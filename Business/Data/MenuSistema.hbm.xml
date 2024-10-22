@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.MenuSistema,Business" table="Sys_Menu">
+
+		<id name="IdMenu" column="idMenu" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="objeto" type="String" name="Objeto" not-null="true" length="50" />
+		<property column="idMenuSuperior" type="Int32" name="IdMenuSuperior" not-null="true" />
+		<property column="posicion" type="Int32" name="Posicion" not-null="true" />
+		<property column="icono" type="String" name="Icono" not-null="true" length="50" />
+		<property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+		<property column="url" type="String" name="Url" not-null="true" length="200" />
+		<property column="fechaCreacion" type="DateTime" name="FechaCreacion" not-null="true" />
+		<property column="idUsuarioCreacion" type="Int32" name="IdUsuarioCreacion" not-null="true" />
+		<property column="fechaModificacion" type="DateTime" name="FechaModificacion" not-null="true" />
+		<property column="idUsuarioModificacion" type="Int32" name="IdUsuarioModificacion" not-null="true" />
+
+    <property column="idModulo" type="Int32" name="IdModulo" not-null="true" />
+		
+		<property column="esAccion" type="Boolean" name="EsAccion" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

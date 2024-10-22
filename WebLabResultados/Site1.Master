@@ -1,0 +1,186 @@
+﻿<%@ Master Language="C#"  AutoEventWireup="true" CodeBehind="Site1.Master.cs" Inherits="WebLab.Site1"      %>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head runat="server">
+    <title>SIL - Sistema Informático de Laboratorio</title>
+ 
+     <link rel="stylesheet" type="text/css" href="App_Themes/default/style.css" />
+     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+     <script src="bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+
+      
+   <script type="text/javascript"> 
+   
+
+function checkKeyCode()
+{ 
+
+if(window.event && window.event.keyCode == 116)
+{ 
+    //alert ('Refresh deshabilitado');
+    event.keyCode=0;
+    return false;
+} 
+
+if( window.event.keyCode == 8) 
+{
+     //BackSpace lo cambia por tecla: <- 
+        
+     valor = document.activeElement.value; 
+//     alert(valor);
+    if (valor==undefined) 
+        event.keyCode=37;
+    
+}
+
+if(window.event && window.event.keyCode == 122) 
+{
+event.keyCode=0; 
+return false;
+}
+ //Controla combinaciÃ³n: Alt <- 
+if(window.event && window.event.keyCode == 37 ) 
+{ 
+     //alert ('Alt <- Deshabilitada ');
+    event.keyCode=0;
+    return false; 
+} 
+teclaAnt = window.event.keyCode ;
+} 
+
+document.onkeydown=checkKeyCode;
+
+ 
+//if (document.all) {
+//// window.moveTo(0,0);
+//top.window.resizeTo(screen.availWidth,screen.availHeight);
+//}
+//else if (document.layers||document.getElementById) {
+//if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+//top.window.outerHeight = screen.availHeight;
+//top.window.outerWidth = screen.availWidth;
+//}
+//}
+         function  efecto(){
+       $('#cargando').hide();
+                             $('#contenidoWeb').fadeIn(500);                           
+        }     
+        
+        
+        function Salir()
+        {
+        window.close();
+        }  
+        
+       function hoy()
+{
+   var fechaActual = new Date();
+ 
+    dia = fechaActual.getDate();
+    mes = fechaActual.getMonth() +1;
+    anno = fechaActual.getYear();
+    
+ 
+    if (dia <10) dia = "0" + dia;
+    if (mes <10) mes = "0" + mes;   
+ 
+    fechaHoy = dia + "/" + mes + "/" + anno;
+    
+    return fechaHoy;
+}
+   </script>   
+  <asp:ContentPlaceHolder ID="head" runat="server">
+ 
+  
+      <style type="text/css">
+          
+ @media only screen and (min-width: 59.6875em) {
+    /* tablets and desktop */
+    .hide-from-cel{display:none;}
+}
+@media only screen and (max-width: 59.6875em) {
+    .hide-from-desktop{display:none;}
+}
+
+      
+ 
+#menu {
+    position: absolute;
+    right: 0;
+    top: 15px;
+    display:none;
+}
+#nav {
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+}
+#nav.vertical {
+    display: block;
+    padding-left: 20px;
+}
+#nav.vertical li {
+    display: list-item;
+    line-height: 30px;
+}
+#nav li {
+    display:inline-block;
+    padding-right: 30px;
+}
+#nav li:last-child {
+    padding-right: 0;
+}
+ h1 {
+  color: #6c2eb9;
+  font-weight: normal;
+  font-size: 30px;
+  font-family: Arial;
+  text-transform: uppercase;
+}
+
+  </style>
+
+  </asp:ContentPlaceHolder>
+
+</head>
+  
+
+
+	
+   
+
+
+<body class="body" onload="Javascript:history.go(1);" onunload="Javascript:history.go(1);"> 	
+
+		  <form runat="server" id="form1"> 
+        
+          <div   >
+              
+		  		  
+               </div>
+              
+            
+      
+
+  <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">                         
+ 
+
+  </asp:ContentPlaceHolder>
+  
+
+
+	<div   style="width:100%;background-color:lavender;" >
+       
+		<p style="color: #747377;
+  font-weight: normal;
+  font-size: 14px;
+  font-family: Arial;
+   text-align:center;">
+	</div>	</form>
+</body>
+ 
+</html>

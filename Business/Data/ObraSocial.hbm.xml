@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.ObraSocial,Business" table="Sys_ObraSocial">
+
+		<id name="IdObraSocial" column="idObraSocial" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="4000" />
+    <property column="sigla" type="String" name="Sigla" not-null="true" length="400" />
+		
+	</class>
+</hibernate-mapping>

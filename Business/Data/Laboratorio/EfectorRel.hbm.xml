@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.EfectorRel,Business" table="LAB_EfectorRelacionado">
+
+		<id name="IdEfectorRelacionado" column="idEfectorRelacionado" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <many-to-one  name="IdEfectorRel"  column="idefectorRel"  class="Business.Data.Efector,Business"  /> 
+		
+	</class>
+</hibernate-mapping>

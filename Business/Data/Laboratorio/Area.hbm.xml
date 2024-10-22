@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Area,Business" table="LAB_Area">
+
+		<id name="IdArea" column="idArea" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="50" />
+		<!--<property column="idTipoServicio" type="Int32" name="IdTipoServicio" not-null="true" />-->
+    <many-to-one name="IdTipoServicio" column="idTipoServicio" class="Business.Data.Laboratorio.TipoServicio,Business" />
+
+    <property column="ordenImpresion" type="Int32" name="OrdenImpresion" not-null="true" />
+    <!--<many-to-one name="IdUsuarioResponsable" column="idUsuarioResponsable" class="Business.Data.Usuario,Business" />-->
+		
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+    <property column="imprimeCodigoBarra" type="Boolean" name="ImprimeCodigoBarra" not-null="true" />
+
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

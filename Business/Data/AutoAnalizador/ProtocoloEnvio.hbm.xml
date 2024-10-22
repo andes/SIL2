@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.ProtocoloEnvio,Business" table="LAB_TempProtocoloEnvio">
+
+		<id name="IdTempProtocoloEnvio" column="idTempProtocoloEnvio" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <property column="idMuestra" type="Int32" name="IdMuestra" not-null="true" />
+    <property column="idEfector" type="Int32" name="IdEfector" not-null="true" />
+		<property column="numeroProtocolo" type="String" name="NumeroProtocolo" not-null="true" length="50" />
+		<property column="tipoMuestra" type="String" name="TipoMuestra" not-null="true" length="50" />
+		<property column="iditem" type="String" name="Iditem" not-null="true" length="500" />
+		<property column="paciente" type="String" name="Paciente" not-null="true" length="200" />
+		<property column="anioNacimiento" type="String" name="AnioNacimiento" not-null="true" length="6" />
+		<property column="sexo" type="String" name="Sexo" not-null="true" length="1" />
+		<property column="sectorSolicitante" type="String" name="SectorSolicitante" not-null="true" length="150" />
+		<property column="medicoSolicitante" type="String" name="MedicoSolicitante" not-null="true" length="150" />
+		<property column="urgente" type="String" name="Urgente" not-null="true" length="50" />
+    <property column="equipo" type="String" name="Equipo" not-null="true" length="50" />
+		
+	</class>
+</hibernate-mapping>

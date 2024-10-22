@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.AuditoriaProtocolo,Business" table="LAB_AuditoriaProtocolo">
+
+		<id name="IdAuditoriaProtocolo" column="idAuditoriaProtocolo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />
+		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
+		<property column="hora" type="String" name="Hora" not-null="true" length="50" />
+		<property column="accion" type="String" name="Accion" not-null="true" length="50" />
+		<property column="analisis" type="String" name="Analisis" not-null="true" length="400" />
+		<property column="valor" type="String" name="Valor" not-null="true" length="4000" />
+		<property column="valorAnterior" type="String" name="ValorAnterior" not-null="true" length="400" />
+		<property column="idUsuario" type="Int32" name="IdUsuario" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

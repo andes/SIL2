@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Usuario,Business" table="Sys_Usuario">
+
+		<id name="IdUsuario" column="idUsuario" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <many-to-one name="IdPerfil" column="idPerfil" class="Business.Data.Perfil,Business" />
+    
+		<property column="apellido" type="String" name="Apellido" length="50" />
+		<property column="nombre" type="String" name="Nombre" length="50" />
+		<property column="legajo" type="String" name="Legajo" length="50" />
+		<property column="username" type="String" name="Username" length="50" />
+		<property column="password" type="String" name="Password" length="50" />
+		<property column="activo" type="Boolean" name="Activo" not-null="true" />
+
+    <property column="idUsuarioActualizacion" type="Int32" name="IdUsuarioActualizacion" not-null="true" />
+    <property column="fechaActualizacion" type="DateTime" name="FechaActualizacion" not-null="true" />
+
+
+    <property column="firmaValidacion" type="String" name="FirmaValidacion" length="500" />
+    <property column="idArea" type="Int32" name="IdArea" not-null="true" />
+    <property column="requiereCambioPass" type="Boolean" name="RequiereCambioPass" not-null="true" />
+    <property column="administrador" type="Boolean" name="Administrador" not-null="true" />
+  <property column="externo" type="Boolean" name="Externo" not-null="true" />
+    <property column="email" type="String" name="Email" length="100" />
+    <property column="telefono" type="String" name="Telefono" length="50" />
+
+    <!--<property column="matricula" type="String" name="Matricula" length="50" />-->
+    <many-to-one name="IdEfectorDestino" column="idEfectorDestino" class="Business.Data.Efector,Business" />
+	</class>
+</hibernate-mapping>

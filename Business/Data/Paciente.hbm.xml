@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Paciente,Business" table="Sys_Paciente">
+
+		<id name="IdPaciente" column="idPaciente" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+		<property column="historiaClinica" type="Int32" name="HistoriaClinica" not-null="true" />
+		<property column="apellido" type="String" name="Apellido" not-null="true" length="100" />
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="100" />
+    <!--<property name="IdTipoDocumento" column="idTipoDocumento" type="Int32"/>-->
+		<property column="numeroDocumento" type="Int32" name="NumeroDocumento" not-null="true" />
+    <property name="IdSexo" column="idSexo" type="Int32"/>
+    <property name="IdSexoLegal" column="idSexoLegal" type="Int32"/>
+    <property name="IdGenero" column="idGenero" type="Int32"/>
+    <property column="nombreAutopercibido" type="String" name="NombreAutopercibido" not-null="true" length="500" />
+		<property column="fechaNacimiento" type="DateTime" name="FechaNacimiento" not-null="true" />
+    <property name="IdPais" column="idPais" type="Int32"/>
+    <property name="IdProvincia" column="idProvincia" type="Int32"/>
+    <property name="IdNivelInstruccion" column="idNivelInstruccion" type="Int32" />
+    <property name="IdSituacionLaboral" column="idSituacionLaboral" type="Int32" />
+    <property name="IdProfesion" column="idProfesion" type="Int32"/>
+    <property name="IdOcupacion" column="idOcupacion" type="Int32" />
+		<property column="calle" type="String" name="Calle" not-null="true" length="50" />
+		<property column="numero" type="Int32" name="Numero" not-null="true" />
+		<property column="piso" type="String" name="Piso" not-null="true" length="10" />
+		<property column="departamento" type="String" name="Departamento" not-null="true" length="10" />
+		<property column="manzana" type="String" name="Manzana" not-null="true" length="50" />
+    <property  name="IdLocalidad" column="idLocalidad" type="Int32" />
+    <property  name="IdBarrio" column="idBarrio" type="Int32"/>
+    <property  name="IdProvinciaDomicilio" column="idProvinciaDomicilio" type="Int32"/>
+		<property column="referencia" type="String" name="Referencia" not-null="true" length="200" />
+		<!--<property column="telefono1" type="String" name="Telefono1" not-null="true" length="50" />
+		<property column="telefono2" type="String" name="Telefono2" not-null="true" length="50" />-->
+    <property  name="IdEstado" column="idEstado" type="Int32"/>
+    <property  name="IdMotivoni" column="idMotivoni" type="Int32"/>
+    <property column="informacionContacto" type="String" name="InformacionContacto" not-null="true" length="800" />
+    
+    <property  name="IdObraSocial" column="idObraSocial" type="Int32"/>
+    <property  name="IdEstadoCivil" column="idEstadoCivil" type="Int32"/>
+		<property column="idUsuario" type="Int32" name="IdUsuario" not-null="true" />
+		<property column="fechaAlta" type="DateTime" name="FechaAlta" not-null="true" />
+		<property column="fechaDefuncion" type="DateTime" name="FechaDefuncion" not-null="true" />
+		<property column="fechaUltimaActualizacion" type="DateTime" name="FechaUltimaActualizacion" not-null="true" />
+    <property  name="IdDepartamento" column="idDepartamento" type="Int32" />
+
+    <property column="numeroAdic" type="String" name="NumeroAdic"   length="100" />
+    <property column="idRaza" type="Int32" name="IdRaza"        />
+    
+    <property column="seDeclaraAborigen" type="Boolean" name="SeDeclaraAborigen" not-null="true"       />
+    <property column="mail" type="String" name="Mail" not-null="true" length="500" />
+    <!--<property column="foto" type="String" name="Foto"   />-->
+	</class>
+</hibernate-mapping>

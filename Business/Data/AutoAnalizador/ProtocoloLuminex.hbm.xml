@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.ProtocoloLuminex,Business" table="LAB_ProtocoloLuminex">
+
+		<id name="IdProtocoloLuminex" column="idProtocoloLuminex" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />
+		<property column="idItem" type="Int32" name="IdItem" not-null="true"  />
+		<property column="idSubitem" type="String" name="IdSubitem" not-null="true" length="500" />
+		<property column="tipoValor" type="String" name="TipoValor" not-null="true" length="500" />
+		<property column="valor" type="String" name="Valor" not-null="true" length="4000" />
+
+    <property column="idUsuarioResultado" type="Int32" name="IdUsuarioResultado" not-null="true" />
+    <property column="fechaResultado" type="DateTime" name="FechaResultado" not-null="true" />
+
+    <property column="idUsuarioValida" type="Int32" name="IdUsuarioValida" not-null="true" />
+    <property column="fechaValida" type="DateTime" name="FechaValida" not-null="true" />
+    
+		
+	</class>
+</hibernate-mapping>

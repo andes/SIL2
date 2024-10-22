@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.MetrolabItem,Business" table="LAB_MetrolabItem">
+
+		<id name="IdMetrolabItem" column="idMetrolabItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idMetrolab" type="String" name="IdMetrolab" not-null="true" length="50" />
+		<property column="idItem" type="Int32" name="IdItem" not-null="true" />
+    <property column="prefijo" type="String" name="Prefijo" not-null="true" length="10" />
+		<property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

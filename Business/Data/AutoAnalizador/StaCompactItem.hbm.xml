@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.StaCompactItem,Business" table="LAB_STACompactItem">
+
+		<id name="IdstaCompactItem" column="idSTACompactItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idSTACompac" type="String" name="IdstaCompac" not-null="true" length="50" />
+		<property column="idItem" type="Int32" name="IdItem" not-null="true" />
+		<property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

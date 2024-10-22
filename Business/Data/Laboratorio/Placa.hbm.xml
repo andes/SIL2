@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Placa,Business" table="LAB_Placa">
+
+		<id name="IdPlaca" column="idPlaca" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+
+		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
+		<property column="operador" type="String" name="Operador" not-null="true" />
+		<property column="equipo" type="String" name="Equipo" not-null="true" />
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+    <property column="estado" type="String" name="Estado" not-null="true" />
+
+	</class>
+</hibernate-mapping>

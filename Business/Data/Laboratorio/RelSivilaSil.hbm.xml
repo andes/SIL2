@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.RelSivilaSil,Business" table="LAB_RelSivilaSil">
+
+		<id name="IdRelSivilaSil" column="idRelSivilaSil" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    
+	  <property column="idSivilaGrupo" type="Int32" name="IdSivilaGrupo" not-null="true" />
+    <property column="idSivilaEtiologia" type="Int32" name="IdSivilaEtiologia" not-null="true" />
+    <property column="semana" type="String" name="Semana" not-null="true" length="500" />
+		<property column="codigoSil" type="String" name="CodigoSil" not-null="true" length="500" />
+    <property column="cantidadRegistros" type="Int32" name="CantidadRegistros" not-null="true" />
+
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+				<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

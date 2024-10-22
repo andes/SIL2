@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ConfiguracionCodigoBarra,Business" table="LAB_ConfiguracionCodigoBarra">
+
+		<id name="IdConfiguracionCodigoBarra" column="idConfiguracionCodigoBarra" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdTipoServicio" column="idTipoServicio" class="Business.Data.Laboratorio.TipoServicio,Business" />
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+		<property column="fuente" type="String" name="Fuente" not-null="true" length="50" />
+		<property column="protocoloFecha" type="Boolean" name="ProtocoloFecha" not-null="true" />
+		<property column="protocoloOrigen" type="Boolean" name="ProtocoloOrigen" not-null="true" />
+		<property column="protocoloSector" type="Boolean" name="ProtocoloSector" not-null="true" />
+		<property column="protocoloNumeroOrigen" type="Boolean" name="ProtocoloNumeroOrigen" not-null="true" />
+    <property column="pacienteNumeroDocumento" type="Boolean" name="PacienteNumeroDocumento" not-null="true" />
+		<property column="pacienteApellido" type="Boolean" name="PacienteApellido" not-null="true" />
+		<property column="pacienteSexo" type="Boolean" name="PacienteSexo" not-null="true" />
+		<property column="pacienteEdad" type="Boolean" name="PacienteEdad" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

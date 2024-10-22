@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Nomenclador,Business" table="LAB_Nomenclador">
+
+		<id name="Codigo" column="Codigo" type="String">
+			<generator class="assigned"/>
+		</id>
+		<property column="Descrip" type="String" name="Descrip" not-null="true" length="255" />
+		<property column="UG" type="Double" name="Ug" not-null="true" />
+		<property column="ValMod" type="Double" name="ValMod" />
+		<property column="Usuario" type="String" name="Usuario" not-null="true" length="255" />
+		<property column="FechaMod" type="DateTime" name="FechaMod" not-null="true" />
+		<property column="TipoPrest" type="Int32" name="TipoPrest" />
+		<property column="ConsAmb" type="Boolean" name="ConsAmb" not-null="true" />
+    <property column="FactorProduccion" type="Int32" name="FactorProduccion" />
+		
+	</class>
+</hibernate-mapping>

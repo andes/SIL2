@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Antibiograma,Business" table="LAB_Antibiograma">
+
+		<id name="IdAntibiograma" column="idAntibiograma" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <many-to-one name="IdProtocolo" column="idProtocolo" class="Business.Data.Laboratorio.Protocolo,Business" />
+    <property column="idItem" type="Int32" name="IdItem" not-null="true" />
+		<!--<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />-->
+    <property column="numeroAislamiento" type="Int32" name="NumeroAislamiento" not-null="true" />
+    <many-to-one name="IdGermen" column="idGermen" class="Business.Data.Laboratorio.Germen,Business" />
+    <property column="idMetodologia" type="Int32" name="IdMetodologia" not-null="true" />
+
+    <many-to-one name="IdAntibiotico" column="idAntibiotico" class="Business.Data.Laboratorio.Antibiotico,Business" />
+		<!--<property column="idAntibiotico" type="Int32" name="IdAntibiotico" not-null="true" />-->
+		
+    <property column="resultado" type="String" name="Resultado" not-null="true" length="50" />
+    <property column="valor" type="String" name="Valor" not-null="true" length="50" />    
+    
+      <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+ 
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+
+    <property column="idUsuarioValida" type="Int32" name="IdUsuarioValida" not-null="true" />
+    <property column="fechaValida" type="DateTime" name="FechaValida" not-null="true" />
+
+    <property column="validaValor" type="Boolean" name="ValidaValor" not-null="true" />
+	</class>
+</hibernate-mapping>

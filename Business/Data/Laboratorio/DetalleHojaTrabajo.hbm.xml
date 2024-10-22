@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.DetalleHojaTrabajo,Business" table="LAB_DetalleHojaTrabajo">
+
+		<id name="IdDetalleHojaTrabajo" column="idDetalleHojaTrabajo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdHojaTrabajo" column="idHojaTrabajo" class="Business.Data.Laboratorio.HojaTrabajo,Business" />
+    
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+		<property column="textoImprimir" type="String" name="TextoImprimir" not-null="true" length="200" />
+    <!--<property column="ancho" type="Int32" name="Ancho" not-null="true" />-->
+	</class>
+</hibernate-mapping>

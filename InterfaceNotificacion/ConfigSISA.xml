@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sisa>
+  <item>
+    <idConfiguracionSISA>1</idConfiguracionSISA>  
+    <idEvento>307</idEvento>
+    <nombreEvento>Caso sospechoso de COVID-19</nombreEvento>
+    <idClasificacionManual>752</idClasificacionManual>
+    <nombreClasificacionManual>Caso sospechosos de nuevo coronavirus (2019-nCoV)</nombreClasificacionManual>
+    <idGrupoEvento>113</idGrupoEvento>
+    <nombreGrupoEvento>Infecciones respiratorias agudas</nombreGrupoEvento>   
+    <idMuestra>272</idMuestra>
+    <idTipoMuestra>4</idTipoMuestra>
+    <idPrueba>1076</idPrueba>
+    <idTipoPrueba>727</idTipoPrueba>
+  </item>
+  <item>
+    <idConfiguracionSISA>2</idConfiguracionSISA>    
+    <idEvento>307</idEvento>
+    <nombreEvento>Caso sospechoso de COVID-19</nombreEvento>
+    <idClasificacionManual>790</idClasificacionManual>
+    <nombreClasificacionManual>Estudio de SARS-COV-2 en situaciones especiales</nombreClasificacionManual>
+    <idGrupoEvento>113</idGrupoEvento>
+    <nombreGrupoEvento>Infecciones respiratorias agudas</nombreGrupoEvento>  
+    <idMuestra>272</idMuestra>
+    <idTipoMuestra>4</idTipoMuestra>
+    <idPrueba>1076</idPrueba>
+    <idTipoPrueba>727</idTipoPrueba>
+  </item>
+  <item>
+    <idConfiguracionSISA>3</idConfiguracionSISA>
+    <idEvento>307</idEvento>
+    <nombreEvento>Caso sospechoso de COVID-19</nombreEvento>
+    <idClasificacionManual>795</idClasificacionManual>
+    <nombreClasificacionManual>Caso sospechosos de nuevo coronavirus (2019-nCoV)</nombreClasificacionManual>
+    <idGrupoEvento>113</idGrupoEvento>
+    <nombreGrupoEvento>Infecciones respiratorias agudas</nombreGrupoEvento>
+    <idMuestra></idMuestra>
+    <idTipoMuestra></idTipoMuestra>
+    <idPrueba></idPrueba>
+    <idTipoPrueba></idTipoPrueba>
+  </item>
+  <item>
+    <idConfiguracionSISA>4</idConfiguracionSISA>
+    <idEvento>307</idEvento>
+    <nombreEvento>Caso sospechoso de COVID-19</nombreEvento>
+    <idClasificacionManual>752</idClasificacionManual>
+    <nombreClasificacionManual>Caso sospechosos de nuevo coronavirus (2019-nCoV)</nombreClasificacionManual>
+    <idGrupoEvento>113</idGrupoEvento>
+    <nombreGrupoEvento>Infecciones respiratorias agudas</nombreGrupoEvento>
+    <idMuestra></idMuestra>
+    <idTipoMuestra></idTipoMuestra>
+    <idPrueba></idPrueba>
+    <idTipoPrueba></idTipoPrueba>
+  </item>
+</sisa>

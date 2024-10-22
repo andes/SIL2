@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.MindrayItem,Business" table="LAB_MindrayItem">
+
+		<id name="IdMindrayItem" column="idMindrayItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idMindray" type="Int32" name="IdMindray" not-null="true" />
+		<property column="idItem" type="Int32" name="IdItem" not-null="true" />
+		<property column="tipoMuestra" type="String" name="TipoMuestra" not-null="true" length="50" />
+    <property column="prefijo" type="String" name="Prefijo" not-null="true" length="10" />
+    <property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+	</class>
+</hibernate-mapping>

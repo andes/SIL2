@@ -1,0 +1,49 @@
+Sample Name	Marker	Allele 1	Allele 2	Allele 3	Allele 4	Allele 5	Allele 6	Allele 7	Allele 8	Allele 9	Allele 10	
+30519 A Fragmento cobertor	AMEL	X	Y									
+30519 A Fragmento cobertor	D3S1358	15	17									
+30519 A Fragmento cobertor	D1S1656	13	16.3									
+30519 A Fragmento cobertor	D2S441	10										
+30519 A Fragmento cobertor	D10S1248	13										
+30519 A Fragmento cobertor	D13S317	10	11	14								
+30519 A Fragmento cobertor	Penta E	13	14									
+30519 A Fragmento cobertor	D16S539	11	12	13								
+30519 A Fragmento cobertor	D18S51	12	16	17	22							
+30519 A Fragmento cobertor	D2S1338	17	20									
+30519 A Fragmento cobertor	CSF1PO	11										
+30519 A Fragmento cobertor	Penta D	7	13									
+30519 A Fragmento cobertor	TH01	7										
+30519 A Fragmento cobertor	vWA	16	17									
+30519 A Fragmento cobertor	D21S11	28	29	30								
+30519 A Fragmento cobertor	D7S820	8	11	12								
+30519 A Fragmento cobertor	D5S818	11	12									
+30519 A Fragmento cobertor	TPOX	8	9	11	12							
+30519 A Fragmento cobertor	DYS391	10										
+30519 A Fragmento cobertor	D8S1179	10	12	13								
+30519 A Fragmento cobertor	D12S391	18	19	24								
+30519 A Fragmento cobertor	D19S433	12	14	15								
+30519 A Fragmento cobertor	FGA	19	20	24	26							
+30519 A Fragmento cobertor	D22S1045	15									
+30489 A Fragmento cobertor	AMEL	X	Y	 							
+30489 A Fragmento cobertor	D3S1358	15	17								
+30489 A Fragmento cobertor	D1S1656	13									
+30489 A Fragmento cobertor	D2S441	10									
+30489 A Fragmento cobertor	D10S1248	13									
+30489 A Fragmento cobertor	D13S317	10	11								
+30489 A Fragmento cobertor	Penta E	13	14								
+30489 A Fragmento cobertor	D16S539	11	12								
+30489 A Fragmento cobertor	D18S51	12	16								
+30489 A Fragmento cobertor	D2S1338	17	20								
+30489 A Fragmento cobertor	CSF1PO	11									
+30489 A Fragmento cobertor	Penta D	7	13								
+30489 A Fragmento cobertor	TH01	7									
+30489 A Fragmento cobertor	vWA	16	17								
+30489 A Fragmento cobertor	D21S11	28	29								
+30489 A Fragmento cobertor	D7S820	8	11								
+30489 A Fragmento cobertor	D5S818	11	12								
+30489 A Fragmento cobertor	TPOX	8	9								
+30489 A Fragmento cobertor	DYS391	10									
+30489 A Fragmento cobertor	D8S1179	10	12								
+30489 A Fragmento cobertor	D12S391	18	19								
+30489 A Fragmento cobertor	D19S433	12	14								
+30489 A Fragmento cobertor	FGA	19	20								
+30489 A Fragmento cobertor	D22S1045	15									

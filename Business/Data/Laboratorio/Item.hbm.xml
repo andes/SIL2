@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Item,Business" table="LAB_Item">
+
+		<id name="IdItem" column="idItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    
+		<property column="codigo" type="String" name="Codigo" not-null="true" length="50" />
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="50" />
+		<property column="descripcion" type="String" name="Descripcion" not-null="true" length="500" />
+		<property column="tipo" type="String" name="Tipo" not-null="true" length="1" />
+
+    <property column="ordenImpresion" type="Int32" name="OrdenImpresion" not-null="true" />
+    
+    <many-to-one name="IdArea" column="idArea" class="Business.Data.Laboratorio.Area,Business" />
+		<property column="idResultadoPorDefecto" type="Int32" name="IdResultadoPorDefecto" not-null="true" />
+
+    <many-to-one name="IdEfectorDerivacion" column="idEfectorDerivacion" class="Business.Data.Efector,Business" />
+    <!--<property column="idEfectorDerivacion" type="Int32" name="IdEfectorDerivacion" not-null="true" />-->
+
+    <property column="requiereMuestra" type="String" name="RequiereMuestra" not-null="true" length="1" />
+
+    <property column="resultadoDefecto" type="String" name="ResultadoDefecto" not-null="true" length="200" />
+		<property column="idUnidadMedida" type="Int32" name="IdUnidadMedida" not-null="true" />
+
+    <property column="idCategoria" type="Int32" name="IdCategoria" not-null="true" />
+    <property column="idTipoResultado" type="Int32" name="IdTipoResultado" not-null="true" />
+    <property column="formatoDecimal" type="Int32" name="FormatoDecimal" not-null="true" />
+    <property column="multiplicador" type="Int32" name="Multiplicador" not-null="true" />
+    <property column="valorMinimo" type="Decimal" name="ValorMinimo" not-null="true" />
+    <property column="valorMaximo" type="Decimal" name="ValorMaximo" not-null="true" />
+    <property column="idItemReferencia" type="Int32" name="IdItemReferencia" not-null="true" />
+    <property column="duracion" type="Int32" name="Duracion" not-null="true" />
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+    <property column="disponible" type="Boolean" name="Disponible" not-null="true" />
+
+    <property column="codificaHiv" type="Boolean" name="CodificaHiv" not-null="true" />
+    
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+
+
+    <property column="codigoNomenclador" type="String" name="CodigoNomenclador" not-null="true" length="255" />
+    <property column="limiteTurnosDia" type="Int32" name="LimiteTurnosDia" not-null="true" />
+
+    <property column="etiquetaAdicional" type="Boolean" name="EtiquetaAdicional" not-null="true" />
+  		<property column="informable" type="Boolean" name="Informable" not-null="true" />
+   <property column="requiereCaracter" type="Boolean" name="RequiereCaracter" not-null="true" />
+
+    <property column="idMuestra" type="Int32" name="IdMuestra" not-null="true" />
+    <property column="imprimeMuestra" type="Boolean" name="ImprimeMuestra" not-null="true" />
+
+
+  </class>
+</hibernate-mapping>

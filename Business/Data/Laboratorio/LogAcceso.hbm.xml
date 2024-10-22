@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.LogAcceso,Business" table="LAB_LogAcceso">
+
+		<id name="IdLogAcceso" column="idLogAcceso" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idUsuario" type="Int32" name="IdUsuario" not-null="true" />
+		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

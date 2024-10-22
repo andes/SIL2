@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Configuracion,Business" table="LAB_Configuracion">
+
+		<id name="IdConfiguracion" column="idConfiguracion" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+		<property column="nivel" type="Int32" name="Nivel" not-null="true" />
+    <property column="idHistocompatibilidad" type="Int32" name="IdHistocompatibilidad" not-null="true" />
+		<property column="rutaLogo" type="String" name="RutaLogo" not-null="true" length="500" />
+    <property column="diagObligatorio" type="Boolean" name="DiagObligatorio" not-null="true" />
+
+    <property column="principalTurno" type="Boolean" name="PrincipalTurno" not-null="true" />
+    <property column="principalRecepcion" type="Boolean" name="PrincipalRecepcion" not-null="true" />
+    <property column="principalImpresionHT" type="Boolean" name="PrincipalImpresionHT" not-null="true" />
+    <property column="principalCargaResultados" type="Boolean" name="PrincipalCargaResultados" not-null="true" />
+    <property column="principalValidacion" type="Boolean" name="PrincipalValidacion" not-null="true" />
+    <property column="principalImpresionResultados" type="Boolean" name="PrincipalImpresionResultados" not-null="true" />
+    <property column="principalUrgencias" type="Boolean" name="PrincipalUrgencias" not-null="true" />
+    <property column="principalResultados" type="Boolean" name="PrincipalResultados" not-null="true" />
+  <property column="preValida" type="Boolean" name="PreValida" not-null="true" />
+    <!--<property column="nombreImpresora" type="String" name="NombreImpresora" not-null="true" length="100" />-->
+
+    <property column="encabezadoLinea1" type="String" name="EncabezadoLinea1" not-null="true" length="100" />
+		<property column="encabezadoLinea2" type="String" name="EncabezadoLinea2" not-null="true" length="100" />
+		<property column="encabezadoLinea3" type="String" name="EncabezadoLinea3" not-null="true" length="100" />
+
+    <property column="urlMatriculacion" type="String" name="UrlMatriculacion"   length="500" />
+    <property column="encabezadoLinea1Microbiologia" type="String" name="EncabezadoLinea1Microbiologia" not-null="true" length="100" />
+    <property column="encabezadoLinea2Microbiologia" type="String" name="EncabezadoLinea2Microbiologia" not-null="true" length="100" />
+    <property column="encabezadoLinea3Microbiologia" type="String" name="EncabezadoLinea3Microbiologia" not-null="true" length="100" />
+    
+    
+		<property column="tipoNumeracionProtocolo" type="Int32" name="TipoNumeracionProtocolo" not-null="true" />
+    <property column="utilizaNumeroEliminado" type="Boolean" name="UtilizaNumeroEliminado" not-null="true" />
+    
+		<property column="nroProtocolo" type="Int32" name="NroProtocolo" not-null="true" />
+
+    <property column="tipoCalculoDiasRetiro" type="Int32" name="TipoCalculoDiasRetiro" not-null="true" />
+		<property column="diasRetiro" type="Int32" name="DiasRetiro" not-null="true" />
+    
+    <!--datos para texto adicional del comprobante para el paciente-->    
+		<property column="generaComprobanteProtocolo" type="Boolean" name="GeneraComprobanteProtocolo" not-null="true" />
+    <property column="generaComprobanteProtocoloMicrobiologia" type="Boolean" name="GeneraComprobanteProtocoloMicrobiologia" not-null="true" />
+    <property column="habilitaConsentimientoMicrobiologia" type="Boolean" name="HabilitaConsentimientoMicrobiologia" not-null="true" />
+    <property column="textoAdicionalComprobanteProtocolo" type="String" name="TextoAdicionalComprobanteProtocolo" not-null="true" length="500" />
+    <property column="textoAdicionalComprobanteProtocoloMicrobiologia" type="String" name="TextoAdicionalComprobanteProtocoloMicrobiologia" not-null="true" length="500" />
+    <!--fin-->
+    
+    <property column="recordarOrigenProtocolo" type="Boolean" name="RecordarOrigenProtocolo" not-null="true" />
+      <property column="idSectorDefecto" type="Int32" name="IdSectorDefecto" not-null="true" />
+    <property column="recordarSectorProtocolo" type="Boolean" name="RecordarSectorProtocolo" not-null="true" />
+      <property column="origenHabilitado" type="String" name="OrigenHabilitado" not-null="true" length="500" />
+    
+    <property column="cantidadProtocolosPorPagina" type="Int32" name="CantidadProtocolosPorPagina" not-null="true" />
+
+    <property column="modificarProtocoloTerminado" type="Boolean" name="ModificarProtocoloTerminado" not-null="true" />
+    <property column="habilitaNoPublicacion" type="Boolean" name="HabilitaNoPublicacion" not-null="true" />
+    
+    
+    
+		<property column="turno" type="Boolean" name="Turno" not-null="true" />
+		<property column="generaComprobanteTurno" type="Boolean" name="GeneraComprobanteTurno" not-null="true" />
+    <property column="smsCancelaTurno" type="Boolean" name="SmsCancelaTurno" not-null="true" />
+
+    <property column="tipoListaProtocolo" type="Int32" name="TipoListaProtocolo" not-null="true" />
+    <property column="tipoHojaTrabajo" type="Int32" name="TipoHojaTrabajo" not-null="true" />
+    <property column="tipoCargaResultado" type="Int32" name="TipoCargaResultado" not-null="true" />
+    <property column="ordenCargaResultado" type="Boolean" name="OrdenCargaResultado" not-null="true" />
+
+    <property column="tipoImpresionResultado" type="Boolean" name="TipoImpresionResultado" not-null="true" />
+    <property column="tipoHojaImpresionResultado" type="String" name="TipoHojaImpresionResultado" not-null="true" length="5" />
+
+    <property column="tipoImpresionResultadoMicrobiologia" type="Boolean" name="TipoImpresionResultadoMicrobiologia" not-null="true" />
+    <property column="tipoHojaImpresionResultadoMicrobiologia" type="String" name="TipoHojaImpresionResultadoMicrobiologia" not-null="true" length="5" />
+    
+    <property column="aplicarFormulaDefecto" type="Boolean" name="AplicarFormulaDefecto" not-null="true" />
+    
+    <property column="resultadoEdad" type="Boolean" name="ResultadoEdad" not-null="true" />
+    <property column="resultadoFNacimiento" type="Boolean" name="ResultadoFNacimiento" not-null="true" />
+    <property column="resultadoSexo" type="Boolean" name="ResultadoSexo" not-null="true" />
+    <property column="resultadoDNI" type="Boolean" name="ResultadoDNI" not-null="true" />
+    <property column="resultadoHC" type="Boolean" name="ResultadoHC" not-null="true" />
+    <property column="resultadoDomicilio" type="Boolean" name="ResultadoDomicilio" not-null="true" />
+
+    <property column="resultadoEdadMicrobiologia" type="Boolean" name="ResultadoEdadMicrobiologia" not-null="true" />
+    <property column="resultadoFNacimientoMicrobiologia" type="Boolean" name="ResultadoFNacimientoMicrobiologia" not-null="true" />
+    <property column="resultadoSexoMicrobiologia" type="Boolean" name="ResultadoSexoMicrobiologia" not-null="true" />
+    <property column="resultadoDNIMicrobiologia" type="Boolean" name="ResultadoDNIMicrobiologia" not-null="true" />
+    <property column="resultadoHCMicrobiologia" type="Boolean" name="ResultadoHCMicrobiologia" not-null="true" />
+    <property column="resultadoDomicilioMicrobiologia" type="Boolean" name="ResultadoDomicilioMicrobiologia" not-null="true" />
+
+
+
+    <!--firma electronica-->
+    <property column="firmaElectronicaLaboratorio" type="Int32" name="FirmaElectronicaLaboratorio" not-null="true" />
+    <property column="firmaElectronicaMicrobiologia" type="Int32" name="FirmaElectronicaMicrobiologia" not-null="true" />
+    <!--fin de firma electronica-->
+    
+
+
+    <property column="resultadoNumeroRegistro" type="Boolean" name="ResultadoNumeroRegistro" not-null="true" />
+    <property column="resultadoFechaEntrega" type="Boolean" name="ResultadoFechaEntrega" not-null="true" />
+    <property column="resultadoSector" type="Boolean" name="ResultadoSector" not-null="true" />
+    <property column="resultadoSolicitante" type="Boolean" name="ResultadoSolicitante" not-null="true" />
+    <property column="resultadoOrigen" type="Boolean" name="ResultadoOrigen" not-null="true" />
+    <property column="resultadoPrioridad" type="Boolean" name="ResultadoPrioridad" not-null="true" />
+
+    <property column="resultadoNumeroRegistroMicrobiologia" type="Boolean" name="ResultadoNumeroRegistroMicrobiologia" not-null="true" />
+    <property column="resultadoFechaEntregaMicrobiologia" type="Boolean" name="ResultadoFechaEntregaMicrobiologia" not-null="true" />
+    <property column="resultadoSectorMicrobiologia" type="Boolean" name="ResultadoSectorMicrobiologia" not-null="true" />
+    <property column="resultadoSolicitanteMicrobiologia" type="Boolean" name="ResultadoSolicitanteMicrobiologia" not-null="true" />
+    <property column="resultadoOrigenMicrobiologia" type="Boolean" name="ResultadoOrigenMicrobiologia" not-null="true" />
+    <property column="resultadoPrioridadMicrobiologia" type="Boolean" name="ResultadoPrioridadMicrobiologia" not-null="true" />
+
+
+    <property column="idOrigenUrgencia" type="Int32" name="IdOrigenUrgencia" not-null="true" />
+    <property column="idSectorUrgencia" type="Int32" name="IdSectorUrgencia" not-null="true" />
+    
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+
+    <property column="ordenImpresionLaboratorio" type="Boolean" name="OrdenImpresionLaboratorio" not-null="true" />
+    <property column="ordenImpresionMicrobiologia" type="Boolean" name="OrdenImpresionMicrobiologia" not-null="true" />
+    <!--<property column="numeracionServicio" type="Boolean" name="NumeracionServicio" not-null="true" />-->
+
+
+    <property column="autenticaValidacion" type="Boolean" name="AutenticaValidacion" not-null="true" />
+		<property column="peticionElectronica" type="Boolean" name="PeticionElectronica" not-null="true" />
+
+    <property column="valorDefectoFechaTomaMuestra" type="Int32" name="ValorDefectoFechaTomaMuestra" not-null="true" />
+    <property column="valorDefectoFechaOrden" type="Int32" name="ValorDefectoFechaOrden" not-null="true" />
+    <property column="NomencladorDiagnostico" type="Int32" name="NomencladorDiagnostico" not-null="true" />
+      <property column="tipoEtiqueta" type="String" name="TipoEtiqueta" not-null="true" length="50" />
+
+    <property column="notificarSISA" type="Boolean" name="NotificarSISA" not-null="true" />
+    <property column="urlServicioSISA" type="String" name="UrlServicioSISA"   />
+    <property column="URLMuestraSISA" type="String" name="URLMuestraSISA"   />
+    <property column="URLResultadoSISA" type="String" name="URLResultadoSISA"   />
+    <property column="codigoEstablecimientoSISA" type="String" name="CodigoEstablecimientoSISA"   />
+    <property column="notificaAndes" type="Boolean" name="NotificaAndes" not-null="true" />
+    
+
+    <property column="conectaRenaper" type="Boolean" name="ConectaRenaper" not-null="true" />
+    <property column="urlRenaper" type="String" name="UrlRenaper"   />
+  <property column="codigoCovid" type="String" name="CodigoCovid"   />
+  <property column="FISCaracter" type="String" name="FISCaracter"   />
+
+    <property column="conectaMPI" type="Boolean" name="ConectaMPI" not-null="true" />
+    <property column="urlMPI" type="String" name="UrlMPI"   />
+    <property column="tokenMPI" type="String" name="TokenMPI"   />
+    <property column="urlResultadosQR" type="String" name="UrlResultadosQR"   />
+  
+
+    <property column="verificaIngresoAnterior" type="Boolean" name="VerificaIngresoAnterior" not-null="true" />
+  </class>
+</hibernate-mapping>

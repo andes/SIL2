@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns2="urn:AutenticacionIntf" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="urn:TiposWebServices" name="IAutenticacionservice" targetNamespace="http://tempuri.org/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema xmlns="urn:TiposWebServices" targetNamespace="urn:TiposWebServices">
+      <xs:complexType name="CIdSesionPecasBase">
+        <xs:sequence>
+          <xs:element name="IDSesion" type="xs:string" />
+          <xs:element name="Base" type="xs:string" />
+          <xs:element name="Resultado" type="xs:boolean" />
+          <xs:element name="Username" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CResultadoLoginJosso">
+        <xs:sequence>
+          <xs:element name="IDSession" type="xs:string" />
+          <xs:element name="Username" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TDatosSesionPecas">
+        <xs:sequence>
+          <xs:element name="Usuario" type="xs:string" />
+          <xs:element name="BaseDeDatos" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns="urn:AutenticacionIntf" targetNamespace="urn:AutenticacionIntf">
+      <xs:complexType name="TResultadoEcho">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="Resultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="LoginAplicacion0Request">
+    <part name="Usuario" type="xs:string" />
+    <part name="Password" type="xs:string" />
+  </message>
+  <message name="LoginAplicacion0Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="LoginPecas1Request">
+    <part name="Usuario" type="xs:string" />
+    <part name="Password" type="xs:string" />
+  </message>
+  <message name="LoginPecas1Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="LoginPecasRapido2Request">
+    <part name="Usuario" type="xs:string" />
+    <part name="Password" type="xs:string" />
+  </message>
+  <message name="LoginPecasRapido2Response">
+    <part name="return" type="ns1:CIdSesionPecasBase" />
+  </message>
+  <message name="LoginJossoRapido3Request">
+    <part name="IDSession" type="xs:string" />
+  </message>
+  <message name="LoginJossoRapido3Response">
+    <part name="return" type="ns1:CIdSesionPecasBase" />
+  </message>
+  <message name="LoginJosso4Request">
+    <part name="IDSesionJosso" type="xs:string" />
+  </message>
+  <message name="LoginJosso4Response">
+    <part name="return" type="ns1:CResultadoLoginJosso" />
+  </message>
+  <message name="VerificarSesionActivaPecas5Request">
+    <part name="IdSesionPecas" type="xs:string" />
+  </message>
+  <message name="VerificarSesionActivaPecas5Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="ObtenerUserNameDeSesion6Request">
+    <part name="IdSesionPecas" type="xs:string" />
+  </message>
+  <message name="ObtenerUserNameDeSesion6Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="FijarBaseDeSesion7Request">
+    <part name="IdSesion" type="xs:string" />
+    <part name="Base" type="xs:string" />
+  </message>
+  <message name="FijarBaseDeSesion7Response">
+    <part name="return" type="xs:boolean" />
+  </message>
+  <message name="ObtenerBaseDeSesion8Request">
+    <part name="IdSesion" type="xs:string" />
+  </message>
+  <message name="ObtenerBaseDeSesion8Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="ObtenerDatosDeSesion9Request">
+    <part name="idSesion" type="xs:string" />
+  </message>
+  <message name="ObtenerDatosDeSesion9Response">
+    <part name="return" type="ns1:TDatosSesionPecas" />
+  </message>
+  <message name="ObtenerNivelDeSesion10Request">
+    <part name="idSesion" type="xs:string" />
+  </message>
+  <message name="ObtenerNivelDeSesion10Response">
+    <part name="return" type="xs:int" />
+  </message>
+  <message name="CambiarPassword11Request">
+    <part name="idSesion" type="xs:string" />
+    <part name="ClaveAnterior" type="xs:string" />
+    <part name="ClaveNueva" type="xs:string" />
+  </message>
+  <message name="CambiarPassword11Response">
+    <part name="return" type="xs:boolean" />
+  </message>
+  <message name="ObtenerInvolucrado12Request">
+    <part name="idSesion" type="xs:string" />
+  </message>
+  <message name="ObtenerInvolucrado12Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="VerificarSesionActivaPecas_V213Request">
+    <part name="IdSesionPecas" type="xs:string" />
+  </message>
+  <message name="VerificarSesionActivaPecas_V213Response">
+    <part name="return" type="xs:boolean" />
+  </message>
+  <message name="Logout14Request">
+    <part name="idSesion" type="xs:string" />
+  </message>
+  <message name="Logout14Response">
+    <part name="return" type="xs:boolean" />
+  </message>
+  <message name="ObtenerDuracionSesion15Request">
+    <part name="idSesion" type="xs:string" />
+  </message>
+  <message name="ObtenerDuracionSesion15Response">
+    <part name="return" type="xs:int" />
+  </message>
+  <message name="Echo16Request">
+    <part name="texto" type="xs:string" />
+  </message>
+  <message name="Echo16Response">
+    <part name="return" type="ns2:TResultadoEcho" />
+  </message>
+  <message name="Encriptar17Request">
+    <part name="texto" type="xs:string" />
+  </message>
+  <message name="Encriptar17Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <message name="Desencriptar18Request">
+    <part name="texto" type="xs:string" />
+  </message>
+  <message name="Desencriptar18Response">
+    <part name="return" type="xs:string" />
+  </message>
+  <portType name="IAutenticacion">
+    <operation name="LoginAplicacion">
+      <input message="tns:LoginAplicacion0Request" />
+      <output message="tns:LoginAplicacion0Response" />
+    </operation>
+    <operation name="LoginPecas">
+      <input message="tns:LoginPecas1Request" />
+      <output message="tns:LoginPecas1Response" />
+    </operation>
+    <operation name="LoginPecasRapido">
+      <input message="tns:LoginPecasRapido2Request" />
+      <output message="tns:LoginPecasRapido2Response" />
+    </operation>
+    <operation name="LoginJossoRapido">
+      <input message="tns:LoginJossoRapido3Request" />
+      <output message="tns:LoginJossoRapido3Response" />
+    </operation>
+    <operation name="LoginJosso">
+      <input message="tns:LoginJosso4Request" />
+      <output message="tns:LoginJosso4Response" />
+    </operation>
+    <operation name="VerificarSesionActivaPecas">
+      <input message="tns:VerificarSesionActivaPecas5Request" />
+      <output message="tns:VerificarSesionActivaPecas5Response" />
+    </operation>
+    <operation name="ObtenerUserNameDeSesion">
+      <input message="tns:ObtenerUserNameDeSesion6Request" />
+      <output message="tns:ObtenerUserNameDeSesion6Response" />
+    </operation>
+    <operation name="FijarBaseDeSesion">
+      <input message="tns:FijarBaseDeSesion7Request" />
+      <output message="tns:FijarBaseDeSesion7Response" />
+    </operation>
+    <operation name="ObtenerBaseDeSesion">
+      <input message="tns:ObtenerBaseDeSesion8Request" />
+      <output message="tns:ObtenerBaseDeSesion8Response" />
+    </operation>
+    <operation name="ObtenerDatosDeSesion">
+      <input message="tns:ObtenerDatosDeSesion9Request" />
+      <output message="tns:ObtenerDatosDeSesion9Response" />
+    </operation>
+    <operation name="ObtenerNivelDeSesion">
+      <input message="tns:ObtenerNivelDeSesion10Request" />
+      <output message="tns:ObtenerNivelDeSesion10Response" />
+    </operation>
+    <operation name="CambiarPassword">
+      <input message="tns:CambiarPassword11Request" />
+      <output message="tns:CambiarPassword11Response" />
+    </operation>
+    <operation name="ObtenerInvolucrado">
+      <input message="tns:ObtenerInvolucrado12Request" />
+      <output message="tns:ObtenerInvolucrado12Response" />
+    </operation>
+    <operation name="VerificarSesionActivaPecas_V2">
+      <input message="tns:VerificarSesionActivaPecas_V213Request" />
+      <output message="tns:VerificarSesionActivaPecas_V213Response" />
+    </operation>
+    <operation name="Logout">
+      <input message="tns:Logout14Request" />
+      <output message="tns:Logout14Response" />
+    </operation>
+    <operation name="ObtenerDuracionSesion">
+      <input message="tns:ObtenerDuracionSesion15Request" />
+      <output message="tns:ObtenerDuracionSesion15Response" />
+    </operation>
+    <operation name="Echo">
+      <input message="tns:Echo16Request" />
+      <output message="tns:Echo16Response" />
+    </operation>
+    <operation name="Encriptar">
+      <input message="tns:Encriptar17Request" />
+      <output message="tns:Encriptar17Response" />
+    </operation>
+    <operation name="Desencriptar">
+      <input message="tns:Desencriptar18Request" />
+      <output message="tns:Desencriptar18Response" />
+    </operation>
+  </portType>
+  <binding name="IAutenticacionbinding" type="tns:IAutenticacion">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <operation name="LoginAplicacion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#LoginAplicacion" style="rpc" />
+      <input message="tns:LoginAplicacion0Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:LoginAplicacion0Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="LoginPecas">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#LoginPecas" style="rpc" />
+      <input message="tns:LoginPecas1Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:LoginPecas1Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="LoginPecasRapido">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#LoginPecasRapido" style="rpc" />
+      <input message="tns:LoginPecasRapido2Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:LoginPecasRapido2Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="LoginJossoRapido">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#LoginJossoRapido" style="rpc" />
+      <input message="tns:LoginJossoRapido3Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:LoginJossoRapido3Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="LoginJosso">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#LoginJosso" style="rpc" />
+      <input message="tns:LoginJosso4Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:LoginJosso4Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="VerificarSesionActivaPecas">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#VerificarSesionActivaPecas" style="rpc" />
+      <input message="tns:VerificarSesionActivaPecas5Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:VerificarSesionActivaPecas5Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerUserNameDeSesion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#ObtenerUserNameDeSesion" style="rpc" />
+      <input message="tns:ObtenerUserNameDeSesion6Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerUserNameDeSesion6Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="FijarBaseDeSesion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#FijarBaseDeSesion" style="rpc" />
+      <input message="tns:FijarBaseDeSesion7Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:FijarBaseDeSesion7Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerBaseDeSesion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#ObtenerBaseDeSesion" style="rpc" />
+      <input message="tns:ObtenerBaseDeSesion8Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerBaseDeSesion8Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerDatosDeSesion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#ObtenerDatosDeSesion" style="rpc" />
+      <input message="tns:ObtenerDatosDeSesion9Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerDatosDeSesion9Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerNivelDeSesion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#ObtenerNivelDeSesion" style="rpc" />
+      <input message="tns:ObtenerNivelDeSesion10Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerNivelDeSesion10Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="CambiarPassword">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#CambiarPassword" style="rpc" />
+      <input message="tns:CambiarPassword11Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:CambiarPassword11Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerInvolucrado">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#ObtenerInvolucrado" style="rpc" />
+      <input message="tns:ObtenerInvolucrado12Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerInvolucrado12Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="VerificarSesionActivaPecas_V2">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#VerificarSesionActivaPecas_V2" style="rpc" />
+      <input message="tns:VerificarSesionActivaPecas_V213Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:VerificarSesionActivaPecas_V213Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Logout">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#Logout" style="rpc" />
+      <input message="tns:Logout14Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Logout14Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerDuracionSesion">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#ObtenerDuracionSesion" style="rpc" />
+      <input message="tns:ObtenerDuracionSesion15Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerDuracionSesion15Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Echo">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#Echo" style="rpc" />
+      <input message="tns:Echo16Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Echo16Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Encriptar">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#Encriptar" style="rpc" />
+      <input message="tns:Encriptar17Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Encriptar17Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Desencriptar">
+      <soap:operation soapAction="urn:AutenticacionIntf-IAutenticacion#Desencriptar" style="rpc" />
+      <input message="tns:Desencriptar18Request">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Desencriptar18Response">
+        <soap:body use="encoded" namespace="urn:AutenticacionIntf-IAutenticacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+  </binding>
+  <service name="IAutenticacionservice">
+    <port name="IAutenticacionPort" binding="tns:IAutenticacionbinding">
+      <soap:address location="http://autentica.neuquen.gov.ar:8080/scripts/autenticacion.exe/soap/IAutenticacion" />
+    </port>
+  </service>
+</definitions>

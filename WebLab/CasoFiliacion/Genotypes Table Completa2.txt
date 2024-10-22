@@ -1,0 +1,102 @@
+Sample Name	Marker	Allele 1	Allele 2	Allele 3	Allele 4					
+30540 Pintos Graciela Monica	AMEL	X				
+30540 Pintos Graciela Monica	D3S1358	15				
+30540 Pintos Graciela Monica	D1S1656	16.3	17.3			
+30540 Pintos Graciela Monica	D2S441	11	14			
+30540 Pintos Graciela Monica	D10S1248	14	16			
+30540 Pintos Graciela Monica	D13S317	9	11			
+30540 Pintos Graciela Monica	Penta E	7	18			
+30540 Pintos Graciela Monica	D16S539	10	14			
+30540 Pintos Graciela Monica	D18S51	15	16			
+30540 Pintos Graciela Monica	D2S1338	17	18			
+30540 Pintos Graciela Monica	CSF1PO	11				
+30540 Pintos Graciela Monica	Penta D	9				
+30540 Pintos Graciela Monica	TH01	6	7			
+30540 Pintos Graciela Monica	vWA	14	17			
+30540 Pintos Graciela Monica	D21S11	29	34.2			
+30540 Pintos Graciela Monica	D7S820	10				
+30540 Pintos Graciela Monica	D5S818	9	11			
+30540 Pintos Graciela Monica	TPOX	8	11			
+30540 Pintos Graciela Monica	DYS391					
+30540 Pintos Graciela Monica	D8S1179	9	15			
+30540 Pintos Graciela Monica	D12S391	18	20			
+30540 Pintos Graciela Monica	D19S433	15	15.2			
+30540 Pintos Graciela Monica	FGA	20				
+30540 Pintos Graciela Monica	D22S1045	15				
+30541 Salmini Delia	AMEL	X				
+30541 Salmini Delia	D3S1358	15				
+30541 Salmini Delia	D1S1656	12	14			
+30541 Salmini Delia	D2S441	11	14			
+30541 Salmini Delia	D10S1248	13				
+30541 Salmini Delia	D13S317	11	12			
+30541 Salmini Delia	Penta E	13	14			
+30541 Salmini Delia	D16S539	9	13			
+30541 Salmini Delia	D18S51	13	18			
+30541 Salmini Delia	D2S1338	17	20			
+30541 Salmini Delia	CSF1PO	11	12			
+30541 Salmini Delia	Penta D	11	14			
+30541 Salmini Delia	TH01	8	9			
+30541 Salmini Delia	vWA	15	16			
+30541 Salmini Delia	D21S11	29	30			
+30541 Salmini Delia	D7S820	9	11			
+30541 Salmini Delia	D5S818	11	12			
+30541 Salmini Delia	TPOX	8	10			
+30541 Salmini Delia	DYS391					
+30541 Salmini Delia	D8S1179	13	15			
+30541 Salmini Delia	D12S391	23	24			
+30541 Salmini Delia	D19S433	13	14			
+30541 Salmini Delia	FGA	24	25			
+30541 Salmini Delia	D22S1045	15	16			
+30473 Choquich Heleana Irma	AMEL	X				
+30473 Choquich Heleana Irma	D3S1358	15	17			
+30473 Choquich Heleana Irma	D1S1656	12				
+30473 Choquich Heleana Irma	D2S441	14				
+30473 Choquich Heleana Irma	D10S1248	13	14			
+30473 Choquich Heleana Irma	D13S317	10	12			
+30473 Choquich Heleana Irma	Penta E	14	17			
+30473 Choquich Heleana Irma	D16S539	12	13			
+30473 Choquich Heleana Irma	D18S51	13	17			
+30473 Choquich Heleana Irma	D2S1338	17	20			
+30473 Choquich Heleana Irma	CSF1PO	12				
+30473 Choquich Heleana Irma	Penta D	11	12			
+30473 Choquich Heleana Irma	TH01	6	8			
+30473 Choquich Heleana Irma	vWA	16	18			
+30473 Choquich Heleana Irma	D21S11	29				
+30473 Choquich Heleana Irma	D7S820	9	10			
+30473 Choquich Heleana Irma	D5S818	12	13			
+30473 Choquich Heleana Irma	TPOX	8				
+30473 Choquich Heleana Irma	DYS391					
+30473 Choquich Heleana Irma	D8S1179	11	15			
+30473 Choquich Heleana Irma	D12S391	17	23			
+30473 Choquich Heleana Irma	D19S433	12	13			
+30473 Choquich Heleana Irma	FGA	22	25			
+30473 Choquich Heleana Irma	D22S1045	15	16			
+30542 Pintos Rodrigo	AMEL	X	Y			
+30542 Pintos Rodrigo	D3S1358	15				
+30542 Pintos Rodrigo	D1S1656	16.3	17.3			
+30542 Pintos Rodrigo	D2S441	14	15			
+30542 Pintos Rodrigo	D10S1248	14				
+30542 Pintos Rodrigo	D13S317	11	13			
+30542 Pintos Rodrigo	Penta E	7	15			
+30542 Pintos Rodrigo	D16S539	10	13			
+30542 Pintos Rodrigo	D18S51	16	18			
+30542 Pintos Rodrigo	D2S1338	17	21			
+30542 Pintos Rodrigo	CSF1PO	11	12			
+30542 Pintos Rodrigo	Penta D	9	12			
+30542 Pintos Rodrigo	TH01	7	8			
+30542 Pintos Rodrigo	vWA	15	17			
+30542 Pintos Rodrigo	D21S11	29	30			
+30542 Pintos Rodrigo	D7S820	9	10			
+30542 Pintos Rodrigo	D5S818	11	12			
+30542 Pintos Rodrigo	TPOX	8	11			
+30542 Pintos Rodrigo	DYS391	10				
+30542 Pintos Rodrigo	D8S1179	11	15			
+30542 Pintos Rodrigo	D12S391	17	20			
+30542 Pintos Rodrigo	D19S433	14	15			
+30542 Pintos Rodrigo	FGA	20	22			
+30542 Pintos Rodrigo	D22S1045	15	
+
+
+	
+
+

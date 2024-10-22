@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.DetalleTipoMarcador,Business" table="LAB_DetalleTipoMarcador">
+
+		<id name="IdDetalleTipoMarcador" column="idDetalleTipoMarcador" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdTipoMarcador" column="idTipoMarcador" class="Business.Data.Laboratorio.TipoMarcador,Business" />
+    
+   
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="100" />
+    <!--<property column="ancho" type="Int32" name="Ancho" not-null="true" />-->
+	</class>
+</hibernate-mapping>

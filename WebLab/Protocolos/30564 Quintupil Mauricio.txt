@@ -1,0 +1,25 @@
+Sample Name	Marker	Allele 1	Allele 2	
+30564 Quintupil Mauricio Alejandro	AMEL	X	Y									
+30564 Quintupil Mauricio Alejandro	D3S1358	15	16									
+30564 Quintupil Mauricio Alejandro	D1S1656	15										
+30564 Quintupil Mauricio Alejandro	D2S441	11										
+30564 Quintupil Mauricio Alejandro	D10S1248	14										
+30564 Quintupil Mauricio Alejandro	D13S317	12	13									
+30564 Quintupil Mauricio Alejandro	Penta E	12	14									
+30564 Quintupil Mauricio Alejandro	D16S539	11	13									
+30564 Quintupil Mauricio Alejandro	D18S51	14	17									
+30564 Quintupil Mauricio Alejandro	D2S1338	16	22									
+30564 Quintupil Mauricio Alejandro	CSF1PO	11	12									
+30564 Quintupil Mauricio Alejandro	Penta D	10	13									
+30564 Quintupil Mauricio Alejandro	TH01	6	9									
+30564 Quintupil Mauricio Alejandro	vWA	16	18									
+30564 Quintupil Mauricio Alejandro	D21S11	30										
+30564 Quintupil Mauricio Alejandro	D7S820	11	12									
+30564 Quintupil Mauricio Alejandro	D5S818	11	13									
+30564 Quintupil Mauricio Alejandro	TPOX	11	12									
+30564 Quintupil Mauricio Alejandro	DYS391	10										
+30564 Quintupil Mauricio Alejandro	D8S1179	14	15									
+30564 Quintupil Mauricio Alejandro	D12S391	18	19									
+30564 Quintupil Mauricio Alejandro	D19S433	13										
+30564 Quintupil Mauricio Alejandro	FGA	23	25									
+30564 Quintupil Mauricio Alejandro	D22S1045	15										
