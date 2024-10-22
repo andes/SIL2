@@ -1,0 +1,492 @@
+Id de evento/caso;Nro. documento;Apellido y nombre;Grupo evento;Evento;Clasificación del caso según algoritmo;Clasificación manual del caso;Fecha apertura;Fecha de derivación;Id de la derivación;Provincia del establecimiento de origen;Establecimiento de origen;Estado de la derivación;Muestra;Fecha de toma muestra;Id Evento Muestra
+2960840;DNI 38492910;BANEIRO CESAR JAVIER;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329932;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541640
+2960714;DNI 29386816;AVILA ANABEL SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1329879;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541527
+2960714;DNI 29386816;AVILA ANABEL SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;08/10/2020;1449510;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado combinado;07/10/2020;2803623
+2960615;DNI 24825623;GAJARDO RAMIREZ NOELIA CONSTANCIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;28/09/2020;28/09/2020;1329845;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541457
+2960594;DNI 7571004;CANALE BALTASAR;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 04 - Asintomático - Continúa en seguimiento;28/09/2020;28/09/2020;1329826;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541410
+2960516;DNI 36800159;MUÑOZ MICHELLE PAZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329794;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541353
+2960440;DNI 41978969;LEAL LAUTARO ANDRES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1329771;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541295
+2960210;DNI 44863729;MANSILLA TAPIA LUISIANA IVONNE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329689;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541103
+2960195;DNI 29418577;FUENTEALBA MARIA LUISA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329724;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2541126
+2960139;DNI 28558000;MERINO ANDREA ELIZABETH;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 10 - Asintomático - Continúa en seguimiento;28/09/2020;22/09/2020;1404189;Neuquén;HOSPITAL CHOS MALAL - DR. GREGORIO ALVAREZ;No respondida;Hisopado combinado;21/09/2020;2697531
+2960055;DNI 23890029;INOSTROZA HUGO ARIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329617;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540947
+2959870;DNI 7569433;VERA JUAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329502;Neuquén;HOSPITAL PIEDRA DEL AGUILA;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540710
+2959683;DNI 36964380;GRILLI RAMON MAXIMILIANO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;28/09/2020;28/09/2020;1329413;Neuquén;HOSPITAL DE AÑELO;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540516
+2959544;DNI 29877644;LENTINI GISELE YANINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1329358;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540401
+2959346;DNI 41092490;ORTEGA LAURA MACARENA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 06 - Asintomático - Continúa en seguimiento;28/09/2020;28/09/2020;1329249;Neuquén;HOSPITAL DE AÑELO;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540177
+2959064;DNI 20654727;ORTEGA NESTOR FABIO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 06 - Asintomático - Continúa en seguimiento;28/09/2020;28/09/2020;1329118;Neuquén;HOSPITAL DE AÑELO;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539878
+2958971;DNI 95395625;IPORRE COLQUE EMETERIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1329114;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539882
+2958653;DNI 36257546;LOPEZ CATHERINA ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1328961;Neuquén;HOSPITAL DE AÑELO;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539529
+2958300;DNI 37176203;MORALES MARIA ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;28/09/2020;29/09/2020;1328786;Neuquén;HOSPITAL DR. JOSE VENIER LAS LAJAS;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539127
+2958277;DNI 36877805;CASTILLO MAURO MATIAS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1328802;Neuquén;HOSPITAL DE AÑELO;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539163
+2957617;DNI 36489760;LIBERATORE LOPEZ SILVINA ROSMARY ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1328890;Neuquén;HOSPITAL DE AÑELO;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539366
+2957353;DNI 34882705;GIMENEZ CARLOS ALBERTO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;06/10/2020;1426821;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);06/10/2020;2747196
+2955988;DNI 5624131;SAN MARTIN ELDA MARY;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;27/09/2020;1331906;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2545617
+2955827;DNI 28387898;CONTRERAS ROBERTO PABLO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;27/09/2020;1331877;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2545568
+2955194;DNI 717557;LEIVA FILOMENA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;27/09/2020;1355755;Neuquén;HOSPITAL JUNIN DE LOS ANDES;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2594255
+2954811;DNI 36434388;SALAZAR NICOLAS MARTIN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;24/09/2020;1327157;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);24/09/2020;2535851
+2954677;DNI 37173265;VAZQUEZ TALIA MAIRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;28/09/2020;28/09/2020;1327153;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2535901
+2954406;DNI 37101474;ZAMPATTI LIDIA VIRGINIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1327017;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2535584
+2954243;DNI 44422971;GOMEZ SOLEDAD KATHERINE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;29/09/2020;1326886;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;28/09/2020;2535320
+2954050;DNI 39882045;VIVANCO KAREN MICAELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;29/09/2020;1326803;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;28/09/2020;2535152
+2953893;DNI 30823936;OPORTO MANUEL JESUS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1328354;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2538293
+2953876;DNI 16393035;OLAVE NELIDA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;29/09/2020;1326748;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;28/09/2020;2535034
+2953815;DNI 31614568;CUEVAS BADILLA ROMINA NOELIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;28/09/2020;28/09/2020;1328261;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2538125
+2953798;DNI 46724499;UNTAKER NEHUEN JAVIER;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1328489;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2538528
+2953748;DNI 37101685;CABRERA MARIA DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1327551;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2536703
+2953747;DNI 31614657;MUÑOZ ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1328158;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2537909
+2953681;DNI 29939820;LINIADO GRISELDA NOEMI;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1327344;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2536306
+2953670;DNI 40442439;VELINTENE MICAELA AILEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;28/09/2020;28/09/2020;1327652;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2536911
+2953443;DNI 12681826;URIBE JUAN CARLOS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1328936;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539462
+2953125;DNI 27531009;CANALE MARCELO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;28/09/2020;28/09/2020;1326359;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2534207
+2952846;DNI 26144157;GUTIERREZ MARIA CECILIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1326266;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2534013
+2951657;DNI 32312615;BENITEZ NOELIA ANAHI;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1325721;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2532860
+2951416;DNI 37944313;CASTILLO ALEJANDRA MAGALI;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1325603;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2532634
+2951261;DNI 34375600;SANDOVAL DIAZ JEREMIAS EFRAIN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;28/09/2020;02/10/2020;1388743;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);01/10/2020;2663505
+2951230;DNI 24877161;CAYUMAN LUIS ALBERTO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329438;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540578
+2951090;DNI 14687564;LEHR EDUARDO ADOLFO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329422;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540542
+2950976;DNI 26509823;JUAREZ MARTA RAQUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1329407;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540510
+2950862;DNI 18628294;COLITRIPAY ALEJANDRA LUCIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329389;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540474
+2950799;DNI 40295031;CANO CANDELA AGUSTINA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;28/09/2020;19/09/2020;1404238;Neuquén;HOSPITAL CHOS MALAL - DR. GREGORIO ALVAREZ;No respondida;Hisopado combinado;18/09/2020;2697645
+2950761;DNI 38144595;MARDONES YAMILA SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329373;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2540444
+2950683;DNI 14316547;VAZQUEZ DANIEL ANGEL;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;28/09/2020;19/09/2020;1404227;Neuquén;HOSPITAL CHOS MALAL - DR. GREGORIO ALVAREZ;No respondida;Hisopado combinado;18/09/2020;2697627
+2950667;DNI 37943713;PEÑA PERIE ENZO EXEQUIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329182;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado combinado;28/09/2020;2540037
+2950560;DNI 33952046;ORTIZ LEONARDO SAMUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1329160;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2539998
+2950371;DNI 37781606;ANDRIAN ALEJANDRA DANIELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1325147;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2531732
+2950020;DNI 31086417;COLIPAN CLAUDIA IRENE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1324896;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;28/09/2020;2531175
+2949803;DNI 29356327;CABAS SONIA ANGELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1324780;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;28/09/2020;2530967
+2949717;DNI 22242665;BRUCHMANN ANGELA JUDITH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;28/09/2020;21/09/2020;1404147;Neuquén;HOSPITAL CHOS MALAL - DR. GREGORIO ALVAREZ;No respondida;Hisopado combinado;20/09/2020;2697430
+2949581;DNI 96078190;LEONES DE LOPEZ GLIDYS EMILIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1403228;Neuquén;HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2695010
+2949352;DNI 26999564;LIZAMA CLAUDIO OMAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1324608;Neuquén;HOSPITAL SAN PATRICIO DEL CHAÑAR;No respondida;Hisopado nasofaríngeo (Diagnóstico);28/09/2020;2530629
+2948259;DNI 40182968;ROMERO JONATAN EMANUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;28/09/2020;27/09/2020;1324060;Neuquén;HOSPITAL ALUMINE;No respondida;Hisopado combinado;27/09/2020;2529447
+2947115;DNI 35261434;ACOSTA ALEJANDRO FEDERICO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1323478;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2528338
+2947062;DNI 32247592;MORANDI JONATHAN IVAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1323447;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado combinado;27/09/2020;2528285
+2947033;DNI 11843037;CASTRO MONICA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1323428;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2528258
+2946823;DNI 46257028;CUEVAS SANTIAGO IVAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1323341;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado combinado;27/09/2020;2528061
+2946466;DNI 27531225;VIDAL SUSANA EDITH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;28/09/2020;28/09/2020;1323174;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2527718
+2946415;DNI 18398095;CRUSOE SILVINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1323160;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado combinado;27/09/2020;2527676
+2946377;DNI 22631791;ESPINOZA CESAR IVAN;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Ver en Caso Sospechoso de COVID-19;28/09/2020;26/09/2020;1323135;Neuquén;HOSPITAL ANDACOLLO - DR. ANTONIO GORGNI;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2527643
+2946263;DNI 37603902;GUTIERREZ CYNTIA ESTELA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Ver en Caso Sospechoso de COVID-19;28/09/2020;26/09/2020;1323077;Neuquén;HOSPITAL ANDACOLLO - DR. ANTONIO GORGNI;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2527550
+2946164;DNI 21840218;CACERES ADOLFO ARTURO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Ver en Caso Sospechoso de COVID-19;28/09/2020;26/09/2020;1323021;Neuquén;HOSPITAL ANDACOLLO - DR. ANTONIO GORGNI;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2527469
+2946088;DNI 45389708;CACERES MARTINEZ BRUNO ESEQUIEL;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Ver en Caso Sospechoso de COVID-19;28/09/2020;26/09/2020;1322979;Neuquén;HOSPITAL ANDACOLLO - DR. ANTONIO GORGNI;No respondida;Hisopado nasofaríngeo (Seguimiento);26/09/2020;2527398
+2946026;DNI 25776780;CONTRERAS ALEJANDRO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Ver en Caso Sospechoso de COVID-19;28/09/2020;26/09/2020;1322947;Neuquén;HOSPITAL ANDACOLLO - DR. ANTONIO GORGNI;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2527341
+2945934;DNI 36257216;GUTIERREZ CESAR LUCIANO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Ver en Caso Sospechoso de COVID-19;28/09/2020;26/09/2020;1322912;Neuquén;HOSPITAL ANDACOLLO - DR. ANTONIO GORGNI;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2527275
+2945324;DNI 34866338;MATURANO VALERIA ISABEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322669;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2526834
+2945324;DNI 34866338;MATURANO VALERIA ISABEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;03/10/2020;1393496;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);02/10/2020;2672939
+2945288;DNI 93079720;MANSILLA OYARZUN MIRSA MARILU;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322651;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);22/09/2020;2526802
+2945236;DNI 40183415;MARIGUAN BRAIAN EZEQUIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322627;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2526748
+2945155;DNI 11861793;MARIGUAN MARCELO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322587;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2526668
+2945057;DNI 11060403;AGUAYO MINERVA GLADIS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322505;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2526571
+2944937;DNI 92737290;SAN MARTIN PAINEO DELIA ROSA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;28/09/2020;28/09/2020;1322424;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2526451
+2944834;DNI 33875696;CAAMAÑO DANIELA SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322359;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;27/09/2020;2526352
+2944822;DNI 20684256;PARATORE ESPINOSA SANTIAGO JOSE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;28/09/2020;28/09/2020;1322346;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;27/09/2020;2526337
+2944047;DNI 10609744;VALDEZ JESUS AMERICO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;28/09/2020;1321984;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2525507
+2943699;DNI 30999560;TORO NATALIA YANET;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321934;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2525383
+2943465;DNI 27038417;LARENAS SALVETTO ANDREA NATALIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321855;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2525141
+2943052;DNI 10276205;SOTO JOSE AGUSTIN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321708;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524728
+2942987;DNI 17881536;AREVALO ESTELA MARY;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1321680;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524660
+2942842;DNI 51525962;GARCIA ZILLI ANTONELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321607;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524527
+2942830;DNI 34944847;GUZMAN FATIMA AYELEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1321598;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524508
+2942438;DNI 14424409;MORETTI LUISA ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321515;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524394
+2942266;DNI 33314021;VENTURA DANIELA CARINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1321438;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524284
+2942105;DNI 29347284;CERDA DEBORA GISELL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1321320;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2524092
+2942027;DNI 28567109;PACHECO WALTER OSCAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1321274;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2524014
+2941954;DNI 2937806;TORRES CATALINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321227;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523939
+2941878;DNI 32876535;MALDONADO MARIA JOSE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1321180;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523853
+2941793;DNI 14654275;MESA VICTOR ORLANDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1321126;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523752
+2941709;DNI 35135155;MEDINA YUFRA MARIA EUGENIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;28/09/2020;1321068;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523629
+2941667;DNI 16432828;HENRIQUEZ EDUARDO ANTONIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;28/09/2020;1321050;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523582
+2941639;DNI 13786963;FAUNDEZ JUAN GUILLERMO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;28/09/2020;1321034;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523545
+2941619;DNI 13324514;GOICOECHEA ANTONIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;28/09/2020;1321022;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523524
+2941595;DNI 18701086;PESCETTO GLADYS NOEMI;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;28/09/2020;1321008;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523494
+2941555;DNI 32951568;VILLEGAS LUCIANO RODRIGO ALEJANDRO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;24/09/2020;1404002;Neuquén;HOSPITAL CHOS MALAL - DR. GREGORIO ALVAREZ;No respondida;Hisopado combinado;23/09/2020;2696956
+2941533;DNI 26864355;VALIN PEREZ CECILIA ELIZABET;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;28/09/2020;1320979;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523433
+2941461;DNI 37946166;PAREDES-MONASTERIO NADIA EUGENIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;28/09/2020;1320939;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523352
+2941405;DNI 14856819;FUENTES MARIA MAGDALENA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;28/09/2020;1320912;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523297
+2941369;DNI 10592192;SALINAS CARLOS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;28/09/2020;1320896;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523262
+2941344;DNI 22601603;HURTADO EDUARDO OMAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1320897;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523266
+2941204;DNI 37946761;MENA NADIA BELEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1320822;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523131
+2941106;DNI 24082650;PINCHEIRA HECTOR ARIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1320771;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2523015
+2941034;DNI 37938524;MEZA JUAN EDUARDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1320732;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2522937
+2940955;DNI 18807411;SIFUENTES IBERICO GIANNINA LUZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1320702;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2522872
+2940855;DNI 32398161;MORALES GLADYS LETICIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1320658;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2522784
+2940427;DNI 33465975;MONJE ALFREDO BENJAMIN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1320603;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2522664
+2940179;DNI 25595256;LINCOPAN JULIA ELENA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;04/10/2020;1402844;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);04/10/2020;2693989
+2940179;DNI 25595256;LINCOPAN JULIA ELENA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1320371;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2522214
+2936250;DNI 4163504;BARRERA ROSA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;27/09/2020;28/09/2020;1318584;Neuquén;HOSPITAL DR. JOSE VENIER LAS LAJAS;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2518126
+2935879;DNI 23428098;GUERRERO GRACIELA ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;27/09/2020;26/09/2020;1355854;Neuquén;HOSPITAL JUNIN DE LOS ANDES;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2594456
+2935848;DNI 38584007;MILLALUAN GUSTAVO NORBERTO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;27/09/2020;26/09/2020;1355881;Neuquén;HOSPITAL JUNIN DE LOS ANDES;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2594525
+2935452;DNI 28982172;VASQUEZ GLORIA CAROLINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1318283;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2517435
+2935408;DNI 38430355;MORALES YOHANA DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1318261;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2517376
+2935356;DNI 11092566;DESISTA MIGUEL ANTONIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1318241;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado combinado;27/09/2020;2517326
+2934810;DNI 34380462;HUENTEN LUCIANO SERGIO DAVID;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1318062;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2516758
+2934763;DNI 29154226;ESQUIBEL DIEGO GERARDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1318042;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado combinado;27/09/2020;2516708
+2934711;DNI 44462534;PAILLALEF SOFIA CECILIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1318027;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado combinado;25/09/2020;2516670
+2934641;DNI 23715897;TASHIRO MARCELO DANIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1317998;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2516599
+2934232;DNI 21385884;BARRERA MARIA RAQUEL;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;27/09/2020;28/09/2020;1317801;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2516138
+2934178;DNI 24268871;CATRIEL NORMA BEATRIZ;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;27/09/2020;28/09/2020;1317773;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2516081
+2934137;DNI 4251057;MARTINEZ AZUCENA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;27/09/2020;28/09/2020;1317754;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2516042
+2934079;DNI 4076838;ROMERO IRMA ANADELIA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;27/09/2020;28/09/2020;1317731;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2515988
+2934009;DNI 31939932;ALARCON CRISTIAN NOLBERTO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1341896;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Seguimiento);26/09/2020;2565437
+2933949;DNI 18628258;SARDINI MARIA RITA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 07 - Asintomático - Continúa en seguimiento;27/09/2020;28/09/2020;1317681;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2515853
+2932687;DNI 20262904;SAMBUEZA IRENE DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;27/09/2020;28/09/2020;1317167;Neuquén;HOSPITAL ALUMINE;No respondida;Hisopado combinado;26/09/2020;2514664
+2931772;DNI 57122512;CARRIZO LUCAS URIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1316821;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513736
+2931713;DNI 40960073;ESCOBAR AYLEN NICOLE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1323412;Neuquén;HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2528226
+2931706;DNI 57123208;JUAN PINO VICTORIA ISABELLA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1316784;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2513636
+2931686;DNI 13893695;VILTE MIRTA LUISA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1316796;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513652
+2931682;DNI 37533312;DESIDERI TOJO LUCAS MANUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;27/09/2020;27/09/2020;1323470;Neuquén;HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2528321
+2931662;DNI 41436510;SANCHEZ LUCAS GABRIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1323539;Neuquén;HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2528454
+2931625;DNI 54851468;GARCIA CANISA SANTIAGO FELIPE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1316760;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513574
+2931526;DNI 37603841;ESPINOZA JUAN MANUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1316722;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513478
+2931435;DNI 38494296;ARIAS FACUNDO JULIAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1316686;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513389
+2931287;DNI 26957617;BOBADILLA ROLANDO ALFREDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1316627;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513217
+2931223;DNI 33989836;PAEZ VALERIA GISEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1316606;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513147
+2931173;DNI 29736385;NAVARRO CRISTIAN ALBERTO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1316589;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513095
+2930646;DNI 92742451;MARTINEZ MOLINET LUIS HUMBERTO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;27/09/2020;27/09/2020;1316352;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2512543
+2930637;DNI 33447516;ORMEÑO BETIANA ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1316344;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2512533
+2930624;DNI 23494116;VARELA FELIX ENRIQUE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1316339;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2512517
+2930533;DNI 27994115;SOTO LAURA DINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1316332;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2512501
+2930500;DNI 41124227;MARTINEZ AGUSTIN ESTEBAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;27/09/2020;27/09/2020;1316330;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2512497
+2930493;DNI 92404975;HERRERA VALENZUELA PATRICIA ELISETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1316327;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2512490
+2930334;DNI 29551863;SAN MARTIN HECTOR ANDRES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;27/09/2020;27/09/2020;1316245;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);27/09/2020;2512310
+2929307;DNI 14230061;EGEA LEONOR ALICIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1315998;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2511681
+2928693;DNI 92849085;GUERRERO PAVEZ NOEMI GABRIELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1315740;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2511049
+2928658;DNI 35571449;MUÑOZ AILIN DEBORA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1315725;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2511016
+2928652;DNI 21125884;SALAZAR LUIS ENRIQUE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1315714;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2510992
+2928597;DNI 7562817;GARRIDO VICTOR CARLOS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1315701;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2510960
+2928556;DNI 30725692;PAREDES SEBASTIAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1315674;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2510911
+2928507;DNI 92425338;MARTINI MARTINI ESTELLA DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1315659;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2510878
+2928429;DNI 35571743;MARTINEZ MICAELA ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1315600;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2510767
+2927665;DNI 26777141;POLANCO SILVANA NATALIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1315315;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2510049
+2927471;DNI 35383141;BAZAN GUSTAVO DANIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1315278;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509953
+2927385;DNI 33637051;GUARDA MIGUEL ANGEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1315251;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509890
+2927372;DNI 40442488;GUTIERREZ AZOCAR LEANDRO DANIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1315246;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509874
+2927294;DNI 16428147;CONEJEROS JULIAN ARTURO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1315206;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509778
+2927189;DNI 94321526;RAMIREZ HERNANDEZ KARINA NOELIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1315164;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509686
+2927171;DNI 14791947;ELGUETA VIOLINDA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1323155;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2527687
+2927166;DNI 46257749;RODRIGUEZ EMANUEL GASTON;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1315147;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509648
+2927093;DNI 16433291;BOGARIN MARIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1315129;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509602
+2927065;DNI 4610155;ORELLANA DELINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1316831;Neuquén;HOSPITAL PIEDRA DEL AGUILA;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2513757
+2926961;DNI 29556411;DI LUCA LUCIANA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1315084;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509506
+2926904;DNI 24825593;MENDEZ MARIANA BELEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1315059;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509438
+2926545;DNI 33952218;BRAVO BRUNO EMANUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1314852;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2509058
+2926302;DNI 37461501;ARAVENA MARIA JOSE;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 09 - Asintomático - Continúa en seguimiento;26/09/2020;27/09/2020;1314715;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508809
+2926083;DNI 40443794;CASTILLO JENIFER ORIANA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1314609;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508584
+2925591;DNI 6393606;LAPIDUS BEATRIZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1323680;Neuquén;HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2528705
+2925554;DNI 31524449;HUANI GABRIELA ESTHER;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1323636;Neuquén;HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2528620
+2925491;DNI 38204248;LEIVA ALEXIS EDGARDO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 01 - Asintomático - Continúa en seguimiento;26/09/2020;26/09/2020;1314341;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2508038
+2924771;DNI 22586723;CARRASCO JUAN CARLOS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314138;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507551
+2924697;DNI 13415645;NAMUNCURA ERNESTINA BEATRIZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1314095;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507443
+2924581;DNI 27190479;DOMINGUE MARGARITA DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1314049;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507356
+2924581;DNI 27190479;DOMINGUE MARGARITA DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;29/09/2020;1344193;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);29/09/2020;2570070
+2924415;DNI 12210126;LOPEZ DESIDERIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1313992;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507225
+2924392;DNI 25329367;MAZZANTI HERNAN GUILLERMO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1313997;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507236
+2924382;DNI 92425950;NICOSIA ESPINOZA JAVIER AMERICO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1314522;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508408
+2924361;DNI 29024101;NAVARRO AMELIA BEATRIZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1314507;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508380
+2924348;DNI 35571875;DELVAS MAYRA ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313946;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507123
+2924325;DNI 37588199;CORONEL ROBERTO ANDRES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314498;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508361
+2924316;DNI 28741341;PARADA MARCELA ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314484;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508338
+2924289;DNI 34034015;KREDER ERNESTO ALFREDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314469;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508308
+2924230;DNI 41010993;ORTIZ CAMILA ALDANA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314459;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508289
+2924212;DNI 28394830;FALCONE MAXIMILIANO NAHUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314451;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508265
+2924191;DNI 92708638;MENA CARDENAS LUIS OMAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1314436;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2508242
+2924172;DNI 29528359;SAYAVEDRA JESUS PABLO DAVID;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1314414;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2508200
+2924154;DNI 1895180;IRRIBARRA LORENZA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314390;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2508149
+2924128;DNI 29313249;INALEF RUTH ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314380;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2508131
+2924108;DNI 93681774;BURGOS NORAMBUENA JAVIER ALEJANDRO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1314351;Neuquén;HOSPITAL SENILLOSA - DR. ADOLFO DEL VALLE;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2508070
+2923942;DNI 30823976;SOTO GLADIS ESTER;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1313902;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2507025
+2923912;DNI 36371788;MENDEZ VICTOR DANIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313794;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506708
+2923816;DNI 7569316;ROMERO MANUEL ANTONIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313748;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506620
+2923787;DNI 22124933;YNSULZA NELSON;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313737;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506592
+2923713;DNI 32090555;SOTO MARCELA INES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313708;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506516
+2923649;DNI 92401873;JARAMILLO ALVAREZ MYRIAM LUZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313693;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506475
+2923605;DNI 20910615;RODRIGUEZ CLAUDIA ANDREA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313663;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506394
+2923562;DNI 36151268;DILLENS VENEGAS BARBARA SOLANGE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1313633;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506319
+2923521;DNI 35355005;KITTL RODOLFO FRANCISCO ERWIN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313626;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506301
+2923461;DNI 35598826;LUCERO PEREZ PAULA BEATRIZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1313600;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506221
+2923435;DNI 24789600;QUINTEROS OSCAR PEDRO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313589;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506204
+2923378;DNI 37946381;MANSILLA ADRIAN MAXIMILIANO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313566;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506131
+2923236;DNI 26144719;MENDEZ CAROLINA SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313533;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506054
+2923156;DNI 41619881;LEMA EMILIANO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313490;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505897
+2923128;DNI 38101664;MAZA JUAN FACUNDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313480;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505867
+2923114;DNI 28792864;MELLADO NILDA GABRIELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313472;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505854
+2923106;DNI 25308483;TORRES ALMONACID RICARDO MARCELO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1313540;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2506066
+2923103;DNI 31331058;SANHUEZA ESTEFANIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1313479;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505863
+2923080;DNI 94138205;ROJAS GARCIA FILIMON;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313462;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505826
+2923043;DNI 38809762;CARRICA MATIAS EZEQUIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1313446;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505804
+2923034;DNI 32613924;CORONEL MATIAS YAIN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313441;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505791
+2923023;DNI 32539053;LUCARELLI TICIANA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1313442;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505797
+2922995;DNI 45883448;FLORES FUENTES FACUNDO MANUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313426;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505773
+2922961;DNI 35492440;VILLALBA PAMELA BRENDA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313411;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505743
+2922929;DNI 30941937;PICHAUD DANIELA VANESA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1313392;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505714
+2922910;DNI 13462638;ANDRES IRMA INES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313382;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505689
+2922891;DNI 28019118;SILVA VILMA MARISA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313379;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505681
+2922889;DNI 29154347;GUZMAN HEBER RAUL JAVIER;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313368;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505669
+2922861;DNI 20315765;GUERRA HECTOR OSVALDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;27/09/2020;1313352;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505640
+2922841;DNI 22287728;GARRIDO VERONICA ANDREA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313351;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505634
+2922814;DNI 12818239;CASTILLO MARIA EMPERATRIZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313322;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505594
+2922800;DNI 39647500;PIL ROCIO JULIANA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;01/10/2020;1370464;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);01/10/2020;2623940
+2922800;DNI 39647500;PIL ROCIO JULIANA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313330;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505599
+2922781;DNI 34223034;SOSA DANIEL ARMANDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1313311;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505576
+2922769;DNI 32806769;HERRERA DARIO GERMAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313303;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505558
+2922753;DNI 41348374;BODEMAN SILVINA PATRICIA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1313296;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505544
+2922445;DNI 46257705;RUIZ FRANCO JULIAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313140;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505276
+2922406;DNI 94446805;BARRIENTOS LARROZA JUSTA NOEMI;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1313120;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505244
+2922372;DNI 34812840;HUAYGUA JIMENA AILEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1313108;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505215
+2922336;DNI 26872860;GUERRERO GALMES VANESA ISABEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1313091;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505180
+2922220;DNI 30397329;DE BERNARDI YESICA CAROLINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1313057;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2505113
+2920151;DNI 39881529;PINO GUSTAVO SEBASTIAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1312040;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502860
+2920100;DNI 18267851;MARTINEZ PATRICIA DEL VALLE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;27/09/2020;1312015;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502801
+2919928;DNI 42518902;RIVERA CAMILA BELÈN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;26/09/2020;27/09/2020;1311950;Neuquén;HOSPITAL DR. JOSE VENIER LAS LAJAS;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502628
+2919819;DNI 24609486;FUENTES MARIELA ROSARIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311921;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502544
+2919637;DNI 24157771;QUIROGA MARIA DE LOS ANGELES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311846;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502317
+2919422;DNI 7293464;MOYANO DANIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;25/09/2020;1322886;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2527228
+2919406;DNI 26741986;CANALE LORENA BEATRIZ;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311764;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502103
+2919380;DNI 41242127;COLIHUINCA INES BEATRIZ SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;25/09/2020;1322830;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2527087
+2919357;DNI 32909169;COLASANTE PATRICIA ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311745;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2502060
+2919317;DNI 25975432;PEREZ ROSA GRACIELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;25/09/2020;1323083;Neuquén;HOSPITAL PICUN LEUFU - DRA. NANCY FERRARI DE DIBY;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2527546
+2919245;DNI 34661928;CARRASCO NICOLAS OSCAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311703;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2501952
+2919202;DNI 39130917;YAÑEZ CLAUDIO JESUS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311686;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2501903
+2919166;DNI 26132168;CANDIA CEFERINO SALVADOR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311667;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2501858
+2919004;DNI 28394814;ZUÑIGA DANIELA ALEJANDRA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311590;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2501686
+2918950;DNI 26767077;CERDA CEFERINO ANDRES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;27/09/2020;1311562;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;26/09/2020;2501620
+2918806;DNI 7562674;SOSA ARISTOBULO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1311512;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2501490
+2918366;DNI 38584108;OSSA NATALIA ANDREA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1311356;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2501021
+2918249;DNI 12393779;VEGA CESAR OMAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1311304;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2500869
+2918207;DNI 24367316;DECOSTANZI ANA CAROLINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;05/10/2020;1499303;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Seguimiento);24/09/2020;2772355
+2918025;DNI 4609206;GUGLIELMI HECTOR MIGUEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1311230;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2500640
+2917856;DNI 29568619;COLETTA MARIA GABRIELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1311149;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2500481
+2917344;DNI 22473975;ROMERO MONICA ERMELINDA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Sintomático - Caso sospechoso COVID-19;26/09/2020;26/09/2020;1310895;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2499843
+2917202;DNI 31793974;MONTENEGRO JULIETA ELDINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1310850;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2499737
+2917168;DNI 17641211;MELLAO JORGE HECTOR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1310820;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2499667
+2917000;DNI 27564372;ALBORNOZ HORACIO JAVIER;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1310759;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2499534
+2913979;DNI 33307734;BIANCUCCI MARIA SOLEDAD;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Confirmado COVID - Coinfección con OVR;26/09/2020;26/09/2020;1309443;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2496592
+2913203;DNI 3433663;CUEVAS RAUL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1309124;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;25/09/2020;2495943
+2913195;DNI 42165699;FREYRE DAVILA BRISA ELIZABETH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1309148;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2495993
+2912797;DNI 42910720;RIVERA CESAR  DANIEL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Descartado COVID-19 por laboratorio;26/09/2020;26/09/2020;1308997;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;25/09/2020;2495658
+2912636;DNI 30941920;PINAYA VILMA VANESA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1308962;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2495585
+2912421;DNI 25316396;MIANO MIRIAN EDITH;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1308903;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2495438
+2911883;DNI 43834291;PRATS PEDRO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado de COVID-19;26/09/2020;26/09/2020;1308750;Neuquén;HOSPITAL PLOTTIER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2495052
+2911130;DNI 14420792;SANDOVAL NORMA MABEL;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 01 - Asintomático - Continúa en seguimiento;26/09/2020;26/09/2020;1308412;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;25/09/2020;2494309
+2911095;DNI 13462669;VILLABLANCA JUAN ADALBERTO;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 01 - Asintomático - Continúa en seguimiento;26/09/2020;26/09/2020;1308395;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;25/09/2020;2494272
+2911069;DNI 10287325;CARO LUZ HERMINIA;Infecciones respiratorias agudas;Contacto de caso de COVID-19;No disponible;Día 01 - Asintomático - Continúa en seguimiento;26/09/2020;26/09/2020;1308382;Neuquén;HOSPITAL ZAPALA;No respondida;Hisopado combinado;25/09/2020;2494250
+2910922;DNI 37946268;NAVARRETE CESAR SEGUNDO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;25/09/2020;1308290;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);24/09/2020;2494081
+2910623;DNI 14657411;SAAVEDRA IRMA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1308156;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);26/09/2020;2493839
+2910500;DNI 51591393;SARAVIA SOTO VALENTIN TOMAS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1308085;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493741
+2910359;DNI 14761237;PONCE JOSE LUIS;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307964;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado combinado;26/09/2020;2493509
+2910292;DNI 39681356;ALTAMIRANO LUCIA DANIELA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307924;Neuquén;HOSPITAL DR. HORACIO HELLER;No respondida;Hisopado combinado;25/09/2020;2493429
+2910169;DNI 37856597;SOTO KAREN ABIGAIL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307873;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493336
+2910150;DNI 27238041;MATAMALA NELSON ANDRES;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307863;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493318
+2910104;DNI 17489123;QUIROGA BERTA LADY;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307841;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493274
+2910089;DNI 8850054;LINCOPAN ISIDORO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307831;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493259
+2910074;DNI 36692690;PARRA SANHUEZA LINO DARIO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307826;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493249
+2910065;DNI 39131728;SEPULVEDA ANTU AYLEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307820;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493238
+2910051;DNI 16222981;MARTIN HEBE ROSA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307814;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493229
+2909984;DNI 30941829;MANSILLA GALINDO TERESA DEL CARMEN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307769;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493155
+2909937;DNI 92233911;MARCHANT IBAÑEZ HUGO;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307740;Neuquén;HOSPITAL BOUQUET ROLDAN;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493112
+2909934;DNI 11276902;TRONCOSO HECTOR RAUL;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307731;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493093
+2909922;DNI 23918915;CARRASCO MIRNA CARINA;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;28/10/2020;1378619;Neuquén;CLINICA DR. ROBERTO RAÑA - LACH Y BS S.A.;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493083
+2909919;DNI 14856886;HERNANDEZ MARIA NOEMI;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;26/09/2020;1307722;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493077
+2909912;DNI 24609832;VILLAMAYOR LUIS SEBASTIAN;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso confirmado con criterio epidemiológico de fin de seguimiento;26/09/2020;26/09/2020;1307711;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493059
+2909900;DNI 92632657;OBREQUE OBREQUE ROMUALDO ENRIQUE;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;25/09/2020;1307696;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493039
+2909892;DNI 14818220;JEREZ LIVIO OMAR;Infecciones respiratorias agudas;Caso sospechoso de COVID-19, Influenza y OVR;No disponible;Caso sospechoso de COVID-19;26/09/2020;25/09/2020;1307684;Neuquén;HOSPITAL CUTRAL CO - PLAZA HUINCUL - DR. ALDO V. MAULU;No respondida;Hisopado nasofaríngeo (Diagnóstico);25/09/2020;2493025
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;
