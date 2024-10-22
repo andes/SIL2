@@ -1,0 +1,116 @@
+File Name,corona promega 29-03-21 placa 2 1435hs.pcrd,,,,,
+Created By User,admin,,,,,
+Notes,,,,,,
+ID,,,,,,
+Run Started,03/29/2021 17:34:31 UTC,,,,,
+Run Ended,03/29/2021 18:49:10 UTC,,,,,
+Sample Vol,10,,,,,
+Lid Temp,105,,,,,
+Protocol File Name,CoronaPromega.prcl,,,,,
+Plate Setup File Name,CompletaPromega.pltd,,,,,
+Base Serial Number,CT043124,,,,,
+Optical Head Serial Number,785BR22113,,,,,
+CFX Maestro Version,4.1.2433.1219. ,,,,,
+,,,,,,
+Well group,All Wells,,,,,
+Amplification step,4,,,,,
+Melt step,,,,,,
+,,,,,,
+,,,,,,
+Well,Fluor,Target,Content,Sample,Cq,Starting Quantity (SQ)
+A01,FAM,,NTC,,NaN,NaN
+A02,FAM,,Unkn,,22.5265125470566,NaN
+A03,FAM,,Unkn,,NaN,NaN
+A04,FAM,,Unkn,,NaN,NaN
+A05,FAM,,Unkn,,NaN,NaN
+A06,FAM,,Unkn,,NaN,NaN
+A07,FAM,,Unkn,,NaN,NaN
+A08,FAM,,Unkn,,NaN,NaN
+A09,FAM,,Unkn,,NaN,NaN
+A10,FAM,,Unkn,,NaN,NaN
+A11,FAM,,Unkn,,NaN,NaN
+A12,FAM,,Unkn,,NaN,NaN
+B01,FAM,,Unkn,,NaN,NaN
+B02,FAM,,Unkn,,26.675889370901,NaN
+B03,FAM,,Unkn,,NaN,NaN
+B04,FAM,,Unkn,,NaN,NaN
+B05,FAM,,Unkn,,NaN,NaN
+B06,FAM,,Unkn,,NaN,NaN
+B07,FAM,,Unkn,,NaN,NaN
+B08,FAM,,Unkn,,NaN,NaN
+B09,FAM,,Unkn,,NaN,NaN
+B10,FAM,,Unkn,,NaN,NaN
+B11,FAM,,Unkn,,NaN,NaN
+B12,FAM,,Unkn,,NaN,NaN
+C01,FAM,,Unkn,,NaN,NaN
+C02,FAM,,Unkn,,27.740922184553,NaN
+C03,FAM,,Unkn,,29.5567441908891,NaN
+C04,FAM,,Unkn,,30.6316868500561,NaN
+C05,FAM,,Unkn,,31.2078569359235,NaN
+C06,FAM,,Unkn,,34.7450561107455,NaN
+C07,FAM,,Unkn,,31.1924645995524,NaN
+C08,FAM,,Unkn,,34.2805330852758,NaN
+C09,FAM,,Unkn,,31.9858726779837,NaN
+C10,FAM,,Unkn,,31.2393027873734,NaN
+C11,FAM,,Unkn,,30.5703734059451,NaN
+C12,FAM,,Unkn,,31.8957404855845,NaN
+D01,FAM,,Unkn,,NaN,NaN
+D02,FAM,,Unkn,,NaN,NaN
+D03,FAM,,Unkn,,35.8014579646353,NaN
+D04,FAM,,Unkn,,NaN,NaN
+D05,FAM,,Unkn,,NaN,NaN
+D06,FAM,,Unkn,,32.4356391943266,NaN
+D07,FAM,,Unkn,,NaN,NaN
+D08,FAM,,Unkn,,NaN,NaN
+D09,FAM,,Unkn,,29.8836370848907,NaN
+D10,FAM,,Unkn,,NaN,NaN
+D11,FAM,,Unkn,,NaN,NaN
+D12,FAM,,Unkn,,29.3067379918975,NaN
+E01,FAM,,Unkn,,NaN,NaN
+E02,FAM,,Unkn,,NaN,NaN
+E03,FAM,,Unkn,,31.9545959644,NaN
+E04,FAM,,Unkn,,NaN,NaN
+E05,FAM,,Unkn,,NaN,NaN
+E06,FAM,,Unkn,,32.0338150037858,NaN
+E07,FAM,,Unkn,,NaN,NaN
+E08,FAM,,Unkn,,NaN,NaN
+E09,FAM,,Unkn,,33.1623980054407,NaN
+E10,FAM,,Unkn,,NaN,NaN
+E11,FAM,,Unkn,,NaN,NaN
+E12,FAM,,Unkn,,36.2688148726878,NaN
+F01,FAM,,Unkn,,NaN,NaN
+F02,FAM,,Unkn,,NaN,NaN
+F03,FAM,,Unkn,,NaN,NaN
+F04,FAM,,Unkn,,NaN,NaN
+F05,FAM,,Unkn,,NaN,NaN
+F06,FAM,,Unkn,,NaN,NaN
+F07,FAM,,Unkn,,NaN,NaN
+F08,FAM,,Unkn,,NaN,NaN
+F09,FAM,,Unkn,,NaN,NaN
+F10,FAM,,Unkn,,NaN,NaN
+F11,FAM,,Unkn,,NaN,NaN
+F12,FAM,,Pos Ctrl,,24.4260109502757,NaN
+G01,FAM,,Unkn,,NaN,NaN
+G02,FAM,,Unkn,,NaN,NaN
+G03,FAM,,Unkn,,NaN,NaN
+G04,FAM,,Unkn,,NaN,NaN
+G05,FAM,,Unkn,,NaN,NaN
+G06,FAM,,Unkn,,NaN,NaN
+G07,FAM,,Unkn,,NaN,NaN
+G08,FAM,,Unkn,,NaN,NaN
+G09,FAM,,Unkn,,NaN,NaN
+G10,FAM,,Unkn,,NaN,NaN
+G11,FAM,,Unkn,,NaN,NaN
+G12,FAM,,Pos Ctrl,,29.3244308853486,NaN
+H01,FAM,,Unkn,,30.9006582054659,NaN
+H02,FAM,,Unkn,,34.0206569999801,NaN
+H03,FAM,,Unkn,,31.2574456411905,NaN
+H04,FAM,,Pos Ctrl,,33.3492507303938,NaN
+H05,FAM,,Unkn,,29.3025989441156,NaN
+H06,FAM,,Unkn,,33.9880694157109,NaN
+H07,FAM,,Unkn,,32.7840253205561,NaN
+H08,FAM,,Unkn,,39.631425722127,NaN
+H09,FAM,,Unkn,,35.5304822423332,NaN
+H10,FAM,,Unkn,,31.4715682157358,NaN
+H11,FAM,,Unkn,,32.4474843067681,NaN
+H12,FAM,,Pos Ctrl,,29.4167822413706,NaN
