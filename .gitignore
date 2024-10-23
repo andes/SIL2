@@ -212,3 +212,8 @@ _Pvt_Extensions/
 ModelManifest.xml
 
 web.config
+
+*.csv
+*.xlsm
+*.xls
+*.xlsx
