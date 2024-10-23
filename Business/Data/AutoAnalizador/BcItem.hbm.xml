@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.BcItem,Business" table="LAB_BcItem">
+
+		<id name="IdBcItem" column="idBcItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idBc" type="String" name="IdBc" not-null="true" length="500" />
+		<property column="idItem" type="Int32" name="IdItem" not-null="true" />
+		<property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ItemRecomendacion,Business" table="LAB_ItemRecomendacion">
+
+		<id name="IdItemRecomendacion" column="idItemRecomendacion" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+		<!--<property column="idItem" type="Int32" name="IdItem" not-null="true" />-->
+		<!--<property column="idRecomendacion" type="Int32" name="IdRecomendacion" not-null="true" />-->
+    <many-to-one name="IdRecomendacion" column="idRecomendacion" class="Business.Data.Laboratorio.Recomendacion,Business" />
+		
+	</class>
+</hibernate-mapping>

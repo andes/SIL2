@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Facturacion.DetallePresupuesto,Business" table="LAB_DetallePresupuesto">
+
+		<id name="IdDetallePresupuesto" column="idDetallePresupuesto" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdPresupuesto" column="idPresupuesto" class="Business.Data.Facturacion.Presupuesto,Business" />
+   
+    <property column="idNomencladorForense" type="Int32" name="IdNomencladorForense" not-null="true" />
+    
+
+    <property column="descripcion" type="String" name="Descripcion" not-null="true" length="4000" />
+   <property column="cantidad" type="Int32" name="Cantidad" not-null="true" />
+    <property column="precio" type="Decimal" name="Precio" not-null="true" />
+    <property column="total" type="Decimal" name="Total" not-null="true" />
+   <property column="prefacturado" type="boolean" name="Prefacturado" not-null="true" />
+    <property column="cantidadprefacturado" type="int" name="Cantidadprefacturado" not-null="true" />
+  <property column="idFactura" type="int" name="IdFactura" not-null="true" />
+    <property column="totalPrefactura" type="Decimal" name="TotalPrefactura"   />
+   <property column="idCasoFiliacion" type="int" name="IdCasoFiliacion" not-null="true" />
+  </class>
+</hibernate-mapping>

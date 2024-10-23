@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.DetalleProtocolo,Business" table="LAB_DetalleProtocolo">
+
+		<id name="IdDetalleProtocolo" column="idDetalleProtocolo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		
+    <!--<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />-->
+    <many-to-one name="IdProtocolo" column="idProtocolo" class="Business.Data.Laboratorio.Protocolo,Business" />    
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <property column="trajoMuestra" type="String" name="TrajoMuestra" not-null="true" length="2" />
+    
+    <!--<property column="idItem" type="Int32" name="IdItem" not-null="true" />-->
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+    <many-to-one name="IdSubItem" column="idSubItem" class="Business.Data.Laboratorio.Item,Business" />
+
+    <property column="resultadoCar" type="String" name="ResultadoCar" length="500" />
+		<property column="resultadoNum" type="Decimal" name="ResultadoNum" />
+    <property column="codigoObservaciones" type="String" name="CodigoObservaciones" length="500" />
+		<property column="observaciones" type="String" name="Observaciones" length="500" />
+
+    <property column="formatoValida" type="Int32" name="FormatoValida" not-null="true" />
+    <property column="unidadMedida" type="String" name="UnidadMedida" not-null="true" length="100" />
+    <property column="metodo" type="String" name="Metodo" not-null="true" length="100" />
+    <property column="valorReferencia" type="String" name="ValorReferencia" not-null="true" length="1000" />
+
+    <property column="conResultado" type="Boolean" name="ConResultado" not-null="true" />
+    
+		<property column="idUsuarioResultado" type="Int32" name="IdUsuarioResultado" not-null="true" />
+		<property column="fechaResultado" type="DateTime" name="FechaResultado" not-null="true" />
+    
+		<property column="idUsuarioValida" type="Int32" name="IdUsuarioValida" not-null="true" />
+		<property column="fechaValida" type="DateTime" name="FechaValida" not-null="true" />
+
+    <property column="idUsuarioPreValida" type="Int32" name="IdUsuarioPreValida" not-null="true" />
+    <property column="fechaPreValida" type="DateTime" name="FechaPreValida" not-null="true" />
+
+    <property column="idUsuarioControl" type="Int32" name="IdUsuarioControl" not-null="true" />
+    <property column="fechaControl" type="DateTime" name="FechaControl" not-null="true" />
+
+    <property column="idUsuarioImpresion" type="Int32" name="IdUsuarioImpresion" not-null="true" />
+    <property column="fechaImpresion" type="DateTime" name="FechaImpresion" not-null="true" />
+    
+    <!--campos para envío al equipo-->
+    <property column="enviado" type="Int32" name="Enviado" not-null="true" />
+    <property column="idUsuarioEnvio" type="Int32" name="IdUsuarioEnvio" not-null="true" />
+    <property column="fechaEnvio" type="DateTime" name="FechaEnvio" not-null="true" />
+
+    <!--campos para observación-->
+    <property column="idUsuarioObservacion" type="Int32" name="IdUsuarioObservacion" not-null="true" />
+    <property column="fechaObservacion" type="DateTime" name="FechaObservacion" not-null="true" />
+
+    <property column="idUsuarioValidaObservacion" type="Int32" name="IdUsuarioValidaObservacion" not-null="true" />
+    <property column="fechaValidaObservacion" type="DateTime" name="FechaValidaObservacion" not-null="true" />
+    
+   <property column="ideventomuestraSISA" type="Int32" name="IdeventomuestraSISA" not-null="true" />
+
+    <property column="informable" type="Boolean" name="Informable" not-null="true" />
+    
+
+  </class>
+</hibernate-mapping>

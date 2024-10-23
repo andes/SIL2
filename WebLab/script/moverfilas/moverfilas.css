@@ -1,0 +1,79 @@
+body,html {
+	font-family:verdana, arial, helvetica, sans-serif;
+	color:#000;
+}
+
+#tabla
+{
+	border-collapse: collapse;
+	
+	background: #FFFFFF;
+}
+
+#tabla td {border:1px solid}
+
+#tabla img {cursor:pointer}
+
+.orden
+{
+	background-position: center;
+	background: #DFE7F7;
+	width: 20px;
+	text-align: center;
+}
+.brojo
+{
+	margin: 2;
+	padding: 2;
+	float: none;
+	list-style: none;
+	height: 22px;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #999;
+	width: 200px;
+	border-color: #999;
+	border-width: 1px;
+	border-style: solid;
+	color: #000000;
+	font-size: 12px;
+	font-family: Arial;
+	font-weight: bold;
+	background-color: #FFDBCE;
+}
+
+
+
+.codigoAnalisis
+{
+	border: 1px none; /*font-weight: bold;*/
+	font-size: 9pt;
+	font-family: arial;
+	background-color: #FCFCFC;
+	width: 60px;
+}
+
+.nombreAnalisis
+{
+	border: 1px none; /*font-weight: bold;*/
+	font-size: 9pt;
+	font-family: arial;
+	background-color: #FCFCFC;
+	width: 250px;
+}
+
+
+.textoCorto
+{
+	border: 1px solid #C0C0C0; /*font-weight: bold;*/
+	font-size: 9pt;
+	font-family: arial;
+	background-color: #FCFCFC;
+	width: 60px;
+}
+.textoLargo
+{	border: 1px solid #C0C0C0; /*font-weight: bold;*/
+	font-size: 9pt;
+	font-family: arial;
+	background-color: #FCFCFC;
+	width: 362px;
+}

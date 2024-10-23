@@ -1,0 +1,80 @@
+
+code
+{
+	font-family: Arial;
+	
+}
+
+#options {width:657px; margin:20px auto; text-align:right; color:#9ac1c9}
+#options a {text-decoration:none; color:#9ac1c9}
+#options a:hover {color:#033}
+
+#acc
+{
+	list-style: none;
+	color: #033;
+	margin: 0 auto 40px;
+}
+#acc h3
+{
+	width: 100%;
+	border: 1px solid #C0C0C0;
+	padding: 6px 6px 8px;
+	font-weight: bold;
+	margin-top: 5px;
+	cursor: pointer;
+	font-family: Arial;
+	font-size: 12px;
+	color: #000000;
+	background-color: #CCCCCC;
+	height: 15px;
+}
+#acc h3:hover
+{
+	background: #FFFFFF;
+	color: #000000;
+}
+#acc .acc-section {overflow:hidden; background:#fff}
+#acc .acc-content
+{
+	border-left: 1px solid #9ac1c9;
+	border-right: 1px solid #9ac1c9;
+	border-bottom: 1px solid #9ac1c9;
+	padding: 15px;
+	border-top: none;
+	background: #fff;
+	font-family: Arial;
+	font-size: 12px;
+	border-top-color: inherit;
+	border-right-color: #C0C0C0;
+	border-bottom-color: #C0C0C0;
+	border-left-color: #C0C0C0;
+	font-weight: bold;
+}
+
+#nested {width:625px; list-style:none; color:#033; margin-bottom:15px}
+#nested h3 {width:611px; border:1px solid #256c32; padding:6px 6px 8px; font-weight:bold; margin-top:5px; cursor:pointer; background:url(../images/header.gif)}
+#nested h3:hover {background:url(../images/header_over.gif)}
+#nested .acc-section
+{
+	overflow: hidden;
+	background: #C0C0C0;
+}
+#nested .acc-content
+{
+	
+
+	border-top: none;
+	background: #fff;
+	border-style: solid;
+	border-width: 1px;
+	border-top-color: inherit;
+	border-right-color: #2B7EBD;
+	border-bottom-color: #2B7EBD;
+	border-left-color: #2B7EBD;
+}
+#nested .acc-selected
+{
+	background: url(../images/header_over.gif);
+	background-color: #C0C0C0;
+}

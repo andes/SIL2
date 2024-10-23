@@ -1,0 +1,1 @@
+3110 ;N;COMAN DANIELA ELIZAB;41356028    ;25 ;F;02/10/23;00:00:00;OK; 9;ALP   ;    240,2;U/L;BDL   ;     1E-6;mg/dL;BTL   ;   0,4459;mg/dL;CREL  ;    1,269;mg/dL;GLUL  ;    74,67;mg/dl;GOTL  ;    21,48;U/L;GPTL  ;     13,7;U/L;TGL   ;    118,2;mg/dL;UREL  ;    41,26;mg/dL

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Cie10,Business" table="Sys_CIE10">
+
+		<id name="Id" column="ID" type="Int32" unsaved-value="0">
+			<generator class="assigned"/>
+		</id>
+		<property column="CAPITULO" type="String" name="Capitulo" length="255" />
+		<property column="GRUPOCIE10" type="String" name="Grupocie10" length="255" />
+		<property column="CAUSA" type="String" name="Causa" length="255" />
+		<property column="SUBCAUSA" type="String" name="Subcausa" length="255" />
+		<property column="CODIGO" type="String" name="Codigo" length="255" />
+		<property column="Nombre" type="String" name="Nombre" length="255" />
+		<property column="DescripCap" type="String" name="DescripCap" length="255" />
+		<!--<property column="Modif" type="Double" name="Modif" />-->
+		
+	</class>
+</hibernate-mapping>

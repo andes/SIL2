@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Permiso,Business" table="Sys_Permiso">
+
+		<id name="IdPermiso" column="idPermiso" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <property column="idEfector" type="Int32" name="IdEfector" not-null="true" />
+    <!--<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />-->
+		<many-to-one name="IdPerfil" column="idPerfil" class="Business.Data.Perfil,Business" />
+		<property column="idMenu" type="Int32" name="IdMenu" not-null="true" />
+		<property column="permiso" type="String" name="PermisoAcceso" not-null="true" length="1" />
+		
+	</class>
+</hibernate-mapping>

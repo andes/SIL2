@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ValorReferenciaNoPac,Business" table="LAB_ValorRefNoPaciente">
+
+		<id name="IdValorRefNoPaciente" column="idValorRefNoPaciente" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+    <property column="idPresentacion" type="Int32" name="IdPresentacion" not-null="true" />
+    <!--<property column="idItem" type="Int32" name="IdItem" not-null="true" />    
+		<property column="sexo" type="String" name="Sexo" not-null="true" length="1" />
+		<property column="todasEdades" type="Boolean" name="TodasEdades" not-null="true" />
+		<property column="edadDesde" type="Int32" name="EdadDesde" not-null="true" />
+		<property column="edadHasta" type="Int32" name="EdadHasta" not-null="true" />
+    <property column="unidadEdad" type="Int32" name="UnidadEdad" not-null="true" />-->
+		<property column="idMetodo" type="Int32" name="IdMetodo" not-null="true" />
+    <property column="tipoValor" type="Int32" name="TipoValor" not-null="true" />
+		<property column="valorMinimo" type="Decimal" name="ValorMinimo" not-null="true" />
+		<property column="valorMaximo" type="Decimal" name="ValorMaximo" not-null="true" />
+
+    <property column="observacion" type="String" name="Observacion" length="500" />
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

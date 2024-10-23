@@ -1,0 +1,17 @@
+a
+{
+	font-family: Arial;
+	font-size: 10px;
+	color: #000000;
+	text-decoration: none;
+}
+
+a:visited
+{
+	color:#000000;
+}
+
+a:hover
+{
+	font-weight:bold;
+}

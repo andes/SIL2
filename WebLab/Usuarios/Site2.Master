@@ -1,0 +1,26 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site2.master.cs" Inherits="WebLab.Usuarios.Site2" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title> 
+    <link rel="stylesheet" type="text/css" href="App_Themes/default/style.css" />
+     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+     <script src="bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server"> 
+     <link rel="shortcut icon" href="App_Themes/default/images/favicon.ico">
+    
+	<link rel="stylesheet" type="text/css" href="App_Themes/default/style.css" />
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>

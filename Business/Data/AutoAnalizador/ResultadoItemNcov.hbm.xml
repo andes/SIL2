@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.ResultadoItemNcov,Business" table="LAB_ResultadoItemNcov">
+
+		<id name="IdResultadoItemNcov" column="idResultadoItemNcov" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idResultadoItem" type="Int32" name="IdResultadoItem" not-null="true" />
+	 
+    <property column="resultadoEquipo" type="String" name="ResultadoEquipo" not-null="true" length="150" />
+  
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,77 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SitePE.master.cs" Inherits="WebLab.PeticionElectronica.SitePE" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link rel="stylesheet" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" />	
+    <title>Laboratorio Central - SIPS</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <a href="#" class="navbar-left"><img src="../App_Themes/default/images/logo.png"></a>
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse"
+            data-target="#collapse">
+      <span class="sr-only">Desplegar navegación</span>
+      <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+    
+  <!-- Agrupar los enlaces de navegación, los formularios y cualquier
+       otro elemento que se pueda ocultar al minimizar la barra -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse" id="collapse">
+    <ul class="nav navbar-nav">
+       <li  class="active"><a href="<%= Page.ResolveUrl("~/PeticionElectronica/ResultadosBusqueda.aspx") %>"><span class="glyphicons glyphicons-newspaper">Busqueda de Resultados</span></a></li>
+      <li><a href="<%= Page.ResolveUrl("~/PeticionElectronica/PeticionLC.aspx") %>"><span class="glyphicons glyphicons-file-plus">Nueva Peticion</span></a></li>
+      <li><a href="<%= Page.ResolveUrl("~/PeticionElectronica/PeticionLCList.aspx") %>"><span class="glyphicons glyphicons-newspaper">Mis Peticiones</span></a></li>
+       <li><a href="<%= Page.ResolveUrl("~/Resultados/ResultadoBExterno.aspx?idServicio=3&Operacion=Valida&modo=Normal") %>" ><span class="glyphicons glyphicons-newspaper">
+           <asp:Label ID="lblAccesoValidacion" runat="server" Text="Label">Validacion de Resultados</asp:Label></span></a></li>
+         
+     <%-- <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          Menú #1 <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Acción #1</a></li>
+          <li><a href="#">Acción #2</a></li>
+          <li><a href="#">Acción #3</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Acción #4</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Acción #5</a></li>
+        </ul>
+      </li>--%>
+    </ul>
+ 
+    <p class="navbar-text pull-right"> 
+         <a href="#" class="navbar-link"><asp:Label ID="lblUsuario" runat="server"></asp:Label></a>
+   <a href="http://www.saludnqn.gob.ar/sips" class="navbar-link"> <img alt="Principal" title= "Retorna a la pantalla principal"  src="<%= Page.ResolveUrl("~/App_Themes/default/images/icono_homeGratis.gif") %>" border="0"/></a>
+          <asp:HyperLink ID="lnkCerrar" runat="server"  ImageUrl="~/App_Themes/default/images/icon_close.gif" 
+         NavigateUrl="../FinSesion.aspx" ToolTip="Cierra sesión del usuario y cierra el sistema">Cerrar Sesión</asp:HyperLink>
+      
+        
+</p>
+  </div>
+
+        
+</nav>
+    <div class="container">
+    <form id="form1" runat="server">
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+          
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+        </div>
+
+     <div class="panel-footer">
+         <p style="text-align:center">Laboratorio Central - Versión Sept - 2020</p>
+         </div>
+</body>
+</html>

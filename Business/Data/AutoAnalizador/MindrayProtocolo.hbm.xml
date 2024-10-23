@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.MindrayProtocolo,Business" table="LAB_MindrayProtocolo">
+
+		<id name="IdMindrayProtocolo" column="idMindrayProtocolo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="iddetalleProtocolo" type="Int32" name="IddetalleProtocolo" not-null="true" />
+		<property column="numeroProtocolo" type="String" name="NumeroProtocolo" not-null="true" length="50" />
+		<property column="fechaProtocolo" type="DateTime" name="FechaProtocolo" not-null="true" />
+		<property column="tipoMuestra" type="String" name="TipoMuestra" not-null="true" length="50" />
+		<property column="iditemMindray" type="Int32" name="IditemMindray" not-null="true" />
+		<property column="paciente" type="String" name="Paciente" not-null="true" length="200" />
+		<property column="fechaNacimiento" type="DateTime" name="FechaNacimiento" not-null="true" />
+		<property column="sexo" type="String" name="Sexo" not-null="true" length="1" />
+		<property column="sectorSolicitante" type="String" name="SectorSolicitante" not-null="true" length="150" />
+		<property column="urgente" type="Boolean" name="Urgente" not-null="true" />
+		<property column="estado" type="Boolean" name="Estado" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ProtocoloWhonet,Business" table="LAB_ProtocoloWhonet">
+
+		<id name="IdProtocoloWhonet" column="idProtocoloWhonet" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<!--<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />-->
+    <many-to-one name="IdProtocolo" column="idProtocolo" class="Business.Data.Laboratorio.Protocolo,Business" />
+		
+	</class>
+</hibernate-mapping>

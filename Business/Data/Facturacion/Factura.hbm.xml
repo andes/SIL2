@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Facturacion.Factura,Business" table="LAB_Factura">
+
+		<id name="IdFactura" column="idFactura" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <property column="numero" type="String" name="Numero"   length="50" />
+    <property column="idCasoFiliacion" type="Int32" name="IdCasoFiliacion" not-null="true" />
+    <property column="total" type="Decimal" name="Total"   />
+    
+
+
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+    	
+    
+	 <property column="baja" type="Boolean" name="Baja" not-null="true" /> 
+    
+	</class>
+</hibernate-mapping>
