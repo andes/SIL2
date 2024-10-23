@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.GenMarcadores.Marcadores,Business" table="GEN_Marcadores">
+
+		<id name="IdMarcadores" column="idMarcadores" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    
+    	<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />
+    <property column="idPaciente" type="Int32" name="IdPaciente" not-null="true" />
+    
+    
+   
+   
+
+    <property column="marcador" type="String" name="Marcador"  length="50" />
+    <property column="allello1" type="String" name="Allello1"  length="50" />
+    <property column="allello2" type="String" name="Allello2"  length="50" />
+
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+
+    <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.SolicitudScreeningAlarma,Business" table="LAB_SolicitudScreeningAlarma">    
+
+    <id name="IdSolicitudScreeningAlarma" column="idSolicitudScreeningAlarma" type="Int32" unsaved-value="0">
+      <generator class="native"/>
+    </id>
+    <many-to-one name="IdSolicitudScreening" column="idSolicitudScreening" class="Business.Data.Laboratorio.SolicitudScreening,Business" />        
+    <property column="descripcion" type="String" name="Descripcion" not-null="true" length="500" />        
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.DetalleProtocoloPlaca,Business" table="LAB_DetalleProtocoloPlaca">
+
+		<id name="IdDetalleProtocoloPlaca" column="idDetalleProtocoloPlaca" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+
+		<property column="idPlaca" type="Int32" name="IdPlaca" not-null="true" />
+		<property column="idDetalleProtocolo" type="Int32" name="IdDetalleProtocolo" not-null="true" />
+		<property column="NamespaceID" type="String" name="NamespaceID" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

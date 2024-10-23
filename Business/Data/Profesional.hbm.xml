@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Profesional,Business" table="Sys_Profesional">
+
+		<id name="IdProfesional" column="idProfesional" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>		
+		<property column="idEfector" type="Int32" name="IdEfector" not-null="true" />
+		<property column="apellido" type="String" name="Apellido" not-null="true" length="50" />
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="50" />
+    <property column="idTipoDocumento" type="Int32" name="IdTipoDocumento" not-null="true" />
+		
+		<property column="numeroDocumento" type="Int32" name="NumeroDocumento" not-null="true" />
+		<property column="matricula" type="String" name="Matricula" not-null="true" length="20" />
+		<property column="idUsuario" type="Int32" name="IdUsuario" not-null="true" />
+		<property column="fechaModificacion" type="DateTime" name="FechaModificacion" not-null="true" />
+		<property column="activo" type="Boolean" name="Activo" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

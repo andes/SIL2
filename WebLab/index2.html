@@ -1,0 +1,741 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    
+  <meta charset="utf-8">
+  <title>Laboratorio Central</title>
+    <link rel="shortcut icon" href="website/images/icolabo.ico">
+  <link rel="stylesheet" href="website/style.css">
+    <style type="text/css">
+        
+   
+
+			
+		
+
+			
+			ul, ol {
+				list-style:none
+			}
+			
+			.nav > li {
+				float:none;
+			}
+			
+			.nav li a {
+                border: 0.1px solid #336c2b;
+				background-color:#fff;
+                color:#336c2b;
+				text-decoration:none;
+				padding:8px 10px;
+				display:block;                
+                font-size: 13px;
+               
+               
+			}
+			
+			.nav li a:hover {background-color:#336c2b;
+				color:#fff;
+				
+               
+			}
+			
+			.nav li ul {
+				display:none;
+				position:absolute;
+				
+			}
+			
+			.nav li:hover > ul {
+				display:block;
+			}
+			
+			.nav li ul li {
+				position:relative;
+			}
+			
+			.nav li ul li ul {	right:-140px;
+				top:0px;
+			}
+
+
+       
+#ventana-flotante {
+width: 250px;  /* Ancho de la ventana */
+height: 30px;  /* Alto de la ventana */
+background: #509743;  /* Color de fondo */
+position: fixed;
+top: 1px;
+left: 50%;
+margin-left: 10px;
+border: 1px solid #282928;  /* Borde de la ventana */
+box-shadow: 0 5px 25px rgba(0,0,0,.1);  /* Sombra */
+z-index:999;
+border-radius: 4px;
+}
+#ventana-flotante #contenedor {
+
+}
+#ventana-flotante .cerrar {
+
+}
+#ventana-flotante .cerrar:hover {
+background: #ff6868;
+
+text-decoration: none;
+text-shadow: -1px -1px gray;
+border-bottom: 1px solid gray;
+border-left: 1px solid gray;
+}
+#ventana-flotante #contenedor .contenido {
+    padding-top:10px;
+padding: 10px;
+
+color: white;
+font-size: 12px;  /* Tamaño del texto del mensaje */
+
+text-shadow: 1px 1px gray;
+margin: 0 auto;
+border-radius: 4px;
+}
+.oculto {-webkit-transition:1s;-moz-transition:1s;-o-transition:1s;-ms-transition:1s;opacity:0;-ms-opacity:0;-moz-opacity:0;visibility:hidden;}
+
+    </style>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+  <script src="website/js/slides.min.jquery.js"></script>
+
+   
+
+	<!--<![endif]-->
+</head>
+
+<body>
+   
+
+    <div id="ventana-flotante">
+
+        <!--<a class="cerrar" href="javascript:void(0);" >X</a>-->
+
+        <div id="contenedor">
+
+            <div class="contenido">
+
+                <a href="website/portalweb.html"><strong><span style="color:white; text-shadow:0 5px 25px rgba(0,0,0,.1);">RESULTADOS DE DERIVACIONES AQUI</span></strong></a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+        <div id="header-wrap">
+            <header class="group">
+               
+              
+                <h2><a href="index.html" title="Mg. Luis Alfredo Pianciola">Laboratorio Central</a></h2>
+                <div id="call">
+
+                    <h4 class="green">Gregorio Martínez 65	</h4>
+                    <h4 class="green">(8300) Neuquén - Argentina	</h4>
+                    
+                    
+                    <h6 class="gris" >(0299) 4484026 - 4477563</h6>
+                  
+                    <h6 class="gris">email: labcen@yahoo.com.ar</h6>
+            
+                <br />
+                    <div id="botones-para-compartir">
+    <a href="javascript:void(0);" onclick="window.open(&quot;http://www.facebook.com/sharer.php?u=http://laboratoriocentral.neuquen.gob.ar/index.html/&quot;,&quot;gplusshare&quot;,&quot;toolbar=0,status=0,width=548,height=325&quot;);" rel="nofollow" title="Compartir en Facebook"><img alt="compartir en facebook" class="facebooki" height="25" src="http://4.bp.blogspot.com/-2W3Fr7nS-T0/Uh1HrkLe5wI/AAAAAAAAAiQ/0-_aC8Yici4/s1600/facebook.png" title="compartir en facebook" width="25" /></a>
+    <a href="javascript:void(0);" onclick="window.open(&quot;https://plus.google.com/share?url=http://laboratoriocentral.neuquen.gob.ar/index.html/&quot;,&quot;gplusshare&quot;,&quot;toolbar=0,status=0,width=548,height=325&quot;);" rel="nofollow" title="Compartir en Google+"><img alt="compartir en google+" class="googlei" height="25" src="http://3.bp.blogspot.com/-Ioy5JWv_nwk/Uh1HlxE8urI/AAAAAAAAAhc/q_uUabDAhsU/s1600/Google%252B%2Balt.png" title="compartir en google+" width="25" /></a>
+    <a href="javascript:void(0);" onclick="window.open(&quot;http://twitter.com/home?status=http://laboratoriocentral.neuquen.gob.ar/index.html/&quot;,&quot;gplusshare&quot;,&quot;toolbar=0,status=0,width=548,height=325&quot;);" rel="nofollow" title="Compartir en Google+"><img alt="compartir en twitter" class="twitteri" height="25" src="http://3.bp.blogspot.com/-TgonF6vzJs0/Uh1Hmxqk8aI/AAAAAAAAAiA/MdT4pRWKRbI/s1600/twitter.png" title="compartir en twitter" width="25" /></a>
+    <a href="javascript:void(0);" onclick="window.open(&quot;https://www.pinterest.com/pin/create/button/?url=http://laboratoriocentral.neuquen.gob.ar/index.html/&quot;,&quot;gplusshare&quot;,&quot;toolbar=0,status=0,width=548,height=325&quot;);" rel="nofollow" title="Compartir en Google+"><img alt="compartir en pinterest" class="pinteresti" height="25" src="http://3.bp.blogspot.com/-v45z5di8z9o/Uh1HmsgZY7I/AAAAAAAAAh8/-gQOHJtZ884/s1600/pinterest.png" title="compartir en pinterest" width="25" /></a>
+    <a href="javascript:void(0);" onclick="window.open(&quot;http://www.linkedin.com/shareArticle?url=http://laboratoriocentral.neuquen.gob.ar/index.html/&quot;,&quot;gplusshare&quot;,&quot;toolbar=0,status=0,width=548,height=325&quot;);" rel="nofollow" title="Compartir en Google+"><img alt="compartir en linkedin" class="likedini" height="25" src="http://2.bp.blogspot.com/-NeWo2YBWX-8/Uh1HmSwLlWI/AAAAAAAAAhs/Y3orDyf_EMA/s1600/linkedin.png" title="compartir en linkedin" width="25" /></a>
+</div>
+
+                </div><!-- end call -->
+             
+                <nav class="group">
+
+                    <ul  >
+                        <li class="home"><a href="index.html" title="">Home</a></li>
+
+                        
+                        <li><a href="#" title="">Institucional</a>
+                        <ul class="nav">
+                            <li><a href="website/historia.html" title="">Historia del Laboratorio</a></li>
+                            <li><a href="website/quienessomos_plantelprofesional.html" title="">Quienes Somos</a></li>      
+                            <li><a href="website/instalaciones.html" title="">Tecnología</a></li>                      
+                            <li><a href="website/becasypremios.html" title="">Becas y Premios</a></li>
+                            <li><a href="website/NoticiasLabo.aspx" title="">Noticias</a></li>
+
+                        </ul>
+
+                        </li>
+                        <li>
+                            <a href="#" title="">Areas Laboratorio</a>
+                            <ul class="nav">
+                                <li><a href="website/molecularyforense.html">Genética Forense y Molecular</a> </li>
+                                <li><a href="website/microbiologia.html" title="">Microbiología Molecular</a></li>
+                                <li><a href="website/histocompatibilidadDeterminaciones.html" title="">Histocompatibilidad</a></li>
+                                <li><a href="website/investigacion.html" title="">Investigación</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="website/quimerismo.html" title="">Quimerismo</a></li>
+                        <li><a href="website/filiacion.html" title="">Filiacion</a></li>
+                        <li><a href="website/DirectorioAnalisis.aspx" title="">Determinaciones</a></li>
+                        <!--<li class="about"><a href="website/contacto.html" title="">Contácto</a></li>-->
+                        <li class="hour"><a href="website/contacto.html" title="">Contacto</a></li>
+
+<!--<li class="last">
+
+                            <div>
+
+                                <input type="text" name="search" placeholder="buscar" />
+                                <input type="submit" name="search" value="go" class="search" />
+                            </div>
+                        </li>-->
+                    </ul>
+</nav>
+            </header>
+        </div><!-- end header wrap -->
+
+
+        <div id="container">
+          
+            <div id="slides">
+                <div class="slides_container" style="    /* transition: all 650ms ease; */
+    transform: translate3d(0px, 0px, 0px);">
+     <div>
+                   <img src="website/images/IMG-20190613-WA0003.jpg" alt="slide1" />
+
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+CUCAI Neuquén renueva habilitación al Laboratorio de Histocompatibilidad del LC
+                            </h1>
+                            <p class="info">
+Esta renovación se otorga bajo los nuevos lineamientos para estandarizar la metodología de Cross Match a utilizar durante los operativos de distribución renal.
+<br>
+En este marco, el Laboratorio participó, a través de un convenio de colaboración mutua entre las provincias de Neuquén y Rio Negro, del último operativo realizado en la ciudad de Cipoletti.
+                            </p>
+                            <p class="info">Junio 2019
+                                <a href="https://www.facebook.com/885929045076924/posts/893333937669768/" target="_blank"
+                                   class="readmore">leer más</a>
+                            </p>
+
+                        </div>
+
+                    </div>
+                    <div>
+                   <img src="website/images/termocicladorLC.jpg" alt="slide1" />
+
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+                                El LC suma tecnología para informar <strong>Resultados de HistoCompatibilidad</strong><br />
+                            </h1>
+                            <p class="info">
+                                Con la implementación de interfaz de comunicación entre Luminex (Fusion) y SIL, el Laboratorio de Histocompatibilidad suma calidad y mejora los tiempos en informar resultados.
+                            </p>
+                            <p class="info">Mayo 2019</p>
+                            <p>
+                                <a href="website/interfaceSIL.html"
+                                   class="readmore">leer más</a>
+                            </p>
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <a href="website/capacitacionTSJ.html" target="_blank">  <img src="website/images/Utilización de herramientas moleculares para estudios del ADN_Poder Judicial_8 de mayo de 201 (12).jpg" alt="slide1" /></a>
+
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+                                El LC capacitó a personal del Poder Judicial de la Provincia del Neuquén<br />
+
+                            </h1>
+                            <p class="info">
+                                La capacitación es en el marco del convenio que firmó el Ministerio de Salud con el TSJ, que comenzó en una primera etapa con filiación y en esta segunda etapa interviene el fuero penal.
+                            </p>
+                            <p class="info">Mayo 2019</p>
+                            <p>
+                                <a href="website/capacitacionTSJ.html"
+                                   class="readmore">leer más</a>
+                            </p>
+                        </div>
+
+                    </div>
+               
+                    <div>
+                        <a href="website/images/imgJornadasBioqNorpatagonicas.jpg" target="_blank">  <img src="website/images/imgJornadasBioqNorpatagonicas.jpg"  alt="slide1" /></a>
+
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+                              Participación en las III Jornadas Patagónicas de Bioquímicas<br />
+
+                            </h1>
+                            <p class="info">
+                                Profesionales del Laboratorio Central participaron en las III Jornadas Patagónicas de Bioquímica en Mesas redondas y trabajos libres.
+                            </p>
+                            <p class="info">Marzo 2019</p>
+                            <p>
+                                <a href="website/laboenJornadas.html" 
+                                   class="readmore">leer más</a>
+                            </p>
+                        </div>
+
+                    </div>
+
+ <div>
+                        <a href="website/images/9781351863483.jpg" target="_blank">  <img src="website/images/9781351863483.jpg" width="450px" heigth="350px" alt="slide1" /></a>
+
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+                                Se publicó el libro <strong> Handbook of Foodborne Diseases</strong> con participación del Laboratorio Central<br />
+
+                            </h1>
+                            <p class="info">
+                               Este libro tuvo participación de Mg. Luis Pianciola como coautor de capítulo de libro: <strong>Chapter 30 Escherichia, Section II: Foodborne diseases due to bacteria.</strong> Handbook of Foodborne Diseases. Editado por Dongyou Liu. CRC Press-Taylor and Francis Group.
+                            </p>
+                            <p class="info">Diciembre 2018</p>
+                            
+                        </div>
+
+                    </div>
+
+
+                    <!--<div>
+                        <a href="website/images/libroecoli.png" target="_blank">  <img src="website/images/libroecoli2.png" alt="slide1" /></a>
+
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+                                Se publicó el libro <strong> Escherichia coli diarreigénico</strong><br />
+
+                            </h1>
+                            <p class="info">
+                               Este libro tuvo participación de Mg. Luis Pianciola como coautor con la Dra Marta Rivas, referente nacional de SUH.  Quienes estén interesados en leer algo más del libro pueden comunicarse con Luis Pianciola.
+                            </p>
+                            <p class="info">Octubre 2018</p>
+                            <p>
+                                <a href="website/images/libroecoli.png" target="_blank"
+                                   class="readmore">leer más</a>
+                            </p>
+
+                        </div>
+
+                    </div>-->
+
+                    <!--<div>
+                        <img src="website/images/miseq1.png" alt="slide1" />
+                   
+                        <div class="slide-right">
+                            <h1 class="slide-heading">
+                                Se instaló en el Laboratorio Central el Secuenciador de Nueva Generación MiSeq de Illumina <br />
+
+                            </h1>
+                            <p class="info">
+                             El 1ro de Agosto se instaló y dejó en funcionamiento el SNG. El Equipo MiSeq aportará al LC una tecnología innovadora para analizar a gran escala las variaciones genéticas y su función.
+                            </p>
+                            <p class="info">Agosto 2018</p>
+                            <p>
+                                <a href="website/sng.html"
+                                   class="readmore">leer más</a>
+                            </p>
+
+                        </div>
+
+                        </div>-->
+
+                        <!--<div>
+                            <img src="website/images/cmv.png" alt="slide1" />
+                            <div class="slide-right">
+                                <h1 class="slide-heading">
+                                    El LC realiza carga viral de Citomegalovirus en muestras de pacientes trasplantados <br />
+
+                                </h1>
+                                <p class="info">
+                                
+                                    La infección por este virus es una de las complicaciones más comunes en pacientes trasplantados, por lo tanto, es importante contar con esta determinación para el monitoreo de estos pacientes y así poder tomar medidas terapéuticas oportunas.
+
+                                </p>
+                                <p class="info">Junio 2018</p>
+                                <p>
+                                    <a href="website/cmv.html"
+                                       class="readmore">leer más</a>
+                                </p>
+
+
+
+                            </div>
+
+                        </div>-->
+                       <!--   <div>
+                            <img src="website/images/conveniojusticia.png" alt="slide1" />
+                            <div class="slide-right">
+                                <h1 class="slide-heading">
+                                    El Laboratorio Central realizará los informes periciales del Poder Judicial del Neuquén <br />
+
+                                </h1>
+                                <p class="info">
+                                    EL MINISTERIO suministrará a través del LABORATORIO CENTRAL informes periciales con sustento en análisis por vía del Polimorfismo del ADN en muestras suministradas por organismos de EL PODER JUDICIAL a partir del 1ro. de Junio de 2018.
+                                </p>
+                                <p class="info">Junio 2018</p>
+                                <p>-->
+                                    <!--<a href="website/publicaciones/microorganisms-06-00036.pdf" target="_blank"
+                       class="readmore">leer más</a>-->
+                            <!--    </p>
+
+
+
+                            </div>
+
+                        </div>-->
+
+
+                        <!--<div>
+                            <img src="website/images/publicacion-abril18.png" alt="slide1" />
+                            <div class="slide-right">
+                                <h1 class="slide-heading">
+                                    Nueva Publicación con Participación del Laboratorio Central <br />
+
+                                </h1>
+                                <p class="info">
+                                    Genotypic Features of Clinical and Bovine
+                                    Escherichia coli O157 Strains Isolated in Countries
+                                    with Different Associated-Disease Incidences
+                                </p>
+                                <p class="info">Abril 2018</p>
+                                <p>
+                                    <a href="website/publicaciones/microorganisms-06-00036.pdf" target="_blank"
+                                       class="readmore">leer más</a>
+                                </p>
+
+
+
+                            </div>
+
+                        </div>-->
+                        <!--<div>
+                            <img src="website/images/publicacion_marzo2018.jpg" alt="slide1" />
+                            <div class="slide-right">
+                                <h1 class="slide-heading">
+                                    Nueva Publicación con participación del Laboratorio Central<br />
+
+                                </h1>
+                                <p class="info">Perfil de virulencia de cepas de <strong>Escherichia coli O157 </strong>aisladas de aguas superficiales en áreas de cría de ganado.</p>
+                                <p class="info">Marzo 2018</p>
+                                <p>
+                                    <a href="https://www.ncbi.nlm.nih.gov/pubmed/29500840" target="_blank"
+                                       class="readmore">leer más</a>
+                                </p>
+
+                            </div>
+
+                        </div>-->
+
+
+                        <!--<div>
+                            <img src="website/images/copade.jpg" alt="slide1" />
+                            <div class="slide-right">
+                                <h1 class="slide-heading">Idea Proyecto fue preseleccionada por COPADE para su financiación por parte de COFECYT</h1>
+                                <p class="info">
+                                    Título de la Idea Proyecto: <strong>
+                                        Generación de conocimientos para la disminución de riesgos asociados a la salud y al cuidado del medioambiente en la cría intensiva de ganado.
+                                    </strong>
+                                </p>
+                                <p class="info">Diciembre 2017</p>
+                                <p>
+                                    <a href="website/proyecto_COFECYT.html"
+                                       class="readmore">leer más</a>
+                                </p>
+
+                            </div>
+
+                        </div>-->
+
+
+                        <!--<div>
+            <img src="website/images/slide2.jpg" alt="slide1" />
+            <div class="slide-right">
+                <h1 class="slide-heading">Aporte del Laboratorio Central en el Megaoperativo del Incucai en Neuquén.</h1>
+                <p class="info">El equipo del Laboratorio de Histocompatibilidad participó en el operativo del Incucai del pasado 13 de diciembre en la ciudad de Neuquén.</p>
+                <p class="info">Diciembre 2017</p>
+                <p>
+                    <a href="https://noticiasnqn.com.ar/2017/12/megaoperativo-neuquen-del-incucai-tras-fallecimiento-del-joven-junin-los-andes/" target="_blank"
+                       class="readmore">leer más</a>
+                </p>
+
+            </div>
+
+        </div>-->
+                        <!--<div>
+                                <img src="website/images/histocompatibilidad2.jpg" alt="slide1" />
+                                <div class="slide-right">
+                                    <h1 class="slide-heading">El Laboratorio Central participó del último operativo de INCUCAI en la región.</h1>
+                                    <p class="info">Integrantes del Laboratorio de Histocompatibilidad colaboraron con el operativo de <strong>Trasplante Multiorgánico</strong> realizado en el hospital Francisco López Lima de la ciudad de Gral. Roca, Rio Negro.</p>
+                                    <p class="info">Noviembre 2017</p>
+        <p>
+                                        <a href="http://www.rionegro.gov.ar/?contID=40711" target="_blank"
+                                           class="readmore">leer más</a>
+                                    </p>
+
+                                </div>
+
+                            </div>-->
+                        <!--<div>
+            <img src="website/galeria/jornadabioq2.jpg" alt="slide2" />
+            <div class="slide-right">
+                <h1 class="slide-heading">Participación en las IX Jornadas Bioquímicas Provinciales</h1>
+                <p class="info">Integrantes del Laboratorio Central participan de las Jornadas Bioquímicas Provinciales que se realiza el 12 y 13 de octubre en la ciudad de San Martín de los Andes.</p>
+                <p class="info">Octubre 2017</p>
+
+                <p>
+                    <a href="http://www.saludneuquen.gob.ar/se-realizan-las-ix-jornadas-bioquimica/" target="_blank"
+                       class="readmore">leer más</a>
+                </p>
+            </div>
+
+        </div>-->
+                        <!--<div>
+            <img src="website/galeria/instalaciones4.jpg" alt="slide3" />
+            <div class="slide-right">
+                <h1 class="slide-heading">Incorporación de PCR para Pcp<br />  (Pneumocystis jirovecii)</h1>
+                <p class="info">El Laboratorio Central incorpora un nueva determinación para acelerar los tiempos en que el médico obtiene un resultado; pudiendo de ésta forma iniciar el tratamiento tempranamente.</p>
+                <p class="info">Setiembre 2017</p>
+
+                <p>
+                    <a href="website/nuevadeterminacion.html"
+                       class="readmore">leer más</a>
+                </p>
+            </div>
+
+        </div>-->
+                        <!--<div>
+            <img src="website/images/nuevapublicacion.jpg" alt="slide1" />
+            <div class="slide-right">
+                <h1 class="slide-heading">Nuevos Aportes de Investigación Científica</h1>
+                <p class="info">Participación del Laboratorio en el Manual de Microbiología Clínica de la AAA y publicación en la revista Parasitology Research  </p>
+                <p class="info">Julio 2017</p>
+
+                <p><a href="website/NuevasPublicaciones.aspx"
+                        class="readmore">leer más</a></p>
+            </div>
+
+        </div>-->
+                        <!--<div>
+
+            <img src="website/images/slide4.jpg" alt="slide1" />
+
+            <div class="slide-right">
+                <h1 class="slide-heading">Nueva Vinculación entre Sector Privado de Salud y el Laboratorio Central</h1>
+                <p class="info">Se implementa el nuevo módulo de Petición Electrónica y Consulta de Resultados online destinado al Sector Privado de Salud</p>
+                <p class="info">Junio 2017</p>
+
+                <p><a href="http://www.saludneuquen.gob.ar/el-laboratorio-central-tiene-pagina-web/" target="_blank" class="readmore">leer más</a></p>
+            </div>
+        </div>-->
+                        <!--<div>
+
+            <img src="website/images/slide1.jpg" alt="slide1" />
+
+            <div class="slide-right">
+                <h1 class="slide-heading">El Laboratorio Central lleva el nombre de Mg. Luis Alfredo Pianciola </h1>
+                <p class="info">En homenaje y reconocimiento a su dedicación y constancia, así se desprende de la resolución 0070 del 19 de enero de este año.</p>
+                <p class="info">Mayo 2017</p>
+                <p><a href="http://www.saludneuquen.gob.ar/nuevo-nombre-para-el-laboratorio-central/" target="_blank" class="readmore">leer más</a></p>
+            </div>
+        </div>-->
+                        <!--<div>
+
+            <img src="website/images/slide3.jpg" alt="slide1" />
+
+            <div class="slide-right">
+                <h1 class="slide-heading">Convenio de Cooperación Científica y Tecnológica entre el Ministerio de Salud y Desarrollo Social y el Ministerio Publico Fiscal</h1>
+                <p class="info">El Laboratorio Central será el primer Centro Institucional en la Provincia de Neuquén dedicado a la Biología Molecular Forense.</p>
+                <p class="info">Abril 2017</p>
+                <p><a href="http://www.saludneuquen.gob.ar/el-laboratorio-central-de-la-provincia-asistira-al-poder-judicial/" target="_blank" class="readmore">leer más</a></p>
+            </div>
+        </div>-->
+
+
+
+                    </div><!-- end slies container -->
+            </div><!-- end slides -->
+          
+           
+            <div id="servicegde">
+                <div id="web">
+
+                    <a href="website/historia.html">  <h3>El <strong><span class="green">Laboratorio</span></strong></h3></a>
+                    <p>
+                        El Laboratorio Central fue creado por el Mg. Luis Pianciola en el año 2005 mediante resolución ministerial comenzando sus actividades ese mismo año. El proyecto que le dió origen destacaba la necesidad de contar con una estructura de apoyo a los laboratorios hospitalarios, desarrollar nuevas metodologías, ampliar y profundizar las actividades de investigación en patologías prevalentes en la provincia.
+                    </p>
+                    <p><a href="website/historia.html" class="readmore">leer más</a></p>
+                </div>
+                <div id="vector">
+
+                   
+
+
+
+
+
+                        <h3>Areas del <strong><span class="green">Laboratorio</span></strong></h3>
+
+                        <p>
+                            Las principales áreas del Laboratorio Central son:
+                        </p>
+                        <p>
+                            <table>
+                                <tr>
+                                    <td>
+                        <p><a href="website/microbiologia.html" class="readmore">Microbiología molecular</a></p></td>
+                        <td><p><a href="website/histocompatibilidadDeterminaciones.html" class="readmore">Histocompatibilidad</a></p></td>
+                        <td><br /></td>
+                        </tr>
+                        <tr>
+                            <td><p><a href="website/molecularyforense.html" class="readmore">Genética molecular y forense</a></p></td>
+                            <td><p><a href="website/investigacion.html" class="readmore">Investigación</a></p></td>
+                            <td><br /></td>
+                        </tr>
+                        </table>
+
+
+                        </p>
+                        <a href="website/DirectorioAnalisis.aspx"> <h3>Buscador de <strong><span class="green">Determinaciones</span></strong></h3></a>
+                        <p>
+                            Conozca las determinaciones que realiza el Laboratorio e información para derivaciones.
+
+                        </p>
+                       <p><a href="website/DirectorioAnalisis.aspx" class="readmore">leer más</a></p>
+                        <a href="website/investigacion.html">  <h3><strong><span class="green"> Investigación</span></strong></h3></a>
+                        <p>
+                            El Laboratorio Central, desde su fundación, ha producido una gran cantidad de trabajos científicos que han sido presentados en Congresos Nacionales e Internacionales y publicados en revistas de prestigio.
+                            El <strong>Laboratorio Central</strong> pone a disposición de la comunidad un buscador de estos trabajos.
+                        </p>
+                        <p><a href="website/DirectorioInvestigacion.aspx" class="readmore">Buscador de Presentaciones, Proyectos y Publicaciones</a></p>
+                    </div>
+                    <div id="vector">
+
+                        <a href="https://www.saludnqn.gob.ar/Sips" target="_blank"> <h3>Resultados <strong><span class="green">OnLine</span></strong></h3></a>
+                        <p>
+                            Los efectores de salud (laboratorios, clinicas, institutos, hospitales, etc) de la region, tanto públicos como privados, que derivan sus muestras al Laboratorio Central pueden acceder a la consulta de resultados y seguimiento on line de las muestras
+                            haciendo clic <a href="website/portalweb.html">aquí</a>.
+
+                            <!--estrena sitio web con la finalidad de mejorar la comunicación con la comunidad que requiere sus servicios. Asimismo implementa la modalidad de <strong>Derivación de muestras y Consulta online de los resultados</strong> para el Sector Privado de Salud.-->
+
+                        </p>
+                        <p><a href="website/portalweb2.html" class="readmore">leer más</a></p>
+                    </div>
+                    <!--<div id="vector">
+                     
+
+        </div>-->
+                    <div id="web">
+
+                        <a href="website/filiacion.html">  <h3>Estudios <strong><span class="green">Filiación</span></strong></h3></a>
+                        <p>
+                            Realizamos estudios de filiación a particulares y al Poder Judicial de la Provincia de Neuquén.
+
+                        </p>
+                        <p><a href="website/filiacion.html" class="readmore">leer más</a></p>
+
+
+                    </div>
+
+
+
+
+
+
+                </div><!-- end service-->
+
+            <div id="media" class="group">
+                <div id="video">
+                    <h4>Acceda al <strong>Portal Web</strong></h4>
+                    <h5>Realizar peticiones y consultar resultados</h5>
+                    <a href="http://www.saludnqn.gob.ar/SIPS" target="_blank" class="play"><img src="website/images/play.png" alt="play" /></a>
+                </div>
+
+                <div id="web">
+                    <h4>Mis <strong><span class="green">Derivaciones</span></strong></h4>
+                    <p class="tweet">A través del Portal Web podrá realizar sus peticiones de estudios y consultar sus resultados.</p>
+                    <p><a href="website/portalweb2.html" class="readmore">leer más</a></p>
+                    <!--<p class="time">SIPS Sistema Integrado Provincial de Salud</p>-->
+                </div>
+
+                <!--<div id="facebook">
+                    <h4>Like Us On <strong><span class="green">Facebook</span></strong></h4>
+                </div>-->
+            </div><!-- end media -->
+
+        </div> <!--! end container -->
+
+        <div id="widget-wrap" class="group">
+            <div id="widget">
+                <div id="links" class="group">
+                    <h4 class="white">Sitios de <strong>Interés</strong></h4>
+                    <ul>
+                        <li><a href="http://www.saludneuquen.gov.ar/" target="_blank">Ministerio de Salud de Neuquén</a></li>
+                        <li><a href="http://www.msal.gov.ar/" target="_blank">Ministerio de Salud de la Nación</a></li>                       
+                        <li><a href="http://www.anlis.gov.ar/" target="_blank">Instituto Malbrán</a></li>
+                        <li><a href=" http://www.incucai.gov.ar" target="_blank">Cucai</a></li>
+
+                    </ul>
+                </div>
+
+
+
+                <div id="location">
+                    <h4 class="footer-header white">Nuestra <strong>Ubicación</strong></h4>
+                    <a target="_blank" href="https://www.google.com.ar/maps/place/Gregorio+Mart%C3%ADnez+65,+Neuqu%C3%A9n/@-38.9542714,-68.0850468,17z/data=!3m1!4b1!4m5!3m4!1s0x960a33b019b82653:0x72282fe614342b5e!8m2!3d-38.9542714!4d-68.0828581"><img src="website/images/map.png" alt="map" /></a>
+                    <p class="address">Gregorio Martínez 65 - (8300) -  Neuquén</p>
+                     
+                </div><!-- end location -->
+            </div><!-- end widget -->
+        </div> <!--! end widget-wrap -->
+
+
+
+        <footer class="group">
+            <div id="footer-left">
+                <a href="http://www.saludneuquen.gov.ar/" target="_blank">
+                    <img src="website/images/logo_ministerio.png" /></a>
+                    <p>
+                        COPYRIGTH <a href="#" class="green">2017</a> </br>
+                        <a href="#" class="green">Laboratorio Central</a>
+                        
+                    </p>
+</div>
+
+            <div id="footer-right">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <!--<li><a href="website/quienessomos.html">Quienes somos</a></li>-->                   
+                    <li><a href="website/contacto.html">Contáctenos</a></li>
+                    <li><a href="website/terminos.html">Términos</a></li>
+                    <center><a href="https://www.cerotec.net/estadisticas-110511/laboratoriocentral.neuquen.gob.ar" title="contador de visitas"><img src="https://www.cerotec.net/contador.php?t=43&amp;s=1&amp;i=110511"></a> <br><a href="https://www.cerotec.net" style="font-size:12px;"></a></center>
+                    <center><a href="https://www.cerotec.net/estadisticas-110511/laboratoriocentral.saludneuquen.gob.ar" title="contador de visitas"><img src="https://www.cerotec.net/contador.php?t=43&amp;s=1&amp;i=110511"></a> <br><a href="https://www.cerotec.net" style="font-size:12px;"></a></center>
+
+                </ul>
+           
+            </div>
+
+            <a href="#header-wrap"><img src="website/images/back-top.png" alt="back-top" class="back-top" /></a>
+        </footer>
+
+    <script>
+                $(function(){
+                    $('#slides').slides({
+                        preload: false,
+                        generateNextPrev: true,
+                        play: 5500,
+                        hoverPause: true
+
+                    });
+                });
+    </script>   
+  
+      
+</body>
+
+</html>

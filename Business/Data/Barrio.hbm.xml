@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Barrio,Business" table="Sys_Barrio">
+
+		<id name="IdBarrio" column="idBarrio" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="100" />
+
+    <many-to-one name="IdLocalidad" column="idLocalidad" class="Business.Data.Localidad,Business" />
+		<!--<property column="idLocalidad" type="Int32" name="IdLocalidad" not-null="true" />-->
+		
+	</class>
+</hibernate-mapping>

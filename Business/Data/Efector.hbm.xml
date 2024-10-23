@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Efector,Business" table="Sys_Efector">
+
+		<id name="IdEfector" column="idEfector" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="100" />
+
+    <many-to-one name="IdZona" column="idZona" class="Business.Data.Zona,Business" />
+    <!--<property column="idZona" type="Int32" name="IdZona" not-null="true" />-->
+		<property column="nombreNacion" type="String" name="NombreNacion" not-null="true" length="100" />
+		<property column="complejidad" type="String" name="Complejidad" not-null="true" length="10" />
+		<property column="idEfectorSuperior" type="Int32" name="IdEfectorSuperior" not-null="true"  />
+		<property column="domicilio" type="String" name="Domicilio" not-null="true" length="200" />
+		<property column="telefono" type="String" name="Telefono" not-null="true" length="10" />
+		<property column="reponsable" type="String" name="Reponsable" not-null="true" length="100" />
+			<property column="idTipoEfector" type="Int32" name="IdTipoEfector" not-null="true"  />
+    <property column="notificarSISA" type="Boolean" name="NotificarSISA" not-null="true" />
+    	<property column="codigoSISA" type="String" name="CodigoSISA" not-null="true" length="100" />
+
+    <property column="codigoREFES" type="String" name="CodigoREFES" not-null="true" length="50" />    
+    <property column="idEfector2" type="String" name="IdEfector2" not-null="true" length="6" />
+    <property column="jefeLaboratorio" type="String" name="JefeLaboratorio" not-null="true" length="100" />
+    <property column="correoJefe" type="String" name="CorreoJefe" not-null="true" length="100" />
+     <property column="idRegion" type="Int32" name="IdRegion" not-null="true" /> 
+  </class>
+</hibernate-mapping>

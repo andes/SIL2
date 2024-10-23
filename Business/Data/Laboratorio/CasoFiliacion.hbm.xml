@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.CasoFiliacion,Business" table="LAB_CasoFiliacion">
+
+		<id name="IdCasoFiliacion" column="idCasoFiliacion" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+  
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+
+   		<property column="nombre" type="String" name="Nombre" not-null="true" length="500" />
+  
+    
+    	<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+    	
+    
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+    <property column="solicitante" type="String" name="Solicitante" length="500" />
+    <property column="autos" type="String" name="Autos" length="500" />
+    <property column="bibliografia" type="String" name="Bibliografia" length="5000" />
+	<property column="objetivo" type="String" name="Objetivo"  length="500" />
+	<property column="muestra" type="String" name="Muestra" length="500" />
+		
+	<property column="resultado" type="String" name="Resultado"  length="500" />
+	<property column="conclusion" type="String" name="Conclusion" length="8000" />
+
+    <property column="metodo" type="String" name="Metodo" length="500" />
+    <property column="amplificacion" type="String" name="Amplificacion" length="500" />
+     <property column="cuantificacion" type="String" name="Cuantificacion" length="500" />
+    <property column="analisis" type="String" name="Analisis" length="500" />
+    <property column="software" type="String" name="Software" length="500" />
+    <property column="estadistico" type="String" name="Estadistico" length="500" />
+    <property column="marcoestudio" type="String" name="Marcoestudio" length="500" />
+  <property column="idTipoCaso" type="Int32" name="IdTipoCaso" not-null="true" />
+    <property column="idUsuarioCarga" type="Int32" name="IdUsuarioCarga" not-null="true" />
+		<property column="fechaCarga" type="DateTime" name="FechaCarga" not-null="true" />
+    
+    	<property column="idUsuarioValida" type="Int32" name="IdUsuarioValida" not-null="true" />
+		<property column="fechaValida" type="DateTime" name="FechaValida" not-null="true" />
+  <property column="motivoBaja" type="String" name="MotivoBaja" length="500" />
+<property column="probabilidad" type="String" name="Probabilidad" length="500" />
+    <property column="limiteDeteccion" type="String" name="LimiteDeteccion" length="50" />
+  	<property column="fechaTransplante" type="DateTime" name="FechaTransplante" not-null="true" />
+	</class>
+</hibernate-mapping>

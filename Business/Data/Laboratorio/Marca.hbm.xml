@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Marca,Business" table="LAB_MarcaEquipo">
+
+		<id name="IdMarcaEquipo" column="idMarcaEquipo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="50" />
+		
+
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

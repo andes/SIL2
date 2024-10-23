@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.PeticionItem,Business" table="LAB_PeticionItem">
+
+		<id name="IdPeticionItem" column="idPeticionItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<!--<property column="idEfector" type="Int32" name="IdEfector" not-null="true" />
+		<property column="idPeticion" type="Int32" name="IdPeticion" not-null="true" />
+		<property column="idItem" type="Int32" name="IdItem" not-null="true" />-->
+	
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <many-to-one name="IdPeticion" column="idPeticion" class="Business.Data.Laboratorio.Peticion,Business" />    
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+    <property column="recomendacion" type="String" name="Recomendacion" not-null="true" length="4000" />
+	</class>
+</hibernate-mapping>

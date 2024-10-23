@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Protocolo,Business" table="LAB_Protocolo">
+
+		<id name="IdProtocolo" column="idProtocolo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+		<property column="numero" type="Int32" name="Numero" not-null="true" />
+    <property column="numeroTipoServicio" type="Int32" name="NumeroTipoServicio" not-null="true" />
+		<property column="numeroDiario" type="Int32" name="NumeroDiario" not-null="true" />
+    
+    <property column="prefijoSector" type="String" name="PrefijoSector" length="10" />
+    <property column="numeroSector" type="Int32" name="NumeroSector" not-null="true" />
+
+    <many-to-one name="IdTipoServicio" column="idTipoServicio" class="Business.Data.Laboratorio.TipoServicio,Business" />
+		<!--<property column="idTipoServicio" type="Int32" name="IdTipoServicio" not-null="true" />-->
+
+    <many-to-one name="IdSector" column="idSector" class="Business.Data.Laboratorio.SectorServicio,Business" />
+    <!--<property column="idSector" type="Int32" name="IdSector" not-null="true" />-->
+    
+		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
+		<property column="fechaOrden" type="DateTime" name="FechaOrden" not-null="true" />
+		<property column="fechaRetiro" type="DateTime" name="FechaRetiro" not-null="true" />
+
+    <many-to-one name="IdPaciente" column="idPaciente" class="Business.Data.Paciente,Business" />
+    <!--<property column="idPaciente" type="Int32" name="IdPaciente" not-null="true" />-->
+
+    <many-to-one name="IdEfectorSolicitante" column="idEfectorSolicitante" class="Business.Data.Efector,Business" />
+    <!--<property column="idEfectorSolicitante" type="Int32" name="IdEfectorSolicitante" not-null="true" />-->
+    
+		<property column="idEspecialistaSolicitante" type="Int32" name="IdEspecialistaSolicitante" not-null="true" />
+    
+    <many-to-one name="IdObraSocial" column="idObraSocial" class="Business.Data.ObraSocial,Business" />
+		<!--<property column="idObraSocial" type="Int32" name="IdObraSocial" not-null="true" />-->
+
+    <many-to-one name="IdOrigen" column="idOrigen" class="Business.Data.Laboratorio.Origen,Business" />
+    <!--<property column="idOrigen" type="Int32" name="IdOrigen" not-null="true" />-->
+
+    <many-to-one name="IdPrioridad" column="idPrioridad" class="Business.Data.Laboratorio.Prioridad,Business" />
+    <!--<property column="idPrioridad" type="Int32" name="IdPrioridad" not-null="true" />-->
+    	<property column="observacion" type="String" name="Observacion" length="4000" />
+		
+		<property column="nombreObraSocial" type="String" name="NombreObraSocial" length="500" />
+    	<property column="especialista" type="String" name="Especialista" length="500" />
+    <property column="matriculaEspecialista" type="String" name="MatriculaEspecialista" length="100" />
+    <property column="sala" type="String" name="Sala" length="50" />
+    <property column="cama" type="String" name="Cama" length="50" />
+
+    <property column="estado" type="Int32" name="Estado" not-null="true" />    
+    
+    <property column="alerta" type="Boolean" name="Alerta" not-null="true" />
+
+    <property column="edad" type="Int32" name="Edad" not-null="true" />
+    <property column="unidadEdad" type="Int32" name="UnidadEdad" not-null="true" />
+    <property column="sexo" type="String" name="Sexo" length="1" />
+    <property column="embarazada" type="String" name="Embarazada" length="1" />
+    
+    <!--<property column="horaNacimiento" type="String" name="HoraNacimiento" length="5" />
+    <property column="pesoNacimiento" type="Int32" name="PesoNacimiento" />
+    <property column="semanaGestacion" type="Int32" name="SemanaGestacion" not-null="true" />-->
+
+    <property column="numeroOrigen" type="String" name="NumeroOrigen" length="50" />
+      <property column="numeroOrigen2" type="String" name="NumeroOrigen2" length="50" />
+    
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+    <property column="impreso" type="Boolean" name="Impreso" not-null="true" />
+    <property column="observacionesResultados" type="String" name="ObservacionResultado" length="4000" />
+    <property column="descripcionProducto" type="String" name="DescripcionProducto" length="500" />
+    
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		<property column="idMuestra" type="Int32" name="IdMuestra" not-null="true" />
+    <property column="fechaTomaMuestra" type="DateTime" name="FechaTomaMuestra" not-null="true" />
+  	<property column="idConservacion" type="Int32" name="IdConservacion"  not-null="true" />
+  
+  
+		<property column="idCaracter" type="Int32" name="IdCaracter" not-null="true" />
+
+    <property column="cod_os" type="Int32" name="CodOs" not-null="true" />
+<property column="idCasoSISA" type="Int32" name="IdCasoSISA" not-null="true" />
+  
+	<property column="ipCarga" type="String" name="IpCarga" length="50" />
+    <property column="impres" type="String" name="Impres" length="150" />
+  <property column="fechaInicioSintomas" type="DateTime" name="FechaInicioSintomas" not-null="true" />
+  <property column="fechaUltimoContacto" type="DateTime" name="FechaUltimoContacto" not-null="true" />
+
+    <property column="notificarresultado" type="Boolean" name="Notificarresultado" not-null="true" /> 
+	</class>
+</hibernate-mapping>

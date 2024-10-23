@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Formula,Business" table="LAB_Formula">
+
+		<id name="IdFormula" column="idFormula" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+		<!--<property column="nombre" type="String" name="Nombre" not-null="true" length="50" />-->
+		<property column="formula" type="String" name="ContenidoFormula" not-null="true" length="500" />
+    <!--<property column="operacion" type="String" name="Operacion" not-null="true" length="5" />-->
+    <property column="operacion" type="Int32" name="Operacion" not-null="true" />
+    
+    <property column="formulaControl" type="String" name="FormulaControl" not-null="true" length="500" />
+    <property column="idTipoFormula" type="Int32" name="IdTipoFormula" not-null="true" />
+
+
+    <property column="condicionSexo" type="String" name="Sexo" not-null="true" length="1" />
+    
+    <property column="condicionEdadDesde" type="Int32" name="EdadDesde" not-null="true" />
+    <property column="condicionEdadHasta" type="Int32" name="EdadHasta" not-null="true" />
+    <property column="condicionUnidadEdad" type="Int32" name="UnidadEdad" not-null="true" />
+
+     <property column="condicionDeterminacion" type="String" name="CondicionDeterminacion" not-null="true" length="2000" /> 
+
+    <property column="baja" type="Boolean" name="Baja" not-null="true" />
+
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+    <!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+    <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+    <property column="idRaza" type="Int32" name="IdRaza" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

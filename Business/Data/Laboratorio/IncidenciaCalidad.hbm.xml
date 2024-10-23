@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.IncidenciaCalidad,Business" table="LAB_IncidenciaCalidad">
+
+		<id name="IdIncidenciaCalidad" column="idIncidenciaCalidad" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="500" />
+		<property column="descripcion" type="String" name="Descripcion" not-null="true" length="2147483647" />
+		<property column="idTipoIncidencia" type="Int32" name="IdTipoIncidencia" not-null="true" />
+		<property column="idIncidenciaSuperior" type="Int32" name="IdIncidenciaSuperior" not-null="true" />
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.Peticion,Business" table="LAB_Peticion">
+
+		<id name="IdPeticion" column="idPeticion" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    
+		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
+		<property column="hora" type="String" name="Hora" not-null="true" length="5" />
+    <many-to-one name="IdPaciente" column="idPaciente" class="Business.Data.Paciente,Business" />
+    
+    <many-to-one name="IdTipoServicio" column="idTipoServicio" class="Business.Data.Laboratorio.TipoServicio,Business" />
+    
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+		<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+    
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		<property column="observaciones" type="String" name="Observaciones" not-null="true" length="4000" />
+
+
+    <property column="enviada" type="Boolean" name="Enviada" not-null="true" />
+    <many-to-one name="IdOrigen" column="idOrigen" class="Business.Data.Laboratorio.Origen,Business" />
+    <many-to-one name="IdSector" column="idSector" class="Business.Data.Laboratorio.SectorServicio,Business" />
+
+    <property column="sala" type="String" name="Sala" length="50" />
+    <property column="cama" type="String" name="Cama" length="50" />
+
+    
+    <property column="idSolicitante" type="Int32" name="IdSolicitante" not-null="true" />
+    <property column="idMuestra" type="Int32" name="IdMuestra" not-null="true" />
+    <property column="idObraSocial" type="Int32" name="IdObraSocial" not-null="true" />
+    
+    		<property column="apellido" type="String" name="Apellido" not-null="true" length="100" />
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="100" />
+    
+
+    
+    <property name="IdSexo" column="idSexo" type="Int32"/>
+		<property column="fechaNacimiento" type="DateTime" name="FechaNacimiento" not-null="true" />
+    
+	</class>
+</hibernate-mapping>

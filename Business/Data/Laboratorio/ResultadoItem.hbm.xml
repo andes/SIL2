@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ResultadoItem,Business" table="LAB_ResultadoItem">
+
+		<id name="IdResultadoItem" column="idResultadoItem" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+
+    <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
+		<!--<property column="idItem" type="Int32" name="IdItem" not-null="true" />-->
+    
+		<property column="resultado" type="String" name="Resultado" not-null="true" length="200" />
+		<property column="baja" type="Boolean" name="Baja" not-null="true" />
+
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+    <property name="IdEfectorDeriva" column="idEfectorDeriva" type="Int32" not-null="true"/>
+		
+	</class>
+</hibernate-mapping>

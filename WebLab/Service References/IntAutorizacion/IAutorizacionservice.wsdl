@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns2="urn:AutorizacionIntf" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://www.borland.com/namespaces/Types" xmlns:ns1="urn:TiposWebServices" name="IAutorizacionservice" targetNamespace="http://tempuri.org/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema xmlns="urn:TiposWebServices" targetNamespace="urn:TiposWebServices">
+      <xs:complexType name="TResultadoServicio">
+        <xs:sequence>
+          <xs:element name="Resultado" type="xs:base64Binary" />
+          <xs:element name="Resultado2" type="xs:base64Binary" />
+          <xs:element name="Resultado3" type="xs:base64Binary" />
+          <xs:element name="Resultado4" type="xs:base64Binary" />
+          <xs:element name="Resultado5" type="xs:base64Binary" />
+          <xs:element name="NumPedido" type="xs:int" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="TipoResultado" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoServicio2">
+        <xs:sequence>
+          <xs:element name="Resultado1" type="xs:base64Binary" />
+          <xs:element name="FirmaResultado1" type="xs:base64Binary" />
+          <xs:element name="Resultado2" type="xs:base64Binary" />
+          <xs:element name="Resultado3" type="xs:base64Binary" />
+          <xs:element name="Resultado4" type="xs:base64Binary" />
+          <xs:element name="Resultado5" type="xs:base64Binary" />
+          <xs:element name="NumPedido" type="xs:int" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="TipoResultado" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoServicio3">
+        <xs:sequence>
+          <xs:element name="Resultado1" type="xs:base64Binary" />
+          <xs:element name="Resultado2" type="xs:base64Binary" />
+          <xs:element name="Resultado3" type="xs:base64Binary" />
+          <xs:element name="Resultado4" type="xs:base64Binary" />
+          <xs:element name="Resultado5" type="xs:base64Binary" />
+          <xs:element name="FirmaResultado1" type="xs:base64Binary" />
+          <xs:element name="FirmaResultado2" type="xs:base64Binary" />
+          <xs:element name="FirmaResultado3" type="xs:base64Binary" />
+          <xs:element name="FirmaResultado4" type="xs:base64Binary" />
+          <xs:element name="FirmaResultado5" type="xs:base64Binary" />
+          <xs:element name="NumPedido" type="xs:int" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="TipoResultado" type="xs:int" />
+          <xs:element name="ResultadoFirmado" type="xs:boolean" />
+          <xs:element name="ResultadoEncriptado" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayDeMenu">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:sequence />
+            <xs:attribute xmlns:n1="http://schemas.xmlsoap.org/wsdl/" n1:arrayType="ns1:TNodoMenu[]" ref="soapenc:arrayType" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="TNodoMenu">
+        <xs:sequence>
+          <xs:element name="Codigo" type="xs:int" />
+          <xs:element name="Descripcion" type="xs:string" />
+          <xs:element name="codigopadre" type="xs:int" />
+          <xs:element name="CodigoExterno" type="xs:string" />
+          <xs:element name="NivelAutorizacion" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ArrayDeInt">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:sequence />
+            <xs:attribute xmlns:n1="http://schemas.xmlsoap.org/wsdl/" n1:arrayType="xs:int[]" ref="soapenc:arrayType" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="ArrayDeString">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:sequence />
+            <xs:attribute xmlns:n1="http://schemas.xmlsoap.org/wsdl/" n1:arrayType="xs:string[]" ref="soapenc:arrayType" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="TParametrosDeServicio">
+        <xs:sequence>
+          <xs:element name="Nombres" type="ns3:TStringDynArray" />
+          <xs:element name="Tipos" type="ns3:TStringDynArray" />
+          <xs:element name="Valores" type="ns3:TStringDynArray" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoEjemploServicio">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="Resultado1" type="xs:base64Binary" />
+          <xs:element name="Resultado2" type="xs:base64Binary" />
+          <xs:element name="Resultado3" type="xs:base64Binary" />
+          <xs:element name="Resultado4" type="xs:base64Binary" />
+          <xs:element name="Resultado5" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoUsuarioHabilitadoParaMenu">
+        <xs:sequence>
+          <xs:element name="Habilitado" type="xs:boolean" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns="urn:AutorizacionIntf" targetNamespace="urn:AutorizacionIntf">
+      <xs:complexType name="CResultadoMenu">
+        <xs:sequence>
+          <xs:element name="Menu" type="ns1:ArrayDeMenu" />
+          <xs:element name="Resultado" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CResultadoMenuJAVA">
+        <xs:sequence>
+          <xs:element name="Resultado" type="xs:boolean" />
+          <xs:element name="Codigo" type="ns1:ArrayDeInt" />
+          <xs:element name="Descripcion" type="ns1:ArrayDeString" />
+          <xs:element name="CodigoPadre" type="ns1:ArrayDeInt" />
+          <xs:element name="CodigoExterno" type="ns1:ArrayDeString" />
+          <xs:element name="NivelAutorizacion" type="ns1:ArrayDeInt" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CResultadoMenu_V2">
+        <xs:sequence>
+          <xs:element name="Resultado" type="xs:boolean" />
+          <xs:element name="Codigo" type="ns3:TIntegerDynArray" />
+          <xs:element name="Descripcion" type="ns3:TStringDynArray" />
+          <xs:element name="CodigoPadre" type="ns3:TIntegerDynArray" />
+          <xs:element name="CodigoExterno" type="ns3:TStringDynArray" />
+          <xs:element name="NivelAutorizacion" type="ns3:TIntegerDynArray" />
+          <xs:element name="ProgramaAsociado" type="ns3:TStringDynArray" />
+          <xs:element name="Comentarios" type="ns3:TStringDynArray" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CResultadoMenu_V4">
+        <xs:sequence>
+          <xs:element name="Resultado" type="xs:boolean" />
+          <xs:element name="Codigo" type="ns3:TIntegerDynArray" />
+          <xs:element name="Nombre" type="ns3:TStringDynArray" />
+          <xs:element name="CodigoPadre" type="ns3:TIntegerDynArray" />
+          <xs:element name="CodigoExterno" type="ns3:TStringDynArray" />
+          <xs:element name="NivelAutorizacion" type="ns3:TIntegerDynArray" />
+          <xs:element name="ProgramaAsociado" type="ns3:TStringDynArray" />
+          <xs:element name="Comentarios" type="ns3:TStringDynArray" />
+          <xs:element name="Descripcion" type="ns3:TStringDynArray" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="CResultadoMenu_V3">
+        <xs:sequence>
+          <xs:element name="Resultado" type="xs:boolean" />
+          <xs:element name="Codigo" type="ns3:TIntegerDynArray" />
+          <xs:element name="Nombre" type="ns3:TStringDynArray" />
+          <xs:element name="CodigoPadre" type="ns3:TIntegerDynArray" />
+          <xs:element name="CodigoExterno" type="ns3:TStringDynArray" />
+          <xs:element name="NivelAutorizacion" type="ns3:TIntegerDynArray" />
+          <xs:element name="ProgramaAsociado" type="ns3:TStringDynArray" />
+          <xs:element name="Comentarios" type="ns3:TStringDynArray" />
+          <xs:element name="Descripcion" type="ns3:TStringDynArray" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoEcho">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="Resultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TListaNodosIntegrabilidad">
+        <xs:sequence>
+          <xs:element name="Codigos" type="ns3:TStringDynArray" />
+          <xs:element name="Nombres" type="ns3:TStringDynArray" />
+          <xs:element name="Tipos" type="xs:base64Binary" />
+          <xs:element name="Estados" type="xs:base64Binary" />
+          <xs:element name="IPs" type="ns3:TStringDynArray" />
+          <xs:element name="Mensajes" type="ns3:TStringDynArray" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TListaServiciosDeFA">
+        <xs:sequence>
+          <xs:element name="Codigos" type="ns3:TStringDynArray" />
+          <xs:element name="Nombres" type="ns3:TStringDynArray" />
+          <xs:element name="Descripciones" type="ns3:TStringDynArray" />
+          <xs:element name="SistemaFuenteDatos" type="ns3:TStringDynArray" />
+          <xs:element name="ComoTrabaja" type="ns3:TStringDynArray" />
+          <xs:element name="DatosParaTest" type="ns3:TStringDynArray" />
+          <xs:element name="RespuestaEsperada" type="ns3:TStringDynArray" />
+          <xs:element name="Responsable" type="ns3:TStringDynArray" />
+          <xs:element name="Estados" type="xs:base64Binary" />
+          <xs:element name="URLs" type="ns3:TStringDynArray" />
+          <xs:element name="Mensajes" type="ns3:TStringDynArray" />
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TListaUsuariosDeMenu">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="Codigos" type="ns3:TStringDynArray" />
+          <xs:element name="Nombres" type="ns3:TStringDynArray" />
+          <xs:element name="CodigosPadre" type="ns3:TStringDynArray" />
+          <xs:element name="CodigosUsuarios" type="ns3:TStringDynArray" />
+          <xs:element name="CodigosItems" type="ns3:TStringDynArray" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="TNivelPermiso">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="npNinguno" />
+          <xs:enumeration value="npLectura" />
+          <xs:enumeration value="npInsercion" />
+          <xs:enumeration value="npModificacion" />
+          <xs:enumeration value="npBorrado" />
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:complexType name="TResultadoAsignacionMenu">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoRolesDeUsuario">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="ListaRoles" type="ns3:TIntegerDynArray" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultadoUsuariosDependientes">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+          <xs:element name="Usuarios" type="ns3:TIntegerDynArray" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TResultado">
+        <xs:sequence>
+          <xs:element name="CodResultado" type="xs:int" />
+          <xs:element name="MensajeResultado" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="TBasesDeUsuario">
+        <xs:complexContent mixed="false">
+          <xs:extension base="ns2:TResultado">
+            <xs:sequence>
+              <xs:element name="Bases" type="ns2:TArrayDeBases" />
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="TArrayDeBases">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:sequence />
+            <xs:attribute xmlns:n1="http://schemas.xmlsoap.org/wsdl/" n1:arrayType="ns2:TBase[]" ref="soapenc:arrayType" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="TBase">
+        <xs:sequence>
+          <xs:element name="Alias" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns="http://www.borland.com/namespaces/Types" targetNamespace="http://www.borland.com/namespaces/Types">
+      <xs:complexType name="TIntegerDynArray">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:sequence />
+            <xs:attribute xmlns:n1="http://schemas.xmlsoap.org/wsdl/" n1:arrayType="xs:int[]" ref="soapenc:arrayType" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="TStringDynArray">
+        <xs:complexContent mixed="false">
+          <xs:restriction base="soapenc:Array">
+            <xs:sequence />
+            <xs:attribute xmlns:n1="http://schemas.xmlsoap.org/wsdl/" n1:arrayType="xs:string[]" ref="soapenc:arrayType" />
+          </xs:restriction>
+        </xs:complexContent>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="Solicitar_Servicio0Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Cliente" type="xs:string" />
+    <part name="Proveedor" type="xs:string" />
+    <part name="Servicio" type="xs:string" />
+    <part name="DatoAuditado" type="xs:string" />
+    <part name="Operador" type="xs:string" />
+    <part name="Cuerpo" type="xs:base64Binary" />
+    <part name="CuerpoFirmado" type="xs:boolean" />
+    <part name="CuerpoEncriptado" type="xs:boolean" />
+  </message>
+  <message name="Solicitar_Servicio0Response">
+    <part name="return" type="ns1:TResultadoServicio" />
+  </message>
+  <message name="Solicitar_Servicio21Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Cliente" type="xs:string" />
+    <part name="Proveedor" type="xs:string" />
+    <part name="Servicio" type="xs:string" />
+    <part name="DatoAuditado" type="xs:string" />
+    <part name="Operador" type="xs:string" />
+    <part name="Cuerpo" type="xs:base64Binary" />
+    <part name="Firma" type="xs:base64Binary" />
+    <part name="CuerpoFirmado" type="xs:boolean" />
+    <part name="CuerpoEncriptado" type="xs:boolean" />
+  </message>
+  <message name="Solicitar_Servicio21Response">
+    <part name="return" type="ns1:TResultadoServicio2" />
+  </message>
+  <message name="Solicitar_Servicio32Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Cliente" type="xs:string" />
+    <part name="Proveedor" type="xs:string" />
+    <part name="Servicio" type="xs:string" />
+    <part name="DatoAuditado" type="xs:string" />
+    <part name="Operador" type="xs:string" />
+    <part name="Cuerpo" type="xs:base64Binary" />
+    <part name="Firma" type="xs:base64Binary" />
+    <part name="CuerpoFirmado" type="xs:boolean" />
+    <part name="CuerpoEncriptado" type="xs:boolean" />
+  </message>
+  <message name="Solicitar_Servicio32Response">
+    <part name="return" type="ns1:TResultadoServicio3" />
+  </message>
+  <message name="Solicitar_ClavePublica3Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Proveedor" type="xs:string" />
+  </message>
+  <message name="Solicitar_ClavePublica3Response">
+    <part name="return" type="xs:base64Binary" />
+  </message>
+  <message name="Informar_Resultado_del_Servicio4Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="NumPedido" type="xs:int" />
+    <part name="Cliente" type="xs:string" />
+    <part name="Proveedor" type="xs:string" />
+    <part name="CodResultado" type="xs:int" />
+  </message>
+  <message name="Informar_Resultado_del_Servicio4Response" />
+  <message name="RecuperarMenuDeUsuario5Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="CodigoMenu" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeUsuario5Response">
+    <part name="return" type="ns2:CResultadoMenu" />
+  </message>
+  <message name="RecuperarMenuDeUsuarioParaJAVA6Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeUsuarioParaJAVA6Response">
+    <part name="return" type="ns2:CResultadoMenuJAVA" />
+  </message>
+  <message name="RecuperarMenuDeUsuario_V27Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeUsuario_V27Response">
+    <part name="return" type="ns2:CResultadoMenu_V2" />
+  </message>
+  <message name="RecuperarMenuDeUsuario_V38Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeUsuario_V38Response">
+    <part name="return" type="ns2:CResultadoMenu_V4" />
+  </message>
+  <message name="RecuperarMenuDeUsuario_V49Request">
+    <part name="IdSesionSistemaCliente" type="xs:string" />
+    <part name="IdSesionOperador" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeUsuario_V49Response">
+    <part name="return" type="ns2:CResultadoMenu_V4" />
+  </message>
+  <message name="RecuperarMenuDeSistema10Request">
+    <part name="IdSesionSistemaCliente" type="xs:string" />
+    <part name="IdSesionOperador" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeSistema10Response">
+    <part name="return" type="ns2:CResultadoMenu_V4" />
+  </message>
+  <message name="ObtenerParametrosDeServicio11Request">
+    <part name="idSesionPecas" type="xs:string" />
+    <part name="Servicio" type="xs:string" />
+    <part name="Proveedor" type="xs:string" />
+  </message>
+  <message name="ObtenerParametrosDeServicio11Response">
+    <part name="return" type="ns1:TParametrosDeServicio" />
+  </message>
+  <message name="RecuperarCatalogoServicios12Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+  </message>
+  <message name="RecuperarCatalogoServicios12Response">
+    <part name="return" type="ns2:CResultadoMenu_V3" />
+  </message>
+  <message name="ObtenerEjemploResultadoServicio13Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="servicio" type="xs:string" />
+  </message>
+  <message name="ObtenerEjemploResultadoServicio13Response">
+    <part name="return" type="ns1:TResultadoEjemploServicio" />
+  </message>
+  <message name="Echo14Request">
+    <part name="texto" type="xs:string" />
+  </message>
+  <message name="Echo14Response">
+    <part name="return" type="ns2:TResultadoEcho" />
+  </message>
+  <message name="RecuperarListaNodosIntegrabilidad15Request">
+    <part name="IdSesionPecas" type="xs:string" />
+  </message>
+  <message name="RecuperarListaNodosIntegrabilidad15Response">
+    <part name="return" type="ns2:TListaNodosIntegrabilidad" />
+  </message>
+  <message name="RecuperarListaWebServicesDeFA16Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="CodigoFA" type="xs:string" />
+  </message>
+  <message name="RecuperarListaWebServicesDeFA16Response">
+    <part name="return" type="ns2:TListaServiciosDeFA" />
+  </message>
+  <message name="RecuperarUsuariosDeMenu17Request">
+    <part name="IdSesionUsuario" type="xs:string" />
+    <part name="Raiz" type="xs:string" />
+    <part name="Opcion" type="xs:string" />
+  </message>
+  <message name="RecuperarUsuariosDeMenu17Response">
+    <part name="return" type="ns2:TListaUsuariosDeMenu" />
+  </message>
+  <message name="AutorizarUsuarioMenu18Request">
+    <part name="IdSesionUsuario" type="xs:string" />
+    <part name="Raiz" type="xs:string" />
+    <part name="Usuario" type="xs:string" />
+    <part name="Opcion" type="xs:string" />
+    <part name="NivelPermiso" type="ns2:TNivelPermiso" />
+  </message>
+  <message name="AutorizarUsuarioMenu18Response">
+    <part name="return" type="ns2:TResultadoAsignacionMenu" />
+  </message>
+  <message name="DesAutorizarUsuarioMenu19Request">
+    <part name="IdSesionUsuario" type="xs:string" />
+    <part name="Raiz" type="xs:string" />
+    <part name="Usuario" type="xs:string" />
+    <part name="Opcion" type="xs:string" />
+    <part name="NivelPermiso" type="ns2:TNivelPermiso" />
+  </message>
+  <message name="DesAutorizarUsuarioMenu19Response">
+    <part name="return" type="ns2:TResultadoAsignacionMenu" />
+  </message>
+  <message name="UsuarioHabilitadoParaMenu20Request">
+    <part name="IdSesionUsuario" type="xs:string" />
+    <part name="Raiz" type="xs:string" />
+    <part name="Menu" type="xs:string" />
+  </message>
+  <message name="UsuarioHabilitadoParaMenu20Response">
+    <part name="return" type="ns1:TResultadoUsuarioHabilitadoParaMenu" />
+  </message>
+  <message name="RolesDeUsuario21Request">
+    <part name="IdSesionUsuario" type="xs:string" />
+    <part name="Proceso" type="xs:int" />
+    <part name="Version" type="xs:int" />
+  </message>
+  <message name="RolesDeUsuario21Response">
+    <part name="return" type="ns2:TResultadoRolesDeUsuario" />
+  </message>
+  <message name="UsuariosDependientes22Request">
+    <part name="IdSesionUsuario" type="xs:string" />
+  </message>
+  <message name="UsuariosDependientes22Response">
+    <part name="return" type="ns2:TResultadoUsuariosDependientes" />
+  </message>
+  <message name="RecuperaBasesDeUsuario23Request">
+    <part name="IdSesion" type="xs:string" />
+  </message>
+  <message name="RecuperaBasesDeUsuario23Response">
+    <part name="return" type="ns2:TBasesDeUsuario" />
+  </message>
+  <message name="Test24Request" />
+  <message name="Test24Response">
+    <part name="return" type="ns2:TResultado" />
+  </message>
+  <message name="RecuperarMenuDeOtroUsuario25Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Codigomenu" type="xs:string" />
+    <part name="usuario" type="xs:string" />
+  </message>
+  <message name="RecuperarMenuDeOtroUsuario25Response">
+    <part name="return" type="ns2:CResultadoMenu_V4" />
+  </message>
+  <message name="Solicitar_Servicio_Desde_Workflow26Request">
+    <part name="IdSesionPecas" type="xs:string" />
+    <part name="Servidor" type="xs:string" />
+    <part name="Proceso" type="xs:int" />
+    <part name="Tarea" type="xs:int" />
+  </message>
+  <message name="Solicitar_Servicio_Desde_Workflow26Response">
+    <part name="return" type="ns1:TResultadoServicio3" />
+  </message>
+  <portType name="IAutorizacion">
+    <operation name="Solicitar_Servicio">
+      <input message="tns:Solicitar_Servicio0Request" />
+      <output message="tns:Solicitar_Servicio0Response" />
+    </operation>
+    <operation name="Solicitar_Servicio2">
+      <input message="tns:Solicitar_Servicio21Request" />
+      <output message="tns:Solicitar_Servicio21Response" />
+    </operation>
+    <operation name="Solicitar_Servicio3">
+      <input message="tns:Solicitar_Servicio32Request" />
+      <output message="tns:Solicitar_Servicio32Response" />
+    </operation>
+    <operation name="Solicitar_ClavePublica">
+      <input message="tns:Solicitar_ClavePublica3Request" />
+      <output message="tns:Solicitar_ClavePublica3Response" />
+    </operation>
+    <operation name="Informar_Resultado_del_Servicio">
+      <input message="tns:Informar_Resultado_del_Servicio4Request" />
+      <output message="tns:Informar_Resultado_del_Servicio4Response" />
+    </operation>
+    <operation name="RecuperarMenuDeUsuario">
+      <input message="tns:RecuperarMenuDeUsuario5Request" />
+      <output message="tns:RecuperarMenuDeUsuario5Response" />
+    </operation>
+    <operation name="RecuperarMenuDeUsuarioParaJAVA">
+      <input message="tns:RecuperarMenuDeUsuarioParaJAVA6Request" />
+      <output message="tns:RecuperarMenuDeUsuarioParaJAVA6Response" />
+    </operation>
+    <operation name="RecuperarMenuDeUsuario_V2">
+      <input message="tns:RecuperarMenuDeUsuario_V27Request" />
+      <output message="tns:RecuperarMenuDeUsuario_V27Response" />
+    </operation>
+    <operation name="RecuperarMenuDeUsuario_V3">
+      <input message="tns:RecuperarMenuDeUsuario_V38Request" />
+      <output message="tns:RecuperarMenuDeUsuario_V38Response" />
+    </operation>
+    <operation name="RecuperarMenuDeUsuario_V4">
+      <input message="tns:RecuperarMenuDeUsuario_V49Request" />
+      <output message="tns:RecuperarMenuDeUsuario_V49Response" />
+    </operation>
+    <operation name="RecuperarMenuDeSistema">
+      <input message="tns:RecuperarMenuDeSistema10Request" />
+      <output message="tns:RecuperarMenuDeSistema10Response" />
+    </operation>
+    <operation name="ObtenerParametrosDeServicio">
+      <input message="tns:ObtenerParametrosDeServicio11Request" />
+      <output message="tns:ObtenerParametrosDeServicio11Response" />
+    </operation>
+    <operation name="RecuperarCatalogoServicios">
+      <input message="tns:RecuperarCatalogoServicios12Request" />
+      <output message="tns:RecuperarCatalogoServicios12Response" />
+    </operation>
+    <operation name="ObtenerEjemploResultadoServicio">
+      <input message="tns:ObtenerEjemploResultadoServicio13Request" />
+      <output message="tns:ObtenerEjemploResultadoServicio13Response" />
+    </operation>
+    <operation name="Echo">
+      <input message="tns:Echo14Request" />
+      <output message="tns:Echo14Response" />
+    </operation>
+    <operation name="RecuperarListaNodosIntegrabilidad">
+      <input message="tns:RecuperarListaNodosIntegrabilidad15Request" />
+      <output message="tns:RecuperarListaNodosIntegrabilidad15Response" />
+    </operation>
+    <operation name="RecuperarListaWebServicesDeFA">
+      <input message="tns:RecuperarListaWebServicesDeFA16Request" />
+      <output message="tns:RecuperarListaWebServicesDeFA16Response" />
+    </operation>
+    <operation name="RecuperarUsuariosDeMenu">
+      <input message="tns:RecuperarUsuariosDeMenu17Request" />
+      <output message="tns:RecuperarUsuariosDeMenu17Response" />
+    </operation>
+    <operation name="AutorizarUsuarioMenu">
+      <input message="tns:AutorizarUsuarioMenu18Request" />
+      <output message="tns:AutorizarUsuarioMenu18Response" />
+    </operation>
+    <operation name="DesAutorizarUsuarioMenu">
+      <input message="tns:DesAutorizarUsuarioMenu19Request" />
+      <output message="tns:DesAutorizarUsuarioMenu19Response" />
+    </operation>
+    <operation name="UsuarioHabilitadoParaMenu">
+      <input message="tns:UsuarioHabilitadoParaMenu20Request" />
+      <output message="tns:UsuarioHabilitadoParaMenu20Response" />
+    </operation>
+    <operation name="RolesDeUsuario">
+      <input message="tns:RolesDeUsuario21Request" />
+      <output message="tns:RolesDeUsuario21Response" />
+    </operation>
+    <operation name="UsuariosDependientes">
+      <input message="tns:UsuariosDependientes22Request" />
+      <output message="tns:UsuariosDependientes22Response" />
+    </operation>
+    <operation name="RecuperaBasesDeUsuario">
+      <input message="tns:RecuperaBasesDeUsuario23Request" />
+      <output message="tns:RecuperaBasesDeUsuario23Response" />
+    </operation>
+    <operation name="Test">
+      <input message="tns:Test24Request" />
+      <output message="tns:Test24Response" />
+    </operation>
+    <operation name="RecuperarMenuDeOtroUsuario">
+      <input message="tns:RecuperarMenuDeOtroUsuario25Request" />
+      <output message="tns:RecuperarMenuDeOtroUsuario25Response" />
+    </operation>
+    <operation name="Solicitar_Servicio_Desde_Workflow">
+      <input message="tns:Solicitar_Servicio_Desde_Workflow26Request" />
+      <output message="tns:Solicitar_Servicio_Desde_Workflow26Response" />
+    </operation>
+  </portType>
+  <binding name="IAutorizacionbinding" type="tns:IAutorizacion">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <operation name="Solicitar_Servicio">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Solicitar_Servicio" style="rpc" />
+      <input message="tns:Solicitar_Servicio0Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Solicitar_Servicio0Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Solicitar_Servicio2">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Solicitar_Servicio2" style="rpc" />
+      <input message="tns:Solicitar_Servicio21Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Solicitar_Servicio21Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Solicitar_Servicio3">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Solicitar_Servicio3" style="rpc" />
+      <input message="tns:Solicitar_Servicio32Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Solicitar_Servicio32Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Solicitar_ClavePublica">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Solicitar_ClavePublica" style="rpc" />
+      <input message="tns:Solicitar_ClavePublica3Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Solicitar_ClavePublica3Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Informar_Resultado_del_Servicio">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Informar_Resultado_del_Servicio" style="rpc" />
+      <input message="tns:Informar_Resultado_del_Servicio4Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Informar_Resultado_del_Servicio4Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeUsuario">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeUsuario" style="rpc" />
+      <input message="tns:RecuperarMenuDeUsuario5Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeUsuario5Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeUsuarioParaJAVA">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeUsuarioParaJAVA" style="rpc" />
+      <input message="tns:RecuperarMenuDeUsuarioParaJAVA6Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeUsuarioParaJAVA6Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeUsuario_V2">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeUsuario_V2" style="rpc" />
+      <input message="tns:RecuperarMenuDeUsuario_V27Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeUsuario_V27Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeUsuario_V3">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeUsuario_V3" style="rpc" />
+      <input message="tns:RecuperarMenuDeUsuario_V38Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeUsuario_V38Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeUsuario_V4">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeUsuario_V4" style="rpc" />
+      <input message="tns:RecuperarMenuDeUsuario_V49Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeUsuario_V49Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeSistema">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeSistema" style="rpc" />
+      <input message="tns:RecuperarMenuDeSistema10Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeSistema10Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerParametrosDeServicio">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#ObtenerParametrosDeServicio" style="rpc" />
+      <input message="tns:ObtenerParametrosDeServicio11Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerParametrosDeServicio11Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarCatalogoServicios">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarCatalogoServicios" style="rpc" />
+      <input message="tns:RecuperarCatalogoServicios12Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarCatalogoServicios12Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="ObtenerEjemploResultadoServicio">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#ObtenerEjemploResultadoServicio" style="rpc" />
+      <input message="tns:ObtenerEjemploResultadoServicio13Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:ObtenerEjemploResultadoServicio13Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Echo">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Echo" style="rpc" />
+      <input message="tns:Echo14Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Echo14Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarListaNodosIntegrabilidad">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarListaNodosIntegrabilidad" style="rpc" />
+      <input message="tns:RecuperarListaNodosIntegrabilidad15Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarListaNodosIntegrabilidad15Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarListaWebServicesDeFA">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarListaWebServicesDeFA" style="rpc" />
+      <input message="tns:RecuperarListaWebServicesDeFA16Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarListaWebServicesDeFA16Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarUsuariosDeMenu">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarUsuariosDeMenu" style="rpc" />
+      <input message="tns:RecuperarUsuariosDeMenu17Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarUsuariosDeMenu17Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="AutorizarUsuarioMenu">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#AutorizarUsuarioMenu" style="rpc" />
+      <input message="tns:AutorizarUsuarioMenu18Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:AutorizarUsuarioMenu18Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="DesAutorizarUsuarioMenu">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#DesAutorizarUsuarioMenu" style="rpc" />
+      <input message="tns:DesAutorizarUsuarioMenu19Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:DesAutorizarUsuarioMenu19Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="UsuarioHabilitadoParaMenu">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#UsuarioHabilitadoParaMenu" style="rpc" />
+      <input message="tns:UsuarioHabilitadoParaMenu20Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:UsuarioHabilitadoParaMenu20Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RolesDeUsuario">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RolesDeUsuario" style="rpc" />
+      <input message="tns:RolesDeUsuario21Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RolesDeUsuario21Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="UsuariosDependientes">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#UsuariosDependientes" style="rpc" />
+      <input message="tns:UsuariosDependientes22Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:UsuariosDependientes22Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperaBasesDeUsuario">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperaBasesDeUsuario" style="rpc" />
+      <input message="tns:RecuperaBasesDeUsuario23Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperaBasesDeUsuario23Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Test">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Test" style="rpc" />
+      <input message="tns:Test24Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Test24Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="RecuperarMenuDeOtroUsuario">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#RecuperarMenuDeOtroUsuario" style="rpc" />
+      <input message="tns:RecuperarMenuDeOtroUsuario25Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:RecuperarMenuDeOtroUsuario25Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+    <operation name="Solicitar_Servicio_Desde_Workflow">
+      <soap:operation soapAction="urn:AutorizacionIntf-IAutorizacion#Solicitar_Servicio_Desde_Workflow" style="rpc" />
+      <input message="tns:Solicitar_Servicio_Desde_Workflow26Request">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </input>
+      <output message="tns:Solicitar_Servicio_Desde_Workflow26Response">
+        <soap:body use="encoded" namespace="urn:AutorizacionIntf-IAutorizacion" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </output>
+    </operation>
+  </binding>
+  <service name="IAutorizacionservice">
+    <port name="IAutorizacionPort" binding="tns:IAutorizacionbinding">
+      <soap:address location="http://autoriza.neuquen.gov.ar:8080/scripts/autorizacion.exe/soap/IAutorizacion" />
+    </port>
+  </service>
+</definitions>

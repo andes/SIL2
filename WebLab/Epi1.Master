@@ -1,0 +1,237 @@
+﻿<%@ Master Language="C#"  AutoEventWireup="true" CodeBehind="Epi1.Master.cs" Inherits="WebLab.Epi1"      %>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head runat="server">
+    <title>SIL - Sistema Informático de Laboratorio</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1"> 
+     <link rel="stylesheet" type="text/css" href="App_Themes/default/style.css" />
+     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+     <script src="bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+ <%--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> --%>
+      
+   <script type="text/javascript"> 
+   
+
+function checkKeyCode()
+{ 
+
+if(window.event && window.event.keyCode == 116)
+{ 
+    //alert ('Refresh deshabilitado');
+    event.keyCode=0;
+    return false;
+} 
+
+if( window.event.keyCode == 8) 
+{
+     //BackSpace lo cambia por tecla: <- 
+        
+     valor = document.activeElement.value; 
+//     alert(valor);
+    if (valor==undefined) 
+        event.keyCode=37;
+    
+}
+
+if(window.event && window.event.keyCode == 122) 
+{
+event.keyCode=0; 
+return false;
+}
+ //Controla combinaciÃ³n: Alt <- 
+if(window.event && window.event.keyCode == 37 ) 
+{ 
+     //alert ('Alt <- Deshabilitada ');
+    event.keyCode=0;
+    return false; 
+} 
+teclaAnt = window.event.keyCode ;
+} 
+
+document.onkeydown=checkKeyCode;
+
+ 
+//if (document.all) {
+//// window.moveTo(0,0);
+//top.window.resizeTo(screen.availWidth,screen.availHeight);
+//}
+//else if (document.layers||document.getElementById) {
+//if (top.window.outerHeight<screen.availHeight||top.window.outerWidth<screen.availWidth){
+//top.window.outerHeight = screen.availHeight;
+//top.window.outerWidth = screen.availWidth;
+//}
+//}
+         function  efecto(){
+       $('#cargando').hide();
+                             $('#contenidoWeb').fadeIn(500);                           
+        }     
+        
+        
+        function Salir()
+        {
+        window.close();
+        }  
+        
+       function hoy()
+{
+   var fechaActual = new Date();
+ 
+    dia = fechaActual.getDate();
+    mes = fechaActual.getMonth() +1;
+    anno = fechaActual.getYear();
+    
+ 
+    if (dia <10) dia = "0" + dia;
+    if (mes <10) mes = "0" + mes;   
+ 
+    fechaHoy = dia + "/" + mes + "/" + anno;
+    
+    return fechaHoy;
+}
+   </script>   
+  <asp:ContentPlaceHolder ID="head" runat="server">
+ 
+  
+   <style type="text/css">
+      
+#logo {
+    display:inline-block;
+    width: 348px;
+    height: 57px;
+    border:1px dotted black;
+    position:relative;
+}
+#menu {
+    position: absolute;
+    right: 0;
+    top: 15px;
+    display:none;
+}
+#nav {
+    list-style: none;
+    padding: 0;
+    display: inline-block;
+}
+#nav.vertical {
+    display: block;
+    padding-left: 20px;
+}
+#nav.vertical li {
+    display: list-item;
+    line-height: 30px;
+}
+#nav li {
+    display:inline-block;
+    padding-right: 30px;
+}
+#nav li:last-child {
+    padding-right: 0;
+}
+ h1 {
+  color: #6c2eb9;
+  font-weight: normal;
+  font-size: 30px;
+  font-family: Arial;
+  text-transform: uppercase;
+}
+  </style>
+
+  </asp:ContentPlaceHolder>
+
+</head>
+  
+
+
+	
+   
+
+
+<body class="body" onload="Javascript:history.go(1);" onunload="Javascript:history.go(1);"> 	
+
+		  <form runat="server" id="form1"> 
+        <div >  
+         <table  width="100%" >
+         <tr >
+         <td style="vertical-align:middle">	
+          <div id="logo"  >
+			<h1 style=" color:#2f2736;
+ padding-top:20px;
+ font:bold;
+  font-weight: normal;
+  font-size: 18px;
+  font-family: Arial;
+  text-transform: uppercase;">    <asp:Label    ID="lblEfector"  runat="server" Text="LABORATORIO CENTRAL"></asp:Label> </h1>
+             
+		  		  
+               </div>
+              
+              
+		  
+         </td>
+         
+         <td  align="right" style="vertical-align: top"> 
+         <div  align="center" style=" color:#2f2736; font:bold;
+  font-weight: normal;
+  font-size: 12px;
+  font-family: Arial;
+  text-transform: uppercase;">
+         <br />
+
+         <a href="<%= Page.ResolveUrl("~/Help/help_LIS.html") %>" target="_blank"><img alt="Ayuda" title= "Ayuda en linea del Sistema" 
+          src="~/App_Themes/default/images/icono_help.jpg" border="0" visible="false"  runat="server" id="imgAyudaLinea" /></a>
+         
+         
+     &nbsp;<a title="Volver a pantalla principal" href="<%= Page.ResolveUrl("/Sips/default.aspx") %>">
+    <span class=" glyphicon glyphicon-home"></span></a>&nbsp&nbsp;&nbsp;
+     <asp:HyperLink ID="lnkCerrar" runat="server" 
+         NavigateUrl="FinSesion.aspx" ToolTip="Cierra sesión del usuario y cierra el sistema">  <span class="glyphicon glyphicon-log-out"></span></asp:HyperLink>
+         <asp:LinkButton ID="lnkCambiarPass" PostBackUrl="~/Usuarios/PasswordEdit2.aspx" ToolTip="Cambiar Password" runat="server" Text="" Width="20px"  >
+                                             <span class="glyphicon glyphicon-user"></span></asp:LinkButton>
+          <div class="myLabelIzquierda" > 
+      
+       <h5>   <asp:Label ID="lblFechaHora" runat="server" Text="Label" 
+       ></asp:Label>
+           <br />
+             <asp:Label    ID="lblUsuario" runat="server" Text="Usuario de prueba"></asp:Label>  
+       </h5>
+           
+ </div>
+                </div>
+         </td>
+         </tr>
+
+
+   
+    
+   </table>   
+		</div>	  
+<div   style="background-color:lavender;" class="nav-justified" >
+ 
+</div>
+   
+  <br />
+      
+
+  <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">                         
+ 
+
+  </asp:ContentPlaceHolder>
+  
+
+
+	<div   style="width:100%;background-color:lavender;" >
+       
+		<p style="color: #747377;
+  font-weight: normal;
+  font-size: 14px;
+  font-family: Arial;
+   text-align:center;">Versión Mayo 2020
+	</div>	</form>
+</body>
+ 
+</html>

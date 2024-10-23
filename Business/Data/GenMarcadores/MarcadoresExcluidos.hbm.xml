@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.GenMarcadores.MarcadoresExcluidos,Business" table="GEN_MarcadoresExcluidos">
+
+		<id name="IdMarcadoresExcluidos" column="idMarcadoresExcluidos" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    
+    	<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />
+    <property column="idPaciente" type="Int32" name="IdPaciente" not-null="true" />
+
+
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+
+    <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+    
+
+  </class>
+</hibernate-mapping>

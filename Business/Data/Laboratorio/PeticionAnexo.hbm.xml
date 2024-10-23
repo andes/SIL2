@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.PeticionAnexo,Business" table="LAB_PeticionAnexo">
+
+		<id name="IdPeticionAnexo" column="idPeticionAnexo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdPeticion" column="idPeticion" class="Business.Data.Laboratorio.Peticion,Business" />
+   
+    <property column="url" type="String" name="Url" length="4000" />
+  
+
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+    
+    <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+  
+    
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,3 @@
+Sample Name	Marker	Allele 1	Allele 2	Allele 3	Allele 4
+30542 Pintos Rodrigo	D22S1045	15	 		
+

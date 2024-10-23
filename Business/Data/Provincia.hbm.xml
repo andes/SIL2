@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Provincia,Business" table="Sys_Provincia">
+
+		<id name="IdProvincia" column="idProvincia" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="100" />
+		<property column="idPais" type="Int32" name="IdPais" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

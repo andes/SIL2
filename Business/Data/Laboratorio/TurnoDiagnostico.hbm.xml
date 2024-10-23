@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.TurnoDiagnostico,Business" table="LAB_TurnoDiagnostico">
+
+		<id name="IdTurnoDiagnostico" column="idTurnoDiagnostico" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+
+    <many-to-one name="IdTurno" column="idTurno" class="Business.Data.Laboratorio.Turno,Business" />
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+		
+    
+		
+		<property column="idDiagnostico" type="Int32" name="IdDiagnostico" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

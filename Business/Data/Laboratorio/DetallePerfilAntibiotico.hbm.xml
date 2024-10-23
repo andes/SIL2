@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.DetallePerfilAntibiotico,Business" table="LAB_DetallePerfilAntibiotico">
+
+		<id name="IdDetallePerfilAntibiotico" column="idDetallePerfilAntibiotico" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="idPerfilAntibiotico" type="Int32" name="IdPerfilAntibiotico" not-null="true" />
+		<property column="idAntibiotico" type="Int32" name="IdAntibiotico" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

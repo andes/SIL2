@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ProtocoloMecanismoResistencia,Business" table="LAB_ProtocoloMecanismoResistencia">
+
+		<id name="IdProtocoloMecanismoResistencia" column="idProtocoloMecanismoResistencia" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <many-to-one name="IdProtocoloGermen" column="idProtocoloGermen" class="Business.Data.Laboratorio.ProtocoloGermen,Business" />
+    <many-to-one name="IdMecanismoResistencia" column="idMecanismoResistencia" class="Business.Data.Laboratorio.MecanismoResistencia,Business" />
+
+
+		
+	</class>
+</hibernate-mapping>

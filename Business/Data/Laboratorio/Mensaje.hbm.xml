@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.MensajeInterno,Business" table="LAB_Mensaje">
+
+		<id name="IdMensaje" column="idMensaje" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="remitente" type="String" name="Remitente" not-null="true" length="50" />
+		<property column="destinatario" type="String" name="Destinatario" not-null="true" length="50" />
+		<property column="mensaje" type="String" name="Mensaje" not-null="true" length="4000" />
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+		<property column="fechaHoraRegistro" type="DateTime" name="FechaHoraRegistro" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

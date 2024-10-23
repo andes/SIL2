@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.SolicitudScreening,Business" table="LAB_SolicitudScreening">
+
+		<id name="IdSolicitudScreening" column="idSolicitudScreening" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>    
+    <property column="idSolicitudScreeningOrigen" type="Int32" name="IdSolicitudScreeningOrigen" not-null="true" />
+    <many-to-one name="IdProtocolo" column="idProtocolo" class="Business.Data.Laboratorio.Protocolo,Business" />
+
+
+    <property column="numeroTarjeta" type="Int32" name="NumeroTarjeta" not-null="true" />
+    <property column="medicoSolicitante" type="String" name="MedicoSolicitante" not-null="true" length="500" />
+    <property column="apellidoMaterno" type="String" name="ApellidoMaterno" not-null="true" length="500" />
+    <property column="apellidoPaterno" type="String" name="ApellidoPaterno" not-null="true" length="500" />
+    <property column="nombreParentesco" type="String" name="NombreParentesco" not-null="true" length="500" />    
+    <property column="numerodocumentoParentesco" type="Int32" name="NumerodocumentoParentesco" not-null="true" />
+    <property column="fechaNacimientoParentesco" type="DateTime" name="FechaNacimientoParentesco" not-null="true" />
+    <property column="idLugarControl" type="Int32" name="IdLugarControl" not-null="true" />    
+
+    <property column="horaNacimiento" type="String" name="HoraNacimiento" not-null="true" length="50" />
+    <property column="edadGestacional" type="Int32" name="EdadGestacional" not-null="true" />
+    <property column="peso" type="Decimal" name="Peso" not-null="true" />
+    <property column="primeraMuestra" type="Boolean" name="PrimeraMuestra" not-null="true" />
+    <property column="motivoRepeticion" type="String" name="MotivoRepeticion" not-null="true" />
+    <property column="fechaExtraccion" type="DateTime" name="FechaExtraccion" not-null="true" />
+    <property column="horaExtraccion" type="String" name="HoraExtraccion" not-null="true" length="5" />
+    <property column="ingestaLeche24Horas" type="Boolean" name="IngestaLeche24Horas" not-null="true" />
+    <property column="tipoAlimentacion" type="String" name="TipoAlimentacion" not-null="true" />
+    <property column="antibiotico" type="Boolean" name="Antibiotico" not-null="true" />
+    <property column="transfusion" type="Boolean" name="Transfusion" not-null="true" />
+    <property column="corticoides" type="Boolean" name="Corticoides" not-null="true" />
+    <property column="dopamina" type="Boolean" name="Dopamina" not-null="true" />
+    <property column="enfermedadTiroideaMaterna" type="Boolean" name="EnfermedadTiroideaMaterna" not-null="true" />
+    <property column="antecedentesMaternos" type="String" name="AntecedentesMaternos" not-null="true" />
+    <property column="corticoidesMaterno" type="Boolean" name="CorticoidesMaterno" not-null="true" />
+    <property column="fechaCargaOrigen" type="DateTime" name="FechaCargaOrigen" not-null="true" />
+    <property column="fechaEnvioOrigen" type="DateTime" name="FechaEnvioOrigen" not-null="true" />    
+    
+		
+	</class>
+</hibernate-mapping>

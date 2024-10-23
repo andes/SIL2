@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.DomicilioPaciente,Business" table="Sys_PacienteDomicilio">
+
+		<id name="IdPacienteDomicilio" column="idPacienteDomicilio" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		
+    
+    <many-to-one name="IdPaciente" column="idPaciente" class="Business.Data.Paciente,Business" />
+		 
+		<property column="fechaDomicilio" type="DateTime" name="FechaDomicilio" not-null="true" />
+    
+		<property column="calle" type="String" name="Calle" not-null="true" length="50" />
+		<property column="numero" type="String" name="Numero"   />
+	
+		<property column="departamento" type="String" name="Departamento"   length="100" />
+	 
+    <property  name="Cpostal" column="cpostal" type="String" length="100"/>
+    <property  name="Barrio" column="barrio" type="String" length="100"/>
+    <property  name="Monoblock" column="monoblock" type="String" length="100"/>
+    <property  name="Ciudad" column="ciudad" type="String" length="100"/>
+    <property  name="Municipio" column="municipio" type="String" length="100"/>
+    <property  name="Provincia" column="provincia" type="String" length="100"/>
+    <property  name="Pais" column="pais" type="String" length="100"/>
+
+ 
+		<property column="idUsuario" type="Int32" name="IdUsuario" not-null="true" />
+		<property column="fechaAlta" type="DateTime" name="FechaAlta" not-null="true" />
+		 
+		
+	</class>
+</hibernate-mapping>

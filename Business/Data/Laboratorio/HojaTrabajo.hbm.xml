@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.HojaTrabajo,Business" table="LAB_HojaTrabajo">
+
+		<id name="IdHojaTrabajo" column="idHojaTrabajo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<!--<property column="idEfector" type="Int32" name="IdEfector" not-null="true" />-->
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+    
+		<!--<property column="idArea" type="Int32" name="IdArea" not-null="true" />-->
+    <many-to-one name="IdArea" column="idArea" class="Business.Data.Laboratorio.Area,Business" />
+
+    <property column="formato" type="Int32" name="Formato" not-null="true" />
+    <property column="codigo" type="String" name="Codigo" not-null="true" length="50" />
+
+    <property column="responsable" type="String" name="Responsable" not-null="true" length="100" />
+    <property column="tipoHoja" type="Boolean" name="TipoHoja" not-null="true" />
+    <property column="formatoAncho" type="Int32" name="FormatoAncho" not-null="true" />
+
+    
+    <property column="imprimirPrioridad" type="Boolean" name="ImprimirPrioridad" not-null="true" />
+    <property column="imprimirOrigen" type="Boolean" name="ImprimirOrigen" not-null="true" />
+    <property column="imprimirApellidoNombre" type="Boolean" name="ImprimirApellidoNombre" not-null="true" />
+    <property column="imprimirEdad" type="Boolean" name="ImprimirEdad" not-null="true" />
+    <property column="imprimirSexo" type="Boolean" name="ImprimirSexo" not-null="true" />
+    <property column="imprimirAntecedente" type="Boolean" name="ImprimirAntecedente" not-null="true" />
+    <property column="imprimirFechaHora" type="Boolean" name="ImprimirFechaHora" not-null="true" />
+    <property column="imprimirCorrelativo" type="Boolean" name="ImprimirCorrelativo" not-null="true" />
+    <property column="imprimirMedico" type="Boolean" name="ImprimirMedico" not-null="true" />
+
+     <property column="imprimeMuestra" type="Boolean" name="ImprimirMuestra" not-null="true" />
+         <property column="agrupaPorFecha" type="Boolean" name="AgrupaFecha" not-null="true" />
+
+    <property column="textoInferiorDerecha" type="String" name="TextoInferiorDerecha" not-null="true" length="50" />
+    <property column="textoInferiorIzquierda" type="String" name="TextoInferiorIzquierda" not-null="true" length="50" />
+    
+    <property column="baja" type="Boolean" name="Baja" not-null="true" />
+    
+		<property column="cantidadLineaAdicional" type="Int32" name="CantidadLineaAdicional" not-null="true" />
+    <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
+    
+		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

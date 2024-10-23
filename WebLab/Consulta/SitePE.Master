@@ -1,0 +1,71 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="SitePE.master.cs" Inherits="WebLab.Consulta.SitePE" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link rel="stylesheet" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" />	
+ 
+
+    <title>Subsecretaría de Salud  - Neuquén</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+      <div style="border-top: 10px solid #4d9543;padding-top: 15px; border-top-color: #0000FF;">
+
+
+<nav class="navbar navbar-default" role="navigation">
+    <a href="<%= Page.ResolveUrl("~/Consulta/historiaClinicaFiltro.aspx") %>" class="navbar-left"><img src="../App_Themes/default/images/logosubse.png" width="50%" height="50%"/> </a>
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse"
+            data-target="#collapse">
+      <span class="sr-only">Desplegar navegación</span>
+      <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+
+</div>
+ 
+  <!-- Agrupar los enlaces de navegación, los formularios y cualquier
+       otro elemento que se pueda ocultar al minimizar la barra -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse" id="collapse">
+    <ul class="nav navbar-nav">     
+     <%--  <li runat="server" id="Li1" ><a href="<%= Page.ResolveUrl("~/Consulta/ResultadosPanel.aspx") %>"><span class="glyphicons glyphicons-newspaper">Principal</span></a></li>--%>
+           <li runat="server" id="consulta"  class="active"><a href="<%= Page.ResolveUrl("~/Consulta/historiaClinicaFiltro.aspx") %>"><span class="glyphicons glyphicons-newspaper">Busqueda de Resultados</span></a></li>
+      
+      
+  
+
+    </ul>
+ 
+    <p class="navbar-text pull-right"> 
+         <a href="../Usuarios/PasswordEdit2.aspx" class="navbar-link"><asp:Label ID="lblUsuario" Font-Bold="true" Font-Size="12px" runat="server"></asp:Label></a>
+  <%-- <a href="<%= Page.ResolveUrl("~/Default.aspx") %>" class="navbar-link"> <img alt="Principal" title= "Retorna a la pantalla principal"  src="<%= Page.ResolveUrl("~/App_Themes/default/images/icono_homeGratis.gif") %>" border="0"/></a>--%>
+          <asp:HyperLink ID="lnkCerrar" runat="server"  ImageUrl="~/App_Themes/default/images/icon_close.gif" 
+         NavigateUrl="../FinSesion.aspx" ToolTip="Cierra sesión del usuario y cierra el sistema">Cerrar Sesión</asp:HyperLink>
+      
+        
+</p>
+  </div>
+
+        
+</nav>
+    <div class="container">
+    <form id="form1" runat="server">
+    <div>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+        </div>
+
+        <div class="panel-footer">
+		<p>Subsecretaría de Salud - Neuquén - Versión 2022-07</p>
+              
+        
+	</div>	
+          </div>
+</body>
+</html>
