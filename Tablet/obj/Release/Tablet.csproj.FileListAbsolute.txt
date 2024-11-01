@@ -1,0 +1,5 @@
+D:\hnqn\Laboratorio_UltimaVersion\Tablet\bin\Release\Tablet.dll
+D:\hnqn\Laboratorio_UltimaVersion\Tablet\bin\Release\Tablet.pdb
+D:\hnqn\Laboratorio_UltimaVersion\Tablet\obj\Release\Tablet.csprojResolveAssemblyReference.cache
+D:\hnqn\Laboratorio_UltimaVersion\Tablet\obj\Release\Tablet.dll
+D:\hnqn\Laboratorio_UltimaVersion\Tablet\obj\Release\Tablet.pdb

@@ -1,0 +1,70 @@
+D:\PROYECTOS (CAROLINA)\Laboratorio\Sistema\Business\obj\Debug\ResolveAssemblyReference.cache
+D:\PROYECTOS (CAROLINA)\Laboratorio\Sistema\Business\bin\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\Sistema\Business\bin\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\Sistema\Business\obj\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\Sistema\Business\obj\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\Sistema\Business\bin\Debug\MathParser.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN PRODUCCION\Sistema\Business\bin\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN PRODUCCION\Sistema\Business\bin\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN PRODUCCION\Sistema\Business\bin\Debug\MathParser.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN PRODUCCION\Sistema\Business\obj\Debug\ResolveAssemblyReference.cache
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN PRODUCCION\Sistema\Business\obj\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN PRODUCCION\Sistema\Business\obj\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN DESARROLLO\Sistema\Business\bin\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN DESARROLLO\Sistema\Business\bin\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN DESARROLLO\Sistema\Business\bin\Debug\MathParser.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN DESARROLLO\Sistema\Business\obj\Debug\ResolveAssemblyReference.cache
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN DESARROLLO\Sistema\Business\obj\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\EN DESARROLLO\Sistema\Business\obj\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\HOSPITAL NQN\Sistema\Business\bin\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\HOSPITAL NQN\Sistema\Business\bin\Debug\Business.pdb
+D:\PROYECTOS (CAROLINA)\Laboratorio\HOSPITAL NQN\Sistema\Business\bin\Debug\MathParser.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\HOSPITAL NQN\Sistema\Business\obj\Debug\ResolveAssemblyReference.cache
+D:\PROYECTOS (CAROLINA)\Laboratorio\HOSPITAL NQN\Sistema\Business\obj\Debug\Business.dll
+D:\PROYECTOS (CAROLINA)\Laboratorio\HOSPITAL NQN\Sistema\Business\obj\Debug\Business.pdb
+D:\proyectos (carolina)\Laboratorio\HOSPITAL NQN\Sistema\Business\bin\Debug\Iesi.Collections.dll
+D:\proyectos (carolina)\Laboratorio\HOSPITAL NQN\Sistema\Business\bin\Debug\log4net.dll
+D:\proyectos (carolina)\Laboratorio\HOSPITAL NQN\Sistema\Business\bin\Debug\NHibernate.dll
+D:\hnqn\Sistema\Business\bin\Debug\Business.dll
+D:\hnqn\Sistema\Business\bin\Debug\Business.pdb
+D:\hnqn\Sistema\Business\bin\Debug\MathParser.dll
+D:\hnqn\Sistema\Business\obj\Debug\ResolveAssemblyReference.cache
+D:\hnqn\Sistema\Business\obj\Debug\Business.dll
+D:\hnqn\Sistema\Business\obj\Debug\Business.pdb
+D:\hnqn\SistemaConScreening\Business\bin\Debug\Business.dll
+D:\hnqn\SistemaConScreening\Business\bin\Debug\Business.pdb
+D:\hnqn\SistemaConScreening\Business\bin\Debug\MathParser.dll
+D:\hnqn\SistemaConScreening\Business\obj\Debug\Business.dll
+D:\hnqn\SistemaConScreening\Business\obj\Debug\Business.pdb
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Debug\Business.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Debug\Business.pdb
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Debug\MathParser.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\obj\Debug\Business.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\obj\Debug\Business.pdb
+D:\development\Laboratorio\Business\obj\Debug\Business.dll
+D:\development\Laboratorio\Business\obj\Debug\Business.pdb
+D:\development\Laboratorio\Business\bin\Debug\Business.dll
+D:\development\Laboratorio\Business\bin\Debug\Business.pdb
+D:\development\Laboratorio\Business\bin\Debug\AjaxControlToolkit.dll
+D:\development\Laboratorio\Business\bin\Debug\MathParser.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\obj\Debug\Business.csprojResolveAssemblyReference.cache
+D:\Laboratorio_UltimaVersion\Business\bin\Debug\Business.dll
+D:\Laboratorio_UltimaVersion\Business\bin\Debug\Business.pdb
+D:\Laboratorio_UltimaVersion\Business\bin\Debug\MathParser.dll
+D:\Laboratorio_UltimaVersion\Business\obj\Debug\Business.dll
+D:\Laboratorio_UltimaVersion\Business\obj\Debug\Business.pdb
+D:\Laboratorio_UltimaVersion\Business\obj\Debug\Business.csprojResolveAssemblyReference.cache
+D:\Laboratorio_UltimaVersionMultiEfector\Business\bin\Debug\Business.dll
+D:\Laboratorio_UltimaVersionMultiEfector\Business\bin\Debug\Business.pdb
+D:\Laboratorio_UltimaVersionMultiEfector\Business\bin\Debug\MathParser.dll
+D:\Laboratorio_UltimaVersionMultiEfector\Business\bin\Debug\QRCoder.dll
+D:\Laboratorio_UltimaVersionMultiEfector\Business\obj\Debug\Business.csprojResolveAssemblyReference.cache
+D:\Laboratorio_UltimaVersionMultiEfector\Business\obj\Debug\Business.dll
+D:\Laboratorio_UltimaVersionMultiEfector\Business\obj\Debug\Business.pdb
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\obj\Debug\Business.csprojResolveAssemblyReference.cache
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\obj\Debug\Business.dll
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\obj\Debug\Business.pdb
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\bin\Debug\Business.dll
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\bin\Debug\Business.pdb
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\bin\Debug\MathParser.dll
+D:\Laboratorio_UltimaVersionMultiEfector20241002\Business\bin\Debug\QRCoder.dll

@@ -1,0 +1,6 @@
+D:\hnqn\Laboratorio_UltimaVersion\Firma2\bin\Release\Firma2.dll
+D:\hnqn\Laboratorio_UltimaVersion\Firma2\bin\Release\Firma2.pdb
+D:\hnqn\Laboratorio_UltimaVersion\Firma2\bin\Release\Microsoft.Ink.dll
+D:\hnqn\Laboratorio_UltimaVersion\Firma2\obj\Release\Firma2.csprojResolveAssemblyReference.cache
+D:\hnqn\Laboratorio_UltimaVersion\Firma2\obj\Release\Firma2.dll
+D:\hnqn\Laboratorio_UltimaVersion\Firma2\obj\Release\Firma2.pdb

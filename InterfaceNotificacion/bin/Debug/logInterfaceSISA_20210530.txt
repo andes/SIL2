@@ -1,0 +1,1 @@
+22:29:46 Error informando resultado {"pruebaMuestraDTO":"fechaEmisionResultado debe ser posterior o igual a la fecha de toma"}

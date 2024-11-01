@@ -1,0 +1,5 @@
+D:\hnqn\Laboratorio_UltimaVersion\tabletvb\obj\Release\Interop.MSINKAUTLib.dll
+D:\hnqn\Laboratorio_UltimaVersion\tabletvb\obj\Release\tabletvb.vbproj.ResolveComReference.cache
+D:\hnqn\Laboratorio_UltimaVersion\tabletvb\obj\Release\tabletvb.Resources.resources
+D:\hnqn\Laboratorio_UltimaVersion\tabletvb\obj\Release\tabletvb.vbproj.GenerateResource.Cache
+D:\hnqn\Laboratorio_UltimaVersion\tabletvb\obj\Release\tabletvb.xml

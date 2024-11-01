@@ -1,0 +1,8 @@
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Release\Business.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Release\Business.pdb
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Release\Iesi.Collections.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Release\log4net.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Release\MathParser.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\bin\Release\NHibernate.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\obj\Release\Business.dll
+D:\hnqn\Laboratorio_UltimaVersion\Business\obj\Release\Business.pdb
