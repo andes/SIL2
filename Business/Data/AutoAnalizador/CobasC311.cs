@@ -10,9 +10,13 @@ namespace Business.Data.AutoAnalizador
         #region Private Members
         private bool m_isChanged;
         private int m_id;
-        private string m_idItemCobas;
-        private string m_idItemSil;
+        private string m_itemCobas;
+        private int m_idItemCobas;
+        private int m_idItemSil;
+        private string m_prefijo;
+        private string m_tipoMuestra;
         private bool m_habilitado;
+        private string m_codigoSil;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -22,9 +26,13 @@ namespace Business.Data.AutoAnalizador
         public CobasC311()
         {
             m_id = 0;
-            m_idItemCobas = string.Empty;
-            m_idItemSil = string.Empty;
+            m_itemCobas = string.Empty;
+            m_idItemCobas = 0;
+            m_idItemSil = 0;
+            m_prefijo = string.Empty;
+            m_tipoMuestra = string.Empty;
             m_habilitado = false;
+            m_codigoSil = string.Empty;
         }
         #endregion // End of Default ( Empty ) Class Constuctor
 
@@ -33,14 +41,22 @@ namespace Business.Data.AutoAnalizador
         /// required (not null) fields only constructor
         /// </summary>
         public CobasC311(
-            string idItemCobas,
-            string idItemSil,
-            bool habilitado)
+            string itemCobas,
+            int idItemCobas,
+            int idItemSil,
+            string tipoMuestra,
+            string Prefijo,
+            bool habilitado,
+            string codigoSil)
             : this()
         {
+            m_itemCobas = itemCobas;
             m_idItemCobas = idItemCobas;
             m_idItemSil = idItemSil;
+            m_tipoMuestra = tipoMuestra;
+            m_prefijo = Prefijo;
             m_habilitado = habilitado;
+            m_codigoSil = codigoSil;
         }
         #endregion // End Required Fields Only Constructor
 
@@ -63,26 +79,33 @@ namespace Business.Data.AutoAnalizador
         /// <summary>
         /// 
         /// </summary>
-        public string IdItemCobas
+        public int IdItemCobas
         {
             get { return m_idItemCobas; }
 
             set
             {
-                if (value == null)
-                    throw new ArgumentOutOfRangeException("Null value not allowed for Idbastec", value, "null");
+                m_isChanged |= (m_idItemCobas != value);
+                m_idItemCobas = value;
 
-                if (value.Length <= 0)
-                    throw new ArgumentOutOfRangeException("Invalid value for idCobas", value, value.ToString());
-                
-                m_isChanged |= (m_idItemCobas != value); m_idItemCobas = value;
             }
         }
 
+        public string ItemCobas
+        {
+            get { return m_itemCobas; }
+            set
+            {
+                m_isChanged |= (m_itemCobas != value);
+                m_itemCobas = value;
+            }
+
+        }
+        
         /// <summary>
         /// 
         /// </summary>
-        public string IdItemSil
+        public int IdItemSil
         {
             get { return m_idItemSil; }
             set
@@ -92,6 +115,28 @@ namespace Business.Data.AutoAnalizador
             }
 
         }
+
+        public string TipoMuestra
+        {
+            get { return m_tipoMuestra; }
+            set
+            {
+                m_isChanged |= (m_tipoMuestra != value);
+                m_tipoMuestra = value;
+            }
+        }
+
+            public string Prefijo
+        {
+            get { return m_prefijo; }
+            set
+            {
+                m_isChanged |= (m_prefijo != value);
+                m_prefijo = value;
+            }
+
+        }
+
 
         /// <summary>
         /// 
@@ -106,6 +151,18 @@ namespace Business.Data.AutoAnalizador
             }
 
         }
+
+        public string CodigoSil
+        {
+            get { return m_codigoSil; }
+            set
+            {
+                m_isChanged |= (m_codigoSil != value);
+                m_codigoSil = value;
+            }
+
+        }
+
 
         /// <summary>
         /// Returns whether or not the object has changed it's values.

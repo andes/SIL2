@@ -5,9 +5,13 @@
     <id name="Id" column="id" type="Int32" unsaved-value="0">
       <generator class="native"/>
     </id>
-    <property column="idItemCobas" type="string" name="IdItemCobas" not-null="true" />
-    <property column="idItemSil" type="string" name="IdItemSil" not-null="true" />
+    <property column="idItemCobas" type="int" name="IdItemCobas" not-null="true" />
+    <property column="itemCobas" type="string" name="ItemCobas" not-null="true" />
+    <property column="idItemSil" type="int" name="IdItemSil" not-null="true" />
+    <property column="tipoMuestra" type="string" name="TipoMuestra" not-null="true" />
+    <property column="prefijo" type="string" name="Prefijo" />
     <property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+    <property column="codigoSil" type="string" name="CodigoSil" not-null="true" />
 
   </class>
 </hibernate-mapping>

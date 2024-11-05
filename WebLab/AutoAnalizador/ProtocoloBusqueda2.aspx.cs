@@ -82,6 +82,12 @@ namespace WebLab.AutoAnalizador
                             lblTituloEquipo.Text = "INCAA - Diconex QUIMICA".ToUpper();
                         }
                         break;
+                    case "CobasC311":
+                        {
+                            VerificaPermisos("Cobas C311 - Envío de datos");
+                            lblTituloEquipo.Text = "Cobas C311".ToUpper();
+                        }
+                        break;
                 }
                 CargarPagina();
             }
@@ -133,8 +139,11 @@ namespace WebLab.AutoAnalizador
                 pnlMindray.Visible = true; imgEquipo.Visible = false;
                 //imgEquipo.ImageUrl = "../App_Themes/default/images/mindray.jpg";
             }
-           
-         //   txtCantidad.Value = "50";
+            if (Request["Equipo"].ToString() == "CobasC311")
+            {
+                pnlMindray.Visible = true; imgEquipo.Visible = false;
+            }
+            //   txtCantidad.Value = "50";
 
         }
 
@@ -250,9 +259,10 @@ namespace WebLab.AutoAnalizador
                     string m_parametro = " P.baja=0 and P.idEfector=" + oC.IdEfector.IdEfector.ToString() + " and P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
 
                     //if (ddlArea.SelectedValue != "0") m_parametro += " AND i.idArea=" + ddlArea.SelectedValue;
+                    if (txtProtocoloDesde.Value != "") m_parametro += " And P.numero>=" + int.Parse(txtProtocoloDesde.Value);
+                    if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numero<=" + int.Parse(txtProtocoloHasta.Value);
 
-
-                    switch (oC.TipoNumeracionProtocolo)// busqueda con autonumerico
+               /*     switch (oC.TipoNumeracionProtocolo)// busqueda con autonumerico
                     {
                         case 0:
                             {
@@ -278,7 +288,7 @@ namespace WebLab.AutoAnalizador
                                 if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroTipoServicio<=" + int.Parse(txtProtocoloHasta.Value);
                             }
                             break;
-                    }
+                    }*/
 
 
                     if (ddlEfector.SelectedValue != "0") m_parametro += " AND P.idEfectorSolicitante=" + ddlEfector.SelectedValue;

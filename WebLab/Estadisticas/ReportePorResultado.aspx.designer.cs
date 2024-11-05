@@ -40,6 +40,15 @@ namespace WebLab.Estadisticas {
         protected global::System.Web.UI.WebControls.DropDownList ddlServicio;
         
         /// <summary>
+        /// rfvDiag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDiag;
+        
+        /// <summary>
         /// lstDiag control.
         /// </summary>
         /// <remarks>
@@ -47,6 +56,15 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox lstDiag;
+        
+        /// <summary>
+        /// chkSinDiag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox chkSinDiag;
         
         /// <summary>
         /// lnkMarcarSectores control.

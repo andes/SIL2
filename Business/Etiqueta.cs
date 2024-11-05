@@ -368,7 +368,7 @@ namespace Business
 
                 if (TipoEtiqueta == "5x2.5")
                 {
-                    gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 32, 5, new StringFormat(StringFormatFlags.DirectionVertical));
+                    gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 45, 5, new StringFormat(StringFormatFlags.DirectionVertical));
                    
                 }
                 else
