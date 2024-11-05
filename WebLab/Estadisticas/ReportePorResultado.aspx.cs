@@ -31,7 +31,7 @@ namespace WebLab.Estadisticas
       
         int suma1 = 0;
         int grupo1 = 0; int grupo2 = 0; int grupo3 = 0; int grupo4=0; int grupo5=0; int grupo6=0; int grupo7=0; int grupo8=0; int grupo9=0; int grupo10=0;
-        int grupo11 = 0; int grupo12 = 0; int grupo13 = 0; int grupo14 = 0;
+        int grupo11 = 0; int grupo12 = 0; int grupo13 = 0; //int grupo14 = 0;
         int masc = 0; int fem = 0; int ind = 0;
         
         protected void Page_PreInit(object sender, EventArgs e)
@@ -77,7 +77,7 @@ namespace WebLab.Estadisticas
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             ///Carga de combos de tipos de servicios
-            string m_ssql = "SELECT  idTipoServicio, nombre from LAB_TipoServicio (nolock) where baja=0 and idtipoServicio<5 ORDER BY idTiposervicio";
+            string m_ssql = "SELECT  idTipoServicio, nombre from LAB_TipoServicio with (nolock) where baja=0 and idtipoServicio<5 ORDER BY idTiposervicio";
             oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
             ddlServicio.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
@@ -126,7 +126,7 @@ namespace WebLab.Estadisticas
 
             //CargarAnalisis();
 
-            m_ssql = "SELECT     idOrigen, nombre  AS nombre FROM         LAB_Origen (nolock)   WHERE (baja = 0)  ORDER BY nombre";
+            m_ssql = "SELECT     idOrigen, nombre  AS nombre FROM     LAB_Origen (nolock)   WHERE (baja = 0)  ORDER BY nombre";
             oUtil.CargarCheckBox(ChckOrigen, m_ssql, "idOrigen", "nombre");
             for (int i = 0; i < ChckOrigen.Items.Count; i++)
                 ChckOrigen.Items[i].Selected = true;
@@ -318,7 +318,7 @@ namespace WebLab.Estadisticas
         private string getListaDiagnostico()
         {
 
-            string lista = "";string noselec = "";
+            string lista = ""; 
             for (int i = 0; i < lstDiag.Items.Count; i++)
             {
                 if (lstDiag.Items[i].Selected)
@@ -328,13 +328,16 @@ namespace WebLab.Estadisticas
                     else
                         lista += "," + lstDiag.Items[i].Value;
                 }
-                else
-                    noselec = "-1";
+               
 
             }
-            if (noselec == "")
-                return noselec;
-            else
+            if (chkSinDiag.Checked)
+                if (lista == "")
+                    lista  = "-9";
+                else
+                    lista += ",-9";
+
+           
             return lista;
         }
         private string getListaOrigen()
@@ -687,22 +690,22 @@ substring(O.nombre, 1, 3) as [Amb / Int.],
 case when convert(varchar(10), p.fechaTomaMuestra, 103)= '01/01/1900' then ''
 else convert(varchar(10), p.fechaTomaMuestra, 103) end as [F.Toma Muestra],
 M.nombre as Muestra, 
-p.Especialista AS[Solicitante],
+p.Especialista AS [Solicitante],
 dP.fechavalida as [F.Resultado],
   isnull(c10.nombre, '') as diagnostico,
    SS.nombre as Sector
-   FROM LAB_DetalleProtocolo AS DP
-   INNER JOIN LAB_Protocolo AS P ON DP.idProtocolo = P.idProtocolo
-     left JOIN LAB_Muestra as M on M.idMuestra = p.idMuestra
-   INNER JOIN LAB_Item AS I ON DP.idSUBItem = I.idItem
-   INNER JOIN Sys_Paciente AS Pac ON P.idPaciente = Pac.idPaciente
-   left join sys_Pacientedomicilio as D on d.idpaciente = Pac.idpaciente
-   left JOIN Lab_protocoloDiagnostico AS PD ON PD.idProtocolo = P.idProtocolo
+  FROM LAB_DetalleProtocolo AS DP with (nolock)
+   INNER JOIN LAB_Protocolo AS P with (nolock)ON DP.idProtocolo = P.idProtocolo
+     left JOIN LAB_Muestra as M with (nolock) on M.idMuestra = p.idMuestra
+   INNER JOIN LAB_Item AS I with (nolock) ON DP.idSUBItem = I.idItem
+   INNER JOIN Sys_Paciente AS Pac with (nolock) ON P.idPaciente = Pac.idPaciente
+   left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pac.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pac.idpaciente)
+   left JOIN Lab_protocoloDiagnostico AS PD with (nolock) ON PD.idProtocolo = P.idProtocolo
     left join " + tablaDiag+ @" 
-    INNER JOIN LAB_Origen as O on O.idOrigen = P.idOrigen
-     inner join lab_sectorservicio as SS on SS.idsectorservicio = P.idsector
-     inner JOIN [SYS_efector] e on  e.idefector = p.idEfectorSolicitante
-      left join lab_caracter as Ca on Ca.idCaracter = p.idcaracter " +
+    INNER JOIN LAB_Origen as O with (nolock) on O.idOrigen = P.idOrigen
+     inner join lab_sectorservicio as SS with (nolock) on SS.idsectorservicio = P.idsector
+     inner JOIN [SYS_efector] e with (nolock) on  e.idefector = p.idEfectorSolicitante
+      left join lab_caracter as Ca with (nolock) on Ca.idCaracter = p.idcaracter   " +
                            " WHERE (I.idItem=" + m_analisis + ") AND (DP.resultadoCar = '" + m_resultado + "') AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "') and " +
                            " ( DP.conresultado=1) " + m_strCondicion +
                            " order by P.fecha  ";
@@ -719,7 +722,7 @@ dP.fechavalida as [F.Resultado],
                             " INNER JOIN LAB_Protocolo AS P ON DP.idProtocolo = P.idProtocolo " +
                             " INNER JOIN LAB_Item AS I ON DP.idSUBItem = I.idItem " +
                             " INNER JOIN Sys_Paciente AS Pa ON P.idPaciente = Pa.idPaciente" +
-                            " left join sys_Pacientedomicilio as D on d.idpaciente = Pa.idpaciente "+
+                            " left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pac.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pac.idpaciente)  " +
                             " left JOIN Lab_protocoloDiagnostico AS PD ON PD.idProtocolo = P.idProtocolo " +
                             " left join " + tablaDiag +
                             " INNER JOIN LAB_Origen as O on O.idOrigen= P.idOrigen " +
@@ -880,7 +883,7 @@ dP.fechavalida as [F.Resultado],
             Utility oUtil = new Utility();
             ///Carga de combos de tipos de servicios
             /// 
-            string  m_ssql = "SELECT  idArea, nombre from LAB_Area where baja=0 and idtipoServicio= "+ddlServicio.SelectedValue +" ORDER BY nombre";
+            string  m_ssql = "SELECT  idArea, nombre from LAB_Area with (nolock) where baja=0 and idtipoServicio= "+ddlServicio.SelectedValue +" ORDER BY nombre";
 
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
             ddlArea.Items.Insert(0, new ListItem("--Seleccione--", "0"));

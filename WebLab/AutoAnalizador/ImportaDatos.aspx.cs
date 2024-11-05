@@ -510,18 +510,30 @@ namespace WebLab.AutoAnalizador
 
                 //*nuevo cuando vienen separados el inicio y el fni
                 int LARGO = mensagitoProcesa.Length; ///120 caracteres del mensaje de datos de resultados (info de calidad viene en 99 caracteres)
-                if ((LARGO < 121) && (caracterfin == 3)) // terminó pero no cumple con el largo
+            /*    if ((LARGO < 121) && (caracterfin == 3)) // terminó pero no cumple con el largo
                 {
                     mensagitoProcesa = mensagitoInicial + mensagitoProcesa;
                 }
+                */
                 ////
 
                 LARGO = mensagitoProcesa.Length; ///120 caracteres del mensaje de datos de resultados (info de calidad viene en 99 caracteres)
-                if ((LARGO == 121) && (caracterfin == 3)) // FORMATO K21N: completa hasta 131
-                {
+                //if ((LARGO == 121) && (caracterfin == 3)) // FORMATO K21N: completa hasta 131
+                 if  (caracterfin == 3) // FORMATO K21N: completa hasta 131
+                    {
+                    mensagitoProcesa = mensagitoInicial + mensagitoProcesa;
+                    int cantidadespacio = 131 - LARGO;
+                    int largoultimo = (LARGO - 13);
+                    string espacioblanco = "";
+                    //entre el primero y el segundo mensaje hay 10 espacios si el largo es 121
                     string pri = mensagitoProcesa.Substring(0, 13);
-                    string seg = mensagitoProcesa.Substring(13, 108);
-                    mensagitoProcesa = pri + "          " + seg;
+                    string seg = mensagitoProcesa.Substring(13, largoultimo); // 108);
+                    for (int i = 1; i <= cantidadespacio; i++)
+                    {
+                        espacioblanco += " ";
+                    }
+                    mensagitoProcesa = pri + espacioblanco + seg;
+                    //mensagitoProcesa = pri + "          " + seg;
                 }
                 LARGO = mensagitoProcesa.Length;
                 if (LARGO == 131)  // FORMATO K21N
