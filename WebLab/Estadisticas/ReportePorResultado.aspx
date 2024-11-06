@@ -90,10 +90,12 @@
       <div  style="width: 320px" class="form-inline"  >
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title">Diagnósticos</h4>
+                                    <h4 class="panel-title">Diagnósticos<asp:RequiredFieldValidator ID="rfvDiag" runat="server" ControlToValidate="lstDiag" ErrorMessage="*" Font-Size="8pt" ValidationGroup="0">Seleccione al menos uno</asp:RequiredFieldValidator>
+                                    </h4>
                                 </div>
                                 <div class="panel-body">
                                     <asp:ListBox ID="lstDiag" runat="server" class="form-control input-sm" Height="160px" SelectionMode="Multiple" TabIndex="12" ToolTip="Seleccione los diagnósticos" Width="300px"></asp:ListBox>
+                                    <asp:CheckBox ID="chkSinDiag" runat="server" Checked="true" Text="Incluir Sin Diagnostico" />
                                 </div>
                                 <div class="panel-footer">
                                     <ul class="pagination">

@@ -78,15 +78,15 @@ namespace WebLab.Estadisticas
 
             Utility oUtil = new Utility();
             ///Carga de combos de tipos de servicios
-            string m_ssql = "SELECT  idArea, nombre from LAB_Area where baja=0 ORDER BY nombre";
+            string m_ssql = "SELECT  idArea, nombre from LAB_Area with (nolock) where baja=0 ORDER BY nombre";
 
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
             ddlArea.Items.Insert(0, new ListItem("--Todas--", "0"));
 
             if (oUser.IdEfector.IdEfector == 227) // puede elegir el efector que quiere ver o todos
             {
-                m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E " +
-                     " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
+                m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E with (nolock) " +
+                     " INNER JOIN lab_Configuracion C with (nolock) on C.idEfector=E.idEfector " +
                      "order by E.nombre";
 
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
@@ -94,7 +94,7 @@ namespace WebLab.Estadisticas
             }
             else
             {
-                m_ssql = "select  E.idEfector, E.nombre  from sys_efector E  where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
+                m_ssql = "select  E.idEfector, E.nombre  from sys_efector E with (nolock) where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             }
 
@@ -447,7 +447,7 @@ namespace WebLab.Estadisticas
             DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
 
-            string m_condicion = "";
+            string m_condicion = ""; string m_condicionDiag = "";
 
 
             string m_codigopaciente = " '' as codigoPaciente";
@@ -466,7 +466,7 @@ namespace WebLab.Estadisticas
             if (m_resultadoHasta != "") m_condicion += " and  DP.resultadoNum<=" + decimal.Parse(m_resultadoHasta, System.Globalization.CultureInfo.InvariantCulture);
 
             if (rdbPaciente.SelectedValue == "1")
-                m_condicion += " and (PD.iddiagnostico = 11999)  ";
+                m_condicionDiag = " and  exists (select 1 from  LAB_ProtocoloDiagnostico AS PD with (nolock) ON PD.idProtocolo = P.idProtocolo and   (PD.iddiagnostico = 11999)  ";
 
             if (i_idEfector>0)
                 m_condicion += " and P.idEfector= " + i_idEfector.ToString();
@@ -493,28 +493,29 @@ namespace WebLab.Estadisticas
             }
 
 
-            string m_strSQL = @" SELECT I.nombre AS ANALISIS, CASE I.formatoDecimal
+            string m_strSQL = @" SELECT  I.nombre AS Analisis, CASE I.formatoDecimal
  WHEN 0 then CONVERT(int,DP.resultadoNum) 
  WHEN 1 then convert(decimal(19,1), DP.resultadoNum) 
  WHEN 2 then convert(decimal(19,2), DP.resultadoNum) 
  WHEN 3 then convert(decimal(19,3), DP.resultadoNum) 
  WHEN 4 then convert(decimal(19,4), DP.resultadoNum) 
   end 
- AS RESULTADO,  Pa.numeroDocumento, Pa.apellido, Pa.nombre, 
-convert(varchar,P.edad) + case  P.unidadedad when 0 then 'A' when 1 then 'M' when 2 then 'D' end as edad,
-CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS FECHANACIMIENTO, Pa.referencia AS domicilio, CONVERT(varchar(10), P.fecha, 103) AS fecha, P.numero as numero ," + m_codigopaciente+
- @"                            FROM LAB_DetalleProtocolo AS DP 
-                             INNER JOIN LAB_Protocolo AS P ON DP.idProtocolo = P.idProtocolo 
-                             INNER JOIN LAB_Item AS I ON DP.idsubItem = I.idItem
-                             INNER JOIN Sys_Paciente AS Pa ON P.idPaciente = Pa.idPaciente
-                             left JOIN LAB_ProtocoloDiagnostico AS PD ON PD.idProtocolo = P.idProtocolo 
+ AS Resultado,  Pa.numeroDocumento as [Numero Doc.], Pa.apellido as Apellido, Pa.nombre as Nombres, 
+convert(varchar,P.edad) + case  P.unidadedad when 0 then 'A' when 1 then 'M' when 2 then 'D' end as Edad,
+CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS [Fecha Nacimiento],    d.calle + ' Barrio:' + d.barrio + ' Ciudad: ' + d.ciudad   AS Domicilio
+                , CONVERT(varchar(10), P.fecha, 103) AS Fecha, P.numero as Numero ," + m_codigopaciente+
+ @"                            FROM LAB_DetalleProtocolo AS DP with (nolock)
+                             INNER JOIN LAB_Protocolo AS P with (nolock) ON DP.idProtocolo = P.idProtocolo 
+                             INNER JOIN LAB_Item AS I with (nolock) ON DP.idsubItem = I.idItem
+                             INNER JOIN Sys_Paciente AS Pa with (nolock) ON P.idPaciente = Pa.idPaciente
+                             left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pa.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pa.idpaciente)
+                            
                              WHERE P.baja=0 and  I.iditem=" + m_analisis +  m_condicion+ 
              " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "') and " +
-                             " ( DP.conresultado=1)  order by P.fecha  ";
+                             " ( DP.conresultado=1)  "+ m_condicionDiag +" order by P.fecha  ";
 
       
-            DataSet Ds = new DataSet();
-            //      SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();            
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
