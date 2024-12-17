@@ -60,10 +60,13 @@
                                 <asp:ListItem Value="12">LYM#</asp:ListItem>
                                 <asp:ListItem Value="13">MXD#</asp:ListItem>
                                 <asp:ListItem Value="14">NEUT#</asp:ListItem>
-                                <asp:ListItem Value="15">RDW-SD/CV</asp:ListItem>                                
+                                <asp:ListItem Value="15">RDW-SD/CV</asp:ListItem> 
+                                  <asp:ListItem Value="19">RDW_SD</asp:ListItem>   
+                                <asp:ListItem Value="20">RDW_CV</asp:ListItem>                                  
                                 <asp:ListItem Value="16">MPV</asp:ListItem>
                                 <asp:ListItem Value="17">PDW</asp:ListItem>
                                 <asp:ListItem Value="18">P-LCR</asp:ListItem>                               
+                               
                             </asp:DropDownList>
                                         
                                                 <asp:RangeValidator ID="RangeValidator2" runat="server" 

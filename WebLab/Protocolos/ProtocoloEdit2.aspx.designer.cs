@@ -310,6 +310,15 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.TextBox txtTelefono;
         
         /// <summary>
+        /// cvValidacionInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
+        
+        /// <summary>
         /// lblIdPaciente control.
         /// </summary>
         /// <remarks>
@@ -391,15 +400,6 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
         
         /// <summary>
-        /// rvOrigen control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvOrigen;
-        
-        /// <summary>
         /// ddlOrigen control.
         /// </summary>
         /// <remarks>
@@ -418,15 +418,6 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.DropDownList ddlSectorServicio;
         
         /// <summary>
-        /// rvSectorServicio control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvSectorServicio;
-        
-        /// <summary>
         /// ddlPrioridad control.
         /// </summary>
         /// <remarks>
@@ -434,15 +425,6 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPrioridad;
-        
-        /// <summary>
-        /// rvPrioridad control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvPrioridad;
         
         /// <summary>
         /// lblSalaCama control.
@@ -497,15 +479,6 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlMuestra;
-        
-        /// <summary>
-        /// rvMuestra control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.RangeValidator rvMuestra;
         
         /// <summary>
         /// lblCaracterSisa control.
@@ -974,15 +947,6 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigo;
-        
-        /// <summary>
-        /// cvValidacionInput control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
         
         /// <summary>
         /// txtCodigosRutina control.

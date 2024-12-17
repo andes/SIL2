@@ -98,16 +98,20 @@ ORDER BY nombre";
             {
                 if (ddlEfector.SelectedValue != "0")
                 {
-                    Efector oEfector = new Efector();
-                    oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
+                    if (Session["idUsuarioAux"] != null)
+                    {
+                        Efector oEfector = new Efector();
+                        oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
 
-                    Usuario oRegistro = new Usuario();
-                    oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Session["idUsuarioAux"].ToString()));
-                    oRegistro.IdEfector = oEfector;
-                    oRegistro.Save();
-                    Session["idUsuario"] = oRegistro.IdUsuario.ToString();
-                    Response.Redirect("Default.aspx", false);
-                   // Response.Redirect("Default.aspx?IdUsuario=" + oRegistro.IdUsuario.ToString(), false);
+                        Usuario oRegistro = new Usuario();
+                        oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Session["idUsuarioAux"].ToString()));
+                        oRegistro.IdEfector = oEfector;
+                        oRegistro.Save();
+                        Session["idUsuario"] = oRegistro.IdUsuario.ToString();
+                        Response.Redirect("Default.aspx", false);
+                        // Response.Redirect("Default.aspx?IdUsuario=" + oRegistro.IdUsuario.ToString(), false);
+                    }
+                    else Response.Redirect("FinSesion.aspx", false);
                 }
             }
         }
