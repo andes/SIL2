@@ -26,13 +26,14 @@ namespace Business.Data.Laboratorio
         private int m_idusuarioresultado;
         private DateTime m_fecharesultado;
         private Efector m_idEfector;
-		#endregion
+        private LoteDerivacion idLote;
+        #endregion
 
-		#region Default ( Empty ) Class Constuctor
-		/// <summary>
-		/// default constructor
-		/// </summary>
-		public Derivacion()
+        #region Default ( Empty ) Class Constuctor
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public Derivacion()
 		{
 			m_idderivacion = 0; 
 			m_iddetalleprotocolo = new DetalleProtocolo(); 
@@ -44,7 +45,8 @@ namespace Business.Data.Laboratorio
             m_idusuarioresultado = 0;
             m_fecharesultado = DateTime.MinValue;
             m_idEfector = new Efector();
-		}
+            idLote = null;
+        }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -72,6 +74,7 @@ namespace Business.Data.Laboratorio
             m_idusuarioresultado = idusuarioresultado;
             m_fecharesultado = fecharesultado;
             m_idEfector = idEfector;
+            idLote = null;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -115,6 +118,8 @@ namespace Business.Data.Laboratorio
             }
 
         }
+
+       
 
         /// <summary>
         /// 
@@ -223,7 +228,15 @@ namespace Business.Data.Laboratorio
 		{
 			get { return m_isChanged; }
 		}
-				
-		#endregion 
-	}
+
+
+        public LoteDerivacion Idlote {
+            get { return idLote; }
+            set {
+                m_isChanged |= (idLote != value);
+                idLote = value;
+            }
+        }
+        #endregion
+    }
 }

@@ -541,6 +541,19 @@ namespace Business
 
         }
 
+        public void CargarRadioButton(RadioButtonList buttons, String strSql, String CampoId, String CampoDetalle)
+        {
+            NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
+            String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            SqlDataAdapter da = new SqlDataAdapter(strSql, strconn);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "t");
+            buttons.DataTextField = CampoDetalle;
+            buttons.DataValueField = CampoId;
+            buttons.DataSource = ds.Tables["t"];
+            buttons.DataBind();
+
+        }
 
         #endregion
 

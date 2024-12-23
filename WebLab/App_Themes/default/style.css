@@ -963,9 +963,12 @@ font-weight: bold;
 	background-color: #FFFFFF;
 	color: #333333;
 	vertical-align: top;
+    
+    /*/para que haya separacion entre filas
+    border-collapse: separate;
+    border-spacing:0 1em;*/
 	
 }
-
 
 .mytituloRelleno
 {
@@ -1283,7 +1286,14 @@ www.twoplusfour.co.uk
 	border-spacing: 0px;
 }
 
+.hidden {
+    display: none; /* El control está oculto inicialmente */
+}
 
+.exposed{
+    display : block;
+    color:red;
+}
 /* =links
 ----------------------------------------------- */
 

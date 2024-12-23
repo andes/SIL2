@@ -25,6 +25,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -267,6 +268,7 @@
     <Content Include="AutoAnalizador\Bc3000\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\Clinitek\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\CobasB221\ConfiguracionEdit.aspx" />
+    <Content Include="AutoAnalizador\CobasC311Config\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\Counter\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\Fusion2019\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\Fusion2019\ImportaDatosFusion.aspx" />
@@ -289,6 +291,7 @@
     <Content Include="AutoAnalizador\SysmexXN1000\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\SysmexXT1800\ConfiguracionEdit.aspx" />
+    <Content Include="AutoAnalizador\Sysmex\ConfiguracionEdit.aspx" />
     <Content Include="bin\AjaxControlToolkit.dll" />
     <Content Include="bin\Anthem.dll" />
     <Content Include="bin\Business.dll" />
@@ -2084,6 +2087,10 @@
     <Content Include="Consulta\HistoriaClinicaFiltro.aspx" />
     <Content Include="Consulta\Procesa.aspx" />
     <Content Include="Consulta\ResultadoView.aspx" />
+    <Content Include="Derivaciones\NuevoLote.aspx" />
+    <Content Include="Derivaciones\InformeLote.aspx" />
+    <Content Include="Derivaciones\GestionarLote.aspx" />
+    <Content Include="Derivaciones\InformeList2.aspx" />
     <Content Include="Diagnosticos\DiagEdit.aspx" />
     <Content Include="Diagnosticos\DiagList.aspx" />
     <Content Include="Efectores\EfectorEdit.aspx" />
@@ -2152,7 +2159,7 @@
     <Content Include="PeticionElectronica\VincularProtocolo.aspx" />
     <Content Include="PeticionList.ascx" />
     <Content Include="Derivaciones\Derivados2.aspx" />
-    <Content Include="Derivaciones\InformeList2.aspx" />
+    <Content Include="Derivaciones\InformeList3.aspx" />
     <Content Include="Help\Documentos\ACCESO A RESULTADOS.htm" />
     <Content Include="Help\Documentos\ACCESO A RESULTADOS_archivos\colorschememapping.xml" />
     <Content Include="Help\Documentos\ACCESO A RESULTADOS_archivos\filelist.xml" />
@@ -3708,6 +3715,13 @@
     <Compile Include="AutoAnalizador\CobasB221\ConfiguracionEdit.aspx.designer.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AutoAnalizador\CobasC311Config\ConfiguracionEdit.aspx.cs">
+      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AutoAnalizador\CobasC311Config\ConfiguracionEdit.aspx.designer.cs">
+      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
+    </Compile>
     <Compile Include="AutoAnalizador\Counter\ConfiguracionEdit.aspx.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3878,6 +3892,13 @@
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
     <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.designer.cs">
+      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AutoAnalizador\Sysmex\ConfiguracionEdit.aspx.cs">
+      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="AutoAnalizador\Sysmex\ConfiguracionEdit.aspx.designer.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
     <Compile Include="Calidad\IncidenciaEdit.ascx.cs">
@@ -4181,6 +4202,34 @@
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Derivaciones\NuevoLote.aspx.cs">
+      <DependentUpon>NuevoLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\NuevoLote.aspx.designer.cs">
+      <DependentUpon>NuevoLote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\InformeLote.aspx.cs">
+      <DependentUpon>InformeLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\InformeLote.aspx.designer.cs">
+      <DependentUpon>InformeLote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\GestionarLote.aspx.cs">
+      <DependentUpon>GestionarLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\GestionarLote.aspx.designer.cs">
+      <DependentUpon>GestionarLote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList2.aspx.cs">
+      <DependentUpon>InformeList2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList2.aspx.designer.cs">
+      <DependentUpon>InformeList2.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Diagnosticos\DiagEdit.aspx.cs">
       <DependentUpon>DiagEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4418,6 +4467,18 @@
     </Compile>
     <Compile Include="Informes\Consulta.aspx.designer.cs">
       <DependentUpon>Consulta.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Informes\DerivacionLote.cs">
+      <DependentUpon>DerivacionLote.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Informes\Derivacion.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Derivacion.rpt</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Informes\HistorialPorUsuario.aspx.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
@@ -4657,12 +4718,12 @@
     <Compile Include="Derivaciones\Derivados2.aspx.designer.cs">
       <DependentUpon>Derivados2.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Derivaciones\InformeList2.aspx.cs">
-      <DependentUpon>InformeList2.aspx</DependentUpon>
+    <Compile Include="Derivaciones\InformeList3.aspx.cs">
+      <DependentUpon>InformeList3.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Derivaciones\InformeList2.aspx.designer.cs">
-      <DependentUpon>InformeList2.aspx</DependentUpon>
+    <Compile Include="Derivaciones\InformeList3.aspx.designer.cs">
+      <DependentUpon>InformeList3.aspx</DependentUpon>
     </Compile>
     <Compile Include="Derivaciones\ResultadoEdit.aspx.cs">
       <DependentUpon>ResultadoEdit.aspx</DependentUpon>
@@ -6285,6 +6346,10 @@
     <EmbeddedResource Include="Informes\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\DerivacionLote.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DerivacionLote.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
