@@ -304,9 +304,10 @@
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                            
-                                                       
-                                                        &nbsp;</td>
+                                                           <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                                ErrorMessage="Debe completar al menos un analisis" 
+                                    ValidationGroup="0" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" 
+                                             ></asp:CustomValidator></td>
                                                 </tr>
                                             
                                             </table>
@@ -404,19 +405,13 @@
                                 </tr>
                                 <tr>
                                     <td >
-                                     <label>   Origen/Servicio: </label>  <asp:RangeValidator ID="rvOrigen" runat="server" 
-                                ControlToValidate="ddlOrigen" ErrorMessage="Origen" MaximumValue="999999" 
-                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>
+                                     <label>   Origen/Servicio: </label>  
                                         </td><td   colspan="3">
                             <anthem:DropDownList ID="ddlOrigen" runat="server"  
                                 ToolTip="Seleccione el origen" TabIndex="7" class="form-control input-sm">
                             </anthem:DropDownList>                                        
                                         <asp:DropDownList ID="ddlSectorServicio" class="form-control input-sm" runat="server" TabIndex="8" Width="180px">
                                         </asp:DropDownList>
-                                        
-					                    <asp:RangeValidator ID="rvSectorServicio" runat="server" 
-                                ControlToValidate="ddlSectorServicio" ErrorMessage="Sector" MaximumValue="999999" 
-                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>
                                         
                                             </td>
                                      <td  >
@@ -425,9 +420,6 @@
                             <asp:DropDownList ID="ddlPrioridad" runat="server" 
                                 ToolTip="Seleccione la prioridad" TabIndex="9" class="form-control input-sm">
                             </asp:DropDownList>
-					                    <asp:RangeValidator ID="rvPrioridad" runat="server" 
-                                ControlToValidate="ddlPrioridad" ErrorMessage="Prioridad" MaximumValue="999" 
-                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>
                                       
                                         </td>
                                       <td  align="right">  
@@ -455,9 +447,6 @@
                             <anthem:TextBox ID="txtCodigoMuestra" Width="50px" TabIndex="12" class="form-control input-sm" runat="server"  ontextchanged="txtCodigoMuestra_TextChanged" AutoCallBack="true"></anthem:TextBox> 
                             <anthem:DropDownList ID="ddlMuestra" Width="300px" runat="server" TabIndex="13"  AutoCallBack="true"  onselectedindexchanged="ddlMuestra_SelectedIndexChanged"  class="form-control input-sm" >
                             </anthem:DropDownList>
-                            <anthem:RangeValidator ID="rvMuestra" runat="server"     ErrorMessage="Muestra" 
-                                ControlToValidate="ddlMuestra" Enabled="False" MaximumValue="9999999" 
-                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</anthem:RangeValidator>
                             
                             </asp:Panel>
 						</td>
@@ -814,10 +803,7 @@
                                      <input id="hidToken" type="hidden" runat="server" />
                                 
 						    <anthem:TextBox ID="txtCodigo" runat="server" BorderColor="White" ForeColor="White" 
-                                BackColor="White" BorderStyle="Solid" BorderWidth="0px"></anthem:TextBox>  <asp:CustomValidator ID="cvValidacionInput" runat="server" 
-                                                ErrorMessage="Debe completar al menos un analisis" 
-                                    ValidationGroup="0" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" 
-                                             ></asp:CustomValidator>
+                                BackColor="White" BorderStyle="Solid" BorderWidth="0px"></anthem:TextBox><br />  
                                               <anthem:TextBox ID="txtCodigosRutina"  runat="server" BorderColor="White" 
                                 ForeColor="White" BackColor="White" BorderStyle="Solid" BorderWidth="0px"></anthem:TextBox>						
 						
@@ -848,7 +834,7 @@
 						
 						<td  align="right">
 						
-                                               <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0" AccessKey="s" CausesValidation="true"
+                                               <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0" AccessKey="s" 
                                           ToolTip="Alt+Shift+S: Guarda Protocolo"  onclick="btnGuardar_Click" CssClass="btn btn-primary" Width="80px" TabIndex="24"  /></td>
 						
 					</tr>

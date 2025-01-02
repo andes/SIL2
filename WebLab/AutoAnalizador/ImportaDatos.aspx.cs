@@ -506,22 +506,19 @@ namespace WebLab.AutoAnalizador
                 //     mensagito = mensagito.Substring(1, mensagito.Length-1);
                 //}l
                 int caracterfin = Convert.ToInt32(Encoding.ASCII.GetBytes(mensagito.Substring(mensagito.Length - 1, 1))[0]);// tiene que ser igual a 3
-                mensagitoProcesa += mensagito;
+                //mensagitoProcesa += mensagito;---cantes
+                mensagitoProcesa = mensagito;
 
-                //*nuevo cuando vienen separados el inicio y el fni
-                int LARGO = mensagitoProcesa.Length; ///120 caracteres del mensaje de datos de resultados (info de calidad viene en 99 caracteres)
-            /*    if ((LARGO < 121) && (caracterfin == 3)) // terminó pero no cumple con el largo
+                if ((mensagito.IndexOf("D", 0) >= 0) && (caracterInicio == 2) && (caracterfin == 3))//viene el mensaje completo
+                    mensagitoInicial = "";
+                        
+                int LARGO = 0;
+                //    LARGO = mensagitoProcesa.Length; ///120 caracteres del mensaje de datos de resultados (info de calidad viene en 99 caracteres)
+                //if ((LARGO == 121) && (caracterfin == 3)) // FORMATO K21N: completa hasta 131
+                if (caracterfin == 3) // FORMATO K21N: completa hasta 131
                 {
                     mensagitoProcesa = mensagitoInicial + mensagitoProcesa;
-                }
-                */
-                ////
-
-                LARGO = mensagitoProcesa.Length; ///120 caracteres del mensaje de datos de resultados (info de calidad viene en 99 caracteres)
-                //if ((LARGO == 121) && (caracterfin == 3)) // FORMATO K21N: completa hasta 131
-                 if  (caracterfin == 3) // FORMATO K21N: completa hasta 131
-                    {
-                    mensagitoProcesa = mensagitoInicial + mensagitoProcesa;
+                    LARGO = mensagitoProcesa.Length;
                     int cantidadespacio = 131 - LARGO;
                     int largoultimo = (LARGO - 13);
                     string espacioblanco = "";
@@ -534,139 +531,140 @@ namespace WebLab.AutoAnalizador
                     }
                     mensagitoProcesa = pri + espacioblanco + seg;
                     //mensagitoProcesa = pri + "          " + seg;
-                }
-                LARGO = mensagitoProcesa.Length;
-                if (LARGO == 131)  // FORMATO K21N
-                {
-                     GrabarMensajeTemp(mensagitoProcesa);
-                    //SqlConnection conn2 = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
 
-                    //string query = @"INSERT INTO Temp_Mensaje   (mensaje, fechaRegistro)     
-                    //    VALUES           ( '" + mensagitoProcesa + "', getdate() )";
-                    //SqlCommand cmd = new SqlCommand(query, conn2);
-                    //int idres2 = Convert.ToInt32(cmd.ExecuteScalar());
-
-
-                    /////Decofificar mensagito k1000 por posicion de ocupacion
-                    string codeInicio = mensagitoProcesa.Substring(1, 1);
-                    if (codeInicio.ToUpper() == "D") //Datos de resultado
+                    LARGO = mensagitoProcesa.Length;
+                    if (LARGO == 131)  // FORMATO K21N
                     {
-                        string code1 = mensagitoProcesa.Substring(2, 1);
-                        string code2 = mensagitoProcesa.Substring(3, 1);
-                        //string code3 = mensagito.Substring(3, 2);
-                        string anio = mensagitoProcesa.Substring(4, 4);
-                        string mes = mensagitoProcesa.Substring(8, 2);
-                        string dia = mensagitoProcesa.Substring(10, 2);
-                        string code4 = mensagitoProcesa.Substring(12, 1);
-                        string f = mensagitoProcesa.Substring(13, 12);
-                        string numeroprotocolo = oUtil.quitaCerosIzquierda(mensagitoProcesa.Substring(14, 14)).TrimStart().TrimEnd();//.Substring(12, 6)); //
-                        string code_PDA = mensagitoProcesa.Substring(23, 6);
-                        string code_rdw = mensagitoProcesa.Substring(29, 1);
+                        GrabarMensajeTemp(mensagitoProcesa);
+                        //SqlConnection conn2 = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
 
-                        String[] arr = new String[19]; /// Son 18 parametros los que envia el equipo
-
-                        string WBC = mensagitoProcesa.Substring(35, 5);//WBC [x10^2/uL]
-                        WBC = WBC.Substring(0, 3) + "." + WBC.Substring(3, 2);
-                        arr[0] = "WBC|" + oUtil.quitaCerosIzquierda(WBC);
-
-                        string RBC = mensagitoProcesa.Substring(40, 5);//RBC [x10^4/uL]
-                       //  RBC = RBC.Substring(0, 3) + "." + RBC.Substring(3, 2);//RBC [x10^4/uL]
-                        RBC = RBC.Substring(0, 2) + "." + RBC.Substring(2, 3); //RBC[x10 ^ 6 / uL]
-                        arr[1] = "RBC|" + oUtil.quitaCerosIzquierda(RBC);
-
-                        string HGB = mensagitoProcesa.Substring(45, 5);//HGB [g/dL]
-                        HGB = HGB.Substring(0, 3) + "." + HGB.Substring(3, 2);
-                        arr[2] = "HGB|" + oUtil.quitaCerosIzquierda(HGB);
-
-                        string HCT = mensagitoProcesa.Substring(50, 5);//HCT [%]
-                        HCT = HCT.Substring(0, 3) + "." + HCT.Substring(3, 2);
-                        arr[3] = "HCT|" + oUtil.quitaCerosIzquierda(HCT);
-
-                        string MCV = mensagitoProcesa.Substring(55, 5);// MCV[fL]
-                        MCV = MCV.Substring(0, 3) + "." + MCV.Substring(3, 2);
-                        arr[4] = "MCV|" + oUtil.quitaCerosIzquierda(MCV);
-
-                        string MCH = mensagitoProcesa.Substring(60, 5);//MCH [pg]
-                        MCH = MCH.Substring(0, 3) + "." + MCH.Substring(3, 2);
-                        arr[5] = "MCH|" + oUtil.quitaCerosIzquierda(MCH);
-
-                        string MCHC = mensagitoProcesa.Substring(65, 5);//MCHC [g/dL]
-                        MCHC = MCHC.Substring(0, 3) + "." + MCHC.Substring(3, 2);
-                        arr[6] = "MCHC|" + oUtil.quitaCerosIzquierda(MCHC);
-
-                        string PLT = mensagitoProcesa.Substring(70, 5); //PLT[x10 ^ 4 / uL]
-                        PLT = PLT.Substring(0, 4);
-                        arr[7] = "PLT|" + oUtil.quitaCerosIzquierda(PLT);
-
-                        string WSCR = mensagitoProcesa.Substring(75, 5);//W-SCR [%]
-                        WSCR = WSCR.Substring(0, 3) + "." + WSCR.Substring(3, 2);///le saco el centesimo para que la suma de 100. (3,1)
-                        arr[8] = "W-SCR%|" + oUtil.quitaCerosIzquierda(WSCR);
-
-                        string WMCR = mensagitoProcesa.Substring(80, 5);//W-MCR [%]
-                        WMCR = WMCR.Substring(0, 3) + "." + WMCR.Substring(3, 2);///le saco el centesimo para que la suma de 100.
-                        arr[9] = "W-MCR%|" + oUtil.quitaCerosIzquierda(WMCR);
-
-                        string WLCR = mensagitoProcesa.Substring(85, 5);//W-LCR [%]
-                        WLCR = WLCR.Substring(0, 3) + "." + WLCR.Substring(3, 2);///le saco el centesimo para que la suma de 100.
-                        arr[10] = "W-LCR%|" + oUtil.quitaCerosIzquierda(WLCR);
-
-                        string W_SCC = mensagitoProcesa.Substring(90, 5);                  //W-SCC
-                        W_SCC = W_SCC.Substring(0, 3) + "." + W_SCC.Substring(3, 2);
-                        arr[11] = "W-SCC|" + oUtil.quitaCerosIzquierda(W_SCC);
-
-                        string W_MCC = mensagitoProcesa.Substring(95, 5);//W-MCC
-                        W_MCC = W_MCC.Substring(0, 3) + "." + W_MCC.Substring(3, 2);
-                        arr[12] = "W-MCC|" + oUtil.quitaCerosIzquierda(W_MCC);
-
-                        string W_LCC = mensagitoProcesa.Substring(100, 5);//W-LCC
-                        W_LCC = W_LCC.Substring(0, 3) + "." + W_LCC.Substring(3, 2);
-                        arr[13] = "W-LCC|" + oUtil.quitaCerosIzquierda(W_LCC);
-
-                        string RDWSD = mensagitoProcesa.Substring(105, 5);//RDW-SD
-                        RDWSD = RDWSD.Substring(0, 3) + "." + RDWSD.Substring(3, 2);
-                        //arr[14] = "RDW-SD/CV|" + oUtil.quitaCerosIzquierda(RDW);
-                        arr[14] = "RDW-SD|" + oUtil.quitaCerosIzquierda(RDWSD);
+                        //string query = @"INSERT INTO Temp_Mensaje   (mensaje, fechaRegistro)     
+                        //    VALUES           ( '" + mensagitoProcesa + "', getdate() )";
+                        //SqlCommand cmd = new SqlCommand(query, conn2);
+                        //int idres2 = Convert.ToInt32(cmd.ExecuteScalar());
 
 
-                        string RDWCV = mensagitoProcesa.Substring(110, 5);//RDW-CV
-                        RDWCV = RDWCV.Substring(0, 3) + "." + RDWCV.Substring(3, 2);
-                        arr[15] = "RDW-CV|" + oUtil.quitaCerosIzquierda(RDWCV);
-
-                        string PDW = mensagitoProcesa.Substring(115, 5);//PDW
-                        PDW = PDW.Substring(0, 3) + "." + PDW.Substring(3, 2);
-                        arr[16] = "PDW|" + oUtil.quitaCerosIzquierda(PDW);
-
-                        string MPV = mensagitoProcesa.Substring(120, 5);//MPV
-                        MPV = MPV.Substring(0, 3) + "." + MPV.Substring(3, 2);
-                        arr[17] = "MPV|" + oUtil.quitaCerosIzquierda(MPV);
-
-                        string PLCR = mensagitoProcesa.Substring(125, 5);//P-LCR
-                        PLCR = PLCR.Substring(0, 3) + "." + PLCR.Substring(3, 2);
-                        arr[18] = "P-LCR|" + oUtil.quitaCerosIzquierda(PLCR);
-                        ///Fin de decodificación de mensagito
-                        ///Fin de decodificación de mensagito 
-                        /// 
-                        foreach (string r in arr)
+                        /////Decofificar mensagito k1000 por posicion de ocupacion
+                        string codeInicio = mensagitoProcesa.Substring(1, 1);
+                        if (codeInicio.ToUpper() == "D") //Datos de resultado
                         {
-                            if (r.Trim() != "")
-                            {
-                              
-                                string[] arrCampo = r.Split(("|").ToCharArray());
-                                string s_Prueba = arrCampo[0].ToString(); ///idItem
-                                string s_Resultado = arrCampo[1].ToString().Trim(); ///Valor del item
-                                if (oUtil.EsNumerico(s_Resultado)) ///Solo guarda numeros
-                                {
-                                    Grabar(numeroprotocolo, s_Prueba, s_Resultado, "");
+                            string code1 = mensagitoProcesa.Substring(2, 1);
+                            string code2 = mensagitoProcesa.Substring(3, 1);
+                            //string code3 = mensagito.Substring(3, 2);
+                            string anio = mensagitoProcesa.Substring(4, 4);
+                            string mes = mensagitoProcesa.Substring(8, 2);
+                            string dia = mensagitoProcesa.Substring(10, 2);
+                            string code4 = mensagitoProcesa.Substring(12, 1);
+                            string f = mensagitoProcesa.Substring(13, 12);
+                            string numeroprotocolo = oUtil.quitaCerosIzquierda(mensagitoProcesa.Substring(14, 14)).TrimStart().TrimEnd();//.Substring(12, 6)); //
+                            string code_PDA = mensagitoProcesa.Substring(23, 6);
+                            string code_rdw = mensagitoProcesa.Substring(29, 1);
 
+                            String[] arr = new String[19]; /// Son 18 parametros los que envia el equipo
+
+                            string WBC = mensagitoProcesa.Substring(35, 5);//WBC [x10^2/uL]
+                            WBC = WBC.Substring(0, 3) + "." + WBC.Substring(3, 2);
+                            arr[0] = "WBC|" + oUtil.quitaCerosIzquierda(WBC);
+
+                            string RBC = mensagitoProcesa.Substring(40, 5);//RBC [x10^4/uL]
+                                                                           //  RBC = RBC.Substring(0, 3) + "." + RBC.Substring(3, 2);//RBC [x10^4/uL]
+                            RBC = RBC.Substring(0, 2) + "." + RBC.Substring(2, 3); //RBC[x10 ^ 6 / uL]
+                            arr[1] = "RBC|" + oUtil.quitaCerosIzquierda(RBC);
+
+                            string HGB = mensagitoProcesa.Substring(45, 5);//HGB [g/dL]
+                            HGB = HGB.Substring(0, 3) + "." + HGB.Substring(3, 2);
+                            arr[2] = "HGB|" + oUtil.quitaCerosIzquierda(HGB);
+
+                            string HCT = mensagitoProcesa.Substring(50, 5);//HCT [%]
+                            HCT = HCT.Substring(0, 3) + "." + HCT.Substring(3, 2);
+                            arr[3] = "HCT|" + oUtil.quitaCerosIzquierda(HCT);
+
+                            string MCV = mensagitoProcesa.Substring(55, 5);// MCV[fL]
+                            MCV = MCV.Substring(0, 3) + "." + MCV.Substring(3, 2);
+                            arr[4] = "MCV|" + oUtil.quitaCerosIzquierda(MCV);
+
+                            string MCH = mensagitoProcesa.Substring(60, 5);//MCH [pg]
+                            MCH = MCH.Substring(0, 3) + "." + MCH.Substring(3, 2);
+                            arr[5] = "MCH|" + oUtil.quitaCerosIzquierda(MCH);
+
+                            string MCHC = mensagitoProcesa.Substring(65, 5);//MCHC [g/dL]
+                            MCHC = MCHC.Substring(0, 3) + "." + MCHC.Substring(3, 2);
+                            arr[6] = "MCHC|" + oUtil.quitaCerosIzquierda(MCHC);
+
+                            string PLT = mensagitoProcesa.Substring(70, 5); //PLT[x10 ^ 4 / uL]
+                            PLT = PLT.Substring(0, 4);
+                            arr[7] = "PLT|" + oUtil.quitaCerosIzquierda(PLT);
+
+                            string WSCR = mensagitoProcesa.Substring(75, 5);//W-SCR [%]
+                            WSCR = WSCR.Substring(0, 3) + "." + WSCR.Substring(3, 2);///le saco el centesimo para que la suma de 100. (3,1)
+                            arr[8] = "W-SCR%|" + oUtil.quitaCerosIzquierda(WSCR);
+
+                            string WMCR = mensagitoProcesa.Substring(80, 5);//W-MCR [%]
+                            WMCR = WMCR.Substring(0, 3) + "." + WMCR.Substring(3, 2);///le saco el centesimo para que la suma de 100.
+                            arr[9] = "W-MCR%|" + oUtil.quitaCerosIzquierda(WMCR);
+
+                            string WLCR = mensagitoProcesa.Substring(85, 5);//W-LCR [%]
+                            WLCR = WLCR.Substring(0, 3) + "." + WLCR.Substring(3, 2);///le saco el centesimo para que la suma de 100.
+                            arr[10] = "W-LCR%|" + oUtil.quitaCerosIzquierda(WLCR);
+
+                            string W_SCC = mensagitoProcesa.Substring(90, 5);                  //W-SCC
+                            W_SCC = W_SCC.Substring(0, 3) + "." + W_SCC.Substring(3, 2);
+                            arr[11] = "W-SCC|" + oUtil.quitaCerosIzquierda(W_SCC);
+
+                            string W_MCC = mensagitoProcesa.Substring(95, 5);//W-MCC
+                            W_MCC = W_MCC.Substring(0, 3) + "." + W_MCC.Substring(3, 2);
+                            arr[12] = "W-MCC|" + oUtil.quitaCerosIzquierda(W_MCC);
+
+                            string W_LCC = mensagitoProcesa.Substring(100, 5);//W-LCC
+                            W_LCC = W_LCC.Substring(0, 3) + "." + W_LCC.Substring(3, 2);
+                            arr[13] = "W-LCC|" + oUtil.quitaCerosIzquierda(W_LCC);
+
+                            string RDWSD = mensagitoProcesa.Substring(105, 5);//RDW-SD
+                            RDWSD = RDWSD.Substring(0, 3) + "." + RDWSD.Substring(3, 2);
+                            //arr[14] = "RDW-SD/CV|" + oUtil.quitaCerosIzquierda(RDW);
+                            arr[14] = "RDW-SD|" + oUtil.quitaCerosIzquierda(RDWSD);
+
+
+                            string RDWCV = mensagitoProcesa.Substring(110, 5);//RDW-CV
+                            RDWCV = RDWCV.Substring(0, 3) + "." + RDWCV.Substring(3, 2);
+                            arr[15] = "RDW-CV|" + oUtil.quitaCerosIzquierda(RDWCV);
+
+                            string PDW = mensagitoProcesa.Substring(115, 5);//PDW
+                            PDW = PDW.Substring(0, 3) + "." + PDW.Substring(3, 2);
+                            arr[16] = "PDW|" + oUtil.quitaCerosIzquierda(PDW);
+
+                            string MPV = mensagitoProcesa.Substring(120, 5);//MPV
+                            MPV = MPV.Substring(0, 3) + "." + MPV.Substring(3, 2);
+                            arr[17] = "MPV|" + oUtil.quitaCerosIzquierda(MPV);
+
+                            string PLCR = mensagitoProcesa.Substring(125, 5);//P-LCR
+                            PLCR = PLCR.Substring(0, 3) + "." + PLCR.Substring(3, 2);
+                            arr[18] = "P-LCR|" + oUtil.quitaCerosIzquierda(PLCR);
+                            ///Fin de decodificación de mensagito
+                            ///Fin de decodificación de mensagito 
+                            /// 
+                            foreach (string r in arr)
+                            {
+                                if (r.Trim() != "")
+                                {
+
+                                    string[] arrCampo = r.Split(("|").ToCharArray());
+                                    string s_Prueba = arrCampo[0].ToString(); ///idItem
+                                    string s_Resultado = arrCampo[1].ToString().Trim(); ///Valor del item
+                                    if (oUtil.EsNumerico(s_Resultado)) ///Solo guarda numeros
+                                    {
+                                        Grabar(numeroprotocolo, s_Prueba, s_Resultado, "");
+
+                                    }
                                 }
                             }
+
+
+
+
+
+
                         }
-
-
-
-
-
-
                     }
                 }
 
