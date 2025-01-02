@@ -45,7 +45,6 @@ namespace WebLab.Derivaciones
                     txtFechaDesde.Focus();
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
-
             }
         }
 
@@ -98,6 +97,11 @@ namespace WebLab.Derivaciones
             ddlEfector.Items.Insert(0, new ListItem("--Seleccione--", "0"));
             CargarItem();
 
+            oUtil = new Utility();
+            string query_string = "SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (0,2,3)";
+            oUtil.CargarRadioButton(rdbEstado, query_string, "idEstado", "descripcion");
+            rdbEstado.SelectedIndex = 0;
+
             m_ssql = null;
             oUtil = null;
         }
@@ -113,7 +117,7 @@ namespace WebLab.Derivaciones
             ///Carga de combos de areas
             string m_ssql = "";
             if (ddlServicio.SelectedValue!="0")
- m_ssql = "select idArea, nombre from Lab_Area where baja=0    and idTipoServicio=" + ddlServicio.SelectedValue + " order by nombre";
+                    m_ssql = "select idArea, nombre from Lab_Area where baja=0    and idTipoServicio=" + ddlServicio.SelectedValue + " order by nombre";
             else
                 m_ssql = "select idArea, nombre from Lab_Area where baja=0   order by nombre";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
@@ -190,8 +194,8 @@ namespace WebLab.Derivaciones
                     //  ddlEfector
 
                     if (Request["tipo"] == "informe")
-                        Response.Redirect("InformeList2.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue, false);
-                    if (Request["tipo"] == "resultado")
+                        Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino="+ ddlEfector.SelectedValue, false);
+                   else if (Request["tipo"] == "resultado")
                         Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
                 }
                 else Response.Redirect("../FinSesion.aspx", false);

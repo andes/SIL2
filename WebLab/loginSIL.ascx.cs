@@ -48,7 +48,7 @@ namespace WebLab
         {
             Utility oUtil = new Utility();
             string m_password = oUtil.Encrypt(Login1.Password);
-
+            //string admin = oUtil.Decrypt("XlvQvuBhaPuYaHQuhVbPKQ==");
 
             int i_idusuario = 0;
             string m_strSQL = @" SELECT top 1 idUsuario FROM Sys_usuario with (nolock)  WHERE (username = '" + Login1.UserName + "') AND ([password] = '" + m_password + "') AND  (activo=1 ) ";

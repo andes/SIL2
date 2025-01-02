@@ -52,8 +52,8 @@
                  <table  width="550px" align="center" 
                    class="myTabla">
 					
-					<tr>
-						<td class="myLabelIzquierda">Servicio:</td>
+					<tr class="mt-1">
+						<td class="myLabelIzquierda">Servicio: <br /></td>
 						<td>
                               <asp:DropDownList ID="ddlServicio" runat="server" 
                                 ToolTip="Seleccione el servicio" TabIndex="1" CssClass="form-control input-sm" 
@@ -63,9 +63,9 @@
                                         
                                             </td>
 					</tr>
-					<tr>
+					<tr >
 						<td class="myLabelIzquierda">Area:</td>
-						<td>
+						<td class="pt-4">
                             <asp:dropdownlist ID="ddlArea" runat="server" 
                                 ToolTip="Seleccione el area" TabIndex="2" CssClass="form-control input-sm">
                             </asp:dropdownlist>
@@ -134,11 +134,11 @@
 						<tr>
 						<td class="myLabelIzquierda">Estado:</td>
 						<td>
-                            <asp:RadioButtonList ID="rdbEstado" runat="server" RepeatDirection="Horizontal" 
+                            <asp:RadioButtonList ID="rdbEstado" runat="server" RepeatDirection="Vertical" CellSpacing="15" CellPadding="15" Width="200"
                                 TabIndex="12">
-                                <asp:ListItem Value="0" Selected="True">Pendientes de enviar</asp:ListItem>
+                                <%--<asp:ListItem Value="0" Selected="True">Pendientes de enviar</asp:ListItem>
                                 <asp:ListItem Value="1">Enviados</asp:ListItem>
-                                <asp:ListItem Value="2">Marcado como No enviados</asp:ListItem>
+                                <asp:ListItem Value="2">Marcado como No enviados</asp:ListItem>--%>
                             </asp:RadioButtonList>
                                         
 					</tr>
@@ -161,8 +161,8 @@
                                                ValidationGroup="0" TabIndex="9" Visible="False">Imprimir</asp:LinkButton>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                            </asp:Panel>
                                             <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
-                                                HeaderText="Debe completar los siguientes datos:" ShowMessageBox="True" 
-                                                ValidationGroup="0" ShowSummary="False" />
+                                                HeaderText="Debe completar los siguientes datos:" ShowMessageBox="true" 
+                                                ValidationGroup="0" ShowSummary="false" />
                         </td>
 						
 					</tr>

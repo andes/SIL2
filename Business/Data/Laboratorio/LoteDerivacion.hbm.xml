@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?> 
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+   <class name="Business.Data.Laboratorio.LoteDerivacion,Business" table="LAB_LoteDerivacion"  >
+
+    
+     <id name="IdLoteDerivacion" column="IdLoteDerivacion" type="Int32" unsaved-value="0">
+       <generator class="native"/>
+     </id>
+    <property name="IdEfectorOrigen" column="idEfectorOrigen" />
+    <property name="IdEfectorDestino" column="idEfectorDestino" />
+    <property name="Estado" column="estado" />
+    <property name="FechaRegistro" column="fechaRegistro" />
+    <property name="FechaEnvio" column="fechaEnvio" />
+    <property name="FechaIngreso" column="fechaIngreso" />
+    <property name="Baja" column="baja" />
+    <property name="IdUsuarioRegistro" column="idUsuarioRegistro" type="Int32" />
+    <property name="IdUsuarioEnvio" column="idUsuarioEnvio" type="Int32"/>
+    <property name="IdUsuarioRecepcion" column="idUsuarioRecepcion" type="Int32"/>
+    <property name="Observacion" column="observacion" />
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,94 @@
+﻿using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Linq;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
+using System.Web.UI.WebControls.WebParts;
+using System.Xml.Linq;
+using Business;
+using Business.Data.Laboratorio;
+using CrystalDecisions.Shared;
+using System.IO;
+using System.Data.SqlClient;
+using CrystalDecisions.Web;
+using Business.Data;
+
+namespace WebLab.Derivaciones
+{
+    public partial class NuevoLote : System.Web.UI.Page
+    {
+        public CrystalReportSource oCr = new CrystalReportSource();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            oCr.Report.FileName = "";
+            oCr.CacheDuration = 0;
+            oCr.EnableCaching = false;
+        }
+
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack){
+                if (Session["idUsuario"] != null){
+                    lblLote.Text = "Se genero el lote número " + Request["Lote"].ToString();
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
+            }
+        }
+
+       
+        protected void lnkPDF_Click(object sender, EventArgs e)  {
+            MostrarInforme();
+        }
+
+       
+        private void MostrarInforme()
+        {
+                DataTable dt = GetDataSet();
+                string informe = "../Informes/DerivacionLote.rpt";
+                Configuracion oCon = new Configuracion();
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+
+                ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
+                encabezado1.Value = oCon.EncabezadoLinea1;
+
+                ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+                encabezado2.Value = oCon.EncabezadoLinea2;
+
+                ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+                encabezado3.Value = oCon.EncabezadoLinea3;
+
+
+                oCr.Report.FileName = informe;
+                oCr.ReportDocument.SetDataSource(dt);
+                oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
+                oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
+                oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
+                oCr.DataBind();
+
+            Utility oUtil = new Utility();
+            string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones");
+            oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
+        }
+
+        public DataTable GetDataSet()
+        {
+
+            string m_strSQL = Business.Data.Laboratorio.LoteDerivacion.derivacionPDF(int.Parse(Request["Lote"]));
+            
+            DataSet Ds = new DataSet();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+
+            return Ds.Tables[0];
+
+        }
+    }
+}
