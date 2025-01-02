@@ -883,8 +883,8 @@ namespace Business.Data.Laboratorio
                     dev = true;
 
             }
-            else
-                dev = false;
+           /* else
+                dev = false;*/
 
 
             return dev;
