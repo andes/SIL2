@@ -69,13 +69,13 @@
 						
 					</tr>
 				
-					
+						 
 					<tr>
                         	<td colspan="2"> 
                            <div class="form-group">
                             
                             <div class="col-md-8 inputGroupContainer">
-                                <label class="control-label">   Codigo:  </label>
+                                <label class="control-label">   Codigo (identificador PCR):  </label>
                                <div class="input-group">
 
                                   <span class="input-group-addon"><i class="glyphicon glyphicon-barcode"></i></span> 
@@ -159,6 +159,9 @@
 					</table>
 
 </div>
+		  
+    	
+        </div>
 		  
     	
  </asp:Content>
