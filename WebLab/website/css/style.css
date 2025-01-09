@@ -170,25 +170,37 @@ hr {
     #logo-menu {
         width: 150px;
         padding-left: 0px;
-        margin-left: 0px;
+        margin-left: 20px;
     }
-   
-}
-@media only screen and (max-width : 765px) {
-    #logo-menu {
-        width: 150px;
-        padding-left: 0px;
-        margin-left: 0px;
-    }
-
     #logo-neuquen {
         width: 150px;
+        margin-right: 50px;
     }
 
     #logo-escudo {
         width: 150px;
         height: 70px;
         padding-bottom: 10px;
+    }
+}
+
+@media only screen and (max-width : 1024px) {
+    #logo-menu {
+        width: 150px;
+        padding-left: 0px;
+        margin-left: 20px;
+    }
+
+    #logo-neuquen {
+        width: 100px;
+        margin-right: 50px;
+    }
+
+    #logo-escudo {
+        width: 100px;
+        height: 70px;
+        padding-bottom: 10px;
+        margin-left: 0px;
     }
 
     #logo-menu-ministerio {
@@ -200,19 +212,192 @@ hr {
         left: 40% !important;
     }
 }
-@media only screen and (max-width : 570px) {
+
+@media only screen and (max-width : 850px) {
+    #logo-menu {
+        width: 150px;
+        padding-left: 0px;
+        margin-left: 20px;
+    }
+
+    #logo-neuquen {
+        width: 100px;
+        margin-right: 50px;
+
+    }
+
+    #logo-escudo {
+        width: 100px;
+        height: 70px;
+        padding-bottom: 10px;
+        padding-right: 10px;
+        margin-left: 0px;
+    }
+
+    #logo-menu-ministerio {
+        width: 470px;
+    }
+
+    #ventana-flotante {
+        position: fixed !important;
+        left: 40% !important;
+    }
+}
+
+@media only screen and (max-width : 800px) {
+    #logo-menu {
+        width: 150px;
+        padding-left: 0px;
+        margin-left: 20px;
+    }
+
+    #logo-neuquen {
+        /*width: 100px;*/
+        width: 150px;
+        margin-right: 50px;
+        /*margin-left: 50px;*/
+        padding-right: 50px;
+    }
+
+    #logo-escudo {
+        /*width: 100px;
+        height: 70px;
+        padding-bottom: 10px;
+        margin-left: 0px;*/
+        width: 100px;
+        height: 70px;
+        padding: 0px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+        margin-left: 0px;
+    }
+
+    #logo-menu-ministerio {
+        width: 470px;
+    }
+
+    #ventana-flotante {
+        position: fixed !important;
+        left: 40% !important;
+    }
+}
+
+@media only screen and (max-width : 767px) {
+    #logo-menu {
+        width: 150px;
+        padding-left: 0px;
+        margin-left: 20px;
+    }
+
+    #logo-neuquen {
+        width: 150px;
+        margin-right: 50px;
+        margin-left: 50px;
+        padding-right: 50px;
+    }
+
+    #logo-escudo {
+        width: 100px;
+        height: 70px;
+        padding-bottom: 10px;
+        margin-left: 200px;
+    }
+
+    #logo-menu-ministerio {
+        width: 470px;
+    }
+
+    #ventana-flotante {
+        position: fixed !important;
+        left: 40% !important;
+    }
+}
+
+/* ************* para min-width 768 se abre el menu navbar *********/
+@media only screen and (max-width : 720px) {
+    #logo-menu {
+        width: 150px;
+        margin-left: 20px;
+    }
+
+    #logo-neuquen {
+        width: 150px;
+        margin-right: 50px;
+        margin-left: 50px;
+        padding-right: 50px;
+    }
+
+    #logo-escudo {
+        width: 100px;
+        height: 70px;
+        padding-bottom: 10px;
+        margin-left: 200px;
+        /*margin-top:10px;*/
+    }
+
+    #logo-menu-ministerio {
+        width: 470px;
+    }
+
+    #ventana-flotante {
+        position: fixed !important;
+        left: 40% !important;
+    }
+}
+
+@media only screen and (max-width : 640px) {
     #logo-menu {
         width: 150px;
         padding-left: 0px;
         margin-left: 0px;
     }
+
     #logo-neuquen {
         width: 150px;
+        margin-right: 50px;
     }
+
     #logo-escudo {
         width: 150px;
         height: 70px;
         padding-bottom: 10px;
+        margin-left:60px;
+    }
+
+    #logo-menu-ministerio {
+        width: 470px;
+    }
+
+    #ventana-flotante {
+        position: fixed !important;
+        left: 40% !important;
+    }
+}
+
+@media only screen and (max-width : 570px) {
+    #logo-menu {
+        /*width: 150px;
+        padding-left: 0px;
+        margin-left: 0px;*/
+        width: 100px;
+        padding-bottom: 0px;
+        margin-left: 0px;
+        padding-left: 0px;
+        margin-top: 5px;
+    }
+    #logo-neuquen {
+        /*width: 150px;*/
+        width: 100px;
+        margin-left: 0px;
+    }
+    #logo-escudo {
+        /*width: 150px;
+        height: 70px;
+        padding-bottom: 10px;*/
+        width: 100px;
+        height: 70px;
+        padding-bottom: 15px;
+        margin-left: 100px;
     }
     #logo-menu-ministerio{
         width: 470px;
@@ -223,22 +408,73 @@ hr {
     }
  }
 
-@media only screen and (max-width : 458px) {
+/*@media only screen and (max-width : 458px) {
     #logo-menu {
-        width: 150px;
-        padding-left: 0px;
+         width: 100px;
+        padding-bottom: 0px;
         margin-left: 0px;
+        padding-left: 0px;
+        margin-top: 5px;
     }
     #logo-neuquen {
-        width: 150px;
+        width: 100px;
+        margin-left: 0px;
+        margin-right: 5px;
     }
     #logo-escudo {
-        width: 150px;
+        width: 100px;
         height: 70px;
-        padding-bottom: 10px;
+        padding-bottom: 15px;
+        margin-left: 50px;
     }
     #logo-menu-ministerio{
         width: 450px;
+    }
+}*/
+
+@media only screen and (max-width : 480px) {
+
+    .secuenciacion {
+        height: 385px !important;
+    }
+
+    .secuencia {
+        margin-bottom: 45px;
+    }
+
+    #ventana-flotante {
+        position: fixed !important;
+        left: 20% !important;
+    }
+   
+    #logo-menu {
+        width: 100px;
+        padding-bottom: 0px;
+        margin-left: 0px;
+        padding-left: 0px;
+        margin-top: 5px;
+    }
+
+    #logo-neuquen {
+        width: 100px;
+        height: 70px;
+        margin-left: 0px;
+        padding: 0px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+    }
+
+
+    #logo-escudo {
+        width: 80px;
+        height: 70px;
+        padding-bottom: 15px;
+        margin-left: 100px;
+    }
+
+
+    #logo-menu-ministerio {
+        width: 330px;
     }
 }
 
@@ -255,30 +491,33 @@ hr {
         position: fixed !important;
         left: 20% !important;
     }
-    [class*="col-"] {
+    /*[class*="col-"] {
         width: 100%;
-    }
-    /*#logo-menu {
-        width: 150px;
-        padding-bottom: 20px;
-        margin-left: 80px;
+    }*/
+    #logo-menu {
+        width: 80px;
+        padding-bottom: 0px;
+        margin-left: 0px;
         padding-left: 0px;
+        margin-top: 5px;
     }
     #logo-neuquen {
-        width: 150px;
-        margin-left: 100px;
-       
+        width: 50px;
+        height: 70px;
+        margin-left: 0px;
+        padding: 0px;
+        padding-bottom:10px;
+        padding-left:10px;
     }
-    
+
 
     #logo-escudo {
-        width: 150px;
+        width: 50px;
         height: 70px;
-       
-        padding-bottom: 10px;
-        left: 50px;
-        margin-left:100px;
-    }*/
+      
+        padding-bottom: 15px;
+        margin-left: 70px;
+    }
 
 
     #logo-menu-ministerio {

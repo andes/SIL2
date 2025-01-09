@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap" rel="stylesheet">
         <link rel="shortcut icon" href="images/icolabo.ico">
-        <link href="css/style.css" rel="stylesheet" type="text/css">
+        <link href="css/style.css?v=1.0" rel="stylesheet" type="text/css">
         <link href="css/tareas.css" rel="stylesheet" type="text/css">
         <link href="css/menu.css" rel="stylesheet" type="text/css">
         <link href="css/footer.css" rel="stylesheet" type="text/css">
