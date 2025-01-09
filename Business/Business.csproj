@@ -96,6 +96,7 @@
     <Compile Include="BaseDataAccess.cs" />
     <Compile Include="cAppConfig.cs" />
     <Compile Include="Data\AutoAnalizador\ClinitekItem.cs" />
+    <Compile Include="Data\AutoAnalizador\CobasC311.cs" />
     <Compile Include="Data\AutoAnalizador\FusionItem.cs" />
     <Compile Include="Data\AutoAnalizador\Cobasb221Item.cs" />
     <Compile Include="Data\AutoAnalizador\InccaItem.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Data\Laboratorio\AlarmaScreening.cs" />
     <Compile Include="Data\Laboratorio\AuditoriaItem.cs" />
     <Compile Include="Data\Laboratorio\EfectorRel.cs" />
+    <Compile Include="Data\Laboratorio\Ficha.cs" />
     <Compile Include="Data\Laboratorio\ItemMuestra.cs" />
     <Compile Include="Data\Laboratorio\ItemPresentacion.cs" />
     <Compile Include="Data\Laboratorio\Marca.cs" />
@@ -312,6 +314,8 @@
     <Content Include="bin\Debug\Iesi.Collections.dll" />
     <Content Include="bin\Debug\log4net.dll" />
     <Content Include="bin\Debug\NHibernate.dll" />
+    <Content Include="Data\AutoAnalizador\CobasC311.hbm.xml" />
+    <Content Include="Data\Laboratorio\Ficha.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ItemMuestra.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\Marca.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ItemPresentacion.hbm.xml" />

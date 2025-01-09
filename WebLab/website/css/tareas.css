@@ -1,0 +1,77 @@
+.no-margin{
+    margin-bottom: 0;
+}
+
+.mas-margin{
+    margin-top: 130px;
+}
+
+.mas-margin-bottom{
+    margin-bottom: 20px;
+}
+
+.mas-padding-bottom{
+    padding-bottom: 38px;
+}
+
+.img-noticia{
+    padding-bottom: 30px;
+}
+
+.centrar{
+    margin: auto;
+}
+
+.jumbotron h1, .jumbotron .h1 {
+    font-size: 46px;
+    font-weight: 700;
+}
+
+.jumbotron-body{
+    padding: 50px 0;
+}
+
+.justify-content-center{
+    justify-content:center;
+}
+
+.display-flex{
+    display: flex;
+}
+
+.panel-body{
+    margin-top: 50px;
+}
+
+.estilo-lista{
+    list-style: circle;
+    margin: 5px 0;
+}
+
+.estilo-lista-ordenada{
+    margin: 5px 0;
+}
+
+.estilo-lista-ordenada li{
+    font-size: 16px;
+    font-weight: 300;
+    padding-bottom: 10px;
+}
+
+.estilo-lista li{
+    font-size: 16px;
+    font-weight: 300;
+    padding-bottom: 15px;
+}
+
+.proyecto-forense table, .proyecto-forense th, proyecto-forense td {
+    width:65%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 10px;
+    text-align: center;
+}
+
+.secuenciacion{
+    height: 300px;
+}

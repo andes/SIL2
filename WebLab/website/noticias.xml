@@ -1,0 +1,340 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<catalog>
+
+<cd>
+    <title>El Laboratorio Central incorpora más tecnología</title>
+    <texto>
+      En el marco de la pandemia el Laboratorio adquiere un Extractor de ácidos nucleico de alta calidad
+    </texto>
+    <fecha>Julio de 2020</fecha>
+    <foto>images/nuevoequipocovid.jpg</foto>
+    <link>https://www.lmneuquen.com/neuquen-sextuplicara-el-procesamiento-muestras-covid-19-n719471</link>
+  </cd>
+
+<cd>
+    <title>Primeros Resultados Proyecto Pais</title>
+    <texto>
+      Se obtuvieron 57 nuevos genomas de SARS-CoV2 de pacientes de la Patagonia, con participación del LC.
+    </texto>
+    <fecha>Julio de 2020</fecha>
+    <foto>images/avanceproyectopais.jpg</foto>
+    <link>https://www.argentina.gob.ar/noticias/cientificos-y-cientificas-obtuvieron-57-nuevos-genomas-de-sars-cov2</link>
+  </cd>
+
+  <cd>
+    <title>Donación de 20 Mascaras de Protección Personal</title>
+    <texto>
+      El LC recibe y agradece donación de Contagiando Ayuda en el marco de la pandemia.
+    </texto>
+    <fecha>Junio de 2020</fecha>
+    <foto>images/donacionmascara.jpg</foto>
+    <link>https://contagiandoayuda.com.ar/</link>
+  </cd>
+
+    <cd>
+    <title>El LC recibe Donación de Tecpetrol de una Cabina de Bioseguridad</title>
+    <texto>
+  El LC recibe y agradece donación de Tecpetrol en el marco de la pandemia.
+    </texto>
+
+    <fecha>Mayo 2020</fecha>
+    <foto>images/cabinabiologica.png</foto>
+    <link>http://pais.qb.fcen.uba.ar/</link>
+
+  </cd>
+    
+    
+     <cd>
+    <title>El LC participará de la Secuenciación del genoma SARS-CoV2</title>
+    <texto>
+ El LC participará en el Proyecto de Secuenciación del genoma de cepas de SARS-CoV2 que circulan en nuestro país.
+    </texto>
+
+    <fecha>Abril 2020</fecha>
+    <foto>images/edificio.png</foto>
+    <link>http://pais.qb.fcen.uba.ar/</link>
+
+  </cd>
+      <cd>
+    <title>El gobernador, Omar Gutierrez, destaca labor del Laboratorio Central</title>
+    <texto>
+  El gobernador de Neuquén destacó el trabajo del Laboratorio Central que detecta el coronavirus en 4 horas.
+  
+    </texto>
+
+    <fecha>Marzo 2020</fecha>
+    <foto>images/0004611866.jpg</foto>
+    <link>https://www.lmneuquen.com/gutierrez-destaco-el-trabajo-del-laboratorio-central-que-detecta-el-coronavirus-4-horas-n692752</link>
+
+  </cd>
+   <cd>
+    <title>El LC incluyó un área más en los programas externos de control de calidad obteniendo un porcentaje del 100%.</title>
+    <texto>
+  
+  
+    </texto>
+
+    <fecha>Marzo 2020</fecha>
+    <foto>images/programacontrolcalidad2020.jpg</foto>
+    <link>103 - Laboratorio Central.pdf</link>
+
+  </cd>
+
+ <cd>
+    <title>El LC se suma al Plan Maestro de Gobierno Electrónico de la Provincia de Neuquén</title>
+    <texto>
+  El laboratorio incorpora, a través de su sistema informático (SIL), la validación de datos de las personas/pacientes con el servicio de RENAPER.
+    </texto>
+
+    <fecha>Noviembre 2019</fecha>
+    <foto>images/validarenaper.jpg</foto>
+    <link>integrabilidadSIL.html</link>
+
+  </cd>
+
+ <cd>
+    <title>El LC participa de una investigación para evaluar un medicamento contra el SUH</title>
+    <texto>
+En el Laboratorio Central participará realizando, a través de estudios moleculares, el diagnóstico o confirmación de los casos de diarreas sanguinolenta causados por STEC.
+    </texto>
+
+    <fecha>Noviembre 2019</fecha>
+    <foto>images/ecoli-1184px.jpg</foto>
+    <link>suhi.html</link>
+
+  </cd>
+
+
+ <cd>
+    <title>  CUCAI Neuquén renueva habilitación al Laboratorio de Histocompatibilidad</title>
+    <texto>
+   Esta renovación se otorga bajo los nuevos lineamientos para estandarizar la metodología de Cross Match a utilizar durante los operativos de distribución renal.
+    </texto>
+
+    <fecha>Junio 2019</fecha>
+    <foto>images/IMG-20190613-WA0003.jpg</foto>
+    <link>https://www.facebook.com/885929045076924/posts/893333937669768/</link>
+
+  </cd>
+ <cd>
+    <title>  El LC suma tecnología para informar Resultados de HistoCompatibilidad</title>
+    <texto>
+     Con la implementación de interfaz de comunicación entre Luminex (Fusion) y SIL, el Laboratorio de Histocompatibilidad suma calidad y mejora los tiempos en informar resultados.
+    </texto>
+
+    <fecha>Mayo 2019</fecha>
+    <foto>images/termocicladorLC.jpg</foto>
+    <link>interfaceSIL.html</link>
+
+  </cd>
+  <cd>
+    <title>    El LC capacitó a personal del Poder Judicial de la Provincia del Neuquén</title>
+    <texto>
+      La capacitación es en el marco del convenio que firmó el Ministerio de Salud con el TSJ, que comenzó en una primera etapa con filiación y en esta segunda etapa interviene el fuero penal.
+    </texto>
+
+    <fecha>Mayo 2019</fecha>
+    <foto>images/capacitacionpoderjudicial.JPG</foto>
+    <link>capacitacionTSJ.html</link>
+
+  </cd>
+ <cd>
+    <title>    Participación en las III Jornadas Patagónicas de Bioquímicas</title>
+    <texto>
+    Profesionales del Laboratorio Central participaron en las III Jornadas Patagónicas de Bioquímica en Mesas redondas y trabajos libres.
+    </texto>
+
+    <fecha>Marzo 2019</fecha>
+    <foto>images/imgJornadasBioqNorpatagonicas.JPG</foto>
+    <link>laboenJornadas.html</link>
+   
+
+  </cd>
+  <cd>
+    <title>  Se publicó el libro  Handbook of Foodborne Diseases con participación del LC</title>
+    <texto>
+     Este libro tuvo participación de Mg. Luis Pianciola como coautor de capítulo de libro Chapter 30 Escherichia, Section II: Foodborne diseases due to bacteria.
+    </texto>
+
+    <fecha>Dic. 2018</fecha>
+    <foto>images/handbook.jpg</foto>
+    <link>images/9781351863483.jpg</link>
+
+  </cd>
+  <cd>
+    <title>   Se llevaron a cabo las X Jornadas Bioquímicas Provinciales el 6 y 7 de Setiembre de 2018</title>
+    <texto>
+      El Laboratorio Central organizó las jornadas destinadas a bioquímicos del Sistema Público de Salud de la Provincia de Neuquén 
+      que se desarrollaron en la ciudad de Neuquén Capital.
+    </texto>
+
+    <fecha>Setiembre 2018</fecha>
+    <foto>jornadas/images/banner1.png</foto>
+    <link>jornadas/index.html</link>
+
+  </cd>
+  <cd>
+    <title>   Se instaló en el Laboratorio Central el Secuenciador de Nueva Generación MiSeq de Illumina</title>
+    <texto>
+      El Equipo MiSeq aportará al LC una tecnología innovadora para analizar a gran escala las variaciones genéticas y su función.
+    </texto>
+
+    <fecha>Agosto 2018</fecha>
+    <foto>images/miseq1.png</foto>
+    <link>sng.html</link>
+
+  </cd>
+    
+
+  <cd>
+    <title> El LC realiza carga viral de Citomegalovirus en muestras de pacientes trasplantados</title>
+    <texto>
+    A partir del mes de Junio del corriente año, el Laboratorio Central cuenta con la posibilidad de cuantificar la carga viral de Citomegalovirus en muestras de pacientes trasplantados.
+    </texto>
+
+    <fecha>Junio 2018</fecha>
+    <foto>images/cmv.png</foto>
+    <link>cmv.html</link>
+
+  </cd>
+
+  <cd>
+    <title>  El Laboratorio Central realizará los informes periciales del Poder Judicial del Neuquén</title>
+    <texto>
+     EL MINISTERIO suministrará a través del LC informes periciales con sustento en análisis por vía del Polimorfismo del ADN en muestras suministradas por EL PODER JUDICIAL.
+    </texto>
+
+    <fecha>Junio 2018</fecha>
+    <foto>images/conveniojusticia.png</foto>
+    <link>images/conveniojusticia.png </link>
+
+  </cd>
+
+  <cd>
+    <title> Nueva Publicación con Participación del Laboratorio Central </title>
+    <texto>
+      Genotypic Features of Clinical and Bovine Escherichia coli O157 Strains Isolated in Countries with Different Associated-Disease Incidences
+    </texto>
+
+    <fecha>Abril 2018</fecha>
+    <foto>images/publicacion-abril18.png</foto>
+    <link>publicaciones/microorganisms-06-00036.pdf</link>
+
+  </cd>
+    <cd>
+    <title> Nueva Publicación con Participación del Laboratorio Central </title>
+    <texto>
+      Perfil de virulencia de cepas de Escherichia coli O157 aisladas de aguas superficiales en áreas de cría de ganado.
+    </texto>
+
+    <fecha>Marzo 2018</fecha>
+    <foto>images/publicacion_marzo2018.jpg</foto>
+    <link>https://www.ncbi.nlm.nih.gov/pubmed/29500840</link>
+
+  </cd>
+  
+  <cd>
+    <title>Idea Proyecto fue preseleccionada por COPADE para su financiación por parte de COFECYT</title>
+    <texto>
+      Título de la Idea Proyecto: Generación de conocimientos para la disminución de riesgos asociados a la salud y al cuidado del medioambiente en la cría intensiva de ganado.
+    </texto>
+
+    <fecha>Diciembre 2017</fecha>
+    <foto>images/copade.jpg</foto>
+    <link>proyecto_COFECYT.html</link>
+
+  </cd>
+
+  <cd>
+    <title>Aporte del Laboratorio Central en el Megaoperativo del Incucai en Neuquén.</title>
+    <texto>El equipo del Laboratorio de Histocompatibilidad participó en el operativo del Incucai del pasado 13 de diciembre en la ciudad de Neuquén.</texto>
+    
+    <fecha>Diciembre 2017</fecha>
+    <foto>galeria/igualtamaño/slide2.jpg</foto>
+    <link>"https://noticiasnqn.com.ar/2017/12/megaoperativo-neuquen-del-incucai-tras-fallecimiento-del-joven-junin-los-andes/"</link>
+    
+  </cd>
+     
+  <cd>
+    <title>El Laboratorio Central participó del último operativo de INCUCAI en la región.</title>
+    <texto>Integrantes del Laboratorio de Histocompatibilidad colaboraron con el operativo de Trasplante Multiorgánico realizado en el hospital de la ciudad de Gral. Roca, Rio Negro.</texto>
+    
+    <fecha>Noviembre 2017</fecha>
+    <foto>galeria/igualtamaño/histocompatibilidad2.jpg</foto>
+    <link>"http://www.rionegro.gov.ar/?contID=40711"</link>
+    
+  </cd>
+    
+  <cd>
+    <title>Participación en las IX Jornadas Bioquímicas Provinciales</title>
+    <texto>Integrantes del Laboratorio Central participan de las Jornadas Bioquímicas Provinciales que se realiza el 12 y 13 de octubre en la ciudad de San Martín de los Andes.</texto>
+    
+    <fecha>Octubre 2017</fecha>
+    <foto>galeria/igualtamaño/jornadabioq2.jpg</foto>
+    <link>"http://www.saludneuquen.gob.ar/se-realizan-las-ix-jornadas-bioquimica"</link>
+    
+  </cd>
+    
+<cd>
+    <title>Incorporación de PCR para Pcp  (Pneumocystis jirovecii)</title>
+    <texto>El Laboratorio Central incorpora un nueva determinación para acelerar los tiempos en que el médico obtiene un resultado; pudiendo de ésta forma iniciar el tratamiento tempranamente.</texto>
+    
+    <fecha>Octubre 2017</fecha>
+    <foto>galeria/igualtamaño/instalaciones4.jpg</foto>
+    <link>nuevadeterminacion.html</link>
+    
+  </cd>
+   
+<cd>
+    <title>Nuevos Aportes de Investigación Científica</title>
+    <texto>Participación del Laboratorio en el Manual de Microbiología Clínica de la AAA y publicación en la revista Parasitology Research.</texto>
+    
+    <fecha>Octubre 2017</fecha>
+    <foto>images/nuevapublicacion.jpg</foto>
+    <link>NuevasPublicaciones.aspx</link>
+    
+  </cd>
+
+<cd>
+    <title>Nueva Vinculación entre Sector Privado de Salud y el Laboratorio Central</title>
+    <texto>Se implementa el nuevo módulo de Petición Electrónica y Consulta de Resultados online destinado al Sector Privado de Salud.</texto>
+    
+    <fecha>Junio 2017</fecha>
+    <foto>galeria/igualtamaño/slide4.jpg</foto>
+    <link>"http://www.saludneuquen.gob.ar/el-laboratorio-central-tiene-pagina-web/"</link>
+    
+  </cd>
+
+
+<cd>
+    <title>El Laboratorio Central lleva el nombre de Mg. Luis Alfredo Pianciola</title>
+    <texto>En homenaje y reconocimiento a su dedicación y constancia, así se desprende de la resolución 0070 del 19 de enero de este año.</texto>
+    
+    <fecha>Mayo 2017</fecha>
+    <foto>images/slide1.jpg</foto>
+    <link>"http://www.saludneuquen.gob.ar/nuevo-nombre-para-el-laboratorio-central/"</link>
+    
+  </cd>
+
+<cd>
+    <title>Convenio de Cooperación Científica y Tecnológica con el Ministerio Publico Fiscal</title>
+    <texto>El Laboratorio Central será el primer Centro Institucional en la Provincia de Neuquén dedicado a la Biología Molecular Forense.</texto>
+    
+    <fecha>Abril 2017</fecha>
+    <foto>images/slide3.jpg</foto>
+    <link>"http://www.saludneuquen.gob.ar/el-laboratorio-central-de-la-provincia-asistira-al-poder-judicial/"</link>
+    
+  </cd>
+
+
+  <cd>
+    <title>Portal Web Laboratorio Central</title>
+    <texto>El Laboratorio inaugura el presente Sitio Web en conjunto con la implementación de la nueva modalidad de Petición Electrónica y Consulta de Resultados on line.</texto>
+
+    <fecha>Enero 2017</fecha>
+    <foto>images/portalweb2.jpg</foto>
+    <link>portalweb.html</link>
+
+  </cd>
+</catalog>

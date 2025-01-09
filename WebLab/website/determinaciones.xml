@@ -1,0 +1,981 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<catalog>
+  
+   <cd>
+    <title>Carga Viral de Citomegalovirus</title>
+    <codigo>9049</codigo>
+    <muestra>Sangre entera con EDTA</muestra>
+    <conservacion>Refrigerada (procesada en el día)</conservacion>
+    <metodo>PCR cuantitativa</metodo>
+       <ficha1>Ficha de Derivacion:|fichas/Formulario de Derivacion de Muestras Carga Viral Citomegalovirus.pdf  </ficha1>
+    <ficha2> </ficha2>
+   <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+    <cd>
+    <title>CoVid-19 (Coronavirus)</title>
+    
+<codigo>9122</codigo>
+  
+  <muestra>Esputo, Lavado broncoalveolar o aspirado traqueal,
+ Hisopado nasofaríngeo combinado con un Hisopado orofaríngeo</muestra>
+  
+  <conservacion>Refrigeradas (no congelar)</conservacion>
+  
+  <metodo>PCR</metodo>
+  
+  <ficha1>Ficha de Derivación:|fichas/Coronavirus NQN.pdf  </ficha1>
+   
+ <ficha2> </ficha2>
+   
+ <tipo>Microbiología Molecular</tipo>
+  
+  <observacion>Se deriva al ANLIS Malbran</observacion>
+
+  </cd>
+  <cd>
+    <title>Pneumocystis Carinii-PCP</title>
+    <codigo>9105</codigo>
+    <muestra>Esputo</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1> </ficha1>
+    <ficha2> </ficha2>
+   <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+    
+  <cd>
+    <title>Virus Influenza A</title>
+    <codigo>9000</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>RT-PCR en tiempo real</metodo>
+     <ficha1>Ficha de Derivación:|fichas/Virus Respiratorios.pdf  </ficha1>
+    <ficha2> </ficha2>
+   <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Virus Influenza B</title>
+    <codigo>9000</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>RT-PCR en tiempo real</metodo>
+   <ficha1> </ficha1>
+    <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Subtipificación de Virus Influenza A</title>
+    <codigo>9000</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>RT-PCR en tiempo real</metodo>
+    <ficha1> </ficha1>
+    <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+
+  </cd>
+  <cd>
+
+
+    <title>Virus Herpes 1 (HSV 1)</title>
+    <codigo>9004</codigo>
+    <muestra>Suero y orina o hisopado de lesión</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+     <ficha1>
+      Ficha de Derivación:|fichas/PLANILLA ITS.pdf     
+
+    </ficha1>
+    <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion>Ante sospecha de una infección congénita, se solicita completar las fichas de notificación obligatoria según corresponda.</observacion>
+  </cd>
+  <cd>
+
+
+    <title>Virus Herpes 2 (HSV 2)</title>
+    <codigo>9005</codigo>
+    <muestra>Suero y orina o hisopado de lesión</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Derivación:|fichas/PLANILLA ITS.pdf     
+
+    </ficha1>
+    <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion>Ante sospecha de una infección congénita, se solicita completar las fichas de notificación obligatoria según corresponda.</observacion>
+  </cd>
+
+  <cd>
+
+
+    <title>Citomegalovirus (CMV)</title>
+    <codigo>9009</codigo>
+    <muestra>LCR</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    
+     <ficha1>Ficha de Notificacion Obligatoria:|fichas/Meningitis.pdf  </ficha1>
+    <ficha2> </ficha2>
+       
+     
+   
+ <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+  <cd>
+    <title>Citomegalovirus (CMV)</title>
+    <codigo>9006</codigo>
+    <muestra>Suero y orina</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>    
+    <ficha1>
+     Ficha de Notificación para Embarazadas:|fichas/FichaVirusCongénitos-embarazadas.pdf
+  
+    </ficha1>
+    <ficha2> Ficha de Notificación para Recien Nacidos:|fichas/FichaVirusCongenitos-RN.pdf</ficha2>
+
+ <tipo>Microbiología Molecular</tipo>
+ <observacion></observacion>
+  </cd>
+
+
+
+
+  <!--<cd>
+
+    <title>Varicella Zoster</title>
+
+    <codigo>9007</codigo>
+    <muestra></muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Meningitis.pdf
+      
+    </ficha1>
+    <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  </cd>-->
+
+  <cd>
+    <title>Varicella Zoster</title>
+    <codigo>9007</codigo>
+    <muestra>Suero y orina o hisopado de lesión</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>    
+    <ficha1>
+     Ficha de Notificación para Embarazadas:|fichas/FichaVirusCongénitos-embarazadas.pdf
+  
+    </ficha1>
+    <ficha2> Ficha de Notificación para Recien Nacidos:|fichas/FichaVirusCongenitos-RN.pdf</ficha2>
+
+ <tipo>Microbiología Molecular</tipo>
+ <observacion></observacion>
+  </cd>
+  <cd>
+    <title>Varicella Zoster</title>
+    <codigo>9010</codigo>
+    <muestra>LCR</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Meningitis.pdf
+      <!--Ficha de Notificación Obligatoria:
+      <a href="fichas/Meningitis.pdf" class="green">Descargar Ficha</a>-->
+
+    </ficha1>
+ <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion></cd>
+
+
+
+  <cd>
+
+    <title>Virus Herpes (HSV)</title>
+
+    <codigo>9008</codigo>
+    <muestra>LCR</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR y PCR en real time</metodo>
+    <ficha1>Ficha de Derivación:|fichas/Meningitis.pdf  </ficha1>
+     <ficha2></ficha2>
+  <tipo>Microbiología Molecular</tipo>  
+  <observacion></observacion>
+  </cd>
+
+
+
+  <cd>
+
+    <title>Enterovirus (EV)</title>
+
+    <codigo>9011</codigo>
+    <muestra>LCR, material fecal, hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Meningitis.pdf
+      <!--Ficha de Notificación Obligatoria:
+      <a href="fichas/Meningitis.pdf" class="green">Descargar Ficha</a>-->
+
+    </ficha1>
+     <ficha2></ficha2>
+    <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+
+  <cd>
+
+
+    <title>Parvovirus Humano B19</title>
+
+    <codigo>9035</codigo>
+    <muestra>Suero y orina</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+     Ficha de Notificación para Embarazadas:|fichas/FichaVirusCongénitos-embarazadas.pdf
+      <!--Ficha de Notificación para Embarazadas:
+      <a href="fichas/FichaVirusCongénitos-embarazadas.pdf" class="green">Descargar Ficha</a>
+      Ficha de Notificación para Recien Nacidos:
+      <a href="fichas/FichaVirusCongenitos-RN.pdf" class="green">Descargar Ficha</a>-->
+
+
+    </ficha1>
+    <ficha2> Ficha de Notificación para Recien Nacidos:|fichas/FichaVirusCongenitos-RN.pdf</ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+
+
+    <title>Metapneumovirus humano (hMPV)</title>
+    <codigo>9012</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>Ficha de Derivación:|fichas/Virus Respiratorios.pdf  </ficha1>
+    <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Chlamydia trachomatis</title>
+
+    <codigo>9013</codigo>
+    <muestra>Exudado endocervical o uretral, primer chorro de orina, aspirado nasofaríngeo, hisopado conjuntival</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+
+    <ficha1>
+      Ficha de Derivación:|fichas/PLANILLA ITS.pdf     
+
+    </ficha1>
+    <ficha2></ficha2>
+  <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+
+  <cd>
+
+
+
+    <title>Chlamydophila psitacci</title>
+    <codigo>9018B</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Psitacosis.pdf
+      
+
+    </ficha1>
+  
+    <ficha2></ficha2>
+    <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+  
+     <cd>
+
+
+
+    <title>Chlamydophila psitacci (Serología)</title>
+    <codigo>9018C</codigo>
+    <muestra>Suero </muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo></metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Psitacosis.pdf
+      
+
+    </ficha1>
+  
+    <ficha2></ficha2>
+    <tipo>Microbiología Molecular</tipo>
+  <observacion>Se deriva al INEI-ANLIS Malbran</observacion>
+  </cd>
+  <!--<cd>
+
+
+
+    <title>Chlamydophila pneumoniae </title>
+    <codigo>9015</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1></ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+
+  </cd>-->
+  <cd>
+
+
+    <title>Mycoplasma pneumoniae </title>
+    <codigo>9016</codigo>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>Ficha de Derivación:|fichas/Virus Respiratorios.pdf  </ficha1>
+        <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+    <title>Coqueluche </title>
+    <codigo>9054</codigo>
+    <descripcion>Bordetella pertussis, Bordetella parapertussis, Bordetella bronchiseptica, Bordetella holmesii.</descripcion>
+    <muestra>Aspirado o hisopado nasofaríngeo</muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Coqueluche.pdf
+      
+
+    </ficha1>
+        <ficha2></ficha2>
+    <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+  
+     <cd>
+    <title>Coqueluche (Serología) </title>
+    <codigo>9053</codigo>
+    <descripcion>Bordetella pertussis, Bordetella parapertussis, Bordetella bronchiseptica, Bordetella holmesii.</descripcion>
+  <muestra>Suero </muestra>
+        <conservacion>Refrigerada</conservacion>
+    <metodo></metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Coqueluche.pdf
+      
+
+    </ficha1>
+        <ficha2></ficha2>
+    <tipo>Microbiología Molecular</tipo>
+         <observacion>Se deriva al INEI-ANLIS Malbran</observacion>
+
+  </cd>
+  <cd>
+
+
+    <title>Shigella spp </title>
+    <codigo>9022</codigo>
+    <muestra>Materia fecal, cepa*</muestra>
+        <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1> </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+
+    <title>Campylobacter spp </title>
+    <codigo>9023</codigo>
+  <muestra>Materia fecal, cepa*</muestra>
+        <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1> </ficha1>
+      <ficha2></ficha2>
+    <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+
+  </cd>
+  <cd>
+
+
+    <title>Yersinia spp </title>
+    <codigo>9024</codigo>
+  <muestra>Materia fecal, cepa*</muestra>
+        <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1> </ficha1>
+      <ficha2></ficha2>
+
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+
+    <title>Salmonella spp</title>
+    <codigo>9025</codigo>
+ <muestra>Materia fecal, cepa*</muestra>
+        <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1> </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+
+  </cd>
+  <cd>
+
+    <title>Screening de STEC en Alimentos</title>
+    <codigo>9026</codigo>
+ <muestra>Materia fecal, cepa*</muestra>
+        <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR</metodo>
+     <ficha1> </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Escherichia coli O157 y factores de virulencia</title>
+    <codigo>9026</codigo>
+   <muestra>Materia fecal, cepa*</muestra>
+        <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR, Separación inmunomagnética</metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Síndrome Urémico Hemolítico Notificación.pdf
+      
+
+    </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+
+  <observacion></observacion>
+  </cd>
+  <cd>
+
+
+    <title>Staphylococcus aureus</title>
+    <codigo>9063</codigo>
+    <muestra>Cepa </muestra>
+        <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1> </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+
+  <cd>
+
+
+    <title>Clostridium difficile</title>
+    <codigo>9031</codigo>
+    <muestra>Materia fecal </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+      <ficha1> </ficha1>
+      <ficha2></ficha2>
+
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+
+
+    <title>Listeria spp</title>
+    <codigo>9091</codigo>
+    <muestra>LCR, alimentos, *cepa </muestra>
+    <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR real time </metodo>
+    <ficha1> </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+
+  <cd>
+    <title>Norovirus</title>
+    <codigo>9065</codigo>
+    <muestra>Materia fecal  </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR real time </metodo>
+       <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Planilla Derivación Norovirus- Lab central.xlsx
+      
+
+    </ficha1>
+      <ficha2></ficha2>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+    <title>Mycoplasma genitalium</title>
+    <codigo>9067</codigo>
+    <muestra>Hisopado endocervical o uretral </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1>
+      Ficha de Derivación:|fichas/PLANILLA ITS.pdf     
+
+    </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+    <title>Neisseria gonorrhoeae</title>
+    <codigo>9066</codigo>
+    <muestra>Hisopado endocervical, uretral o *cepa </muestra>
+    <conservacion>Refrigerada, *Ambiente</conservacion>
+    <metodo>PCR</metodo>
+      <ficha1>
+      Ficha de Derivación:|fichas/PLANILLA ITS.pdf     
+
+    </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+  <cd>
+
+
+    <title>Treponema pallidum</title>
+    <codigo>9068</codigo>
+    <muestra>Hisopado de lesión</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+      <ficha1>
+      Ficha de Derivación:|fichas/PLANILLA ITS.pdf     
+
+    </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>HPV </title>
+    <codigo>9032</codigo>
+    <muestra>Hisopado, cepillado endocervical o hisopado de lesión</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR y RFLP</metodo>
+      <ficha1> </ficha1>
+      <ficha2></ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+    <title>Leptospira spp  </title>
+    <codigo>9033</codigo>
+    <muestra>Suero</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo></metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Leptospirosis.pdf
+      <!--Ficha de Notificación Obligatoria:
+      <a href="fichas/Leptospirosis.pdf" class="green">Descargar</a>-->
+
+    </ficha1>
+      
+      <ficha2></ficha2>
+
+ <tipo>Microbiología Molecular</tipo>
+      <observacion>Se deriva al INEI-ANLIS Malbran </observacion>
+
+  </cd>
+  <cd>
+
+
+
+    <title>Chagas</title>
+    <codigo>9057</codigo>
+    <muestra>Sangre entera con guanidina</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR</metodo>
+    <ficha1> </ficha1>
+    <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+    <title>Hantavirus </title>
+    <codigo>9060</codigo>
+    <muestra>Sangre sin Anticoagulante y Sangre con EDTA</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo></metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Hantavirus.pdf
+      
+
+    </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion>Se deriva al INEI-ANLIS Malbran</observacion>
+  </cd>
+  <cd>
+
+
+    <title>Triquinosis  </title>
+    <codigo>9061</codigo>
+    <muestra>Suero</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo></metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Triquinosis.pdf
+      <!--Ficha de Notificación Obligatoria:
+      <a href="fichas/Triquinosis.pdf" class="green">Descargar</a>-->
+
+    </ficha1>
+      <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion>Se deriva al INEI-ANLIS Malbran  </observacion>
+  </cd>
+  <cd>
+
+    <title>Parotiditis   </title>
+    <codigo>9046</codigo>
+    <muestra>Saliva</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>  </metodo>
+    <ficha1>
+      Ficha de Notificación Obligatoria:|fichas/Parotiditis infecciosa.pdf
+      <!--Ficha de Notificación Obligatoria:
+      <a href="fichas/Parotiditis infecciosa.pdf" class="green">Descargar</a>-->
+
+    </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  <observacion>Se deriva al INEI-ANLIS Malbran</observacion>
+  </cd>
+  <!--<cd>
+
+
+    <title>Carga viral para Citomegalovirus    </title>
+    <codigo>9049</codigo>
+    <muestra>Sangre entera con EDTA</muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR real time  </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+  </cd>-->
+  <cd>
+
+
+    <title>Neisseria meningitidis</title>
+    <codigo>9041</codigo>
+    <muestra>LCR </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>Ficha de Derivación:|fichas/Meningitis.pdf  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Streptococcus pneumoniae </title>
+    <codigo>9042</codigo>
+    <muestra>LCR, muestras respiratorias </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+   <ficha1>Ficha de Derivación:|fichas/Meningitis.pdf  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+
+    <title>Haemophilus influenzae</title>
+    <codigo>9040</codigo>
+    <muestra>LCR, muestras respiratorias </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+  <ficha1>Ficha de Derivación:|fichas/Meningitis.pdf  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Carbapenemasas (gen oxa)</title>
+    <codigo>9095</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>   </ficha1>
+       <ficha2> </ficha2>
+
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Carbapenemasas (gen kpc)  </title>
+    <codigo>9099</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>   </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+
+    <title>Carbapenemasas (gen pilV)   </title>
+    <codigo>9100</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Resistencia a Glicopeptidos (gen vana) </title>
+    <codigo>9097</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1> </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Resistencia a Meticilina (gen mecA) </title>
+    <codigo>9101</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Resistencia a Plasmídica a colistin (gen mcr-1)</title>
+    <codigo>9096</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+   <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+      <observacion></observacion>
+
+  </cd>
+  <cd>
+
+    <title>Resistencia a Betalactámicos (gen imp)</title>
+    <codigo>9094</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+  <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Resistencia a Betalactámicos  (gen vim)</title>
+    <codigo>9098</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+   <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+  <cd>
+
+    <title>Resistencia a Betalactámicos  (gen ndm)</title>
+    <codigo>9093</codigo>
+    <muestra>Cepa </muestra>
+    <conservacion>Ambiente</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+ <tipo>Microbiología Molecular</tipo>
+    <observacion></observacion>
+  </cd>
+
+  
+
+ <cd>
+
+    <title>Factor V Leiden</title>
+    <codigo>655102</codigo>
+    <muestra>Sangre entera con EDTA </muestra>
+   <conservacion>Refrigerada</conservacion>
+    <metodo>PCR y RFLP </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Genética Molecular</tipo>
+   <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>Polimorfismo del gen PAI-1</title>
+    <codigo>658000</codigo>
+    <muestra>Sangre entera con EDTA </muestra>
+   <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Genética Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+<cd>
+
+    <title>Variante termolábil de la MTHFR</title>
+    <codigo>657460</codigo>
+    <muestra>Sangre entera con EDTA </muestra>
+  <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Genética Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+<cd>
+
+    <title>Protrombina 20210</title>
+    <codigo>658691</codigo>
+    <muestra>Sangre entera con EDTA </muestra>
+  <conservacion>Refrigerada</conservacion>
+    <metodo>PCR </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Genética Molecular</tipo>
+  <observacion></observacion>
+  </cd>
+
+
+<cd>
+
+    <title>Cross Match Frente a Panel</title>
+    <codigo>1005</codigo>
+    <muestra>Suero</muestra>
+  <conservacion>Refrigerada</conservacion>
+    <metodo>Citotoxicidad dependiente de complemento </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>Cross Match Familiar</title>
+    <codigo>1006</codigo>
+    <muestra>Donante sangre entera con EDTA. Receptor: Suero</muestra>
+  <conservacion>-</conservacion>
+    <metodo>Citotoxicidad dependiente de complemento </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>Cross Match Pretransplante</title>
+    <codigo>1004</codigo>
+    <muestra>Donante sangre entera con EDTA. Receptor: Suero</muestra>
+    <conservacion>-</conservacion>
+    <metodo>Citotoxicidad dependiente de complemento </metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>HLA –A</title>
+    <codigo>1001</codigo>
+    <muestra>Donante sangre entera con EDTA</muestra>
+    <conservacion>-</conservacion>
+    <metodo>PCR-SSO Luminex</metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>HLA –B</title>
+    <codigo>1002</codigo>
+    <muestra>Donante sangre entera con EDTA</muestra>
+    <conservacion>-</conservacion>
+    <metodo>PCR-SSO Luminex</metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>HLA –DR</title>
+    <codigo>1003</codigo>
+    <muestra>Donante sangre entera con EDTA </muestra>
+    <conservacion>Refrigerada</conservacion>
+    <metodo>PCR-SSO Luminex</metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+
+<cd>
+
+    <title>HLA –DQ</title>
+    <codigo>9102</codigo>
+    <muestra>Donante sangre entera con EDTA</muestra>
+  <conservacion>Refrigerada</conservacion>
+    <metodo>PCR-SSO Luminex</metodo>
+    <ficha1>  </ficha1>
+       <ficha2> </ficha2>
+<tipo>Histocompatibilidad</tipo>
+  <observacion></observacion>
+  </cd>
+</catalog>

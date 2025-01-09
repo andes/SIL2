@@ -1231,5 +1231,53 @@ namespace Business.Data.Laboratorio
             this.Save();
             //Fin calculo de valor de refrencia y metodo
         }
+
+        public bool VerificarSiEsDerivable( Efector i_IdEfector)
+        {
+            bool ok = false;
+            /// buscar idefectorderivacion desde lab_itemefector
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
+            critItemEfector.Add(Expression.Eq("IdItem", this.IdItem));
+            critItemEfector.Add(Expression.Eq("IdEfector", i_IdEfector));
+            IList detalle1 = critItemEfector.List();
+            if (detalle1.Count > 0)
+            {
+                foreach (ItemEfector oitemEfector in detalle1)
+                {
+                    if (this.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
+                    {
+                        ok = true; break;
+                    }
+                }
+            }
+            else
+                ok = false;
+
+            return ok;
+        }
+
+        public void GuardarDerivacion(Usuario oUser)
+        {
+            if (this.IdItem.esDerivado(oUser.IdEfector))
+            {
+                Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
+                oRegistro.IdDetalleProtocolo = this;
+                oRegistro.Estado = 0;
+                oRegistro.Observacion = "";// txtObservacion.Text;
+                oRegistro.IdUsuarioRegistro = oUser.IdUsuario;//int.Parse(Session["idUsuario"].ToString());
+                oRegistro.FechaRegistro = DateTime.Now;
+                oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+
+                oRegistro.IdEfectorDerivacion = this.IdItem.GetIDEfectorDerivacion(oUser.IdEfector);  // se graba el efector configurado en ese momento.
+
+                oRegistro.Save();
+
+                // graba el resultado en ResultadCar   "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
+                //oDetalle.ResultadoCar = "Pendiente de Derivacion";//"se podria poner a que efector....         
+                //oDetalle.Save();
+                this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
+            }
+        }
     }
 }

@@ -1,0 +1,549 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- AddEvent theme css -->
+    <link rel="stylesheet" href="css/theme2.css" type="text/css" media="screen" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="dscountdown.js"></script>
+<style>
+        div.avatar {
+    /* cambia estos dos valores para definir el tamaño de tu círculo */
+    height: 300px;
+    width: 300px;
+    /* los siguientes valores son independientes del tamaño del círculo */
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-radius: 50%;
+    background-size: 100% auto;
+}
+</style>
+    <!-- AddEvent -->
+    <script type="text/javascript" src="https://addevent.com/libs/atc/1.6.1/atc.min.js"></script>
+  
+    <!-- AddEvent Settings -->
+    <script type="text/javascript">
+		addeventatc.settings({
+			license    : "replace-with-your-licensekey",
+			css        : false
+		});
+    </script>
+    <script language="JavaScript">
+
+var anioFinal = 2018
+var mesFinal = 09
+var diaFinal = 06
+
+mesFinal -= 1
+function faltan()
+{
+    fechaFinal = new Date(anioFinal, mesFinal, diaFinal);
+ 
+    fechaActual = new Date();
+  
+diferencia = fechaFinal - fechaActual
+diferenciaSegundos = diferencia /1000
+diferenciaMinutos = diferenciaSegundos/60
+diferenciaHoras = diferenciaMinutos/60
+diferenciaDias = diferenciaHoras/24
+diferenciaHoras2 = parseInt(diferenciaHoras) - (parseInt(diferenciaDias) *24)
+diferenciaMinutos2 = parseInt(diferenciaMinutos) - (parseInt(diferenciaHoras) * 60)
+diferenciaSegundos2 = parseInt(diferenciaSegundos) - (parseInt(diferenciaMinutos) * 60)
+diferenciaDias = parseInt(diferenciaDias)
+if (diferenciaDias < 10 && diferenciaDias > -1){diferenciaDias = "0" + diferenciaDias}
+if(diferenciaHoras2 < 10 && diferenciaHoras2 > -1){diferenciaHoras2 = "0" + diferenciaHoras2}
+if(diferenciaMinutos2 < 10 && diferenciaMinutos2 > -1){diferenciaMinutos2 = "0" + diferenciaMinutos2}
+if(diferenciaSegundos2 < 10 && diferenciaSegundos2 > -1){diferenciaSegundos2 = "0" + diferenciaSegundos2}
+if(diferenciaDias <= 0 && diferenciaHoras2<= 0 && diferenciaMinutos2 <= 0 && diferenciaSegundos2 <= 0)
+{
+ 
+diferenciaDias = 0
+diferenciaHoras2 = 0
+diferenciaMinutos2 = 0
+diferenciaSegundos2 = 0
+
+
+document.getElementById('tiempodias').innerHTML = 'Arrancaron las jornadas';
+document.getElementById('tiempohoras').hidden = true;
+document.getElementById('tiempominutos').hidden = true;
+document.getElementById('tiemposegundos').hidden=true;
+
+}
+else{
+
+
+    document.getElementById('tiempodias').innerHTML = diferenciaDias + ' días';
+    document.getElementById('tiempohoras').innerHTML = diferenciaHoras2 + ' hs.'; // + diferenciaMinutos2 + ' minutos ' + diferenciaSegundos2 + ' segundos ';
+    document.getElementById('tiempominutos').innerHTML = diferenciaMinutos2 + ' mn.'; //+ diferenciaSegundos2 + ' segundos ';
+    document.getElementById('tiemposegundos').innerHTML = diferenciaSegundos2 + ' seg.';
+setTimeout('faltan()',1000)
+}
+}
+
+
+    </script>
+    <style type="text/css">
+       
+        .faltan {
+            font-family: Berlin Sans FB Demi;
+            font-size: 50px;
+            color: #ffffff;
+            background-color: #000000;
+            text-align: center;
+            font-weight: bold;
+        }
+        .content-box-gray {
+margin-top: 2em;
+	display: inline-block;
+	padding: 8px 10px;
+	font-size: 2em;
+    font-family: Georgia, 'Times New Roman', serif;
+    
+	cursor: pointer;
+	border: none;
+	background: #2ABB9B;
+	color: #fff;
+	text-decoration: none;
+	outline: none;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+	-o-transition: all 0.3s;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+}
+
+          .content-box-red {
+margin-top: 2em;
+	display: inline-block;
+	padding: 8px 10px;
+	font-size: 2em; font-family: Georgia, 'Times New Roman', serif;
+    
+	cursor: pointer;
+	border: none;
+	background: #ff0000;
+	color: #fff;
+	text-decoration: none;
+	outline: none;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+	-o-transition: all 0.3s;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+}
+        
+    </style>
+   
+
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X Jornadas Bioquímicas Provinciales</title>
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/flexslider.css" rel="stylesheet" />
+<link href="css/style.css?v=1.0" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="css/font-awesome.min.css">
+<script src="js/jquery.min.js"></script>
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900' rel='stylesheet' type='text/css'>
+   
+</head>
+<body onload="ConteoRegresivo()">
+    <div class="header">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><h3>X Jornadas Bioquímicas Provinciales</h3></a>
+            
+                
+            
+            <div class="menu">
+                <a class="toggleMenu" href="#"><img src="images/nav_icon.png" alt="" /> </a>
+                <ul class="nav" id="nav">
+                    <li class="current"><a href="index.html">Jornadas</a></li>
+                    <li><a href="temario.html">Programa</a></li>
+                    <!--<li><a href="inscripcion.aspx">Inscripciones</a></li>-->                    
+                    <li><a href="auspiciantes.html">Auspiciantes</a></li>
+                    <li><a href="services.html">Expositores</a></li>
+                    <!--<li><a href="index.html">Certificados</a></li>--> 
+                    <div class="clear"></div>
+                        
+                </ul>
+                
+                <script type="text/javascript" src="js/responsive-nav.js"></script>
+            </div>
+        </div>
+    </div>
+    <div class="banner text-center">
+        <div class="container">
+            <div class="banner-info">
+            
+                <h1>X Jornadas Bioquímicas Provinciales</h1>
+                <p>6 y 7 de Setiembre de 2018</p>
+                <p>Neuquén Capital</p>
+               
+                
+              
+                 <!--<a class="banner_btn" href="about.html">Read More</a>--> 
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="content_white">         
+
+         <h4>    Si participó de las Jornadas puede completar la siguiente encuesta: </h4> 
+          
+<a href="encuesta.aspx"><button class= "content-box-red"  type="button">Encuesta</button></a>
+              
+               
+            </div>
+
+
+<div>
+
+
+   <div id="slides">          
+                <div class="slides_container"> 
+
+                    <div>
+
+                        <img src="fotos/1.png" alt="slide1" />
+
+
+                    </div>
+    <div>
+
+        <img src="fotos/2.png" alt="slide1" />
+
+
+    </div>
+    <div>
+
+        <img src="galeria/instalaciones2.jpg" alt="slide1" />
+
+
+    </div>
+    <div>
+
+        <img src="galeria/instalaciones3.jpg" alt="slide1" />
+
+
+    </div>
+    <div>
+
+        <img src="galeria/instalaciones4.jpg" alt="slide1" />
+
+
+    </div>
+                    <div>
+
+                        <img src="galeria/instalaciones7.jpg" alt="slide1" />
+
+
+                    </div>
+</div>
+            </div>
+
+  <div class="col">
+                        <div class="col-md-2">
+                          <img src="fotos/1.png" class="img-responsive" alt="" />
+                            <br />
+  </div>
+ <div class="col-md-8">
+   <img src="fotos/2.png" class="img-responsive" alt="" />
+                            <br />
+                        </div>
+<div class="col-md-8">
+   <img src="fotos/3.png" class="img-responsive" alt="" />
+                            <br />
+                        </div>
+<div class="col-md-8">
+   <img src="fotos/4.jpeg" class="img-responsive" alt="" />
+                            <br />
+                        </div>
+</div>
+
+    </div>
+     
+    <div class="about_content">
+        <div class="container">
+         
+                <div class="row">
+                    <div class="col-md-8">
+                        <img src="images/equipo.jpg" class="img-responsive" alt="" />
+                        <p>
+                        <a target="_blank" href="http://laboratoriocentral.neuquen.gob.ar/">Laboratorio Central</a> invita a bioquímicos del Sistema Público de Salud de la Provincia de Neuquén a las <strong>X Jornadas Bioquímicas Provinciales </strong>a desarrollarse en la ciudad de Neuquén Capital entre los días 6 y 7 de Setiembre de 2018.
+                        </p>
+                      
+
+                        <br>
+                        <p>
+                           Este encuentro anual está destinado a brindar espacios de actualización, informativo y de debate, en todas las especialidades bioquímicas. Actualizar conocimientos y estados de situación en las diferentes áreas. Facilitar el contacto entre colegas para integrar esfuerzos para el bien de la profesión.
+                            Con el objetivo de mejorar el trabajo en red, satisfacer las necesidad de los pacientes y elevar el valor de la Salud Pública.
+<br />                     
+                            <br />  <h4>
+    <a href="Invitacion jornadas.pdf" target="_blank">Descargar Nota Invitación Formal</a>
+
+</h4>
+    
+                        </p>
+                       
+
+                    </div>
+                  
+                    <div class="col-md-4">
+                        <!--<div class="block-heading-two">
+                            <h3><span>Las Jornadas</span></h3>
+                        </div>-->
+                        <div class="panel-group" id="accordion-alt3">
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseFour-alt3"> <i class="fa fa-angle-right"></i> Evento Declarado de Interés Provincial</a></h4>
+                                </div>
+                                <div id="collapseFour-alt3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <p>El Ministerio de Salud a traves de <a href="Resolucion 631.pdf" target="_blank">Resolución 631</a> declara de Interés Provincial a las X Jornadas Bioquímicas Provinciales </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseOne-alt3"> <i class="fa fa-angle-right"></i> Programa</a> </h4>
+                                </div>
+                                <div id="collapseOne-alt3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <p>El equipo del Laboratorio Central agradece la participacion de los disertantes en estas jornadas.  <a href="temario.html">Ver Temario</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseTwo-alt3"> <i class="fa fa-angle-right"></i> El Lugar</a> </h4>
+                                </div>
+                                <div id="collapseTwo-alt3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <p><strong>Salón Limay. 2do. piso de Torre BPN</strong></p>
+                                        <p>Independencia 50, Neuquén</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="panel">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseThree-alt3"> <i class="fa fa-angle-right"></i>Inscripciones </a> </h4>
+                                </div>
+                                <div id="collapseThree-alt3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <p>Para una mejor organización, solicitamos que realice su inscripción antes del 10 de agosto de 2018 ingresando <a href="inscripcion.aspx">aquí</a></p>
+                                    </div>
+                                </div>
+                            </div>-->
+                            <div class="panel">
+                                <div class="panel-heading">
+                                    <h4 class="panel-title"> <a data-toggle="collapse" data-parent="#accordion-alt3" href="#collapseFive-alt3"> <i class="fa fa-angle-right"></i>Cena de Camaradería</a> </h4>
+                                </div>
+                                <div id="collapseFive-alt3" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <p>La cena de camaradería se realizará el día <strong>jueves 6/9</strong> de 21 a 00 hs. en la <a href="https://goo.gl/maps/YS9EkoxwSb62" target="_blank">Casa de la Bodega</a>.</p>
+                                        <p> Tendrá un costo de aproximadamente $250 por persona. </p>
+                                        <p> El menú incluye picada de fiambres y emcurtidos con panes saborizados. Empanadas de carne / queso y cebolla. Pernil con salsas.
+                                            1 pinta (500 cc) de cerveza artesanal Nihilista o 1 botella (500 cc) de Agua saborizada o gaseosa línea coca cola.
+                                        
+                                            </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <div>
+            <div >
+                <div class="container"  style="color:gray; text-align:center;">
+                    <h3>Evento Declarado de Interés Provincial </h3>
+                <p>El Ministerio de Salud a traves de <a href="Resolucion 631.pdf" target="_blank">Resolución 631</a> declara de Interés Provincial a las X Jornadas Bioquímicas Provinciales 
+                   </p>
+                    <p><br /></p>
+
+                    <a href="http://www.saludneuquen.gov.ar/" target="_blank">
+                        <img src="../images/logo_ministerio.png" />
+                    </a>
+                    
+                     <div class="row text-center">
+                        <div class="col-sm-3 col-xs-6">
+                           
+                            <br />
+                            <br />
+                        </div>
+
+                   
+
+                    </div>
+                </div>
+
+               
+                <div class="container">
+                    <h3 style="color:gray; text-align:center;">Lugar del evento: Salón Limay de Torre BPN </h3>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3102.6382163604935!2d-68.06043848502836!3d-38.95509267956172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x960a33d269efe8a9%3A0x9192c61f03c90072!2sIndependencia+50%2C+Neuqu%C3%A9n!5e0!3m2!1ses-419!2sar!4v1524248125305" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+
+                 
+                    <div class="row text-center">
+                    <div class="col-sm-3 col-xs-6">
+                         
+</div>
+                    
+                        <!--<div class="col-sm-3 col-xs-6">
+                            <i class="fa fa-trophy fa-5x"></i>
+                            <h4>25 Awards Won</h4>
+                        </div>
+                        <div class="col-sm-3 col-xs-6">
+                            <i class="fa fa-map-marker fa-5x"></i>
+                            <h4>3 Offices</h4>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+    
+        <div class="testimonial-area">
+          <div class="testimonial-solid">
+            <div class="container">
+        
+              <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                  <h2>
+                      <a name="seccion1"  style="color:gray;font-size:18px;">Auspiciantes</a>
+                      </h2>
+                       
+                      <ol class="carousel-indicators">
+                          <li data-target="#carousel-example-generic" data-slide-to="0" class="active"> <a href="#"></a> </li>
+                          <li data-target="#carousel-example-generic" data-slide-to="1" class=""> <a href="#"></a> </li>
+                          <li data-target="#carousel-example-generic" data-slide-to="2" class=""> <a href="#"></a> </li>
+                         <li data-target="#carousel-example-generic" data-slide-to="3" class=""> <a href="#"></a> </li>
+                          <li data-target="#carousel-example-generic" data-slide-to="4" class=""> <a href="#"></a> </li>
+                          <li data-target="#carousel-example-generic" data-slide-to="5" class=""> <a href="#"></a> </li>
+                          <li data-target="#carousel-example-generic" data-slide-to="6" class=""> <a href="#"></a> </li>
+                      </ol>
+                      <div class="carousel-inner">
+
+                          <div class="item active">
+                              <div style="align-content:center">
+                                  <br />
+                                  <img src="images/cfi.jpg" width="100" height="100" />
+<p style="color:gray">El CFI es un organismo de las provincias argentinas, dedicado a promover el desarrollo armónico e </p>
+                          <p style="color:gray">integral del país para lograr condiciones favorables de bienestar social.</p>
+                          <a target="_blank" href="http://cfi.org.ar/"><strong> cfi.org.ar </strong></a>
+                      </div>
+                  </div>
+                  <div class="item">
+                      <div style="align-content:center">
+                          <br />
+
+                          <img src="images/bpn.png" width="80" height="120" />
+                          
+                          <p style="color:gray">Banco de la Provincia de Neuquén.</p>
+                          <a target="_blank" href="http://www.bpn.com.ar"> www.bpn.com.ar</a>
+                        </div>
+                      </div>
+                          
+                  <div class="item">
+                      <div style="align-content:center">
+                          <br />
+                          <img src="images/biodinamic.jpg" />
+
+                          <p style="color:gray">Biodynamics es una de las empresas líderes en Biología Molecular de la Argentina.</p>
+                          <a target="_blank" href="https://www.biodynamics.com.ar"  /> www.biodynamics.com.ar </a>
+                          </div>
+                      </div>
+
+
+  <div class="item">
+                      <div style="align-content:center">
+                          <br />
+                          <img src="images/ambos.jpg" />
+
+                          <p style="color:gray">Ambos Oh Neuquén Nieves & Nancy</p>
+                          <a target="_blank" href="https://oh-wear.com/"  /> www.oh-wear.com </a>
+                          </div>
+                      </div>
+
+
+                          <div class="item">
+                              <div style="align-content:center">
+                                  <br />
+                                  <img src="images/BG-logo.jpg" />
+
+                                  <p style="color:gray">BG Analizadores</p>
+                                  <a target="_blank" href="https://www.bganalizadores.com.ar/" /> www.bganalizadores.com.ar </a>
+                              </div>
+                          </div>
+                         <!--La cena de camaradería será en la casa de la bodega con una colaboración aproximada de 200 por persona.-->
+
+                    
+
+
+                          <div class="item">
+                              <div style="align-content:center">
+                                  <br />
+                                  <img src="images/tramitar.jpg" />
+
+                                  <p style="color:gray">Tramit.ar es una empresa desarrollada y estructurada <br />
+para llevar adelante en forma confiable, rápida y precisa las gestiones, compras y tramites que le sean encomendadas.</p>
+                                  <a target="_blank" href="http://www.tramitarenargentina.com.ar/" /> http://www.tramitarenargentina.com.ar </a>
+                              </div>
+                          </div>
+
+                          <div class="item">
+                              <div style="align-content:center">
+                                  <br />
+                                  <img src="images/uruguay.png" />
+
+                                  <p style="color:gray">
+                                      Distribuidora Ururuay SRL
+                                      
+                                  </p>
+                                
+                              </div>
+                          </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+            <div class="footer_bottom">
+             
+              
+              <div class="follow-us">
+                
+                  <a class="fa fa-facebook social-icon" href="http://www.facebook.com/sharer.php?u=http://laboratoriocentral.neuquen.gob.ar/website/jornadas/index.html" target="_blank" rel="nofollow" title="Compartir en Facebook"></a>
+               
+
+                  <a class="fa fa-twitter social-icon" href="http://twitter.com/home?status=http://laboratoriocentral.neuquen.gob.ar/website/jornadas/index.html" target="_blank"  rel="nofollow" title="Compartir en Twitter"></a>
+                  <a class="fa fa-linkedin social-icon" href="http://www.linkedin.com/shareArticle?url=http://laboratoriocentral.neuquen.gob.ar/website/jornadas/index.html" target="_blank" rel="nofollow" title="Compartir en Linkedin"></a>
+                  <a class="fa fa-google-plus social-icon" href="https://plus.google.com/share?url=http://laboratoriocentral.neuquen.gob.ar/website/jornadas/index.html" target="_blank" rel="nofollow" title="Compartir en Google+"></a>
+                
+                      
+</div>
+                <div class="copy">
+                    <p>Copyright &copy; 2018 <a target="_blank" href="http://laboratoriocentral.neuquen.gob.ar" rel="nofollow">Laboratorio Central</a></p>
+                </div>
+                
+              
+</div>
+            <a href="http://www.saludneuquen.gov.ar/" target="_blank">
+                <img src="../images/logo_ministerio.png" />
+            </a>
+          
+</div>
+            </div>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery.flexslider.js"></script>
+</body>
+</html>
