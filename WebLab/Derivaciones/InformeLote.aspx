@@ -17,16 +17,16 @@
 
            //Verifico los estados para el envio del Lote
            switch (estado.value) {
-               case "0": //Opcion  --Seleccion--
-                   validatorEstado.style.visibility = 'visible';  
-                   todoOk = false;
+               //case "0": //Opcion  --Seleccion--
+               //    validatorEstado.style.visibility = 'visible';  
+               //    todoOk = false;
 
-                   break;
-               case "1": //Opcion: Enviado
+                   //break;
+               case "2": //Opcion: Derivado
                   todoOk = validarGrilla();
                    break;
 
-               case "2": //Opcion: No enviado
+               case "3": //Opcion: Cancelado
                    if (txtObservacion.value.trim() == "") {
                        label.className = 'exposed';
                        todoOk = false; // Evitar el envío del formulario
@@ -62,12 +62,12 @@
            var ddl = document.getElementById('<%= ddlEstados.ClientID %>');
             var estado = ddl.value;
 
-           if (estado == 1 || estado == 0) {
+           if (estado == 2) { //Derivado
                 var radioButtons = document.getElementById('<%= rb_transportista.ClientID %>').getElementsByTagName('input');
                 for (var i = 0; i < radioButtons.length; i++) {
                     radioButtons[i].disabled = false; // Habilitar
                 }
-            } else { //estado == 2
+           } else { //estado Cancelado
                 var radioButtons = document.getElementById('<%= rb_transportista.ClientID %>').getElementsByTagName('input');
                 for (var i = 0; i < radioButtons.length; i++) {
                     radioButtons[i].disabled = true; // Deshabilitar
@@ -103,10 +103,10 @@
 				 <table  width="1000px"  >
 					<tr>
 					<td class="myLabelLitlle" style="vertical-align: top" colspan="3">
-                            Referencias:
-                                <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
-                                <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
-                                <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;<br />
+                            Referencias de lote:
+                                <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Creado&nbsp;
+                                <img alt="" src="../App_Themes/default/images/enviado.png" /> Derivado&nbsp;
+                                <img alt="" src="../App_Themes/default/images/block.png" /> Cancelado&nbsp;<br />
                                 &nbsp;<br />
                         </td>
 						
@@ -120,8 +120,8 @@
                                      <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  onchange="habilitaTransporte()" /> 
                                          <asp:RangeValidator id="Range1"
                                                ControlToValidate="ddlEstados"
-                                               MinimumValue="1"
-                                               MaximumValue="2"
+                                               MinimumValue="2"
+                                               MaximumValue="3"
                                                Type="Integer"
                                                Text="* Seleccione un estado"
                                                runat="server" SetFocusOnError="True" ValidationGroup="0" />
@@ -193,7 +193,7 @@
             
                                    <asp:TemplateField HeaderText="Sel."  >
                                         <ItemTemplate>
-                                           <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# cargarSegunEstado(Convert.ToInt32(Eval("estado"))) %>' 
+                                           <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# habilitarCheckBoxSegunEstado(Convert.ToInt32(Eval("estado"))) %>' 
                                                onchange="checkLote(this);"
                                                />
                                         </ItemTemplate>
@@ -237,7 +237,7 @@
 
                                     <asp:TemplateField ItemStyle-Width="5%" >
                                         <ItemTemplate>
-                                            <asp:LinkButton runat="server" ID="lnkPDF" OnCommand="lnkPDF_Command" CommandArgument='<%# Eval("numero") %>' Visible='<%# tieneLoteGenerado((Int32)Eval("estado")) %>'>
+                                            <asp:LinkButton runat="server" ID="lnkPDF" OnCommand="lnkPDF_Command" CommandArgument='<%# Eval("numero") %>'>
                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                             </asp:LinkButton>
                                             

@@ -74,9 +74,10 @@ namespace WebLab.Derivaciones
             ddlEfector.Items.Insert(0, new ListItem("--- TODOS ---", "0"));
 
             oUtil = new Utility();
-            string query_string = "SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (1,2,3)";
-            oUtil.CargarRadioButton(rdbEstado, query_string, "idEstado", "descripcion");
-            rdbEstado.SelectedIndex = 2;
+            string query_string = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado   where baja = 0 and idEstado in (1,2,3)";
+                //"SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (1,2,3)";
+            oUtil.CargarRadioButton(rdbEstado, query_string, "idEstado", "nombre");
+            rdbEstado.SelectedIndex = 0;
 
         }
 

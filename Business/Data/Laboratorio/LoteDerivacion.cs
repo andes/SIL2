@@ -106,5 +106,17 @@ namespace Business.Data.Laboratorio  {
 
             return m_strSQL;     
         }
+
+        public void GrabarAuditoriaLoteDerivacion(string m_accion, int m_idusuario, string m_observacion="", string valorNuevo="") {
+            AuditoriaLoteDerivacion oRegistro = new AuditoriaLoteDerivacion();
+            oRegistro.Accion = m_accion;
+            oRegistro.Analisis = m_observacion;
+            oRegistro.Valor = valorNuevo;
+            oRegistro.Fecha = DateTime.Now;
+            oRegistro.Hora = DateTime.Now.ToLongTimeString();
+            oRegistro.IdLote = this.IdLoteDerivacion;
+            oRegistro.IdUsuario = m_idusuario;
+            oRegistro.Save();
+        }
     }
 }
