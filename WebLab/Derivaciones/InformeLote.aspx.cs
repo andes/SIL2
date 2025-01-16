@@ -38,13 +38,17 @@ namespace WebLab.Derivaciones
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack){
-                if (Convert.ToInt32(Request["Estado"]) == 3 || Convert.ToInt32(Request["Estado"]) == 2)
-                {
-                    activarControles();
+                if (Session["idUsuario"] != null) {
+                    if (Convert.ToInt32(Request["Estado"]) == 1 || Convert.ToInt32(Request["Estado"]) == 3) {
+                        activarControles();
+                    }
+                    CargarGrilla();
+                    CargarEstados();
+                } else {
+                    Response.Redirect("../FinSesion.aspx", false);
                 }
-                CargarGrilla();
-                CargarEstados();
-            }
+
+            } 
         }
 
         protected void Page_Unload(object sender, EventArgs e)
@@ -119,31 +123,31 @@ namespace WebLab.Derivaciones
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-            /////////////////Estados de derivacion/////////////////
+            /////////////////Estados de lote /////////////////
 
-            string m_ssql = "SELECT idEstado, descripcion FROM LAB_DerivacionEstado where baja=0 and idEstado in (1,2) ";
-            oUtil.CargarCombo(ddlEstados, m_ssql, "idEstado", "descripcion", connReady);
-            ddlEstados.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+            string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
+            oUtil.CargarCombo(ddlEstados, m_ssql, "idEstado", "nombre", connReady);
+           
         }
 
         protected string ObtenerImagenEstado(int estado)
         {
+            //Estados de Lote
             switch (estado)
             {
-                case 1:return "~/App_Themes/default/images/enviado.png";
-                case 2:return "../App_Themes/default/images/block.png";
-                case 3:return "../App_Themes/default/images/reloj-de-arena.png";
+                case 1:return "../App_Themes/default/images/reloj-de-arena.png";
+                case 2:return  "~/App_Themes/default/images/enviado.png";
+                case 3:return "../App_Themes/default/images/block.png";
                 default: return ""; 
             }
         }
 
-        protected bool cargarSegunEstado(int estado)
+        protected bool habilitarCheckBoxSegunEstado(int estado)
         {
-           // return estado == 3 ? true :  false;
             switch (estado)
             {
-                case 1: return false;
-                case 2: return true;
+                case 1: return true;
+                case 2: return false;
                 case 3: return true;
                 default: return false;
             }
@@ -237,12 +241,7 @@ namespace WebLab.Derivaciones
             string idLote = (((System.Web.UI.WebControls.LinkButton)sender).CommandArgument).ToString();
             GenerarPDF(idLote);
         }
-        //protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
-        //{
-        //    int index = Convert.ToInt32(e.CommandArgument);
-        //    string idLote= gvLista.Rows[index].Cells[2].Text;
-        //    GenerarPDF(idLote);
-        //}
+       
 
         private void GenerarPDF(string idLote)
         {
@@ -281,23 +280,13 @@ namespace WebLab.Derivaciones
             }
         }
 
-        protected bool tieneLoteGenerado(int estado)
-        {
-            bool tiene = false;
-            switch (estado){
-                case 1: tiene = true; break;
-                case 2: tiene = false; break;
-                case 3: tiene = true; break;
-            }
-
-            return tiene;
-        }
+       
         #endregion
 
         #region Entrega
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            GuardarEstadoNuevo();
+            Guardar();
             CargarGrilla();
             limpiarForm();
         }
@@ -340,31 +329,78 @@ namespace WebLab.Derivaciones
             }
 
         }
+
+        private void Guardar() {
+            foreach (GridViewRow row in gvLista.Rows) {
+                CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
+                if (a.Checked) {
+
+                    int idLote = Convert.ToInt32(row.Cells[2].Text);
+                    int idUsuario = int.Parse(Session["idUsuario"].ToString());
+                    int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
+                    string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
+                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : "");
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), idLote);
+
+                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                    ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
+                    crit.Add(Expression.Eq("Idlote", lote));
+                    IList lista = crit.List();
+                    if (lista.Count > 0) {
+                        foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista) {
+                            //Cambia el estado de las derivaciones LAB_Derivacion 
+
+                            /*
+                             Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                             1 : Creado
+                             2 : Derivado
+                             3 : Cancelado
+
+                             Estado de la derivacion LAB_DerivacionEstado
+                             0 : Pendiente de derivar
+                             1 : Enviado
+                             2 : No Enviado
+                             3 : Recibido
+                             4 : Pendiente para enviar
+                           */
+                            oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
+                            oDeriva.Save();
+
+                            //Cambia el resultado de LAB_DetalleProtocolo
+                            DetalleProtocolo oDet = new DetalleProtocolo();
+                            oDet = (DetalleProtocolo) oDet.Get(typeof(DetalleProtocolo), oDeriva.IdDetalleProtocolo.IdDetalleProtocolo);
+                            oDet.ResultadoCar = resultadoDerivacion;
+                            oDet.ConResultado = true;
+                            oDet.IdUsuarioResultado = idUsuario;
+                            oDet.FechaResultado = DateTime.Now;
+                            oDet.Save();
+                            //Inserta auditoria del detalle del protocolo
+                            oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
+                        }                      
+                    }
+
+                    //Se cambia el estado del lote LAB_LoteDerivacion
+                    lote.Estado = estadoLote;
+                    lote.Observacion = observacion;
+                    lote.IdUsuarioEnvio = idUsuario;
+                    //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
+                    lote.FechaEnvio = (estadoLote == 2) ? DateTime.Now.ToString() : "";
+
+                    //Inserta auditoria del lote
+                    if(estadoLote == 2)  //Si deriva indica con que transportista fue
+                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue);
+                    
+                     else
+                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario);
+
+                    lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
+                }
+            }
+        }
         #endregion
 
-        private bool hayLotesMarcados()
-        {
-            bool hayMarcado = false;
-            int largo = gvLista.Rows.Count, i = 0;
-            if (largo > 0)
-            {
-                GridViewRowCollection rows = gvLista.Rows;
-                while (i < largo && !hayMarcado)
-                {
-                    GridViewRow row = rows[i];
-                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-
-                    if (a.Checked)
-                    {
-                        hayMarcado = true; //hay al menos un item marcado
-                    }
-                    i++;
-                }
-
-            }
-            return hayMarcado;
-        }
-
+       
         private void limpiarForm()
         {
             txtObservacion.Text = string.Empty;

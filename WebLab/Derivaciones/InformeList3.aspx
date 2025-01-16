@@ -176,7 +176,7 @@
             
                                     <asp:TemplateField HeaderText="Sel." >
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true" onchange="checkDeterminaciones(this);"/>
+                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")))%> ' onchange="checkDeterminaciones(this);"/>
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" 
                                             HorizontalAlign="Center" />
