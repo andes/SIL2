@@ -32,7 +32,7 @@
                     }
                     break;
 
-                case "3": //Opcion: Pendiente para enviar
+                case "4": //Opcion: Pendiente para enviar
                     todoOk = validarGrilla();
                     break;
             }
@@ -117,7 +117,7 @@
                                              <asp:RangeValidator id="rv_estado"
                                                ControlToValidate="ddlEstado"
                                                MinimumValue="1"
-                                               MaximumValue="3"
+                                               MaximumValue="4"
                                                Type="Integer"
                                                Text="* Seleccione un estado"
                                                runat="server" SetFocusOnError="True" 

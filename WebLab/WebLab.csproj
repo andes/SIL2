@@ -2544,6 +2544,8 @@
     <Content Include="Protocolos\Default2.aspx" />
     <Content Include="Protocolos\DefaultEfector.aspx" />
     <Content Include="Protocolos\DefaultFFEE.aspx" />
+    <Content Include="Protocolos\DerivacionMultiEfectorLote.aspx" />
+    <Content Include="Protocolos\DerivacionRecibirLote.aspx" />
     <Content Include="Protocolos\DerivacionMultiEfector.aspx" />
     <Content Include="Protocolos\DerivacionProcesa.aspx" />
     <Content Include="Protocolos\Derivacion.aspx" />
@@ -4453,6 +4455,18 @@
     <Compile Include="ImpresoraEdit.aspx.designer.cs">
       <DependentUpon>ImpresoraEdit.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\AuditoriaLote.cs">
+      <DependentUpon>AuditoriaLote.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Informes\AuditoriaProtocolo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AuditoriaProtocolo.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\AuditoriaUsuario.aspx.cs">
       <DependentUpon>AuditoriaUsuario.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5025,6 +5039,20 @@
     </Compile>
     <Compile Include="Protocolos\DefaultFFEE.aspx.designer.cs">
       <DependentUpon>DefaultFFEE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Protocolos\DerivacionMultiEfectorLote.aspx.cs">
+      <DependentUpon>DerivacionMultiEfectorLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Protocolos\DerivacionMultiEfectorLote.aspx.designer.cs">
+      <DependentUpon>DerivacionMultiEfectorLote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Protocolos\DerivacionRecibirLote.aspx.cs">
+      <DependentUpon>DerivacionRecibirLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Protocolos\DerivacionRecibirLote.aspx.designer.cs">
+      <DependentUpon>DerivacionRecibirLote.aspx</DependentUpon>
     </Compile>
     <Compile Include="Protocolos\DerivacionMultiEfector.aspx.cs">
       <DependentUpon>DerivacionMultiEfector.aspx</DependentUpon>
@@ -6322,6 +6350,10 @@
     <EmbeddedResource Include="Informes\AuditoriaCasoFiliacion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>AuditoriaCasoFiliacion1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\AuditoriaLote.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AuditoriaLote.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\AuditoriaProtocolo.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

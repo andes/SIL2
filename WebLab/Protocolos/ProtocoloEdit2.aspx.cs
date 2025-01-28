@@ -23,44 +23,35 @@ using System.Net.Http;
 using System.Web;
 using WebLab.Resultados;
 
-namespace WebLab.Protocolos
-{
-    public partial class ProtocoloEdit2 : System.Web.UI.Page
-    {
+namespace WebLab.Protocolos {
+    public partial class ProtocoloEdit2 : System.Web.UI.Page {
         public CrystalReportSource oCr = new CrystalReportSource();
         public Configuracion oC = new Configuracion();
         public Usuario oUser = new Usuario();
 
-        protected void Page_PreInit(object sender, EventArgs e)
-        {
+        protected void Page_PreInit(object sender, EventArgs e) {
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
             //MiltiEfector: Filtra para configuracion del efector del usuario 
-            if (Session["idUsuario"] != null)
-            {
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-            }
-            else Response.Redirect("../FinSesion.aspx", false);
+            if (Session["idUsuario"] != null) {
+                oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oC = (Configuracion) oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            } else
+                Response.Redirect("../FinSesion.aspx", false);
 
 
         }
-        protected void Page_Unload(object sender, EventArgs e)
-        {
-            try
-            {
-                if (this.oCr.ReportDocument != null)
-                {
+        protected void Page_Unload(object sender, EventArgs e) {
+            try {
+                if (this.oCr.ReportDocument != null) {
                     this.oCr.ReportDocument.Close();
                     this.oCr.ReportDocument.Dispose();
                 }
-            }
-            catch { }
+            } catch { }
         }
 
 
-        public string GetPuco(int numeroDocumento)
-        {
+        public string GetPuco(int numeroDocumento) {
             string connetionString = null;
             SqlConnection connection;
             SqlCommand command;
@@ -73,40 +64,37 @@ namespace WebLab.Protocolos
             sql = "select S.nombre, S.cod_os as os from pd_puco P inner join obras_sociales S on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
 
             connection = new SqlConnection(connetionString);
-            try
-            {
+            try {
                 SqlDataReader rdr = null;
                 connection.Open();
                 command = new SqlCommand(sql, connection);
                 rdr = command.ExecuteReader();
 
-                while (rdr.Read())
-                {
+                while (rdr.Read()) {
                     nombre = rdr[0].ToString();
                     codigo = rdr[1].ToString();
                 }
-                if (nombre == "") nombre = "Sin obra social"; // sin obra social
-                else nombre = nombre + "&" + codigo;
+                if (nombre == "")
+                    nombre = "Sin obra social"; // sin obra social
+                else
+                    nombre = nombre + "&" + codigo;
                 command.Dispose();
                 connection.Close();
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 nombre = "Sin obra social&0";
             }
 
             return nombre;
         }
 
-        private void CargarGrilla()
-        {
+        private void CargarGrilla() {
             ////Metodo que carga la grilla de Protocolos
             string m_strSQL = @" Select   P.idProtocolo,   numero as numero, convert(varchar(10),P.fecha,103) as fecha,P.estado 
                                from Lab_Protocolo P with (nolock) 
                                WHERE P.idProtocolo in (" + Session["ListaProtocolo"].ToString() + ") order by numero ";
 
             DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = (SqlConnection) NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
@@ -123,38 +111,34 @@ namespace WebLab.Protocolos
 
 
 
-        private bool IsTokenValid()
-        {
-            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+        private bool IsTokenValid() {
+            bool result = double.Parse(hidToken.Value) == ((double) Session["NextToken"]);
             SetToken();
             return result;
         }
 
-        private void SetToken()
-        {
+        private void SetToken() {
             double next = random.Next();
             hidToken.Value = next + "";
             Session["NextToken"] = next;
         }
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
+        protected void Page_Load(object sender, EventArgs e) {
 
-            if (!Page.IsPostBack)
-            {           
+            if (!Page.IsPostBack) {
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
-                if (Session["idUsuario"] != null)
-                {
+                if (Session["idUsuario"] != null) {
                     //pnlIncidencia.Visible = false;
                     //tituloCalidad.Visible = false;
                     //this.IncidenciaEdit1.Visible = false;
-                    if (Request["idServicio"] != null) Session["idServicio"] = Request["idServicio"].ToString();
-                    if (Request["idUrgencia"] != null) Session["idUrgencia"] = Request["idUrgencia"].ToString();
+                    if (Request["idServicio"] != null)
+                        Session["idServicio"] = Request["idServicio"].ToString();
+                    if (Request["idUrgencia"] != null)
+                        Session["idUrgencia"] = Request["idUrgencia"].ToString();
                     CargarListas();
 
-                    if (Request["Operacion"].ToString() == "Modifica")
-                    {
+                    if (Request["Operacion"].ToString() == "Modifica") {
                         //lnkReimprimirComprobante.Visible = true;
                         //lnkReimprimirCodigoBarras.Visible = true;
 
@@ -164,24 +148,18 @@ namespace WebLab.Protocolos
 
                         MuestraDatos();
                         //VerificaPermisos("Pacientes sin turno");
-                        if (Request["Desde"].ToString() == "Control")
-                        {
+                        if (Request["Desde"].ToString() == "Control") {
                             pnlLista.Visible = true;
                             CargarGrilla();
                             gvLista.Visible = true;
                             pnlNavegacion.Visible = true;
-                        }
-                        else
-                        {
+                        } else {
                             pnlLista.Visible = false;
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
 
                         }
-                    }
-                    else
-
-                    {
+                    } else {
 
                         //lnkReimprimirComprobante.Visible = false;
                         //lnkReimprimirCodigoBarras.Visible = false;
@@ -194,11 +172,15 @@ namespace WebLab.Protocolos
                         txtFecha.Value = DateTime.Now.ToShortDateString();
 
                         ///verificar si la configuracion determina fecha actual por defecto o sin valor
-                        if (oC.ValorDefectoFechaOrden == 0) txtFechaOrden.Value = "";
-                        else txtFechaOrden.Value = DateTime.Now.ToShortDateString();
+                        if (oC.ValorDefectoFechaOrden == 0)
+                            txtFechaOrden.Value = "";
+                        else
+                            txtFechaOrden.Value = DateTime.Now.ToShortDateString();
 
-                        if (oC.ValorDefectoFechaTomaMuestra == 0) txtFechaTomaMuestra.Value = "";
-                        else txtFechaTomaMuestra.Value = DateTime.Now.ToShortDateString();
+                        if (oC.ValorDefectoFechaTomaMuestra == 0)
+                            txtFechaTomaMuestra.Value = "";
+                        else
+                            txtFechaTomaMuestra.Value = DateTime.Now.ToShortDateString();
                         ///
 
                         MostrarPaciente();
@@ -209,8 +191,7 @@ namespace WebLab.Protocolos
                         btnCancelar.Text = "Cancelar";
                         btnCancelar.Width = Unit.Pixel(80);
 
-                        if (Request["idServicio"].ToString() == "6")
-                        {
+                        if (Request["idServicio"].ToString() == "6") {
                             //tabContainer.Visible = false;
                             ddlOrigen.SelectedValue = "1"; //Ambulatorio /Externo
                             ddlPrioridad.SelectedValue = "1"; //Prioridad: Rutina
@@ -224,22 +205,19 @@ namespace WebLab.Protocolos
                             btnGuardar.Attributes.Add("class", "btn btn-success");
                             btnCancelar.Attributes.Add("class", "btn btn-success");
                             //CargarDeterminacionesForense();
-                        }
-                        else
-                        {
-                            if (Request["Operacion"].ToString() == "AltaTurno")
-                            {
+                        } else {
+                            if (Request["Operacion"].ToString() == "AltaTurno") {
                                 CargarDeterminacionesTurno();
                                 ddlOrigen.SelectedValue = "1"; //Ambulatorio /Externo
                                 ddlPrioridad.SelectedValue = "1"; //Prioridad: Rutina
 
 
                             }
-                            if (Request["Operacion"].ToString() == "AltaDerivacion")
-                            {
+                            if (Request["Operacion"].ToString() == "AltaDerivacion") {
                                 txtNumeroOrigen.Text = Request["numeroOrigen"].ToString();
                                 txtFechaOrden.Value = Request["fechaOrden"].ToString();
-                                ddlEfector.SelectedValue = Request["idEfectorSolicitante"].ToString(); SelectedEfector();
+                                ddlEfector.SelectedValue = Request["idEfectorSolicitante"].ToString();
+                                SelectedEfector();
                                 txtSala.Text = Request["sala"].ToString();
                                 txtCama.Text = Request["cama"].ToString();
                                 CargarDeterminacionesDerivacion(Request["analisis"].ToString(), Request["diagnostico"].ToString());
@@ -247,22 +225,21 @@ namespace WebLab.Protocolos
 
 
                             }
-                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
-                            {
+                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" ||
+                                Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") {
 
-                               string numeroProtocolo= Request["numeroProtocolo"].ToString();
-                                string analisis= Request["analisis"].ToString();
+                                string numeroProtocolo = Request["numeroProtocolo"].ToString();
+                                string analisis = Request["analisis"].ToString();
                                 CargarProtocoloDerivado(numeroProtocolo, analisis);
-                                
-                                
+
+
 
                             }
 
-                            if (Request["Operacion"].ToString() == "AltaPeticion")
-                            {
+                            if (Request["Operacion"].ToString() == "AltaPeticion") {
                                 string idPeticion = Request["idPeticion"].ToString();
                                 Peticion oRegistro = new Peticion();
-                                oRegistro = (Peticion)oRegistro.Get(typeof(Peticion), int.Parse(idPeticion));
+                                oRegistro = (Peticion) oRegistro.Get(typeof(Peticion), int.Parse(idPeticion));
 
                                 txtFechaOrden.Value = oRegistro.Fecha.ToShortDateString();
                                 ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
@@ -271,12 +248,15 @@ namespace WebLab.Protocolos
                                 ddlEspecialista.SelectedValue = oRegistro.IdSolicitante.ToString();
                                 ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
                                 ddlOrigen.SelectedValue = oRegistro.IdOrigen.IdOrigen.ToString();
-                                if (oRegistro.IdOrigen.IdOrigen == 3) ddlPrioridad.SelectedValue = "2"; // si es de guardia es urgente
-                                if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlPrioridad.SelectedValue = "1"; // si es de microbiologia NO es urgente
+                                if (oRegistro.IdOrigen.IdOrigen == 3)
+                                    ddlPrioridad.SelectedValue = "2"; // si es de guardia es urgente
+                                if (oRegistro.IdTipoServicio.IdTipoServicio == 3)
+                                    ddlPrioridad.SelectedValue = "1"; // si es de microbiologia NO es urgente
                                 txtObservacion.Text = oRegistro.Observaciones;
                                 txtNumeroOrigen.Text = "PE-" + oRegistro.IdPeticion.ToString();
                                 txtNumeroOrigen.Enabled = false;
-                                if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
+                                if (oRegistro.IdTipoServicio.IdTipoServicio == 3)
+                                    ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
 
                                 CargarDeterminacionesPeticion(oRegistro);
 
@@ -285,23 +265,20 @@ namespace WebLab.Protocolos
 
 
                     }
-                }
-                else
-                                       Response.Redirect("../FinSesion.aspx", false);
+                } else
+                    Response.Redirect("../FinSesion.aspx", false);
             }
         }
 
-        private void CargarProtocoloDerivado(string numeroProtocolo, string analisis)
-        {
+        private void CargarProtocoloDerivado(string numeroProtocolo, string analisis) {
 
             Utility oUtil = new Utility();
             //Actualiza los datos de los objetos : alta o modificacion .
-    
+
             Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(numeroProtocolo));
+            oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(numeroProtocolo));
             //oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));
-            if (oRegistro != null)
-            {
+            if (oRegistro != null) {
                 hplActualizarPaciente.Visible = false;
                 hplModificarPaciente.Visible = false;
 
@@ -309,21 +286,23 @@ namespace WebLab.Protocolos
                 lblTitulo.Visible = false;
                 txtFecha.Value = DateTime.Now.ToShortDateString();
                 txtFechaOrden.Value = oRegistro.FechaOrden.ToShortDateString();
-                txtFechaTomaMuestra.Value = oRegistro.FechaTomaMuestra.ToShortDateString();                           
+                txtFechaTomaMuestra.Value = oRegistro.FechaTomaMuestra.ToShortDateString();
 
                 pnlNavegacion.Visible = false;
                 btnCancelar.Text = "Cancelar";
                 btnCancelar.Width = Unit.Pixel(80);
 
                 txtNumeroOrigen.Text = oRegistro.Numero.ToString();
-                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString(); SelectedEfector();
+                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
+                SelectedEfector();
                 txtSala.Text = oRegistro.Sala.ToString();
                 txtCama.Text = oRegistro.Cama;
                 ddlOrigen.SelectedValue = oRegistro.IdOrigen.IdOrigen.ToString();
-                ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();                
+                ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
                 ddlPrioridad.SelectedValue = oRegistro.IdPrioridad.IdPrioridad.ToString();
-                if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
-                             
+                if (oRegistro.IdTipoServicio.IdTipoServicio == 3)
+                    ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
+
                 txtEspecialista.Text = oRegistro.MatriculaEspecialista;
                 string espe = oRegistro.Especialista;
                 string matricula = oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
@@ -350,13 +329,12 @@ namespace WebLab.Protocolos
                     diag.Visible = true;
                 else
                     diag.Visible = false;
-                
-                foreach (ProtocoloDiagnostico oDiag in diagnosticos)
-                {
+
+                foreach (ProtocoloDiagnostico oDiag in diagnosticos) {
                     if (oC.NomencladorDiagnostico == 0) //cie10
                     {
                         Cie10 oD = new Cie10();
-                        oD = (Cie10)oD.Get(typeof(Cie10), oDiag.IdDiagnostico);
+                        oD = (Cie10) oD.Get(typeof(Cie10), oDiag.IdDiagnostico);
 
                         ListItem oDia = new ListItem();
                         oDia.Text = oD.Codigo + " - " + oD.Nombre;
@@ -364,11 +342,9 @@ namespace WebLab.Protocolos
                         lstDiagnosticosFinal.Items.Add(oDia);
 
 
-                    }
-                    else
-                    {
+                    } else {
                         DiagnosticoP oD = new DiagnosticoP();
-                        oD = (DiagnosticoP)oD.Get(typeof(DiagnosticoP), oDiag.IdDiagnostico);
+                        oD = (DiagnosticoP) oD.Get(typeof(DiagnosticoP), oDiag.IdDiagnostico);
 
                         ListItem oDia = new ListItem();
                         oDia.Text = oD.Codigo + " - " + oD.Nombre;
@@ -387,8 +363,7 @@ namespace WebLab.Protocolos
         //    TxtDatos.Value = TxtDatosCargados.Value;
         //}
 
-        private void CargarDeterminacionesPeticion(Peticion oRegistro)
-        {
+        private void CargarDeterminacionesPeticion(Peticion oRegistro) {
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(PeticionItem));
             crit.Add(Expression.Eq("IdPeticion", oRegistro));
@@ -396,10 +371,8 @@ namespace WebLab.Protocolos
             IList items = crit.List();
             string pivot = "";
             string sDatos = "";
-            foreach (PeticionItem oDet in items)
-            {
-                if (pivot != oDet.IdItem.Nombre)
-                {
+            foreach (PeticionItem oDet in items) {
+                if (pivot != oDet.IdItem.Nombre) {
                     //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#false@";
                     if (sDatos == "")
                         sDatos = oDet.IdItem.Codigo + "#Si";
@@ -414,15 +387,13 @@ namespace WebLab.Protocolos
 
         }
 
-        private void CargarDeterminacionesDerivacion(string s_analisis, string s_diagnostico)
-        {
+        private void CargarDeterminacionesDerivacion(string s_analisis, string s_diagnostico) {
 
 
             string[] tabla = s_analisis.Split('|');
             string sDatos = "";
             /////Crea nuevamente los detalles.
-            for (int i = 0; i <= tabla.Length - 1; i++)
-            {
+            for (int i = 0; i <= tabla.Length - 1; i++) {
                 if (sDatos == "")
                     sDatos = tabla[i].ToString() + "#Si";
                 else
@@ -434,23 +405,22 @@ namespace WebLab.Protocolos
 
 
             TxtDatosCargados.Value = sDatos;
-            if (s_diagnostico != "0")
-            {
+            if (s_diagnostico != "0") {
                 ///Traer datos de diagnsotico        
-                if (oC.NomencladorDiagnostico == 0)
-                {
+                if (oC.NomencladorDiagnostico == 0) {
                     Cie10 oD = new Cie10();
-                    oD = (Cie10)oD.Get(typeof(Cie10), int.Parse(s_diagnostico));
+                    oD = (Cie10) oD.Get(typeof(Cie10), int.Parse(s_diagnostico));
                     ListItem oDia = new ListItem();
                     oDia.Text = oD.Nombre;
-                    oDia.Value = oD.Id.ToString(); lstDiagnosticosFinal.Items.Add(oDia);
-                }
-                else {
+                    oDia.Value = oD.Id.ToString();
+                    lstDiagnosticosFinal.Items.Add(oDia);
+                } else {
                     DiagnosticoP oD = new DiagnosticoP();
-                    oD = (DiagnosticoP)oD.Get(typeof(DiagnosticoP), int.Parse(s_diagnostico));
+                    oD = (DiagnosticoP) oD.Get(typeof(DiagnosticoP), int.Parse(s_diagnostico));
                     ListItem oDia = new ListItem();
                     oDia.Text = oD.Nombre;
-                    oDia.Value = oD.IdDiagnostico.ToString(); lstDiagnosticosFinal.Items.Add(oDia);
+                    oDia.Value = oD.IdDiagnostico.ToString();
+                    lstDiagnosticosFinal.Items.Add(oDia);
                 }
 
 
@@ -459,44 +429,38 @@ namespace WebLab.Protocolos
         }
 
 
-        private void CargarDeterminacionesDerivacionMultiEfector(string s_analisis)
-        {            
+        private void CargarDeterminacionesDerivacionMultiEfector(string s_analisis) {
             string[] tabla = s_analisis.Split('|');
             string pivot = "";
             string sDatos = "";
 
             /////Crea nuevamente los detalles.
-            for (int i = 0; i <= tabla.Length - 1; i++)
-            {
+            for (int i = 0; i <= tabla.Length - 1; i++) {
                 Item oItem = new Item();
-                oItem = (Item)oItem.Get(typeof(Item), int.Parse(tabla[i].ToString()));
-                if (oItem!= null)
-                    if (pivot != oItem.Nombre)
-                    {
+                oItem = (Item) oItem.Get(typeof(Item), int.Parse(tabla[i].ToString()));
+                if (oItem != null)
+                    if (pivot != oItem.Nombre) {
                         if (sDatos == "")
                             sDatos = oItem.Codigo + "#Si#False";
                         else
-                            sDatos += ";"  +oItem.Codigo + "#Si#False";
+                            sDatos += ";" + oItem.Codigo + "#Si#False";
                         //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
                         pivot = oItem.Nombre;
                     }
-            }             
+            }
             TxtDatosCargados.Value = sDatos;
         }
 
 
 
-        protected void txtCodigoMuestra_TextChanged(object sender, EventArgs e)
-        {
-            try
-            {
+        protected void txtCodigoMuestra_TextChanged(object sender, EventArgs e) {
+            try {
                 Muestra oMuestra = new Muestra();
-                oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "Codigo", txtCodigoMuestra.Text, "Baja", false);
-                if (oMuestra != null) ddlMuestra.SelectedValue = oMuestra.IdMuestra.ToString();
+                oMuestra = (Muestra) oMuestra.Get(typeof(Muestra), "Codigo", txtCodigoMuestra.Text, "Baja", false);
+                if (oMuestra != null)
+                    ddlMuestra.SelectedValue = oMuestra.IdMuestra.ToString();
                 ddlMuestra.UpdateAfterCallBack = true;
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
                 string exception = "";
                 //while (ex != null)
                 //{
@@ -505,35 +469,32 @@ namespace WebLab.Protocolos
                 //}
             }
         }
-        private void VerificaPermisos(string sObjeto)
-        {
-            if (Session["s_permiso"] != null)
-            {
+        private void VerificaPermisos(string sObjeto) {
+            if (Session["s_permiso"] != null) {
                 Utility oUtil = new Utility();
-                int i_permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
-                switch (i_permiso)
-                {
-                    case 0: Response.Redirect("../AccesoDenegado.aspx", false); break;
-                    case 1:
-                        { btnGuardar.Visible = false;
-                            //    btnGuardarImprimir.Visible = false; 
-                        }
+                int i_permiso = oUtil.VerificaPermisos((ArrayList) Session["s_permiso"], sObjeto);
+                switch (i_permiso) {
+                    case 0:
+                        Response.Redirect("../AccesoDenegado.aspx", false);
                         break;
+                    case 1: {
+                        btnGuardar.Visible = false;
+                        //    btnGuardarImprimir.Visible = false; 
+                    }
+                    break;
                 }
-            }
-            else Response.Redirect(Page.ResolveUrl("~/FinSesion.aspx"), false);
+            } else
+                Response.Redirect(Page.ResolveUrl("~/FinSesion.aspx"), false);
         }
 
-        private void CargarDeterminacionesTurno()
-        {
+        private void CargarDeterminacionesTurno() {
             Turno oTurno = new Turno();
-            oTurno = (Turno)oTurno.Get(typeof(Turno), int.Parse(Request["idTurno"].ToString()));
+            oTurno = (Turno) oTurno.Get(typeof(Turno), int.Parse(Request["idTurno"].ToString()));
 
-            if (oTurno != null)
-            {
+            if (oTurno != null) {
                 ddlEfector.SelectedValue = oTurno.IdEfectorSolicitante.IdEfector.ToString();
                 ddlSectorServicio.SelectedValue = oTurno.IdSector.ToString();
-                txtEspecialista.Text = oTurno.MatriculaEspecialista;                
+                txtEspecialista.Text = oTurno.MatriculaEspecialista;
                 ddlEspecialista.Items.Insert(0, new ListItem(oTurno.Especialista, oTurno.MatriculaEspecialista + '#' + oTurno.Especialista));
                 ddlEspecialista.SelectedValue = oTurno.MatriculaEspecialista + '#' + oTurno.Especialista;
                 ddlEspecialista.UpdateAfterCallBack = true;
@@ -553,10 +514,8 @@ namespace WebLab.Protocolos
                 IList items = crit.List();
                 string pivot = "";
                 string sDatos = "";
-                foreach (TurnoItem oDet in items)
-                {
-                    if (pivot != oDet.IdItem.Nombre)
-                    {
+                foreach (TurnoItem oDet in items) {
+                    if (pivot != oDet.IdItem.Nombre) {
                         //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#false@";
                         if (sDatos == "")
                             sDatos = oDet.IdItem.Codigo + "#Si";
@@ -579,21 +538,17 @@ namespace WebLab.Protocolos
 
                 IList diagnosticos = crit2.List();
 
-                foreach (TurnoDiagnostico oDiag in diagnosticos)
-                {
-                    if (oC.NomencladorDiagnostico == 0)
-                    {
+                foreach (TurnoDiagnostico oDiag in diagnosticos) {
+                    if (oC.NomencladorDiagnostico == 0) {
                         Cie10 oD = new Cie10();
-                        oD = (Cie10)oD.Get(typeof(Cie10), oDiag.IdDiagnostico);
+                        oD = (Cie10) oD.Get(typeof(Cie10), oDiag.IdDiagnostico);
                         ListItem oDia = new ListItem();
                         oDia.Text = oD.Nombre;
                         oDia.Value = oD.Id.ToString();
                         lstDiagnosticosFinal.Items.Add(oDia);
-                    }
-                    else
-                    {
+                    } else {
                         DiagnosticoP oD = new DiagnosticoP();
-                        oD = (DiagnosticoP)oD.Get(typeof(DiagnosticoP), oDiag.IdDiagnostico);
+                        oD = (DiagnosticoP) oD.Get(typeof(DiagnosticoP), oDiag.IdDiagnostico);
                         ListItem oDia = new ListItem();
                         oDia.Text = oD.Nombre;
                         oDia.Value = oD.IdDiagnostico.ToString();
@@ -603,16 +558,13 @@ namespace WebLab.Protocolos
             }
         }
 
-        private void MuestraDatos()
-        {
-            Utility oUtil = new Utility();            
+        private void MuestraDatos() {
+            Utility oUtil = new Utility();
             Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-            if (oRegistro != null)
-            {
-                oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));                 
-                if (oRegistro.IdTipoServicio.IdTipoServicio == 6)
-                {
+            oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+            if (oRegistro != null) {
+                oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));
+                if (oRegistro.IdTipoServicio.IdTipoServicio == 6) {
                     lblSalaCama.Visible = false;
                     txtSala.Visible = false;
                     txtCama.Visible = false;
@@ -624,10 +576,7 @@ namespace WebLab.Protocolos
                     btnCancelar.CssClass = "btn btn-success";
                 }
 
-                if (oRegistro.tieneAdjuntoProtocolo())
-                { spanadjunto.Visible = true; }
-                else
-                { spanadjunto.Visible = false; }
+                if (oRegistro.tieneAdjuntoProtocolo()) { spanadjunto.Visible = true; } else { spanadjunto.Visible = false; }
 
                 if (oRegistro.IdPrioridad.IdPrioridad == 2)
                     Session["idUrgencia"] = 2;
@@ -654,14 +603,12 @@ namespace WebLab.Protocolos
 
 
                 ////Modificacion de datos del paciente; retorna al protocolo.
-                if (ConfigurationManager.AppSettings["urlPaciente"].ToString() != "0")
-                {
+                if (ConfigurationManager.AppSettings["urlPaciente"].ToString() != "0") {
                     hplActualizarPaciente.Visible = false;
                     //string s_urlLabo = ConfigurationManager.AppSettings["urlLabo"].ToString();
                     //string s_urlModifica =s_urlLabo+ "Protocolos/ProtocoloEdit2.aspx?llamada=LaboProtocolo&idServicio=" + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString() + "&Operacion=Modifica&idProtocolo=" + Request.QueryString["idProtocolo"] + "&Desde=" + Request["Desde"].ToString();
                     //hplActualizarPaciente.NavigateUrl = ConfigurationManager.AppSettings["urlPaciente"].ToString() + "/modifica?idPaciente=" + oRegistro.IdPaciente.IdPaciente.ToString() + "&url='" + s_urlModifica + "'";
-                }
-                else
+                } else
                     hplActualizarPaciente.NavigateUrl = "../Pacientes/PacienteEdit.aspx?id=" + oRegistro.IdPaciente.IdPaciente.ToString() + "&llamada=LaboProtocolo&idServicio=" + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString() + "&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString();
 
 
@@ -671,8 +618,7 @@ namespace WebLab.Protocolos
 
 
 
-                if (oC.TipoNumeracionProtocolo == 2)
-                {
+                if (oC.TipoNumeracionProtocolo == 2) {
                     //   lblTitulo.Text = oRegistro.PrefijoSector;
                     ///Si es la numeracion es con letra no se puede modificar el prefijo sector.
                     ddlSectorServicio.Enabled = false;
@@ -685,7 +631,7 @@ namespace WebLab.Protocolos
 
                 //ddlServicio.SelectedValue = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
 
-             //   CargarItems();  ///Caro Performance no es necesario llamar nuevamente
+                //   CargarItems();  ///Caro Performance no es necesario llamar nuevamente
                 txtFecha.Value = oRegistro.Fecha.ToShortDateString();
                 txtFechaOrden.Value = oRegistro.FechaOrden.ToShortDateString();
                 txtFechaTomaMuestra.Value = oRegistro.FechaTomaMuestra.ToShortDateString();
@@ -698,30 +644,26 @@ namespace WebLab.Protocolos
                 txtNumeroOrigen.Text = oRegistro.NumeroOrigen;
                 txtNumeroOrigen2.Text = oRegistro.NumeroOrigen2;
 
-            
+
                 chkNotificar.Checked = oRegistro.Notificarresultado;
                 // muestra FIS
                 chkSinFIS.Checked = false;
                 chkSinFUC.Checked = false;
-                if (cantidadIncidencias > 0)
-                { 
+                if (cantidadIncidencias > 0) {
                     chkSinFIS.Checked = oRegistro.VerificaIncidencia(46);
-                    if (!chkSinFIS.Checked)
-                    {
+                    if (!chkSinFIS.Checked) {
                         if (oRegistro.FechaInicioSintomas.Year != 1900)
                             txtFechaFIS.Value = oRegistro.FechaInicioSintomas.ToShortDateString();
                     }
                     // muestra FUC
                     chkSinFUC.Checked = oRegistro.VerificaIncidencia(47);
-                    if (!chkSinFUC.Checked)
-                    {
+                    if (!chkSinFUC.Checked) {
                         if (oRegistro.FechaUltimoContacto.Year != 1900)
                             txtFechaFUC.Value = oRegistro.FechaUltimoContacto.ToShortDateString();
                     }
                 }
 
-                if (oRegistro.IdCasoSISA > 0)
-                { lblNroSISA.Text = "Nro. SISA: " + oRegistro.IdCasoSISA.ToString(); lblNroSISA.Visible = true; }
+                if (oRegistro.IdCasoSISA > 0) { lblNroSISA.Text = "Nro. SISA: " + oRegistro.IdCasoSISA.ToString(); lblNroSISA.Visible = true; }
                 txtEspecialista.Text = oRegistro.MatriculaEspecialista;
                 string espe = oRegistro.Especialista;
                 string matricula = oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
@@ -731,8 +673,7 @@ namespace WebLab.Protocolos
                 ddlEspecialista.SelectedValue = oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
                 ddlEspecialista.UpdateAfterCallBack = true;
                 ///Datos del Paciente
-                if (Request["idPaciente"] == null)
-                {
+                if (Request["idPaciente"] == null) {
                     HFNumeroDocumento.Value = oRegistro.IdPaciente.NumeroDocumento.ToString();
                     HFIdPaciente.Value = oRegistro.IdPaciente.IdPaciente.ToString();
                     lblIdPaciente.Text = oRegistro.IdPaciente.IdPaciente.ToString();
@@ -741,27 +682,22 @@ namespace WebLab.Protocolos
                     if (oRegistro.IdPaciente.IdEstado == 2)
                         lblPaciente.Text = oRegistro.IdPaciente.Apellido.ToUpper() + " " + oRegistro.IdPaciente.Nombre.ToUpper() + " (Temporal:" + oRegistro.IdPaciente.NumeroAdic + ") ";
 
-                    if (oRegistro.IdPaciente.IdEstado == 3)
-                    {
+                    if (oRegistro.IdPaciente.IdEstado == 3) {
                         logoRenaper.Visible = true;
-                    }
-                    else
+                    } else
                         logoRenaper.Visible = false;
 
                     if (oRegistro.IdCasoSISA > 0)
                         btnNotificarSISA.Visible = false;
-                    else
-                    {
+                    else {
 
-                        if (oC.NotificarSISA)
-                        {
+                        if (oC.NotificarSISA) {
                             if (oRegistro.VerificaObligatoriedadFIS()) //sospechoso o detectar: cambiar segun parametrizacion de tabla
                                                                        //                                                                //   if ((oRegistro.IdCaracter == 1) || (oRegistro.IdCaracter == 8)) //sospechoso o detectar
                             {
 
                                 string idItem = oRegistro.GenerarCasoSISA(); // se fija si hay algun item que tiene configurado notificacion a sisa
-                                if (idItem != "")
-                                { btnNotificarSISA.Visible = true; }
+                                if (idItem != "") { btnNotificarSISA.Visible = true; }
                             }
                         }
                     }
@@ -779,11 +715,18 @@ namespace WebLab.Protocolos
 
 
 
-                    switch (oRegistro.IdPaciente.IdSexo)
-                    {
-                        case 1: lblSexo.Text = "I"; break;
-                        case 2: lblSexo.Text = "F"; HFSexo.Value = "F"; break;
-                        case 3: lblSexo.Text = "M"; HFSexo.Value = "M"; break;
+                    switch (oRegistro.IdPaciente.IdSexo) {
+                        case 1:
+                            lblSexo.Text = "I";
+                            break;
+                        case 2:
+                            lblSexo.Text = "F";
+                            HFSexo.Value = "F";
+                            break;
+                        case 3:
+                            lblSexo.Text = "M";
+                            HFSexo.Value = "M";
+                            break;
                     }
 
                     if ((oRegistro.IdPaciente.IdEstado == 1) && ((lblSexo.Text == "F") || (lblSexo.Text == "M")))
@@ -803,9 +746,7 @@ namespace WebLab.Protocolos
 
 
                     //OSociales.setOS(oRegistro.IdObraSocial.IdObraSocial); //reemplezar por texto
-                }
-                else
-                {
+                } else {
                     MostrarPaciente();
                 }
 
@@ -845,7 +786,7 @@ namespace WebLab.Protocolos
 
 
                 MostrarDiagnosticos(oRegistro);
-           
+
 
 
                 //chkRecordarConfiguracion.Checked = false;
@@ -857,12 +798,12 @@ namespace WebLab.Protocolos
                 //chkImprimir.Visible = false;
                 //chkRecordarConfiguracion.Visible = false;
 
-                if (oRegistro.Estado == 2) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
+                if (oRegistro.Estado == 2)
+                    btnGuardar.Visible = oC.ModificarProtocoloTerminado;
             }
         }
 
-        private void MostrarDiagnosticos(Protocolo oRegistro)
-        {
+        private void MostrarDiagnosticos(Protocolo oRegistro) {
 
 
             if (oC.NomencladorDiagnostico == 0) //cie10
@@ -873,49 +814,46 @@ from sys_cie10 c (nolock)
 inner join LAB_ProtocoloDiagnostico pd (nolock) on c.id = pd.idDiagnostico
 where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
-            DataSet Ds = new DataSet();
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
-                lstDiagnosticosFinal.Items.Clear(); diag.Visible = false;
-            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
-            {
-                diag.Visible = true;
+                DataSet Ds = new DataSet();
+                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                adapter.Fill(Ds);
+                lstDiagnosticosFinal.Items.Clear();
+                diag.Visible = false;
+                for (int i = 0; i < Ds.Tables[0].Rows.Count; i++) {
+                    diag.Visible = true;
 
-                ListItem oDia = new ListItem();
-                oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
-                oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+                    ListItem oDia = new ListItem();
+                    oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+                    oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
                     lstDiagnosticosFinal.Items.Add(oDia);
 
 
+                }
+
+
+
+
+
+
+
+
+
+            } else {
+                //DiagnosticoP oD = new DiagnosticoP();
+                //oD = (DiagnosticoP)oD.Get(typeof(DiagnosticoP), oDiag.IdDiagnostico);
+
+                //ListItem oDia = new ListItem();
+                //oDia.Text = oD.Codigo + " - " + oD.Nombre;
+                //oDia.Value = oD.IdDiagnostico.ToString();
+                //lstDiagnosticosFinal.Items.Add(oDia);
             }
 
 
-
-          
-
-
-
-            
-
-                }
-                else
-                {
-                    //DiagnosticoP oD = new DiagnosticoP();
-                    //oD = (DiagnosticoP)oD.Get(typeof(DiagnosticoP), oDiag.IdDiagnostico);
-
-                    //ListItem oDia = new ListItem();
-                    //oDia.Text = oD.Codigo + " - " + oD.Nombre;
-                    //oDia.Value = oD.IdDiagnostico.ToString();
-                    //lstDiagnosticosFinal.Items.Add(oDia);
-                }
-             
-
         }
 
-        private void MostrarDeterminaciones(Protocolo oRegistro)
-        {
+        private void MostrarDeterminaciones(Protocolo oRegistro) {
             ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
             //dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
             DetalleProtocolo oDetalle = new DetalleProtocolo();
@@ -927,11 +865,9 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             IList items = crit.List();
             string pivot = "";
             string sDatos = "";
-           
-            foreach (DetalleProtocolo oDet in items)
-            {
-                if (pivot != oDet.IdItem.Nombre)
-                {
+
+            foreach (DetalleProtocolo oDet in items) {
+                if (pivot != oDet.IdItem.Nombre) {
                     /*if (sDatos == "")
                         sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
                     else
@@ -939,45 +875,43 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     pivot = oDet.IdItem.Nombre;
                     */
                     string estado = "0";
-                    if ((oDet.IdUsuarioValida > 0)  || (oDet.IdUsuarioValidaObservacion > 0)) //validado
+                    if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioValidaObservacion > 0)) //validado
                         estado = "2";
-                    else
-                    {
-                        if ((oDet.IdUsuarioResultado > 0) || (oDet.IdUsuarioObservacion> 0) ||  (oDet.Enviado==2)) //cargado
+                    else {
+                        if ((oDet.IdUsuarioResultado > 0) || (oDet.IdUsuarioObservacion > 0) || (oDet.Enviado == 2)) //cargado
                             estado = "1";
                     }
 
-                            if (sDatos == "")
+                    if (sDatos == "")
                         sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
                     else
                         sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
                     pivot = oDet.IdItem.Nombre;
                 }
 
-                
+
 
             }
 
             TxtDatosCargados.Value = sDatos;
 
-             
+
         }
 
 
-      
 
 
 
-        private string VerEstado(Protocolo oRegistro)
-        {
+
+        private string VerEstado(Protocolo oRegistro) {
             string result = "";
             int p = oRegistro.Estado;
-            if (!oRegistro.Baja)
-            {
-                if ((p == 1) || (p == 2))
-                {
-                    if (p == 1) result = "EN PROCESO";
-                    else result = "TERMINADO";
+            if (!oRegistro.Baja) {
+                if ((p == 1) || (p == 2)) {
+                    if (p == 1)
+                        result = "EN PROCESO";
+                    else
+                        result = "TERMINADO";
                     lblEstado.ForeColor = System.Drawing.Color.Green;
                 }
                 if (p == 2)  //terminado
@@ -987,9 +921,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     hplModificarPaciente.Enabled = false;
                     hplActualizarPaciente.Enabled = false;
                 }
-            }
-            else
-            {
+            } else {
                 result = "ANULADO";
                 lblEstado.ForeColor = System.Drawing.Color.Red;
                 btnGuardar.Visible = false;
@@ -1004,22 +936,25 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
 
-        private void MostrarPaciente()
-        {
+        private void MostrarPaciente() {
 
 
             Utility oUtil = new Utility();
             ///Muestro los datos del paciente 
             Paciente oPaciente = new Paciente();
-            oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), int.Parse(Request["idPaciente"].ToString()));
-            if (oPaciente != null)
-            {
+            oPaciente = (Paciente) oPaciente.Get(typeof(Paciente), int.Parse(Request["idPaciente"].ToString()));
+            if (oPaciente != null) {
                 HFNumeroDocumento.Value = oPaciente.NumeroDocumento.ToString();
-                switch (oPaciente.IdSexo)
-                {
-                    case 1: lblSexo.Text = "I"; break;
-                    case 2: lblSexo.Text = "F"; break;
-                    case 3: lblSexo.Text = "M"; break;
+                switch (oPaciente.IdSexo) {
+                    case 1:
+                        lblSexo.Text = "I";
+                        break;
+                    case 2:
+                        lblSexo.Text = "F";
+                        break;
+                    case 3:
+                        lblSexo.Text = "M";
+                        break;
                 }
 
                 //if (oPaciente.IdEstado == 1) Response.Redirect("ProcesaRenaper.aspx?Tipo=DNI&dni=" + oPaciente.NumeroDocumento.ToString() + "&sexo=" + lblSexo.Text + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
@@ -1029,19 +964,15 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (oPaciente.IdEstado != 2)
                     lblPaciente.Text = oPaciente.NumeroDocumento.ToString() + " - " + oPaciente.Apellido.ToUpper() + " " + oPaciente.Nombre.ToUpper();
-                if (oPaciente.IdEstado == 2)
-                {
+                if (oPaciente.IdEstado == 2) {
                     lblPaciente.Text = oPaciente.Apellido.ToUpper() + " " + oPaciente.Nombre.ToUpper() + " (Temporal :" + oPaciente.NumeroAdic + ") ";
                     lblObraSocial.Text = "-";
                     btnSelObraSocial.Visible = true;
-                }
-                else
-                {
+                } else {
                     string nombreOS = "";
                     string codigoOS = "0";
                     string[] os = GetPuco(oPaciente.NumeroDocumento).Split('&');
-                    if (os.Length > 1)
-                    {
+                    if (os.Length > 1) {
                         nombreOS = os[0].ToString();
                         codigoOS = os[1].ToUpper();
                         CodOS.Value = codigoOS;
@@ -1053,7 +984,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     else
                         btnSelObraSocial.Visible = false;
                 }
-              
+
 
                 if (oPaciente.IdEstado == 3)
                     logoRenaper.Visible = true;
@@ -1064,21 +995,17 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 /// //Caro Performance: no buscar si tiene ingresos por defecto.
                 /// 
                 lblAlertaProtocolo.Visible = false;
-                if ((Request["Operacion"].ToString() == "Alta") && (oC.VerificaIngresoAnterior))
-                {
+                if ((Request["Operacion"].ToString() == "Alta") && (oC.VerificaIngresoAnterior)) {
                     string tieneingreso = oPaciente.GetProtocolosReciente(7, Request["idServicio"].ToString());
 
-                    if (tieneingreso != "")
-                    {
+                    if (tieneingreso != "") {
                         lblAlertaProtocolo.Text = " El paciente tiene un protocolo ingresado el día " + tieneingreso;
                         lblAlertaProtocolo.Visible = true;
-                    }
-                    else
-                    {
+                    } else {
                         lblAlertaProtocolo.Text = tieneingreso;
                         lblAlertaProtocolo.Visible = false;
                     }
-                }                             
+                }
 
 
                 string[] edad = oUtil.DiferenciaFechas(oPaciente.FechaNacimiento, DateTime.Now).Split(';');
@@ -1096,8 +1023,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         }
 
 
-        private void CargarListas()
-        {
+        private void CargarListas() {
             Utility oUtil = new Utility();
             //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
 
@@ -1132,7 +1058,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             ///Carga de combos de tipos de servicios          
             TipoServicio oServicio = new TipoServicio();
-            oServicio = (TipoServicio)oServicio.Get(typeof(TipoServicio), int.Parse(Session["idServicio"].ToString()));
+            oServicio = (TipoServicio) oServicio.Get(typeof(TipoServicio), int.Parse(Session["idServicio"].ToString()));
             lblServicio.Text = oServicio.Nombre;
 
 
@@ -1141,8 +1067,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
-            if (oC.IdSectorDefecto > 0)
-            {
+            if (oC.IdSectorDefecto > 0) {
                 ddlSectorServicio.SelectedValue = oC.IdSectorDefecto.ToString();
                 ddlSectorServicio.Visible = false;
             }
@@ -1152,35 +1077,29 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             pnlEtiquetas.Visible = false;
 
             ConfiguracionCodigoBarra oConfiguracion = new ConfiguracionCodigoBarra();
-            oConfiguracion = (ConfiguracionCodigoBarra)oConfiguracion.Get(typeof(ConfiguracionCodigoBarra), "IdTipoServicio", oServicio,"IdEfector", oUser.IdEfector); //Multiefector: filtrar por efector
-            if (oConfiguracion == null)
-            {
+            oConfiguracion = (ConfiguracionCodigoBarra) oConfiguracion.Get(typeof(ConfiguracionCodigoBarra), "IdTipoServicio", oServicio, "IdEfector", oUser.IdEfector); //Multiefector: filtrar por efector
+            if (oConfiguracion == null) {
                 //    lblImprimeCodigoBarras.Visible = false;
                 //    chkAreaCodigoBarra.Items.Clear();
                 ddlImpresoraEtiqueta.Visible = false;
-            }
-            else
-            {
-                if (oConfiguracion.Habilitado)
-                {
+            } else {
+                if (oConfiguracion.Habilitado) {
                     m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
-                                                                                                                                                             //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+                                                                                                                                                                     //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
                     oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
-                  
+
 
 
                     if ((Request["Operacion"].ToString() == "Alta") ||
                   (Request["Operacion"].ToString() == "AltaTurno") ||
                   (Request["Operacion"].ToString() == "AltaDerivacion") ||
                   (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
-                  (Request["Operacion"].ToString() == "AltaPeticion"))
-                    {
+                  (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ||
+                  (Request["Operacion"].ToString() == "AltaPeticion")) {
                         pnlImpresoraAlta.Visible = true;
                         pnlEtiquetas.Visible = false;
-                    }
-                    else
-                    {
+                    } else {
                         pnlImpresoraAlta.Visible = false;
                         oUtil.CargarCombo(ddlImpresora2, m_ssql, "nombre", "nombre", connReady);
                         ddlImpresora2.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
@@ -1191,7 +1110,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                         //lblImprimeCodigoBarras.Visible = true;
                         ///cargar de areas con codigo de barras           ==> solo areas que estan en el protocolo.
-                                         
+
                         m_ssql = @"select idArea, nombre from Lab_Area  A (nolock)
                             WHERE imprimeCodigoBarra=1 and idTipoServicio=" + oServicio.IdTipoServicio.ToString() +
                             @"  and baja=0
@@ -1203,9 +1122,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         oUtil.CargarCheckBox(chkAreaCodigoBarra, m_ssql, "idArea", "nombre");
                         chkAreaCodigoBarra.Items.Insert(0, new ListItem("General", "-1"));
                     }
-                }
-                else
-                {
+                } else {
                     //lblImprimeCodigoBarras.Enabled = false;
                     chkAreaCodigoBarra.Items.Clear();
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Sin impresora", "0"));
@@ -1215,13 +1132,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     lblMensajeImpresion.Text = "No se ha habilitado la impresion de etiquetas";
                     lblMensajeImpresion.UpdateAfterCallBack = true;
                 }
-                 
-                
+
+
             }
 
 
 
-           
+
 
             //////////////////////////////////////////////////
 
@@ -1256,7 +1173,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 m_ssql = @"SELECT idMuestra, nombre + ' - ' + codigo as nombre FROM LAB_Muestra (nolock)  M
                             where (tipo=0 or tipo=1)";
                 if (Request["Operacion"].ToString() != "Modifica")  //alta
-                    m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString()+")"; //Multiefector";
+                    m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString() + ")"; //Multiefector";
 
 
                 m_ssql += " order by nombre ";
@@ -1270,13 +1187,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             m_ssql = "SELECT idEfector, nombre FROM sys_Efector  E  (nolock) ";
 
             //if (Request["Operacion"].ToString() != "Modifica")  //alta
-                m_ssql += " where exists (select 1 from LAB_EfectorRelacionado R (nolock) where E.idEfector = R.idEfectorRel and R.idefector = " + oUser.IdEfector.IdEfector.ToString() +
-                    ")  or (E.idEfector="+oC.IdEfector.IdEfector.ToString()+ @" )";
-           
-           m_ssql += " order by nombre ";
+            m_ssql += " where exists (select 1 from LAB_EfectorRelacionado R (nolock) where E.idEfector = R.idEfectorRel and R.idefector = " + oUser.IdEfector.IdEfector.ToString() +
+                ")  or (E.idEfector=" + oC.IdEfector.IdEfector.ToString() + @" )";
+
+            m_ssql += " order by nombre ";
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             ddlEfector.SelectedValue = oC.IdEfector.IdEfector.ToString();
-            
+
 
             //////////////Carga de combos de Medicos Solicitantes
             //if (Request["Operacion"].ToString()=="Carga")///muestra solo los activos
@@ -1295,8 +1212,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
             ddlCaracter.Items.Insert(0, new ListItem("--Seleccione Caracteristica--", "0"));
 
-            if (ddlCaracter.Items.Count > 1)
-            {
+            if (ddlCaracter.Items.Count > 1) {
                 lblCaracterSisa.Visible = true;
                 ddlCaracter.Visible = true;
             }
@@ -1314,24 +1230,23 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +
                   " FROM Lab_item I (nolock) " +
-                  " inner join lab_itemEfector IE (nolock) on IE.idItem= I.iditem and ie.idefector="+ oC.IdEfector.IdEfector.ToString()+
+                  " inner join lab_itemEfector IE (nolock) on IE.idItem= I.iditem and ie.idefector=" + oC.IdEfector.IdEfector.ToString() +
                   " INNER JOIN Lab_area A (nolock) ON A.idArea= I.idArea " +
                   " where A.baja=0 and I.baja=0 and  IE.disponible=1 and A.idtipoServicio= " + Session["idServicio"].ToString() + " AND (I.tipo= 'P') order by I.nombre ";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
 
 
-            if (Request["Operacion"].ToString() != "Modifica")
-            {
-                if (Session["idUrgencia"] != null)
-                {
+            if (Request["Operacion"].ToString() != "Modifica") {
+                if (Session["idUrgencia"] != null) {
                     if (Session["idUrgencia"].ToString() == "0")
 
                         IniciarValores(oC);
                 }
             }
 
-            if (Request["Operacion"].ToString() == "AltaDerivacion") IniciarValores(oC);
+            if (Request["Operacion"].ToString() == "AltaDerivacion")
+                IniciarValores(oC);
 
             //if (oC.IdEfector.IdEfector.ToString() != ddlEfector.SelectedValue)
             //    CargarSolicitantesExternos("");
@@ -1342,18 +1257,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             CargarItems();
 
             //CargarDiagnosticosFrecuentes();
-            if (int.Parse(Session["idServicio"].ToString()) == 1)
-            {
-                if (Session["idUrgencia"] != null)
-                {
-                    if (Session["idUrgencia"].ToString() != "0")
-                    {
+            if (int.Parse(Session["idServicio"].ToString()) == 1) {
+                if (Session["idUrgencia"] != null) {
+                    if (Session["idUrgencia"].ToString() != "0") {
                         ddlOrigen.SelectedValue = oC.IdOrigenUrgencia.ToString(); //Origen: Guardia
                         ddlSectorServicio.SelectedValue = oC.IdSectorUrgencia.ToString(); // sector de urgencia
                         ddlPrioridad.SelectedValue = "2"; // Prioridad: Urgencia
-                    }
-                    else
-                    {
+                    } else {
 
                         ddlPrioridad.SelectedValue = "1"; //Prioridad: Rutina
                     }
@@ -1364,60 +1274,49 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             chkNotificar.Checked = true;
             chkNotificar.Enabled = oC.HabilitaNoPublicacion;
 
-          
+
             m_ssql = null;
             oUtil = null;
         }
 
-        private void IniciarValores(Configuracion oC)
-        {
-            if (Session["ProtocoloLaboratorio"] != null)
-            {
+        private void IniciarValores(Configuracion oC) {
+            if (Session["ProtocoloLaboratorio"] != null) {
                 string[] arr = Session["ProtocoloLaboratorio"].ToString().Split(("@").ToCharArray());
-                foreach (string item in arr)
-                {
+                foreach (string item in arr) {
                     string[] s_control = item.Split((":").ToCharArray());
-                    switch (s_control[0].ToString())
-                    {
-                        case "ddlMuestra":
-                            {
+                    switch (s_control[0].ToString()) {
+                        case "ddlMuestra": {
 
+                            if (Request["Operacion"].ToString() != "Modifica")
+                                if (Request["Operacion"].ToString() != "AltaTurno") {
+                                    ddlMuestra.SelectedValue = s_control[1].ToString();
+                                    mostrarCodigoMuestra();
+                                }
+                        }
+                        break;
+                        case "ddlOrigen": {
+                            if ((oC.RecordarOrigenProtocolo))
                                 if (Request["Operacion"].ToString() != "Modifica")
-                                    if (Request["Operacion"].ToString() != "AltaTurno")
-                                    {
-                                        ddlMuestra.SelectedValue = s_control[1].ToString();
-                                        mostrarCodigoMuestra();
+                                    if (Request["Operacion"].ToString() != "AltaTurno") {
+                                        ddlOrigen.SelectedValue = s_control[1].ToString();
                                     }
-                            }
-                            break;
-                        case "ddlOrigen":
-                            {
-                                if ((oC.RecordarOrigenProtocolo))
-                                    if (Request["Operacion"].ToString() != "Modifica")
-                                        if (Request["Operacion"].ToString() != "AltaTurno")
-                                        {
-                                            ddlOrigen.SelectedValue = s_control[1].ToString();
-                                        }
-                            }
-                            break;
+                        }
+                        break;
                         case "ddlEfector":
                             if ((oC.RecordarOrigenProtocolo))
                                 if (Request["Operacion"].ToString() != "Modifica")
-                                    if (Request["Operacion"].ToString() != "AltaTurno")
-                                    {
+                                    if (Request["Operacion"].ToString() != "AltaTurno") {
                                         ddlEfector.SelectedValue = s_control[1].ToString();
                                     }
                             break;
-                        case "ddlSectorServicio":
-                            {
-                                if ((oC.RecordarSectorProtocolo))
-                                    if (Request["Operacion"].ToString() != "Modifica")
-                                        if (Request["Operacion"].ToString() != "AltaTurno")
-                                        {
-                                            ddlSectorServicio.SelectedValue = s_control[1].ToString();
-                                        }
-                            }
-                            break;
+                        case "ddlSectorServicio": {
+                            if ((oC.RecordarSectorProtocolo))
+                                if (Request["Operacion"].ToString() != "Modifica")
+                                    if (Request["Operacion"].ToString() != "AltaTurno") {
+                                        ddlSectorServicio.SelectedValue = s_control[1].ToString();
+                                    }
+                        }
+                        break;
                         //case "chkRecordarConfiguracion":
                         //    {
                         //        if (s_control[1].ToString() == "False")
@@ -1456,34 +1355,33 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         //        }
                         //    }
                         //    break;
-                        case "chkRecordarPractica":
-                            {
-                                if (s_control[1].ToString() == "False")
-                                    chkRecordarPractica.Checked = false;
-                                else
-                                    chkRecordarPractica.Checked = true;
-                            }
-                            break;
+                        case "chkRecordarPractica": {
+                            if (s_control[1].ToString() == "False")
+                                chkRecordarPractica.Checked = false;
+                            else
+                                chkRecordarPractica.Checked = true;
+                        }
+                        break;
                         case "prácticas":
-                            TxtDatosCargados.Value = s_control[1].ToString(); break;
+                            TxtDatosCargados.Value = s_control[1].ToString();
+                            break;
                         //case "ddlImpresora":
                         //    ddlImpresora.SelectedValue = s_control[1].ToString(); break;
 
                         case "ddlImpresoraEtiqueta":
-                            ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
+                            ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString();
+                            break;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 //if (Session["Impresora"]!=null) ddlImpresora.SelectedValue=Session["Impresora"].ToString();
-                if (Session["Etiquetadora"] != null) ddlImpresoraEtiqueta.SelectedValue = Session["Etiquetadora"].ToString();
+                if (Session["Etiquetadora"] != null)
+                    ddlImpresoraEtiqueta.SelectedValue = Session["Etiquetadora"].ToString();
             }
 
         }
 
-        private void CargarItems()
-        {
+        private void CargarItems() {
             Utility oUtil = new Utility();
             ///Carga del combo de determinaciones
             string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
@@ -1491,7 +1389,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             " FROM Lab_item I  (nolock) " +
                             " inner join lab_itemEfector IE  (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oC.IdEfector.IdEfector.ToString() + //MultiEfector 
                             " INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea " +
-                            " where A.baja=0 and I.baja=0 "+  
+                            " where A.baja=0 and I.baja=0 " +
                             " and  A.idtipoServicio= " + Session["idServicio"].ToString() + " AND (I.tipo= 'P') order by I.nombre ";
             SqlConnection strconn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
@@ -1507,14 +1405,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             ddlItem.Items.Insert(0, new ListItem("", "0"));
 
             string sTareas = "";
-            for (int i = 0; i < ds.Tables["T"].Rows.Count; i++)
-            {
+            for (int i = 0; i < ds.Tables["T"].Rows.Count; i++) {
                 sTareas += "#" + ds.Tables["T"].Rows[i][1].ToString() + "#" + ds.Tables["T"].Rows[i][2].ToString() + "#" + ds.Tables["T"].Rows[i][4].ToString() + "@";
             }
             txtTareas.Value = sTareas;
 
             //Carga de combo de rutinas
-            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina (nolock) where baja=0 and IdEfector= "+ oUser.IdEfector.IdEfector.ToString() +" and idTipoServicio= " + Session["idServicio"].ToString() + " order by nombre ";//Ver MultiEfector 
+            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina (nolock) where baja=0 and IdEfector= " + oUser.IdEfector.IdEfector.ToString() + " and idTipoServicio= " + Session["idServicio"].ToString() + " order by nombre ";//Ver MultiEfector 
             oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre");
             ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
 
@@ -1526,18 +1423,16 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         }
 
 
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
-            if (Page.IsValid)
-            { ///Verifica si se trata de un alta o modificacion de protocolo               
+        protected void btnGuardar_Click(object sender, EventArgs e) {
+            if (Page.IsValid) { ///Verifica si se trata de un alta o modificacion de protocolo               
                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-                if (Request["Operacion"].ToString() == "Modifica") oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                if (Request["Operacion"].ToString() == "Modifica")
+                    oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
 
                 bool guardo = Guardar(oRegistro);
 
-                if (guardo)
-                {    ////if (oRegistro.IdTipoServicio==6) Response.Redirect ("ProtocoloMensaje.aspx")
+                if (guardo) {    ////if (oRegistro.IdTipoServicio==6) Response.Redirect ("ProtocoloMensaje.aspx")
                     //// se muestra un mensaje con el numero de protocolo y te da opcion de adjuntos y de consentieminto si es forense.
 
 
@@ -1545,8 +1440,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     (Request["Operacion"].ToString() == "AltaTurno") ||
                     (Request["Operacion"].ToString() == "AltaDerivacion") ||
                     (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
-                    (Request["Operacion"].ToString() == "AltaPeticion"))
-                    {
+                    (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ||
+                    (Request["Operacion"].ToString() == "AltaPeticion")) {
 
 
                         if (ddlImpresoraEtiqueta.SelectedValue != "0")
@@ -1569,8 +1464,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         //////Imprimir Comprobante para el paciente
                         //if (chkImprimir.Checked) Imprimir(oRegistro);
 
-                        if (oC.NotificarSISA)
-                        {
+                        if (oC.NotificarSISA) {
                             if (oRegistro.VerificaObligatoriedadFIS()) //sospechoso o detectar: cambiar segun parametrizacion de tabla
                                                                        //                                                                //   if ((oRegistro.IdCaracter == 1) || (oRegistro.IdCaracter == 8)) //sospechoso o detectar
                             {
@@ -1594,18 +1488,23 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     //if (oC.GeneraComprobanteProtocolo)
                     //    Response.Redirect("ProtocoloMensaje.aspx?id=" + oRegistro.IdProtocolo.ToString(), false);
                     //else
-                    if (Request["Operacion"].ToString() == "Modifica")
-                    {
+                    if (Request["Operacion"].ToString() == "Modifica") {
                         if (Request["DesdeUrgencia"] != null)
                             Response.Redirect("../Urgencia/UrgenciaList.aspx");
-                        else
-                        {
-                            switch (Request["Desde"].ToString())
-                            {
-                                case "Default": Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString(), false); break;
-                                case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Lista"); break;
-                                case "Control": Avanzar(1); break;
-                                case "Urgencia": Response.Redirect("../Urgencia/UrgenciaList.aspx", false); break;
+                        else {
+                            switch (Request["Desde"].ToString()) {
+                                case "Default":
+                                    Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString(), false);
+                                    break;
+                                case "ProtocoloList":
+                                    Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Lista");
+                                    break;
+                                case "Control":
+                                    Avanzar(1);
+                                    break;
+                                case "Urgencia":
+                                    Response.Redirect("../Urgencia/UrgenciaList.aspx", false);
+                                    break;
 
                             }
 
@@ -1614,96 +1513,134 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             //else
                             //    Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&tipo=Lista", false);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         //if (Request["Operacion"].ToString() == "AltaDerivacion") 
-                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
-                        {
+                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" ||
+                           (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ) {
                             ActualizarEstadoDerivacion(oRegistro);
+                            VerificacionEstadoLote(oRegistro);
 
-                            Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
-                        }
-                        else
-                        {
+                            if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                                Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
+                            else
+                                Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString());
+
+                        } else {
                             if (Request["Operacion"].ToString() == "AltaTurno")
                                 Response.Redirect("../turnos/Turnolist.aspx?ultimoProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
-                            else
-                            {
+                            else {
                                 //       if (Request["Operacion"].ToString() == "AltaPeticion")
                                 //         Response.Redirect("../PeticionElectronica/PeticionList.aspx", false);
                                 //   else
                                 //   {
                                 if (Session["idServicio"].ToString() == "3") { Session["idUrgencia"] = "0"; }
-                                if (Session["idUrgencia"] != null)
-                                {
-                                    switch (Session["idUrgencia"].ToString())
-                                    {
+                                if (Session["idUrgencia"] != null) {
+                                    switch (Session["idUrgencia"].ToString()) {
                                         case "1": /// va directo a la carga de protocolo      
                                             {
-                                                Session["Parametros"] = oRegistro.IdProtocolo.ToString();
-                                                Response.Redirect("../resultados/ResultadoEdit2.aspx?idServicio=1&Operacion=Carga&idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Index=0&Parametros=" + oRegistro.IdProtocolo.ToString() + "&idArea=0&urgencia=1&validado=0&modo=Normal");
-                                            }
-                                            break;
+                                            Session["Parametros"] = oRegistro.IdProtocolo.ToString();
+                                            Response.Redirect("../resultados/ResultadoEdit2.aspx?idServicio=1&Operacion=Carga&idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Index=0&Parametros=" + oRegistro.IdProtocolo.ToString() + "&idArea=0&urgencia=1&validado=0&modo=Normal");
+                                        }
+                                        break;
                                         case "2": // va a la carga de otro protocolo con urgencia
-                                            Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=2", false); break;
+                                            Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=2", false);
+                                            break;
                                         case "0":
-                                            Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0", false); break;
+                                            Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0", false);
+                                            break;
                                     }
-                                }
-                                else
+                                } else
                                     Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0", false);
                                 //   }
                             }
                         }
                     }
-                }
-          else
-            {
+                } else {
                     Response.Redirect("ProtocoloMensaje.aspx?error=1");
-             
+
+                }
             }
-            }
-           
+
 
         }
 
-        private void ActualizarEstadoDerivacion(Protocolo oRegistro)
-        {
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        private void VerificacionEstadoLote(Protocolo oRegistro) {
+            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") {
+                //Casos viejos y tambien casos donde los analisis prodrian provenir de diferente lotes
+
+                if (Session["VariosLotes"] != null ) {
+                    if (((HashSet<string>)Session["VariosLotes"]).Count > 0) {
+                        //tiene al menos un lote
+                        HashSet<string> lotes = (HashSet<string>)Session["VariosLotes"];
+                        foreach (string item in lotes) {
+                            ActualizaEstadoLote(Convert.ToInt32(item), oRegistro);
+                        }
+                    }
+                } 
+            } else {
+                ActualizaEstadoLote(Convert.ToInt32(Request["idLote"]), oRegistro);
+            }
+               
+        }
+
+        private void ActualizaEstadoLote(int idLote, Protocolo oRegistro) {
+            try {
+                if (idLote != 0) {
+
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), idLote);
+                    lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
+
+                    if (lote.Estado == 2 || lote.Estado == 4) {
+                        if (lote.Estado == 2)  //Con iEstado=4 lo graba el id desde la pantalla DerivacionRecibirLote.aspx.cs
+                            lote.IdUsuarioRecepcion = oUser.IdUsuario;
+                       
+                        lote.Estado = 5;
+                    }
+
+                    //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
+                    if (!lote.HayDerivacionesPendientes()) {
+                        lote.Estado = 6;
+                    }
+
+                    lote.Save();
+                    lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), oUser.IdUsuario);
+                } 
+            } catch (Exception) {
+            }
+        }
+
+        private void ActualizarEstadoDerivacion(Protocolo oRegistro) {
+            SqlConnection conn = (SqlConnection) NHibernateHttpModule.CurrentSession.Connection;
 
             string query = @"update LAB_Derivacion
-set estado=3---recibido
-,idProtocoloDerivacion="+oRegistro.IdProtocolo.ToString()+@"
-from LAB_Derivacion D
-inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
-inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
-where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (" + Request["analisis"].ToString().Replace("|",",") + ")";
-           
+            set estado=3---recibido
+            ,idProtocoloDerivacion=" + oRegistro.IdProtocolo.ToString() + @"
+            from LAB_Derivacion D
+            inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
+            inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
+            where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (" + Request["analisis"].ToString().Replace("|", ",") + ")";
+
             SqlCommand cmd = new SqlCommand(query, conn);
 
             ///grabar auditoria de 
 
-           int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
+            int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
 
             //Se indica en el protocolo de Origen que fue recibido en el destino
             Business.Data.Laboratorio.Protocolo oPOrigen = new Business.Data.Laboratorio.Protocolo();
-            oPOrigen = (Business.Data.Laboratorio.Protocolo)oPOrigen.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(Request["numeroProtocolo"].ToString()));
-            if (oPOrigen != null)
-            {
+            oPOrigen = (Business.Data.Laboratorio.Protocolo) oPOrigen.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(Request["numeroProtocolo"].ToString()));
+            if (oPOrigen != null) {
                 oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "", oRegistro.Numero.ToString());
             }
 
-
+            
         }
 
-        private string getListaAreasCodigoBarras()
-        {
+        private string getListaAreasCodigoBarras() {
             string lista = "";
-            for (int i = 0; i < chkAreaCodigoBarra.Items.Count; i++)
-            {
-                if (chkAreaCodigoBarra.Items[i].Selected)
-                {
+            for (int i = 0; i < chkAreaCodigoBarra.Items.Count; i++) {
+                if (chkAreaCodigoBarra.Items[i].Selected) {
                     if (lista == "")
                         lista = chkAreaCodigoBarra.Items[i].Value;
                     else
@@ -1713,24 +1650,21 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             return lista;
         }
 
-      
 
-        private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas)
-        {
-           
+
+        private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas) {
+
             string[] tabla = s_listaAreas.Split(',');
 
 
-            for (int i = 0; i <= tabla.Length - 1; i++)
-            {
+            for (int i = 0; i <= tabla.Length - 1; i++) {
                 string s_area = tabla[i].ToUpper();
 
                 if (s_area == "-1")
                     oProt.GrabarAuditoriaProtocolo("Imprime Etiquetas General", int.Parse(Session["idUsuario"].ToString()));
-                else
-                {
+                else {
                     Area oArea = new Area();
-                    oArea = (Area)oArea.Get(typeof(Area), int.Parse(s_area));
+                    oArea = (Area) oArea.Get(typeof(Area), int.Parse(s_area));
                     string s_narea = oArea.Nombre;
                     if (oArea.Nombre.Length > 25)
                         s_narea = oArea.Nombre.Substring(0, 25);
@@ -1739,11 +1673,11 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
 
 
-                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                SqlConnection conn = (SqlConnection) NHibernateHttpModule.CurrentSession.Connection;
 
                 string query = @" INSERT INTO LAB_ProtocoloEtiqueta
                     (idProtocolo ,idEfector  ,[idArea]  ,[idItem]      ,[impresora],fechaRegistro )
-     VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString()+"," + s_area + ",0,'" + ddlImpresora2.SelectedItem.Text + "' , getdate()    )";
+     VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString() + "," + s_area + ",0,'" + ddlImpresora2.SelectedItem.Text + "' , getdate()    )";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
 
@@ -1906,32 +1840,26 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
 
 
-        private void ActualizarTurno(string p, Business.Data.Laboratorio.Protocolo oRegistro)
-        {
+        private void ActualizarTurno(string p, Business.Data.Laboratorio.Protocolo oRegistro) {
             Turno oTurno = new Turno();
-            oTurno = (Turno)oTurno.Get(typeof(Turno),int.Parse( p));
-            if (oTurno != null)
-            {
+            oTurno = (Turno) oTurno.Get(typeof(Turno), int.Parse(p));
+            if (oTurno != null) {
                 oTurno.IdProtocolo = oRegistro.IdProtocolo;
                 oTurno.Save();
             }
         }
 
-        private void ActualizarPeticion(string p, Protocolo oRegistro)
-        {
+        private void ActualizarPeticion(string p, Protocolo oRegistro) {
             Peticion oPeticion = new Peticion();
-            oPeticion = (Peticion)oPeticion.Get(typeof(Peticion), int.Parse(p));
-            if (oPeticion != null)
-            {
+            oPeticion = (Peticion) oPeticion.Get(typeof(Peticion), int.Parse(p));
+            if (oPeticion != null) {
                 oPeticion.IdProtocolo = oRegistro.IdProtocolo;
                 oPeticion.Save();
             }
         }
-        private bool Guardar(Business.Data.Laboratorio.Protocolo oRegistro)
-        {
+        private bool Guardar(Business.Data.Laboratorio.Protocolo oRegistro) {
             bool guardo = false;
-            if (IsTokenValid())
-            {
+            if (IsTokenValid()) {
                 Utility oUtil = new Utility();
                 TEST++;
                 //Actualiza los datos de los objetos : alta o modificacion .
@@ -1950,20 +1878,19 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                 oRegistro.IdEfector = oC.IdEfector;
                 SectorServicio oSector = new SectorServicio();
-                oSector = (SectorServicio)oSector.Get(typeof(SectorServicio), int.Parse(ddlSectorServicio.SelectedValue));
+                oSector = (SectorServicio) oSector.Get(typeof(SectorServicio), int.Parse(ddlSectorServicio.SelectedValue));
                 oRegistro.IdSector = oSector;
 
                 TipoServicio oServicio = new TipoServicio();
-                oServicio = (TipoServicio)oServicio.Get(typeof(TipoServicio), int.Parse(Session["idServicio"].ToString()));
+                oServicio = (TipoServicio) oServicio.Get(typeof(TipoServicio), int.Parse(Session["idServicio"].ToString()));
                 oRegistro.IdTipoServicio = oServicio;
 
                 oRegistro.Notificarresultado = chkNotificar.Checked;
 
-                if (Request["Operacion"].ToString() != "Modifica")
-                {
+                if (Request["Operacion"].ToString() != "Modifica") {
 
                     oRegistro.Numero = 0;
-                     //oRegistro.NumeroDiario = oRegistro.GenerarNumeroDiario(fecha.ToString("yyyyMMdd"));
+                    //oRegistro.NumeroDiario = oRegistro.GenerarNumeroDiario(fecha.ToString("yyyyMMdd"));
                     //oRegistro.PrefijoSector = oSector.Prefijo.Trim();
                     //oRegistro.NumeroSector = oRegistro.GenerarNumeroGrupo(oSector);
                     //oRegistro.NumeroTipoServicio = oRegistro.GenerarNumeroTipoServicio(oServicio);
@@ -1972,53 +1899,57 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 bool grabarincidenciafuc = false;
                 oRegistro.FechaInicioSintomas = DateTime.Parse("01/01/1900");
                 oRegistro.FechaUltimoContacto = DateTime.Parse("01/01/1900");
-                oRegistro.IdCaracter =int.Parse( ddlCaracter.SelectedValue);
+                oRegistro.IdCaracter = int.Parse(ddlCaracter.SelectedValue);
                 if (VerificaObligatoriedadFIS())
                 //if ((ddlCaracter.SelectedValue == "1") || (ddlCaracter.SelectedValue == "8") || (ddlCaracter.SelectedValue == "9")) //SOSPECHOSO O DETECTAR O REINFECCION
                 {
-                    if (chkSinFIS.Checked) grabarincidenciafis = true;
-                    else oRegistro.FechaInicioSintomas = DateTime.Parse(txtFechaFIS.Value);
-                                        
-                        
-                      
+                    if (chkSinFIS.Checked)
+                        grabarincidenciafis = true;
+                    else
+                        oRegistro.FechaInicioSintomas = DateTime.Parse(txtFechaFIS.Value);
+
+
+
                 }
                 if (ddlCaracter.SelectedValue == "4")  //CONTACTO
                 {
-                    if (chkSinFUC.Checked) grabarincidenciafuc = true;
-                    else oRegistro.FechaUltimoContacto = DateTime.Parse(txtFechaFUC.Value);
+                    if (chkSinFUC.Checked)
+                        grabarincidenciafuc = true;
+                    else
+                        oRegistro.FechaUltimoContacto = DateTime.Parse(txtFechaFUC.Value);
                     //GRABAR fUC
                 }
 
                 // si tiene datos graba igual
-                DateTime fechaFis; DateTime fechaFuc;
+                DateTime fechaFis;
+                DateTime fechaFuc;
 
                 if (DateTime.TryParse(txtFechaFIS.Value, out fechaFis))
-                
+
                     oRegistro.FechaInicioSintomas = fechaFis;
-                
+
 
                 if (DateTime.TryParse(txtFechaFUC.Value, out fechaFuc))
-                
+
                     oRegistro.FechaUltimoContacto = fechaFuc;
 
                 oRegistro.Fecha = DateTime.Parse(txtFecha.Value);
                 oRegistro.FechaOrden = DateTime.Parse(txtFechaOrden.Value);
-                oRegistro.FechaTomaMuestra= DateTime.Parse(txtFechaTomaMuestra.Value);
+                oRegistro.FechaTomaMuestra = DateTime.Parse(txtFechaTomaMuestra.Value);
                 oRegistro.FechaRetiro = DateTime.Parse("01/01/1900"); //DateTime.Parse(txtFechaEntrega.Value);
 
-                oRegistro.IdEfectorSolicitante = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
+                oRegistro.IdEfectorSolicitante = (Efector) oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
                 oRegistro.IdEspecialistaSolicitante = 0;
 
 
 
-                oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), int.Parse(lblIdPaciente.Text));
-                if (Request["Operacion"].ToString() == "Modifica")
-                {
+                oPaciente = (Paciente) oPaciente.Get(typeof(Paciente), int.Parse(lblIdPaciente.Text));
+                if (Request["Operacion"].ToString() == "Modifica") {
                     if (oRegistro.IdPaciente != oPaciente)
                         oRegistro.GrabarAuditoriaProtocolo("Cambia de Paciente", int.Parse(Session["idUsuario"].ToString()));
                 }
-                if (txtTelefono.Text!="")
-                { oPaciente.InformacionContacto = txtTelefono.Text;
+                if (txtTelefono.Text != "") {
+                    oPaciente.InformacionContacto = txtTelefono.Text;
                     oPaciente.FechaUltimaActualizacion = DateTime.Now;
                     oPaciente.Save();
                 }
@@ -2028,44 +1959,53 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
 
                 oRegistro.Edad = int.Parse(lblEdad.Text);
-               
-                    oRegistro.NumeroOrigen = txtNumeroOrigen.Text;
-                oRegistro.NumeroOrigen2 = txtNumeroOrigen2.Text.Replace("HISOP00","").Replace("HISOP0","").Replace("HISOP", "");
 
-                switch (lblUnidadEdad.Text.Trim())
-                {
-                    case "A": oRegistro.UnidadEdad = 0; break;
-                    case "M": oRegistro.UnidadEdad = 1; break;
-                    case "D": oRegistro.UnidadEdad = 2; break;
+                oRegistro.NumeroOrigen = txtNumeroOrigen.Text;
+                oRegistro.NumeroOrigen2 = txtNumeroOrigen2.Text.Replace("HISOP00", "").Replace("HISOP0", "").Replace("HISOP", "");
+
+                switch (lblUnidadEdad.Text.Trim()) {
+                    case "A":
+                        oRegistro.UnidadEdad = 0;
+                        break;
+                    case "M":
+                        oRegistro.UnidadEdad = 1;
+                        break;
+                    case "D":
+                        oRegistro.UnidadEdad = 2;
+                        break;
                 }
 
                 //oRegistro.Sexo = lblSexo.Text;
 
-                switch (oPaciente.IdSexo)
-                {
-                    case 1: oRegistro.Sexo = "I"; break;
-                    case 2: oRegistro.Sexo = "F"; break;
-                    case 3: oRegistro.Sexo = "M"; break;
+                switch (oPaciente.IdSexo) {
+                    case 1:
+                        oRegistro.Sexo = "I";
+                        break;
+                    case 2:
+                        oRegistro.Sexo = "F";
+                        break;
+                    case 3:
+                        oRegistro.Sexo = "M";
+                        break;
                 }
 
-               
+
                 oRegistro.Embarazada = "N";
                 oRegistro.Sala = txtSala.Text;
                 oRegistro.Cama = txtCama.Text;
 
 
-                 ObraSocial oObraSocial = new ObraSocial();
-                oRegistro.IdObraSocial =   (ObraSocial)oObraSocial.Get(typeof(ObraSocial), -1); 
-                
+                ObraSocial oObraSocial = new ObraSocial();
+                oRegistro.IdObraSocial = (ObraSocial) oObraSocial.Get(typeof(ObraSocial), -1);
+
                 oRegistro.NombreObraSocial = lblObraSocial.Text;
                 oRegistro.CodOs = int.Parse(CodOS.Value);
-                oRegistro.IdOrigen = (Origen)oOrigen.Get(typeof(Origen), int.Parse(this.ddlOrigen.SelectedValue));
-                oRegistro.IdPrioridad = (Prioridad)oPri.Get(typeof(Prioridad), int.Parse(this.ddlPrioridad.SelectedValue));
+                oRegistro.IdOrigen = (Origen) oOrigen.Get(typeof(Origen), int.Parse(this.ddlOrigen.SelectedValue));
+                oRegistro.IdPrioridad = (Prioridad) oPri.Get(typeof(Prioridad), int.Parse(this.ddlPrioridad.SelectedValue));
                 oRegistro.Observacion = txtObservacion.Text;
                 oRegistro.ObservacionResultado = "";
                 oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
-                if (Request["Operacion"].ToString() != "Modifica")
-                {
+                if (Request["Operacion"].ToString() != "Modifica") {
                     oRegistro.IdUsuarioRegistro = oUser; // (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
                     oRegistro.IpCarga = "";
@@ -2076,19 +2016,16 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 ///  ddlEspecialista.SelectedValue
                 string matricula = "";
                 string apellidoynombre = "";
-                if (ddlEspecialista.SelectedValue == "0")
-                {
+                if (ddlEspecialista.SelectedValue == "0") {
                     matricula = "0";
                     apellidoynombre = "No identificado";
-                }
-                else
-                {
+                } else {
                     string[] fila = ddlEspecialista.SelectedValue.Split('#');
                     matricula = fila[0].ToString();
 
                     apellidoynombre = fila[1].ToString();
                     string[] fila2 = apellidoynombre.Split('-');
-                    apellidoynombre= fila2[0].ToString().TrimEnd();
+                    apellidoynombre = fila2[0].ToString().TrimEnd();
                 }
                 oRegistro.Especialista = apellidoynombre; // ddlEspecialista.SelectedItem.Text;
                 oRegistro.MatriculaEspecialista = matricula; // ddlEspecialista.SelectedValue;
@@ -2096,13 +2033,14 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 oRegistro.Save();
                 oRegistro.ActualizarNumeroDesdeID();
 
-               
+
 
 
 
 
                 if (Request["Operacion"].ToString() != "Modifica") { if (Request["Operacion"].ToString() != "AltaPeticion") { if (Session["idUrgencia"] != null) { if (Session["idUrgencia"].ToString() == "0") AlmacenarSesion(oC); } } }
-                    if (Request["Operacion"].ToString() == "AltaDerivacion") AlmacenarSesion(oC);
+                if (Request["Operacion"].ToString() == "AltaDerivacion")
+                    AlmacenarSesion(oC);
 
                 //   if (Request["idSolicitudScreening"] != null) ActualizarSolicitudScreening(Request["idSolicitudScreening"].ToString(),oRegistro);
                 GuardarDiagnosticos(oRegistro);
@@ -2113,13 +2051,13 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     oRegistro.GeneraIncidenciaAutomatica(46, int.Parse(Session["idUsuario"].ToString()));
                 if (grabarincidenciafuc)
                     oRegistro.GeneraIncidenciaAutomatica(47, int.Parse(Session["idUsuario"].ToString()));
-            /*    if ((!grabarincidenciafis) && (!grabarincidenciafuc))
-                    oRegistro.BorrarIncidenciasFISyFUC(int.Parse(Session["idUsuario"].ToString()));
-                    */
-               
+                /*    if ((!grabarincidenciafis) && (!grabarincidenciafuc))
+                        oRegistro.BorrarIncidenciasFISyFUC(int.Parse(Session["idUsuario"].ToString()));
+                        */
+
 
                 //oRegistro.VerificarExisteNumeroAsignado();
-                
+
                 oRegistro.GrabarAuditoriaProtocolo(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
 
                 ///cambair estado
@@ -2140,21 +2078,16 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
               */
 
-                if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
-                {
+                if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()))) {
                     oRegistro.Estado = 2;  //validado total (cerrado);
-                                            //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                           //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
                     if (!oRegistro.Notificarresultado) // no se notifica a sips
                         oRegistro.Estado = 3; ///Accceso Restringido;
-                }
-                else
-                {
-                    if (oRegistro.EnProceso())
-                    {
+                } else {
+                    if (oRegistro.EnProceso()) {
                         oRegistro.Estado = 1;//en proceso
-                                              // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                    }
-                    else
+                                             // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                    } else
                         oRegistro.Estado = 0;
 
                 }
@@ -2198,9 +2131,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 //    //}
                 //}
                 /////////////////fin try /////////////////
-            }
-            else
-            { //doble submit
+            } else { //doble submit
                 guardo = false;
             }
 
@@ -2214,8 +2145,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
         //    oRegistro.IdProtocolo = oProtocolo.IdProtocolo;
         //    oRegistro.Save();
         //}
-        private void PreventingDoubleSubmit(Button button)
-        {
+        private void PreventingDoubleSubmit(Button button) {
             StringBuilder sb = new StringBuilder();
             sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
             sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
@@ -2229,12 +2159,11 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             string submit_Button_onclick_js = sb.ToString();
             button.Attributes.Add("onclick", submit_Button_onclick_js);
         }
-        private void AlmacenarSesion(Configuracion oC)
-        {
-            
-                
+        private void AlmacenarSesion(Configuracion oC) {
+
+
             string s_valores = "chkRecordarPractica:" + chkRecordarPractica.Checked;
-            
+
             //if (chkRecordarConfiguracion.Checked)
             //{
             //    s_valores += "@chkImprimir:" + chkImprimir.Checked;
@@ -2249,50 +2178,47 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
             if (oC.RecordarOrigenProtocolo)
                 if (Request["Operacion"].ToString() != "Modifica")
-                    if (Request["Operacion"].ToString() != "AltaTurno")
-                    {
+                    if (Request["Operacion"].ToString() != "AltaTurno") {
                         s_valores += "@ddlOrigen:" + ddlOrigen.SelectedValue;
                         s_valores += "@ddlEfector:" + ddlEfector.SelectedValue;
-                        if (ddlMuestra.SelectedValue!="0") s_valores += "@ddlMuestra:" + ddlMuestra.SelectedValue;
+                        if (ddlMuestra.SelectedValue != "0")
+                            s_valores += "@ddlMuestra:" + ddlMuestra.SelectedValue;
 
                     }
             if (oC.RecordarSectorProtocolo)
                 if (Request["Operacion"].ToString() != "Modifica")
-                    if (Request["Operacion"].ToString() != "AltaTurno")
-                    {
-                        s_valores += "@ddlSectorServicio:" + ddlSectorServicio.SelectedValue;            
-                    }                                                                                      
+                    if (Request["Operacion"].ToString() != "AltaTurno") {
+                        s_valores += "@ddlSectorServicio:" + ddlSectorServicio.SelectedValue;
+                    }
 
-               
+
             Session["ProtocoloLaboratorio"] = s_valores;
-        
+
         }
 
-        private void GuardarDiagnosticos(Business.Data.Laboratorio.Protocolo oRegistro)
-        {
-            string embarazada = ""; string accion = "Graba";
+        private void GuardarDiagnosticos(Business.Data.Laboratorio.Protocolo oRegistro) {
+            string embarazada = "";
+            string accion = "Graba";
             //   dtDiagnosticos = (System.Data.DataTable)(Session["Tabla2"]);
             ///Eliminar los detalles y volverlos a crear
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloDiagnostico));
             crit.Add(Expression.Eq("IdProtocolo", oRegistro));
             IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
-              
-                foreach (ProtocoloDiagnostico oDetalle in detalle)
-                {
-                   /* if (oC.NomencladorDiagnostico == 0)
-                    {
-                        Cie10 oD = new Cie10(oDetalle.IdDiagnostico);
-                        oRegistro.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", oD.Nombre);
-                    }
-                    else
-                    {
-                        DiagnosticoP oD = new DiagnosticoP(oDetalle.IdDiagnostico);
+            if (detalle.Count > 0) {
 
-                        oRegistro.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", oD.Nombre);
-                    }*/
+                foreach (ProtocoloDiagnostico oDetalle in detalle) {
+                    /* if (oC.NomencladorDiagnostico == 0)
+                     {
+                         Cie10 oD = new Cie10(oDetalle.IdDiagnostico);
+                         oRegistro.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", oD.Nombre);
+                     }
+                     else
+                     {
+                         DiagnosticoP oD = new DiagnosticoP(oDetalle.IdDiagnostico);
+
+                         oRegistro.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", oD.Nombre);
+                     }*/
 
                     oDetalle.Delete();
                     accion = "Cambia";
@@ -2300,32 +2226,29 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             }
             string listaDx = "";
             ///Busca en la lista de diagnosticos buscados
-            if (lstDiagnosticosFinal.Items.Count > 0)
-            {             
+            if (lstDiagnosticosFinal.Items.Count > 0) {
                 /////Crea nuevamente los detalles.
-                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
-                {
-                   
+                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++) {
+
                     ProtocoloDiagnostico oDetalle = new ProtocoloDiagnostico();
                     oDetalle.IdProtocolo = oRegistro;
                     oDetalle.IdEfector = oRegistro.IdEfector;
                     oDetalle.IdDiagnostico = int.Parse(lstDiagnosticosFinal.Items[i].Value);
-                     oDetalle.Save();
+                    oDetalle.Save();
                     string s_diag = lstDiagnosticosFinal.Items[i].Text;
-                    oDetalle.IdProtocolo.GrabarAuditoriaDetalleProtocolo( accion, int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", s_diag);
+                    oDetalle.IdProtocolo.GrabarAuditoriaDetalleProtocolo(accion, int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", s_diag);
                     embarazada = oDetalle.EsEmbarazada();
-                  
 
-                 
-                    if (listaDx=="")
-                    listaDx = lstDiagnosticosFinal.Items[i].Value;
+
+
+                    if (listaDx == "")
+                        listaDx = lstDiagnosticosFinal.Items[i].Value;
                     else
-                        listaDx +=";"+ lstDiagnosticosFinal.Items[i].Value;
+                        listaDx += ";" + lstDiagnosticosFinal.Items[i].Value;
                 }
             }
-           
-            if (embarazada == "E")
-            {
+
+            if (embarazada == "E") {
                 oRegistro.Embarazada = "S";
                 oRegistro.Save();
             }
@@ -2333,54 +2256,51 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         }
 
-        
 
-        private void GuardarDetalle(Business.Data.Laboratorio.Protocolo oRegistro)
-        {         
+
+        private void GuardarDetalle(Business.Data.Laboratorio.Protocolo oRegistro) {
             int dias_espera = 0;
             string[] tabla = TxtDatos.Value.Split('@');
             ISession m_session = NHibernateHttpModule.CurrentSession;
 
             string recordar_practicas = "";
 
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
+            for (int i = 0; i < tabla.Length - 1; i++) {
                 string[] fila = tabla[i].Split('#');
 
 
                 string codigo = fila[1].ToString();
 
-                
+
                 if (recordar_practicas == "")
-                    recordar_practicas = codigo +"#Si#False";
+                    recordar_practicas = codigo + "#Si#False";
                 else
                     recordar_practicas += ";" + codigo + "#Si#False";
 
-                if (codigo != "")
-                {
-                    Item oItem = new Item();                                        
-                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo,"Baja",false);
-                    
-                  string trajomuestra = fila[3].ToString();
+                if (codigo != "") {
+                    Item oItem = new Item();
+                    oItem = (Item) oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+
+                    string trajomuestra = fila[3].ToString();
 
                     ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
                     crit.Add(Expression.Eq("IdProtocolo", oRegistro));
                     crit.Add(Expression.Eq("IdItem", oItem));
                     IList listadetalle = crit.List();
-                    if (listadetalle.Count == 0)
-                    { //// si no está lo agrego --- si ya está no hago nada
+                    if (listadetalle.Count == 0) { //// si no está lo agrego --- si ya está no hago nada
 
 
                         DetalleProtocolo oDetalle = new DetalleProtocolo();
                         //Item oItem = new Item();
                         oDetalle.IdProtocolo = oRegistro;
                         oDetalle.IdEfector = oRegistro.IdEfector;
-                         
-                       
+
+
 
                         oDetalle.IdItem = oItem; // (Item)oItem.Get(typeof(Item), "Codigo", codigo);
 
-                        if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
+                        if (dias_espera < oDetalle.IdItem.Duracion)
+                            dias_espera = oDetalle.IdItem.Duracion;
 
                         /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
                         if (a.Checked)
@@ -2411,11 +2331,9 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                             oRegistro.IdTipoServicio = oItem.IdArea.IdTipoServicio;
                             oRegistro.Save();
                         }
-                    }
-                    else  //si ya esta actualizo si trajo muestra o no
-                    {
-                        foreach (DetalleProtocolo oDetalle in listadetalle)
-                        {
+                    } else  //si ya esta actualizo si trajo muestra o no
+                      {
+                        foreach (DetalleProtocolo oDetalle in listadetalle) {
                             if (trajomuestra == "true")
                                 oDetalle.TrajoMuestra = "No";
                             else
@@ -2428,40 +2346,34 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
             }
 
-            if (Request["Operacion"].ToString() != "Modifica")
-            {
+            if (Request["Operacion"].ToString() != "Modifica") {
                 if (chkRecordarPractica.Checked)
                     Session["ProtocoloLaboratorio"] += "@prácticas:" + recordar_practicas;
             }
 
 
 
-            if (Request["Operacion"].ToString() != "Alta")
-            {
+            if (Request["Operacion"].ToString() != "Alta") {
                 // Modificacion de protocolo en proceso: Elimina los detalles que no se ingresaron por pantalla         
                 //  ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria critBorrado = m_session.CreateCriteria(typeof(DetalleProtocolo));
                 critBorrado.Add(Expression.Eq("IdProtocolo", oRegistro));
                 IList detalleaBorrar = critBorrado.List();
-                if (detalleaBorrar.Count > 0)
-                {
-                    foreach (DetalleProtocolo oDetalle in detalleaBorrar)
-                    {
+                if (detalleaBorrar.Count > 0) {
+                    foreach (DetalleProtocolo oDetalle in detalleaBorrar) {
                         bool noesta = true;
                         //oDetalle.Delete();                     
                         //string[] tablaAux = TxtDatos.Value.Split('@');
-                        for (int i = 0; i < tabla.Length - 1; i++)
-                        {
+                        for (int i = 0; i < tabla.Length - 1; i++) {
                             string[] fila = tabla[i].Split('#');
                             string codigo = fila[1].ToString();
-                            if (codigo != "")
-                            {
-                                if (codigo == oDetalle.IdItem.Codigo) noesta = false;
+                            if (codigo != "") {
+                                if (codigo == oDetalle.IdItem.Codigo)
+                                    noesta = false;
 
                             }
                         }
-                        if (noesta)
-                        {
+                        if (noesta) {
                             oDetalle.Delete();
                             oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()));
                         }
@@ -2469,8 +2381,8 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
             }
 
-         //   Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-        
+            //   Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+
             //if (oCon.TipoCalculoDiasRetiro == 0)
 
             if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
@@ -2489,10 +2401,8 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         }
 
-        private void GuardarDerivacion(DetalleProtocolo oDetalle)
-        {
-            if (oDetalle.IdItem.esDerivado(oC.IdEfector))
-            {
+        private void GuardarDerivacion(DetalleProtocolo oDetalle) {
+            if (oDetalle.IdItem.esDerivado(oC.IdEfector)) {
                 Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
                 oRegistro.IdDetalleProtocolo = oDetalle;
                 oRegistro.Estado = 0;
@@ -2513,32 +2423,28 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         }
 
-        private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
-        {                           
+        private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro) {
             ///Eliminar los detalles para volverlos a crear            
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
             crit.Add(Expression.Eq("IdProtocolo", oRegistro));
             IList detalle = crit.List();
-                         
-                foreach (DetalleProtocolo oDetalle in detalle)
-                {
-                    oDetalle.Delete();
-                }                
-            
 
-       
+            foreach (DetalleProtocolo oDetalle in detalle) {
+                oDetalle.Delete();
+            }
+
+
+
             int dias_espera = 0;
             string[] tabla = TxtDatos.Value.Split('@');
 
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
+            for (int i = 0; i < tabla.Length - 1; i++) {
                 string[] fila = tabla[i].Split('#');
 
 
                 string codigo = fila[1].ToString();
-                if (codigo!="")
-                {
+                if (codigo != "") {
                     DetalleProtocolo oDetalle = new DetalleProtocolo();
                     Item oItem = new Item();
                     oDetalle.IdProtocolo = oRegistro;
@@ -2546,16 +2452,17 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                     string trajomuestra = fila[3].ToString();
 
-                    oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
+                    oDetalle.IdItem = (Item) oItem.Get(typeof(Item), "Codigo", codigo);
 
-                    if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
+                    if (dias_espera < oDetalle.IdItem.Duracion)
+                        dias_espera = oDetalle.IdItem.Duracion;
 
                     /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
                     if (a.Checked)
                         oDetalle.TrajoMuestra = "Si";
                     else*/
 
-                    if (trajomuestra=="true")
+                    if (trajomuestra == "true")
                         oDetalle.TrajoMuestra = "No";
                     else
                         oDetalle.TrajoMuestra = "Si";
@@ -2572,117 +2479,106 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     GuardarDetallePractica(oDetalle);
                 }
             }
-         
 
-         //   Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-       //     DateTime fechaentrega;
+
+            //   Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            //     DateTime fechaentrega;
             //if (oCon.TipoCalculoDiasRetiro == 0)
 
             if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
                 if (oC.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera)  );
+                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
                 else   // calcula con los días predeterminados de espera
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oC.DiasRetiro)  );                                                       
+                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oC.DiasRetiro));
             else
-                oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);  
-            
-            
- 
-            
+                oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
+
+
+
+
             oRegistro.Save();
-          
-          
+
+
         }
 
-       
 
-        private void GuardarDetallePractica(DetalleProtocolo oDet)
-        {
 
-               
-            if (VerificarSiEsDerivable(oDet )) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+        private void GuardarDetallePractica(DetalleProtocolo oDet) {
+
+
+            if (VerificarSiEsDerivable(oDet)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
-                 oDet.IdSubItem = oDet.IdItem;
-                            oDet.Save();
+                oDet.IdSubItem = oDet.IdItem;
+                oDet.Save();
                 oDet.GuardarValorReferencia();
 
-//                GuardarValorReferencia(oDet);
-            }
-            else
-            {
-               ISession m_session = NHibernateHttpModule.CurrentSession;
+                //                GuardarValorReferencia(oDet);
+            } else {
+                ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
                 crit.Add(Expression.Eq("IdItemPractica", oDet.IdItem));
-                crit.Add(Expression.Eq("IdEfector",oUser.IdEfector));
+                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
 
                 IList detalle = crit.List();
-                if (detalle.Count > 0)
-                {
+                if (detalle.Count > 0) {
                     int i = 1;
-                    foreach (PracticaDeterminacion oSubitem in detalle)
-                    {
-                        if (oSubitem.IdItemDeterminacion != 0)
-                        { 
+                    foreach (PracticaDeterminacion oSubitem in detalle) {
+                        if (oSubitem.IdItemDeterminacion != 0) {
                             Item oSItem = new Item();
-                            oSItem=(Item)oSItem.Get(typeof(Item), oSubitem.IdItemDeterminacion);
-                            if (i == 1)
-                            {
+                            oSItem = (Item) oSItem.Get(typeof(Item), oSubitem.IdItemDeterminacion);
+                            if (i == 1) {
                                 oDet.IdSubItem = oSItem;
-                                oDet.Save();                                                   
-                            }
-                            else
-                            {
-                                 DetalleProtocolo oDetalle = new DetalleProtocolo();                           
-                                 oDetalle.IdProtocolo =oDet.IdProtocolo;
-                                 oDetalle.IdEfector = oDet.IdEfector;
-                                 oDetalle.IdItem = oDet.IdItem;
+                                oDet.Save();
+                            } else {
+                                DetalleProtocolo oDetalle = new DetalleProtocolo();
+                                oDetalle.IdProtocolo = oDet.IdProtocolo;
+                                oDetalle.IdEfector = oDet.IdEfector;
+                                oDetalle.IdItem = oDet.IdItem;
                                 oDetalle.IdSubItem = oSItem;
-                                 oDetalle.TrajoMuestra = oDet.TrajoMuestra;
+                                oDetalle.TrajoMuestra = oDet.TrajoMuestra;
                                 oDetalle.Informable = oSItem.GetInformableEfector(oUser.IdEfector);
 
 
                                 oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                                 oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                                 oDetalle.FechaControl = DateTime.Parse("01/01/1900");
-                                 oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
-                                 oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
-                                 oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
-                                 oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
+                                oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                oDetalle.FechaControl = DateTime.Parse("01/01/1900");
+                                oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
+                                oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
+                                oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
+                                oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                                 oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-                                
-                              
+
+
                                 oDetalle.Save();
                                 oDetalle.GuardarSinInsumo();
                                 oDetalle.GuardarValorReferencia();
                                 //GuardarValorReferencia(oDetalle);
-                                 
+
                             }
-                            i = i + 1;                        
+                            i = i + 1;
                         }//fin if
                     }//fin foreach
-                }         
-                else
-                {
+                } else {
                     oDet.IdSubItem = oDet.IdItem;
                     oDet.Informable = oDet.IdSubItem.GetInformableEfector(oUser.IdEfector);
 
-               
+
                     oDet.Save();
-                     oDet.GuardarSinInsumo();
+                    oDet.GuardarSinInsumo();
                     oDet.GuardarValorReferencia();
                     //GuardarValorReferencia(oDet);
                 }//fin   if (detalle.Count > 0)  
             }
 
-         
-            
+
+
         }
 
         //private void GuardarValorReferencia(DetalleProtocolo oDetalle)
         //{
-           
-          
-       
+
+
+
 
         //string s_unidadMedida = ""; //string s_metodo = "";
         //    //Item oItem = new Item();
@@ -2692,7 +2588,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
         //        UnidadMedida oUnidad = new UnidadMedida();
         //        oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), oDetalle.IdSubItem.IdUnidadMedida);
         //        if (oUnidad != null) s_unidadMedida = oUnidad.Nombre;
-               
+
         //    }
 
         //    ///Calculo de valor de referencia al momento de generar el registro
@@ -2715,7 +2611,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
         //                }
         //                break;
         //        }
-               
+
         //    }
         //    oDetalle.UnidadMedida = s_unidadMedida;
         //    oDetalle.Metodo = m_metodo;
@@ -2724,178 +2620,163 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
         //    //Fin calculo de valor de refrencia y metodo
         //}
 
-        private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
-        {
-            bool ok=false;
+        private bool VerificarSiEsDerivable(DetalleProtocolo oDet) {
+            bool ok = false;
             /// buscar idefectorderivacion desde lab_itemefector
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
             critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
             critItemEfector.Add(Expression.Eq("IdEfector", oUser.IdEfector));
             IList detalle1 = critItemEfector.List();
-            if (detalle1.Count > 0)
-            {
-                foreach (ItemEfector oitemEfector in detalle1)
-                {
-                    if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
-                    {
-                        ok = true; break;
+            if (detalle1.Count > 0) {
+                foreach (ItemEfector oitemEfector in detalle1) {
+                    if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector) {
+                        ok = true;
+                        break;
                     }
                 }
-            }
-            else
+            } else
                 ok = false;
 
             return ok;
 
         }
 
-        protected void ddlSexo_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        protected void ddlSexo_SelectedIndexChanged(object sender, EventArgs e) {
             //Si el sexo es femenino se habilita la selecció de Embarazada
-           // HabilitarEmbarazada();
+            // HabilitarEmbarazada();
         }
 
-  
 
-        protected void txtCodigo_TextChanged(object sender, EventArgs e)
-        {
-           
+
+        protected void txtCodigo_TextChanged(object sender, EventArgs e) {
+
         }
 
-        protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e) {
             ///////Con la selección del item se muestra el codigo
-            if (ddlItem.SelectedValue != "0")
-            {
+            if (ddlItem.SelectedValue != "0") {
                 Item oItem = new Item();
-                oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-                if (oItem!=null)
-                txtCodigo.Text = oItem.Codigo;
-                
-            }
-            else
+                oItem = (Item) oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
+                if (oItem != null)
+                    txtCodigo.Text = oItem.Codigo;
+
+            } else
                 txtCodigo.Text = "";
 
             txtCodigo.UpdateAfterCallBack = true;
-            
+
 
         }
 
 
 
-        protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                ImageButton CmdModificar = (ImageButton)e.Row.Cells[1].Controls[1];
+        protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e) {
+            if (e.Row.RowType == DataControlRowType.DataRow) {
+                ImageButton CmdModificar = (ImageButton) e.Row.Cells[1].Controls[1];
                 CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdModificar.CommandName = "Modificar";
                 CmdModificar.ToolTip = "Modificar";
             }
         }
 
-      
 
-        protected void btnAgregarDiagnostico_Click(object sender, EventArgs e)
-        {
-          
+
+        protected void btnAgregarDiagnostico_Click(object sender, EventArgs e) {
+
 
             AgregarDiagnostico();
         }
 
-        private void AgregarDiagnostico()
-        {
-            lblMensajeDiagnostico.Visible = false; 
-            if (lstDiagnosticos.SelectedValue != "")
-            {
+        private void AgregarDiagnostico() {
+            lblMensajeDiagnostico.Visible = false;
+            if (lstDiagnosticos.SelectedValue != "") {
                 bool agrego = true;
                 /////Verifica si ya fue agregado el diagnostico
-                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
-                {
+                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++) {
 
-                    if (lstDiagnosticosFinal.Items[i].Value == lstDiagnosticos.SelectedItem.Value)
-                    {
-                        agrego = false; break;
+                    if (lstDiagnosticosFinal.Items[i].Value == lstDiagnosticos.SelectedItem.Value) {
+                        agrego = false;
+                        break;
                     }
                 }
 
 
-                if (agrego)
-                {
+                if (agrego) {
                     lstDiagnosticosFinal.Items.Add(lstDiagnosticos.SelectedItem);
                     lstDiagnosticosFinal.UpdateAfterCallBack = true;
-                }
-                else
-                {
+                } else {
                     lblMensajeDiagnostico.Visible = true;
                     lblMensajeDiagnostico.Text = "Alerta: Diagnostico ya ingresado para el paciente.";
-                  
+
                 }
             }
             lblMensajeDiagnostico.UpdateAfterCallBack = true;
         }
 
 
-        private void SacarDiagnostico()
-        {
-            if (lstDiagnosticosFinal.SelectedValue != "")
-            {
+        private void SacarDiagnostico() {
+            if (lstDiagnosticosFinal.SelectedValue != "") {
                 lstDiagnosticosFinal.Items.Remove(lstDiagnosticosFinal.SelectedItem);
                 lstDiagnosticosFinal.UpdateAfterCallBack = true;
             }
         }
 
 
-       
 
-        protected void txtCodigo_TextChanged1(object sender, EventArgs e)
-        {
-         
+
+        protected void txtCodigo_TextChanged1(object sender, EventArgs e) {
+
         }
 
-        protected void btnCancelar_Click(object sender, EventArgs e)
-        {
-            if (Request["Operacion"].ToString() == "Modifica")
+        protected void btnCancelar_Click(object sender, EventArgs e) {
+            if (Request["Operacion"].ToString() == "Modifica") 
             {
                 if (Request["DesdeUrgencia"] != null)
                     Response.Redirect("../Urgencia/UrgenciaList.aspx");
-                else
-                {
-                    switch (Request["Desde"].ToString())
-                    {
-                        case "Default": Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString(), false); break;
-                        case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Lista"); break;
-                        case "Control": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control"); break;
-                        case "Urgencia": Response.Redirect("../Urgencia/UrgenciaList.aspx",false); break;
-                        case "Derivacion": Response.Redirect("Derivacion.aspx?idServicio="+Session["idServicio"].ToString(), false); break;
+                else {
+                    switch (Request["Desde"].ToString()) {
+                        case "Default":
+                            Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString(), false);
+                            break;
+                        case "ProtocoloList":
+                            Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Lista");
+                            break;
+                        case "Control":
+                            Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control");
+                            break;
+                        case "Urgencia":
+                            Response.Redirect("../Urgencia/UrgenciaList.aspx", false);
+                            break;
+                        case "Derivacion":
+                            Response.Redirect("Derivacion.aspx?idServicio=" + Session["idServicio"].ToString(), false);
+                            break;
                     }
-                    
-                    
+
+
                     //if (Request["Control"] != null)
                     //    Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control");
                     //else
                     //    Response.Redirect("ProtocoloList.aspx?idServicio="+ Session["idServicio"].ToString()+"&Tipo=Lista");
                 }
-            }
-            else
-            {
+            } 
+            else {
                 if (Request["Operacion"].ToString() == "AltaTurno")
                     Response.Redirect("../turnos/Turnolist.aspx", false);
-                else
-                {
+                else {
                     if (Request["Operacion"].ToString() == "AltaDerivacion")
-                        Response.Redirect("Derivacion.aspx?idEfector=" + ddlEfector.SelectedValue+ "&idServicio=" + Session["idServicio"].ToString(), false);
-                    else
-                    {
-                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")                            
-                            Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
+                        Response.Redirect("Derivacion.aspx?idEfector=" + ddlEfector.SelectedValue + "&idServicio=" + Session["idServicio"].ToString(), false);
+                    else {
+                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" || (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote"))
+                            if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                         else
-                        {
+                                Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString());
+
+                        else {
                             if (Request["Operacion"].ToString() == "AltaPeticion")
                                 Response.Redirect("../PeticionElectronica/PeticionList.aspx", false);
-                            else
-                            {
+                            else {
                                 if (Session["idUrgencia"].ToString() != "0")
                                     Response.Redirect("Default2.aspx?idServicio=1&idUrgencia=" + Session["idUrgencia"].ToString(), false);
                                 else
@@ -2906,38 +2787,34 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
             }
         }
-      
 
-    
 
-        protected void btnAgregarRutina_Click(object sender, EventArgs e)
-        {
-           // if (ddlRutina.SelectedValue != "0")
-               // AgregarRutina();           
-           
+
+
+        protected void btnAgregarRutina_Click(object sender, EventArgs e) {
+            // if (ddlRutina.SelectedValue != "0")
+            // AgregarRutina();           
+
         }
 
-        private void AgregarRutina()
-        {
+        private void AgregarRutina() {
             Rutina oRutina = new Rutina();
-            oRutina = (Rutina)oRutina.Get(typeof(Rutina), int.Parse(ddlRutina.SelectedValue));
+            oRutina = (Rutina) oRutina.Get(typeof(Rutina), int.Parse(ddlRutina.SelectedValue));
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleRutina));
             crit.Add(Expression.Eq("IdRutina", oRutina));
             IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
-                string codigos="";
-                foreach (DetalleRutina oDetalle in detalle)
-                {
+            if (detalle.Count > 0) {
+                string codigos = "";
+                foreach (DetalleRutina oDetalle in detalle) {
 
                     if (codigos == "")
                         codigos = oDetalle.IdItem.Codigo;
                     else
                         codigos += ";" + oDetalle.IdItem.Codigo;
 
-                  
+
 
                     //ddlRutina.SelectedValue = "0";
                     //ddlRutina.UpdateAfterCallBack = true;
@@ -2951,92 +2828,91 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         }
 
-       
 
-        protected void ddlServicio_SelectedIndexChanged1(object sender, EventArgs e)
-        {
+
+        protected void ddlServicio_SelectedIndexChanged1(object sender, EventArgs e) {
             CargarItems();
             TxtDatos.Value = "";
 
         }
 
-        protected void ddlRutina_SelectedIndexChanged(object sender, EventArgs e)
-        {
-             if (ddlRutina.SelectedValue != "0")
-             AgregarRutina();
+        protected void ddlRutina_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ddlRutina.SelectedValue != "0")
+                AgregarRutina();
         }
 
-      
 
-        protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e)
-        {
+
+        protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e) {
 
             SelectedEfector();
         }
 
 
-        protected void ddlMuestra_SelectedIndexChanged(object sender, EventArgs e)
-        {
-         
-                mostrarCodigoMuestra();
-          
+        protected void ddlMuestra_SelectedIndexChanged(object sender, EventArgs e) {
+
+            mostrarCodigoMuestra();
+
         }
 
-        private void mostrarCodigoMuestra()
-        {
-            if (ddlMuestra.SelectedValue != "0")
-            {
+        private void mostrarCodigoMuestra() {
+            if (ddlMuestra.SelectedValue != "0") {
                 Muestra oMuestra = new Muestra();
-                oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), int.Parse(ddlMuestra.SelectedValue));
-                if (oMuestra != null) txtCodigoMuestra.Text = oMuestra.Codigo;
+                oMuestra = (Muestra) oMuestra.Get(typeof(Muestra), int.Parse(ddlMuestra.SelectedValue));
+                if (oMuestra != null)
+                    txtCodigoMuestra.Text = oMuestra.Codigo;
                 txtCodigoMuestra.UpdateAfterCallBack = true;
             }
         }
 
-        private void SelectedEfector()
-        {
-         //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-            if (ddlEfector.SelectedValue != oC.IdEfector.IdEfector.ToString())
-            {
+        private void SelectedEfector() {
+            //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+            if (ddlEfector.SelectedValue != oC.IdEfector.IdEfector.ToString()) {
                 //CargarSolicitantesExternos("");
 
-                try { 
-                Efector oEfectorExterno = new Efector();
-                oEfectorExterno = (Efector)oEfectorExterno.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
+                try {
+                    Efector oEfectorExterno = new Efector();
+                    oEfectorExterno = (Efector) oEfectorExterno.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
                     if (oEfectorExterno.IdTipoEfector == 2) // es privado
                     {
                         if (lblObraSocial.Text == "-") // es temporal
                         {
                             lblAlertaObraSocial.Text = "El efector derivante es privado verifique Financiador u Obra Social.";
-                            lblAlertaObraSocial.Visible = true;                       
+                            lblAlertaObraSocial.Visible = true;
 
                         }
+                    } else
+                        lblAlertaObraSocial.Visible = false;
+
+                    switch (oEfectorExterno.IdZona.IdZona) {
+                        case 1: // subse
+                            ddlOrigen.SelectedValue = "5";
+                            break;
+                        case 2: // zona I
+                            ddlOrigen.SelectedValue = "6";
+                            break;
+                        case 3: // zona II
+                            ddlOrigen.SelectedValue = "8";
+                            break; //7
+                        case 5: // zona III
+                            ddlOrigen.SelectedValue = "9";
+                            break;
+                        case 7: // zona IV
+                            ddlOrigen.SelectedValue = "10";
+                            break;
+                        case 8: // zona v
+                            ddlOrigen.SelectedValue = "11";
+                            break;
+                        case 9: // zona metro
+                            ddlOrigen.SelectedValue = "5";
+                            break;
+                        case 10: // rio negro
+                            ddlOrigen.SelectedValue = "12";
+                            break;
+
                     }
-                    else lblAlertaObraSocial.Visible = false;
 
-                switch (oEfectorExterno.IdZona.IdZona)
-                {
-                    case 1: // subse
-                        ddlOrigen.SelectedValue = "5"; break;
-                    case 2: // zona I
-                        ddlOrigen.SelectedValue = "6"; break;
-                    case 3: // zona II
-                        ddlOrigen.SelectedValue = "8"; break; //7
-                    case 5: // zona III
-                        ddlOrigen.SelectedValue = "9"; break;
-                    case 7: // zona IV
-                        ddlOrigen.SelectedValue = "10"; break;
-                    case 8: // zona v
-                        ddlOrigen.SelectedValue = "11"; break;
-                    case 9: // zona metro
-                        ddlOrigen.SelectedValue = "5"; break;
-                    case 10: // rio negro
-                        ddlOrigen.SelectedValue = "12"; break;
-
-                }
-
-                }
-                catch {
+                } catch {
                     ddlOrigen.SelectedValue = "0";
                 }
                 //btnGuardarSolicitante.Visible = true;
@@ -3048,10 +2924,8 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                 ddlOrigen.UpdateAfterCallBack = true;
 
-            }
-            else
-            {
-                ddlOrigen.SelectedValue = "0"; 
+            } else {
+                ddlOrigen.SelectedValue = "0";
                 ddlOrigen.UpdateAfterCallBack = true;
 
                 //btnGuardarSolicitante.Visible = false;
@@ -3130,24 +3004,20 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
         //    txtNombreSolicitante.Text = "";
         //}
 
-        protected void gvLista_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        protected void gvLista_SelectedIndexChanged(object sender, EventArgs e) {
 
         }
 
-        protected void txtCodigoDiagnostico_TextChanged(object sender, EventArgs e)
-        {
-           
+        protected void txtCodigoDiagnostico_TextChanged(object sender, EventArgs e) {
+
             //BuscarCodigoDiagnostico();
-             
+
         }
 
 
-        private void BuscarCodigoDiagnostico()
-        {
+        private void BuscarCodigoDiagnostico() {
             lstDiagnosticos.Items.Clear();
-            if (txtCodigoDiagnostico.Text != "")
-            {
+            if (txtCodigoDiagnostico.Text != "") {
 
 
 
@@ -3161,37 +3031,33 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
                     adapter.Fill(Ds);
                     lstDiagnosticos.Items.Clear();
-                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
-                    {
+                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++) {
 
                         ListItem oDia = new ListItem();
                         oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
                         oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
                         lstDiagnosticos.Items.Add(oDia);
 
- 
+
                     }
 
 
-                     
-                       
 
-                     
-                    
-                }
-                else /// diagnostico propio
+
+
+
+
+                } else /// diagnostico propio
                 {
                     DiagnosticoP oDiagnostico = new DiagnosticoP();
-                    oDiagnostico = (DiagnosticoP)oDiagnostico.Get(typeof(DiagnosticoP), "Codigo", txtCodigoDiagnostico.Text);
-                    if (oDiagnostico != null)
-                    {
+                    oDiagnostico = (DiagnosticoP) oDiagnostico.Get(typeof(DiagnosticoP), "Codigo", txtCodigoDiagnostico.Text);
+                    if (oDiagnostico != null) {
                         ListItem oDia = new ListItem();
                         oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                         oDia.Value = oDiagnostico.IdDiagnostico.ToString();
                         lstDiagnosticos.Items.Add(oDia);
 
-                    }
-                    else
+                    } else
                         lstDiagnosticos.Items.Clear();
                 }
 
@@ -3200,45 +3066,38 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         }
 
-     
 
 
-    private void BuscarCodigoDiagnostico_ant()
-        {
+
+        private void BuscarCodigoDiagnostico_ant() {
             lstDiagnosticos.Items.Clear();
-            if (txtCodigoDiagnostico.Text != "")
-            {
+            if (txtCodigoDiagnostico.Text != "") {
 
 
 
                 if (oC.NomencladorDiagnostico == 0) /// Cie10
                 {
                     Cie10 oDiagnostico = new Cie10();
-                    oDiagnostico = (Cie10)oDiagnostico.Get(typeof(Cie10), "Codigo", txtCodigoDiagnostico.Text);
-                    if (oDiagnostico != null)
-                    {
+                    oDiagnostico = (Cie10) oDiagnostico.Get(typeof(Cie10), "Codigo", txtCodigoDiagnostico.Text);
+                    if (oDiagnostico != null) {
                         ListItem oDia = new ListItem();
                         oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                         oDia.Value = oDiagnostico.Id.ToString();
                         lstDiagnosticos.Items.Add(oDia);
 
-                    }
-                    else
+                    } else
                         lstDiagnosticos.Items.Clear();
-                }
-                else /// diagnostico propio
+                } else /// diagnostico propio
                 {
                     DiagnosticoP oDiagnostico = new DiagnosticoP();
-                    oDiagnostico = (DiagnosticoP)oDiagnostico.Get(typeof(DiagnosticoP), "Codigo", txtCodigoDiagnostico.Text);
-                    if (oDiagnostico != null)
-                    {
+                    oDiagnostico = (DiagnosticoP) oDiagnostico.Get(typeof(DiagnosticoP), "Codigo", txtCodigoDiagnostico.Text);
+                    if (oDiagnostico != null) {
                         ListItem oDia = new ListItem();
                         oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                         oDia.Value = oDiagnostico.IdDiagnostico.ToString();
                         lstDiagnosticos.Items.Add(oDia);
 
-                    }
-                    else
+                    } else
                         lstDiagnosticos.Items.Clear();
                 }
 
@@ -3247,22 +3106,18 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         }
 
-        protected void txtNombreDiagnostico_TextChanged(object sender, EventArgs e)
-        {
-           
+        protected void txtNombreDiagnostico_TextChanged(object sender, EventArgs e) {
+
             //BuscarNombreDiagnostico();
-            
+
         }
 
-        private void BuscarNombreDiagnostico()
-        {
+        private void BuscarNombreDiagnostico() {
             lstDiagnosticos.Items.Clear();
-            if (txtNombreDiagnostico.Text != "")
-            {
+            if (txtNombreDiagnostico.Text != "") {
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
-                if (oC.NomencladorDiagnostico == 0)
-                {
+                if (oC.NomencladorDiagnostico == 0) {
                     //ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
                     //crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
 
@@ -3285,8 +3140,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
                     adapter.Fill(Ds);
                     lstDiagnosticos.Items.Clear();
-                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
-                    {
+                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++) {
 
                         ListItem oDia = new ListItem();
                         oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
@@ -3298,18 +3152,15 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
 
                     lstDiagnosticos.UpdateAfterCallBack = true;
-                }
-
-                else //nomenclador propio
-                {
+                } else //nomenclador propio
+                  {
                     ICriteria crit1 = m_session.CreateCriteria(typeof(DiagnosticoP));
-                  
+
                     crit1.Add(Expression.InsensitiveLike("Nombre", txtNombreDiagnostico.Text, MatchMode.Anywhere));
-                    crit1.Add(Expression.Eq ( "Baja", false));
+                    crit1.Add(Expression.Eq("Baja", false));
                     IList items = crit1.List();
 
-                    foreach (DiagnosticoP oDiagnostico in items)
-                    {
+                    foreach (DiagnosticoP oDiagnostico in items) {
                         ListItem oDia = new ListItem();
                         oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                         oDia.Value = oDiagnostico.IdDiagnostico.ToString();
@@ -3324,22 +3175,18 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
 
 
-        private void BuscarNombreDiagnostico_ant()
-        {
+        private void BuscarNombreDiagnostico_ant() {
             lstDiagnosticos.Items.Clear();
-            if (txtNombreDiagnostico.Text != "")
-            {
+            if (txtNombreDiagnostico.Text != "") {
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
-                if (oC.NomencladorDiagnostico == 0)
-                {
+                if (oC.NomencladorDiagnostico == 0) {
                     ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
                     crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
 
                     IList items = crit.List();
 
-                    foreach (Cie10 oDiagnostico in items)
-                    {
+                    foreach (Cie10 oDiagnostico in items) {
                         ListItem oDia = new ListItem();
                         oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                         oDia.Value = oDiagnostico.Id.ToString();
@@ -3347,18 +3194,15 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     }
 
                     lstDiagnosticos.UpdateAfterCallBack = true;
-                }
-
-                else //nomenclador propio
-                {
+                } else //nomenclador propio
+                  {
                     ICriteria crit1 = m_session.CreateCriteria(typeof(DiagnosticoP));
 
                     crit1.Add(Expression.InsensitiveLike("Nombre", txtNombreDiagnostico.Text, MatchMode.Anywhere));
                     crit1.Add(Expression.Eq("Baja", false));
                     IList items = crit1.List();
 
-                    foreach (DiagnosticoP oDiagnostico in items)
-                    {
+                    foreach (DiagnosticoP oDiagnostico in items) {
                         ListItem oDia = new ListItem();
                         oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                         oDia.Value = oDiagnostico.IdDiagnostico.ToString();
@@ -3371,44 +3215,39 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             }
         }
 
-        protected void btnAgregarDiagnostico_Click1(object sender, ImageClickEventArgs e)
-        {
+        protected void btnAgregarDiagnostico_Click1(object sender, ImageClickEventArgs e) {
             AgregarDiagnostico();
         }
 
-        protected void btnSacarDiagnostico_Click(object sender, ImageClickEventArgs e)
-        {
+        protected void btnSacarDiagnostico_Click(object sender, ImageClickEventArgs e) {
             SacarDiagnostico();
         }
 
-        protected void cvAnalisis_ServerValidate(object source, ServerValidateEventArgs args)
-        {
+        protected void cvAnalisis_ServerValidate(object source, ServerValidateEventArgs args) {
 
-         
+
         }
 
-        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        {
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args) {
             TxtDatosCargados.Value = TxtDatos.Value;
 
             string sDatos = "";
 
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
+            string[] tabla = TxtDatos.Value.Split('@');
+
+            for (int i = 0; i < tabla.Length - 1; i++) {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
-            
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
+                string muestra = fila[2].ToString();
+
+                if (sDatos == "")
+                    sDatos = codigo + "#" + muestra;
+                else
+                    sDatos += ";" + codigo + "#" + muestra;
 
             }
 
-          
+
 
 
             TxtDatosCargados.Value = sDatos;
@@ -3422,33 +3261,29 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             //        return;
             //    }
 
-            if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
+            if (!VerificarAnalisisContenidos()) {
+                TxtDatos.Value = "";
                 args.IsValid = false;
-             
+
                 return;
-            }
-            else
-            {
+            } else {
 
-              
 
-            ///
 
-            if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
-                {
+                ///
+
+                if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@")) {
 
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
                     return;
-                }
-                else args.IsValid = true;
+                } else
+                    args.IsValid = true;
 
 
                 //validacion Diagnostico
-                if (oC.DiagObligatorio)
-                {if (lstDiagnosticosFinal.Items.Count == 0)
-                    {
+                if (oC.DiagObligatorio) {
+                    if (lstDiagnosticosFinal.Items.Count == 0) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
@@ -3457,31 +3292,26 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
 
                 ///Validacion de la fecha de protocolo
-                if (txtFecha.Value == "")
-                {
+                if (txtFecha.Value == "") {
                     TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
                     return;
-                }
-                else
-                {
+                } else {
 
-                    if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
-                    {
+                    if (DateTime.Parse(txtFecha.Value) > DateTime.Now) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
                         return;
-                    }
-                    else
+                    } else
                         args.IsValid = true;
                 }
 
                 /// Valida que debe seleccionar un caracter si es un caso notificable a SISA
 
 
-               
+
                 if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
                 //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
                 {
@@ -3493,10 +3323,8 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 // fin valida
                 // validacion si es sospechoso o detctar ingresar fecha de inicio de sintomas
 
-                if (VerificaObligatoriedadFIS()) 
-                {
-                    if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
-                    {
+                if (VerificaObligatoriedadFIS()) {
+                    if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked == false)) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
@@ -3504,40 +3332,35 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     }
                 }
                 // validacion si es contacto  ingresar fecha de ultimo contacto
-                if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
-                {
-                    
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
-                        return;
-                     
+                if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value == "") && (chkSinFUC.Checked == false)) {
+
+                    TxtDatos.Value = "";
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
+                    return;
+
                 }
-                if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
-                {
+                if ((ddlEspecialista.SelectedValue == "-1") && (oC.MedicoObligatorio)) {
                     TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
                     return;
                 }
-                if (ddlOrigen.SelectedValue == "0")
-                {
+                if (ddlOrigen.SelectedValue == "0") {
                     TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
                     return;
                 }
-                if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
-                        return;
-                    }
-                         
+                if ((oC.IdSectorDefecto == 0) && (ddlSectorServicio.SelectedValue == "0")) {
+                    TxtDatos.Value = "";
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
+                    return;
+                }
 
-                    if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
-                {
+
+                if ((lblAlertaObraSocial.Visible) && (lblObraSocial.Text == "-")) {
                     TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
@@ -3546,65 +3369,49 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                 ///Validacion de la fecha de la orden
 
-                if (txtFechaOrden.Value == "")
-                {
+                if (txtFechaOrden.Value == "") {
                     TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
                     return;
-                }
-                else
-                {
-                    if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
-                    {
+                } else {
+                    if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
                         return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
-                        {
+                    } else {
+                        if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value)) {
                             TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
                             return;
-                        }
-                        else
+                        } else
                             args.IsValid = true;
                     }
                 }
 
 
-              
 
-                if (txtFechaTomaMuestra.Value == "")
-                {
+
+                if (txtFechaTomaMuestra.Value == "") {
                     TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de toma de muestra";
                     return;
-                }
-                else
-                {
-                    if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Now)
-                    {
+                } else {
+                    if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Now) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha actual";
                         return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Parse(txtFecha.Value))
-                        {
+                    } else {
+                        if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Parse(txtFecha.Value)) {
                             TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha del protocolo";
                             return;
-                        }
-                        else
+                        } else
                             args.IsValid = true;
                     }
                 }
@@ -3612,27 +3419,20 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                 /// control de fecha inicio de sintomas
                 /// 
-                
-                if (txtFechaFIS.Value != "")
-               
-                {
-                    if (DateTime.Parse(txtFechaFIS.Value) > DateTime.Now)
-                    {
+
+                if (txtFechaFIS.Value != "") {
+                    if (DateTime.Parse(txtFechaFIS.Value) > DateTime.Now) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La FIS no puede ser superior a la fecha actual";
                         return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFIS.Value))
-                        {
+                    } else {
+                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFIS.Value)) {
                             TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La FIS no puede ser despues de la fecha de toma de muestra";
                             return;
-                        }
-                        else
+                        } else
                             args.IsValid = true;
                     }
                 }//fin control
@@ -3640,28 +3440,21 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                 /// control de fecha inicio de sintomas
                 /// 
-                
 
-                if (txtFechaFUC.Value != "")
 
-                {
-                    if (DateTime.Parse(txtFechaFUC.Value) > DateTime.Now)
-                    {
+                if (txtFechaFUC.Value != "") {
+                    if (DateTime.Parse(txtFechaFUC.Value) > DateTime.Now) {
                         TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La FUC no puede ser superior a la fecha actual";
                         return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFUC.Value))
-                        {
+                    } else {
+                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFUC.Value)) {
                             TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La FUC no puede ser despues de la fecha de toma de muestra";
                             return;
-                        }
-                        else
+                        } else
                             args.IsValid = true;
                     }
                 }//fin control
@@ -3669,24 +3462,20 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             }
         }
 
-        private bool VerificaRequiereCaracter(string sDatos)
-        {
-           
-            bool devolver = false ;
-            string[] tabla = sDatos.Split(';');
-            
+        private bool VerificaRequiereCaracter(string sDatos) {
 
-            for (int i = 0; i < tabla.Length  ; i++)
-            {
+            bool devolver = false;
+            string[] tabla = sDatos.Split(';');
+
+
+            for (int i = 0; i < tabla.Length; i++) {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[0].ToString();
-                if (codigo != "")
-                {
+                if (codigo != "") {
                     Item oItem = new Item();
-                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+                    oItem = (Item) oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
 
-                    if (oItem.RequiereCaracter)
-                    {
+                    if (oItem.RequiereCaracter) {
                         devolver = true;
                         break;
                     }
@@ -3697,15 +3486,12 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             return devolver;
         }
 
-        private bool VerificaObligatoriedadFIS()
-        {
+        private bool VerificaObligatoriedadFIS() {
             bool obligafis = false;
 
             string[] arrfis = oC.FISCaracter.Split((",").ToCharArray());
-            foreach (string item in arrfis)
-            {
-                if (item == ddlCaracter.SelectedValue)
-                { obligafis = true; break; }
+            foreach (string item in arrfis) {
+                if (item == ddlCaracter.SelectedValue) { obligafis = true; break; }
             }
             return obligafis;
 
@@ -3721,15 +3507,12 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
         //    else return true;
         //}
 
-        private bool VerificarAnalisisContenidos()
-        {
+        private bool VerificarAnalisisContenidos() {
             bool devolver = true;
             string[] tabla = TxtDatos.Value.Split('@');
             string listaCodigo = "";
 
-             for (int i = 0; i < tabla.Length - 1; i++)
-            
-            {
+            for (int i = 0; i < tabla.Length - 1; i++) {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
                 if (listaCodigo == "")
@@ -3738,24 +3521,19 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     listaCodigo += ",'" + codigo + "'";
 
                 int i_idItemPractica = 0;
-                if (codigo != "")
-                {
+                if (codigo != "") {
 
                     Item oItem = new Item();
-                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);                 
-                    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
-                    { 
+                    oItem = (Item) oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+                    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue))) {
 
-                    i_idItemPractica = oItem.IdItem;
-                        for (int j = 0; j < tabla.Length - 1; j++)
-
-                        {
+                        i_idItemPractica = oItem.IdItem;
+                        for (int j = 0; j < tabla.Length - 1; j++) {
                             string[] fila2 = tabla[j].Split('#');
                             string codigo2 = fila2[1].ToString();
-                            if ((codigo2 != "") && (codigo != codigo2))
-                            {
+                            if ((codigo2 != "") && (codigo != codigo2)) {
                                 Item oItem2 = new Item();
-                                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+                                oItem2 = (Item) oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
 
                                 //MultiEfector: filtro por efector
 
@@ -3765,62 +3543,58 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                                 crit.Add(Expression.Eq("IdItemPractica", oItem));
                                 crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
                                 crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+                                PracticaDeterminacion oGrupo = (PracticaDeterminacion) crit.UniqueResult();
 
 
 
-                                if (oGrupo != null)
-                                {
+                                if (oGrupo != null) {
 
                                     this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
-                                    devolver = false; break;
+                                    devolver = false;
+                                    break;
 
                                 }
 
                             }
-                        
-                    }////for           
-                    }
-                    else
-                    {
+
+                        }////for           
+                    } else {
                         this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
-                        devolver = false; break;
+                        devolver = false;
+                        break;
 
                     }
 
                 }/// if codigo
-                if (!devolver) break;
+                if (!devolver)
+                    break;
             }
 
-            if ((devolver) && (listaCodigo != ""))
-            { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
-           
+            if ((devolver) && (listaCodigo != "")) { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
+
             return devolver;
-         
+
         }
 
-        private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
-        { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
+        private bool VerificarAnalisisComplejosContenidos(string listaCodigo) { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
             bool devolver = true;
             string m_ssql = "SELECT  distinct PD.idItemDeterminacion, I.codigo" +
                             " FROM         LAB_PracticaDeterminacion AS PD " +
                             " INNER JOIN   LAB_Item AS I ON PD.idItemPractica = I.idItem " +
                             " WHERE     I.codigo IN (" + listaCodigo + ") AND (I.baja = 0)" +
-                            " and PD.idEfector= "+oUser.IdEfector.IdEfector.ToString()+" ORDER BY PD.idItemDeterminacion ";
+                            " and PD.idEfector= " + oUser.IdEfector.IdEfector.ToString() + " ORDER BY PD.idItemDeterminacion ";
 
             //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
             //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter da = new SqlDataAdapter(m_ssql,  conn);
+            SqlDataAdapter da = new SqlDataAdapter(m_ssql, conn);
             DataSet ds = new DataSet();
             da.Fill(ds);
 
             string itempivot = "";
             string codigopivot = "";
-            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
-            {
-                if (ds.Tables[0].Rows[i][0].ToString() == itempivot)
-                {
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++) {
+                if (ds.Tables[0].Rows[i][0].ToString() == itempivot) {
                     devolver = false;
                     cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigopivot + " y " + ds.Tables[0].Rows[i][1].ToString() + "!";
                     break;
@@ -3846,74 +3620,58 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
         //}
 
-        protected void lnkReimprimirCodigoBarras_Click(object sender, EventArgs e)
-        {
+        protected void lnkReimprimirCodigoBarras_Click(object sender, EventArgs e) {
             lblMensajeImpresion.Text = "Se ha enviado la impresión.";
-            if (ddlImpresora2.SelectedIndex>0)
-            {
+            if (ddlImpresora2.SelectedIndex > 0) {
                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
                 ///Imprimir codigo de barras.
                 string s_AreasCodigosBarras = getListaAreasCodigoBarras();
-                if (s_AreasCodigosBarras != "")
-                {
+                if (s_AreasCodigosBarras != "") {
 
                     ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras);
-                }
-                else
+                } else
                     lblMensajeImpresion.Text = "Debe seleccionar al menos un area para imprimir";
-            }
-            else
+            } else
                 lblMensajeImpresion.Text = "Debe seleccionar una impresora";
             lblMensajeImpresion.UpdateAfterCallBack = true;
         }
 
 
-        protected void lnkSiguiente_Click(object sender, EventArgs e)
-        {
+        protected void lnkSiguiente_Click(object sender, EventArgs e) {
             Avanzar(1);
         }
 
-        protected void lnkAnterior_Click(object sender, EventArgs e)
-        {
+        protected void lnkAnterior_Click(object sender, EventArgs e) {
             Avanzar(-1);
         }
 
-        private void Avanzar(int avance)
-        {
+        private void Avanzar(int avance) {
 
             int ProtocoloActual = int.Parse(Request["idProtocolo"].ToString());
             //Protocolo oProtocoloActual = new Protocolo();
             //oProtocoloActual = (Protocolo)oProtocoloActual.Get(typeof(Protocolo), ProtocoloActual);
             int ProtocoloNuevo = ProtocoloActual;
 
-            if (Session["ListaProtocolo"] != null)
-            {
+            if (Session["ListaProtocolo"] != null) {
                 string[] lista = Session["ListaProtocolo"].ToString().Split(',');
-                for (int i = 0; i < lista.Length ; i++)
-                {
-                    if (ProtocoloActual == int.Parse(lista[i].ToString()))
-                    {
-                        if (avance == 1)
-                        {
-                            if (i < lista.Length - 1)
-                            {
-                                ProtocoloNuevo = int.Parse(lista[i + 1].ToString()); break;
+                for (int i = 0; i < lista.Length; i++) {
+                    if (ProtocoloActual == int.Parse(lista[i].ToString())) {
+                        if (avance == 1) {
+                            if (i < lista.Length - 1) {
+                                ProtocoloNuevo = int.Parse(lista[i + 1].ToString());
+                                break;
                             }
-                        }
-                        else
-                        {
-                            if (avance == 0)
-                            {
-                                if (i < lista.Length - 1)
-                                {
-                                    ProtocoloNuevo = int.Parse(lista[i].ToString()); break;
+                        } else {
+                            if (avance == 0) {
+                                if (i < lista.Length - 1) {
+                                    ProtocoloNuevo = int.Parse(lista[i].ToString());
+                                    break;
                                 }
-                            }
-                            else
-                            if (i > 0)
-                            {
-                                ProtocoloNuevo = int.Parse(lista[i - 1].ToString()); break;
+                            } else
+                            if (i > 0) {
+                                ProtocoloNuevo = int.Parse(lista[i - 1].ToString());
+                                break;
                             }
                         }
 
@@ -3921,69 +3679,63 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     }
                 }
             }
-                //if (avance == 1)
-                //{
-                //    ProtocoloNuevo = ProtocoloActual+1;
-                //}
-                //else  //retrocede                        
-                //    ProtocoloNuevo = ProtocoloActual - 1;
+            //if (avance == 1)
+            //{
+            //    ProtocoloNuevo = ProtocoloActual+1;
+            //}
+            //else  //retrocede                        
+            //    ProtocoloNuevo = ProtocoloActual - 1;
 
-            
+
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));
             crit.Add(Expression.Eq("IdProtocolo", ProtocoloNuevo));
             //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            Protocolo oProtocolo = (Protocolo)crit.UniqueResult();
+            Protocolo oProtocolo = (Protocolo) crit.UniqueResult();
 
             string m_parametro = "";
-            if (Request["DesdeUrgencia"]!=null)m_parametro= "&DesdeUrgencia=1";
+            if (Request["DesdeUrgencia"] != null)
+                m_parametro = "&DesdeUrgencia=1";
 
-            if (oProtocolo != null)
-            {
+            if (oProtocolo != null) {
                 //if (Request["Desde"].ToString() == "Control")
-                    Response.Redirect("ProtocoloEdit2.aspx?Desde="+Request["Desde"].ToString()+"&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
+                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
                 //else
                 //    Response.Redirect("ProtocoloEdit2.aspx?Desde="+Request["Desde"].ToString()+"&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
-            }
-            else
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloActual + m_parametro);                                                               
-               
-        }
-
-
-
-        protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-              if (e.CommandName== "Modificar")
-                  Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + e.CommandArgument.ToString());
-            
+            } else
+                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloActual + m_parametro);
 
         }
 
-        protected void btnBusquedaDiagnostico_Click(object sender, EventArgs e)
-        {
-            
+
+
+        protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e) {
+            if (e.CommandName == "Modificar")
+                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + e.CommandArgument.ToString());
+
+
+        }
+
+        protected void btnBusquedaDiagnostico_Click(object sender, EventArgs e) {
+
             lstDiagnosticos.Items.Clear();
-            if (txtCodigoDiagnostico.Text != "")
-            {
+            if (txtCodigoDiagnostico.Text != "") {
                 BuscarCodigoDiagnostico();
             }
 
-            if (txtNombreDiagnostico.Text != "")
-            {
+            if (txtNombreDiagnostico.Text != "") {
                 BuscarNombreDiagnostico();
-               
+
             }
             lstDiagnosticos.UpdateAfterCallBack = true;
 
 
 
-            
+
         }
 
-        private void CargarDiagnosticosFrecuentes()
-        {
+        private void CargarDiagnosticosFrecuentes() {
             Utility oUtil = new Utility();
 
 
@@ -3998,15 +3750,14 @@ group by id, codigo, nombre
 ORDER BY cantidad desc";
 
 
-           
+
             DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_ssql, conn);
             adapter.Fill(Ds);
             lstDiagnosticos.Items.Clear();
-            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
-            {
+            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++) {
 
                 ListItem oDia = new ListItem();
                 oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
@@ -4024,13 +3775,11 @@ ORDER BY cantidad desc";
 
         }
 
-        protected void btnBusquedaFrecuente_Click(object sender, EventArgs e)
-        {
+        protected void btnBusquedaFrecuente_Click(object sender, EventArgs e) {
             CargarDiagnosticosFrecuentes();
         }
 
-        protected void rdbSeleccionarAreasEtiquetas_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        protected void rdbSeleccionarAreasEtiquetas_SelectedIndexChanged(object sender, EventArgs e) {
             if (rdbSeleccionarAreasEtiquetas.SelectedValue == "1")
                 MarcarTodasAreas(true);
             else
@@ -4038,99 +3787,81 @@ ORDER BY cantidad desc";
             chkAreaCodigoBarra.UpdateAfterCallBack = true;
         }
 
-        private void MarcarTodasAreas(bool p)
-        {
+        private void MarcarTodasAreas(bool p) {
             for (int i = 0; i < chkAreaCodigoBarra.Items.Count; i++)
                 chkAreaCodigoBarra.Items[i].Selected = p;
 
         }
 
-        protected void btnSelObraSocial_Click(object sender, EventArgs e)
-        {
+        protected void btnSelObraSocial_Click(object sender, EventArgs e) {
             actualizarObraSocial();
         }
 
-        private void actualizarObraSocial()
-        {
+        private void actualizarObraSocial() {
             Paciente oPaciente = new Paciente();
-            oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), int.Parse(HFIdPaciente.Value));
+            oPaciente = (Paciente) oPaciente.Get(typeof(Paciente), int.Parse(HFIdPaciente.Value));
 
             ObraSocial oObraSocial = new ObraSocial();
-            oObraSocial = (ObraSocial)oObraSocial.Get(typeof(ObraSocial), int.Parse(oPaciente.IdObraSocial.ToString()));
-      
+            oObraSocial = (ObraSocial) oObraSocial.Get(typeof(ObraSocial), int.Parse(oPaciente.IdObraSocial.ToString()));
+
             lblObraSocial.Text = oObraSocial.Nombre;
 
-            if (Request["idProtocolo"]!= null)
-            { 
-            TxtDatos.Value = "";
-            TxtDatosCargados.Value = "";
-            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+            if (Request["idProtocolo"] != null) {
+                TxtDatos.Value = "";
+                TxtDatosCargados.Value = "";
+                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
-            MostrarDeterminaciones(oRegistro);
-            }
-            else
+                MostrarDeterminaciones(oRegistro);
+            } else
                 TxtDatos.Value = "";
         }
 
-        protected void lnkValidarRenaper_Click(object sender, EventArgs e)
-        {
+        protected void lnkValidarRenaper_Click(object sender, EventArgs e) {
             Avanzar(0);
         }
 
-        protected void txtEspecialista_TextChanged(object sender, EventArgs e)
-        {
+        protected void txtEspecialista_TextChanged(object sender, EventArgs e) {
             MostrarMedico();
         }
 
-        private void MostrarMedico()
-        {
-            try
-            {
+        private void MostrarMedico() {
+            try {
                 ///Buscar especilista
                 string matricula = txtEspecialista.Text;
-            
-                if (matricula == "0")
-                {
+
+                if (matricula == "0") {
                     ddlEspecialista.Items.Clear();
                     ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
-                }
-                else
-                {
+                } else {
                     string s_urlWFC = oC.UrlMatriculacion;
                     string s_url = s_urlWFC + "numeroMatricula=" + matricula; // + "&codigoProfesion in (1,23)";
 
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
-                    HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
+                    HttpWebRequest request = (HttpWebRequest) WebRequest.Create(s_url);
+                    HttpWebResponse ws1 = (HttpWebResponse) request.GetResponse();
                     JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
                     Stream st = ws1.GetResponseStream();
                     StreamReader sr = new StreamReader(st);
 
                     string s = sr.ReadToEnd();
-                    if (s != "0")
-                    {
+                    if (s != "0") {
 
                         List<ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<ProfesionalMatriculado>>(s);
                         string espe;
-                        if (pro.Count > 0)
-                        {
+                        if (pro.Count > 0) {
                             ddlEspecialista.Items.Clear();
 
-                            for (int i = 0; i < pro.Count; i++)
-                            {
+                            for (int i = 0; i < pro.Count; i++) {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
                                 //documento = pro[i].documento.ToString();
-                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula+ '#' + espe));
+                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
                             }
                             if (pro.Count > 1)
-                                if (Request["idProtocolo"] == null)
-                                { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
+                                if (Request["idProtocolo"] == null) { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
 
                             lblErrorMedico.Visible = false;
 
-                        }
-                        else
-                        { //error no encontrado}
+                        } else { //error no encontrado}
 
 
                             lblErrorMedico.Text = "Médico no encontrado!!";
@@ -4144,7 +3875,7 @@ ORDER BY cantidad desc";
             } // try
              catch (Exception ex)
 
-          //  catch (WebException ex)
+            //  catch (WebException ex)
             {
                 ddlEspecialista.Items.Clear();
                 ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
@@ -4156,26 +3887,22 @@ ORDER BY cantidad desc";
 
         }
 
-        public class Profesiones
-        {
+        public class Profesiones {
             public List<Matricula> matriculacion { get; set; }
             public string titulo { get; set; }
         }
 
-        public class Matricula
+        public class Matricula {
+            public string matriculaNumero { get; set; }
 
-        {
-            public string  matriculaNumero { get; set; }
-           
         }
 
-       
-            public class ProfesionalMatriculado
-        {
-        //    public int documento { get; set; }
+
+        public class ProfesionalMatriculado {
+            //    public int documento { get; set; }
             public string nombre { get; set; }
             public string apellido { get; set; }
-           public List<Profesiones> profesiones { get; set; }
+            public List<Profesiones> profesiones { get; set; }
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
             //public string FechaNac { get; set; }
@@ -4233,30 +3960,25 @@ ORDER BY cantidad desc";
 
         }
 
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            if (Session["matricula"] != null)
-            {
+        protected void Button1_Click(object sender, EventArgs e) {
+            if (Session["matricula"] != null) {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
-               
+
                 TxtDatos.Value = "";
             }
         }
 
-        protected void btnRecordarDiagnostico_Click(object sender, EventArgs e)
-        {
-            try
-            {
+        protected void btnRecordarDiagnostico_Click(object sender, EventArgs e) {
+            try {
                 string dx = Session["Dx"].ToString();
                 string[] tabla = dx.Split(';');
 
                 /////Crea nuevamente los detalles.
-                for (int i = 0; i <= tabla.Length - 1; i++)
-                {
+                for (int i = 0; i <= tabla.Length - 1; i++) {
                     Cie10 oD = new Cie10();
-                    oD = (Cie10)oD.Get(typeof(Cie10), int.Parse(tabla[i].ToString()));
+                    oD = (Cie10) oD.Get(typeof(Cie10), int.Parse(tabla[i].ToString()));
                     ListItem oDia = new ListItem();
                     oDia.Text = oD.Nombre;
                     oDia.Value = oD.Id.ToString();
@@ -4264,27 +3986,22 @@ ORDER BY cantidad desc";
 
                 }
                 lstDiagnosticosFinal.UpdateAfterCallBack = true;
-            }
-            catch (Exception ex)
-            { }
+            } catch (Exception ex) { }
         }
-        public class RespuestaCaso
-        {
+        public class RespuestaCaso {
             public string id_caso { get; set; }
 
             public string resultado { get; set; }
 
             public string description { get; set; }
         }
-        public class AltaCaso
-        {
+        public class AltaCaso {
             public string usuario { get; set; }
             public string clave { get; set; }
             public evento altaEventoCasoNominal { get; set; }
 
         }
-        public class evento
-        {
+        public class evento {
             public string idTipodoc { get; set; }
             public string nrodoc { get; set; }
             public string sexo { get; set; }
@@ -4298,14 +4015,13 @@ ORDER BY cantidad desc";
 
 
         }
-        protected void btnNotificarSISA_Click(object sender, EventArgs e)
-        {
-             
-System.Net.ServicePointManager.SecurityProtocol =
-    System.Net.SecurityProtocolType.Tls12;
+        protected void btnNotificarSISA_Click(object sender, EventArgs e) {
+
+            System.Net.ServicePointManager.SecurityProtocol =
+                System.Net.SecurityProtocolType.Tls12;
             TxtDatos.Value = "";
             Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+            oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
             string caracter = "";
             string idevento = "";
@@ -4320,15 +4036,14 @@ System.Net.ServicePointManager.SecurityProtocol =
 @" and C.idCaracter =" + oRegistro.IdCaracter.ToString();
 
             DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = (SqlConnection) NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
 
             DataTable dt = Ds.Tables[0];
 
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
+            for (int i = 0; i < dt.Rows.Count; i++) {
                 caracter = dt.Rows[i][1].ToString();
                 idevento = dt.Rows[i][2].ToString();
                 nombreevento = dt.Rows[i][3].ToString();
@@ -4338,105 +4053,96 @@ System.Net.ServicePointManager.SecurityProtocol =
                 nombregrupoevento = dt.Rows[i][7].ToString();
 
                 break;
-             
+
             }
-                try
-                {
-
-                    
-                    string URL = oC.UrlServicioSISA;
-                    string s_idestablecimiento = oC.CodigoEstablecimientoSISA; // "14580562167000"
-                    string usersisa = ConfigurationManager.AppSettings["usuarioSisa"].ToString();
-                    string[] a = usersisa.Split(':');
-                    string s_user = a[0].ToString();
-                    string s_userpass = a[1].ToString();
-
-                    string s_sexo = lblSexo.Text;
-                    string fn = oRegistro.IdPaciente.FechaNacimiento.ToShortDateString().Replace("/", "-");
-                   
-                    string fnpapel =txtFechaOrden.Value.Replace("/", "-");
+            try {
 
 
-                    string numerodocumento = oRegistro.IdPaciente.NumeroDocumento.ToString();
+                string URL = oC.UrlServicioSISA;
+                string s_idestablecimiento = oC.CodigoEstablecimientoSISA; // "14580562167000"
+                string usersisa = ConfigurationManager.AppSettings["usuarioSisa"].ToString();
+                string[] a = usersisa.Split(':');
+                string s_user = a[0].ToString();
+                string s_userpass = a[1].ToString();
 
-                    string error = "";
-                 
+                string s_sexo = lblSexo.Text;
+                string fn = oRegistro.IdPaciente.FechaNacimiento.ToShortDateString().Replace("/", "-");
 
-                    evento newevento = new evento
-                    {
-                        idTipodoc = "1",
-                        nrodoc = numerodocumento,
-                        sexo = s_sexo,
-                        fechaNacimiento = fn,  //"05-06-1989",
-                        idGrupoEvento = idgrupoevento,
-                        idEvento = idevento, // "77",
-                        idEstablecimientoCarga = s_idestablecimiento, //prod: "51580352167442",
-                        fechaPapel = fnpapel, // "10-12-2019",
-                        idClasificacionManualCaso = idclasificacionmanual, // "22"
-                    };
+                string fnpapel = txtFechaOrden.Value.Replace("/", "-");
 
-                    AltaCaso caso = new AltaCaso
-                    {
 
-                        //usuario = "mapaterniti",
-                        //clave = "Alicia1938",
-                        usuario = s_user, // "bcpintos",
-                        clave = s_userpass, // "2398HH6RK6",
-                        altaEventoCasoNominal = newevento
-                    };
+                string numerodocumento = oRegistro.IdPaciente.NumeroDocumento.ToString();
 
-                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+                string error = "";
 
-                    string DATA = jsonSerializer.Serialize(caso);
+
+                evento newevento = new evento {
+                    idTipodoc = "1",
+                    nrodoc = numerodocumento,
+                    sexo = s_sexo,
+                    fechaNacimiento = fn,  //"05-06-1989",
+                    idGrupoEvento = idgrupoevento,
+                    idEvento = idevento, // "77",
+                    idEstablecimientoCarga = s_idestablecimiento, //prod: "51580352167442",
+                    fechaPapel = fnpapel, // "10-12-2019",
+                    idClasificacionManualCaso = idclasificacionmanual, // "22"
+                };
+
+                AltaCaso caso = new AltaCaso {
+
+                    //usuario = "mapaterniti",
+                    //clave = "Alicia1938",
+                    usuario = s_user, // "bcpintos",
+                    clave = s_userpass, // "2398HH6RK6",
+                    altaEventoCasoNominal = newevento
+                };
+
+                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                string DATA = jsonSerializer.Serialize(caso);
 
 
 
-                    System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-                    client.BaseAddress = new System.Uri(URL);
+                System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+                client.BaseAddress = new System.Uri(URL);
 
-                    System.Net.Http.HttpContent content = new StringContent(DATA, UTF8Encoding.UTF8, "application/json");
-                    HttpResponseMessage messge = client.PostAsync(URL, content).Result;
-                    string description = string.Empty;
-                    if (messge.IsSuccessStatusCode)
-                    {
-                        string result = messge.Content.ReadAsStringAsync().Result;
-                        description = result;
-                        RespuestaCaso respuesta_d = jsonSerializer.Deserialize<RespuestaCaso>(description);
+                System.Net.Http.HttpContent content = new StringContent(DATA, UTF8Encoding.UTF8, "application/json");
+                HttpResponseMessage messge = client.PostAsync(URL, content).Result;
+                string description = string.Empty;
+                if (messge.IsSuccessStatusCode) {
+                    string result = messge.Content.ReadAsStringAsync().Result;
+                    description = result;
+                    RespuestaCaso respuesta_d = jsonSerializer.Deserialize<RespuestaCaso>(description);
 
-                        if (respuesta_d.id_caso != "")
-                        { //  devolver el idcaso para guardar en la base de datos
-                            string s_idcaso = respuesta_d.id_caso;
-                            ///grabar a protocolo idCaso
-                          
-                            if (oRegistro != null)
-                            {
-                                oRegistro.IdCasoSISA = int.Parse(s_idcaso);
-                                oRegistro.Save();
-                                if (respuesta_d.resultado == "OK")
-                                    oRegistro.GrabarAuditoriaProtocolo("Genera Caso SISA " + s_idcaso, int.Parse(Session["idUsuario"].ToString()));
-                                else // ERROR_DATOS
-                                    oRegistro.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + s_idcaso, int.Parse(Session["idUsuario"].ToString()));
+                    if (respuesta_d.id_caso != "") { //  devolver el idcaso para guardar en la base de datos
+                        string s_idcaso = respuesta_d.id_caso;
+                        ///grabar a protocolo idCaso
+
+                        if (oRegistro != null) {
+                            oRegistro.IdCasoSISA = int.Parse(s_idcaso);
+                            oRegistro.Save();
+                            if (respuesta_d.resultado == "OK")
+                                oRegistro.GrabarAuditoriaProtocolo("Genera Caso SISA " + s_idcaso, int.Parse(Session["idUsuario"].ToString()));
+                            else // ERROR_DATOS
+                                oRegistro.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + s_idcaso, int.Parse(Session["idUsuario"].ToString()));
                             if (oRegistro.Estado == 2) // si ya tiene resultados informados
                             {
-                                NotificaLaboratorio(oRegistro); }
-                                Avanzar(0); 
+                                NotificaLaboratorio(oRegistro);
                             }
+                            Avanzar(0);
                         }
-                        else
-                        { 
+                    } else {
                         error = respuesta_d.resultado + ": " + respuesta_d.description;
-                       
+
                         lblErrorMedico.Text = error;
                         lblErrorMedico.Visible = true;
                     }
-                    }
-
-                   
-
                 }
-            catch (WebException ex)
-            {
-                   string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+
+
+
+            } catch (WebException ex) {
+                string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
 
                 //lblError.Text = "Hubo algun problema al conectar al servicio SISA: " + e.InnerException.InnerException.Message.ToString() + ". Intente de nuevo o haga clic en Salir";
                 //lblError.Visible = true;
@@ -4446,8 +4152,7 @@ System.Net.ServicePointManager.SecurityProtocol =
 
         }
 
-        private void NotificaLaboratorio(Protocolo oRegistro)
-        {
+        private void NotificaLaboratorio(Protocolo oRegistro) {
 
 
             string m_strSQL = @"SELECT  distinct idDetalleProtocolo,  S.idMuestra as IdMuestraSISA,	  S.idTipoMuestra as idTipoMuestraSISA, s.idPrueba as idPruebaSISA, s.idTipoPrueba as idTipoPruebaSISA,  
@@ -4458,9 +4163,9 @@ System.Net.ServicePointManager.SecurityProtocol =
                     where d.idusuariovalida>0 and d.idProtocolo= " + oRegistro.IdProtocolo.ToString();
 
 
-        
+
             DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = (SqlConnection) NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
@@ -4474,8 +4179,7 @@ System.Net.ServicePointManager.SecurityProtocol =
 
             DataTable dt = Ds.Tables[0];
 
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
+            for (int i = 0; i < dt.Rows.Count; i++) {
                 idDetalleProtocolo = dt.Rows[i][0].ToString();
                 idMuestra = dt.Rows[i][1].ToString();
                 idTipoMuestra = dt.Rows[i][2].ToString();
@@ -4485,8 +4189,8 @@ System.Net.ServicePointManager.SecurityProtocol =
                 idEvento = dt.Rows[i][6].ToString();
 
 
-                if ((oRegistro.IdCasoSISA > 0)  )
-                    GenerarMuestraSISA(oRegistro, idMuestra, idTipoMuestra, idDetalleProtocolo,idPrueba, idTipoPrueba, idResultadoSISA, idEvento);
+                if ((oRegistro.IdCasoSISA > 0))
+                    GenerarMuestraSISA(oRegistro, idMuestra, idTipoMuestra, idDetalleProtocolo, idPrueba, idTipoPrueba, idResultadoSISA, idEvento);
 
                 //if (oDetalle.IdeventomuestraSISA > 0)
                 //    GenerarResultadoSISA(oDetalle, );
@@ -4496,10 +4200,8 @@ System.Net.ServicePointManager.SecurityProtocol =
         }
 
         //private void GenerarMuestraSISA(Protocolo protocolo)
-        private void GenerarMuestraSISA(Protocolo protocolo, string idMuestraSISA, string idtipoMuestraSISA, string idDetalleProtocolo, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA)
+        private void GenerarMuestraSISA(Protocolo protocolo, string idMuestraSISA, string idtipoMuestraSISA, string idDetalleProtocolo, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA) {
 
-        {
-            
             string URL = oC.URLMuestraSISA;
 
 
@@ -4512,8 +4214,7 @@ System.Net.ServicePointManager.SecurityProtocol =
                 idestablecimientotoma = "107093";
 
 
-            ResultadoxNro.EventoMuestra newmuestra = new ResultadoxNro.EventoMuestra
-            {
+            ResultadoxNro.EventoMuestra newmuestra = new ResultadoxNro.EventoMuestra {
                 adecuada = true,
                 aislamiento = false,
                 fechaToma = ftoma, // "2020-08-23",
@@ -4539,8 +4240,7 @@ System.Net.ServicePointManager.SecurityProtocol =
             request.Headers.Add("app_key", "b0fd61c3a08917cfd20491b24af6049e");
             request.Headers.Add("app_id", "22891c8f");
 
-            try
-            {
+            try {
 
                 Stream postStream = request.GetRequestStream();
                 postStream.Write(data, 0, data.Length);
@@ -4550,35 +4250,28 @@ System.Net.ServicePointManager.SecurityProtocol =
                 string body = reader.ReadToEnd();
 
 
-                if (body != "")
-                {
+                if (body != "") {
                     ResultadoxNro.EventoMuestraResultado respuesta_d = jsonSerializer.Deserialize<ResultadoxNro.EventoMuestraResultado>(body);
 
-                    if (respuesta_d.id != 1)
-                    {
+                    if (respuesta_d.id != 1) {
                         DetalleProtocolo oDetalle = new DetalleProtocolo();
-                        oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                        oDetalle = (DetalleProtocolo) oDetalle.Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
 
-                        if (oDetalle != null)
-                        {
+                        if (oDetalle != null) {
                             oDetalle.IdeventomuestraSISA = respuesta_d.id;
                             oDetalle.Save();
                             oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Muestra SISA " + respuesta_d.id.ToString(), oDetalle.IdUsuarioValida);
-                                                       
+
                             if (oDetalle.IdeventomuestraSISA > 0)
                                 GenerarResultadoSISA(oDetalle, idPruebaSISA, idTipoPruebaSISA, idResultadoSISA, idEventoSISA);
-                            
+
                         } //for each
                     } //respuesta_o
 
 
                 }// body
 
-            }
-
-
-            catch (WebException ex)
-            {
+            } catch (WebException ex) {
                 string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
             }
 
@@ -4587,31 +4280,26 @@ System.Net.ServicePointManager.SecurityProtocol =
         //private void GenerarResultadoSISA(DetalleProtocolo oDetalle)
 
 
-private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA)
+        private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA) {
 
-        {
-            
             int ideventomuestra = oDetalle.IdeventomuestraSISA;
-          
+
             string URL = oC.URLResultadoSISA;
 
 
-            try
-            {
+            try {
                 int id_resultado_a_informar = int.Parse(idResultadoSISA); // 0;
                 int idevento = int.Parse(idEventoSISA); //  307; // sospechoso
 
- 
 
-                if (id_resultado_a_informar != 0)
-                {
+
+                if (id_resultado_a_informar != 0) {
                     string femision = oDetalle.FechaValida.ToString("yyyy-MM-dd");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
 
                     string frecepcion = oDetalle.IdProtocolo.Fecha.ToString("yyyy-MM-dd");//ToShortDateString("yyyy/MM/dd").Replace("/", "-");
 
 
-                    resultado newresultado = new resultado
-                    { // resultado de dni: 31935346
+                    resultado newresultado = new resultado { // resultado de dni: 31935346
                         derivada = false,
                         fechaEmisionResultado = femision, //"2020-09-14", //
                         fechaRecepcion = frecepcion, // "2020-09-13" 
@@ -4648,20 +4336,17 @@ private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA
                     HttpWebResponse response = request.GetResponse() as HttpWebResponse;
                     StreamReader reader = new StreamReader(response.GetResponseStream());
                     string body = reader.ReadToEnd();
-                    if (body != "")
-                    {
+                    if (body != "") {
                         oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Resultado en SISA", oDetalle.IdUsuarioValida);
-                        
+
                     }
 
                 }
 
 
-            }
-            catch (WebException ex)
-            {
+            } catch (WebException ex) {
                 string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
-                 
+
 
             }
 

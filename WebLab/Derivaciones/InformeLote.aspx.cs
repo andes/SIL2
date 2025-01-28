@@ -388,13 +388,14 @@ namespace WebLab.Derivaciones
                     lote.FechaEnvio = (estadoLote == 2) ? DateTime.Now.ToString() : "";
 
                     //Inserta auditoria del lote
-                    if(estadoLote == 2)  //Si deriva indica con que transportista fue
+                    lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), idUsuario);
+                    lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
+                    if (estadoLote == 2)  //Si deriva indica con que transportista fue
                         lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue);
                     
-                     else
-                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario);
+                     
 
-                    lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
+                   
                 }
             }
         }
