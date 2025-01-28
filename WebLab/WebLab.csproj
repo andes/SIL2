@@ -2545,7 +2545,6 @@
     <Content Include="Protocolos\DefaultEfector.aspx" />
     <Content Include="Protocolos\DefaultFFEE.aspx" />
     <Content Include="Protocolos\DefaultFFEE2.aspx" />
-
     <Content Include="Protocolos\DerivacionMultiEfectorLote.aspx" />
     <Content Include="Protocolos\DerivacionRecibirLote.aspx" />
     <Content Include="Protocolos\DerivacionMultiEfector.aspx" />
@@ -5042,7 +5041,6 @@
     <Compile Include="Protocolos\DefaultFFEE.aspx.designer.cs">
       <DependentUpon>DefaultFFEE.aspx</DependentUpon>
     </Compile>
-
     <Compile Include="Protocolos\DefaultFFEE2.aspx.cs">
       <DependentUpon>DefaultFFEE2.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5050,7 +5048,6 @@
     <Compile Include="Protocolos\DefaultFFEE2.aspx.designer.cs">
       <DependentUpon>DefaultFFEE2.aspx</DependentUpon>
     </Compile>
-
     <Compile Include="Protocolos\DerivacionMultiEfectorLote.aspx.cs">
       <DependentUpon>DerivacionMultiEfectorLote.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
