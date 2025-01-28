@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Informes {
-    
-    
-    public partial class Auditoria {
-        
+namespace WebLab.Informes
+{
+
+
+    public partial class Auditoria
+    {
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// pnlControlProtocolo control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlControlProtocolo;
-        
+
         /// <summary>
         /// ddlTipoServicio control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoServicio;
-        
+
         /// <summary>
         /// txtProtocolo control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProtocolo;
-        
+
         /// <summary>
         /// RequiredFieldValidator1 control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// ddlUsuario control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlUsuario;
-        
+
         /// <summary>
         /// btnControlProtocolo control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnControlProtocolo;
-        
+
         /// <summary>
         /// pnlControlAcceso control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlControlAcceso;
-        
+
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-        
+
         /// <summary>
         /// cvFechas control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvFechas;
-        
+
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-        
+
         /// <summary>
         /// ddlUsuario2 control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlUsuario2;
-        
+
         /// <summary>
         /// lblMensaje control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMensaje;
-        
+
         /// <summary>
         /// rdbTipoAuditoria control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbTipoAuditoria;
-        
+
         /// <summary>
         /// btnControlAcceso control.
         /// </summary>
@@ -146,5 +148,50 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnControlAcceso;
+
+        /// <summary>
+        /// pnControlLote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnControlLote;
+
+        /// <summary>
+        /// txt_lote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txt_lote;
+
+        /// <summary>
+        /// RequiredFieldValidator2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
+
+        /// <summary>
+        /// ddlUsuario3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUsuario3;
+
+        /// <summary>
+        /// btn_informeLote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_informeLote;
     }
 }
