@@ -118,5 +118,41 @@ namespace Business.Data.Laboratorio  {
             oRegistro.IdUsuario = m_idusuario;
             oRegistro.Save();
         }
+        public void GrabarAuditoriaLoteDerivacion(string m_accion, int m_idusuario, string m_observacion , string valorNuevo , string valorAnterior) {
+            AuditoriaLoteDerivacion oRegistro = new AuditoriaLoteDerivacion();
+            oRegistro.Accion = m_accion;
+            oRegistro.Analisis = m_observacion;
+            oRegistro.Valor = valorNuevo;
+            oRegistro.ValorAnterior = valorAnterior;
+            oRegistro.Fecha = DateTime.Now;
+            oRegistro.Hora = DateTime.Now.ToLongTimeString();
+            oRegistro.IdLote = this.IdLoteDerivacion;
+            oRegistro.IdUsuario = m_idusuario;
+            oRegistro.Save();
+        }
+
+        public string descripcionEstadoLote() {
+            List<LoteDerivacionEstado> estados = LoteDerivacionEstado.estados();
+            LoteDerivacionEstado estado = estados.Find(x => x.IdEstado == this.estado);
+            return estado.Nombre;
+        }
+
+        public bool HayDerivacionesPendientes() {
+            List<Derivacion> dList = Derivacion.DerivacionesByLote(this.IdLoteDerivacion);
+            dList = dList.FindAll(x => x.IdProtocoloDerivacion == 0 && x.Estado == 1);
+
+            if (dList.Count > 0)
+                return true;
+            else
+                return false;
+            
+        }
+
+        
+        //public bool IngresoProtocolo() {
+        //    List<Derivacion> derivaciones = Derivacion.DerivacionesByLote(this.IdLoteDerivacion);
+            
+        //    derivaciones.co
+        //}
     }
 }

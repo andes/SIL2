@@ -28,7 +28,7 @@ namespace WebLab.Derivaciones {
                     CargarListas();
                     CargarGrilla();
                     int estado = Convert.ToInt32(Request["Estado"]);
-                    activarControles(estado == 1 || estado == 3);
+                    activarControles(estado == 0 || estado == 2);
                 } else {
                     Response.Redirect("../FinSesion.aspx", false);
                 }
@@ -42,7 +42,7 @@ namespace WebLab.Derivaciones {
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             // Estados de las derivaciones
-            string m_ssql = "SELECT idEstado, descripcion FROM LAB_DerivacionEstado where baja=0 and idEstado in (2,3) ";
+            string m_ssql = "SELECT idEstado, descripcion FROM LAB_DerivacionEstado where baja=0 and idEstado in (2,4) ";
             oUtil.CargarCombo(ddlEstado, m_ssql, "idEstado", "descripcion", connReady);
             ddlEstado.Items.Insert(0, new ListItem("--Seleccione--", "0"));
         }
@@ -176,7 +176,7 @@ namespace WebLab.Derivaciones {
             lote.Save();
 
             //Se guarda auditoria de creacion de lote
-            lote.GrabarAuditoriaLoteDerivacion("Creacion de Lote", oUser.IdUsuario);
+            lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), oUser.IdUsuario);
 
             return lote;
         }

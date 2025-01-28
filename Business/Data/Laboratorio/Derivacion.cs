@@ -3,6 +3,8 @@ insert license info here
 */
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using NHibernate;
 
 namespace Business.Data.Laboratorio
 {
@@ -27,6 +29,7 @@ namespace Business.Data.Laboratorio
         private DateTime m_fecharesultado;
         private Efector m_idEfector;
         private LoteDerivacion idLote;
+        private int idProtocoloDerivacion;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -46,6 +49,7 @@ namespace Business.Data.Laboratorio
             m_fecharesultado = DateTime.MinValue;
             m_idEfector = new Efector();
             idLote = null;
+            idProtocoloDerivacion = 0;
         }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
@@ -237,6 +241,32 @@ namespace Business.Data.Laboratorio
                 idLote = value;
             }
         }
+
+        public int IdProtocoloDerivacion {
+            get {
+                return idProtocoloDerivacion;
+            }
+            set {
+                idProtocoloDerivacion = value;
+            }
+        }
         #endregion
+
+        public static List<Derivacion> DerivacionesByLote(int idLote) {
+            List<Derivacion> derivaciones = new List<Derivacion>();
+            try {
+                ISession session = NHibernateHttpModule.CurrentSession;
+                IList lista = session.CreateQuery("from Derivacion where idLote="+idLote).List();
+
+                foreach (Derivacion item in lista) {
+                    derivaciones.Add(item);
+                }
+            } catch (Exception) {
+
+            }
+            return derivaciones;
+        }
+
+       
     }
 }
