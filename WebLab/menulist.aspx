@@ -7,7 +7,8 @@
         <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged">
             <asp:ListItem Selected="True">sys_menu</asp:ListItem>
             <asp:ListItem>temp_mensaje</asp:ListItem>
-        </asp:DropDownList>
+        </asp:DropDownList><asp:Button ID="Button1" runat="server" Text="Borrar mensajes" OnClick="Button1_Click" />
+
         <p>&nbsp;</p>
 
                              <asp:GridView ID="gvProtocolosxEfector" runat="server" CssClass="table table-bordered bs-table"></asp:GridView>

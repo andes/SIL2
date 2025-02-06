@@ -27,8 +27,8 @@ namespace Business
         int maxCharDescription = 20;
 
         int imageHeight = 0;
-        
-        float leftMargin =2;///estaba en 20
+
+        float leftMargin = 2;//2;///estaba en 20--Cambio para plottier
         float leftMarginSdaEtiqueta = 61;
         float topMargin = 1; //estaba en 2
 
@@ -37,8 +37,8 @@ namespace Business
         
         int fontSize =7;///estaba en 7
         int fontSizeSubLinea = 7;///estaba en 7
-        int fontSizeCodigoBarras = 16; // 11; //estaba en 11
-        
+        int fontSizeCodigoBarras = 14; // 16; //estaba en 16 Cambio para plottier
+
         Font printFont = null;
         Font printFontPequeño = null;
         Font printFontSubLinea = null;
@@ -368,8 +368,9 @@ namespace Business
 
                 if (TipoEtiqueta == "5x2.5")
                 {
-                    gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 45, 5, new StringFormat(StringFormatFlags.DirectionVertical));
-                   
+                    gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 40, 5, new StringFormat(StringFormatFlags.DirectionVertical));
+                   // gfx.DrawString(line, printFont_Numero, myBrush, leftMargin+12, 24, new StringFormat(StringFormatFlags.DirectionRightToLeft)); //cambio plottier numero abajo
+
                 }
                 else
                     gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 48, 4, new StringFormat(StringFormatFlags.DirectionVertical));

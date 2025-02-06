@@ -211,6 +211,20 @@ namespace WebLab.AutoAnalizador
               
             }
 
+            if (Request["Equipo"].ToString() == "CobasC311")
+            {
+                
+
+
+                m_ssql = @"select distinct tipoMuestra  from LAB_CobasC311
+where habilitado=1
+order by tipoMuestra";
+                oUtil.CargarCombo(ddlTipoMuestra, m_ssql, "tipoMuestra", "tipoMuestra", connReady);
+                ddlTipoMuestra.Items.Insert(0, new ListItem("Todas", "0"));
+                ddlTipoMuestra.Enabled = true;
+
+            }
+
             if (Request["Equipo"].ToString() == "Mindray")
             {
                 m_ssql = @"SELECT DISTINCT LAB_MindrayItem.prefijo, LAB_Item.nombre FROM LAB_MindrayItem  with (nolock)

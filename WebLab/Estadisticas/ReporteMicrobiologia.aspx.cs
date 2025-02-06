@@ -129,7 +129,7 @@ namespace WebLab.Estadisticas
             Utility oUtil = new Utility(); string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             ///Carga de combos de tipos de servicios
-            string m_ssql = "SELECT     I.idItem, I.nombre + ' (' + I.codigo + ')' AS nombre " +
+            string m_ssql =  "SELECT     I.idItem, I.nombre + ' (' + I.codigo + ')' AS nombre " +
             " FROM         LAB_Item as I" +
             " INNER JOIN LAB_Area  as A ON A.idArea= I.idArea  " +
             " WHERE   I.disponible=1 AND (I.idEfectorDerivacion = I.idEfector) AND (I.baja = 0) and A.idTipoServicio=3 AND (tipo = 'P')  " +
@@ -1282,6 +1282,8 @@ WHERE ATB.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
 
           
             m_strCondicion += " and P.idOrigen in (" + getListaOrigen() + ")";
+            if (ddlEfector.SelectedValue != "0")
+                m_strCondicion += " and P.idEfector=" + ddlEfector.SelectedValue;
 
             if (ddlTipoMuestra.SelectedValue != "0") m_strCondicion += " and P.idMuestra=" + ddlTipoMuestra.SelectedValue;
             DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
@@ -1292,8 +1294,9 @@ SELECT
   Antibiotico ,sensibilidad
 FROM             vta_LAB_Antibiograma A INNER JOIN
                       LAB_Protocolo P ON A.idProtocolo = P.idProtocolo
-
-where A.resultado<>'' and  A.germen like '%" + s_germen +"%' and A.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "')  and P.idtiposervicio=3 and P.estado=2" + m_strCondicion + //; germen='Escherichia coli' and P.fecha>='20130101'
+where A.resultado<>'' and  A.germen like '%" + s_germen +"%' and A.idItem=" + ddlAnalisis.SelectedValue + 
+@" AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + 
+@"')  and P.idtiposervicio=3 and P.estado=2" + m_strCondicion + //; germen='Escherichia coli' and P.fecha>='20130101'
 ")  pvt PIVOT (count(sensibilidad) FOR sensibilidad IN ([Resistente],[Sensible],[Intermedio],[No Probado],[Apto para Sinergia],[Sensibilidad Disminuida],[Sin Reactivo]))  AS Child order by antibiotico";
  
                               
