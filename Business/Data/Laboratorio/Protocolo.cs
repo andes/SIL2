@@ -2265,6 +2265,43 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                 return ok;
         }
 
+        public string getListaAreasCodigoBarras()
+        {
+            string lista = "-1";
+
+            string m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
+                            WHERE imprimeCodigoBarra=1  and baja=0
+                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
+                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
+                                        where dp.idProtocolo = " + this.IdProtocolo.ToString() + @"
+                                        and dp.trajoMuestra = 'Si'
+                                        and p.idarea = A.idArea) order by nombre";
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_ssql, conn);
+            adapter.Fill(Ds);
+
+            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            {
+                //if (lista == "")
+                //    lista = Ds.Tables[0].Rows[i][0].ToString();
+                //else
+                    lista += "," + Ds.Tables[0].Rows[i][0].ToString();
+                //ListItem oDia = new ListItem();
+                //oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+                //oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+                //lstDiagnosticos.Items.Add(oDia);
+
+
+            }
+
+
+         
+            return lista;
+        }
+
         public bool VerificaObligatoriedadFIS()
         {
             Configuracion oC = new Configuracion();

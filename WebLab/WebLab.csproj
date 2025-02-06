@@ -2537,6 +2537,7 @@
     <Content Include="Protocolos\Default2.aspx" />
     <Content Include="Protocolos\DefaultEfector.aspx" />
     <Content Include="Protocolos\DefaultFFEE.aspx" />
+    <Content Include="Protocolos\DefaultFFEE2.aspx" />
     <Content Include="Protocolos\DerivacionMultiEfector.aspx" />
     <Content Include="Protocolos\DerivacionProcesa.aspx" />
     <Content Include="Protocolos\Derivacion.aspx" />
@@ -4964,6 +4965,13 @@
     </Compile>
     <Compile Include="Protocolos\DefaultFFEE.aspx.designer.cs">
       <DependentUpon>DefaultFFEE.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Protocolos\DefaultFFEE2.aspx.cs">
+      <DependentUpon>DefaultFFEE2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Protocolos\DefaultFFEE2.aspx.designer.cs">
+      <DependentUpon>DefaultFFEE2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Protocolos\DerivacionMultiEfector.aspx.cs">
       <DependentUpon>DerivacionMultiEfector.aspx</DependentUpon>

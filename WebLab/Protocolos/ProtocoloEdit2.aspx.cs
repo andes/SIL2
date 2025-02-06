@@ -354,25 +354,93 @@ namespace WebLab.Protocolos
                 btnCancelar.Width = Unit.Pixel(80);
 
                 txtNumeroOrigen.Text = oRegistro.Identificadorlabo;
-                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString(); SelectedEfector();
+                ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); SelectedEfector();
                 ddlOrigen.SelectedValue = "1";// oRegistro.IdOrigen.IdOrigen.ToString();//ver el origen 
                 ddlSectorServicio.SelectedValue =  oSector.IdSectorServicio.ToString();// oRegistro.IdSector.IdSectorServicio.ToString(); //ver el servicio 
                 ddlPrioridad.SelectedValue = "1";// oRegistro.IdPrioridad.IdPrioridad.ToString();
-                //if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
+                                                 //if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
 
-                txtEspecialista.Text = oRegistro.Solicitante;
-                string espe = "_";// oRegistro.Solicitante;
-                string matricula = oRegistro.Solicitante + '#' + oRegistro.Solicitante;
+
+                txtEspecialista.Text = "9999";//oRegistro.MatriculaEspecialista;
+                string espe = oRegistro.Solicitante;
+                string matricula = "9999" + '#' + oRegistro.Solicitante;  //oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
                 //      MostrarMedico();
                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
                 //if ((matricula == oRegistro.MatriculaEspecialista) && (oRegistro.Especialista== apellidoynombre))
-                ddlEspecialista.SelectedValue = oRegistro.Solicitante + '#' + oRegistro.Solicitante;
+                ddlEspecialista.SelectedValue = "9999" + '#' + oRegistro.Solicitante;
                 ddlEspecialista.UpdateAfterCallBack = true;
 
+                ddlMuestra.SelectedValue = oRegistro.IdTipoMuestra.ToString();
 
-                CargarDeterminacionesDerivacionMultiEfector(oRegistro.Analisis);
+                txtFechaFIS.Value= oRegistro.FechaSintoma.ToShortDateString();
+
+                if (oRegistro.Analisis != "")
+                {
+                    CargarDeterminacionesDerivacionMultiEfector(oRegistro.Analisis);
+                }
+
+                CargarDiagnosticoFicha(oRegistro.TipoFicha);
+
+
 
             }
+
+        }
+
+
+        private void CargarDiagnosticoFicha(string Tipo_ficha)
+        {///CARO poner en la tabla las determinaciones por ficha dengue /sifilis
+         //   Utility oUtil = new Utility();
+            ///Carga del combo de determinaciones
+            string m_ssql = @"select nombresil from    Rel_andes where tipo='Diagnostico' and nombreAndes='Dengue' ";
+            
+            NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
+            String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            SqlDataAdapter da = new SqlDataAdapter(m_ssql, strconn);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "T");
+
+        //    m_ssql = null;
+        //    oUtil = null;
+          
+            for (int i = 0; i < ds.Tables["T"].Rows.Count; i++)
+            {
+                string diag = ds.Tables["T"].Rows[i][0].ToString();
+                if (diag != "")
+                { 
+
+                        if (oC.NomencladorDiagnostico == 0) //cie10
+                        {
+                            Cie10 oD = new Cie10();
+                            oD = (Cie10)oD.Get(typeof(Cie10),"Codigo", diag);
+                        if (oD != null)
+                        {
+                            ListItem oDia = new ListItem();
+                            oDia.Text = oD.Codigo + " - " + oD.Nombre;
+                            oDia.Value = oD.Id.ToString();
+                            lstDiagnosticosFinal.Items.Add(oDia);
+                        }
+
+
+                        }
+                        else
+                        {
+                            DiagnosticoP oD = new DiagnosticoP();
+                            oD = (DiagnosticoP)oD.Get(typeof(DiagnosticoP),  "Codigo", diag);
+                        if (oD != null)
+                        {
+                            ListItem oDia = new ListItem();
+                            oDia.Text = oD.Codigo + " - " + oD.Nombre;
+                            oDia.Value = oD.IdDiagnostico.ToString();
+                            lstDiagnosticosFinal.Items.Add(oDia);
+                        }
+                        }
+                    
+                }
+            }
+            
+
+
 
         }
 
@@ -1636,13 +1704,24 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
 
 
-                        if (ddlImpresoraEtiqueta.SelectedValue != "0")
-                            oRegistro.ImprimirCodigoBarras(ddlImpresoraEtiqueta.SelectedItem.Text, int.Parse(Session["idUsuario"].ToString()));
-
                         /// actualiza al paciente con la ultima obra social guardada: solo en las altas
                         oRegistro.IdPaciente.IdObraSocial = oRegistro.IdObraSocial.IdObraSocial;
                         oRegistro.IdPaciente.FechaUltimaActualizacion = DateTime.Now;
                         oRegistro.IdPaciente.Save();
+
+                        if (ddlImpresoraEtiqueta.SelectedValue != "0")
+                        //   oRegistro.ImprimirCodigoBarras(ddlImpresoraEtiqueta.SelectedItem.Text, int.Parse(Session["idUsuario"].ToString()));
+                        {
+                            ///Imprimir codigo de barras.
+                            string s_AreasCodigosBarras = oRegistro.getListaAreasCodigoBarras();
+                            if (s_AreasCodigosBarras != "")
+                            {
+
+                                ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras, ddlImpresoraEtiqueta.SelectedItem.Text);
+                            }
+                        }
+
+
 
                         /////////////////
 
@@ -1800,9 +1879,10 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
             return lista;
         }
 
-      
+     
 
-        private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas)
+
+        private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
         {
            
             string[] tabla = s_listaAreas.Split(',');
@@ -1813,7 +1893,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 string s_area = tabla[i].ToUpper();
 
                 if (s_area == "-1")
-                    oProt.GrabarAuditoriaProtocolo("Imprime Etiquetas General", int.Parse(Session["idUsuario"].ToString()));
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta General", oUser.IdUsuario);
                 else
                 {
                     Area oArea = new Area();
@@ -1822,7 +1902,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                     if (oArea.Nombre.Length > 25)
                         s_narea = oArea.Nombre.Substring(0, 25);
 
-                    oProt.GrabarAuditoriaProtocolo("Imprime Etiquetas " + s_narea, int.Parse(Session["idUsuario"].ToString()));
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta " + s_narea, oUser.IdUsuario);
                 }
 
 
@@ -1830,7 +1910,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
 
                 string query = @" INSERT INTO LAB_ProtocoloEtiqueta
                     (idProtocolo ,idEfector  ,[idArea]  ,[idItem]      ,[impresora],fechaRegistro )
-     VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString()+"," + s_area + ",0,'" + ddlImpresora2.SelectedItem.Text + "' , getdate()    )";
+     VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString()+"," + s_area + ",0,'" + impresora + "' , getdate()    )";
                 SqlCommand cmd = new SqlCommand(query, conn);
 
 
@@ -2179,6 +2259,19 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
                 oRegistro.Especialista = apellidoynombre; // ddlEspecialista.SelectedItem.Text;
                 oRegistro.MatriculaEspecialista = matricula; // ddlEspecialista.SelectedValue;
+
+                if (Request["idFicha"] != null)
+                {
+                    string idFicha = Request["idFicha"].ToString();
+
+                    Business.Data.Laboratorio.Ficha oRegistroFFEE = new Business.Data.Laboratorio.Ficha();
+                    oRegistroFFEE = (Business.Data.Laboratorio.Ficha)oRegistroFFEE.Get(typeof(Business.Data.Laboratorio.Ficha), "IdFicha", idFicha);
+                    if (oRegistroFFEE != null)
+                        if (oRegistroFFEE.IdCasoSnvs!="")
+                            if (oUtil.EsNumerico(oRegistroFFEE.IdCasoSnvs))
+                                oRegistro.IdCasoSISA =int.Parse(oRegistroFFEE.IdCasoSnvs);
+
+                }
 
                 oRegistro.Save();
                 oRegistro.ActualizarNumeroDesdeID();
@@ -3983,7 +4076,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 if (s_AreasCodigosBarras != "")
                 {
 
-                    ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras);
+                    ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras, ddlImpresora2.SelectedItem.Text);
                 }
                 else
                     lblMensajeImpresion.Text = "Debe seleccionar al menos un area para imprimir";

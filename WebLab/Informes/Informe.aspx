@@ -69,7 +69,7 @@
 					       </td>
 					</tr>
 					<tr>
-						<td class="myLabelIzquierda">Servicio:</td>
+						<td  > <label class="control-label">Servicio:</label></td>
 						<td>
                             <asp:DropDownList ID="ddlServicio" runat="server" 
                                 ToolTip="Seleccione el servicio" TabIndex="1" class="form-control input-sm"
@@ -106,7 +106,7 @@
                         </td>
 					</tr>
 					<tr>
-						<td class="myLabelIzquierda">Area:</td>
+						<td  > <label class="control-label">Area:</label></td>
 						<td>
                             <asp:DropDownList ID="ddlArea" runat="server"  class="form-control input-sm"
                                  onselectedindexchanged="ddlArea_SelectedIndexChanged" 
@@ -118,15 +118,15 @@
                             &nbsp;</td>
 					</tr>
 					<tr>
-						<td class="myLabelIzquierda">Fecha Desde:</td>
-						<td class="myLabelIzquierda">
+						<td  > <label class="control-label">Fecha Desde:</label> </td>
+						<td  >
                   <input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
                          onblur="valFecha(this)" 
                         onkeyup="mascara(this,'/',patron,true)" tabindex="3" class="form-control input-sm"
                                 style="width: 100px" title="Ingrese la fecha de inicio"  />
                             <asp:CustomValidator ID="cvFechas" runat="server" 
                                 ErrorMessage="Debe ingresar el rango de fechas"                                 onservervalidate="CustomValidator1_ServerValidate" ValidationGroup="0">*</asp:CustomValidator>
-                        &nbsp;hasta: &nbsp;
+                         <label class="control-label">&nbsp;hasta: &nbsp;</label>
                            <input id="txtFechaHasta" runat="server" type="text" maxlength="10" 
                          onblur="valFecha(this)" 
                         onkeyup="mascara(this,'/',patron,true)" tabindex="4" class="form-control input-sm"
@@ -135,7 +135,9 @@
                             &nbsp;</td>
 					</tr>
 					<tr>
-						<td class="myLabelIzquierda">Efector Solicitante:</td>
+						<td > <label class="control-label">Efector Solicitante:
+                            </label>
+                            </td>
 						<td>
 						
                    
@@ -151,15 +153,15 @@
                             &nbsp;</td>
                         </tr>
 					<tr>
-						<td class="myLabelIzquierda">Protocolo Desde:</td>
-						<td class="myLabelIzquierda">
+						<td > <label class="control-label"> Protocolo Desde:</label> </td>
+						<td  >
 						
                    
                               
                     <input id="txtProtocoloDesde" runat="server" type="text" maxlength="9"                        
                        tabindex="7" class="form-control input-sm" onblur="valNumero(this)"  style="width: 100px" 
-                                title="Ingrese el numero de protocolo de inicio (sin puntos ni guiones)"  />&nbsp;&nbsp;&nbsp; 
-                            hasta:&nbsp;
+                                title="Ingrese el numero de protocolo de inicio (sin puntos ni guiones)"  /> <label class="control-label">&nbsp;&nbsp;&nbsp; 
+                            hasta:&nbsp;</label>
 						
                    
                               
@@ -191,7 +193,7 @@
                         </tr>
                         
 						<tr>
-						<td class="myLabelIzquierda">Origen:</td>
+						<td  > <label class="control-label"> Origen:</label> </td>
 						<td>
                             <asp:DropDownList ID="ddlOrigen" runat="server" 
                                 ToolTip="Seleccione el origen" TabIndex="9" class="form-control input-sm">
@@ -202,7 +204,7 @@
 					        <tr>
 											
 						
-						<td class="myLabelIzquierda">Prioridad:</td>
+						<td  > <label class="control-label"> Prioridad:</label> </td>
 						<td>
                             <asp:DropDownList ID="ddlPrioridad" runat="server" 
                                 ToolTip="Seleccione la prioridad" TabIndex="10" class="form-control input-sm">
@@ -223,8 +225,8 @@
 					        </tr>--%>
 											
 						<tr>
-						<td class="myLabelIzquierda" style="vertical-align: top">Estado:</td>
-						<td class="myLabelIzquierda"  style="vertical-align: top">
+						<td  ><label class="control-label"  runat="server" id="tituloEstado">  Estado:</label> </td>
+						<td >
                             <asp:RadioButtonList ID="rdbEstadoAnalisis" runat="server" 
                                 RepeatDirection="Horizontal">
                                 <asp:ListItem Selected="True" Value="0">Todos</asp:ListItem>
@@ -255,7 +257,7 @@
                                  <tr>
                                       
 
-                                       <td   colspan="3" class="myLabelIzquierda">
+                                       <td   colspan="3"  >
                                           <hr />
                                              <h4>     <label id="lblCaracterCovid" runat="server" class = "label label-danger"> Caracter-CoVid19: </label></h4>
 					                
@@ -282,18 +284,47 @@
 					
 																	
 						<tr>
-						<td   colspan="4" align="right">
-                                          <asp:Panel ID="pnlEtiquetaCodigoBarras" runat="server" Visible="False">
-                                              <asp:Button ID="btnImprimirEtiqueta" runat="server" Text="Imprimir"   OnClientClick="return PreguntoImprimir();"
-                                                  CssClass="myButton"  onclick="btnImprimirEtiqueta_Click" ValidationGroup="0" />
-                                          </asp:Panel>
+						<td   colspan="4" align="left">
+                           
+                                          
                             </td>
                             </tr>
 																	
 						<tr>
 						<td   colspan="4" >
                             <br />
-                    
+                            <asp:Panel ID="pnlEtiquetaCodigoBarras" runat="server" Visible="False">
+                                              <table>
+                                                 	<tr>
+						<td  > <label class="control-label">Efector a Derivar:</label></td>
+						<td>
+                            <anthem:DropDownList ID="ddlEfectorDestino" runat="server" 
+                                ToolTip="Seleccione el efector" TabIndex="6" CssClass="form-control input-sm" 
+                                AutoCallBack="True" >
+                            </anthem:DropDownList>
+                                        
+					        </td>
+                            </tr>
+                                                  <tr>
+
+<td>   <label class="control-label">  Impresora de Codigo de barras:  </label></td>
+                                                      <td>   
+  <asp:DropDownList ID="ddlImpresoraCB" runat="server" TabIndex="1" class="form-control input-sm">     </asp:DropDownList> 
+                                             </td>
+                                                  </tr>
+                                             <tr>
+                                                 <td>
+                                                     <asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="ddlEfectorDestino" ErrorMessage="Efector" MaximumValue="99999" MinimumValue="1" Type="Integer" ValidationGroup="5">Seleccione Efector a Derivar</asp:RangeValidator>
+                                                 </td>
+                                             
+                                                 <td>
+                                                      <br />
+                                              <asp:Button ID="btnImprimirEtiqueta" runat="server" Text="Imprimir"   OnClientClick="return PreguntoImprimir();"
+                                                  CssClass="btn btn-primary" Width="100px"  onclick="btnImprimirEtiqueta_Click" ValidationGroup="5" /> 
+                                             </td>
+                                              </tr>  </table>
+                                          </asp:Panel>
+                     <br />
                                            <asp:Panel ID="pnlAnalisisFueraHT" runat="server">
                                                          <div class="panel panel-default">
                               <div class="panel-heading">

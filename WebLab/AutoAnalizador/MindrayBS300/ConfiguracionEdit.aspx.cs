@@ -22,13 +22,28 @@ namespace WebLab.AutoAnalizador.MindrayBS300
 {
     public partial class ConfiguracionEdit : System.Web.UI.Page
     {
+        Usuario oUser = new Usuario();
+        //   Item oItem = new Item();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+            //     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1, "IdEfector", oEfector);
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
                 VerificaPermisos("Config. Mindray BS-300");
                 CargarCombos();
-                CargarGrilla();                
+                CargarGrilla();
+                if (oUser.IdEfector.IdEfector == 227)
+                    btnGuardar.Visible = true;
+                else btnGuardar.Visible = false;
             }
         }
         private void VerificaPermisos(string sObjeto)
@@ -54,8 +69,8 @@ namespace WebLab.AutoAnalizador.MindrayBS300
         private object LeerDatos()
         {
             string m_strSQL = @" SELECT   M.idMindrayItem, I.codigo, I.nombre, M.tipoMuestra, M.idMindray, M.prefijo, M.Habilitado as Habilitado
-                                 FROM  LAB_MindrayItem AS M (nolock)
-                                 INNER JOIN LAB_Item AS I  (nolock) ON M.idItem = I.idItem Order by M.idMindray, M.tipoMuestra ";
+                                 FROM  LAB_MindrayItem AS M with (nolock)
+                                 INNER JOIN LAB_Item AS I  with (nolock) ON M.idItem = I.idItem Order by M.idMindray, M.tipoMuestra ";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -72,7 +87,7 @@ namespace WebLab.AutoAnalizador.MindrayBS300
         {
             Utility oUtil = new Utility();
 
-            string m_ssql = "select idArea, nombre from Lab_Area (nolock) where baja=0 and idtiposervicio=1 order by nombre";
+            string m_ssql = "select idArea, nombre from Lab_Area with (nolock) where baja=0 and idtiposervicio=1 order by nombre";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
 
             CargarItem();
@@ -86,7 +101,7 @@ namespace WebLab.AutoAnalizador.MindrayBS300
         {
             Utility oUtil = new Utility();
             ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
-            string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item (nolock)
+            string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item with (nolock)
                 where baja=0 
                 AND idEfector=idEfectorDerivacion 
                 and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
@@ -167,7 +182,20 @@ namespace WebLab.AutoAnalizador.MindrayBS300
                 ImageButton CmdEliminar = (ImageButton)e.Row.Cells[6].Controls[1];
                 CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdEliminar.CommandName = "Eliminar";
-                CmdEliminar.ToolTip = "Eliminar";             
+                CmdEliminar.ToolTip = "Eliminar";
+
+                CheckBox chkStatus = (CheckBox)e.Row.Cells[5].Controls[1];
+                if (oUser.IdEfector.IdEfector == 227)
+                {
+                    CmdEliminar.Visible = true;
+                    chkStatus.Visible = true;
+
+                }
+                else
+                {
+                    CmdEliminar.Visible = false;
+                    chkStatus.Enabled = false;
+                }
             }
         }
 

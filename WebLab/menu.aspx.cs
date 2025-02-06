@@ -45,43 +45,47 @@ namespace WebLab
 
             oC = (Configuracion)oC.Get(typeof(Configuracion), 1); // "IdEfector", oUser.IdEfector);
 
+            MenuSistema oMenuSistema = new MenuSistema();
 
-            MenuSistema oRegistro = new MenuSistema();
-            oRegistro.Objeto = txtObjeto.Text;
-            oRegistro.Url = txtURL.Text;
-            oRegistro.IdMenuSuperior =int.Parse( ddlIdMenuSuperior.SelectedValue);
-            oRegistro.Posicion =int.Parse( txtOrden.Text);
-            oRegistro.Icono = "";
-            oRegistro.Habilitado = true;
-            oRegistro.FechaCreacion = DateTime.Today;
-            oRegistro.IdUsuarioCreacion = 2;
-            oRegistro.FechaModificacion = DateTime.Today;
-            oRegistro.IdUsuarioModificacion = 2;
-            oRegistro.IdModulo = 2;
-            oRegistro.EsAccion = false;
-            oRegistro.Save();
-
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Perfil));
-            
-            IList detalle = crit.List();
-
-            foreach (Perfil oPerfil in detalle)
+            oMenuSistema = (MenuSistema)oMenuSistema.Get(typeof(MenuSistema), "Objeto", txtObjeto.Text, "IdMenuSuperior", int.Parse(ddlIdMenuSuperior.SelectedValue)); // "IdEfector", oUser.IdEfector);
+            if (oMenuSistema == null)
             {
-                Permiso oPermiso = new Permiso();
-                oPermiso.IdEfector = oC.IdEfector.IdEfector;
-                oPermiso.IdPerfil = oPerfil;
+                MenuSistema oRegistro = new MenuSistema();
+                oRegistro.Objeto = txtObjeto.Text;
+                oRegistro.Url = txtURL.Text;
+                oRegistro.IdMenuSuperior = int.Parse(ddlIdMenuSuperior.SelectedValue);
+                oRegistro.Posicion = int.Parse(txtOrden.Text);
+                oRegistro.Icono = "";
+                oRegistro.Habilitado = true;
+                oRegistro.FechaCreacion = DateTime.Today;
+                oRegistro.IdUsuarioCreacion = 2;
+                oRegistro.FechaModificacion = DateTime.Today;
+                oRegistro.IdUsuarioModificacion = 2;
+                oRegistro.IdModulo = 2;
+                oRegistro.EsAccion = false;
+                oRegistro.Save();
 
-                oPermiso.IdMenu = oRegistro.IdMenu;
-                if (txtPerfilPermiso.Text.Contains(oPerfil.IdPerfil.ToString()))
-                    oPermiso.PermisoAcceso = "2";
-                else
-                    oPermiso.PermisoAcceso = "0";
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Perfil));
 
-                oPermiso.Save();
+                IList detalle = crit.List();
+
+                foreach (Perfil oPerfil in detalle)
+                {
+                    Permiso oPermiso = new Permiso();
+                    oPermiso.IdEfector = oC.IdEfector.IdEfector;
+                    oPermiso.IdPerfil = oPerfil;
+
+                    oPermiso.IdMenu = oRegistro.IdMenu;
+                    if (txtPerfilPermiso.Text.Contains(oPerfil.IdPerfil.ToString()))
+                        oPermiso.PermisoAcceso = "2";
+                    else
+                        oPermiso.PermisoAcceso = "0";
+
+                    oPermiso.Save();
+                }
+
             }
-                
-           
 
 
         }
