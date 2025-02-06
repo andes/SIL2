@@ -657,7 +657,7 @@ namespace Business.Data
 
         public int getGeneroAndes(string v)
         {
-            string m_strSQL = " SELECT idgenero from sys_genero where nombre='" + v+"'";
+            string m_strSQL = " SELECT idgenero from sys_genero with (nolock) where nombre='" + v+"'";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -723,6 +723,23 @@ namespace Business.Data
 				m_isChanged |= (m_piso != value); m_piso = value;
 			}
 		}
+
+        public int getSexoAndes(string v)
+        {
+            string m_strSQL = " SELECT idsexo from sys_sexo with (nolock) where nombre='" + v + "'";
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+
+            if (Ds.Tables[0].Rows.Count > 0)
+
+                return int.Parse(Ds.Tables[0].Rows[0][0].ToString());
+            else
+                return 0;
+        }
 
         public int VerificaExistePaciente(string paciente_estado,string paciente_documento, string paciente_apellido, 
             string paciente_nombre, string paciente_sexo, string paciente_fn,

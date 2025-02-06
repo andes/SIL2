@@ -109,13 +109,14 @@ namespace WebLab.Informes
                 case "CodigoBarras":
                     {
                         VerificaPermisos("Etiqueta Codigo Barras");
-                        lblTitulo.Text = "IMPRESION DE ETIQUETAS DE CODIGO DE BARRAS";
+                        lblTitulo.Text = "IMPRESION DE ETIQUETAS DE CODIGO DE BARRAS DE DERIVACIONES";
                         pnlEtiquetaCodigoBarras.Visible = true;
                         pnlHojaTrabajo.Visible = false;
                         chkDesdeUltimoListado.Visible = false;
                         pnlHojaTrabajoResultado.Visible = false;
-                        pnlAnalisisFueraHT.Visible = false;                        
-                        
+                        pnlAnalisisFueraHT.Visible = false;
+                        rdbEstadoAnalisis.Visible = false; tituloEstado.Visible = false;
+
                     }
                     break;
             }                        
@@ -170,6 +171,14 @@ namespace WebLab.Informes
                 oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
                 ddlPrioridad.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
+
+                  m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
+
+                oUtil.CargarCombo(ddlImpresoraCB, m_ssql, "nombre", "nombre", connReady);
+
+                ddlImpresora.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
+
+
                 if (Request["Tipo"].ToString() == "HojaTrabajo") ddlPrioridad.SelectedValue = "1";//rutina
 
                 ///Carga de Sectores
@@ -197,7 +206,13 @@ namespace WebLab.Informes
                     CargarAnalisisFueraHT();
                 }
 
-
+                m_ssql = "SELECT  E.idEfector, E.nombre " +
+             " FROM  Sys_Efector AS E " +
+             " where E.idEfector IN  (SELECT DISTINCT idEfectorDerivacion FROM   lab_itemEfector AS IE  WHERE Ie.disponible=1 and IE.idEfector<>Ie.idEfectorDerivacion and  IE.idEfector=" + oUser.IdEfector.IdEfector.ToString() + ")" +
+             "    ORDER BY E.nombre";
+                //oUtil.CargarListBox(lstEfectores, m_ssql, "idEfector", "nombre");
+                oUtil.CargarCombo(ddlEfectorDestino, m_ssql, "idEfector", "nombre");
+                ddlEfectorDestino.Items.Insert(0, new ListItem("--Seleccione--", "0"));
                 ///////////////Impresoras////////////////////////
 
                 /*En multieFEctor esta parte de codigo no va porque refiere a impresora - no etiquetadora*/
@@ -212,7 +227,7 @@ namespace WebLab.Informes
                 }
                 else
                 {
-                    m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora (nolock) ";
+                    m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  
                     oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre", connReady);
                     if (Request["Tipo"].ToString() == "CodigoBarras")
                     { if (Session["Etiquetadora"] != null) ddlImpresora.SelectedValue = Session["Etiquetadora"].ToString(); }
@@ -1157,9 +1172,64 @@ order by I.nombre ";
 
         protected void btnImprimirEtiqueta_Click(object sender, EventArgs e)
         {
-            GenerarEtiquetas();
-        }
+            //  GenerarEtiquetas();
+            if (Page.IsValid)            
+            {
+                DataTable dt = new DataTable();
+                dt = GetDataSet_Etiquetas();
+                foreach (DataRow item in dt.Rows)
+                {
 
+                    int reg_idProtocolo = int.Parse(item[0].ToString());
+                    Business.Data.Laboratorio.Protocolo oProt = new Business.Data.Laboratorio.Protocolo();
+                    oProt = (Business.Data.Laboratorio.Protocolo)oProt.Get(typeof(Business.Data.Laboratorio.Protocolo), reg_idProtocolo);
+
+                    ///Imprimir codigo de barras.
+
+
+                    ImprimirCodigoBarrasAreas(oProt, ddlArea.SelectedValue, ddlImpresoraCB.SelectedItem.Text);
+
+                }
+            }
+           
+
+        }
+        private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
+        {
+
+            string[] tabla = s_listaAreas.Split(',');
+
+
+            for (int i = 0; i <= tabla.Length - 1; i++)
+            {
+                string s_area = tabla[i].ToUpper();
+                if (s_area == "0")
+                    s_area = "-1";
+                if (s_area == "-1")
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta General", oUser.IdUsuario);
+                else
+                {
+                    Business.Data.Laboratorio.Area oArea = new Business.Data.Laboratorio.Area();
+                    oArea = (Business.Data.Laboratorio.Area)oArea.Get(typeof(Business.Data.Laboratorio.Area), int.Parse(s_area));
+                    string s_narea = oArea.Nombre;
+                    if (oArea.Nombre.Length > 25)
+                        s_narea = oArea.Nombre.Substring(0, 25);
+
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta " + s_narea, oUser.IdUsuario);
+                }
+
+
+                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+                string query = @" INSERT INTO LAB_ProtocoloEtiqueta
+                    (idProtocolo ,idEfector  ,[idArea]  ,[idItem]      ,[impresora],fechaRegistro )
+     VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString() + "," + s_area + ",0,'" + impresora + "' , getdate()    )";
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+
+                int idres = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
 
         private void GenerarEtiquetas()
         {
@@ -1272,8 +1342,9 @@ order by I.nombre ";
             DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
 
-            s_condicion = " idTipoServicio=" + ddlServicio.SelectedValue;
-            s_condicion += " AND Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND Fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
+            s_condicion = " and A.idTipoServicio=" + ddlServicio.SelectedValue;
+            s_condicion += " and P.idEfector=" + oUser.IdEfector.IdEfector.ToString();
+            s_condicion += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.Fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
 
             //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
@@ -1284,10 +1355,10 @@ order by I.nombre ";
             {
 		        switch (oCon.TipoNumeracionProtocolo )
                 {
-                    case 0:	s_condicion += " and numero>=" +(txtProtocoloDesde.Value); break;
-                    case 1:	s_condicion += " and numeroDiario>=" +(txtProtocoloDesde.Value); break;
-                    case 2:	s_condicion += " and numeroSector>=" +(txtProtocoloDesde.Value); break;
-                    case 3:	s_condicion += " and numeroTipoServicio>=" +(txtProtocoloDesde.Value); break;
+                    case 0:	s_condicion += " and P.numero>=" +(txtProtocoloDesde.Value); break;
+                    //case 1:	s_condicion += " and numeroDiario>=" +(txtProtocoloDesde.Value); break;
+                    //case 2:	s_condicion += " and numeroSector>=" +(txtProtocoloDesde.Value); break;
+                    //case 3:	s_condicion += " and numeroTipoServicio>=" +(txtProtocoloDesde.Value); break;
                 }
             }
 
@@ -1296,51 +1367,82 @@ order by I.nombre ";
             { 
                 switch (oCon.TipoNumeracionProtocolo )
                 {
-                    case 0 : s_condicion += " and numero<="  +(txtProtocoloHasta.Value);break;
-                    case 1 : s_condicion += " and numeroDiario<="  +(txtProtocoloHasta.Value);break;
+                    case 0 : s_condicion += " and P.numero<="  +(txtProtocoloHasta.Value);break;
+              /*      case 1 : s_condicion += " and numeroDiario<="  +(txtProtocoloHasta.Value);break;
                     case 2 : s_condicion += " and numeroSector<="  +(txtProtocoloHasta.Value); break;
                     case 3 : s_condicion += " and numeroTipoServicio<=" + (txtProtocoloHasta.Value); break;
+                    */
                 }
             }
 
             
-            if (ddlEfector.SelectedValue != "0") s_condicion += " AND idEfectorSolicitante=" + ddlEfector.SelectedValue;
-            if (ddlOrigen.SelectedValue != "0") s_condicion += " AND idOrigen=" + ddlOrigen.SelectedValue;
-            if (ddlPrioridad.SelectedValue != "0") s_condicion += " AND idPrioridad=" + ddlPrioridad.SelectedValue;
+            if (ddlEfector.SelectedValue != "0") s_condicion += " AND P.idEfectorSolicitante=" + ddlEfector.SelectedValue;
+            if (ddlOrigen.SelectedValue != "0") s_condicion += " AND P.idOrigen=" + ddlOrigen.SelectedValue;
+            if (ddlPrioridad.SelectedValue != "0") s_condicion += " AND P.idPrioridad=" + ddlPrioridad.SelectedValue;
 
-            if (rdbEstadoAnalisis.SelectedValue == "1") s_condicion += " AND conResultado=0 ";
+       //     if (rdbEstadoAnalisis.SelectedValue == "1") s_condicion += " AND conResultado=0 ";
 
             string s_sectores = getListaSectores(true);
-            if (s_sectores!="")   s_condicion += " AND idSector in (" + getListaSectores(true) + ")";
+            if (s_sectores!="")   s_condicion += " AND P.idSector in (" + getListaSectores(true) + ")";
 
             if (ddlServicio.SelectedValue == "3")
             {
                 string listaM = getListaMuestra();
-                if (listaM!="") s_condicion += " AND idMuestra in (" + listaM + ")";
+                if (listaM!="") s_condicion += " AND P.idMuestra in (" + listaM + ")";
             }
-            
+            if (ddlEfectorDestino.SelectedValue != "0") s_condicion += " AND De.idEfectorDerivacion = " + ddlEfectorDestino.SelectedValue;
             ////////////////////////
 
             if (ddlArea.SelectedValue != "0")
             {
                 //s_condicion += " AND idDestinoEtiqueta=" + ddlArea.SelectedValue;
                 
-                s_condicion += " AND idArea=" + ddlArea.SelectedValue;
+                s_condicion += " AND I.idArea=" + ddlArea.SelectedValue + "and DP.trajoMuestra='Si' ";
 
-                m_strSQL = @" SELECT distinct [idProtocolo] ,[idArea] ,[numeroP],[area] ,[Fecha],[Origen] ,[Sector],[NumeroOrigen],[NumeroDocumento],[apellido],[Sexo],[edad]
-                FROM vta_LAB_GeneraCodigoBarras
-                WHERE   " + s_condicion;
+                //m_strSQL = @" SELECT distinct [idProtocolo] ,[idArea] ,[numeroP],[area] ,[Fecha],[Origen] ,[Sector],[NumeroOrigen],[NumeroDocumento],[apellido],[Sexo],[edad]
+                //FROM vta_LAB_GeneraCodigoBarras
+                //WHERE   " + s_condicion;
+
+//                m_strSQL = @"SELECT distinct P.idProtocolo
+//                    FROM         dbo.LAB_Protocolo AS P with (nolock) INNER JOIN
+//                      dbo.LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo INNER JOIN
+//    	          LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo inner join
+//                     dbo.LAB_Item AS I with (nolock) ON DP.idItem = I.idItem  
+//--              inner join        dbo.LAB_Area AS A with (nolock) ON I.idArea = A.idArea INNER JOIN
+//--                      dbo.LAB_Origen AS O with (nolock) ON P.idOrigen = O.idOrigen INNER JOIN
+//--                      dbo.LAB_SectorServicio AS SS with (nolock) ON P.idSector = SS.idSectorServicio Left JOIN
+//	--				  lab_muestra as M with (nolock) on M.idMuestra= I.idMuestra
+//Where P.baja=0      " + s_condicion;
             }
-            if (ddlArea.SelectedValue=="0")
-            {
-                m_strSQL += @"   SELECT [idProtocolo],[idArea],[numeroP],[area],[Fecha],[Origen],[Sector],[NumeroOrigen],[NumeroDocumento]      ,[apellido]      ,[Sexo]      ,[edad]
-                FROM vta_LAB_GeneraCodigoBarrasGeneral                    
-                WHERE   " + s_condicion;
-            }
+            //            if (ddlArea.SelectedValue=="0")
+            //            {
+            //                //m_strSQL += @"   SELECT [idProtocolo],[idArea],[numeroP],[area],[Fecha],[Origen],[Sector],[NumeroOrigen],[NumeroDocumento]      ,[apellido]      ,[Sexo]      ,[edad]
+            //                //FROM vta_LAB_GeneraCodigoBarrasGeneral                    
+            //                //WHERE   " + s_condicion;
 
-            m_strSQL += " ORDER BY area";
+            //                m_strSQL = @" SELECT DISTINCT                       P.idProtocolo
+            //FROM         dbo.LAB_Protocolo AS P with (nolock) 
+            //        --INNER JOIN                      dbo.LAB_Origen AS O with (nolock) ON P.idOrigen = O.idOrigen INNER JOIN
+            //          --            dbo.LAB_SectorServicio AS SS with (nolock) ON P.idSector = SS.idSectorServicio 
+            //        INNER JOIN     dbo.LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo INNER JOIN
+            //    	       LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo
+            //        inner join   dbo.LAB_Item AS I with (nolock) ON DP.idItem = I.idItem  
+            //--      inner join        dbo.LAB_Area AS A with (nolock) ON I.idArea = A.idArea 
+            // where P.baja=0   " + s_condicion;
 
-            
+            //            }
+
+            m_strSQL = @" SELECT DISTINCT                       P.idProtocolo
+        FROM         dbo.LAB_Protocolo AS P with (nolock)        
+        INNER JOIN     dbo.LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo 
+        INNER JOIN    	       LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo
+        inner join   dbo.LAB_Item AS I with (nolock) ON DP.idItem = I.idItem  
+        inner join        dbo.LAB_Area AS A with (nolock) ON I.idArea = A.idArea 
+        where P.baja=0   " + s_condicion;
+
+            //      m_strSQL += " ORDER BY area";
+
+
             DataSet Ds = new DataSet();
             //      SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura

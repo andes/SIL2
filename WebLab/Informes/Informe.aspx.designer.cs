@@ -175,6 +175,15 @@ namespace WebLab.Informes {
         protected global::System.Web.UI.WebControls.DropDownList ddlPrioridad;
         
         /// <summary>
+        /// tituloEstado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloEstado;
+        
+        /// <summary>
         /// rdbEstadoAnalisis control.
         /// </summary>
         /// <remarks>
@@ -245,6 +254,33 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlEtiquetaCodigoBarras;
+        
+        /// <summary>
+        /// ddlEfectorDestino control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlEfectorDestino;
+        
+        /// <summary>
+        /// ddlImpresoraCB control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraCB;
+        
+        /// <summary>
+        /// RangeValidator1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator RangeValidator1;
         
         /// <summary>
         /// btnImprimirEtiqueta control.

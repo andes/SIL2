@@ -2077,8 +2077,8 @@ namespace WebLab.Resultados
                     {
                         oDetalle.GrabarAuditoriaDetalleProtocolo("Des-PreValida", usuarioActual);
                         oDetalle.IdUsuarioPreValida = 0;                    
-                        oDetalle.ResultadoCar = "";
-                        oDetalle.ResultadoNum = 0;
+                        //oDetalle.ResultadoCar = "";
+                        //oDetalle.ResultadoNum = 0;
                     
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Save();
@@ -2088,8 +2088,8 @@ namespace WebLab.Resultados
                         oDetalle.GrabarAuditoriaDetalleProtocolo("DesValida", usuarioActual);
                         oDetalle.IdUsuarioPreValida = 0;
                         oDetalle.IdUsuarioValida = 0;
-                        oDetalle.ResultadoCar = "";
-                        oDetalle.ResultadoNum = 0;
+                        //oDetalle.ResultadoCar = "";
+                        //oDetalle.ResultadoNum = 0;
                     oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                     oDetalle.Save();

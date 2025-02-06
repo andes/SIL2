@@ -3189,8 +3189,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     {
                         oDetalle.GrabarAuditoriaDetalleProtocolo("Des-PreValida", usuarioActual);
                         oDetalle.IdUsuarioPreValida = 0;
-                        oDetalle.ResultadoCar = "";
-                        oDetalle.ResultadoNum = 0;
+                    //    oDetalle.ResultadoCar = String.Empty; ;
+                   //     oDetalle.ResultadoNum = 0;
+                   //     oDetalle.IdUsuarioResultado = 0;
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Save();
                     }
@@ -3198,8 +3199,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     {
                         oDetalle.GrabarAuditoriaDetalleProtocolo("DesValida", usuarioActual);
                         oDetalle.IdUsuarioValida = 0;
-                        oDetalle.ResultadoCar = "";
-                        oDetalle.ResultadoNum = 0;
+                  //      oDetalle.ResultadoCar = String.Empty; ;
+                   //     oDetalle.ResultadoNum = 0;
+                    //    oDetalle.IdUsuarioResultado = 0;
                         oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                         oDetalle.Save();
                     }                                      
