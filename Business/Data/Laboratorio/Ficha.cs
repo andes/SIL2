@@ -29,8 +29,10 @@ namespace Business.Data.Laboratorio
         private Efector m_idEfectorSolicitante;
         private string m_identificadorlabo;
         private string m_clasificacion;
+        private string m_idCasoSnvs;
 
         private DateTime m_fecha ;
+        private DateTime m_fechasintoma;
         private int m_idusuarioregistro;
         private DateTime m_fecharegistro;
         private string m_analisis;
@@ -48,12 +50,12 @@ namespace Business.Data.Laboratorio
             m_solicitante                 = String.Empty;
             m_tipoFicha = String.Empty;
             m_identificadorlabo = String.Empty;
-            
+            m_fechasintoma = DateTime.MinValue;
             m_idusuarioregistro = 0;
             m_fecharegistro = DateTime.MinValue;
             m_clasificacion = String.Empty;
-
-        m_fecha = DateTime.MinValue;
+            m_idCasoSnvs = String.Empty;
+            m_fecha = DateTime.MinValue;
         }
 
       
@@ -76,9 +78,10 @@ namespace Business.Data.Laboratorio
          string clasificacion,
         int idusuarioregistro,
             DateTime fecharegistro,
-            DateTime    fecha
-            
-          
+            DateTime    fecha,
+            DateTime fechasintoma,
+
+            string idCasoSnvs
              )
 			: this()
 		{
@@ -87,7 +90,10 @@ namespace Business.Data.Laboratorio
             m_idusuarioregistro = idusuarioregistro;
         m_fecharegistro = DateTime.MinValue;
             m_fecha = DateTime.MinValue;
+            m_fechasintoma = DateTime.MinValue;
             m_analisis = analisis;
+            m_idCasoSnvs = idCasoSnvs;
+
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -206,6 +212,16 @@ namespace Business.Data.Laboratorio
                 m_identificadorlabo = value;
             }
         }
+
+        public string IdCasoSnvs
+        {
+            get { return m_idCasoSnvs; }
+            set
+            {
+                m_isChanged |= (m_idCasoSnvs != value);
+                m_idCasoSnvs = value;
+            }
+        }
         public string Clasificacion
         {
             get { return m_clasificacion; }
@@ -238,6 +254,17 @@ namespace Business.Data.Laboratorio
             {
                 m_isChanged |= (m_fecharegistro != value);
                 m_fecharegistro = value;
+            }
+
+        }
+
+        public DateTime FechaSintoma
+        {
+            get { return m_fechasintoma; }
+            set
+            {
+                m_isChanged |= (m_fechasintoma != value);
+                m_fechasintoma = value;
             }
 
         }

@@ -15,13 +15,16 @@
  
     <property column="identificadorlabo" type="String" name="Identificadorlabo" not-null="true" length="100" />
     <property column="clasificacion" type="String" name="Clasificacion" not-null="true" length="100" />
+    <property column="idCasoSnvs" type="String" name="IdCasoSnvs" not-null="true" length="50" />
     <property column="analisis" type="String" name="Analisis" not-null="true" length="200" />
 
     <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
-    	
-      
-    
-    	<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+
+    <property column="fechaSintoma" type="DateTime" name="FechaSintoma" not-null="true" />
+
+
+
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
 		 
 	</class>
 </hibernate-mapping>

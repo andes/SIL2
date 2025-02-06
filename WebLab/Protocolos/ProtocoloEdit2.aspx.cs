@@ -354,23 +354,28 @@ namespace WebLab.Protocolos
                 btnCancelar.Width = Unit.Pixel(80);
 
                 txtNumeroOrigen.Text = oRegistro.Identificadorlabo;
-                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString(); SelectedEfector();
+                ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); SelectedEfector();
                 ddlOrigen.SelectedValue = "1";// oRegistro.IdOrigen.IdOrigen.ToString();//ver el origen 
                 ddlSectorServicio.SelectedValue =  oSector.IdSectorServicio.ToString();// oRegistro.IdSector.IdSectorServicio.ToString(); //ver el servicio 
                 ddlPrioridad.SelectedValue = "1";// oRegistro.IdPrioridad.IdPrioridad.ToString();
-                //if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
+                                                 //if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
 
-                txtEspecialista.Text = oRegistro.Solicitante;
-                string espe = "_";// oRegistro.Solicitante;
-                string matricula = oRegistro.Solicitante + '#' + oRegistro.Solicitante;
+
+                txtEspecialista.Text = "9999";//oRegistro.MatriculaEspecialista;
+                string espe = oRegistro.Solicitante;
+                string matricula = "9999" + '#' + oRegistro.Solicitante;  //oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
                 //      MostrarMedico();
                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
                 //if ((matricula == oRegistro.MatriculaEspecialista) && (oRegistro.Especialista== apellidoynombre))
-                ddlEspecialista.SelectedValue = oRegistro.Solicitante + '#' + oRegistro.Solicitante;
+                ddlEspecialista.SelectedValue = "9999" + '#' + oRegistro.Solicitante;
                 ddlEspecialista.UpdateAfterCallBack = true;
 
+                txtFechaFIS.Value= oRegistro.FechaSintoma.ToShortDateString();
 
-                CargarDeterminacionesDerivacionMultiEfector(oRegistro.Analisis);
+                if (oRegistro.Analisis != "")
+                {
+                    CargarDeterminacionesDerivacionMultiEfector(oRegistro.Analisis);
+                }
 
             }
 
@@ -2179,6 +2184,17 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
                 oRegistro.Especialista = apellidoynombre; // ddlEspecialista.SelectedItem.Text;
                 oRegistro.MatriculaEspecialista = matricula; // ddlEspecialista.SelectedValue;
+
+                if (Request["idFicha"] != null)
+                {
+                    string idFicha = Request["idFicha"].ToString();
+
+                    Business.Data.Laboratorio.Ficha oRegistroFFEE = new Business.Data.Laboratorio.Ficha();
+                    oRegistroFFEE = (Business.Data.Laboratorio.Ficha)oRegistroFFEE.Get(typeof(Business.Data.Laboratorio.Ficha), "IdFicha", idFicha);
+                    if (oRegistroFFEE != null)
+                        oRegistro.IdCasoSISA =int.Parse(oRegistroFFEE.IdCasoSnvs);
+
+                }
 
                 oRegistro.Save();
                 oRegistro.ActualizarNumeroDesdeID();
