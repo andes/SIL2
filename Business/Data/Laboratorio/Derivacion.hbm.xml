@@ -15,6 +15,7 @@
     <property column="idUsuarioResultado" type="Int32" name="IdUsuarioResultado" not-null="true" />
     <property column="fechaResultado" type="DateTime" name="FechaResultado" not-null="true" />
     <many-to-one name="IdEfectorDerivacion" column="idEfectorDerivacion" class="Business.Data.Efector,Business" />
-		
+    <many-to-one class="Business.Data.Laboratorio.LoteDerivacion,Business" name="Idlote" column="idLote"  />
+    <property column="idProtocoloDerivacion" type="Int32" name="IdProtocoloDerivacion" />
 	</class>
 </hibernate-mapping>

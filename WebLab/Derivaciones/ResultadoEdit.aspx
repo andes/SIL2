@@ -66,7 +66,7 @@
 					<tr>
 						
 						<td style="vertical-align: top" align="left">        
-    <asp:HyperLink ID="hypRegresar" runat="server" CssClass="myLink">Regresar</asp:HyperLink>
+                            <asp:HyperLink ID="hypRegresar" runat="server" CssClass="myLink"  NavigateUrl="~/Derivaciones/Derivados2.aspx?tipo=resultado" >Regresar</asp:HyperLink>
                                          </td>
 						
 						<td colspan="3" style="vertical-align: top" align="right">        
