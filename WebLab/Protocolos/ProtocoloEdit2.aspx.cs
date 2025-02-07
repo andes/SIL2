@@ -233,6 +233,7 @@ namespace WebLab.Protocolos {
                                 CargarProtocoloDerivado(numeroProtocolo, analisis);
 
 
+<<<<<<< HEAD
 
                             }
                             if (Request["Operacion"].ToString() == "AltaFFEE")
@@ -242,11 +243,12 @@ namespace WebLab.Protocolos {
                                  CargarFFEE(  idFicha);
 
 
+=======
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
 
                             }
 
-                            if (Request["Operacion"].ToString() == "AltaPeticion")
-                            {
+                            if (Request["Operacion"].ToString() == "AltaPeticion") {
                                 string idPeticion = Request["idPeticion"].ToString();
                                 Peticion oRegistro = new Peticion();
                                 oRegistro = (Peticion) oRegistro.Get(typeof(Peticion), int.Parse(idPeticion));
@@ -424,8 +426,7 @@ namespace WebLab.Protocolos {
 
         }
 
-        private void CargarProtocoloDerivado(string numeroProtocolo, string analisis)
-        {
+        private void CargarProtocoloDerivado(string numeroProtocolo, string analisis) {
 
             Utility oUtil = new Utility();
             //Actualiza los datos de los objetos : alta o modificacion .
@@ -1237,6 +1238,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 //    lblImprimeCodigoBarras.Visible = false;
                 //    chkAreaCodigoBarra.Items.Clear();
                 ddlImpresoraEtiqueta.Visible = false;
+<<<<<<< HEAD
             }
             else
             {
@@ -1244,6 +1246,12 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
                                                                                                                                                              //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+=======
+            } else {
+                if (oConfiguracion.Habilitado) {
+                    m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
+                                                                                                                                                                     //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                     oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
 
@@ -1253,10 +1261,15 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                   (Request["Operacion"].ToString() == "AltaTurno") ||
                   (Request["Operacion"].ToString() == "AltaDerivacion") ||
                   (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
+<<<<<<< HEAD
                   (Request["Operacion"].ToString() == "AltaPeticion") ||
                   (Request["Operacion"].ToString() == "AltaFFEE") 
                   )
                     {
+=======
+                  (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ||
+                  (Request["Operacion"].ToString() == "AltaPeticion")) {
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                         pnlImpresoraAlta.Visible = true;
                         pnlEtiquetas.Visible = false;
                     } else {
@@ -1270,8 +1283,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                         //lblImprimeCodigoBarras.Visible = true;
                         ///cargar de areas con codigo de barras           ==> solo areas que estan en el protocolo.
+<<<<<<< HEAD
                                          
                         m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
+=======
+
+                        m_ssql = @"select idArea, nombre from Lab_Area  A (nolock)
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                             WHERE imprimeCodigoBarra=1 and idTipoServicio=" + oServicio.IdTipoServicio.ToString() +
                             @"  and baja=0
                             and exists (select 1 from lab_detalleprotocolo dp with (nolock)
@@ -1389,9 +1407,15 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //        " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio= " + Session["idServicio"].ToString() + " AND (I.tipo= 'P') order by I.nombre ";
 
             m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +
+<<<<<<< HEAD
                   " FROM Lab_item I with (nolock) " +
                   " inner join lab_itemEfector IE with (nolock) on IE.idItem= I.iditem and ie.idefector=" + oC.IdEfector.IdEfector.ToString()+
                   " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
+=======
+                  " FROM Lab_item I (nolock) " +
+                  " inner join lab_itemEfector IE (nolock) on IE.idItem= I.iditem and ie.idefector=" + oC.IdEfector.IdEfector.ToString() +
+                  " INNER JOIN Lab_area A (nolock) ON A.idArea= I.idArea " +
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                   " where A.baja=0 and I.baja=0 and  IE.disponible=1 and A.idtipoServicio= " + Session["idServicio"].ToString() + " AND (I.tipo= 'P') order by I.nombre ";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
@@ -1821,12 +1845,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             return lista;
         }
 
+<<<<<<< HEAD
      
 
 
         private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
         {
            
+=======
+
+
+        private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas) {
+
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
             string[] tabla = s_listaAreas.Split(',');
 
 
@@ -1834,9 +1865,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 string s_area = tabla[i].ToUpper();
 
                 if (s_area == "-1")
+<<<<<<< HEAD
                     oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta General", oUser.IdUsuario);
                 else
                 {
+=======
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiquetas General", int.Parse(Session["idUsuario"].ToString()));
+                else {
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                     Area oArea = new Area();
                     oArea = (Area) oArea.Get(typeof(Area), int.Parse(s_area));
                     string s_narea = oArea.Nombre;
@@ -1851,7 +1887,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 string query = @" INSERT INTO LAB_ProtocoloEtiqueta
                     (idProtocolo ,idEfector  ,[idArea]  ,[idItem]      ,[impresora],fechaRegistro )
+<<<<<<< HEAD
      VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString()+"," + s_area + ",0,'" + impresora + "' , getdate()    )";
+=======
+     VALUES   ( " + oProt.IdProtocolo.ToString() + "," + oUser.IdEfector.IdEfector.ToString() + "," + s_area + ",0,'" + ddlImpresora2.SelectedItem.Text + "' , getdate()    )";
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                 SqlCommand cmd = new SqlCommand(query, conn);
 
 
@@ -2589,6 +2629,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
+<<<<<<< HEAD
         //private void GuardarDerivacion(DetalleProtocolo oDetalle)
         //{
         //    if (oDetalle.IdItem.esDerivado(oC.IdEfector))
@@ -2600,6 +2641,17 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         //        oRegistro.IdUsuarioRegistro = oUser.IdUsuario;// int.Parse(Session["idUsuario"].ToString());
         //        oRegistro.FechaRegistro = DateTime.Now;
         //        oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+=======
+        private void GuardarDerivacion(DetalleProtocolo oDetalle) {
+            if (oDetalle.IdItem.esDerivado(oC.IdEfector)) {
+                Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
+                oRegistro.IdDetalleProtocolo = oDetalle;
+                oRegistro.Estado = 0;
+                oRegistro.Observacion = txtObservacion.Text;
+                oRegistro.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+                oRegistro.FechaRegistro = DateTime.Now;
+                oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
 
         //        oRegistro.IdEfectorDerivacion = oDetalle.IdItem.GetIDEfectorDerivacion(oC.IdEfector);  // se graba el efector configurado en ese momento.
 
@@ -2696,7 +2748,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         private void GuardarDetallePractica(DetalleProtocolo oDet) {
 
 
+<<<<<<< HEAD
             if (oDet.VerificarSiEsDerivable(oUser.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+=======
+            if (VerificarSiEsDerivable(oDet)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
             {
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
@@ -2718,6 +2774,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             oSItem = (Item) oSItem.Get(typeof(Item), oSubitem.IdItemDeterminacion);
                             if (i == 1) {
                                 oDet.IdSubItem = oSItem;
+<<<<<<< HEAD
                                
                                 oDet.Save();
                                 oDet.GuardarSinInsumo();
@@ -2729,6 +2786,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                  oDetalle.IdProtocolo =oDet.IdProtocolo;
                                  oDetalle.IdEfector = oDet.IdEfector;
                                  oDetalle.IdItem = oDet.IdItem;
+=======
+                                oDet.Save();
+                            } else {
+                                DetalleProtocolo oDetalle = new DetalleProtocolo();
+                                oDetalle.IdProtocolo = oDet.IdProtocolo;
+                                oDetalle.IdEfector = oDet.IdEfector;
+                                oDetalle.IdItem = oDet.IdItem;
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                                 oDetalle.IdSubItem = oSItem;
                                 oDetalle.TrajoMuestra = oDet.TrajoMuestra;
                                 oDetalle.Informable = oSItem.GetInformableEfector(oUser.IdEfector);
@@ -2815,6 +2880,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         //    //Fin calculo de valor de refrencia y metodo
         //}
 
+<<<<<<< HEAD
         //private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
         //{
         //    bool ok=false;
@@ -2836,6 +2902,25 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         //    }
         //    else
         //        ok = false;
+=======
+        private bool VerificarSiEsDerivable(DetalleProtocolo oDet) {
+            bool ok = false;
+            /// buscar idefectorderivacion desde lab_itemefector
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
+            critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
+            critItemEfector.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+            IList detalle1 = critItemEfector.List();
+            if (detalle1.Count > 0) {
+                foreach (ItemEfector oitemEfector in detalle1) {
+                    if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector) {
+                        ok = true;
+                        break;
+                    }
+                }
+            } else
+                ok = false;
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
 
         //    return ok;
 
@@ -3427,10 +3512,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
+<<<<<<< HEAD
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         { 
            
 
+=======
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args) {
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
             TxtDatosCargados.Value = TxtDatos.Value;
 
             string sDatos = "";
@@ -3863,9 +3952,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 string s_AreasCodigosBarras = getListaAreasCodigoBarras();
                 if (s_AreasCodigosBarras != "") {
 
+<<<<<<< HEAD
                     ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras, ddlImpresora2.SelectedItem.Text);
                 }
                 else
+=======
+                    ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras);
+                } else
+>>>>>>> 4d213f4ac59ecc1bc072eb8b788cb696b35907f1
                     lblMensajeImpresion.Text = "Debe seleccionar al menos un area para imprimir";
             } else
                 lblMensajeImpresion.Text = "Debe seleccionar una impresora";
