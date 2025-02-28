@@ -75,6 +75,7 @@ namespace WebLab.Protocolos {
         }
         private void resetearForm() {
             gvProtocolosDerivados.DataSource = null;
+            gvProtocolosDerivados.EmptyDataText = "";
             gvProtocolosDerivados.DataBind();
             div_controlLote.Attributes["class"] = "form-group";
             lbl_errorEfectorOrigen.Visible = false;
@@ -135,21 +136,24 @@ namespace WebLab.Protocolos {
             lbl_efectorOrigen.Text = efectorOrigen.Nombre;
 
             //Cargo grilla de protocolos para ingresar
-            if(lote.Estado != 6) {
-                DataTable dt = LeerDatosProtocolosDerivados();
-                if (dt.Rows.Count > 0) {
-                    gvProtocolosDerivados.DataSource = dt;
-                    gvProtocolosDerivados.DataBind();
-
-                    lbl_cantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
-                } else {
-                    gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia
-                }
+            DataTable dt = LeerDatosProtocolosDerivados();
+            if (dt.Rows.Count > 0) {
+                gvProtocolosDerivados.DataSource = dt;
+                lbl_cantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
             } else {
-                //Si esta el lote esta completo muestro otro mensaje de la grilla
-                gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote " + txtNumeroLote.Text;
+                gvProtocolosDerivados.DataSource = null;
+                gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia
             }
-            
+            if (gvProtocolosDerivados.Rows.Count == 0) {
+                //Si no trajo datos verifico el estado del lote
+                if (lote.Estado != 6) {
+                    gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado ";
+                } else {
+                    //Si esta el lote esta completo muestro otro mensaje de la grilla
+                    gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote ";
+                }
+            }
+            gvProtocolosDerivados.DataBind();
         }
        
         private bool efectorCorrecto(LoteDerivacion lote) {
@@ -176,21 +180,7 @@ namespace WebLab.Protocolos {
             }
         }
 
-        protected void gvProtocolosDerivados_RowDataBound(object sender, GridViewRowEventArgs e) {
-            //Cargo grilla de protocolos para ingresar
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
-
-            if (gvProtocolosDerivados.Rows.Count == 0 ){
-                //Si no trajo datos verifico el estado del lote
-                if (lote.Estado != 6) {
-                    gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado ";
-                } else {
-                //Si esta el lote esta completo muestro otro mensaje de la grilla
-                gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote " + txtNumeroLote.Text;
-                }
-            } 
-        }
+        
 
         private DataTable LeerDatosProtocolosDerivados() {
 

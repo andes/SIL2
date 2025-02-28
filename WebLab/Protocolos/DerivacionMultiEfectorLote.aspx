@@ -91,9 +91,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <asp:GridView ID="gvProtocolosDerivados" runat="server" CssClass="table table-bordered bs-table" AutoGenerateColumns="False"
-                                            DataKeyNames="idProtocolo"
-                                            OnRowDataBound="gvProtocolosDerivados_RowDataBound"
-                                            >
+                                            DataKeyNames="idProtocolo">
                                             <Columns>
                                                 <asp:BoundField DataField="fecha" HeaderText="Fecha" />
                                                 <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
