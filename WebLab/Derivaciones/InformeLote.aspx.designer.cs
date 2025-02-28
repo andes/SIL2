@@ -42,13 +42,22 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RangeValidator Range1;
 
         /// <summary>
-        /// rb_transportista control.
+        /// ddl_Transporte control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rb_transportista;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_Transporte;
+
+        /// <summary>
+        /// lbl_ErrorTransporte control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_ErrorTransporte;
 
         /// <summary>
         /// txtObservacion control.
