@@ -324,6 +324,8 @@
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacionEstado.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\AuditoriaLoteDerivacion.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacion.hbm.xml" />
+    <Content Include="Data\AutoAnalizador\CobasC311.hbm.xml" />
+    <Content Include="Data\Laboratorio\Ficha.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ItemMuestra.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\Marca.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ItemPresentacion.hbm.xml" />
