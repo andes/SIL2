@@ -235,17 +235,25 @@
                                         <ItemStyle Width="25%" HorizontalAlign="Center" />
                                     </asp:BoundField>
 
-                                    <asp:TemplateField ItemStyle-Width="5%" >
+                                    <asp:TemplateField ItemStyle-Width="20%" HeaderText="Acciones" >
                                         <ItemTemplate>
                                             <asp:LinkButton runat="server" ID="lnkPDF" OnCommand="lnkPDF_Command" CommandArgument='<%# Eval("numero") %>'>
                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                             </asp:LinkButton>
+                                          <asp:LinkButton runat="server" ID="lnkEdit" OnCommand="lnkEdit_Command" CommandArgument='<%# Eval("numero") %>'  CommandName = '<%# Eval("idEfectorDerivacion") %>'>
+                                                 <asp:Image  runat="server" ImageUrl='<%# habilitarEditarSegunEstado(Convert.ToInt32(Eval("estado"))) %>'  />
+                                            </asp:LinkButton>
+                                           
                                             
                                         </ItemTemplate>
+                                        <ItemStyle>
+                                             
+                                        </ItemStyle>
                                         <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>
 
                                      <asp:BoundField DataField="idEfectorDerivacion" Visible="false"/>
+
                                     
                                 </Columns>
 

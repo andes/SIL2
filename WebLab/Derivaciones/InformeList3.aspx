@@ -176,7 +176,8 @@
             
                                     <asp:TemplateField HeaderText="Sel." >
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")))%> ' onchange="checkDeterminaciones(this);"/>
+                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")))%> ' onchange="checkDeterminaciones(this);"
+                                                Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> '/>
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" 
                                             HorizontalAlign="Center" />
@@ -214,6 +215,11 @@
                                     <asp:BoundField DataField="observacion" HeaderText="Observaciones">
                                         <ItemStyle Width="10%" />
                                     </asp:BoundField>
+                                    <asp:BoundField DataField="idLote" Visible="false">
+                                    </asp:BoundField>
+                                    <asp:TemplateField visible="false">
+                                        <ItemTemplate> <asp:Label ID="lbl_estado" runat="server" Text='<%# Eval("estado") %>'/> </ItemTemplate>
+                                    </asp:TemplateField>
                                 </Columns>
                                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                                 <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />

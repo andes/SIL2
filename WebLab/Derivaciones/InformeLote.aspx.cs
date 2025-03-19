@@ -22,37 +22,32 @@ using Business.Data;
 
 namespace WebLab.Derivaciones
 {
-    public partial class InformeLote : System.Web.UI.Page
-    {
+    public partial class InformeLote : System.Web.UI.Page {
 
         public CrystalReportSource oCr = new CrystalReportSource();
 
-        protected void Page_PreInit(object sender, EventArgs e)
-        {
+        protected void Page_PreInit(object sender, EventArgs e) {
             oCr.Report.FileName = "";
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
         }
 
 
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!Page.IsPostBack){
+        protected void Page_Load(object sender, EventArgs e) {
+            if (!Page.IsPostBack) {
                 if (Session["idUsuario"] != null) {
                     if (Convert.ToInt32(Request["Estado"]) == 1 || Convert.ToInt32(Request["Estado"]) == 3) {
-                        activarControles();
+                        activarControles(true);
                     }
                     CargarGrilla();
                     CargarEstados();
                 } else {
                     Response.Redirect("../FinSesion.aspx", false);
                 }
-
-            } 
+            }
         }
 
-        protected void Page_Unload(object sender, EventArgs e)
-        {
+        protected void Page_Unload(object sender, EventArgs e) {
             if (this.oCr.ReportDocument != null) {
                 this.oCr.ReportDocument.Close();
                 this.oCr.ReportDocument.Dispose();
@@ -62,8 +57,8 @@ namespace WebLab.Derivaciones
 
         #region Carga
 
-        private DataTable GetData(string m_strSQL)
-        {
+        
+        private DataTable GetData(string m_strSQL) {
             DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
@@ -72,8 +67,8 @@ namespace WebLab.Derivaciones
             return Ds.Tables[0];
         }
 
-        private void CargarGrilla()
-        {
+        private void CargarGrilla() {
+            
             string m_strSQL = " SELECT idLoteDerivacion as numero, e.nombre as efectorderivacion, l.estado, l.idEfectorDestino as idEfectorDerivacion," +
                              " fechaRegistro, " +
                              " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
@@ -89,37 +84,25 @@ namespace WebLab.Derivaciones
 
             if (dt.Rows.Count > 0) {
                 gvLista.DataSource = dt;
-            }
-            else{
-                desactivarControles();
+            } else {
+                activarControles(false); //desactiva los controles porque no hay nada para derivar o cancelar
             }
 
-            gvLista.DataBind(); 
+            gvLista.DataBind();
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
+           
         }
 
-        private void desactivarControles()
-        {
-            btnGuardar.Enabled = false;
-            txtObservacion.Enabled = false;
-            ddlEstados.Enabled = false;
-            rb_transportista.Enabled = false;
-            lnkMarcar.Enabled = false;
-            lnkDesMarcar.Enabled = false;
+        private void activarControles(bool valor) {
+            btnGuardar.Enabled = valor;
+            txtObservacion.Enabled = valor;
+            ddlEstados.Enabled = valor;
+            rb_transportista.Enabled = valor;
+            lnkMarcar.Enabled = valor;
+            lnkDesMarcar.Enabled = valor;
         }
 
-        private void activarControles()
-        {
-            btnGuardar.Enabled = true;
-            txtObservacion.Enabled = true;
-            ddlEstados.Enabled = true;
-            rb_transportista.Enabled = true;
-            lnkMarcar.Enabled = true;
-            lnkDesMarcar.Enabled = true;
-        }
-
-        private void CargarEstados()
-        {
+        private void CargarEstados() {
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
@@ -127,87 +110,94 @@ namespace WebLab.Derivaciones
 
             string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
             oUtil.CargarCombo(ddlEstados, m_ssql, "idEstado", "nombre", connReady);
-           
+
         }
 
-        protected string ObtenerImagenEstado(int estado)
-        {
+        protected string ObtenerImagenEstado(int estado) {
             //Estados de Lote
-            switch (estado)
-            {
-                case 1:return "../App_Themes/default/images/reloj-de-arena.png";
-                case 2:return  "~/App_Themes/default/images/enviado.png";
-                case 3:return "../App_Themes/default/images/block.png";
-                default: return ""; 
+            switch (estado) {
+                case 1:
+                    return "../App_Themes/default/images/reloj-de-arena.png";
+                case 2:
+                    return "~/App_Themes/default/images/enviado.png";
+                case 3:
+                    return "../App_Themes/default/images/block.png";
+                default:
+                    return "";
             }
         }
 
-        protected bool habilitarCheckBoxSegunEstado(int estado)
-        {
-            switch (estado)
-            {
-                case 1: return true;
-                case 2: return false;
-                case 3: return true;
-                default: return false;
+        protected bool habilitarCheckBoxSegunEstado(int estado) {
+            switch (estado) {
+                case 1:
+                    return true;
+                case 2:
+                    return false;
+                case 3:
+                    return true;
+                default:
+                    return false;
             }
+        }
+
+        protected string habilitarEditarSegunEstado(int estado) {
+            if (estado == 1)
+                return "~/App_Themes/default/images/editar.jpg";
+            else
+                return "";
+
         }
         #endregion
 
         #region Marca
-        protected void lnkMarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(true);           
+        protected void lnkMarcar_Click(object sender, EventArgs e) {
+            MarcarSeleccionados(true);
         }
 
-        protected void lnkDesMarcar_Click(object sender, EventArgs e)
-        {
+        protected void lnkDesMarcar_Click(object sender, EventArgs e) {
             MarcarSeleccionados(false);
         }
 
-        private void MarcarSeleccionados(bool p)
-        {
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        private void MarcarSeleccionados(bool p) {
+            foreach (GridViewRow row in gvLista.Rows) {
+                CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
                 if (a.Checked == !p)
-                    ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
+                    ((CheckBox) (row.Cells[0].FindControl("CheckBox1"))).Checked = p;
             }
         }
 
-        protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-           /* DataTable dt = new DataTable();
+        protected void CheckBox1_CheckedChanged(object sender, EventArgs e) {
+            /* DataTable dt = new DataTable();
 
-            if (Session["ListaSeleccionados"] == null){
-              
-                dt.Columns.Add("numero");
-                dt.Columns.Add("efectorderivacion");
-                dt.Columns.Add("estado");
-                dt.Columns.Add("fechaAlta");
-                dt.Columns.Add("usernameE");
-                dt.Columns.Add("usernameR");
-                dt.Columns.Add("idEfectorDerivacion");
+             if (Session["ListaSeleccionados"] == null){
 
-                cargarRow(sender, dt);
-            }
-            else
-            {
-                dt = (DataTable) Session["ListaSeleccionados"];
-                if (((System.Web.UI.WebControls.CheckBox)sender).Checked){
-                    cargarRow(sender, dt);
-                }
-                else{
-                    int index = ((GridViewRow)((System.Web.UI.Control)sender).BindingContainer).DataItemIndex;
-                    string idLote = gvLista.Rows[index].Cells[2].Text;
-                    DataRow[] borrar = dt.Select("numero = " + idLote);
+                 dt.Columns.Add("numero");
+                 dt.Columns.Add("efectorderivacion");
+                 dt.Columns.Add("estado");
+                 dt.Columns.Add("fechaAlta");
+                 dt.Columns.Add("usernameE");
+                 dt.Columns.Add("usernameR");
+                 dt.Columns.Add("idEfectorDerivacion");
 
-                    if(borrar.Length > 0)
-                       dt.Rows.Remove(borrar[0]);
-                }
-            }
+                 cargarRow(sender, dt);
+             }
+             else
+             {
+                 dt = (DataTable) Session["ListaSeleccionados"];
+                 if (((System.Web.UI.WebControls.CheckBox)sender).Checked){
+                     cargarRow(sender, dt);
+                 }
+                 else{
+                     int index = ((GridViewRow)((System.Web.UI.Control)sender).BindingContainer).DataItemIndex;
+                     string idLote = gvLista.Rows[index].Cells[2].Text;
+                     DataRow[] borrar = dt.Select("numero = " + idLote);
 
-            Session["ListaSeleccionados"] = dt;*/
+                     if(borrar.Length > 0)
+                        dt.Rows.Remove(borrar[0]);
+                 }
+             }
+
+             Session["ListaSeleccionados"] = dt;*/
         }
 
         //private void cargarRow(object sender, DataTable dt)
@@ -234,29 +224,26 @@ namespace WebLab.Derivaciones
 
         #region PDF
 
-       
 
-        protected void lnkPDF_Command(object sender, CommandEventArgs e)
-        {
-            string idLote = (((System.Web.UI.WebControls.LinkButton)sender).CommandArgument).ToString();
+
+        protected void lnkPDF_Command(object sender, CommandEventArgs e) {
+            string idLote = (((System.Web.UI.WebControls.LinkButton) sender).CommandArgument).ToString();
             GenerarPDF(idLote);
         }
-       
 
-        private void GenerarPDF(string idLote)
-        {
+
+        private void GenerarPDF(string idLote) {
 
             string m_strSQL = Business.Data.Laboratorio.LoteDerivacion.derivacionPDF(int.Parse(idLote));
 
             DataTable dt = GetData(m_strSQL);
 
-            if (dt.Rows.Count > 0)
-            {
+            if (dt.Rows.Count > 0) {
                 Usuario oUser = new Usuario();
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 string informe = "../Informes/DerivacionLote.rpt";
                 Configuracion oCon = new Configuracion();
-                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+                oCon = (Configuracion) oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
 
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                 encabezado1.Value = oCon.EncabezadoLinea1;
@@ -280,30 +267,26 @@ namespace WebLab.Derivaciones
             }
         }
 
-       
+
         #endregion
 
         #region Entrega
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
+        protected void btnGuardar_Click(object sender, EventArgs e) {
             Guardar();
             CargarGrilla();
             limpiarForm();
         }
-        private void GuardarEstadoNuevo()
-        {
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked)
-                {
+        private void GuardarEstadoNuevo() {
+            foreach (GridViewRow row in gvLista.Rows) {
+                CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
+                if (a.Checked) {
                     string idLote = row.Cells[2].Text;
                     int idUsuario = int.Parse(Session["idUsuario"].ToString());
                     int estado = Convert.ToInt32(ddlEstados.SelectedValue);
-                    string resultado =  Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-                    string observacion = txtObservacion.Text + " " + ( Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? rb_transportista.SelectedValue : "");
+                    string resultado = Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
+                    string observacion = txtObservacion.Text + " " + (Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? rb_transportista.SelectedValue : "");
 
-                    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                    SqlConnection conn = (SqlConnection) NHibernateHttpModule.CurrentSession.Connection;
                     SqlCommand cmd = new SqlCommand();
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.CommandText = "LAB_LoteDerivacion_Envio";
@@ -377,7 +360,7 @@ namespace WebLab.Derivaciones
                             oDet.Save();
                             //Inserta auditoria del detalle del protocolo
                             oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
-                        }                      
+                        }
                     }
 
                     //Se cambia el estado del lote LAB_LoteDerivacion
@@ -392,22 +375,27 @@ namespace WebLab.Derivaciones
                     lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
                     if (estadoLote == 2)  //Si deriva indica con que transportista fue
                         lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue);
-                    
-                     
 
-                   
+
+
+
                 }
             }
         }
         #endregion
 
-       
-        private void limpiarForm()
-        {
+
+        private void limpiarForm() {
             txtObservacion.Text = string.Empty;
             ddlEstados.SelectedIndex = 0;
         }
 
-        
+        #region Editar
+        protected void lnkEdit_Command(object sender, CommandEventArgs e) {
+
+            Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino="+ e.CommandName +  "&Tipo=Modifica", false);
+        }
+
+        #endregion
     }
 }
