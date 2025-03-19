@@ -76,6 +76,11 @@
 
                                 </tr>
                                 <tr>
+                                    <td>Efector origen:
+                                        <strong> <asp:Label runat="server" ID="lbl_efectorOrigen" Text=""></asp:Label></strong>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>Estado Lote: <strong>
                                         <asp:Label ID="lbl_estadoLote" runat="server" Text=""></asp:Label></strong> </td>
 
@@ -86,8 +91,7 @@
                                 <tr>
                                     <td colspan="2">
                                         <asp:GridView ID="gvProtocolosDerivados" runat="server" CssClass="table table-bordered bs-table" AutoGenerateColumns="False"
-                                            DataKeyNames="idProtocolo"
-                                            EmptyDataText="No se encontraron protocolos para el lote ingresado">
+                                            DataKeyNames="idProtocolo">
                                             <Columns>
                                                 <asp:BoundField DataField="fecha" HeaderText="Fecha" />
                                                 <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
@@ -100,7 +104,7 @@
                                                         <asp:LinkButton runat="server" ID="lnkIngresoProtocolo" OnCommand="lnkIngresoProtocolo_Command"
                                                             CommandArgument='<%# Eval("idProtocolo") %>'
                                                             CommandName='<%# Eval("idPaciente") %>'
-                                                            
+                                                            enabled=' <%# HabilitarIngreso() %>'
                                                             Text="Ingresar Protocolo" CssClass="btn btn-success" Width="150px"></asp:LinkButton>
                                                     </ItemTemplate>
                                                     <ItemStyle Width="5%" HorizontalAlign="Center" />
