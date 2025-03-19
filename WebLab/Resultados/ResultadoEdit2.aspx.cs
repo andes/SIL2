@@ -1551,16 +1551,25 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //}
                         //else
                         //{
-                            if (oDeriva.Estado == 0) /// pendiente                            
-                            {
-                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
-                                lblDerivacion.ForeColor = Color.Red;
-                            }
-                            if (oDeriva.Estado == 1) /// enviado
+                       
+                       
+                        estadoDerivacion = oDetalle.ResultadoCar;  // Vane 27/02/2025 Para todos los estados se debe mostrar el resultado de la derivación
+
+                        if (oDeriva.Estado == 0) /// pendiente                            
+                        {
+                            //  estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
+
+                            lblDerivacion.ForeColor = Color.Red;
+                        }
+
+                        /* // Vane 27/02/2025 Para todos los estados se debe mostrar el resultado de la derivación
+                          if (oDeriva.Estado == 1) /// enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; //"Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
                             if (oDeriva.Estado == 2) /// no enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; // " No Derivado. " + oDeriva.Observacion;
-                            lblDerivacion.Font.Bold = true;
+                          
+                         */
+                        lblDerivacion.Font.Bold = true;
 
                             if (oDeriva.Resultado != "")
                                 estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado; 
