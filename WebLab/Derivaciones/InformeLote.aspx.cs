@@ -43,7 +43,8 @@ namespace WebLab.Derivaciones
                         activarControles();
                     }
                     CargarGrilla();
-                    CargarEstados();
+                    CargarControles();
+                   // CargarEstados();
                 } else {
                     Response.Redirect("../FinSesion.aspx", false);
                 }
@@ -103,7 +104,8 @@ namespace WebLab.Derivaciones
             btnGuardar.Enabled = false;
             txtObservacion.Enabled = false;
             ddlEstados.Enabled = false;
-            rb_transportista.Enabled = false;
+            //rb_transportista.Enabled = false; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+            ddl_Transporte.Enabled = false;
             lnkMarcar.Enabled = false;
             lnkDesMarcar.Enabled = false;
         }
@@ -113,23 +115,38 @@ namespace WebLab.Derivaciones
             btnGuardar.Enabled = true;
             txtObservacion.Enabled = true;
             ddlEstados.Enabled = true;
-            rb_transportista.Enabled = true;
+            //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+            ddl_Transporte.Enabled = true;
             lnkMarcar.Enabled = true;
             lnkDesMarcar.Enabled = true;
         }
 
-        private void CargarEstados()
-        {
+        private void CargarControles() {
+            CargarEstados();
+            CargarTransportistas();
+        }
+        private void CargarEstados() {  /////////////////Estados de lote /////////////////
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
-
-            /////////////////Estados de lote /////////////////
 
             string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
             oUtil.CargarCombo(ddlEstados, m_ssql, "idEstado", "nombre", connReady);
            
         }
 
+
+        private void CargarTransportistas() { 
+            ddl_Transporte.Items.Add("-- SELECCIONE --");
+            //Vanesa: por ahora esta hardcodeado los transportitas, hacer mejora que lea de la base de datos
+            ddl_Transporte.Items.Add("Público");
+            ddl_Transporte.Items.Add("Privado");
+            
+            
+            //Utility oUtil = new Utility();
+            //string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
+            //string m_ssql = "";
+            //oUtil.CargarCombo(ddl_Transporte, m_ssql, "idEstado", "nombre", connReady);
+        }
         protected string ObtenerImagenEstado(int estado)
         {
             //Estados de Lote
@@ -290,45 +307,45 @@ namespace WebLab.Derivaciones
             CargarGrilla();
             limpiarForm();
         }
-        private void GuardarEstadoNuevo()
-        {
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked)
-                {
-                    string idLote = row.Cells[2].Text;
-                    int idUsuario = int.Parse(Session["idUsuario"].ToString());
-                    int estado = Convert.ToInt32(ddlEstados.SelectedValue);
-                    string resultado =  Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-                    string observacion = txtObservacion.Text + " " + ( Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? rb_transportista.SelectedValue : "");
+        //private void GuardarEstadoNuevo()
+        //{
+        //    foreach (GridViewRow row in gvLista.Rows)
+        //    {
+        //        CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //        if (a.Checked)
+        //        {
+        //            string idLote = row.Cells[2].Text;
+        //            int idUsuario = int.Parse(Session["idUsuario"].ToString());
+        //            int estado = Convert.ToInt32(ddlEstados.SelectedValue);
+        //            string resultado =  Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
+        //            string observacion = txtObservacion.Text + " " + ( Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? rb_transportista.SelectedValue : "");
 
-                    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                    SqlCommand cmd = new SqlCommand();
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.CommandText = "LAB_LoteDerivacion_Envio";
+        //            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        //            SqlCommand cmd = new SqlCommand();
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.CommandText = "LAB_LoteDerivacion_Envio";
 
-                    cmd.Parameters.Add("@idLote", SqlDbType.Int);
-                    cmd.Parameters["@idLote"].Value = idLote;
+        //            cmd.Parameters.Add("@idLote", SqlDbType.Int);
+        //            cmd.Parameters["@idLote"].Value = idLote;
 
-                    cmd.Parameters.Add("@idUsuario", SqlDbType.Int);
-                    cmd.Parameters["@idUsuario"].Value = idUsuario;
+        //            cmd.Parameters.Add("@idUsuario", SqlDbType.Int);
+        //            cmd.Parameters["@idUsuario"].Value = idUsuario;
 
-                    cmd.Parameters.Add("@resultado", SqlDbType.VarChar);
-                    cmd.Parameters["@resultado"].Value = resultado;
+        //            cmd.Parameters.Add("@resultado", SqlDbType.VarChar);
+        //            cmd.Parameters["@resultado"].Value = resultado;
 
-                    cmd.Parameters.Add("@estado", SqlDbType.Int);
-                    cmd.Parameters["@estado"].Value = estado;
+        //            cmd.Parameters.Add("@estado", SqlDbType.Int);
+        //            cmd.Parameters["@estado"].Value = estado;
 
-                    cmd.Parameters.Add("@observacion", SqlDbType.VarChar);
-                    cmd.Parameters["@observacion"].Value = observacion;
+        //            cmd.Parameters.Add("@observacion", SqlDbType.VarChar);
+        //            cmd.Parameters["@observacion"].Value = observacion;
 
-                    cmd.Connection = conn;
-                    cmd.ExecuteNonQuery();
-                }
-            }
+        //            cmd.Connection = conn;
+        //            cmd.ExecuteNonQuery();
+        //        }
+        //    }
 
-        }
+        //}
 
         private void Guardar() {
             foreach (GridViewRow row in gvLista.Rows) {
@@ -339,7 +356,8 @@ namespace WebLab.Derivaciones
                     int idUsuario = int.Parse(Session["idUsuario"].ToString());
                     int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
                     string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : "");
+                    //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddl_Transporte.SelectedValue : "");
                     LoteDerivacion lote = new LoteDerivacion();
                     lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), idLote);
 
@@ -391,11 +409,11 @@ namespace WebLab.Derivaciones
                     lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), idUsuario);
                     lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
                     if (estadoLote == 2)  //Si deriva indica con que transportista fue
-                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue);
-                    
-                     
+                        //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
 
-                   
+
+
                 }
             }
         }
