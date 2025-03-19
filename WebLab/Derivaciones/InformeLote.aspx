@@ -9,11 +9,14 @@
            var estado = document.getElementById('<%= ddlEstados.ClientID %>');
            var label = document.getElementById('<%= lbl_ErrorMotivo.ClientID %>');
            var labelGrilla = document.getElementById('<%= lbl_errorLista.ClientID %>');
+           var lista_transporte = document.getElementById('<%= ddl_Transporte.ClientID %>');
+           var labelErrorTransporte = document.getElementById('<%= lbl_ErrorTransporte.ClientID %>');
 
            //Limpio los labels de error 
            label.className = 'hidden';
            validatorEstado.style.visibility = 'hidden'; 
            labelGrilla.className = 'hidden';
+           labelErrorTransporte.className = 'hidden';
 
            //Verifico los estados para el envio del Lote
            switch (estado.value) {
@@ -23,12 +26,17 @@
 
                    //break;
                case "2": //Opcion: Derivado
-                  todoOk = validarGrilla();
+                   if (lista_transporte.selectedIndex != 0) //Si no es la opcion "Seleccionar"
+                       todoOk = validarGrilla();
+                   else { //Para valor 0 es el "Seleccionar"
+                       labelErrorTransporte.className = 'exposed'; //activa el cartel de error de transporte
+                       todoOk = false; // Evitar el envío del formulario
+                   }
                    break;
 
                case "3": //Opcion: Cancelado
                    if (txtObservacion.value.trim() == "") {
-                       label.className = 'exposed';
+                       label.className = 'exposed'; //activa el cartel de error del Motivo en la observacion
                        todoOk = false; // Evitar el envío del formulario
                    }
                    else { 
@@ -41,6 +49,7 @@
        }
 
        function validarGrilla() {
+            //Revisa que haya al menos un lote seleccionado para Derivar o Cancelar
            var todoOk = false;
            var gridView = document.getElementById('<%= gvLista.ClientID %>');
            var rows = gridView.getElementsByTagName('tr');
@@ -59,34 +68,52 @@
        }
 
        function habilitaTransporte() {
-           var ddl = document.getElementById('<%= ddlEstados.ClientID %>');
-            var estado = ddl.value;
+        //Habilita la seleccion del listado desplegable donde estan los transportes
 
-           if (estado == 2) { //Derivado
-                var radioButtons = document.getElementById('<%= rb_transportista.ClientID %>').getElementsByTagName('input');
-                for (var i = 0; i < radioButtons.length; i++) {
-                    radioButtons[i].disabled = false; // Habilitar
-                }
+           var ddl = document.getElementById('<%= ddlEstados.ClientID %>');
+           var labelErrorTransporte = document.getElementById('<%= lbl_ErrorTransporte.ClientID%>');
+           var lista_transporte = document.getElementById('<%= ddl_Transporte.ClientID%>');
+           var estado = ddl.value;
+           //console.log("--");
+           //console.log(lista_transporte);
+           labelErrorTransporte.className = "hidden";
+
+           if (estado == 2) { //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
+               lista_transporte.disabled = false;
            } else { //estado Cancelado
-                var radioButtons = document.getElementById('<%= rb_transportista.ClientID %>').getElementsByTagName('input');
-                for (var i = 0; i < radioButtons.length; i++) {
-                    radioButtons[i].disabled = true; // Deshabilitar
-                }
+               lista_transporte.selectedIndex = 0; //Se deja "Seleccionar" para que no haya confusiones 
+               lista_transporte.disabled = true;
             }
         }
 
        function reseteaLabelErrorLote() {
+        //Esconde el label que tiene el error
            var labelGrilla = document.getElementById('<%= lbl_errorLista.ClientID %>');
            labelGrilla.className = 'hidden';
        }
 
        function checkLote(checkbox) {
-           var itemCheck = checkbox.getElementsByTagName('input');
+        //Si se seleccione un lote se borra el cartel de error
+           
+        var itemCheck = checkbox.getElementsByTagName('input');
           // console.log(checkbox);
            if (itemCheck[0].checked) {
              reseteaLabelErrorLote();
            } 
        }
+
+       function verificaSeleccion() {
+            //Esta funcion revisa que se haya selecionado un transporte
+           var lista_transporte = document.getElementById('<%= ddl_Transporte.ClientID %>');
+           var labelErrorTransporte = document.getElementById('<%= lbl_ErrorTransporte.ClientID %>');
+           //console.log("transporte");
+           //console.log(lista_transporte.value);
+           if (lista_transporte.selectedIndex == 0) {
+               labelErrorTransporte.className = "exposed";
+           } else {
+               labelErrorTransporte.className = "hidden";
+           }
+    }
        </script>
 
    
@@ -127,12 +154,16 @@
                                                runat="server" SetFocusOnError="True" ValidationGroup="0" />
                                      </td>
                                     
-                                     <td >Retira:</td>
-                                     <td > <asp:RadioButtonList runat="server" ID="rb_transportista" CssClass="radio-inline"> 
+                                     <td >Retira transporte:</td>
+                                     <td > <asp:DropDownList ID="ddl_Transporte" runat="server" class="form-control input-sm" onchange="verificaSeleccion()"></asp:DropDownList>    
+                                         <%-- <asp:RadioButtonList runat="server" ID="rb_transportista" CssClass="radio-inline" Visible="false"> 
                                             <asp:ListItem Text="Transportista Tramitar" Selected="True" />   
                                             <asp:ListItem Text="Otro" />
-                                         </asp:RadioButtonList></td>
-                                     <td></td>
+                                         </asp:RadioButtonList>--%>
+
+                                     </td>
+                                     <td> <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lbl_ErrorTransporte" CssClass="hidden"></asp:Label></td>
+
                                      <td>Observaciones:</td>
                                      <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
                                      </td>
