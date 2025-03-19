@@ -148,7 +148,7 @@
     <Compile Include="Data\Laboratorio\ItemPresentacion.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacionEstado.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacion.cs" />
-
+	
     <Compile Include="Data\Laboratorio\Marca.cs" />
     <Compile Include="Data\Laboratorio\MuestraEfector.cs" />
     <Compile Include="Data\Laboratorio\Area.cs">
@@ -318,9 +318,7 @@
     <Content Include="bin\Debug\Iesi.Collections.dll" />
     <Content Include="bin\Debug\log4net.dll" />
     <Content Include="bin\Debug\NHibernate.dll" />
-
     <EmbeddedResource Include="Data\Laboratorio\Ficha.hbm.xml" />
-
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacionEstado.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\AuditoriaLoteDerivacion.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacion.hbm.xml" />
@@ -339,11 +337,7 @@
     <EmbeddedResource Include="Data\Laboratorio\AuditoriaUsuario.hbm.xml" />
     <EmbeddedResource Include="Data\AutoAnalizador\ArchitecItem.hbm.xml" />
     <EmbeddedResource Include="Data\AutoAnalizador\InccaItem.hbm.xml" />
-
     <EmbeddedResource Include="Data\AutoAnalizador\CobasC311.hbm.xml" />
-
-    <Content Include="Data\AutoAnalizador\CobasC311.hbm.xml" />
-
     <Content Include="Data\AutoAnalizador\ResultadoItemNcov.hbm.xml" />
     <EmbeddedResource Include="Data\AutoAnalizador\SysmexItemXN1000.hbm.xml" />
     <EmbeddedResource Include="Data\AutoAnalizador\SysmexItemXP300.hbm.xml" />
