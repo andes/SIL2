@@ -15,10 +15,10 @@
     <many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />
     <many-to-one name="IdSubItem" column="idSubItem" class="Business.Data.Laboratorio.Item,Business" />
 
-    <property column="resultadoCar" type="String" name="ResultadoCar" length="500" />
+    <property column="resultadoCar" type="String" name="ResultadoCar" length="1000" />
 		<property column="resultadoNum" type="Decimal" name="ResultadoNum" />
     <property column="codigoObservaciones" type="String" name="CodigoObservaciones" length="500" />
-		<property column="observaciones" type="String" name="Observaciones" length="500" />
+		<property column="observaciones" type="String" name="Observaciones" length="1000" />
 
     <property column="formatoValida" type="Int32" name="FormatoValida" not-null="true" />
     <property column="unidadMedida" type="String" name="UnidadMedida" not-null="true" length="100" />

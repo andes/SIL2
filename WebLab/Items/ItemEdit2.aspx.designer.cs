@@ -1021,24 +1021,6 @@ namespace WebLab.Items {
         protected global::Anthem.Button btnGuardarRP;
         
         /// <summary>
-        /// ddlResultadoPorDefecto control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.DropDownList ddlResultadoPorDefecto;
-        
-        /// <summary>
-        /// btnGuardarRPDefecto control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Button btnGuardarRPDefecto;
-        
-        /// <summary>
         /// lblMensajeRpD control.
         /// </summary>
         /// <remarks>
@@ -1055,6 +1037,24 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosResultados;
+        
+        /// <summary>
+        /// ddlResultadoPorDefecto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlResultadoPorDefecto;
+        
+        /// <summary>
+        /// btnGuardarRPDefecto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Button btnGuardarRPDefecto;
         
         /// <summary>
         /// pnlRecomendacion control.

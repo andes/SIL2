@@ -180,7 +180,7 @@ namespace ImprimeLocal
             }
             catch (WebException ex)
             {
-                SetText("Error al conectarse a " + ex.Message.ToString());
+                SetText("Error al conectarse a " + ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString() + " - "+  ex.Message.ToString());
 
             }
         }
@@ -1245,6 +1245,11 @@ where p.baja=0 and p.estado=0 and p.idEfectorsolicitante = " + ddlEfector.Select
         }
 
         private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label21_Click(object sender, EventArgs e)
         {
 
         }

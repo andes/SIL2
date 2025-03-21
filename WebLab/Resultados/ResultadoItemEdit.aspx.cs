@@ -998,10 +998,27 @@ namespace WebLab.Resultados
                     switch (oItem.IdTipoResultado)
                     {//tipoResultado
 
-                        case 4://Lista predefinida de resultados con seleccion multiple ( sin seleccion muktiple...jeje).
+                        case 4://Lista predefinida de resultados con seleccion multiple 
                             {
-                                
-
+                                string m_resultadoDefecto = "";
+                                ISession m_session = NHibernateHttpModule.CurrentSession;
+                                ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                                crit.Add(Expression.Eq("IdItem", oItem));
+                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                crit.Add(Expression.Eq("Baja", false));
+                                ///      crit.AddOrder(Order.Asc("Resultado")); /// el orden lo define el usuario
+                                ///Si tiene resultados predeterminados muestra un combo
+                                IList resultados = crit.List();
+                                foreach (ResultadoItem oResultado in resultados)
+                                {
+                                    ListItem Item = new ListItem();
+                                    Item.Value = oResultado.IdResultadoItem.ToString();
+                                    Item.Text = oResultado.Resultado;
+                                   
+                                    if (oResultado.ResultadoDefecto)
+                                        m_resultadoDefecto = oResultado.Resultado;
+                                }
+                               
 
                                 TextBox txt1 = new TextBox();
                                 txt1.ID = s_idDetalleProtocolo;
@@ -1013,6 +1030,8 @@ namespace WebLab.Resultados
                                 txt1.MaxLength = 200;
                                 txt1.ToolTip = s_resultadoCar;
                                 //txt1.CssClass = "myTexto";
+                                if (s_conResultado == "0")// sin resultado
+                                    txt1.Text = m_resultadoDefecto;
 
                                 ImageButton btnAddDetalle = new ImageButton();
                                 btnAddDetalle.TabIndex = short.Parse("500");
@@ -1065,16 +1084,18 @@ namespace WebLab.Resultados
                                     ItemSeleccion.Text = "";
                                     ddl1.Items.Add(ItemSeleccion);
 
-                             
+                                    string m_resultadoDefecto = "";
                                     foreach (ResultadoItem oResultado in resultados)
                                     {
                                         ListItem Item = new ListItem();
                                         Item.Value = oResultado.IdResultadoItem.ToString();
                                         Item.Text = oResultado.Resultado;
                                         ddl1.Items.Add(Item);
+                                        if (oResultado.ResultadoDefecto)
+                                            m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
                                     }
                                     if (s_conResultado == "0")// sin resultado
-                                        ddl1.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
+                                        ddl1.SelectedValue = m_resultadoDefecto;//oItem.IdResultadoPorDefecto.ToString();
                                     else
                                         ddl1.SelectedItem.Text = s_resultadoCar;
 

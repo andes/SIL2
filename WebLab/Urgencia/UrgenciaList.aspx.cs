@@ -15,7 +15,7 @@ using System.Data.SqlClient;
 using Business.Data.Laboratorio;
 using Business.Data;
 
-namespace WebLab.Urgencia
+namespace WebLab.Urgencia 
 {
     public partial class UrgenciaList : System.Web.UI.Page
     {
@@ -145,7 +145,10 @@ namespace WebLab.Urgencia
 
             cmd.Parameters.Add("@idItem", SqlDbType.Int);
             cmd.Parameters["@idItem"].Value = 0;
-            
+
+            cmd.Parameters.Add("@tipoorden", SqlDbType.NVarChar);          
+                cmd.Parameters["@tipoorden"].Value = "DESC";
+
             cmd.Connection = conn;
             
             SqlDataAdapter da = new SqlDataAdapter(cmd);

@@ -152,7 +152,7 @@
     <property column="urlMPI" type="String" name="UrlMPI"   />
     <property column="tokenMPI" type="String" name="TokenMPI"   />
     <property column="urlResultadosQR" type="String" name="UrlResultadosQR"   />
-  
+    <property column="tipoOrdenProtocolo" type="String" name="TipoOrdenProtocolo"   />
 
     <property column="verificaIngresoAnterior" type="Boolean" name="VerificaIngresoAnterior" not-null="true" />
   </class>

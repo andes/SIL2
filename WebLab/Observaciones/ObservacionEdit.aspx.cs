@@ -19,6 +19,18 @@ namespace WebLab.Observaciones
     public partial class ObservacionEdit : System.Web.UI.Page
     {
         Utility oUtil = new Utility();
+        public Usuario oUser = new Usuario();
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+           
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+               
+
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             
@@ -53,9 +65,13 @@ namespace WebLab.Observaciones
 
         private void CargarListas()
         {
-            Utility oUtil = new Utility();   ///Carga de combos de Areas         
+            Utility oUtil = new Utility();   ///Carga de combos de Areas        
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+
+
             string m_ssql = "select idTipoServicio, nombre from Lab_TipoServicio WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlTipoServicio, m_ssql, "idTipoServicio", "nombre");
+            oUtil.CargarCombo(ddlTipoServicio, m_ssql, "idTipoServicio", "nombre", connReady);
             ddlTipoServicio.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
 
@@ -97,9 +113,10 @@ namespace WebLab.Observaciones
         private void Guardar(ObservacionResultado oRegistro)
         {
             TipoServicio oTipo = new TipoServicio();
-            Usuario oUser = new Usuario();
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-           
+          
+            if (txtNombre.Text.Length>1000)
+                oRegistro.Nombre = txtNombre.Text.Substring(1,999);
+            else
             oRegistro.Nombre = txtNombre.Text;
             oRegistro.IdEfector = oUser.IdEfector;
             oRegistro.IdTipoServicio = (TipoServicio)oTipo.Get(typeof(TipoServicio), int.Parse(ddlTipoServicio.SelectedValue));
@@ -118,10 +135,10 @@ namespace WebLab.Observaciones
 
         protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            if (txtNombre.Text.Length>4000)
+            if (txtNombre.Text.Length>1000)
             {
                 args.IsValid = false;
-                CustomValidator1.ErrorMessage = "el largo del texto supera el limite de 4000 caracteres. Verifique.";
+                CustomValidator1.ErrorMessage = "el largo del texto supera el limite de caracteres. Verifique.";
                 return;
 
             }

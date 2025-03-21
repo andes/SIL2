@@ -8,7 +8,7 @@
     <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
     <many-to-one name="IdTipoServicio" column="idTipoServicio" class="Business.Data.Laboratorio.TipoServicio,Business" />
 		<property column="codigo" type="String" name="Codigo" not-null="true" length="100" />
-		<property column="nombre" type="String" name="Nombre" not-null="true" length="4000" />
+		<property column="nombre" type="String" name="Nombre" not-null="true" length="1000" />
 		<property column="baja" type="Boolean" name="Baja" not-null="true" />
 		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
     <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />

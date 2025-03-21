@@ -257,7 +257,9 @@ namespace WebLab.Informes
         private void CargarAnalisisFueraHT()
         {
             Utility oUtil = new Utility();
-            string m_condicion = " where 1=1 ";
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            string m_condicion = "";
             if (ddlArea.SelectedValue != "0") m_condicion += " and I.idArea= " + ddlArea.SelectedValue;
             if ((ddlServicio.SelectedValue != "0")&& (ddlServicio.SelectedValue != "")) m_condicion += " and A.idTipoServicio= " + ddlServicio.SelectedValue;
 
@@ -267,9 +269,10 @@ inner join LAB_ItemEfector IE  with (nolock) on i.idItem = ie.idItem
 inner join lab_area A  with (nolock) on A.idArea = I.idArea
 where Ie.idEfector = " + oUser.IdEfector.IdEfector.ToString()+ @"  and i.baja = 0
 and ie.disponible=1
-and ie.idEfector= ie.idEfectorDerivacion
-order by I.nombre ";
-            oUtil.CargarListBox(lstAnalisis, m_ssql, "idItem", "nombre");   
+and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre ";
+            oUtil.CargarListBox(lstAnalisis, m_ssql, "idItem", "nombre", connReady);   
+
+            
         }
 
 
@@ -300,7 +303,7 @@ order by I.nombre ";
         {
             Utility oUtil = new Utility();
 
-            string m_ssql = "SELECT idMuestra, nombre + ' - ' + codigo as nombre FROM LAB_Muestra (nolock)   where baja=0  order by nombre ";
+            string m_ssql = "SELECT idMuestra, nombre + ' - ' + codigo as nombre FROM LAB_Muestra with (nolock)   where baja=0  order by nombre ";
             
             oUtil.CargarListBox(lstMuestra, m_ssql, "idMuestra", "nombre");
             for (int i = 0; i < lstMuestra.Items.Count; i++)
@@ -314,13 +317,15 @@ order by I.nombre ";
 
         private void CargarArea()
         {
-            Utility oUtil = new Utility();            
-            
-            string m_stroCondicion="";
+            Utility oUtil = new Utility();
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+
+            string m_stroCondicion ="";
             if (Request["Tipo"].ToString() == "CodigoBarras")   m_stroCondicion = " and imprimeCodigoBarra=1 ";
             if (ddlServicio.SelectedValue!="")  m_stroCondicion += "and idTipoServicio = " + ddlServicio.SelectedValue;
             string m_ssql = "select idArea, nombre from Lab_Area (nolock)  where baja=0  " + m_stroCondicion +" order by nombre";            
-            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
+            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
 
             if (Request["Tipo"].ToString()=="CodigoBarras")  ddlArea.Items.Insert(0, new ListItem("--ETIQUETA GENERAL--", "0"));                    
             else  ddlArea.Items.Insert(0, new ListItem("Todas", "0"));                    
@@ -1343,6 +1348,7 @@ order by I.nombre ";
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
 
             s_condicion = " and A.idTipoServicio=" + ddlServicio.SelectedValue;
+            s_condicion += " and De.estado=1 "; //Solo etiquetas marcadas como enviadas por requerimiento del usuario.
             s_condicion += " and P.idEfector=" + oUser.IdEfector.IdEfector.ToString();
             s_condicion += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.Fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
 
@@ -1432,10 +1438,10 @@ order by I.nombre ";
 
             //            }
 
-            m_strSQL = @" SELECT DISTINCT                       P.idProtocolo
+            m_strSQL = @" SELECT DISTINCT      P.idProtocolo
         FROM         dbo.LAB_Protocolo AS P with (nolock)        
         INNER JOIN     dbo.LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo 
-        INNER JOIN    	       LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo
+        INNER JOIN    LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo
         inner join   dbo.LAB_Item AS I with (nolock) ON DP.idItem = I.idItem  
         inner join        dbo.LAB_Area AS A with (nolock) ON I.idArea = A.idArea 
         where P.baja=0   " + s_condicion;

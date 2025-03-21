@@ -33,7 +33,8 @@ namespace WebLab.Resultados
                 Utility oUtil = new Utility();
           
                 string m_ssql = @" SELECT  idObservacionResultado , codigo  AS descripcion 
-                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio=" + Request["idTipoServicio"].ToString()+" and  baja=0 order by codigo " ;
+                                FROM   LAB_ObservacionResultado 
+with (nolock) where idTipoServicio=" + Request["idTipoServicio"].ToString()+" and  baja=0 order by codigo " ;
 
 
                 oUtil.CargarCombo(ddlObservacionesCodificadas, m_ssql, "idObservacionResultado", "descripcion");
@@ -149,6 +150,9 @@ namespace WebLab.Resultados
             oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(m_idDetalleProtocolo));
             if (oDetalle != null)
             {
+                if (txtObservacionAnalisis.Text.Length>1000)
+                    oDetalle.Observaciones = txtObservacionAnalisis.Text.Substring(1,1000);
+                else
                 oDetalle.Observaciones = txtObservacionAnalisis.Text;
                 if (Request["Operacion"].ToString() == "Valida")
                     oDetalle.IdUsuarioObservacion = int.Parse(Session["idUsuarioValida"].ToString());
@@ -156,7 +160,7 @@ namespace WebLab.Resultados
                     oDetalle.IdUsuarioObservacion = int.Parse(Session["idUsuario"].ToString());
                 oDetalle.FechaObservacion = DateTime.Now;
                 //oDetalle.ConResultado = true;
-                oDetalle.GrabarAuditoriaDetalleObservacionesProtocolo("Carga", oDetalle.IdUsuarioObservacion);
+               oDetalle.GrabarAuditoriaDetalleObservacionesProtocolo("Carga", oDetalle.IdUsuarioObservacion);
                 
                 oDetalle.Save();
                // pnlObservacionesDetalle.Visible = false;

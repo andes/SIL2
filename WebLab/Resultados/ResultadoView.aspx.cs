@@ -684,6 +684,17 @@ namespace WebLab.Resultados
                         tContenido.Controls.Add(objRow);
 
                         m_nombre = m_titulo;
+
+                        if (m_trajoMuestra == "No")
+                        {
+                            Label lblSinMuestra = new Label();
+                            lblSinMuestra.TabIndex = short.Parse("500");
+                            lblSinMuestra.Text = "Sin Muestra";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
+                            lblSinMuestra.Font.Italic = true;
+                            lblSinMuestra.ForeColor = Color.Blue;
+                            //     objCellResultado.ColumnSpan = 5;
+                            objCellResultado.Controls.Add(lblSinMuestra);
+                        }
                     }
 
 
@@ -1597,7 +1608,7 @@ namespace WebLab.Resultados
             if (oProtocolo.IdTipoServicio.IdTipoServicio != 3)/// laboratorio y pesquisa neonatal
             {                
                 if (Request["Operacion"].ToString() == "HC")                
-                    m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 or   idUsuarioDerivacion>0 )";                                
+                    m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 or   idUsuarioDerivacion>0 or trajomuestra='No')";                                
             }
 
              

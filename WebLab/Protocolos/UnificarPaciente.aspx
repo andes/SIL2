@@ -221,7 +221,7 @@
         
                             <asp:Panel ID="pnlSinDatos" runat="server" Visible="false">
                             <div class="myLabelRojo">
-                            No se encontraron datos para los filtros determinados.
+                            No se encontraron datos a unificar para los filtros determinados.
                             </div>
                             </asp:Panel>
         

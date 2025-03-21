@@ -91,8 +91,8 @@
                                        <Items>
                                            <asp:ListItem Value="0">Lista de Protocolos</asp:ListItem>
                                            <asp:ListItem Value="1">Hoja de Trabajo</asp:ListItem>
-                                           <asp:ListItem Value="2">Analisis</asp:ListItem>
-                                           <asp:ListItem Value="3">Analisis a Demanda</asp:ListItem>
+                                           <asp:ListItem Value="2">Analisis (simple)</asp:ListItem>
+                                           <asp:ListItem Value="3">Analisis (simple) a Demanda</asp:ListItem>
                                        </Items>
                                    </anthem:RadioButtonList>
                                         </div>
@@ -109,7 +109,7 @@
                             <asp:RadioButtonList ID="rdbEstado" runat="server" 
                                 TabIndex="13" ToolTip="Seleccione el estado de los protocolos a buscar" Width="200px">
                                 <asp:ListItem Value="0" Selected="True">No procesados y en Proceso</asp:ListItem>
-                                <asp:ListItem Value="9">Procesado por el Equipo</asp:ListItem>
+                             <%--   <asp:ListItem Value="9">Procesado por el Equipo</asp:ListItem>--%>
                                 <asp:ListItem Value="1">Solo Validados</asp:ListItem>
                                 <asp:ListItem Value="2">Todos</asp:ListItem>
                             </asp:RadioButtonList>

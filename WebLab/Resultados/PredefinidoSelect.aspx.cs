@@ -19,7 +19,7 @@ namespace WebLab.Resultados
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+
 
 
             if (!Page.IsPostBack)
@@ -28,64 +28,58 @@ namespace WebLab.Resultados
                 string s_idDetalleProtocolo = Request["idDetalleProtocolo"].ToString();
                 DetalleProtocolo oDetalle = new DetalleProtocolo();
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(s_idDetalleProtocolo));
-
-                if (oDetalle.IdSubItem.IdItem != oDetalle.IdItem.IdItem)
+                if (oDetalle != null)
                 {
-                    lblObservacionAnalisis.Text = oDetalle.IdItem.Nombre;
-                    lblObservacionAnalisis.Text += " " + oDetalle.IdSubItem.Nombre;
-                }
-                else
-                    lblObservacionAnalisis.Text = oDetalle.IdSubItem.Nombre;
+                    if (oDetalle.IdSubItem.IdItem != oDetalle.IdItem.IdItem)
+                    {
+                        lblObservacionAnalisis.Text = oDetalle.IdItem.Nombre;
+                        lblObservacionAnalisis.Text += " " + oDetalle.IdSubItem.Nombre;
+                    }
+                    else
+                        lblObservacionAnalisis.Text = oDetalle.IdSubItem.Nombre;
 
-                lblProtocolo.Text = oDetalle.IdProtocolo.GetNumero();
-                
-                
-                //Utility oUtil = new Utility();
+                    lblProtocolo.Text = oDetalle.IdProtocolo.Numero.ToString();//.GetNumero();
+                     
+                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                    ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                    crit.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                    crit.Add(Expression.Eq("IdEfector", oDetalle.IdProtocolo.IdEfector));
+                    crit.Add(Expression.Eq("Baja", false));
 
-                //string m_ssql = @" select resultado from LAB_ResultadoItem where idItem=" + s_iditem + " and baja=0 order by idResultadoItem ";
-            
-                //oUtil.CargarCombo(ddlObservacionesCodificadas, m_ssql, "resultado", "resultado");
-                //ddlObservacionesCodificadas.Items.Insert(0, new ListItem("", "0"));
+                    IList resultados = crit.List();
 
-                ISession m_session = NHibernateHttpModule.CurrentSession;
-                ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
-                crit.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));                
-                IList resultados = crit.List();
-                
-                foreach (ResultadoItem oResultado in resultados)
-                {
-                    ListItem Item = new ListItem();
-                    Item.Value = oResultado.IdResultadoItem.ToString();
-                    Item.Text = oResultado.Resultado;
-                    chk1.Items.Add(Item);
-                }
-              //      chk1.Height = Unit.Pixel(200);
+                    foreach (ResultadoItem oResultado in resultados)
+                    {
+                        ListItem Item = new ListItem();
+                        Item.Value = oResultado.IdResultadoItem.ToString();
+                        Item.Text = oResultado.Resultado;
+                        chk1.Items.Add(Item);
+                    }
+                    //      chk1.Height = Unit.Pixel(200);
                     //chk1.Attributes.Add("ScrollBars", "Horizontal");
                     //chk1.AutoUpdateAfterCallBack = true;
-                                               
-                
-                
+                    
+
+                    txtObservacionAnalisis.Text = oDetalle.ResultadoCar;
 
 
-                txtObservacionAnalisis.Text = oDetalle.ResultadoCar;
-
-
-                if (oDetalle.IdUsuarioValidaObservacion > 0)
-                {
-                    if (Request["Operacion"].ToString() != "Valida")
+                    if (oDetalle.IdUsuarioValidaObservacion > 0)
                     {
-                    //    btnValidarObservacionAnalisis.Visible = false;
-                        btnGuardarObservacionAnalisis.Visible = false;
+                        if (Request["Operacion"].ToString() != "Valida")
+                        {
+                            //    btnValidarObservacionAnalisis.Visible = false;
+                            btnGuardarObservacionAnalisis.Visible = false;
+
+                        }
 
                     }
 
+                    // string op = Request["Operacion"].ToString();
+                    //if (op != "Valida") btnValidarObservacionAnalisis.Visible = false;
+
+                    //lblUsuarioObservacionAnalisis.Text= 
+
                 }
-                
-               // string op = Request["Operacion"].ToString();
-                //if (op != "Valida") btnValidarObservacionAnalisis.Visible = false;
-                
-            //lblUsuarioObservacionAnalisis.Text= 
-                
             }
         }
 

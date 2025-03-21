@@ -21,6 +21,8 @@
  
   		<property column="informable" type="Boolean" name="Informable" not-null="true" />
     <property column="sininsumo" type="Boolean" name="SinInsumo" not-null="true" />
-    <property column="idPresentacionDefecto" type="Int32" name="IdPresentacionDefecto" not-null="true" />
+    <property column="idPresentacionDefecto" type="Int32" name="IdPresentacionDefecto" not-null="true" />    
+    <property column="resultadoDefecto" type="String" name="ResultadoDefecto" not-null="true" length="200" />
+
   </class>
 </hibernate-mapping>

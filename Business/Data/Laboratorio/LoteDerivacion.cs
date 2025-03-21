@@ -81,9 +81,10 @@ namespace Business.Data.Laboratorio  {
             set { idusuarioreceptor = value; }
         }
         public System.Nullable<int>  IdUsuarioEnvio { 
-            get => idusuarioEnvio; 
-            set => idusuarioEnvio = value;
-        }
+            
+            get { return idusuarioEnvio; }
+            set { idusuarioEnvio = value; }
+            }
 
 
         public string Observacion {

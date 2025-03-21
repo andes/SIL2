@@ -567,7 +567,7 @@ namespace WebLab
 
                 rdbTipoNumeracionProtocolo.Items[oC.TipoNumeracionProtocolo].Selected = true;
 
-
+                ddlOrdenProtocolos.SelectedValue = oC.TipoOrdenProtocolo;
 
                 ////dias de entrega            
                 if (oC.TipoCalculoDiasRetiro == 0)
@@ -787,398 +787,401 @@ namespace WebLab
                 ////////////////////////////////////////////////
 
                 ddlTipoHojaImpresionResultados.SelectedValue = oC.TipoHojaImpresionResultado;
+                /*Logo: Se saca codigo realacionado al logo
+              if (oC.RutaLogo != "")
+              {
+                  Image1.Visible = true;
+                  Image1.ImageUrl = "~/Logo/" + oC.RutaLogo;
+
+              }
+              */
+
+
+
+              if (!oC.AutenticaValidacion)
+                  ddlAutenticaValidacion.SelectedValue = "0";
+              else
+                  ddlAutenticaValidacion.SelectedValue = "1";
+
+
+
+              ddlFechaOrden.SelectedValue = oC.ValorDefectoFechaOrden.ToString();
+              ddlFechaTomaMuestra.SelectedValue = oC.ValorDefectoFechaTomaMuestra.ToString();
+              ddlNomencladorDiagnostico.SelectedValue = oC.NomencladorDiagnostico.ToString();
+              ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+              ddlTipoEtiqueta.SelectedValue = oC.TipoEtiqueta;
+              mostrarImagenEtiqueta();
+
+              MostrarDatosCodigoBarrasLaboratorio(); MostrarDatosCodigoBarrasMicrobiologia(); MostrarDatosCodigoBarrasPesquisa();
+              //MostrarImpresoras();
+              ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+              oC = null;
+          }
+      }
+
+      private bool SiNoHayProtocolosCargados()
+      {
+          bool dev=true;
+          ISession m_session = NHibernateHttpModule.CurrentSession;
+          ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));            
+          crit.Add(Expression.Sql(" IdProtocolo in (Select top 1 IdProtocolo From LAb_Protocolo where Baja=0)"));
+          IList lista = crit.List();
+          if (lista.Count > 0)
+          {
+              dev = false;
+          }
+          return dev;
+      }
+
+      protected void btnGuardar_Click(object sender, EventArgs e)
+      {
+          Guardar();
+
+
+          Response.Redirect("ParametrosMsje.aspx", false);
+      }
+
+      private void Guardar()
+      {
+          Efector oEfector = new Efector();
+          oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
+          if (oEfector != null)
+          {
+              //Usuario oUser = new Usuario();
+              //oUser=(Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+              Configuracion oC = new Configuracion();
+              oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oEfector);
+
+              //Usuario oUser = new Usuario();
+              //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+              //Configuracion oC = new Configuracion();
+              //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+              //oC.NombreImpresora=ddlImpresora.SelectedValue  ;
+
+              ////Accesos directos de la pantalla principal
+              oEfector.CodigoREFES = lblRefes.Text;
+
+              oEfector.IdEfector2=lblIdEfector2.Text  ;
+              oEfector.JefeLaboratorio=                lblJefe.Text;
+              oEfector.CorreoJefe=lblCorreoJefe.Text ;
+              oEfector.IdRegion = int.Parse(ddlRegion.SelectedValue);
+              oEfector.Save();
 
-                if (oC.RutaLogo != "")
-                {
-                    Image1.Visible = true;
-                    Image1.ImageUrl = "~/Logo/" + oC.RutaLogo;
-
-                }
-
-
-
-                if (!oC.AutenticaValidacion)
-                    ddlAutenticaValidacion.SelectedValue = "0";
-                else
-                    ddlAutenticaValidacion.SelectedValue = "1";
-
-
-                
-                ddlFechaOrden.SelectedValue = oC.ValorDefectoFechaOrden.ToString();
-                ddlFechaTomaMuestra.SelectedValue = oC.ValorDefectoFechaTomaMuestra.ToString();
-                ddlNomencladorDiagnostico.SelectedValue = oC.NomencladorDiagnostico.ToString();
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                ddlTipoEtiqueta.SelectedValue = oC.TipoEtiqueta;
-                mostrarImagenEtiqueta();
-
-                MostrarDatosCodigoBarrasLaboratorio(); MostrarDatosCodigoBarrasMicrobiologia(); MostrarDatosCodigoBarrasPesquisa();
-                //MostrarImpresoras();
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-                oC = null;
-            }
-        }
-
-        private bool SiNoHayProtocolosCargados()
-        {
-            bool dev=true;
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));            
-            crit.Add(Expression.Sql(" IdProtocolo in (Select top 1 IdProtocolo From LAb_Protocolo where Baja=0)"));
-            IList lista = crit.List();
-            if (lista.Count > 0)
-            {
-                dev = false;
-            }
-            return dev;
-        }
-
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
-            Guardar();
-          
-
-            Response.Redirect("ParametrosMsje.aspx", false);
-        }
-
-        private void Guardar()
-        {
-            Efector oEfector = new Efector();
-            oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
-            if (oEfector != null)
-            {
-                //Usuario oUser = new Usuario();
-                //oUser=(Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-                Configuracion oC = new Configuracion();
-                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oEfector);
-
-                //Usuario oUser = new Usuario();
-                //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-                //Configuracion oC = new Configuracion();
-                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-
-                //oC.NombreImpresora=ddlImpresora.SelectedValue  ;
-
-                ////Accesos directos de la pantalla principal
-                oEfector.CodigoREFES = lblRefes.Text;
-                
-                oEfector.IdEfector2=lblIdEfector2.Text  ;
-                oEfector.JefeLaboratorio=                lblJefe.Text;
-                oEfector.CorreoJefe=lblCorreoJefe.Text ;
-                oEfector.IdRegion = int.Parse(ddlRegion.SelectedValue);
-                oEfector.Save();
 
+              oC.PrincipalTurno = chkAccesoPrincipal.Items[0].Selected;
+              oC.PrincipalRecepcion = chkAccesoPrincipal.Items[1].Selected;
+              oC.PrincipalImpresionHT = chkAccesoPrincipal.Items[2].Selected;
+              oC.PrincipalCargaResultados = chkAccesoPrincipal.Items[3].Selected;
+              oC.PrincipalValidacion = chkAccesoPrincipal.Items[4].Selected;
+              oC.PrincipalImpresionResultados = chkAccesoPrincipal.Items[5].Selected;
+              oC.PrincipalUrgencias = chkAccesoPrincipal.Items[6].Selected;
+              oC.PrincipalResultados = chkAccesoPrincipal.Items[7].Selected;
 
-                oC.PrincipalTurno = chkAccesoPrincipal.Items[0].Selected;
-                oC.PrincipalRecepcion = chkAccesoPrincipal.Items[1].Selected;
-                oC.PrincipalImpresionHT = chkAccesoPrincipal.Items[2].Selected;
-                oC.PrincipalCargaResultados = chkAccesoPrincipal.Items[3].Selected;
-                oC.PrincipalValidacion = chkAccesoPrincipal.Items[4].Selected;
-                oC.PrincipalImpresionResultados = chkAccesoPrincipal.Items[5].Selected;
-                oC.PrincipalUrgencias = chkAccesoPrincipal.Items[6].Selected;
-                oC.PrincipalResultados = chkAccesoPrincipal.Items[7].Selected;
+              oC.UrlMatriculacion = txtUrlMatriculacion.Text;
+              oC.TipoOrdenProtocolo = ddlOrdenProtocolos.SelectedValue ;
+              oC.CodigoCovid = txtCodigoCovid.Text;
+              string origenes = "";
+              for (int i = 0; i < chkOrigen.Items.Count; i++)
+              {
+                  if (chkOrigen.Items[i].Selected)
+                  {
+                      if (origenes == "")
+                          origenes = chkOrigen.Items[i].Value;
+                      else
+                          origenes += "," + chkOrigen.Items[i].Value;
+                  }
+              }
+              oC.OrigenHabilitado = origenes;
+              //////////////////////////////
 
-                oC.UrlMatriculacion = txtUrlMatriculacion.Text;
+              string fiscaracter = "";
+              for (int i = 0; i < chkFISCaracter.Items.Count; i++)
+              {
+                  if (chkFISCaracter.Items[i].Selected)
+                  {
+                      if (fiscaracter == "")
+                          fiscaracter = chkFISCaracter.Items[i].Value;
+                      else
+                          fiscaracter += "," + chkFISCaracter.Items[i].Value;
+                  }
+              }
+              oC.FISCaracter = fiscaracter;
 
-                oC.CodigoCovid = txtCodigoCovid.Text;
-                string origenes = "";
-                for (int i = 0; i < chkOrigen.Items.Count; i++)
-                {
-                    if (chkOrigen.Items[i].Selected)
-                    {
-                        if (origenes == "")
-                            origenes = chkOrigen.Items[i].Value;
-                        else
-                            origenes += "," + chkOrigen.Items[i].Value;
-                    }
-                }
-                oC.OrigenHabilitado = origenes;
-                //////////////////////////////
+
+              oC.IdSectorDefecto = int.Parse(ddlSectorDefecto.SelectedValue);
+
+              if (ddlDiagnostico.SelectedValue == "0") oC.DiagObligatorio = false;
+              else oC.DiagObligatorio = true;
+              if (ddlPreValidacion.SelectedValue == "0") oC.PreValida = false;
+              else oC.PreValida = true;
+
+              if (ddlNotificarSISA.SelectedValue == "0") oC.NotificarSISA = false;
+              else oC.NotificarSISA = true;
+
+              if (ddlNotificaAndes.SelectedValue == "0") oC.NotificaAndes = false;
+              else oC.NotificaAndes = true;
+
+              oC.UrlServicioSISA = txtUrlServicioSISA.Text;
+              oC.URLMuestraSISA = txtUrlMuestraSISA.Text;
+              oC.URLResultadoSISA = txtUrlResultadoSISA.Text;
+
+              oC.CodigoEstablecimientoSISA = txtCodigoEstablecimientoSISA.Text;
+
+              oC.UrlRenaper = txtUrlRenaper.Text;
+              oC.UrlMPI = txtUrlAndes.Text;
+
+              if (ddlRenaper.SelectedValue == "0") oC.ConectaRenaper = false;
+              else oC.ConectaRenaper = true;
+
+              if (ddlAndes.SelectedValue == "0") oC.ConectaMPI = false;
+              else oC.ConectaMPI = true;
+
+              if (ddlMedicoObligatorio.SelectedValue == "0") oC.MedicoObligatorio = false;
+              else oC.MedicoObligatorio = true;
+
+              if (ddlVerificaIngreso.SelectedValue == "0")
+                  oC.VerificaIngresoAnterior = false;
+              else
+                  oC.VerificaIngresoAnterior = true;
+
+              /////////Grupo referido al comprobante para el paciente//////////////
+              if (ddlProtocoloComprobante.SelectedValue == "0") oC.GeneraComprobanteProtocolo = false;
+              else oC.GeneraComprobanteProtocolo = true;
+
+              if (ddlProtocoloComprobanteMicrobiologia.SelectedValue == "0") oC.GeneraComprobanteProtocoloMicrobiologia = false;
+              else oC.GeneraComprobanteProtocoloMicrobiologia = true;
+
+
+              if (ddlConsentimientoMicrobiologia.SelectedValue == "0") oC.HabilitaConsentimientoMicrobiologia = false;
+              else oC.HabilitaConsentimientoMicrobiologia = true;
+
+              oC.TextoAdicionalComprobanteProtocolo = txtTextoAdicionalComprobante.Text;
+              oC.TextoAdicionalComprobanteProtocoloMicrobiologia = txtTextoAdicionalComprobanteMicrobiologia.Text;
+
+              ///////////////fin/////////////////
+
+              if (ddlPeticionElectronica.SelectedValue == "1") oC.PeticionElectronica = true;
+              else oC.PeticionElectronica = false;
+
+
+
+              if (rdbTipoNumeracionProtocolo.Items[0].Selected) oC.TipoNumeracionProtocolo = 0;
+              if (rdbTipoNumeracionProtocolo.Items[1].Selected) oC.TipoNumeracionProtocolo = 1;
+              if (rdbTipoNumeracionProtocolo.Items[2].Selected) oC.TipoNumeracionProtocolo = 2;
+              if (rdbTipoNumeracionProtocolo.Items[3].Selected) oC.TipoNumeracionProtocolo = 3;
+
+              ///////utilizaNumeroEliminado ///////
+              //if (ddlUtilizarNumeroEliminado.SelectedValue == "0") oC.UtilizaNumeroEliminado = false;
+              //else oC.UtilizaNumeroEliminado = true;
+              ////////////////////////////////////////////////
 
-                string fiscaracter = "";
-                for (int i = 0; i < chkFISCaracter.Items.Count; i++)
-                {
-                    if (chkFISCaracter.Items[i].Selected)
-                    {
-                        if (fiscaracter == "")
-                            fiscaracter = chkFISCaracter.Items[i].Value;
-                        else
-                            fiscaracter += "," + chkFISCaracter.Items[i].Value;
-                    }
-                }
-                oC.FISCaracter = fiscaracter;
 
+              ////dias de entrega
+              if (rdbDiasEspera.Items[0].Selected)  //Calcula segun duración de analisis
+              {
+                  oC.TipoCalculoDiasRetiro = 0;
+                  oC.DiasRetiro = 0;
+              }
+              else  //valor predeterminado
+              {
+                  oC.TipoCalculoDiasRetiro = 1;
+                  oC.DiasRetiro = int.Parse(txtDiasEntrega.Value);
+              }
+              oC.IdHistocompatibilidad = int.Parse(ddlHisto.SelectedValue);
 
-                oC.IdSectorDefecto = int.Parse(ddlSectorDefecto.SelectedValue);
-
-                if (ddlDiagnostico.SelectedValue == "0") oC.DiagObligatorio = false;
-                else oC.DiagObligatorio = true;
-                if (ddlPreValidacion.SelectedValue == "0") oC.PreValida = false;
-                else oC.PreValida = true;
-
-                if (ddlNotificarSISA.SelectedValue == "0") oC.NotificarSISA = false;
-                else oC.NotificarSISA = true;
-
-                if (ddlNotificaAndes.SelectedValue == "0") oC.NotificaAndes = false;
-                else oC.NotificaAndes = true;
-
-                oC.UrlServicioSISA = txtUrlServicioSISA.Text;
-                oC.URLMuestraSISA = txtUrlMuestraSISA.Text;
-                oC.URLResultadoSISA = txtUrlResultadoSISA.Text;
-
-                oC.CodigoEstablecimientoSISA = txtCodigoEstablecimientoSISA.Text;
-
-                oC.UrlRenaper = txtUrlRenaper.Text;
-                oC.UrlMPI = txtUrlAndes.Text;
-
-                if (ddlRenaper.SelectedValue == "0") oC.ConectaRenaper = false;
-                else oC.ConectaRenaper = true;
-
-                if (ddlAndes.SelectedValue == "0") oC.ConectaMPI = false;
-                else oC.ConectaMPI = true;
-
-                if (ddlMedicoObligatorio.SelectedValue == "0") oC.MedicoObligatorio = false;
-                else oC.MedicoObligatorio = true;
-
-                if (ddlVerificaIngreso.SelectedValue == "0")
-                    oC.VerificaIngresoAnterior = false;
-                else
-                    oC.VerificaIngresoAnterior = true;
-
-                /////////Grupo referido al comprobante para el paciente//////////////
-                if (ddlProtocoloComprobante.SelectedValue == "0") oC.GeneraComprobanteProtocolo = false;
-                else oC.GeneraComprobanteProtocolo = true;
-
-                if (ddlProtocoloComprobanteMicrobiologia.SelectedValue == "0") oC.GeneraComprobanteProtocoloMicrobiologia = false;
-                else oC.GeneraComprobanteProtocoloMicrobiologia = true;
-
-
-                if (ddlConsentimientoMicrobiologia.SelectedValue == "0") oC.HabilitaConsentimientoMicrobiologia = false;
-                else oC.HabilitaConsentimientoMicrobiologia = true;
-
-                oC.TextoAdicionalComprobanteProtocolo = txtTextoAdicionalComprobante.Text;
-                oC.TextoAdicionalComprobanteProtocoloMicrobiologia = txtTextoAdicionalComprobanteMicrobiologia.Text;
-
-                ///////////////fin/////////////////
-
-                if (ddlPeticionElectronica.SelectedValue == "1") oC.PeticionElectronica = true;
-                else oC.PeticionElectronica = false;
-
-
-
-                if (rdbTipoNumeracionProtocolo.Items[0].Selected) oC.TipoNumeracionProtocolo = 0;
-                if (rdbTipoNumeracionProtocolo.Items[1].Selected) oC.TipoNumeracionProtocolo = 1;
-                if (rdbTipoNumeracionProtocolo.Items[2].Selected) oC.TipoNumeracionProtocolo = 2;
-                if (rdbTipoNumeracionProtocolo.Items[3].Selected) oC.TipoNumeracionProtocolo = 3;
-
-                ///////utilizaNumeroEliminado ///////
-                //if (ddlUtilizarNumeroEliminado.SelectedValue == "0") oC.UtilizaNumeroEliminado = false;
-                //else oC.UtilizaNumeroEliminado = true;
-                ////////////////////////////////////////////////
+              ///Calendario de Entregas            
 
 
-                ////dias de entrega
-                if (rdbDiasEspera.Items[0].Selected)  //Calcula segun duración de analisis
-                {
-                    oC.TipoCalculoDiasRetiro = 0;
-                    oC.DiasRetiro = 0;
-                }
-                else  //valor predeterminado
-                {
-                    oC.TipoCalculoDiasRetiro = 1;
-                    oC.DiasRetiro = int.Parse(txtDiasEntrega.Value);
-                }
-                oC.IdHistocompatibilidad = int.Parse(ddlHisto.SelectedValue);
+              ///Primero borra lo que hay
+              CalendarioEntrega oItem = new CalendarioEntrega();
+              ISession m_session = NHibernateHttpModule.CurrentSession;
+              ICriteria crit = m_session.CreateCriteria(typeof(CalendarioEntrega));
+              crit.Add(Expression.Eq("IdEfector", oC.IdEfector));
 
-                ///Calendario de Entregas            
+              IList items = crit.List();
+              foreach (CalendarioEntrega oDia in items)
+              {
+                  oDia.Delete();
+              }
 
+              ///
+              ///Escribe los nuevos datos
+              for (int i = 0; i < cklDias.Items.Count; i++)
+              {
+                  if (cklDias.Items[i].Selected)
+                  {
+                      CalendarioEntrega oDia = new CalendarioEntrega();
+                      oDia.IdEfector = oC.IdEfector;
+                      oDia.Dia = i + 1;
+                      oDia.Save();
+                  }
+              }
+              /////////////////////////////////////////////////
 
-                ///Primero borra lo que hay
-                CalendarioEntrega oItem = new CalendarioEntrega();
-                ISession m_session = NHibernateHttpModule.CurrentSession;
-                ICriteria crit = m_session.CreateCriteria(typeof(CalendarioEntrega));
-                crit.Add(Expression.Eq("IdEfector", oC.IdEfector));
+              /////Recordar el ultimo origen cargado ///////
+              if (ddlRecordarOrigenProtocolo.SelectedValue == "0") oC.RecordarOrigenProtocolo = false;
+              else oC.RecordarOrigenProtocolo = true;
+              //////////////////////////////////////////////
 
-                IList items = crit.List();
-                foreach (CalendarioEntrega oDia in items)
-                {
-                    oDia.Delete();
-                }
+              /////Recordar el ultimo sector cargado ///////
+              if (ddlRecordarSectorProtocolo.SelectedValue == "0") oC.RecordarSectorProtocolo = false;
+              else oC.RecordarSectorProtocolo = true;
+              //////
 
-                ///
-                ///Escribe los nuevos datos
-                for (int i = 0; i < cklDias.Items.Count; i++)
-                {
-                    if (cklDias.Items[i].Selected)
-                    {
-                        CalendarioEntrega oDia = new CalendarioEntrega();
-                        oDia.IdEfector = oC.IdEfector;
-                        oDia.Dia = i + 1;
-                        oDia.Save();
-                    }
-                }
-                /////////////////////////////////////////////////
+              ///Tamaño maximo de las paginas de la lista de protocolos            
+              oC.CantidadProtocolosPorPagina = int.Parse(ddlPaginadoProtocolo.SelectedValue);
 
-                /////Recordar el ultimo origen cargado ///////
-                if (ddlRecordarOrigenProtocolo.SelectedValue == "0") oC.RecordarOrigenProtocolo = false;
-                else oC.RecordarOrigenProtocolo = true;
-                //////////////////////////////////////////////
+              ///////////
 
-                /////Recordar el ultimo sector cargado ///////
-                if (ddlRecordarSectorProtocolo.SelectedValue == "0") oC.RecordarSectorProtocolo = false;
-                else oC.RecordarSectorProtocolo = true;
-                //////
+              /////modificar el protocolo terminado ///////
+              if (ddlModificaProtocoloTerminado.SelectedValue == "0") oC.ModificarProtocoloTerminado = false;
+              else oC.ModificarProtocoloTerminado = true;
+              //////////////////////////////////////////////
 
-                ///Tamaño maximo de las paginas de la lista de protocolos            
-                oC.CantidadProtocolosPorPagina = int.Parse(ddlPaginadoProtocolo.SelectedValue);
+              /////eliminar el protocolo terminado ///////
+              if (ddlEliminaProtocoloTerminado.SelectedValue == "0") oC.EliminarProtocoloTerminado = false;
+              else oC.EliminarProtocoloTerminado = true;
+              //////
 
-                ///////////
+              if (ddlHabilitaPublicacionProtocolo.SelectedValue == "0")
+                  oC.HabilitaNoPublicacion = false;
+              else
+                  oC.HabilitaNoPublicacion = true;
 
-                /////modificar el protocolo terminado ///////
-                if (ddlModificaProtocoloTerminado.SelectedValue == "0") oC.ModificarProtocoloTerminado = false;
-                else oC.ModificarProtocoloTerminado = true;
-                //////////////////////////////////////////////
+              ////Modulo Urgencia
+              oC.IdOrigenUrgencia = int.Parse(ddlOrigenUrgencia.SelectedValue);
+              oC.IdSectorUrgencia = int.Parse(ddlSectorUrgencia.SelectedValue);
+              //////////
 
-                /////eliminar el protocolo terminado ///////
-                if (ddlEliminaProtocoloTerminado.SelectedValue == "0") oC.EliminarProtocoloTerminado = false;
-                else oC.EliminarProtocoloTerminado = true;
-                //////
 
-                if (ddlHabilitaPublicacionProtocolo.SelectedValue == "0")
-                    oC.HabilitaNoPublicacion = false;
-                else
-                    oC.HabilitaNoPublicacion = true;
+              /////////////Grupo referido al Turno/////////////
+              if (ddlTurno.SelectedValue == "0") oC.Turno = false;
+              else oC.Turno = true;
 
-                ////Modulo Urgencia
-                oC.IdOrigenUrgencia = int.Parse(ddlOrigenUrgencia.SelectedValue);
-                oC.IdSectorUrgencia = int.Parse(ddlSectorUrgencia.SelectedValue);
-                //////////
 
+              if (ddlTurnoComprobante.SelectedValue == "0") oC.GeneraComprobanteTurno = false;
+              else oC.GeneraComprobanteTurno = true;
 
-                /////////////Grupo referido al Turno/////////////
-                if (ddlTurno.SelectedValue == "0") oC.Turno = false;
-                else oC.Turno = true;
+              if (ddlSmsCancelaTurno.SelectedValue == "0") oC.SmsCancelaTurno = false;
+              else
+                  oC.SmsCancelaTurno = true;
+              ////////////////////////////////////////////////
 
+              /////Formato de la Lista de Protocolos ///////
+              oC.TipoListaProtocolo = int.Parse(rdbTipoListaProtocolo.SelectedValue);
 
-                if (ddlTurnoComprobante.SelectedValue == "0") oC.GeneraComprobanteTurno = false;
-                else oC.GeneraComprobanteTurno = true;
 
-                if (ddlSmsCancelaTurno.SelectedValue == "0") oC.SmsCancelaTurno = false;
-                else
-                    oC.SmsCancelaTurno = true;
-                ////////////////////////////////////////////////
+              //////////////////////////////////////////////
 
-                /////Formato de la Lista de Protocolos ///////
-                oC.TipoListaProtocolo = int.Parse(rdbTipoListaProtocolo.SelectedValue);
 
+              ////////Formato de la Hoja de Trabajo///////////
+              //if (rdbHojaTrabajo.Items[0].Selected)  oC.TipoHojaTrabajo = 0;
+              //else    oC.TipoHojaTrabajo = 1;
 
-                //////////////////////////////////////////////
+              ////////////////////////////////////////////////
 
 
-                ////////Formato de la Hoja de Trabajo///////////
-                //if (rdbHojaTrabajo.Items[0].Selected)  oC.TipoHojaTrabajo = 0;
-                //else    oC.TipoHojaTrabajo = 1;
 
-                ////////////////////////////////////////////////
 
+              oC.TipoCargaResultado = int.Parse(rdbCargaResultados.SelectedValue);
+              if (rdbOrdenCargaResultados.SelectedValue == "0")
+                  oC.OrdenCargaResultado = false;
+              else
+                  oC.OrdenCargaResultado = true;
+              /////////////////////////////////////////////////
 
+              ///////Tipo de impresion de resultado///
 
+              oC.TipoImpresionResultado = rdbTipoImpresionResultado.Items[0].Selected;
+              oC.TipoHojaImpresionResultado = ddlTipoHojaImpresionResultados.SelectedValue.Trim();
 
-                oC.TipoCargaResultado = int.Parse(rdbCargaResultados.SelectedValue);
-                if (rdbOrdenCargaResultados.SelectedValue == "0")
-                    oC.OrdenCargaResultado = false;
-                else
-                    oC.OrdenCargaResultado = true;
-                /////////////////////////////////////////////////
+              oC.TipoImpresionResultadoMicrobiologia = rdbTipoImpresionResultadoMicrobiologia.Items[0].Selected;
+              oC.TipoHojaImpresionResultadoMicrobiologia = ddlTipoHojaImpresionResultadosMicrobiologia.SelectedValue.Trim();
+              //   oC.tipo
+              //////////////////////////////////////////
 
-                ///////Tipo de impresion de resultado///
 
-                oC.TipoImpresionResultado = rdbTipoImpresionResultado.Items[0].Selected;
-                oC.TipoHojaImpresionResultado = ddlTipoHojaImpresionResultados.SelectedValue.Trim();
+              ///Aplicar formula por defecto ///
 
-                oC.TipoImpresionResultadoMicrobiologia = rdbTipoImpresionResultadoMicrobiologia.Items[0].Selected;
-                oC.TipoHojaImpresionResultadoMicrobiologia = ddlTipoHojaImpresionResultadosMicrobiologia.SelectedValue.Trim();
-                //   oC.tipo
-                //////////////////////////////////////////
+              if (ddlAplicaFormula.SelectedValue == "0") oC.AplicarFormulaDefecto = false;
+              else oC.AplicarFormulaDefecto = true;
 
 
-                ///Aplicar formula por defecto ///
+              ////Datos a imprimir del Protocolo///////////////
 
-                if (ddlAplicaFormula.SelectedValue == "0") oC.AplicarFormulaDefecto = false;
-                else oC.AplicarFormulaDefecto = true;
+              oC.ResultadoNumeroRegistro = chkDatosProtocoloImprimir.Items[0].Selected;
+              oC.ResultadoFechaEntrega = chkDatosProtocoloImprimir.Items[1].Selected;
+              oC.ResultadoSector = chkDatosProtocoloImprimir.Items[2].Selected;
+              oC.ResultadoSolicitante = chkDatosProtocoloImprimir.Items[3].Selected;
+              oC.ResultadoOrigen = chkDatosProtocoloImprimir.Items[4].Selected;
+              oC.ResultadoPrioridad = chkDatosProtocoloImprimir.Items[5].Selected;
 
 
-                ////Datos a imprimir del Protocolo///////////////
+              oC.ResultadoNumeroRegistroMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[0].Selected;
+              oC.ResultadoFechaEntregaMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[1].Selected;
+              oC.ResultadoSectorMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[2].Selected;
+              oC.ResultadoSolicitanteMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[3].Selected;
+              oC.ResultadoOrigenMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[4].Selected;
+              oC.ResultadoPrioridadMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[5].Selected;
+              /////////////////////////////////////////////////
 
-                oC.ResultadoNumeroRegistro = chkDatosProtocoloImprimir.Items[0].Selected;
-                oC.ResultadoFechaEntrega = chkDatosProtocoloImprimir.Items[1].Selected;
-                oC.ResultadoSector = chkDatosProtocoloImprimir.Items[2].Selected;
-                oC.ResultadoSolicitante = chkDatosProtocoloImprimir.Items[3].Selected;
-                oC.ResultadoOrigen = chkDatosProtocoloImprimir.Items[4].Selected;
-                oC.ResultadoPrioridad = chkDatosProtocoloImprimir.Items[5].Selected;
 
+              ////Datos a imprimir del Paciente///////////////
 
-                oC.ResultadoNumeroRegistroMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[0].Selected;
-                oC.ResultadoFechaEntregaMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[1].Selected;
-                oC.ResultadoSectorMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[2].Selected;
-                oC.ResultadoSolicitanteMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[3].Selected;
-                oC.ResultadoOrigenMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[4].Selected;
-                oC.ResultadoPrioridadMicrobiologia = chkDatosProtocoloImprimirMicrobiologia.Items[5].Selected;
-                /////////////////////////////////////////////////
+              oC.ResultadoEdad = chkDatosPacienteImprimir.Items[3].Selected; ///edad
+              oC.ResultadoFNacimiento = chkDatosPacienteImprimir.Items[4].Selected; ///f.nacimiento
+              oC.ResultadoSexo = chkDatosPacienteImprimir.Items[5].Selected; ///sexo
+              oC.ResultadoHC = chkDatosPacienteImprimir.Items[2].Selected; ///hc
+              oC.ResultadoDNI = chkDatosPacienteImprimir.Items[1].Selected; ///dni
+              oC.ResultadoDomicilio = chkDatosPacienteImprimir.Items[6].Selected; ///domicilio
+                                                                                  ///
 
+              oC.ResultadoEdadMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[3].Selected;
+              oC.ResultadoFNacimientoMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[4].Selected;
+              oC.ResultadoSexoMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[5].Selected;
+              oC.ResultadoHCMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[2].Selected;
+              oC.ResultadoDNIMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[1].Selected;
+              oC.ResultadoDomicilioMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[6].Selected;
+              /////////////////////////////////////////////////
 
-                ////Datos a imprimir del Paciente///////////////
+              ////////Imprime firma electronica///////////
+              oC.FirmaElectronicaLaboratorio = int.Parse(ddlImprimePieResultados.SelectedValue);
+              oC.FirmaElectronicaMicrobiologia = int.Parse(ddlImprimePieResultadosMicrobiologia.SelectedValue);
+              //if (ddlImprimePieResultados.SelectedValue == "0")
+              //    oC.ResultadoImprimePie = false;
+              //else
+              //    oC.ResultadoImprimePie = true;
 
-                oC.ResultadoEdad = chkDatosPacienteImprimir.Items[3].Selected; ///edad
-                oC.ResultadoFNacimiento = chkDatosPacienteImprimir.Items[4].Selected; ///f.nacimiento
-                oC.ResultadoSexo = chkDatosPacienteImprimir.Items[5].Selected; ///sexo
-                oC.ResultadoHC = chkDatosPacienteImprimir.Items[2].Selected; ///hc
-                oC.ResultadoDNI = chkDatosPacienteImprimir.Items[1].Selected; ///dni
-                oC.ResultadoDomicilio = chkDatosPacienteImprimir.Items[6].Selected; ///domicilio
-                                                                                    ///
+              ////////////////////////////////////////////////
 
-                oC.ResultadoEdadMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[3].Selected;
-                oC.ResultadoFNacimientoMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[4].Selected;
-                oC.ResultadoSexoMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[5].Selected;
-                oC.ResultadoHCMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[2].Selected;
-                oC.ResultadoDNIMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[1].Selected;
-                oC.ResultadoDomicilioMicrobiologia = chkDatosPacienteImprimirMicrobiologia.Items[6].Selected;
-                /////////////////////////////////////////////////
+              /////////Formato de Impresión///////////////////
+              oC.EncabezadoLinea1 = txtEncabezado1.Text;
+              oC.EncabezadoLinea2 = txtEncabezado2.Text;
+              oC.EncabezadoLinea3 = txtEncabezado3.Text;
 
-                ////////Imprime firma electronica///////////
-                oC.FirmaElectronicaLaboratorio = int.Parse(ddlImprimePieResultados.SelectedValue);
-                oC.FirmaElectronicaMicrobiologia = int.Parse(ddlImprimePieResultadosMicrobiologia.SelectedValue);
-                //if (ddlImprimePieResultados.SelectedValue == "0")
-                //    oC.ResultadoImprimePie = false;
-                //else
-                //    oC.ResultadoImprimePie = true;
+              oC.EncabezadoLinea1Microbiologia = txtEncabezado1Microbiologia.Text;
+              oC.EncabezadoLinea2Microbiologia = txtEncabezado2Microbiologia.Text;
+              oC.EncabezadoLinea3Microbiologia = txtEncabezado3Microbiologia.Text;
+              ////////////////////////////////////////
+              /*Logo: Se saca codigo realacionado al logo
+              if (chkBorrarImagen.Checked)
+                  oC.RutaLogo = "";
+              else
+                  if (fupLogo.FileName != "") oC.RutaLogo = "logo." + fupLogo.PostedFile.FileName.Split('.')[1];
 
-                ////////////////////////////////////////////////
+              if (fupLogo.FileName != "")
+              {
+                  //arch.PostedFile.SaveAs("nuevo_nombre." + arch.PostedFile.FileName.Split('.')[1]);
 
-                /////////Formato de Impresión///////////////////
-                oC.EncabezadoLinea1 = txtEncabezado1.Text;
-                oC.EncabezadoLinea2 = txtEncabezado2.Text;
-                oC.EncabezadoLinea3 = txtEncabezado3.Text;
-
-                oC.EncabezadoLinea1Microbiologia = txtEncabezado1Microbiologia.Text;
-                oC.EncabezadoLinea2Microbiologia = txtEncabezado2Microbiologia.Text;
-                oC.EncabezadoLinea3Microbiologia = txtEncabezado3Microbiologia.Text;
-                ////////////////////////////////////////
-                if (chkBorrarImagen.Checked)
-                    oC.RutaLogo = "";
-                else
-                    if (fupLogo.FileName != "") oC.RutaLogo = "logo." + fupLogo.PostedFile.FileName.Split('.')[1];
-
-                if (fupLogo.FileName != "")
-                {
-                    //arch.PostedFile.SaveAs("nuevo_nombre." + arch.PostedFile.FileName.Split('.')[1]);
-
-                    fupLogo.PostedFile.SaveAs(Server.MapPath("~/Logo/logo." + fupLogo.PostedFile.FileName.Split('.')[1]));
-                    //this.fupLogo.SaveAs(Server.MapPath("~/Logo/" + oC.RutaLogo));                                   
-                }
+                  fupLogo.PostedFile.SaveAs(Server.MapPath("~/Logo/logo." + fupLogo.PostedFile.FileName.Split('.')[1]));
+                  //this.fupLogo.SaveAs(Server.MapPath("~/Logo/" + oC.RutaLogo));                                   
+              }
+              */
                 if (ddlAutenticaValidacion.SelectedValue == "0")
                     oC.AutenticaValidacion = false;
                 else

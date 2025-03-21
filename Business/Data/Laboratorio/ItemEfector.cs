@@ -31,6 +31,7 @@ namespace Business.Data.Laboratorio
         private bool m_informable;
         private bool m_sininsumo;
         private int m_idpresentacion;
+        private String m_resultadoDefecto;
 
 
         #endregion
@@ -53,7 +54,7 @@ namespace Business.Data.Laboratorio
 
             m_sininsumo = false;
             m_idpresentacion = 0;
-
+            m_resultadoDefecto= String.Empty;
             //m_isscreening = false;
         }
 		#endregion // End of Default ( Empty ) Class Constuctor
@@ -75,7 +76,8 @@ namespace Business.Data.Laboratorio
 			DateTime fecharegistro,
             bool informable ,
              bool   sininsumo ,
-             int  idpresentacion
+             int  idpresentacion,
+             string resultadoDefecto
             )
 			: this()
 		{
@@ -92,6 +94,7 @@ namespace Business.Data.Laboratorio
             m_informable = informable;
             m_sininsumo = sininsumo;
             m_idpresentacion = idpresentacion;
+            m_resultadoDefecto = resultadoDefecto;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -136,16 +139,32 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
-			
-		/// <summary>
-		/// 
-		/// </summary>
-		 
-			
-		/// <summary>
-		/// 
-		/// </summary>
-		public Efector IdEfectorDerivacion
+
+
+        public string ResultadoDefecto
+        {
+            get { return m_resultadoDefecto; }
+
+            set
+            {
+                if (value == null)
+                    throw new ArgumentOutOfRangeException("Null value not allowed for m_resultadoDefecto", value, "null");
+
+                if (value.Length > 200)
+                    throw new ArgumentOutOfRangeException("Invalid value for m_resultadoDefecto", value, value.ToString());
+
+                m_isChanged |= (m_resultadoDefecto != value); m_resultadoDefecto = value;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Efector IdEfectorDerivacion
 		{
 			get { return m_idefectorderivacion; }
 			set

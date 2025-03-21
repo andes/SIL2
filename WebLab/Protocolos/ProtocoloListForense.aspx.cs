@@ -485,8 +485,10 @@ namespace WebLab.Protocolos
             cmd.Parameters["@idArea"].Value = "0";
 
             cmd.Parameters.Add("@idItem", SqlDbType.Int);
-            cmd.Parameters["@idItem"].Value = "0";   
-            
+            cmd.Parameters["@idItem"].Value = "0";
+
+            cmd.Parameters.Add("@tipoorden", SqlDbType.NVarChar);
+            cmd.Parameters["@tipoorden"].Value = "ASC";
             cmd.Connection = conn;
 
 

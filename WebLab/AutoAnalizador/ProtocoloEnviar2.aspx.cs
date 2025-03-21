@@ -477,8 +477,7 @@ namespace WebLab.AutoAnalizador
                     oItemCobasC311 = (CobasC311)oItemCobasC311.Get(typeof(CobasC311), "IdItemSil", oDetalle.IdSubItem.IdItem, "Habilitado", true);
                     if (oItemCobasC311 != null)
                     {
-                        
-                        m_NombretipoMuestra = oItemCobasC311.TipoMuestra;
+
                         if (m_Prefijo.Trim() != "Rutina")
                         {
                             if (oItemCobasC311.Prefijo.Trim() == m_Prefijo.Trim())
@@ -501,6 +500,31 @@ namespace WebLab.AutoAnalizador
                                     m_listaItem += ";" + oItemCobasC311.IdItemCobas + "|" + oItemCobasC311.TipoMuestra.ToString();
                             }
                         }
+                        /*antes     m_NombretipoMuestra = oItemCobasC311.TipoMuestra;
+                             if (m_tipoMuestra!="0") 
+                             //if (m_Prefijo.Trim() != "Rutina")
+                             {
+                                 if (m_NombretipoMuestra == m_tipoMuestra)
+                                 {
+                                     marcarenviado = true;
+                                     if (m_listaItem == "")
+                                         m_listaItem = oItemCobasC311.IdItemCobas.ToString() + "|" + oItemCobasC311.TipoMuestra.ToString();
+                                     else
+                                         m_listaItem += ";" + oItemCobasC311.IdItemCobas + "|" + oItemCobasC311.TipoMuestra.ToString();
+                                 }
+                             }
+                             else
+                             {
+                                 //if (oItemCobasC311.Prefijo.Trim() == "")
+                                 //{
+                                     marcarenviado = true;
+                                     if (m_listaItem == "")
+                                         m_listaItem = oItemCobasC311.IdItemCobas.ToString() + "|" + oItemCobasC311.TipoMuestra.ToString();
+                                     else
+                                         m_listaItem += ";" + oItemCobasC311.IdItemCobas + "|" + oItemCobasC311.TipoMuestra.ToString();
+                                 //}
+                             }
+                             */
                     }
                 }
 
@@ -509,7 +533,7 @@ namespace WebLab.AutoAnalizador
                 if (marcarenviado)
                     {   ////////marca como enviado
                         oDetalle.Enviado = 1;
-                        oDetalle.IdUsuarioEnvio = int.Parse(Session["idUsuario"].ToString());
+                    oDetalle.IdUsuarioEnvio = oUser.IdUsuario;// int.Parse(Session["idUsuario"].ToString());
                         oDetalle.FechaEnvio = DateTime.Now;
                         oDetalle.Save();
                         ///////////////
@@ -581,11 +605,11 @@ namespace WebLab.AutoAnalizador
                     m_Prefijo = Request["Prefijo"].ToString();
                     if (m_Prefijo.Trim() != "Rutina")
                         numero = numero + "-" + m_Prefijo.ToUpper();
-
+                    m_NombretipoMuestra = m_tipoMuestra;
                     m_paciente = oProtocolo.IdPaciente.NumeroDocumento.ToString() + " - " + oProtocolo.IdPaciente.Apellido + "  " + oProtocolo.IdPaciente.Nombre;
                     ///m_anioNacimiento = oProtocolo.IdPaciente.FechaNacimiento.ToString("yyyyMMdd");
                     m_sexoPaciente = oProtocolo.Sexo;
-                    m_anioNacimiento = oProtocolo.IdPaciente.FechaNacimiento.Year.ToString();
+                 //   m_anioNacimiento = oProtocolo.IdPaciente.FechaNacimiento.Year.ToString();
                     //Ver cuales son las condiciones del tipo de muestra
                     //m_Prefijo = Request["Prefijo"].ToString();
                     //m_tipoMuestra = "";

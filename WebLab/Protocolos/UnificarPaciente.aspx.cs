@@ -224,32 +224,25 @@ namespace WebLab.Protocolos
 
             switch (ddlFiltro.SelectedValue)
             {                
-                case "1": str_condicion += " and Pa.numeroDocumento=" + txtFiltro.Text; break;
+                case "1":
+                    {
+                        str_condicion += " and Pa.numeroDocumento=" + txtFiltro.Text;
+                        str_condicion += " and P.idpaciente<>" + lblidPaciente.Text;//que muestre todos los que no son el principal
+                    }
+                        break;
                 case "2": str_condicion += " and Pa.apellido like '%" + txtFiltro.Text + "%'"; break;
                 case "3": str_condicion += " and Pa.nombre like '%" + txtFiltro.Text + "%'"; break;
                 case "4":   str_condicion += " AND P.numero = " + int.Parse(txtFiltro.Text);                    break;
-                    //{
-                    ////Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-                    ////switch (oCon.TipoNumeracionProtocolo)
-                    ////    {
-                    ////    case 0: // busqueda con autonumerico                        
-                    //         str_condicion += " AND P.numero = " + int.Parse(txtFiltro.Text);                            
-                    //         break;
-                    //    case 1: //busqueda con numero diario
-                    //         str_condicion += " AND P.numeroDiario = " + int.Parse(txtFiltro.Text);                                                
-                    //        break;
-                    //    case 2: //busqueda con numero de grupo    
-                    //        str_condicion += " AND P.numeroSector = " + int.Parse(txtFiltro.Text);                                                   
-                    //        break;
-                    //    }
-                    //} break;
+                   
             }
-            
+
+         
+
             string m_strSQL = @" SELECT  P.numero as numero, Pa.apellido + ' ' + Pa.nombre AS paciente,P.idProtocolo ,
                                case when Pa.idestado=2 then 0 else Pa.numeroDocumento end as dni, P.idPaciente as idPaciente ,E.nombre as efector 
-                       FROM         dbo.LAB_Protocolo with (nolock) AS P 
-                       INNER JOIN   dbo.Sys_Paciente with (nolock) AS Pa ON Pa.idPaciente = P.idPaciente 
-                        inner join Sys_efector with (nolock) E on E.idEfector= P.idEfector " +  str_condicion;  
+                       FROM         dbo.LAB_Protocolo AS P 
+                       INNER JOIN   dbo.Sys_Paciente AS Pa ON Pa.idPaciente = P.idPaciente 
+                        inner join Sys_efector E on E.idEfector= P.idEfector " +  str_condicion;  
             
             DataSet Ds = new DataSet();
             //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -326,7 +319,7 @@ namespace WebLab.Protocolos
                 Utility oUtil = new Utility();
                 Protocolo oRegistro = new Protocolo();
                 oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), int.Parse(idProtocolo));
-
+                string idPacienteanterior = oRegistro.IdPaciente.IdPaciente.ToString();
                 string pacienteAnterior = oRegistro.IdPaciente.NumeroDocumento.ToString();
                 Usuario oUser = new Usuario();
                 Paciente oPaciente = new Paciente();
@@ -354,6 +347,8 @@ namespace WebLab.Protocolos
 
                 oRegistro.Save();
                 oRegistro.GrabarAuditoriaProtocolo("Reasigna " + pacienteAnterior + " por " + nuevoPaciente, oUser.IdUsuario);
+                EliminarPacienteSobrante(idPacienteanterior);
+
             }
             catch (Exception ex)
             {
@@ -366,6 +361,14 @@ namespace WebLab.Protocolos
                 string popupScript = "<script language='JavaScript'> alert('No se ha podido reasignar. Verifique con el Administrador del Sistema"+exception+"')</script>";
                 Page.RegisterClientScriptBlock("PopupScript", popupScript);
             }
+        }
+
+        private void EliminarPacienteSobrante(string idPacienteanterior)
+        {
+            Paciente oPaciente = new Paciente();
+
+            oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), int.Parse(idPacienteanterior));
+            oPaciente.BorrarSinuso();
         }
 
         protected void btnBorrar_Click(object sender, EventArgs e)

@@ -17,6 +17,7 @@
 		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
 		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
     <property name="IdEfectorDeriva" column="idEfectorDeriva" type="Int32" not-null="true"/>
+    <property column="resultadoDefecto" type="Boolean" name="ResultadoDefecto" not-null="true" />
 		
 	</class>
 </hibernate-mapping>

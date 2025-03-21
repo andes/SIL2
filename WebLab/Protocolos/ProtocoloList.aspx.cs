@@ -26,7 +26,7 @@ namespace WebLab.Protocolos
         public CrystalReportSource oCr = new CrystalReportSource();
 
         
-        Configuracion oC = new Configuracion();
+        public Configuracion oC = new Configuracion();
         public Usuario oUser = new Usuario();
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -278,7 +278,7 @@ namespace WebLab.Protocolos
 
             ddlItem.Items.Insert(0, new ListItem("--Todas--", "0"));
 
-
+            ddlOrden.SelectedValue = oC.TipoOrdenProtocolo;
 
             //////////////////////////Carga de combos de ObraSocial//////////////////////////////////////////
             m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString()+" order by nombreObraSocial ";
@@ -314,10 +314,12 @@ namespace WebLab.Protocolos
             //m_ssql = "SELECT idProfesional, apellido + ' ' + nombre AS nombre FROM Sys_Profesional ORDER BY apellido, nombre ";
             //oUtil.CargarCombo(ddlEspecialista, m_ssql, "idProfesional", "nombre");
             //ddlEspecialista.Items.Insert(0, new ListItem("-- Todos --", "0"));
-            
-            if (oC!=null)
-            gvLista.PageSize = oC.CantidadProtocolosPorPagina;
 
+            if (oC != null)
+            {
+                gvLista.PageSize = oC.CantidadProtocolosPorPagina;
+                gvListaProducto.PageSize = oC.CantidadProtocolosPorPagina;
+            }
 
             if (Request["idServicio"].ToString() != "1")//microbiologia o pesquisa
             {
@@ -498,11 +500,7 @@ namespace WebLab.Protocolos
         {
             string str_condicion = " 1=1 ";
 
-
-            //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-            //if (oCon.IdEfector.IdEfector != int.Parse(Session["idEfectorSolicitante"].ToString()))
-            //    str_condicion += " AND P.idusuarioregistro in (select top 1 idusuario from sys_usuario where idefector=" + Session["idEfectorSolicitante"].ToString() + ")";
-
+            
 
             //if (ddlEfector.SelectedValue != "227") //Admisnitrador
             str_condicion += "  and P.idefector=" + oUser.IdEfector.IdEfector.ToString();
@@ -514,26 +512,7 @@ namespace WebLab.Protocolos
             //        {
             if (txtProtocoloDesde.Value != "") str_condicion += " AND P.numero >= " + int.Parse(txtProtocoloDesde.Value);
             if (txtProtocoloHasta.Value != "") str_condicion += " AND P.numero <= " + int.Parse(txtProtocoloHasta.Value);
-            //        } break;
-
-            //    case 1: //busqueda con numero diario
-            //        {
-            //            if (txtProtocoloDesde.Value != "") str_condicion += " AND P.numeroDiario >= " + int.Parse(txtProtocoloDesde.Value);
-            //            if (txtProtocoloHasta.Value != "") str_condicion += " AND P.numeroDiario <= " + int.Parse(txtProtocoloHasta.Value);
-            //        }
-            //        break;
-            //    case 2: //busqueda con numero de grupo
-            //        {
-            //            if (txtProtocoloDesde.Value != "") str_condicion += " AND P.numeroSector >= " + int.Parse(txtProtocoloDesde.Value);
-            //            if (txtProtocoloHasta.Value != "") str_condicion += " AND P.numeroSector <= " + int.Parse(txtProtocoloHasta.Value);
-            //        }
-            //        break;
-            //    case 3:
-            //        {
-            //            if (txtProtocoloDesde.Value != "") str_condicion += " And P.numeroTipoServicio>=" + int.Parse(txtProtocoloDesde.Value);
-            //            if (txtProtocoloHasta.Value != "") str_condicion += " AND  P.numeroTipoServicio<=" + int.Parse(txtProtocoloHasta.Value);
-            //        } break;
-            //}
+       
             if (txtNumeroTarjeta.Value != "") str_condicion += " And S.numeroTarjeta=" + int.Parse(txtNumeroTarjeta.Value);
             if ((Request["Tipo"].ToString() == "ListadoOrdenado") || (Request["Tipo"].ToString() == "Exportacion"))
             {
@@ -617,8 +596,12 @@ namespace WebLab.Protocolos
             {
                 cmd.Parameters.Add("@idItem", SqlDbType.Int);
                 cmd.Parameters["@idItem"].Value = ddlItem.SelectedValue;
-            }           
-            
+            }
+            cmd.Parameters.Add("@tipoorden", SqlDbType.NVarChar);
+            if ((tipo==0)|| (tipo == 9))
+            cmd.Parameters["@tipoorden"].Value = ddlOrden.SelectedValue;
+            else
+                cmd.Parameters["@tipoorden"].Value = "ASC";
             cmd.Connection = conn;
 
 
@@ -970,6 +953,13 @@ namespace WebLab.Protocolos
                         {
                             Image hlnk = new Image();
                             hlnk.ImageUrl = "~/App_Themes/default/images/verde.gif";
+                            row.Cells[0].Controls.Add(hlnk);
+                        }
+                        break;
+                    case "3": //bloqueado
+                        {
+                            Image hlnk = new Image();
+                            hlnk.ImageUrl = "~/App_Themes/default/images/lock.png";
                             row.Cells[0].Controls.Add(hlnk);
                         }
                         break;

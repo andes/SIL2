@@ -31,7 +31,7 @@
 						<td class="myLabelIzquierda" >Codigo:</td>
 						<td>
                             <asp:TextBox ID="txtCodigo" runat="server" MaxLength="100" 
-                                Width="86px" style="text-transform :uppercase"  
+                                Width="100px" style="text-transform :uppercase"  
                                 ToolTip="Ingrese el codigo del análisis" TabIndex="3" 
                                 class="form-control input-sm"  />
                                             </td>

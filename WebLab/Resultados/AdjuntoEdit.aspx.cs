@@ -30,7 +30,8 @@ namespace WebLab.Resultados
                 string s_idDetalleProtocolo = Request["idDetalleProtocolo"].ToString();
                 DetalleProtocolo oDetalle = new DetalleProtocolo();
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(s_idDetalleProtocolo));
-                lblObservacionAnalisis.Text = oDetalle.IdProtocolo.GetNumero() + " - " + oDetalle.IdSubItem.Nombre;
+                //    lblObservacionAnalisis.Text = oDetalle.IdProtocolo.GetNumero() + " - " + oDetalle.IdSubItem.Nombre;
+                lblObservacionAnalisis.Text = oDetalle.IdProtocolo.Numero.ToString() + " - " + oDetalle.IdSubItem.Nombre;
                 hdnidDetalleProtocolo.Value = s_idDetalleProtocolo;
                 CargarGrilla();
 
@@ -50,7 +51,8 @@ namespace WebLab.Resultados
                 Boolean fileOK = false;
                 if (trepador.HasFile)
                 {
-                    string directorio = Server.MapPath("") + "\\" + oOs.IdProtocolo.GetNumero() + "\\" + hdnidDetalleProtocolo.Value; // @"C:\Archivos de Usuario\";
+                    //    string directorio = Server.MapPath("") + "\\" + oOs.IdProtocolo.GetNumero() + "\\" + hdnidDetalleProtocolo.Value; // @"C:\Archivos de Usuario\";
+                    string directorio = Server.MapPath("") + "\\" + oOs.IdProtocolo.Numero.ToString() + "\\" + hdnidDetalleProtocolo.Value; // @"C:\Archivos de Usuario\";
 
 
                     if (!Directory.Exists(directorio)) Directory.CreateDirectory(directorio);
