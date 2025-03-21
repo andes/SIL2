@@ -552,10 +552,29 @@ namespace Business.Data
 			}
 
 		}
-			
-		/// <summary>
-		/// 
-		/// </summary>
+
+        public void BorrarSinuso()
+        {
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));
+            crit.Add(Expression.Eq("IdPaciente", this));
+
+            IList lstPro = crit.List();
+            int cantidadprot = lstPro.Count ;
+
+            ICriteria crit2 = m_session.CreateCriteria(typeof(Turno));
+            crit2.Add(Expression.Eq("IdPaciente", this));
+
+            IList lstTur = crit.List();
+            int cantidadtur = lstTur.Count ;
+
+            if ((cantidadprot == 0) && (cantidadtur == 0))
+                this.Delete();
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
         public int IdProvincia
 		{
 			get { return m_idprovincia; }

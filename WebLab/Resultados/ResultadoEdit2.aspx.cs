@@ -130,7 +130,7 @@ namespace WebLab.Resultados
                         hypRegresar.NavigateUrl = "ResultadoBusqueda.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&modo=" + Request["modo"].ToString();
                         lblTitulo.Text = "CARGA DE RESULTADOS";
                         pnlReferencia.Visible = false;
-                        imgImprimir.Visible = false;
+                        //imgImprimir.Visible = false;
                         imgPdf.Visible = false;
                         
                         //lnkMarcar2.Visible = false;
@@ -143,7 +143,7 @@ namespace WebLab.Resultados
                         lnkDesMarcarAislamiento.Visible = false;
 
                         rdbImprimir.Visible = false;
-                        pnlImpresora.Visible = false;
+                    //    pnlImpresora.Visible = false;
                         btnRestringirAcceso.Visible = false;
                         VerificaPermisos("Carga");
                     }
@@ -162,7 +162,7 @@ namespace WebLab.Resultados
                         hypRegresar.NavigateUrl = "ResultadoBusqueda.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&modo=" + Request["modo"].ToString();
                         lblTitulo.Text = "CONTROL DE RESULTADOS"; lblTitulo.ForeColor = Color.Green;
                         pnlReferencia.Visible = false;
-                        imgImprimir.Visible = false;
+                     //   imgImprimir.Visible = false;
                         imgPdf.Visible = false;
 
                         //lnkMarcar2.Visible = true;
@@ -174,7 +174,7 @@ namespace WebLab.Resultados
                         lnkMarcarAislamiento.Visible = false;
                         lnkDesMarcarAislamiento.Visible = false;
                         rdbImprimir.Visible = false;
-                        pnlImpresora.Visible = false;
+                    //    pnlImpresora.Visible = false;
                         VerificaPermisos("Carga");
                     }
                     break;
@@ -230,7 +230,7 @@ namespace WebLab.Resultados
                         btnGuardar.Text = "Validar";
                         btnValidarImprimir.Visible = true;
                         rdbImprimir.Visible = true;
-                        imgImprimir.Visible = true;
+                      //  imgImprimir.Visible = true;
                         imgPdf.Visible = true;
                         lnkMarcar.Visible = true;
                         lnkDesmarcar.Visible = true;
@@ -240,7 +240,7 @@ namespace WebLab.Resultados
                         //lnkMarcar2.Visible = true;
                         //lnkDesmarcar2.Visible = true;
 
-                        pnlImpresora.Visible = true;
+                    //    pnlImpresora.Visible = true;
                         VerificaPermisos("Validacion");
                       
                         // if (Request["Operacion"].ToString() == "Valida")
@@ -851,8 +851,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         imgEstado.ImageUrl = "~/App_Themes/default/images/rojo.gif";
                         lblEstado1.CssClass = "label label-danger";
                         lblEstado1.Text = "NO PROCESADO";
-                        imgImprimir.Visible = false;
-                        pnlImpresora.Visible = false;
+                    //    imgImprimir.Visible = false;
+                      //  pnlImpresora.Visible = false;
                         imgPdf.Visible = false; btnRestringirAcceso.Visible = false;
                     }
                     break;
@@ -1507,6 +1507,16 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         objCellResultado.ColumnSpan = 1;
                         objCellResultado.Controls.Add(lblDerivacion);
                        }
+                    if (m_trajoMuestra == "No")
+                    {
+                        Label lblSinMuestra = new Label();
+                        lblSinMuestra.TabIndex = short.Parse("500");
+                        lblSinMuestra.Text = "Sin Muestra";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
+                        lblSinMuestra.Font.Italic = true;
+                        lblSinMuestra.ForeColor = Color.Blue;
+                        //     objCellResultado.ColumnSpan = 5;
+                        objCellResultado.Controls.Add(lblSinMuestra);
+                    }
 
 
                 }
@@ -1551,25 +1561,16 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //}
                         //else
                         //{
-                       
-                       
-                        estadoDerivacion = oDetalle.ResultadoCar;  // Vane 27/02/2025 Para todos los estados se debe mostrar el resultado de la derivación
-
-                        if (oDeriva.Estado == 0) /// pendiente                            
-                        {
-                            //  estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
-
-                            lblDerivacion.ForeColor = Color.Red;
-                        }
-
-                        /* // Vane 27/02/2025 Para todos los estados se debe mostrar el resultado de la derivación
-                          if (oDeriva.Estado == 1) /// enviado
+                            if (oDeriva.Estado == 0) /// pendiente                            
+                            {
+                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
+                                lblDerivacion.ForeColor = Color.Red;
+                            }
+                            if (oDeriva.Estado == 1) /// enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; //"Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
                             if (oDeriva.Estado == 2) /// no enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; // " No Derivado. " + oDeriva.Observacion;
-                          
-                         */
-                        lblDerivacion.Font.Bold = true;
+                            lblDerivacion.Font.Bold = true;
 
                             if (oDeriva.Resultado != "")
                                 estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado; 
@@ -1594,7 +1595,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         }
                         else
                         {
-                            if (tipodeterminacion == 0) // si es una determinacion simple
+                            if (tipodeterminacion == 0)// si es una determinacion simple
                             { string s_determinacion = oDetalle.IdSubItem.IdItem.ToString();
                                 string s_idPaciente = oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString();
                                 switch (tiporesultado)//tipoResultado
@@ -1633,6 +1634,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         Item.Value = oResultado.IdResultadoItem.ToString();
                                                         Item.Text = oResultado.Resultado;
                                                         chk1.Items.Add(Item);
+                                                        if (oResultado.ResultadoDefecto)
+                                                            m_resultadoDefecto = oResultado.Resultado;
                                                     }
 
                                                     chk1.AutoPostBack = true;
@@ -1655,7 +1658,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     txt1.MaxLength = 200;
                                                     txt1.CssClass = "form-control input-sm"; //mytexto
                                                     txt1.ToolTip = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
-
+                                                     if (m_conResultado == "False") txt1.Text = m_resultadoDefecto;
                                                     ////////////////////
                                                     if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                                     {
@@ -1770,7 +1773,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     olbl.Text = "";
                                                 else
                                                     olbl.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
-
+                                               
                                                 if (oDetalle.Observaciones != "")
                                                 {
                                                     if (olbl.Text == "")
@@ -1814,6 +1817,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         Item.Value = oResultado.IdResultadoItem.ToString();
                                                         Item.Text = oResultado.Resultado;
                                                         ddl1.Items.Add(Item);
+                                                        if (oResultado.ResultadoDefecto)
+                                                            m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
                                                     }
 
                                                     if ((m_resultadoDefecto != "") && (m_conResultado == "False"))
@@ -2703,7 +2708,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
                 Guardar(oProtocolo, true, false);
-                Imprimir(oProtocolo, "I");
+                //Imprimir(oProtocolo, "I");
+                Imprimir(oProtocolo, "PDF");
                 string sredirect="";
 
                 if ((Request["desde"] != null) && (Request["desde"] == "Urgencia"))
@@ -2818,208 +2824,190 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         private void Imprimir(Protocolo oProtocolo, string tipo)
         {
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-            string parametroPaciente = "";
-            string parametroProtocolo = "";
-            
-          
-            ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();           
-            ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();            
-            ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
-
-            ParameterDiscreteValue ImprimirHojasSeparadas = new ParameterDiscreteValue();            
-
-            ParameterDiscreteValue tipoNumeracion = new ParameterDiscreteValue();
-            tipoNumeracion.Value = oCon.TipoNumeracionProtocolo;
-
-            ///////Redefinir el tipo de firma electronica (Serían dos reportes distintos)
-            ParameterDiscreteValue conPie = new ParameterDiscreteValue();          
-            ParameterDiscreteValue conLogo = new ParameterDiscreteValue();
-            if (oCon.RutaLogo != "")                conLogo.Value = true;
-            else
-                conLogo.Value = false;
-
-            if ((oProtocolo.IdTipoServicio.IdTipoServicio ==1)|| (oProtocolo.IdTipoServicio.IdTipoServicio == 4)) //laboratorio o pesquisa neonatal.
+            using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
             {
-                encabezado1.Value = oCon.EncabezadoLinea1;
-                encabezado2.Value = oCon.EncabezadoLinea2;
-                encabezado3.Value = oCon.EncabezadoLinea3;
+                Configuracion oCon = new Configuracion();
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oProtocolo.IdEfector);
+
+                string parametroPaciente = "";
+                string parametroProtocolo = "";
 
 
-                if (oCon.ResultadoEdad) parametroPaciente = "1"; else parametroPaciente = "0";
-                if (oCon.ResultadoFNacimiento) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoSexo) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoDNI) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoHC) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoDomicilio) parametroPaciente += "1"; else parametroPaciente += "0";
+                ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
+                ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+                ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
 
+                ParameterDiscreteValue ImprimirHojasSeparadas = new ParameterDiscreteValue();
 
-                if (oCon.ResultadoNumeroRegistro) parametroProtocolo = "1"; else parametroProtocolo = "0";
-                if (oCon.ResultadoFechaEntrega) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoSector) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoSolicitante) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoOrigen) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoPrioridad) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                ParameterDiscreteValue tipoNumeracion = new ParameterDiscreteValue();
+                tipoNumeracion.Value = oCon.TipoNumeracionProtocolo;
 
-
-                
-                ImprimirHojasSeparadas.Value = oCon.TipoImpresionResultado;
-           
-                conPie.Value = oCon.FirmaElectronicaLaboratorio.ToString();
-
-                if (oCon.OrdenImpresionLaboratorio)
-                {
-                    if (oCon.TipoHojaImpresionResultado == "A4") oCr.Report.FileName = "../Informes/ResultadoSinOrden.rpt";
-                    else oCr.Report.FileName = "../Informes/ResultadoSinOrdenA5.rpt";
-                }
+                ///////Redefinir el tipo de firma electronica (Serían dos reportes distintos)
+                ParameterDiscreteValue conPie = new ParameterDiscreteValue();
+                ParameterDiscreteValue conLogo = new ParameterDiscreteValue();
+                if (oCon.RutaLogo != "") conLogo.Value = true;
                 else
+                    conLogo.Value = false;
+
+                if ((oProtocolo.IdTipoServicio.IdTipoServicio == 1) || (oProtocolo.IdTipoServicio.IdTipoServicio == 4)) //laboratorio o pesquisa neonatal.
                 {
-                    if (oCon.TipoHojaImpresionResultado == "A4") oCr.Report.FileName = "../Informes/Resultado.rpt";
-                    else oCr.Report.FileName = "../Informes/ResultadoA5.rpt";
-                }
-            }
-            if ((oProtocolo.IdTipoServicio.IdTipoServicio == 3)|| (oProtocolo.IdTipoServicio.IdTipoServicio == 5)|| (oProtocolo.IdTipoServicio.IdTipoServicio == 6)) //microbilogia de pacientes y de no pacientes o forense
-            {
-                encabezado1.Value = oCon.EncabezadoLinea1Microbiologia;
-                encabezado2.Value = oCon.EncabezadoLinea2Microbiologia;
-                encabezado3.Value = oCon.EncabezadoLinea3Microbiologia;
+                    encabezado1.Value = oCon.EncabezadoLinea1;
+                    encabezado2.Value = oCon.EncabezadoLinea2;
+                    encabezado3.Value = oCon.EncabezadoLinea3;
 
 
-                if (oCon.ResultadoEdadMicrobiologia) parametroPaciente = "1"; else parametroPaciente = "0";
-                if (oCon.ResultadoFNacimientoMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoSexoMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoDNIMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoHCMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
-                if (oCon.ResultadoDomicilioMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoEdad) parametroPaciente = "1"; else parametroPaciente = "0";
+                    if (oCon.ResultadoFNacimiento) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoSexo) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoDNI) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoHC) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoDomicilio) parametroPaciente += "1"; else parametroPaciente += "0";
 
 
-                if (oCon.ResultadoNumeroRegistroMicrobiologia) parametroProtocolo = "1"; else parametroProtocolo = "0";
-                if (oCon.ResultadoFechaEntregaMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoSectorMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoSolicitanteMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoOrigenMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
-                if (oCon.ResultadoPrioridadMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
-
-                ImprimirHojasSeparadas.Value = oCon.TipoImpresionResultadoMicrobiologia;
-               
-                conPie.Value = oCon.FirmaElectronicaMicrobiologia.ToString();
+                    if (oCon.ResultadoNumeroRegistro) parametroProtocolo = "1"; else parametroProtocolo = "0";
+                    if (oCon.ResultadoFechaEntrega) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoSector) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoSolicitante) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoOrigen) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoPrioridad) parametroProtocolo += "1"; else parametroProtocolo += "0";
 
 
-                if (oCon.TipoHojaImpresionResultadoMicrobiologia == "A4")
-                {
-                    if ((oProtocolo.IdTipoServicio.IdTipoServicio == 3) || (oProtocolo.IdTipoServicio.IdTipoServicio == 6))
+
+                    ImprimirHojasSeparadas.Value = oCon.TipoImpresionResultado;
+
+                    conPie.Value = oCon.FirmaElectronicaLaboratorio.ToString();
+
+                    if (oCon.OrdenImpresionLaboratorio)
                     {
-                        /// porner ejemplo de tabla
-                        /// 
-                       
-                        oCr.Report.FileName = "../Informes/ResultadoMicrobiologia.rpt";
+                        if (oCon.TipoHojaImpresionResultado == "A4") oCr.Report.FileName = "../Informes/ResultadoSinOrden.rpt";
+                        else oCr.Report.FileName = "../Informes/ResultadoSinOrdenA5.rpt";
                     }
                     else
-                        oCr.Report.FileName = "../Informes/ResultadoMicrobiologiaNoPacientes.rpt";
+                    {
+                        if (oCon.TipoHojaImpresionResultado == "A4") oCr.Report.FileName = "../Informes/Resultado.rpt";
+                        else oCr.Report.FileName = "../Informes/ResultadoA5.rpt";
+                    }
                 }
-                else
+                if ((oProtocolo.IdTipoServicio.IdTipoServicio == 3) || (oProtocolo.IdTipoServicio.IdTipoServicio == 5) || (oProtocolo.IdTipoServicio.IdTipoServicio == 6)) //microbilogia de pacientes y de no pacientes o forense
                 {
-                    if ((oProtocolo.IdTipoServicio.IdTipoServicio == 3) || (oProtocolo.IdTipoServicio.IdTipoServicio == 6))
-                        oCr.Report.FileName = "../Informes/ResultadoMicrobiologiaA5.rpt";
+                    encabezado1.Value = oCon.EncabezadoLinea1Microbiologia;
+                    encabezado2.Value = oCon.EncabezadoLinea2Microbiologia;
+                    encabezado3.Value = oCon.EncabezadoLinea3Microbiologia;
+
+
+                    if (oCon.ResultadoEdadMicrobiologia) parametroPaciente = "1"; else parametroPaciente = "0";
+                    if (oCon.ResultadoFNacimientoMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoSexoMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoDNIMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoHCMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
+                    if (oCon.ResultadoDomicilioMicrobiologia) parametroPaciente += "1"; else parametroPaciente += "0";
+
+
+                    if (oCon.ResultadoNumeroRegistroMicrobiologia) parametroProtocolo = "1"; else parametroProtocolo = "0";
+                    if (oCon.ResultadoFechaEntregaMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoSectorMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoSolicitanteMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoOrigenMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
+                    if (oCon.ResultadoPrioridadMicrobiologia) parametroProtocolo += "1"; else parametroProtocolo += "0";
+
+                    ImprimirHojasSeparadas.Value = oCon.TipoImpresionResultadoMicrobiologia;
+
+                    conPie.Value = oCon.FirmaElectronicaMicrobiologia.ToString();
+
+
+                    if (oCon.TipoHojaImpresionResultadoMicrobiologia == "A4")
+                    {
+                        if ((oProtocolo.IdTipoServicio.IdTipoServicio == 3) || (oProtocolo.IdTipoServicio.IdTipoServicio == 6))
+                        {
+                            /// porner ejemplo de tabla
+                            /// 
+
+                            oCr.Report.FileName = "../Informes/ResultadoMicrobiologia.rpt";
+                        }
+                        else
+                            oCr.Report.FileName = "../Informes/ResultadoMicrobiologiaNoPacientes.rpt";
+                    }
                     else
-                        oCr.Report.FileName = "../Informes/ResultadoMicrobiologiaNoPacientesA5.rpt";
+                    {
+                        if ((oProtocolo.IdTipoServicio.IdTipoServicio == 3) || (oProtocolo.IdTipoServicio.IdTipoServicio == 6))
+                            oCr.Report.FileName = "../Informes/ResultadoMicrobiologiaA5.rpt";
+                        else
+                            oCr.Report.FileName = "../Informes/ResultadoMicrobiologiaNoPacientesA5.rpt";
+                    }
+
                 }
 
-            }
+
+
+                ParameterDiscreteValue datosPaciente = new ParameterDiscreteValue();
+                datosPaciente.Value = parametroPaciente;
+
+                ParameterDiscreteValue datosProtocolo = new ParameterDiscreteValue();
+                datosProtocolo.Value = parametroProtocolo;
 
 
 
-            ParameterDiscreteValue datosPaciente = new ParameterDiscreteValue();
-            datosPaciente.Value = parametroPaciente;                     
-
-            ParameterDiscreteValue datosProtocolo = new ParameterDiscreteValue();
-            datosProtocolo.Value = parametroProtocolo;
+                string m_filtro = " WHERE idProtocolo =" + oProtocolo.IdProtocolo;
 
 
 
-            string m_filtro = " WHERE idProtocolo =" + oProtocolo.IdProtocolo;
-
-
-     
-            if ((oProtocolo.IdTipoServicio.IdTipoServicio == 1)|| (oProtocolo.IdTipoServicio.IdTipoServicio == 4)) /// laboratorio o pesquisa neo.
-            {
-
-                if (Request["idArea"].ToString() != "0") m_filtro += " and idArea in (" + Request["idArea"].ToString() +")";
-                if (Request["Operacion"].ToString() != "Valida")
+                if ((oProtocolo.IdTipoServicio.IdTipoServicio == 1) || (oProtocolo.IdTipoServicio.IdTipoServicio == 4)) /// laboratorio o pesquisa neo.
                 {
-                    if (Request["validado"].ToString() == "1") m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 )";
+
+                    if (Request["idArea"].ToString() != "0") m_filtro += " and idArea in (" + Request["idArea"].ToString() + ")";
+                    if (Request["Operacion"].ToString() != "Valida")
+                    {
+                        if (Request["validado"].ToString() == "1") m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 or trajomuestra='No' )";
+                    }
+
+                    if (Request["Operacion"].ToString() == "HC")
+                    {
+                        m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0  or   idUsuarioDerivacion>0 or trajomuestra='No')";
+                    }
+
+                    if (Request["Operacion"].ToString() == "Valida")
+                    {
+                        //    m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 )"; // los validados hasta ahora
+                        if ((rdbImprimir.SelectedValue == "0") && (Session["tildados"].ToString() != ""))// solo los marcados                
+                            m_filtro += " and idSubItem in (" + Session["tildados"] + ")";
+                        if (Session["tildados"].ToString() == "")
+                            m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 or   idUsuarioDerivacion>0 or trajomuestra='No')";
+
+                    }
+
                 }
 
-                if (Request["Operacion"].ToString() == "HC")
+
+                //Caro Performance: ver de no usar la vta_LAB_ImprimirResultados y cambiar a SP --grbar la auditoria en el SP
+                oCr.ReportDocument.SetDataSource(oProtocolo.GetDataSet("Resultados", m_filtro, oProtocolo.IdTipoServicio.IdTipoServicio, oCon));
+
+                oProtocolo.getQRResultados(oCon);
+                oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
+                oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
+                oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
+                oCr.ReportDocument.ParameterFields[3].CurrentValues.Add(conLogo);
+                oCr.ReportDocument.ParameterFields[4].CurrentValues.Add(datosPaciente);
+                oCr.ReportDocument.ParameterFields[5].CurrentValues.Add(ImprimirHojasSeparadas);
+                oCr.ReportDocument.ParameterFields[6].CurrentValues.Add(tipoNumeracion);
+                oCr.ReportDocument.ParameterFields[7].CurrentValues.Add(conPie);
+                oCr.ReportDocument.ParameterFields[8].CurrentValues.Add(datosProtocolo);
+
+                oCr.DataBind();
+
+
+                string s_nombreProtocolo = oProtocolo.Numero.ToString();
+                /*switch (oCon.TipoNumeracionProtocolo)
                 {
-                    m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0  or   idUsuarioDerivacion>0 )";
+                    case 0: s_nombreProtocolo = oProtocolo.Numero.ToString(); break;
+                    case 1: s_nombreProtocolo = oProtocolo.NumeroDiario.ToString(); break;
+                    case 2: s_nombreProtocolo = oProtocolo.PrefijoSector+ oProtocolo.NumeroSector.ToString(); break;
+                    case 3: s_nombreProtocolo = oProtocolo.NumeroTipoServicio.ToString(); break;
                 }
-
-                if (Request["Operacion"].ToString() == "Valida")
-                {
-                    //    m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 )"; // los validados hasta ahora
-                    if ((rdbImprimir.SelectedValue == "0") && (Session["tildados"].ToString() != ""))// solo los marcados                
-                        m_filtro += " and idSubItem in (" + Session["tildados"] + ")";
-                    if (Session["tildados"].ToString() == "") m_filtro += " and (idusuariovalida> 0 or idUsuarioValidaObservacion>0 or   idUsuarioDerivacion>0)";
-
-                }
-
-            }
+                */
 
 
-            //Caro Performance: ver de no usar la vta_LAB_ImprimirResultados y cambiar a SP --grbar la auditoria en el SP
-            oCr.ReportDocument.SetDataSource(oProtocolo.GetDataSet("Resultados", m_filtro, oProtocolo.IdTipoServicio.IdTipoServicio,oCon));
-
-            oProtocolo.getQRResultados(oCon);
-            oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
-            oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
-            oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
-            oCr.ReportDocument.ParameterFields[3].CurrentValues.Add(conLogo);
-            oCr.ReportDocument.ParameterFields[4].CurrentValues.Add(datosPaciente);
-            oCr.ReportDocument.ParameterFields[5].CurrentValues.Add(ImprimirHojasSeparadas);
-            oCr.ReportDocument.ParameterFields[6].CurrentValues.Add(tipoNumeracion);
-            oCr.ReportDocument.ParameterFields[7].CurrentValues.Add(conPie);
-            oCr.ReportDocument.ParameterFields[8].CurrentValues.Add(datosProtocolo);
-           
-            oCr.DataBind();
-            
-
-            string s_nombreProtocolo = "";
-            switch (oCon.TipoNumeracionProtocolo)
-            {
-                case 0: s_nombreProtocolo = oProtocolo.Numero.ToString(); break;
-                case 1: s_nombreProtocolo = oProtocolo.NumeroDiario.ToString(); break;
-                case 2: s_nombreProtocolo = oProtocolo.PrefijoSector+ oProtocolo.NumeroSector.ToString(); break;
-                case 3: s_nombreProtocolo = oProtocolo.NumeroTipoServicio.ToString(); break;
-            }
-
-            if (tipo != "PDF")
-            {
-                try
-                {
-                    oProtocolo.GrabarAuditoriaProtocolo("Imprime Resultados", int.Parse(oUser.IdUsuario.ToString()));
-                    Session["Impresora"] = ddlImpresora.SelectedValue;
-
-                    oCr.ReportDocument.PrintOptions.PrinterName = ddlImpresora.SelectedValue;
-                    oCr.ReportDocument.PrintToPrinter(1, false, 0, 0);
-
-                    oProtocolo.Impreso = true;
-                    oProtocolo.Save();
-                }
-                catch (Exception ex)
-                {
-                    string exception = "";
-                    //while (ex != null)
-                    //{
-                        exception = ex.Message + "<br>";
-
-                    //} 
-                    string popupScript = "<script language='JavaScript'> alert('No se pudo imprimir en la impresora " + Session["Impresora"].ToString() + ". Si el problema persiste consulte con soporte técnico."+exception+"'); </script>";
-                    Page.RegisterStartupScript("PopupScript", popupScript);
-                }
-            }
-            else
-            {
                 try
                 {
                     if (Session["idUsuario"] != null)
@@ -3044,10 +3032,16 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     string popupScript = "<script language='JavaScript'> alert('No se pudo descargar el  informe. Si el problema persiste consulte con soporte técnico." + exception + "'); </script>";
                     Page.RegisterStartupScript("PopupScript", popupScript);
                 }
+                //  }
+
+                conn.Close();
             }
 
         }
-        protected void Page_Unload(object sender, EventArgs e)
+
+
+    
+    protected void Page_Unload(object sender, EventArgs e)
         {
             try
             {

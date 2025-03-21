@@ -493,7 +493,8 @@
 					<div id="tabContainer" style="width: 1000px; z-index:0; position:relative;" >  
 						       <ul class="nav nav-pills">
     <li ><a href="#tab1">Analisis</a></li>        
-   <%-- <li><a href="#tab3">Etiquetas Codigo de barras</a></li> --%>   
+    <li  id="tab3Titulo" runat="server"><a href="#tab3" >Etiquetas</a></li> 
+   
     <li id="tituloCalidad" runat="server"><a  href="#tab5">Incidencias<img alt="tiene incidencias" runat="server" id="inci" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>    
 
 </ul>
@@ -519,7 +520,7 @@
                     </tr>
                 </table>
                 
-                <div  onkeydown="enterToTab(event)" style="width:545px;height:180pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC;"> 
+                <div  onkeydown="enterToTab(event)" style="width:545px;height:160pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC;"> 
                        
                     <table  class="mytablaIngreso"  border="0" id="tabla" cellpadding="0" cellspacing="0" >
 	  	                <tbody id="Datos" >
@@ -574,6 +575,11 @@
                                         </td>
                                 </tr>
                                 </table>
+                                  <div id="pnlImpresoraAlta" runat="server">
+                                   
+                            Impresora de Etiquetas:   <asp:DropDownList    class="form-control input-sm" ToolTip="Seleccione Impresora de Etiqueta" ID="ddlImpresoraEtiqueta" runat="server">
+                                             </asp:DropDownList>
+                                </div>
                                 <input type="hidden" runat="server" name="TxtDatosCargados" id="TxtDatosCargados" value="" />                                
                                    <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />                                
                 <input id="txtTareas" name="txtTareas" runat="server" type="hidden"  />
@@ -583,9 +589,46 @@
                             
                             </div>  
                                 
-                          <%--   <div id="tab3" class="tab_content" style="height: 310px">
+                            <div id="tab3"  >
+                                  <asp:Panel ID="pnlEtiquetas" runat="server" Visible="false">
+                                             
 
-                                 <div class="panel panel-info">
+                                              
+                                                     
+                          
+                                             <anthem:RadioButtonList ID="rdbSeleccionarAreasEtiquetas" runat="server" Font-Size="9pt"
+                                                 AutoCallBack="True" 
+                                                 onselectedindexchanged="rdbSeleccionarAreasEtiquetas_SelectedIndexChanged" RepeatDirection="Horizontal">
+                                                 <asp:ListItem Value="1">Marcar Todas</asp:ListItem>
+                                                 <asp:ListItem Value="0">Desmarcar Todas</asp:ListItem>
+                                             </anthem:RadioButtonList>                  
+                                         
+                                
+                                              <ul class="pagination">
+                                     <li>  
+                                             <anthem:CheckBoxList    ID="chkAreaCodigoBarra" runat="server" RepeatColumns="6" Font-Size="9pt"></anthem:CheckBoxList> 
+                                         </li>
+                                </ul>                                            
+                                                
+                                          <div>
+                                     <br />
+                            Impresora de Etiquetas:   <anthem:DropDownList    class="form-control input-sm" ToolTip="Seleccione Impresora de Etiqueta" ID="ddlImpresora2" runat="server">
+                                             </anthem:DropDownList>
+                                
+                                              
+                                         <anthem:Button  CssClass="btn btn-danger" Width="150px" ID="btnReimprimirCodigoBarras"  onclick="lnkReimprimirCodigoBarras_Click" runat="server" ValidationGroup="9" Text="Reimprimir " /></anthem:Button>
+                                              <br />
+                                              <anthem:Label ID="lblMensajeImpresion" runat="server" ForeColor="#FF3300" Font-Size="8pt"></anthem:Label>
+                                        </div>
+                                             <anthem:CheckBox ID="chkRecordarConfiguracion" Visible="false" runat="server" class="form-control input-sm" Text="Recordar ésta configuracion" />
+                                                                                     
+
+
+                                             <anthem:CheckBox ID="chkCodificaPaciente" runat="server" class="form-control input-sm"
+                                                 Text="Codificar datos del paciente en todas las etiquetas" 
+                                                 ForeColor="#CC3300" Visible="False" />
+                                         </asp:Panel>
+                            <%--     <div class="panel panel-info">
                                   
                                              <asp:Label ID="lblImprimeCodigoBarras" runat="server" Text=""></asp:Label>   
                                  
@@ -618,8 +661,8 @@
                              </div>
                             
                                   </div>
-                             
-                             </div>--%>
+                             --%>
+                             </div>
                              
                          
                                 <div id="tab5" style="overflow:scroll;overflow-x:hidden;">

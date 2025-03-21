@@ -75,11 +75,19 @@ namespace WebLab.Items
                     CargarListas();
                     if (Request["id"] != null)
                     {
-                        MostrarDatos(); HabilitarDatos();
-                        MostrarDatosValoresReferencia();
-                        MostrarDatosDiagrama();
-                        MostrarDatosResultadosPredefinidos();
-                        MostrarDatosRecomendaciones();
+                        Item oItem = new Item();
+                        oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
+                        if (oItem != null)
+                        { //Se optimiza accesos a la bd, se buscan datos segun condiciones
+                            MostrarDatos(oItem); HabilitarDatos();
+                            if (oItem.IdTipoResultado != 0)
+                                MostrarDatosValoresReferencia();
+                            if ((oItem.Tipo=="P") && (oItem.IdTipoResultado ==0))
+                            MostrarDatosDiagrama();
+                            if (oItem.IdTipoResultado >= 2) //si no es numerico muestra los predefinidos
+                                MostrarDatosResultadosPredefinidos(oItem);
+                            MostrarDatosRecomendaciones();
+                        }
                     }
                     if (Request["idEfector"].ToString() == "227")
                     {
@@ -100,6 +108,7 @@ namespace WebLab.Items
                             pnlPredefinidos.Enabled = false;
                             btnAgregarPresentacion.Visible = false;
                             btnAgregarMuestra.Visible = false;
+                            btnGuardarRPDefecto.Enabled = true;
                         }
                     }
                 }
@@ -226,8 +235,8 @@ namespace WebLab.Items
         private object LeerDatosRecomendacion()
         {
             string m_strSQL = " SELECT IR.idItemRecomendacion, R.descripcion as recomendacion " +
-                              " FROM LAB_ItemRecomendacion IR " +
-                              "INNER JOIN LAB_Recomendacion R ON R.idRecomendacion=IR.idRecomendacion " +
+                              " FROM LAB_ItemRecomendacion IR with (nolock)" +
+                              "INNER JOIN LAB_Recomendacion R with (nolock) ON R.idRecomendacion=IR.idRecomendacion " +
                               " WHERE IR.idItem=" + Request["id"].ToString();
 
 
@@ -302,47 +311,55 @@ namespace WebLab.Items
 
 
         ///******************************************Inicio de Resultados Predefinidos***************************************************//
-        private void MostrarDatosResultadosPredefinidos()
+        private void MostrarDatosResultadosPredefinidos(Item oItem)
         {
-            Item oItem = new Item();
-            oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
-            //lblItem.Text = oItem.Codigo + " - " + oItem.Nombre;
-            Efector oEfector = new Efector();
-            oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
-
-
-            // dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
-            ResultadoItem oDetalle = new ResultadoItem();
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
-            crit.Add(Expression.Eq("IdItem", oItem));
-            crit.Add(Expression.Eq("Baja", false));
-            crit.Add(Expression.Eq("IdEfector", oEfector));
-
-            string sDatos = "";
-            IList items = crit.List();
-
-            foreach (ResultadoItem oDet in items)
+         
+            if (oItem != null)
             {
-                string efe = "0";
-                if (oDet.IdEfectorDeriva > 0)
+                //lblItem.Text = oItem.Codigo + " - " + oItem.Nombre;
+                Efector oEfector = new Efector();
+                oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
+                if (oEfector != null)
                 {
-                    Efector oEfectorDer = new Efector();
-                    oEfectorDer = (Efector)oEfectorDer.Get(typeof(Efector), oDet.IdEfectorDeriva);
-                    efe = oEfectorDer.Nombre + "-" + oEfectorDer.IdEfector.ToString();
+                    CargarListasRPDefecto();
+
+
+                    // dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
+                    ResultadoItem oDetalle = new ResultadoItem();
+                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                    ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                    crit.Add(Expression.Eq("IdItem", oItem));
+                    crit.Add(Expression.Eq("Baja", false));
+                    crit.Add(Expression.Eq("IdEfector", oEfector));
+
+                    string sDatos = "";
+                    IList items = crit.List();
+
+                    foreach (ResultadoItem oDet in items)
+                    {
+                        string efe = "0";
+                        if (oDet.IdEfectorDeriva > 0)
+                        {
+                            Efector oEfectorDer = new Efector();
+                            oEfectorDer = (Efector)oEfectorDer.Get(typeof(Efector), oDet.IdEfectorDeriva);
+                            efe = oEfectorDer.Nombre + "-" + oEfectorDer.IdEfector.ToString();
+                        }
+
+                        if (sDatos == "")
+                            sDatos = oDet.Resultado + "#" + efe + "@";
+                        else
+                            sDatos += oDet.Resultado + "#" + efe + "@";
+
+                        if (oDet.ResultadoDefecto)
+                            ddlResultadoPorDefecto.SelectedValue = oDet.IdResultadoItem.ToString();
+                    }
+
+                    TxtDatosResultados.Value = sDatos;
+                    // LeerDatosRP();
+                    //CargarListasRPDefecto();
+                    //ddlResultadoPorDefecto.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
                 }
-
-                if (sDatos == "")
-                    sDatos = oDet.Resultado + "#" + efe + "@";
-                else
-                    sDatos += oDet.Resultado + "#" + efe + "@";
-
             }
-
-            TxtDatosResultados.Value = sDatos;
-            // LeerDatosRP();
-            CargarListasRPDefecto();
-            ddlResultadoPorDefecto.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
 
         }
 
@@ -520,7 +537,7 @@ namespace WebLab.Items
         {
             Utility oUtil = new Utility();
             string m_ssql = @"select idResultadoItem, resultado  as nombre
-from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + " and  idEfector=" + Request["idEfector"].ToString() + " order by idResultadoItem";
+from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].ToString() + " and  idEfector=" + Request["idEfector"].ToString() + " order by idResultadoItem";
             oUtil.CargarCombo(ddlResultadoPorDefecto, m_ssql, "idResultadoItem", "nombre");
             ddlResultadoPorDefecto.Items.Insert(0, new ListItem("               ", "0"));
             ddlResultadoPorDefecto.UpdateAfterCallBack = true;
@@ -1614,11 +1631,10 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
         }
 
 
-        private void MostrarDatos()
+        private void MostrarDatos(Item oItem)
         {
             // Muestra datos del item principal
-            Item oItem = new Item();
-            oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
+           
             //Item oRegistro = new Item();
             //oRegistro = (Item)oRegistro.Get(typeof(Item), int.Parse(Request["id"].ToString()));
             lblItemVR.Text = oItem.Codigo + " - " + oItem.Nombre;
@@ -1675,6 +1691,9 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
                         ddlEfector.SelectedValue = oItemEfector.IdEfectorDerivacion.IdEfector.ToString();
                     }
                     else ddlDerivable.SelectedValue = "0";
+               
+                if ( oItemEfector.IdItem.IdTipoResultado <3 )  //numerico o texto (1,2)
+                txtValorDefecto.Text = oItemEfector.ResultadoDefecto;
                 }
             }
 
@@ -1709,6 +1728,7 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
                 txtValorDefecto.Text = "";
                 txtValorDefecto.Enabled = false;
             }
+            
 
             if ((oItem.ValorMinimo != -1) && (oItem.ValorMaximo != -1))
             {
@@ -2148,7 +2168,7 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
             Efector oEfector = new Efector();
             Usuario oUser = new Usuario();
 
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+             oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
             oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
 
@@ -2291,6 +2311,10 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
                         oRegistro.GrabarAuditoriaDetalleItem("Modifica ", oUser, "Informable", ddlDisponible.SelectedItem.Text, oReg.Disponible.ToString());
                     if ((!oReg.Informable) && (ddlInformable.SelectedValue != "0"))
                         oRegistro.GrabarAuditoriaDetalleItem("Modifica", oUser, "Informable", ddlDisponible.SelectedItem.Text, oReg.Disponible.ToString());
+
+                    if (oRegistro.ResultadoDefecto != txtValorDefecto.Text)
+                        oRegistro.GrabarAuditoriaDetalleItem("Modifica ", oUser, "Valor Defecto", txtValorDefecto.Text, oRegistro.ResultadoDefecto);
+                    
                     //fin auditoria
 
                     if (ddlDerivable.SelectedValue == "1")
@@ -2308,9 +2332,9 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
                     if (ddlInformable.SelectedValue == "1")
                         oReg.Informable = true;
                     else oReg.Informable = false;
-                    oReg.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                    oReg.IdUsuarioRegistro = oUser;//(Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oReg.FechaRegistro = DateTime.Now;
-
+                    oReg.ResultadoDefecto = txtValorDefecto.Text;
 
                     oReg.Save();
 
@@ -2737,20 +2761,45 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
 
         protected void btnGuardarRPDefecto_Click(object sender, EventArgs e)
         {
+            GuardarRPDefectoEfector();
+        }
+
+        private void GuardarRPDefectoEfector()
+        {
             Item oItem = new Item();
             oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
+            if (oItem != null)
+            {
+                //oItem.ResultadoDefecto = ddlResultadoPorDefecto.SelectedItem.Text;
 
-            oItem.ResultadoDefecto = ddlResultadoPorDefecto.SelectedItem.Text;
-
-            oItem.IdResultadoPorDefecto = int.Parse(ddlResultadoPorDefecto.SelectedValue);
-            oItem.Save();
-
-            lblMensajeRpD.Text = "El resultado por defecto ha sido guardado";
-            lblMensajeRpD.Visible = true;
-            lblMensajeRpD.UpdateAfterCallBack = true;
+                //oItem.IdResultadoPorDefecto = int.Parse(ddlResultadoPorDefecto.SelectedValue);
+                //oItem.Save();
 
 
-
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                crit.Add(Expression.Eq("IdItem", oItem));
+                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                crit.Add(Expression.Eq("Baja", false));
+                //   crit.Add(Expression.Eq("Resultado", ddlResultadoPorDefecto.SelectedItem.Text));
+                /// crit.AddOrder(Order.Asc("Resultado"));  //el orden lo define el usuario 
+                IList resultados = crit.List();
+                foreach (ResultadoItem oResultado in resultados)
+                {
+                    if (ddlResultadoPorDefecto.SelectedItem.Text == oResultado.Resultado)
+                    {
+                        oResultado.ResultadoDefecto = true;
+                        oItem.GrabarAuditoriaDetalleItem("Graba Resultado", oUser, "Resultado Defecto", ddlResultadoPorDefecto.SelectedItem.Text, "");
+                    }
+                    else
+                        oResultado.ResultadoDefecto = false;
+                    oResultado.Save();
+                    
+                }
+                lblMensajeRpD.Text = "El resultado por defecto ha sido guardado";
+                lblMensajeRpD.Visible = true;
+                lblMensajeRpD.UpdateAfterCallBack = true;
+            }
         }
 
         protected void btnGuardarHIV_Click(object sender, EventArgs e)
@@ -2759,12 +2808,14 @@ from Lab_ResultadoItem where baja=0 and idItem= " + Request["id"].ToString() + "
             {
                 Item oItem = new Item();
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
-
-                oItem.CodificaHiv = chkCodificaHiv.Checked;
-                oItem.LimiteTurnosDia = int.Parse(txtLimite.Value);
-                oItem.EtiquetaAdicional = chkEtiquetaAdicional.Checked;
-                //oItem.IsScreeening = chkIsScreening.Checked;
-                oItem.Save();
+                if (oItem != null)
+                {
+                    oItem.CodificaHiv = chkCodificaHiv.Checked;
+                    oItem.LimiteTurnosDia = int.Parse(txtLimite.Value);
+                    oItem.EtiquetaAdicional = chkEtiquetaAdicional.Checked;
+                    //oItem.IsScreeening = chkIsScreening.Checked;
+                    oItem.Save();
+                }
             }
         }
 

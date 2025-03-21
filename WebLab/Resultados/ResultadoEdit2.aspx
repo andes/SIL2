@@ -1127,7 +1127,7 @@
 					<tr>
 						
 						<td   colspan="3" align="right">
-                            <asp:Panel ID="pnlImpresora" Visible="false" runat="server" style="border:1px solid #C0C0C0; width:100%; background-color: #EFEFEF;">                                                      
+                         <%--   <asp:Panel ID="pnlImpresora" Visible="false" runat="server" style="border:1px solid #C0C0C0; width:100%; background-color: #EFEFEF;">                                                      
  <table width="720px" align="center">
  	<tr>
 						<td class="myLabelIzquierda" align="left" style="width: 140px; background-color: #EFEFEF;">
@@ -1141,7 +1141,7 @@
                                         </tr>
                                         </table>
 														
- </asp:Panel>
+ </asp:Panel>--%>
                          </td>
 						
 					</tr>

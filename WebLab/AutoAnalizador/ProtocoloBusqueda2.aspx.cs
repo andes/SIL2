@@ -164,25 +164,25 @@ namespace WebLab.AutoAnalizador
             }
 
             ///Carga de combos de Origen
-            m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen WHERE (baja = 0)";
+            m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen with (nolock) WHERE (baja = 0)";
             oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
             ddlOrigen.Items.Insert(0, new ListItem("Todos", "0"));
 
             ///Carga de combos de Prioridad
-            m_ssql = "SELECT idPrioridad, nombre FROM LAB_Prioridad WHERE (baja = 0)";
+            m_ssql = "SELECT idPrioridad, nombre FROM LAB_Prioridad with (nolock) WHERE (baja = 0)";
             oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre",connReady);
             ddlPrioridad.Items.Insert(0, new ListItem("Todos", "0"));        
 
 
             ///Carga de Efectores solicitantes
-            m_ssql = "SELECT idEfector, nombre FROM sys_Efector order by nombre ";
+            m_ssql = "SELECT idEfector, nombre FROM sys_Efector with (nolock) order by nombre ";
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
             //ddlEfector.SelectedValue = oC.IdEfector.IdEfector.ToString();
 
             if (Request["Equipo"].ToString() == "Miura")
             {
-                m_ssql = @"SELECT DISTINCT LAB_MiuraItem.prefijo FROM LAB_MiuraItem                         
+                m_ssql = @"SELECT DISTINCT LAB_MiuraItem.prefijo FROM LAB_MiuraItem   with (nolock)                       
                          WHERE (LAB_MiuraItem.prefijo <> '')";
                 oUtil.CargarCombo(ddlPrefijo, m_ssql, "prefijo", "prefijo", connReady);
                 ddlTipoMuestra.Enabled = false;
@@ -213,10 +213,15 @@ namespace WebLab.AutoAnalizador
 
             if (Request["Equipo"].ToString() == "CobasC311")
             {
-                
 
+                 
+                    m_ssql = @"SELECT DISTINCT LAB_CobasC311.prefijo FROM LAB_CobasC311  with (nolock)
+                       WHERE (LAB_CobasC311.prefijo <> '') and habilitado=1";
+                    oUtil.CargarCombo(ddlPrefijo, m_ssql, "prefijo", "prefijo");
+                    ddlTipoMuestra.Enabled = false;
+ 
 
-                m_ssql = @"select distinct tipoMuestra  from LAB_CobasC311
+                m_ssql = @"select distinct tipoMuestra  from LAB_CobasC311 with (nolock)
 where habilitado=1
 order by tipoMuestra";
                 oUtil.CargarCombo(ddlTipoMuestra, m_ssql, "tipoMuestra", "tipoMuestra", connReady);

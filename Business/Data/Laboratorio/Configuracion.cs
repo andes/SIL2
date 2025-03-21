@@ -152,6 +152,7 @@ namespace Business.Data.Laboratorio
         private string m_urlResultadosQR;
 
         private bool m_verificaIngresoAnterior;
+        private string m_tipoOrdenProtocolo;
 
         #endregion
 
@@ -184,7 +185,7 @@ namespace Business.Data.Laboratorio
             m_encabezadolinea1 = String.Empty; 
             m_encabezadolinea2 = String.Empty; 
             m_encabezadolinea3 = String.Empty;
-
+          
             m_origenhabilitado = String.Empty;
             m_encabezadolinea1microbiologia = String.Empty;
             m_encabezadolinea2microbiologia = String.Empty;
@@ -302,7 +303,7 @@ namespace Business.Data.Laboratorio
 
             m_verificaIngresoAnterior = false;
             m_habilitaNoPublicacion = false;
-
+            m_tipoOrdenProtocolo = String.Empty;
 
         }
 
@@ -451,7 +452,8 @@ int valordefectofechatomamuestra,
         string urlMPI,
         string tokenMPI  ,
         string  urlResultadosQR ,
-        bool verificaIngresoAnterior
+        bool verificaIngresoAnterior,
+        string  tipoOrdenProtocolo
 
             )
             : this()
@@ -589,6 +591,7 @@ int valordefectofechatomamuestra,
             m_urlResultadosQR = urlResultadosQR;
 
             m_verificaIngresoAnterior = verificaIngresoAnterior;
+            m_tipoOrdenProtocolo = tipoOrdenProtocolo;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -692,6 +695,17 @@ int valordefectofechatomamuestra,
             {
                 m_isChanged |= (m_urlmuestraSISA != value);
                 m_urlmuestraSISA = value;
+            }
+
+        }
+
+        public string TipoOrdenProtocolo
+        {
+            get { return m_tipoOrdenProtocolo; }
+            set
+            {
+                m_isChanged |= (m_tipoOrdenProtocolo != value);
+                m_tipoOrdenProtocolo = value;
             }
 
         }

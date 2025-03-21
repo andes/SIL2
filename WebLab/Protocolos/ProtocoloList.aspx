@@ -101,23 +101,8 @@
 				<div class="panel-body">	
 					<table  width="1150px" align="center" >
 					
-				<%--	<tr >
-						<td class="myLabelIzquierda" >Efector:</td>
-						<td colspan="3">
-                            <asp:DropDownList ID="ddlEfector" runat="server" 
-                                ToolTip="Seleccione el efector" TabIndex="9" Width="250px" class="form-control input-sm">
-                            </asp:DropDownList>
-                                        
-                                            </td>
-						<td class="myLabelIzquierda">
-                            &nbsp;</td>
-						<td>
-                            &nbsp;</td>
-						<td class="myLabelIzquierda" >
-                            &nbsp;</td>
-						<td>
-                            &nbsp;</td>
-					</tr>--%>
+				<%--  <asp:ImageButton ID="Editar" runat="server" 
+                                                                                ImageUrl="~/App_Themes/default/images/editar.jpg" ommandName="Editar" />--%>
 					
 					<tr >
 						<td class="myLabelIzquierda" >Servicio:</td>
@@ -330,7 +315,7 @@
                                                               
                                                             </td>
                                                             <td align="right">
-                                                                
+                                                             
                                                                  &nbsp;&nbsp;&nbsp;
                                                                  <asp:Button ID="btnBuscarControl" runat="server" CssClass="btn btn-primary"
                                                                      onclick="btnBuscarControl_Click" TabIndex="15" Text="Buscar" 
@@ -351,6 +336,10 @@
                                                          
                                                         </td>
                                                         <td align="right">
+                                                               <label>Orden:</label><asp:DropDownList ID="ddlOrden" runat="server">
+                                                                   <asp:ListItem Selected="True" Value="Asc">Ascendente</asp:ListItem>
+                                                                   <asp:ListItem Value="Desc">Descendente</asp:ListItem>
+                                                               </asp:DropDownList>
                                                             <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary"
                                                                 onclick="btnBuscar_Click" TabIndex="15" Text="Buscar" ValidationGroup="0" 
                                                                 Width="77px" />

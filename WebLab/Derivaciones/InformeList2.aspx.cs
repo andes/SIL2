@@ -26,15 +26,22 @@ namespace WebLab.Derivaciones
     {
 
         public CrystalReportSource oCr = new CrystalReportSource();
-
+        Configuracion oCon = new Configuracion();
+        public Usuario oUser = new Usuario();
         protected void Page_PreInit(object sender, EventArgs e)
         {
             oCr.Report.FileName = "";
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
-            //Configuracion oC = new Configuracion();
-            //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-           
+            if (Session["idUsuario"] != null)
+            {
+                
+                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+ 
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+
         }
 
 
@@ -42,7 +49,7 @@ namespace WebLab.Derivaciones
         {
             if (!Page.IsPostBack)
             {
-                CargarListas();
+              //  CargarListas();
                   //if (Request["Estado"].ToString() == "0"){   CargarItem();}
                   //else ddlItem.Enabled=false;
 
@@ -60,17 +67,17 @@ namespace WebLab.Derivaciones
                 this.oCr.ReportDocument.Dispose();
             }
         }
-        private void CargarListas()
-        {
-            Utility oUtil = new Utility();
+        //private void CargarListas()
+        //{
+        //    Utility oUtil = new Utility();
 
-            /////////////////Impresoras////////////////////////
-            //string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
-            //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-            //if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
-            /////////////////Fin de Impresoras///////////////////
+        //    /////////////////Impresoras////////////////////////
+        //    //string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
+        //    //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+        //    //if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
+        //    /////////////////Fin de Impresoras///////////////////
 
-        }
+        //}
         private void CargarGrilla()
         {
             gvLista.DataSource = GetDataSet("","");
@@ -295,7 +302,7 @@ namespace WebLab.Derivaciones
                    oRegistro.IdDetalleProtocolo = oDetalle;
                    oRegistro.Estado = int.Parse(ddlEstado.SelectedValue);
                    oRegistro.Observacion = txtObservacion.Text;
-                   oRegistro.IdUsuarioRegistro =  int.Parse(Session["idUsuario"].ToString());
+                    oRegistro.IdUsuarioRegistro =  int.Parse(Session["idUsuario"].ToString());
                    oRegistro.FechaRegistro = DateTime.Now;
                    oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
                    oRegistro.Save();
@@ -353,7 +360,7 @@ namespace WebLab.Derivaciones
 
                             oDeriva.Estado = int.Parse(ddlEstado.SelectedValue);
                             oDeriva.Observacion = txtObservacion.Text;
-                            oDeriva.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+                            oDeriva.IdUsuarioRegistro = oUser.IdUsuario;// int.Parse(Session["idUsuario"].ToString());
                             oDeriva.FechaRegistro = DateTime.Now;
                             oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                             oDeriva.Save();
@@ -369,11 +376,28 @@ namespace WebLab.Derivaciones
                                 oDetalle.ResultadoCar = " No Derivado. " + txtObservacion.Text;
 
                             oDetalle.ConResultado = true;
-                            oDetalle.IdUsuarioResultado = int.Parse(Session["idUsuario"].ToString());
+                            oDetalle.IdUsuarioResultado = oUser.IdUsuario;//int.Parse(Session["idUsuario"].ToString());
                             oDetalle.FechaResultado = DateTime.Now;
                             oDetalle.Save();
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Graba", int.Parse(Session["idUsuario"].ToString()));
-                             
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario);
+
+                            /*Actualiza estado de protocolo*/
+                            if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
+                                oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                            else
+                            {
+                                if (oDetalle.IdProtocolo.EnProceso())
+                                {
+                                    oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                                                    // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                }
+                                else
+                                    oDetalle.IdProtocolo.Estado = 0;
+                            }
+                            oDetalle.IdProtocolo.Save();
+
+                            
+
                         }
                     }
 
@@ -397,8 +421,8 @@ namespace WebLab.Derivaciones
 
             if (dt.Rows.Count > 0)
             {
-                Usuario oUser = new Usuario();
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                //Usuario oUser = new Usuario();
+                //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             
 
                 //Aca se deberá consultar los parametros para mostrar una hoja de trabajo u otra
