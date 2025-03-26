@@ -163,14 +163,35 @@
 
                                      </td>
                                      <td> <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lbl_ErrorTransporte" CssClass="hidden"></asp:Label></td>
-
-                                     <td>Observaciones:</td>
-                                     <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
+                                    
+                                 </tr>
+                                 <tr style="vertical-align: sub">
+                                      <td>Observaciones:</td>
+                                      <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
+                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
                                      </td>
-                                     <td>
+                                     <%-- <td>
                                         
-                                        <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                       <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                     </td>--%>
+                                     <td>Fecha y Hora de retiro:</td>
+                                    
+                                      <td >
+                                            <asp:TextBox id="txt_Fecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
+                                            
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txt_Fecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+                                    </td>
+
+                                     <td>
+                                         <asp:TextBox id="txt_Hora"  runat="server"  class="form-control input-sm"  TextMode="Time"> </asp:TextBox>
+                                         
+                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txt_Hora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
+                                        
                                      </td>
+
+
+
+
 
                                      <td align="left">
                                          <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar" enabled="false"
