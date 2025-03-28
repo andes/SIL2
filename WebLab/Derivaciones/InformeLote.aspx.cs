@@ -98,7 +98,7 @@ namespace WebLab.Derivaciones
             btnGuardar.Enabled = valor;
             txtObservacion.Enabled = valor;
             ddlEstados.Enabled = valor;
-            rb_transportista.Enabled = valor;
+            //rb_transportista.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
         }

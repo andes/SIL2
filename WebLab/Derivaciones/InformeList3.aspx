@@ -71,10 +71,17 @@
         }
 
 
-        function checkDeterminaciones(checkbox) {
+        function checkDeterminaciones(checkbox, estado) {
             var itemCheck = checkbox.getElementsByTagName('input');
             if (itemCheck[0].checked) {
                 reseteaLabelErrorGrilla();
+            }// agrego que si la determinacion ya esta en un Lote mande un alerta
+            else {
+                
+                //console.log(estado);
+                if (estado == '4') { //Estado 4 es Pendiente de envio
+                    alert("Cuidado! Al desmarcar la determinacion no se enviara en el lote.");
+                }
             }
         }
 
@@ -95,9 +102,11 @@
 
 			<div class="panel-body">
 				<table  width="1000px"  >
-					  
-				    <tr>
-				    <td class="myLabelLitlle" style="vertical-align: top" colspan="3">
+
+
+                    <tr>
+
+                    <td class="myLabelLitlle" style="vertical-align: top" colspan="3">
                                             Referencias:
                                                 <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
                                                 <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
@@ -176,7 +185,8 @@
             
                                     <asp:TemplateField HeaderText="Sel." >
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")))%> ' onchange="checkDeterminaciones(this);"
+                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")))%> ' 
+                                                onchange='<%# string.Format("checkDeterminaciones(this, {0});", Eval("estado")) %>'
                                                 Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> '/>
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" 

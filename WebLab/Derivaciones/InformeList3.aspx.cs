@@ -45,10 +45,16 @@ namespace WebLab.Derivaciones {
 
         #region carga
         private void CargarParaModificacion() {
-            Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), "IdLoteDerivacion", Request["idLote"]);
-            ddlEstado.SelectedIndex = 2;
             
+            Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
+            lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
+            crit.Add(Expression.Eq("Idlote", lote ));
+            Business.Data.Laboratorio.Derivacion derivacion = (Derivacion) crit.UniqueResult();
+            
+            txtObservacion.Text = derivacion.Observacion;
+            ddlEstado.SelectedIndex = 2;
         }
         private void CargarListas() {
             Utility oUtil = new Utility();
@@ -105,7 +111,7 @@ namespace WebLab.Derivaciones {
                            "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
                            "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
                               ")" +
-                     " ORDER BY efectorDerivacion,numero desc";
+                     " ORDER BY estado desc, efectorDerivacion,numero desc";
                 }
                    
             }
