@@ -133,7 +133,7 @@
                             Referencias de lote:
                                 <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Creado&nbsp;
                                 <img alt="" src="../App_Themes/default/images/enviado.png" /> Derivado&nbsp;
-                                <img alt="" src="../App_Themes/default/images/block.png" /> Cancelado&nbsp;<br />
+                                <img alt="" src="../App_Themes/default/images/block.png" /> Descartado&nbsp;<br />
                                 &nbsp;<br />
                         </td>
 						

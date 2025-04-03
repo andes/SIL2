@@ -40,7 +40,7 @@ namespace WebLab.Derivaciones
             if (!Page.IsPostBack){
                 if (Session["idUsuario"] != null) {
                     if (Convert.ToInt32(Request["Estado"]) == 1 || Convert.ToInt32(Request["Estado"]) == 3) {
-                        activarControles();
+                        activarControles(true);
                     }
                     CargarGrilla();
                     CargarControles();
@@ -92,33 +92,33 @@ namespace WebLab.Derivaciones
                 gvLista.DataSource = dt;
             }
             else{
-                desactivarControles();
+                activarControles(false);
             }
 
             gvLista.DataBind(); 
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
         }
 
-        private void desactivarControles()
-        {
-            btnGuardar.Enabled = false;
-            txtObservacion.Enabled = false;
-            ddlEstados.Enabled = false;
-            //rb_transportista.Enabled = false; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-            ddl_Transporte.Enabled = false;
-            lnkMarcar.Enabled = false;
-            lnkDesMarcar.Enabled = false;
-        }
+        //private void desactivarControles()
+        //{
+        //    btnGuardar.Enabled = false;
+        //    txtObservacion.Enabled = false;
+        //    ddlEstados.Enabled = false;
+        //    //rb_transportista.Enabled = false; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+        //    ddl_Transporte.Enabled = false;
+        //    lnkMarcar.Enabled = false;
+        //    lnkDesMarcar.Enabled = false;
+        //}
 
-        private void activarControles()
+        private void activarControles(bool valor)
         {
-            btnGuardar.Enabled = true;
-            txtObservacion.Enabled = true;
-            ddlEstados.Enabled = true;
+            btnGuardar.Enabled = valor;
+            txtObservacion.Enabled = valor;
+            ddlEstados.Enabled = valor;
             //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-            ddl_Transporte.Enabled = true;
-            lnkMarcar.Enabled = true;
-            lnkDesMarcar.Enabled = true;
+            ddl_Transporte.Enabled = valor;
+            lnkMarcar.Enabled = valor;
+            lnkDesMarcar.Enabled = valor;
         }
 
         private void CargarControles() {
@@ -303,9 +303,14 @@ namespace WebLab.Derivaciones
         #region Entrega
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            Guardar();
-            CargarGrilla();
-            limpiarForm();
+            if (Session["idUsuario"] != null) {
+                Guardar();
+                CargarGrilla();
+                limpiarForm();
+            } else {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
+               
         }
         //private void GuardarEstadoNuevo()
         //{
