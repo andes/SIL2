@@ -1,8 +1,9 @@
-/*
-insert license info here
-*/
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using NHibernate;
 
 namespace Business.Data.Laboratorio
 {
@@ -233,5 +234,22 @@ namespace Business.Data.Laboratorio
 		}
 				
 		#endregion 
+
+		
+
+		public static List<AuditoriaLoteDerivacion> AuditoriasPorLote(int idLote) {
+			List<AuditoriaLoteDerivacion> auditorias = new List<AuditoriaLoteDerivacion>();
+			try {
+				ISession session = NHibernateHttpModule.CurrentSession;
+				IList lista = session.CreateQuery("from AuditoriaLoteDerivacion where idLote=" + idLote).List();
+
+				foreach (AuditoriaLoteDerivacion item in lista) {
+					auditorias.Add(item);
+				}
+			} catch (Exception) {
+
+			}
+			return auditorias;
+		}
 	}
 }

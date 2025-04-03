@@ -51,6 +51,11 @@ namespace WebLab.Protocolos {
             lb_efector.Text = origen.Nombre;
             
             CargarFechaHoraActual();
+
+            //Cargo el transportista LAB-56
+            List<AuditoriaLoteDerivacion> auditorias = AuditoriaLoteDerivacion.AuditoriasPorLote(Convert.ToInt32(Request["idLote"]));
+            AuditoriaLoteDerivacion transporte = auditorias.FindLast(a => a.Analisis == "Transportista");
+            lbl_transportista.Text = transporte.Valor;
         }
         private void CargarFechaHoraActual() {
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
@@ -101,14 +106,14 @@ namespace WebLab.Protocolos {
           
             if (!string.IsNullOrEmpty(txt_Fecha.Value)) {
                 DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Value.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Value.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Value.Substring(8, 2)));
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("dd/MM/yyyy"));
+                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("yyyy-MM-dd")); //Cambio formato de fecha asi tiene el mismo cuando se retira el lote
             }
 
             if (!string.IsNullOrEmpty(txt_Hora.Value))
                 lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Hora Recibido", txt_Hora.Value);
 
-            if (!string.IsNullOrEmpty(txt_transportista.Text))
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Transportista", txt_transportista.Text);
+            //if (!string.IsNullOrEmpty(txt_transportista.Text))
+            //    lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Transportista", txt_transportista.Text);
 
             if (!string.IsNullOrEmpty(txt_obs.Value))
                 lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Observacion", txt_obs.Value);

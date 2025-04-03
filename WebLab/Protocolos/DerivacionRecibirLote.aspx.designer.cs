@@ -69,6 +69,15 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.Label lb_efector;
 
         /// <summary>
+        /// lbl_transportista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_transportista;
+
+        /// <summary>
         /// txt_Fecha control.
         /// </summary>
         /// <remarks>
@@ -103,15 +112,6 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Hora;
-
-        /// <summary>
-        /// txt_transportista control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_transportista;
 
         /// <summary>
         /// txt_obs control.

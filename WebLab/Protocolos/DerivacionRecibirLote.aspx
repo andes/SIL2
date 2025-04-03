@@ -59,10 +59,16 @@
                                             <asp:Label ID="lb_efector" runat="server" Width="300px"></asp:Label></strong>
                                     </td>
                                 </tr>
+                                
+                                 <tr>
+                                    <td>
+                                        <strong>Transportista:
+                                        <asp:Label ID="lbl_transportista" runat="server"  ></asp:Label> </strong>
+                                        <%--<asp:TextBox ID="txt_transportista" runat="server" class="form-control input-sm" Style="width: 600px"></asp:TextBox>--%></td>
+                                </tr>
                                 <tr>
                                     <td>&nbsp;</td>
                                 </tr>
-
                                 <tr>
                                     <td class="">Fecha y Hora:
                                         <input id="txt_Fecha" runat="server" type="date" class="form-control input-sm" title="Ingrese la fecha de ingreso" />
@@ -75,10 +81,7 @@
                                     <td>&nbsp;</td>
                                 </tr>
 
-                                <tr>
-                                    <td>Transportista:
-                                        <asp:TextBox ID="txt_transportista" runat="server" class="form-control input-sm" Style="width: 600px"></asp:TextBox></td>
-                                </tr>
+                               
                                 <tr>
                                     <td>Observaciones:
                                         <textarea id="txt_obs" runat="server" rows="3" cols="2" class="form-control input-sm" style="width: 600px"></textarea>
