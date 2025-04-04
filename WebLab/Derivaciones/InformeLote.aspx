@@ -113,8 +113,40 @@
            } else {
                labelErrorTransporte.className = "hidden";
            }
-    }
-       </script>
+       }
+
+       document.addEventListener("DOMContentLoaded", function () {
+           var txtFecha = document.getElementById('<%= txt_Fecha.ClientID %>');
+           var txtHora = document.getElementById('<%= txt_Hora.ClientID %>');
+
+           function cambioFechaHorario() {
+               var fechaSeleccionada = new Date(txtFecha.value);
+               var fechaHoy = new Date();
+              
+
+               // Normalizamos para comparar solo YYYY-MM-DD sin la hora
+               var fechaSeleccionadaStr = fechaSeleccionada.toISOString().split('T')[0];  //toISOString() convierte la fecha en YYYY-MM-DDTHH:mm:ss.sssZ
+               var fechaHoyStr = fechaHoy.toISOString().split('T')[0];
+
+               txtFecha.max = fechaHoyStr; // Limitar la fecha máxima al día de hoy
+
+               if (fechaSeleccionadaStr === fechaHoyStr) {
+                   var horaActual = fechaHoy.getHours().toString().padStart(2, '0') + ":" +
+                       fechaHoy.getMinutes().toString().padStart(2, '0');
+                   if (txtHora.max !== horaActual) { // Evita sobrescribir si ya está correcto
+                       txtHora.max = horaActual; //Si elige la fecha de hoy no puede poner una hora superior a la actual
+                   }
+               } else {
+                   if (txtHora.hasAttribute("max")) { // Solo eliminar si existe
+                       txtHora.removeAttribute("max");
+                   }
+               }
+           }
+
+           cambioFechaHorario(); //Llamar a la función al cargar la página
+           txtFecha.addEventListener("change", cambioFechaHorario); //llamar la funcion el usuario cambia la fecha
+       });
+   </script>
 
    
 </asp:Content>
