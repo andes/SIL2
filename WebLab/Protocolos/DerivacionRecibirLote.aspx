@@ -7,7 +7,44 @@
     <link href="Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />
     <script src="Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>
-    
+
+    <script type="text/javascript">
+            /** Con esta funcion verificamos que si coloca la Fecha de Hoy, no pueda poner una Hora superior  a la actual */
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
+            var txtHora = document.getElementById('<%= txt_Hora.ClientID %>');
+            var txtEnvio = document.getElementById('<%= hid_fechaEnvio.ClientID %>');
+
+            function cambioHorario() {
+            var fechaSeleccionada = new Date(txtFecha.value);
+            var fechaHoy = new Date();
+
+            // Normalizamos para comparar solo YYYY-MM-DD sin la hora
+            var fechaSeleccionadaStr = fechaSeleccionada.toISOString().split('T')[0];  //toISOString() convierte la fecha en YYYY-MM-DDTHH:mm:ss.sssZ
+            var fechaHoyStr = fechaHoy.toISOString().split('T')[0];
+            //console.log(txtEnvio.value)
+            var FechaENvioLote = new Date(txtEnvio.value);
+            //console.log(FechaENvioLote)
+            txtFecha.max = fechaHoyStr; // Limitar la fecha máxima al día de hoy
+            txtFecha.min = FechaENvioLote.toISOString().split('T')[0];
+
+            if (fechaSeleccionadaStr === fechaHoyStr) {
+                var horaActual = fechaHoy.getHours().toString().padStart(2, '0') + ":" + fechaHoy.getMinutes().toString().padStart(2, '0');
+                if (txtHora.max !== horaActual) { // Evita sobrescribir si ya está correcto
+                    txtHora.max = horaActual; //Si elige la fecha de hoy no puede poner una hora superior a la actual
+                }
+            } else {
+                if (txtHora.hasAttribute("max")) { // Solo eliminar si existe
+                    txtHora.removeAttribute("max");
+                }
+             }
+        }
+
+        cambioHorario(); //Llamar a la función al cargar la página
+        txtFecha.addEventListener("change", cambioHorario); //llamar la funcion para cambiar la hora
+        });
+    </script>
 
 </asp:Content>
 
@@ -45,20 +82,20 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <label for="lbl_FechaRegistro">Fecha Registro:</label>
-                                        <strong>
-                                            <asp:Label ID="lbl_FechaRegistro" runat="server" Width="100px"></asp:Label></strong>
-                                    </td>
-                                </tr>
-                                <tr>
+                                 <tr>
                                     <td>
                                         <label for="lb_efector">Efector Origen:</label>
                                         <strong>
                                             <asp:Label ID="lb_efector" runat="server" Width="300px"></asp:Label></strong>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                       <strong> <asp:Label runat="server" ID="lbl_fechaPermitida"> </asp:Label></strong>
+                                        <asp:HiddenField ID="hid_fechaEnvio"  runat="server"  />
+                                    </td>
+                                </tr>
+                               
                                 
                                  <tr>
                                     <td>
@@ -70,12 +107,16 @@
                                     <td>&nbsp;</td>
                                 </tr>
                                 <tr>
+                                    
                                     <td class="">Fecha y Hora:
-                                        <input id="txt_Fecha" runat="server" type="date" class="form-control input-sm" title="Ingrese la fecha de ingreso" />
+                                        <%--<input id="txt_Fecha" runat="server" type="date" class="form-control input-sm" title="Ingrese la fecha de ingreso" />--%>
+                                        <asp:TextBox runat="server" ID="txtFecha" TextMode="Date" class="form-control input-sm"  />
                                         <input id="txt_Hora"  runat="server" type="time" class="form-control input-sm" name="txt_Hora" />
-                                        <asp:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txt_Fecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+
+                                        <asp:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
                                         <asp:RequiredFieldValidator ID="rfv_Hora" runat="server" ControlToValidate="txt_Hora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
-                                    </td>
+                                        <asp:RangeValidator runat="server" ID="rv_Fecha" ControlToValidate="txtFecha" />
+                                        </td>
                                 </tr>
                                 <tr>
                                     <td>&nbsp;</td>

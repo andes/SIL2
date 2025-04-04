@@ -104,22 +104,30 @@ namespace WebLab.Protocolos {
 
         #region Buscar
         protected void btnBuscar_Click(object sender, EventArgs e) {
-            resetearForm();
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
+            try { 
+                resetearForm();
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
 
-            if (efectorCorrecto(lote)) { //El efector destino es el efector logueado
+                if (efectorCorrecto(lote)) { //El efector destino es el efector logueado
 
-                CargarControladores(lote);
+                    CargarControladores(lote);
 
-                //Guardo en sesion el número de Lote para que al volver de cargar el protocolo se recarguen los datos
-                if (Session["idLote"] != null) {
-                    Session["idLote"] = Convert.ToInt32(txtNumeroLote.Text);
-                } else {
-                    Session.Add("idLote", Convert.ToInt32(txtNumeroLote.Text));
+                    //Guardo en sesion el número de Lote para que al volver de cargar el protocolo se recarguen los datos
+                    if (Session["idLote"] != null) {
+                        Session["idLote"] = Convert.ToInt32(txtNumeroLote.Text);
+                    } else {
+                        Session.Add("idLote", Convert.ToInt32(txtNumeroLote.Text));
+                    }
+
                 }
-
             }
+            catch(Exception) {
+                //Se agrega esta alerta por que si se consulta por un lote inexistente dispara una excepcion BaseDataAccess
+                // ScriptManager.RegisterStartupScript(this, GetType(), "toastrError",  "toastr.error('No se encontro el número de lote');", true);
+                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
+            }
+
         }
         private void CargarControladores(LoteDerivacion lote) {
             //Si el lote es Derivado se habilita el botón para recibirlo
