@@ -229,8 +229,7 @@ namespace WebLab.Derivaciones {
             lote.Save();
 
             //Se guarda auditoria de creacion de lote
-            lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), oUser.IdUsuario);
-
+            lote.GrabarAuditoriaLoteDerivacion( lote.descripcionEstadoLote(), oUser.IdUsuario);// LAB-54 Sacar la palabra "Estado: xxxxx"
             return lote;
         }
 
