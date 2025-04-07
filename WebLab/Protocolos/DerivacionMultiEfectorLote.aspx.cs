@@ -120,14 +120,11 @@ namespace WebLab.Protocolos {
                         Session.Add("idLote", Convert.ToInt32(txtNumeroLote.Text));
                     }
 
-                }
-            }
-            catch(Exception) {
-                //Se agrega esta alerta por que si se consulta por un lote inexistente dispara una excepcion BaseDataAccess
-                // ScriptManager.RegisterStartupScript(this, GetType(), "toastrError",  "toastr.error('No se encontro el número de lote');", true);
+              }
+            } catch (Exception) {
                 ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
             }
-
+            
         }
         private void CargarControladores(LoteDerivacion lote) {
             //Si el lote es Derivado se habilita el botón para recibirlo
@@ -150,15 +147,19 @@ namespace WebLab.Protocolos {
                 lbl_cantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
             } else {
                 gvProtocolosDerivados.DataSource = null;
-                gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia
-            }
-            if (gvProtocolosDerivados.Rows.Count == 0) {
+                gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
+
                 //Si no trajo datos verifico el estado del lote
-                if (lote.Estado != 6) {
-                    gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado ";
-                } else {
-                    //Si esta el lote esta completo muestro otro mensaje de la grilla
-                    gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote ";
+                switch (lote.Estado) {
+                    case 1:
+                        gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
+                    case 2: case 3: case 4:case 5:
+                        gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
+                    
+                        break;
+                    case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
+                        gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
+                        break;
                 }
             }
             gvProtocolosDerivados.DataBind();
