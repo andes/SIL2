@@ -150,7 +150,7 @@
 				    </tr>
 				    <tr>
 					    <td colspan="2">
-                             <asp:Label Text="* Seleccione un lote" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
+                             <asp:Label Text="* Seleccione al menos una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
                             <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
                             <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0" ID="lnkDesMarcar" onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
