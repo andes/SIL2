@@ -166,7 +166,7 @@ namespace WebLab.Protocolos {
                     Efector e = new Efector();
                     e = (Efector) e.Get(typeof(Efector), lote.IdEfectorDestino);
                     lbl_errorEfectorOrigen.Visible = true;
-                    lbl_errorEfectorOrigen.Text = "El lote con efector Destino '" + e.Nombre + "' no coincide con Efector del usuario '" + oC.IdEfector.Nombre + "'";
+                    lbl_errorEfectorOrigen.Text = "El número de lote no corresponde para recibir en  '" + oC.IdEfector.Nombre + "'"; //LAB-77
                     div_controlLote.Attributes["class"] = "form-group has-error";
                     gvProtocolosDerivados.Visible = false; //para que no salga el cartel de grilla vacia
                     return false;

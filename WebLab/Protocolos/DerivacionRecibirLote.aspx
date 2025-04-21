@@ -32,7 +32,7 @@
                 <td rowspan="6" style="vertical-align: top">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
-                            Recepción del Lotes
+                            Recepción de Lotes
                         </div>
                         <div class="panel-body">
                             <table width="500px">
