@@ -111,11 +111,12 @@ namespace WebLab.Protocolos {
         private void GenerarAuditorias(LoteDerivacion lote) {
             string estado = lote.descripcionEstadoLote();
 
-            lote.GrabarAuditoriaLoteDerivacion("Estado: " + estado, oUser.IdUsuario);
-            
-            if (!string.IsNullOrEmpty(txtFecha.Text)) {
-                DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("yyyy-MM-dd")); //Cambio formato de fecha asi tiene el mismo cuando se retira el lote
+            lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario);  // LAB-54 Sacar la palabra "Estado: xxxxx"
+
+
+            if (!string.IsNullOrEmpty(txt_Fecha.Value)) {
+                DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Value.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Value.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Value.Substring(8, 2)));
+                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("dd/MM/yyyy"));
             }
 
             //if (!string.IsNullOrEmpty(txt_Fecha.Value)) {
