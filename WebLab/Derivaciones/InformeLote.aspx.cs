@@ -98,7 +98,19 @@ namespace WebLab.Derivaciones
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
         }
 
-        private void activarControles(bool valor) {
+        //private void desactivarControles()
+        //{
+        //    btnGuardar.Enabled = false;
+        //    txtObservacion.Enabled = false;
+        //    ddlEstados.Enabled = false;
+        //    //rb_transportista.Enabled = false; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+        //    ddl_Transporte.Enabled = false;
+        //    lnkMarcar.Enabled = false;
+        //    lnkDesMarcar.Enabled = false;
+        //}
+
+        private void activarControles(bool valor)
+        {
             btnGuardar.Enabled = valor;
             txtObservacion.Enabled = valor;
             ddlEstados.Enabled = valor;
@@ -106,22 +118,6 @@ namespace WebLab.Derivaciones
             ddl_Transporte.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
-            txt_Hora.Enabled = valor;
-            txt_Fecha.Enabled = valor;
-            //Date1.Enabled = valor;
-            //Time1.Enabled = valor;
-           
-        }
-
-        private void activarControles()
-        {
-            btnGuardar.Enabled = true;
-            txtObservacion.Enabled = true;
-            ddlEstados.Enabled = true;
-            //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-            ddl_Transporte.Enabled = true;
-            lnkMarcar.Enabled = true;
-            lnkDesMarcar.Enabled = true;
         }
 
         private void CargarControles() {
@@ -318,10 +314,16 @@ namespace WebLab.Derivaciones
         #endregion
 
         #region Entrega
-        protected void btnGuardar_Click(object sender, EventArgs e) {
-            Guardar();
-            CargarGrilla();
-            limpiarForm();
+        protected void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null) {
+                Guardar();
+                CargarGrilla();
+                limpiarForm();
+            } else {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
+               
         }
         //private void GuardarEstadoNuevo()
         //{
