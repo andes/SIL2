@@ -1810,17 +1810,22 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                         enproceso = true;
                         break;
                     }
-                    if (oDetalle.Enviado > 1)
+                    if (oDetalle.Enviado > 1)///tiene resultado desde el equipo
                     {
                         enproceso = true;
                         break;
                     }
-                    if (oDetalle.IdUsuarioObservacion > 0)
+                    if (oDetalle.IdUsuarioObservacion > 0)///tiene cargada alguna observacion desde el equipo
                     {
                         enproceso = true;
                         break;
                     }
                     if (oDetalle.IdUsuarioValidaObservacion > 0)
+                    {
+                        enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.ConResultado )  //si tiene alguna derivacion  
                     {
                         enproceso = true;
                         break;
@@ -1982,7 +1987,8 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                             }
                             else
                             {
-                                if (oDetalle.IdSubItem.IdEfectorDerivacion != oDetalle.IdSubItem.IdEfector) //derivado
+                             //   if (oDetalle.IdSubItem.IdEfectorDerivacion != oDetalle.IdSubItem.IdEfector) //derivado: esto para sil no multiefector
+                             if ((s_operacion == "Derivacion") && (oDetalle.ConResultado))
                                 {
 
  
@@ -2263,6 +2269,42 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             catch
             { ok = false; }
                 return ok;
+        }
+
+        public string getListaEtiquetaDeterminacion()
+        {
+            string lista = "";
+
+            string m_ssql = @"select iditem, nombre from lab_item i with (nolock)
+WHERE etiquetaAdicional=1 
+and baja=0
+and exists (select 1 from lab_detalleprotocolo dp with (nolock)
+where  dp.idsubitem = i.iditem
+and dp.idProtocolo =  " + this.IdProtocolo.ToString() + @"
+and dp.trajoMuestra = 'Si'
+) order by nombre";
+            
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_ssql, conn);
+            adapter.Fill(Ds);
+
+            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            {
+                if (lista == "")
+                    lista = Ds.Tables[0].Rows[i][0].ToString()+ "@"+ Ds.Tables[0].Rows[i][1].ToString();
+                 else
+                lista += "," + Ds.Tables[0].Rows[i][0].ToString() + "@" + Ds.Tables[0].Rows[i][1].ToString(); ;
+                 
+
+
+            }
+
+
+
+            return lista;
         }
 
         public string getListaAreasCodigoBarras()

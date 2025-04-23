@@ -238,6 +238,15 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.Label lblUsuario;
         
         /// <summary>
+        /// tab3Titulo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab3Titulo;
+        
+        /// <summary>
         /// tituloCalidad control.
         /// </summary>
         /// <remarks>
@@ -310,6 +319,24 @@ namespace WebLab.Protocolos {
         protected global::Anthem.LinkButton lnkAgregarItem;
         
         /// <summary>
+        /// pnlImpresoraAlta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlImpresoraAlta;
+        
+        /// <summary>
+        /// ddlImpresoraEtiqueta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraEtiqueta;
+        
+        /// <summary>
         /// TxtDatosCargados control.
         /// </summary>
         /// <remarks>
@@ -335,6 +362,78 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtTareas;
+        
+        /// <summary>
+        /// pnlEtiquetas control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEtiquetas;
+        
+        /// <summary>
+        /// rdbSeleccionarAreasEtiquetas control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RadioButtonList rdbSeleccionarAreasEtiquetas;
+        
+        /// <summary>
+        /// chkAreaCodigoBarra control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.CheckBoxList chkAreaCodigoBarra;
+        
+        /// <summary>
+        /// ddlImpresora2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlImpresora2;
+        
+        /// <summary>
+        /// btnReimprimirCodigoBarras control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Button btnReimprimirCodigoBarras;
+        
+        /// <summary>
+        /// lblMensajeImpresion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblMensajeImpresion;
+        
+        /// <summary>
+        /// chkRecordarConfiguracion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.CheckBox chkRecordarConfiguracion;
+        
+        /// <summary>
+        /// chkCodificaPaciente control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.CheckBox chkCodificaPaciente;
         
         /// <summary>
         /// pnlIncidencia control.

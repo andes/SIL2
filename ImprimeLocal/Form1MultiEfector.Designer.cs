@@ -77,6 +77,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.lblIdEfector = new System.Windows.Forms.Label();
             this.txtmensajes = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.Protocolos.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -644,19 +645,18 @@
             this.label18.Location = new System.Drawing.Point(18, 485);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(683, 28);
+            this.label18.Size = new System.Drawing.Size(263, 28);
             this.label18.TabIndex = 32;
             this.label18.Text = "Version Marzo-2024 MultiEfector";
             // 
             // lblIdEfector
             // 
             this.lblIdEfector.AutoSize = true;
-            this.lblIdEfector.Location = new System.Drawing.Point(426, 27);
+            this.lblIdEfector.Location = new System.Drawing.Point(376, 485);
             this.lblIdEfector.Name = "lblIdEfector";
             this.lblIdEfector.Size = new System.Drawing.Size(60, 20);
             this.lblIdEfector.TabIndex = 33;
             this.lblIdEfector.Text = "label21";
-            this.lblIdEfector.Visible = false;
             // 
             // txtmensajes
             // 
@@ -666,11 +666,22 @@
             this.txtmensajes.Size = new System.Drawing.Size(525, 276);
             this.txtmensajes.TabIndex = 34;
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(345, 485);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(25, 20);
+            this.label21.TabIndex = 35;
+            this.label21.Text = "id:";
+            this.label21.Click += new System.EventHandler(this.label21_Click);
+            // 
             // Form1MultiEfector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(596, 521);
+            this.ClientSize = new System.Drawing.Size(555, 524);
+            this.Controls.Add(this.label21);
             this.Controls.Add(this.txtmensajes);
             this.Controls.Add(this.lblIdEfector);
             this.Controls.Add(this.label18);
@@ -753,6 +764,7 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label lblIdEfector;
         private System.Windows.Forms.TextBox txtmensajes;
+        private System.Windows.Forms.Label label21;
     }
 }
 

@@ -283,6 +283,15 @@ namespace WebLab {
         protected global::System.Web.UI.WebControls.DropDownList ddlPaginadoProtocolo;
         
         /// <summary>
+        /// ddlOrdenProtocolos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlOrdenProtocolos;
+        
+        /// <summary>
         /// rdbTipoListaProtocolo control.
         /// </summary>
         /// <remarks>
@@ -785,33 +794,6 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList chkPaciente3;
-        
-        /// <summary>
-        /// fupLogo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fupLogo;
-        
-        /// <summary>
-        /// Image1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image1;
-        
-        /// <summary>
-        /// chkBorrarImagen control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkBorrarImagen;
         
         /// <summary>
         /// tabCovid control.

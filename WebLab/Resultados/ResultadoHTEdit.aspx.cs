@@ -548,7 +548,8 @@ namespace WebLab.Resultados
                                                 IList resultados = crit.List();
                                                     if (resultados.Count > 0)
                                                     {
-                                                        DropDownList ddl1 = new DropDownList();
+                                                    string m_resultadoDefecto = "";
+                                                    DropDownList ddl1 = new DropDownList();
                                                         //ddl1.Font.Size = FontUnit.Point(7);
                                                         ListItem ItemSeleccion = new ListItem();
                                                         ItemSeleccion.Value = "0";
@@ -566,16 +567,17 @@ namespace WebLab.Resultados
                                                             ddl1.Items.Add(Item);
                                                             //ddl1.SelectedItem.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                             ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
-
-                                                        }
+                                                        if (oResultado.ResultadoDefecto)
+                                                            m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
+                                                    }
                                                       
 
                                                         if (oDet != null)
                                                         {
                                                             if (oDet.ConResultado == false) // sin resultado
                                                             {
-                                                                if (oItem.ResultadoDefecto != "")
-                                                                    ddl1.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
+                                                            if (oItem.ResultadoDefecto != "")
+                                                                ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
                                                                 else
                                                                     ddl1.SelectedValue= "0";
                                                             }

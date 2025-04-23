@@ -1063,9 +1063,7 @@
 					<tr>
 						
 						<td colspan="3" align="center">
-                           <table id="Table1"  
-        style="font-size:1em; margin-left:1%; background-color: #DFE7F7; font-weight: bold;" 
-                                cellpadding="0" cellspacing="0" 
+                           <table 
         >
 <tr>
 <td style="width:40px;">&nbsp</td><td width="500px" align="center" >Resultados 
@@ -1085,11 +1083,7 @@
 </table></td>
 						
 					</tr>
-					<tr>
-						<td  colspan="3">
-                                        </td>
-						
-					</tr>
+					 
 					<tr>
 						<td colspan="2">
     
@@ -1105,22 +1099,7 @@
                         </td>
 						
 					</tr>
-					
-					<tr>
-                        <td colspan="3">
-                            <hr /></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"  class="control-label" >
-                            Resultado por Defecto:</td>
-                        <td >
-                            <anthem:DropDownList ID="ddlResultadoPorDefecto" runat="server" class="form-control input-sm">
-                            </anthem:DropDownList>&nbsp;
-                            <anthem:Button ID="btnGuardarRPDefecto" runat="server" CssClass="btn btn-primary" Width="100px" 
-                                onclick="btnGuardarRPDefecto_Click" Text="Guardar" ValidationGroup="0" 
-                                 />
-                        </td>
-                    </tr>
+					 
 					
 					<tr>
                         <td class="control-label" colspan="2">
@@ -1136,6 +1115,22 @@
 					</table>
 					<input type="hidden" runat="server" name="TxtDatosResultados" id="TxtDatosResultados" value="" /> 
 					</anthem:Panel>
+
+    <table>
+            <tr>
+                        <td colspan="3"    >
+                            Resultado por Defecto:</td>
+                        <td >
+                            <anthem:DropDownList ID="ddlResultadoPorDefecto" Width="300px" runat="server" class="form-control input-sm">
+                            </anthem:DropDownList>&nbsp;
+                 </td>
+                 <td >
+                            <anthem:Button ID="btnGuardarRPDefecto" runat="server" CssClass="btn btn-primary" Width="100px" 
+                                onclick="btnGuardarRPDefecto_Click" Text="Guardar" ValidationGroup="0" 
+                                 />
+                        </td>
+                    </tr>
+    </table>
 </div>	
 
 <div id="tab5" class="tab_content" style="border: 1px solid #C0C0C0">
