@@ -33,9 +33,7 @@ namespace WebLab.Protocolos {
             if (!Page.IsPostBack) {
                 VerificaPermisos("Derivacion");
                 CargarEncabezado();
-            } else {
-              
-            }
+            } 
         }
 
         private void CargarEncabezado() {
@@ -44,18 +42,35 @@ namespace WebLab.Protocolos {
 
             LoteDerivacion lote = new LoteDerivacion();
             lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
-            lbl_FechaRegistro.Text = lote.FechaRegistro.Substring(0, 10);
-
+            //lbl_FechaRegistro.Text = lote.FechaRegistro.Substring(0, 10);
+            //fechaEnvio.Text = DateTime.Parse(lote.FechaEnvio.Substring(0, 10)).ToString("yyyy-MM-dd");
+            hid_fechaEnvio.Value =  DateTime.Parse(lote.FechaEnvio.Substring(0, 10)).ToString("yyyy-MM-dd");
+            lbl_fechaPermitida.Text = "Fecha envio: " + lote.FechaEnvio.Substring(0,10);
             Efector origen = new Efector();
             origen = (Efector) origen.Get(typeof(Efector), lote.IdEfectorOrigen);
             lb_efector.Text = origen.Nombre;
             
             CargarFechaHoraActual();
+
+            //LAB-56 Cargo el transportista 
+            List<AuditoriaLoteDerivacion> auditorias = AuditoriaLoteDerivacion.AuditoriasPorLote(Convert.ToInt32(Request["idLote"]));
+            AuditoriaLoteDerivacion transporte = auditorias.FindLast(a => a.Analisis == "Transportista");
+            lbl_transportista.Text = transporte.Valor;
+
+            
         }
         private void CargarFechaHoraActual() {
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
-            txt_Fecha.Value = miFecha.Date.ToString("yyyy-MM-dd");
+            //txt_Fecha.Value = miFecha.Date.ToString("yyyy-MM-dd");
             txt_Hora.Value = miFecha.ToString("HH:mm");
+            txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
+
+            //LAB-74 Control de fecha: La fecha de ingreso del lote no puede ser anterior a la fecha de envio del lote
+            rv_Fecha.MinimumValue = hid_fechaEnvio.Value;
+            rv_Fecha.MaximumValue = txtFecha.Text; //Fecha Date today
+            rv_Fecha.Text = "La fecha de recepcion no puede ser menor a la fecha de envio " + hid_fechaEnvio.Value;
+
+
         }
         private void VerificaPermisos(string sObjeto) {
             if (Session["idUsuario"] != null) {
@@ -97,18 +112,22 @@ namespace WebLab.Protocolos {
             string estado = lote.descripcionEstadoLote();
 
             lote.GrabarAuditoriaLoteDerivacion("Estado: " + estado, oUser.IdUsuario);
-           
-          
-            if (!string.IsNullOrEmpty(txt_Fecha.Value)) {
-                DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Value.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Value.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Value.Substring(8, 2)));
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("dd/MM/yyyy"));
+            
+            if (!string.IsNullOrEmpty(txtFecha.Text)) {
+                DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
+                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("yyyy-MM-dd")); //Cambio formato de fecha asi tiene el mismo cuando se retira el lote
             }
+
+            //if (!string.IsNullOrEmpty(txt_Fecha.Value)) {
+            //    DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Value.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Value.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Value.Substring(8, 2)));
+            //    lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("yyyy-MM-dd")); //Cambio formato de fecha asi tiene el mismo cuando se retira el lote
+            //}
 
             if (!string.IsNullOrEmpty(txt_Hora.Value))
                 lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Hora Recibido", txt_Hora.Value);
 
-            if (!string.IsNullOrEmpty(txt_transportista.Text))
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Transportista", txt_transportista.Text);
+            //if (!string.IsNullOrEmpty(txt_transportista.Text))
+            //    lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Transportista", txt_transportista.Text);
 
             if (!string.IsNullOrEmpty(txt_obs.Value))
                 lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Observacion", txt_obs.Value);
