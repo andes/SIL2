@@ -27,8 +27,15 @@ namespace WebLab.Derivaciones {
                 if (Session["idUsuario"] != null) {
                     CargarListas();
                     CargarGrilla();
-                    int estado = Convert.ToInt32(Request["Estado"]);
-                    activarControles(estado == 0 || estado == 2);
+                    if(Request["Tipo"] == "Alta") {
+                        int estado = Convert.ToInt32(Request["Estado"]);
+                        activarControles(estado == 0 || estado == 2);
+                    } else {
+                        if (Request["Tipo"] == "Modifica")
+                            activarControles(true);
+                            CargarParaModificacion();
+                    }
+                   
                 } else {
                     Response.Redirect("../FinSesion.aspx", false);
                 }
@@ -37,6 +44,18 @@ namespace WebLab.Derivaciones {
 
 
         #region carga
+        private void CargarParaModificacion() {
+            
+            Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
+            lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
+            crit.Add(Expression.Eq("Idlote", lote ));
+            Business.Data.Laboratorio.Derivacion derivacion = (Derivacion) crit.UniqueResult();
+            
+            txtObservacion.Text = derivacion.Observacion;
+            ddlEstado.SelectedIndex = 2;
+        }
         private void CargarListas() {
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
@@ -74,11 +93,30 @@ namespace WebLab.Derivaciones {
             string s_vta_LAB = "vta_LAB_Derivaciones";
 
             string m_strSQL = " SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
-            " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , solicitante as especialista " +
+            " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , solicitante as especialista , isnull(idlote,0) as idLote " +
             " FROM  " + s_vta_LAB +
-            " WHERE " + Request["Parametros"].ToString() +
-            "  and estado = " + Request["Estado"].ToString() +
-            " ORDER BY efectorDerivacion,numero ";
+            " WHERE ";
+
+
+            if (Request["Tipo"] == "Alta")
+                m_strSQL += Request["Parametros"].ToString() +  "  and estado = " + Request["Estado"].ToString() + " ORDER BY efectorDerivacion,numero ";
+            else {
+                if (Request["Tipo"] == "Modifica") {
+                    Usuario oUser = new Usuario();
+                    oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+                    m_strSQL +=
+                       "    (" +
+                           "     (estado = 0 and idlote is null " +//Traer derivaciones pendientes por si se necesitan agregar 
+                           "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
+                           "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
+                              ")" +
+                     " ORDER BY estado desc, efectorDerivacion,numero desc";
+                }
+                   
+            }
+            
+           
 
 
 
@@ -110,16 +148,26 @@ namespace WebLab.Derivaciones {
 
         protected bool HabilitarCheck(int estado) {
             switch (estado) {
-                case 0:
+                case 0: //Pendiente de derivar
                     return true;
-                case 1:
+                case 1: //Enviado
                     return false; //ya se envio el lote
-                case 2:
+                case 2: //No Enviado
                     return true;
-                case 3:
-                    return false; //ya tiene generado un lote
+                case 3: //Recibido
+                    return false; 
+                case 4: //Pendiente para enviar
+                    return true; //ya tiene generado un lote, pero se puede editar
                 default:
                     return false;
+            }
+        }
+
+        protected bool HacerCheck(int estado) {
+            if(estado == 4) {
+                return true; //Dejar checkeados aquellos que ya estan en el lote
+            } else {
+                return false;
             }
         }
         #endregion
@@ -147,14 +195,19 @@ namespace WebLab.Derivaciones {
         #region Guardar
         protected void btnGuardar_Click(object sender, EventArgs e) {
 
-            if (int.Parse(ddlEstado.SelectedValue) == 2) {
-                //Cambia el estado a "No enviado"
+            if (int.Parse(ddlEstado.SelectedValue) == 2) { //Cambia el estado a "No enviado"
                 GuardarDerivaciones();
                 CargarGrilla();
                 limpiarForm();
             } else {
-                //Genera Lote y cambia determinaciones
-                Business.Data.Laboratorio.LoteDerivacion lote = GenerarLote();
+                Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
+                if (Request["Tipo"] == "Alta") {    //Genera Lote y cambia determinaciones
+                    lote = GenerarLote();
+                } else {
+                    if (Request["Tipo"] == "Modifica") {
+                        lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), "IdLoteDerivacion", Request["idLote"]);
+                    }
+                }
                 GuardarDerivaciones(lote);
                 Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion, false);
             }
@@ -184,29 +237,55 @@ namespace WebLab.Derivaciones {
         private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion idLote = null) {
             foreach (GridViewRow row in gvLista.Rows) {
                 CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked) {
-                    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                    oDetalle = (DetalleProtocolo) oDetalle.Get(typeof(DetalleProtocolo), int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
-
-                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
-                    crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
-                    IList lista = crit.List();
-                    if (lista.Count > 0) {
-                        foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista) {
-                            oDeriva.Estado = int.Parse(ddlEstado.SelectedValue);
-                            oDeriva.Observacion = txtObservacion.Text;
-                            oDeriva.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
-                            oDeriva.FechaRegistro = DateTime.Now;
-                            oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
-                            oDeriva.Idlote = idLote;
-                            oDeriva.Save();
+                int estado = Convert.ToInt32(((Label) (row.Cells[0].FindControl("lbl_estado"))).Text);
+                /* Casos:
+                 * PARA ENVIAR
+                * (1) GUARDA: Tiene estado "Pendiente de derivar" y fue checkeado -> Se asocia al lote
+                * (2) MODIFICA: Tiene estado "Pendiente para enviar" y no tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
+                * PARA NO ENVIAR
+                * (3) GUARDA: Tiene estado "Pendiente de derivar" o "Pendiente para enviar", y fue checkeado 
+                */
+                if(idLote != null) {
+                    if (estado == 0 && a.Checked) { // (1) Tiene estado "Pendiente de derivar" y fue checkeado -> Se asocia al lote
+                        ActualizarDetalleProtocolo(row, idLote);
+                    } else {
+                        if (estado == 4 && !a.Checked) { //(2) Tiene estado "Pendiente para enviar" y no tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
+                            ActualizarDetalleProtocolo(row, null, true);
                         }
                     }
+                } else {
+                    ActualizarDetalleProtocolo(row, idLote);
                 }
             }
         }
 
+        private void ActualizarDetalleProtocolo(GridViewRow row , Business.Data.Laboratorio.LoteDerivacion idLote, bool modifica = false) {
+            DetalleProtocolo oDetalle = new DetalleProtocolo();
+            oDetalle = (DetalleProtocolo) oDetalle.Get(typeof(DetalleProtocolo), int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
+
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
+            crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
+            IList lista = crit.List();
+            if (lista.Count > 0) {
+                foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista) {
+                    oDeriva.Estado = int.Parse(ddlEstado.SelectedValue);
+                    oDeriva.Observacion = txtObservacion.Text;
+                    oDeriva.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+                    oDeriva.FechaRegistro = DateTime.Now;
+                    oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
+                    oDeriva.Idlote = idLote;
+                    oDeriva.Save();
+
+                    if (modifica) { //Cambia el resultado de LAB_DetalleProtocolo
+                        DetalleProtocolo oDet = new DetalleProtocolo();
+                        oDet = (DetalleProtocolo) oDet.Get(typeof(DetalleProtocolo), oDeriva.IdDetalleProtocolo.IdDetalleProtocolo);
+                        //Inserta auditoria del detalle del protocolo
+                        oDet.GrabarAuditoriaDetalleProtocolo("Modifica", oDet.IdUsuarioResultado);
+                    }
+                }
+            }
+        }
         #endregion
 
     }
