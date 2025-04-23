@@ -176,7 +176,7 @@ namespace WebLab.Derivaciones {
                     //  ddlEfector
 
                     if (Request["tipo"] == "informe")
-                        Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue, false);
+                        Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue +"&Tipo=Alta", false);
                     else if (Request["tipo"] == "resultado")
                         Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
                 } else
