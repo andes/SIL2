@@ -113,8 +113,40 @@
            } else {
                labelErrorTransporte.className = "hidden";
            }
-    }
-       </script>
+       }
+
+       document.addEventListener("DOMContentLoaded", function () {
+           var txtFecha = document.getElementById('<%= txt_Fecha.ClientID %>');
+           var txtHora = document.getElementById('<%= txt_Hora.ClientID %>');
+
+           function cambioFechaHorario() {
+               var fechaSeleccionada = new Date(txtFecha.value);
+               var fechaHoy = new Date();
+              
+
+               // Normalizamos para comparar solo YYYY-MM-DD sin la hora
+               var fechaSeleccionadaStr = fechaSeleccionada.toISOString().split('T')[0];  //toISOString() convierte la fecha en YYYY-MM-DDTHH:mm:ss.sssZ
+               var fechaHoyStr = fechaHoy.toISOString().split('T')[0];
+
+               txtFecha.max = fechaHoyStr; // Limitar la fecha máxima al día de hoy
+
+               if (fechaSeleccionadaStr === fechaHoyStr) {
+                   var horaActual = fechaHoy.getHours().toString().padStart(2, '0') + ":" +
+                       fechaHoy.getMinutes().toString().padStart(2, '0');
+                   if (txtHora.max !== horaActual) { // Evita sobrescribir si ya está correcto
+                       txtHora.max = horaActual; //Si elige la fecha de hoy no puede poner una hora superior a la actual
+                   }
+               } else {
+                   if (txtHora.hasAttribute("max")) { // Solo eliminar si existe
+                       txtHora.removeAttribute("max");
+                   }
+               }
+           }
+
+           cambioFechaHorario(); //Llamar a la función al cargar la página
+           txtFecha.addEventListener("change", cambioFechaHorario); //llamar la funcion el usuario cambia la fecha
+       });
+   </script>
 
    
 </asp:Content>
@@ -163,14 +195,35 @@
 
                                      </td>
                                      <td> <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lbl_ErrorTransporte" CssClass="hidden"></asp:Label></td>
-
-                                     <td>Observaciones:</td>
-                                     <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
+                                    
+                                 </tr>
+                                 <tr style="vertical-align: sub">
+                                      <td>Observaciones:</td>
+                                      <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
+                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
                                      </td>
-                                     <td>
+                                     <%-- <td>
                                         
-                                        <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                       <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                     </td>--%>
+                                     <td>Fecha y Hora de retiro:</td>
+                                    
+                                      <td >
+                                            <asp:TextBox id="txt_Fecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
+                                            
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txt_Fecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+                                    </td>
+
+                                     <td>
+                                         <asp:TextBox id="txt_Hora"  runat="server"  class="form-control input-sm"  TextMode="Time"> </asp:TextBox>
+                                         
+                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txt_Hora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
+                                        
                                      </td>
+
+
+
+
 
                                      <td align="left">
                                          <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar" enabled="false"
