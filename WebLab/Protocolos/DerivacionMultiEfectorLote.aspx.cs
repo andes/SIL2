@@ -104,22 +104,27 @@ namespace WebLab.Protocolos {
 
         #region Buscar
         protected void btnBuscar_Click(object sender, EventArgs e) {
-            resetearForm();
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
+            try { 
+                resetearForm();
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
 
-            if (efectorCorrecto(lote)) { //El efector destino es el efector logueado
+                if (efectorCorrecto(lote)) { //El efector destino es el efector logueado
 
-                CargarControladores(lote);
+                    CargarControladores(lote);
 
-                //Guardo en sesion el número de Lote para que al volver de cargar el protocolo se recarguen los datos
-                if (Session["idLote"] != null) {
-                    Session["idLote"] = Convert.ToInt32(txtNumeroLote.Text);
-                } else {
-                    Session.Add("idLote", Convert.ToInt32(txtNumeroLote.Text));
-                }
+                    //Guardo en sesion el número de Lote para que al volver de cargar el protocolo se recarguen los datos
+                    if (Session["idLote"] != null) {
+                        Session["idLote"] = Convert.ToInt32(txtNumeroLote.Text);
+                    } else {
+                        Session.Add("idLote", Convert.ToInt32(txtNumeroLote.Text));
+                    }
 
+              }
+            } catch (Exception) {
+                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
             }
+            
         }
         private void CargarControladores(LoteDerivacion lote) {
             //Si el lote es Derivado se habilita el botón para recibirlo
@@ -142,15 +147,19 @@ namespace WebLab.Protocolos {
                 lbl_cantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
             } else {
                 gvProtocolosDerivados.DataSource = null;
-                gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia
-            }
-            if (gvProtocolosDerivados.Rows.Count == 0) {
+                gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
+
                 //Si no trajo datos verifico el estado del lote
-                if (lote.Estado != 6) {
-                    gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado ";
-                } else {
-                    //Si esta el lote esta completo muestro otro mensaje de la grilla
-                    gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote ";
+                switch (lote.Estado) {
+                    case 1:
+                        gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
+                    case 2: case 3: case 4:case 5:
+                        gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
+                    
+                        break;
+                    case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
+                        gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
+                        break;
                 }
             }
             gvProtocolosDerivados.DataBind();

@@ -51,15 +51,6 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.Label txtNumeroLote;
 
         /// <summary>
-        /// lbl_FechaRegistro control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_FechaRegistro;
-
-        /// <summary>
         /// lb_efector control.
         /// </summary>
         /// <remarks>
@@ -69,13 +60,40 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.Label lb_efector;
 
         /// <summary>
-        /// txt_Fecha control.
+        /// lbl_fechaPermitida control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl txt_Fecha;
+        protected global::System.Web.UI.WebControls.Label lbl_fechaPermitida;
+
+        /// <summary>
+        /// hid_fechaEnvio control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hid_fechaEnvio;
+
+        /// <summary>
+        /// lbl_transportista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_transportista;
+
+        /// <summary>
+        /// txtFecha control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFecha;
 
         /// <summary>
         /// txt_Hora control.
@@ -105,13 +123,13 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Hora;
 
         /// <summary>
-        /// txt_transportista control.
+        /// rv_Fecha control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_transportista;
+        protected global::System.Web.UI.WebControls.RangeValidator rv_Fecha;
 
         /// <summary>
         /// txt_obs control.
