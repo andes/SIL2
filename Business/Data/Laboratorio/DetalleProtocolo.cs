@@ -266,7 +266,7 @@ namespace Business.Data.Laboratorio
 
             set
             {
-                if (value != null && value.Length > 500)
+                if (value != null && value.Length > 1000)
                     throw new ArgumentOutOfRangeException("Invalid value for m_resultadocar", value, value.ToString());
 
                 m_isChanged |= (m_resultadocar != value); m_resultadocar = value;
@@ -398,7 +398,7 @@ namespace Business.Data.Laboratorio
 
 			set	
 			{	
-				if(  value != null &&  value.Length > 4000)
+				if(  value != null &&  value.Length > 1000)
 					throw new ArgumentOutOfRangeException("Invalid value for Observaciones", value, value.ToString());
 				
 				m_isChanged |= (m_observaciones != value); m_observaciones = value;

@@ -281,7 +281,7 @@ function enterToTab(pEvent) {
             title: 'Resultados',
             autoOpen: true,
             width: 500,
-            height: 440,
+            height: 500,
             modal: true,
             resizable: false,
             autoResize: true,

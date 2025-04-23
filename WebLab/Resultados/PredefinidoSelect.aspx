@@ -16,7 +16,7 @@
                 <tr>
                 <td style="vertical-align: top" colspan="2">                                               
                               <asp:Label CssClass="mytituloGris" ID="lblObservacionAnalisis" runat="server" Text="Label"></asp:Label>
-                           <br />   <asp:Label CssClass="myLabelIzquierda" ID="lblProtocolo" runat="server" Text="Label"></asp:Label>
+                           <br /> <strong>Protocolo:</strong>  <asp:Label CssClass="myLabelIzquierda" ID="lblProtocolo" runat="server" Text="Label"></asp:Label>
                               
                               <hr />
                               </td>

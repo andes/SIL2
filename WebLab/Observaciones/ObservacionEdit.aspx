@@ -45,7 +45,7 @@
 				<td  style="vertical-align: top"  >Descripción:</td>
 				<td colspan="3"  >
                     <asp:TextBox ID="txtNombre"  runat="server" Width="600px" CssClass="form-control input-sm"
-                        TabIndex="1" ToolTip="Ingrese la descripcion a imprimir" MaxLength="4000" 
+                        TabIndex="1" ToolTip="Ingrese la descripcion a imprimir" MaxLength="1000" 
                         TextMode="MultiLine" Rows="10"></asp:TextBox>
                              <asp:RequiredFieldValidator ID="rfvNombre" 
                         runat="server" ControlToValidate="txtNombre" 

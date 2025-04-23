@@ -140,7 +140,7 @@ namespace Business.Data.Laboratorio
 				if( value == null )
 					throw new ArgumentOutOfRangeException("Null value not allowed for Nombre", value, "null");
 				
-				if(  value.Length > 4000)
+				if(  value.Length > 1000)
 					throw new ArgumentOutOfRangeException("Invalid value for Nombre", value, value.ToString());
 				
 				m_isChanged |= (m_nombre != value); m_nombre = value;

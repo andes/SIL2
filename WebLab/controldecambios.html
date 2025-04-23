@@ -1,0 +1,374 @@
+ 
+       
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Lista de cambios</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                }
+
+                .fecha {
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+
+                .cambios {
+                    margin-bottom: 20px;
+                }
+
+                .cambio {
+                    margin-bottom: 10px;
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Lista de cambios en SIL2</h2>
+            <div class="cambios">
+                <div class="fecha">2025.03.20</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio: Hoja de Trabajo. Correccion en impresion para separar el numero de origen del numero de protocolo.
+                    </li>
+                </ul>
+                <div class="fecha">2025.03.19</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio: API Resultados para ANDES. Se modifica para que se muestre la observacion validada cuando no tiene resultado informado (Caso Determinacion "Sin Insumos").
+                    </li>                    
+                </ul>
+                <div class="fecha">2025.03.18</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Etiquetas de CB. Se habilita la impresion en Modulo No Pacientes <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Etiquetas de CB. Se corrige impresión de etiqueta adicional para las determinaciones que son parte del diagrama de otra determinacion. Por ej. codigo 412.POST.
+                    </li>                   
+                    <li class="cambio">
+                        Cambio 3: Unificar Pacientes. Se modifica para que cuando se unifique con el mismo dni (por estar repetido) se elimine el paciente repetido.
+                    </li>                   
+                </ul>
+                <div class="fecha">2025.03.12</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Etiquetas de CB. Se habilita acceso al menu de Derivaciones al Perfil Administrativo
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Listado Ordenado. Se corrige error al exportar a excel.
+                    </li>
+                    <li class="cambio">
+                        Cambio 3: API Resultados para ANDES. Se modifica para que se muestre la descripcion de la determinacion y no el nombre corto.
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.03.07</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Etiquetas de CB. Se corrige error al imprimir datos de pacientes temporales con Numero de Identificacion Adicional alfanumericos.                        
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Etiquetas de CB. Se corrige que no imprimía numero de origen en los casos que estaba marcado como dato a imprimir.
+                    </li>
+                     
+                </ul>
+                <div class="fecha">2025.03.06</div>
+                <ul>                                                           
+                    <li class="cambio">
+                        Cambio 1: <strong>Nueva funcionalidad</strong>
+                        <br />
+                        Nuevo Parametro del sistema. Se agrega en la solapa Carga Protocolos el parametro para seleccionar el orden de la lista de protoclos por defecto.
+                        <br />
+                        Lista de protocolos. Se agrega opción de elegir orden de protocolos tomando como opcion seleccionada la cargada en el parametro por defecto.
+                      
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Correccion en Derivacion para que actualice el estado de protocolo ("En Proceso","Terminado"),
+                        principalmente cuando el protocolo solo tienen derivaciones dentro de sus determinaciones. Se ejecuta plan de trabajo para corregir los protocolos pendientes.
+
+                    </li>
+                    <li class="cambio">
+                        Cambio 3: Se saca la opcion en Carga/Validacion de Resultados el filtro "procesado por el Equipo"; dado que es una funcionalidad de prueba desarrollada para
+                        Laboratorio Central y luego resultó sin uso.
+                    </li>
+                    <li class="cambio">
+                        Cambio 4: PDF de Resultado. Se corrige el encabezado por el Laboratorio que realizó el protocolo.                     
+                    </li>
+                    <li class="cambio">
+                        Cambio 5: Observaciones en resultados. Se corrige error al cargar observaciones de mas de 500 caracteres en determinaciones.
+                    </li>
+                    <li class="cambio">
+                        Cambio 6: Etiquetas de Derivaciones. Se ajusta para que se impriman solo las derivaciones marcadas como "Enviadas". 
+                    </li>
+                 
+                    <li class="cambio">
+                        Cambio 7: Determinaciones sin muestra. Se corrige visualizacion en Historial de Analisis/Carga y Validacion de Resultados para determinaciones compuestas.
+                        Se graba en la auditoria el ingreso de determinacion sin muestra.
+                        
+                    </li>
+                    <li class="cambio">
+                        Cambio 8: Resultado Predefinidos multiples.                    
+                        Se corrige seleccion en carga/validacion por analisis. Se corrige seleccion por defecto.
+                    
+                    </li>
+                </ul>
+              
+                <div class="fecha">2025.02.10</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Configuracion de Analisis: Resultado por Defecto. Cada laboratorio carga o selecciona (resultados predefeinidos) sus propios resultados por defecto.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">Cambio 2: HT a Demanda. Se corrige filtro de Determinaciones por Area y Tipo de servicio.</li>
+                    <li class="cambio">Cambio 3: Cobas C311 Envio de muestras: Se agrega filtro por prefijo para solucionar envio de Orinas.</li>
+                    <li class="cambio">Cambio 4: Se agrega link al pie de pagina para ver este listado de cambios <strong>Nueva funcionalidad</strong></li>
+                </ul>
+                <div class="fecha">2025-02-05</div>
+                <ul>
+                    <li class="cambio">Cambio 1: Impresion Etiquetas para Derivacion. <strong>Nueva funcionalidad</strong> desde el menu Derivaciones.</li>
+                    <li class="cambio">Cambio 2: Recepcion FFEE (Ficha Notificacion Electronica) desde ANDES. <strong>Nueva funcionalidad</strong> desde el menu Recepcion para laboratorio general y desde menu Microbiologia.</li>
+                </ul>
+
+                <div class="fecha">2025-02-04</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Cobas C311 Envio de muestras: Correccion filtro por tipo de muestra.
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Busqueda de Pacientes por filtro ampliado. Correccion de error.
+                    </li>
+
+                    <li class="cambio">
+                        Cambio 3: Desvalidacion de resultados. Correccion de error.
+                    </li>
+                </ul>
+                <div class="fecha">2025-01-29</div>
+                <ul>
+                    <li class="cambio">
+                        Correccion para que se generen todas las etiquetas en la carga de protocolos.
+                    </li>
+                </ul>
+                <div class="fecha">2024-12-16</div>
+                <ul>
+                    <li class="cambio">
+                        Configuracion Equipo KX21N: Nuevas determinaciones RDW_SD y RDW_CV <strong>Nueva funcionalidad</strong>
+                    </li>
+                </ul>
+                <div class="fecha">2024-11-26</div>
+                <ul>
+                    <li class="cambio">
+                        Valor de Referencia: Correccion bug en la primer determinacion de una practica compuesta que no se mostraba en valor de referencia.
+
+                    </li>
+                </ul>
+                <div class="fecha">2024-11-05</div>
+                <ul>
+                    <li class="cambio">
+                            Cambio 1: COBAS C311 - Se habilita envío de pedidos al equipo
+
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Estadísticas por Resultados - Correccion en filtro de protocolos que no tienen diagnósticos.
+
+
+                    </li>
+                </ul>
+                <div class="fecha">2024-10-29</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Protocolo de Microbiologia. Se agrega control de que el tipo de muestra selecionado sea el configurado 
+                        en las determinaciones.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Estadísticas por Resultados - Se agrega opción de filtrar los protocolos que no tienen diagnósticos.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>
+                </ul>
+                <div class="fecha">2024-09-17</div>
+                <ul>
+                    <li class="cambio">
+                        Lista de determinaciones: Se agregan nuevos campos.
+                    </li>                    
+                </ul>
+                <div class="fecha">2024-09-10</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Búsqueda paciente temporal con numero identificación adicional se corrige en turnos protocolo. 
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Corrección en carga de resultados: los de tipo numéricos al ingresar un signo negativo sin numero generaba error en el sistema.
+
+                    </li>
+                    <li class="cambio">
+                        Cambio 3: Configuracion del sistema: En la solapa General se agregan los datos del laboratorio: N° de REFES, Región Sanitaria, ID única (ej, HPN, HHH, SMA, etc), Correo de la jefatura, Nombre del jefe.
+                        <strong>Nueva funcionalidad</strong>
+
+                    </li>
+                    <li class="cambio">
+                        Cambio 4: Etiquetas de CB: Se agrega el ID único del laboratorio en la impresión de etiquetas.<strong>Nueva funcionalidad</strong>                                                
+
+                    </li>
+                    <li class="cambio">
+                        Cambio 5: Etiquetas de CB:  Se corrige para que no se imprima etiqueta en las áreas con determinaciones sin muestra.
+
+                    </li>
+                    <li class="cambio">
+                        Cambio 6: Estadistica de Producción: Se cambia el excel agrupado para que se muestre el ID Único de efector en vez del nombre completo. 
+                    </li>
+                    <li class="cambio">
+                        Cambio 7: Menu Informes del Administrador - Nivel Subsecretaria. Se solucionan errores en algunos puntos de menu.
+
+                    </li>
+                </ul>
+                <div class="fecha">2024-08-12</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Configuracion de Análisis: Corrección al momento de eliminar una presentación.
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Interoperabilidad con SISA: se cambia la forma de interoperar muestras por cambios en Nacion.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 3: Turnos: Se agrega búsqueda de paciente por datos adicionales.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 4: Sin insumos Masivos: Correccion en practicas compuestas (funcionaba solo para practicas simples)
+                    </li>
+                    
+                </ul>
+                <div class="fecha">2024-07-30</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio de logo de la Provincia.
+                    </li>                    
+                </ul>
+                <div class="fecha">2024-07-23</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Ingreso de Protocolo: Se agrega la posibilidad de ampliar criterios de busqueda al ingresar los pacientes.
+                        <strong>Nueva funcionalidad</strong>
+                                            </li>
+                    <li class="cambio">
+                        Cambio 2: Estadisticas Resultados Combinados: se corrige error que salían vacios los datos en el reporte de calidad.
+                    </li>
+                    <li class="cambio">
+                        Cambio 3: Menu "Analisis fuera de hoja de trabajo"" se cambia por "HT a Demanda" <strong>Nueva funcionalidad</strong>
+                    </li>
+                    
+
+                </ul>
+                <div class="fecha">2024-06-24</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Valores de referencia por presentacion. <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Se agrega posibilidad de cambiar de método en validacion para que cambien los valores de referencia a informar.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>                  
+                </ul>
+                <div class="fecha">2024-05-29</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Estadísticas de producción: se genera tabla cruzada con efectores. <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Estadística general: se agrega la opcion de obtener cantidades por franjas horarias.<strong>Nueva funcionalidad</strong>
+                    </li>
+                </ul>
+                <div class="fecha">2024-05-07</div>
+                <ul>
+                    <li class="cambio">
+                        Mejora de Performance: Cambio en generacion de armado de menu segun permisos de accesos para agilizar el aceso al sistema.
+                    </li>                    
+                </ul>
+                <div class="fecha">2024-04-30</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Nuevo parámetro para habilitar o no la opcion de "Notificar Resultados" por efector.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Se agrega Estadística Resultado Combinado <strong>Nueva funcionalidad</strong>
+                    </li>
+                </ul>
+                <div class="fecha">2024-03-09</div>
+                <ul>
+                    <li class="cambio">
+                        Se agrega la funcionalidad de carga de Placas del Laboratorio Central.
+                    </li>
+                    
+                </ul>
+                <div class="fecha">2024-03-03</div>
+                <ul>
+                    <li class="cambio">
+                        Se publica la API para obtener los resultados desde Andes (o desde el sistema que se requiera). <strong>Nueva funcionalidad</strong>
+                    </li>
+
+                </ul>
+                <div class="fecha">2024-02-28</div>
+                <ul>
+                    <li class="cambio">
+                    Marca sin insumo a determinaciones, de forma masiva. <strong>Nueva funcionalidad</strong>.
+                    </li>
+                    
+                </ul>
+                <div class="fecha">2024-01-08</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Protocolo. Control de carga cuando duplican pestañas y se genera el protocolo en otro servicio.
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Resultados no pacientes; se agregan valores de referencia.<strong>Nueva funcionalidad</strong>
+                    </li>
+                </ul>
+                <div class="fecha">2024-01-03</div>
+                <ul>
+                    <li class="cambio">
+                        Impresora de etiquetas. Se cambia envio de impresiones en sistema centralizado.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    
+                </ul>
+                <div class="fecha">2023-12-14</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Edicion Protocolos: se visualiza con verde determinaciones validadas, con amarillo en proceso.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Envio a Autoanalizador: Correccion para que no se envien determinaciones sin muestra.                        	                    
+                    </li>
+                    <li class="cambio">
+                        Cambio 3: Envio a Autoanalizador: Correccion en envio de equipo incca.
+                    </li>
+
+                </ul>
+                <div class="fecha">2023-12-11</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Agenda por Efector: Permite el armado de agendas para efector solicitante (por. CAPS) y dacion de turnos desde el efector solicitante.
+                        <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Correccion de que se mostraban metodos repetidos en resultados.
+
+                    </li>
+
+                </ul>
+                <div class="fecha">2023-11-30</div>
+                <ul>
+                    <li class="cambio">
+                        Cambio 1: Correccion de visualizacion de resultados PDF
+                    </li>
+                    <li class="cambio">
+                        Cambio 2: Correccion de Lista detallada de turnos.                        
+                    </li>
+
+                </ul>
+             
+            </div>
+        </body>
+    </html>
+

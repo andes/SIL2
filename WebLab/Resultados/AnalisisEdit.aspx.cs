@@ -49,10 +49,10 @@ namespace WebLab.Resultados
 
                 if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
 
-                    lblProtocolo.Text = oRegistro.GetNumero() + " " + oRegistro.getMuestra();
+                    lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.getMuestra();
                 else
 
-                    lblProtocolo.Text = oRegistro.GetNumero() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
+                    lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
 
                     CargarListas(oRegistro);
                     MuestraDatos();

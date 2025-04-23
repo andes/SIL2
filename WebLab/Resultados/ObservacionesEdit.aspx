@@ -23,9 +23,7 @@
                 <tr>
                 <td style="vertical-align: top" colspan="2">                                               
                               <asp:Label CssClass="mytituloGris" ID="lblObservacionAnalisis" runat="server" Text="Label"></asp:Label>
-                              
-                              <hr />
-                              </td>
+                                                            </td>
                               </tr> 
                               <tr>
                 <td style="vertical-align: top"  colspan="2" class="myLabelIzquierda">                                               
@@ -34,16 +32,14 @@
                                </asp:DropDownList>
                                <anthem:Button  OnClick="btnAgregarObsCodificada_Click" 
                                   ToolTip="Agrega la observacion predefinida" CssClass="btn btn-default" 
-                                  ID="btnAgregarObsCodificada" runat="server" Text="Agregar" Width="145px" />
+                                  ID="btnAgregarObsCodificada" runat="server" Text="Agregar" Width="70px" />
                          &nbsp;
                     
                            
                                <anthem:Button OnClick="btnBorrarObservacionesAnalisis_Click" 
                                   CssClass="btn btn-default" ToolTip="Borra el texto de observaciones" ID="btnBorrarObservacionAnalisis"
-                                   runat="server" Text="Limpiar" Width="145px" />
+                                   runat="server" Text="Limpiar" Width="70px" />
                                     
-					
-                         <hr />       
                     </td>
                 </tr>
                 
@@ -54,7 +50,8 @@
                 <td style="vertical-align: top"  colspan="2">
                     
                            
-                               <anthem:TextBox  ID="txtObservacionAnalisis" runat="server" TextMode="MultiLine" MaxLength="500" Rows="10" Width="450px" CssClass="form-control input-sm"></anthem:TextBox>
+                               <anthem:TextBox  ID="txtObservacionAnalisis" runat="server" TextMode="MultiLine" 
+                                   MaxLength="1000" Rows="7" Width="450px" CssClass="form-control input-sm"></anthem:TextBox>
                                     
 					
                                
@@ -63,8 +60,6 @@
                     </td>
                 </tr>
                 
-              
-               <hr />
                
                 <tr>
                 <td style="vertical-align: top" align="left">

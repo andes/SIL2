@@ -24,6 +24,7 @@ namespace Business.Data.Laboratorio
 		private Usuario m_idusuarioregistro; 
 		private DateTime m_fecharegistro;
         private int m_idefectorderiva;
+        private bool m_resultadoDefecto;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -40,6 +41,7 @@ namespace Business.Data.Laboratorio
 			m_idusuarioregistro = new Usuario(); 
 			m_fecharegistro = DateTime.MinValue;
             m_idefectorderiva = 0;
+            m_resultadoDefecto = false;
         }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
@@ -54,7 +56,9 @@ namespace Business.Data.Laboratorio
 			bool baja, 
 			Usuario idusuarioregistro, 
 			DateTime fecharegistro,
-            int idefectorderiva)
+            int idefectorderiva,
+            bool resultadoDefecto
+            )
 			: this()
 		{
 			m_idefector = idefector;
@@ -64,6 +68,7 @@ namespace Business.Data.Laboratorio
 			m_idusuarioregistro = idusuarioregistro;
 			m_fecharegistro = fecharegistro;
             m_idefectorderiva = idefectorderiva;
+            m_resultadoDefecto = resultadoDefecto;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -154,11 +159,21 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
-			
-		/// <summary>
-		/// 
-		/// </summary>
-		public Usuario IdUsuarioRegistro
+        public bool ResultadoDefecto
+        {
+            get { return m_resultadoDefecto; }
+            set
+            {
+                m_isChanged |= (m_resultadoDefecto != value);
+                m_resultadoDefecto = value;
+            }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Usuario IdUsuarioRegistro
 		{
 			get { return m_idusuarioregistro; }
 			set

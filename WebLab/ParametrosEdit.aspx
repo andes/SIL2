@@ -70,7 +70,7 @@ $("#tabContainer").tabs({ selected: currTab });
                 <li><a href="#tab6">Microbiología</a></li>
                     <%--  <asp:ListItem Value="2">Imprimir por cada determinación</asp:ListItem>--%>
                 
-                <li><a href="#tab8">Imagen de Impresión</a></li>
+               <%-- <li><a href="#tab8">Imagen de Impresión</a></li> No se aplica logo en multiefector.. Todos los labo informan sin logo--%>
                 
                 <li><a href="#tab9">Codigo de Barras</a></li>     
                 <li><a href="#tab10">Genética Forense</a></li> 
@@ -450,8 +450,21 @@ $("#tabContainer").tabs({ selected: currTab });
                                                 <asp:ListItem Value="50">50</asp:ListItem>
                                                 <asp:ListItem>100</asp:ListItem>
                                             </asp:DropDownList>
-                                        &nbsp;protocolos por página</td>
+                                        &nbsp;protocolos por página
+
+                                        </td>
                                     </tr>
+                                           <tr>
+                                                <td class="myLabelIzquierda">
+                                           Tipo Orden de la lista de Protocolos por Defecto:</td>
+                                        <td class="myLabelIzquierda">
+                                                <asp:DropDownList ID="ddlOrdenProtocolos" runat="server">
+                                                                   <asp:ListItem Selected="True" Value="Asc">Ascendente</asp:ListItem>
+                                                                   <asp:ListItem Value="Desc">Descendente</asp:ListItem>
+                                                               </asp:DropDownList>
+                                            </td>
+                                               </tr>
+                                           
                         
                                     <tr>
                                         <td class="myLabelIzquierdaGde" colspan="2">
@@ -1236,7 +1249,7 @@ $("#tabContainer").tabs({ selected: currTab });
                         <td class="myLabelIzquierda" align="left">
                             <asp:RadioButtonList ID="ddlFuente" runat="server" RepeatDirection="Horizontal">
                                 <asp:ListItem Value="CCode39">Code 39</asp:ListItem>
-                                <asp:ListItem Value="Ccode39M43">Code 39 Módulo 43</asp:ListItem>
+                                <asp:ListItem Value="Ccode39M43" Enabled="false">Code 39 Módulo 43</asp:ListItem>
                           <%--      <asp:ListItem Value="EAN-13">EAN-13</asp:ListItem>--%>
                             </asp:RadioButtonList>
                         </td> 
@@ -1303,7 +1316,7 @@ $("#tabContainer").tabs({ selected: currTab });
                             <asp:RadioButtonList ID="rdbFuente2" runat="server" 
                                 RepeatDirection="Horizontal">
                                <asp:ListItem Value="CCode39">Code 39</asp:ListItem>
-                                <asp:ListItem Value="Ccode39M43">Code 39 Módulo 43</asp:ListItem>
+                                <asp:ListItem Value="Ccode39M43" Enabled="false">Code 39 Módulo 43</asp:ListItem>
                           <%--      <asp:ListItem Value="EAN-13">EAN-13</asp:ListItem>--%>
                             </asp:RadioButtonList>
                         </td>
@@ -1373,7 +1386,7 @@ $("#tabContainer").tabs({ selected: currTab });
                             <asp:RadioButtonList ID="rdbFuente3" runat="server" 
                                 RepeatDirection="Horizontal">
                                <asp:ListItem Value="CCode39">Code 39</asp:ListItem>
-                                <asp:ListItem Value="Ccode39M43">Code 39 Módulo 43</asp:ListItem>
+                                <asp:ListItem Value="Ccode39M43"  Enabled="false">Code 39 Módulo 43</asp:ListItem>
                           <%--      <asp:ListItem Value="EAN-13">EAN-13</asp:ListItem>--%>
                             </asp:RadioButtonList>
                         </td>
@@ -1421,7 +1434,7 @@ $("#tabContainer").tabs({ selected: currTab });
    
      </div>
                  <%--      <asp:ListItem Value="EAN-13">EAN-13</asp:ListItem>--%>
-     <div id="tab8" class="tab_content" style="border: 1px solid #C0C0C0; width: 1000px;">
+    <%-- <div id="tab8" class="tab_content" style="border: 1px solid #C0C0C0; width: 1000px;">
      <table>
        <tr>
                                         <td class="myLabelIzquierdaGde" style="vertical-align: top" colspan="3">
@@ -1459,7 +1472,7 @@ $("#tabContainer").tabs({ selected: currTab });
                                     </td>
                                     </tr>
      </table>
-     </div>
+     </div>--%>
                
                    <div id="tab13" class="tab_content" style="border: 1px solid #C0C0C0">
              
