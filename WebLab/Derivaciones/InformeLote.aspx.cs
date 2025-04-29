@@ -90,9 +90,6 @@ namespace WebLab.Derivaciones
             } else {
                 activarControles(false); //desactiva los controles porque no hay nada para derivar o cancelar
             }
-            else{
-                activarControles(false);
-            }
 
             gvLista.DataBind();
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
