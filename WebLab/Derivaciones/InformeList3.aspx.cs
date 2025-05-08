@@ -26,16 +26,18 @@ namespace WebLab.Derivaciones {
             if (!Page.IsPostBack) {
                 if (Session["idUsuario"] != null) {
                     CargarListas();
-                    CargarGrilla();
+                    
                     if(Request["Tipo"] == "Alta") {
                         int estado = Convert.ToInt32(Request["Estado"]);
                         activarControles(estado == 0 || estado == 2);
                     } else {
-                        if (Request["Tipo"] == "Modifica")
+                        if (Request["Tipo"] == "Modifica") {
                             activarControles(true);
                             CargarParaModificacion();
+                        }
+                            
                     }
-                   
+                    CargarGrilla();
                 } else {
                     Response.Redirect("../FinSesion.aspx", false);
                 }
@@ -52,8 +54,9 @@ namespace WebLab.Derivaciones {
             ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
             crit.Add(Expression.Eq("Idlote", lote ));
             Business.Data.Laboratorio.Derivacion derivacion = (Derivacion) crit.UniqueResult();
-            
-            txtObservacion.Text = derivacion.Observacion;
+
+            ddl_motivoCancelacion.SelectedValue = "0";
+            txt_observacion.Text = derivacion.Observacion;
             ddlEstado.SelectedIndex = 2;
         }
         private void CargarListas() {
@@ -64,17 +67,26 @@ namespace WebLab.Derivaciones {
             string m_ssql = "SELECT idEstado, descripcion FROM LAB_DerivacionEstado where baja=0 and idEstado in (2,4) ";
             oUtil.CargarCombo(ddlEstado, m_ssql, "idEstado", "descripcion", connReady);
             ddlEstado.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+
+            oUtil = new Utility();
+            //Motivos de cancelacion LAB-75
+            m_ssql = "SELECT idMotivo, descripcion FROM LAB_DerivacionMotivoCancelacion WHERE baja = 0";
+            oUtil.CargarCombo(ddl_motivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
+            ddl_motivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
         }
         private void limpiarForm() {
-            txtObservacion.Text = string.Empty;
+            txt_observacion.Text = string.Empty;
+            ddl_motivoCancelacion.SelectedIndex = 0;
             ddlEstado.SelectedIndex = 0;
         }
 
         private void activarControles(bool valor) {
             btnGuardar.Enabled = valor;
-            txtObservacion.Enabled = valor;
+            txt_observacion.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
+            //ddl_motivoCancelacion.Enabled = valor;
+            ddlEstado.Enabled = valor;
         }
 
         private void CargarGrilla() {
@@ -97,7 +109,6 @@ namespace WebLab.Derivaciones {
             " FROM  " + s_vta_LAB +
             " WHERE ";
 
-
             if (Request["Tipo"] == "Alta")
                 m_strSQL += Request["Parametros"].ToString() +  "  and estado = " + Request["Estado"].ToString() + " ORDER BY efectorDerivacion,numero ";
             else {
@@ -115,19 +126,12 @@ namespace WebLab.Derivaciones {
                 }
                    
             }
-            
-           
-
-
-
             DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
-
             return Ds.Tables[0];
-
         }
 
         protected string CargarImagenEstado(int estado) {
@@ -164,11 +168,15 @@ namespace WebLab.Derivaciones {
         }
 
         protected bool HacerCheck(int estado) {
-            if(estado == 4) {
-                return true; //Dejar checkeados aquellos que ya estan en el lote
-            } else {
+            if (Request["Tipo"] == "Modifica") {
+                if (estado == 4) {
+                    return true; //Dejar checkeados aquellos que ya estan en el lote
+                } else {
+                    return false;
+                }
+            } else
                 return false;
-            }
+                
         }
         #endregion
 
@@ -232,56 +240,103 @@ namespace WebLab.Derivaciones {
             lote.GrabarAuditoriaLoteDerivacion( lote.descripcionEstadoLote(), oUser.IdUsuario);// LAB-54 Sacar la palabra "Estado: xxxxx"
             return lote;
         }
-
+               
         private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion idLote = null) {
             foreach (GridViewRow row in gvLista.Rows) {
-                CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
                 int estado = Convert.ToInt32(((Label) (row.Cells[0].FindControl("lbl_estado"))).Text);
-                /* Casos:
-                 * PARA ENVIAR
-                * (1) GUARDA: Tiene estado "Pendiente de derivar" y fue checkeado -> Se asocia al lote
-                * (2) MODIFICA: Tiene estado "Pendiente para enviar" y no tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
-                * PARA NO ENVIAR
-                * (3) GUARDA: Tiene estado "Pendiente de derivar" o "Pendiente para enviar", y fue checkeado 
-                */
-                if(idLote != null) {
-                    if (estado == 0 && a.Checked) { // (1) Tiene estado "Pendiente de derivar" y fue checkeado -> Se asocia al lote
-                        ActualizarDetalleProtocolo(row, idLote);
-                    } else {
-                        if (estado == 4 && !a.Checked) { //(2) Tiene estado "Pendiente para enviar" y no tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
-                            ActualizarDetalleProtocolo(row, null, true);
-                        }
-                    }
-                } else {
+                bool chequeado = ((CheckBox) (row.Cells[0].FindControl("CheckBox1"))).Checked;
+
+                //CASOS: Se evalua el estado anterior de las determinaciones
+
+                // 1 - Tiene estado "Pendiente de derivar" (0) y fue checkeado -> Se asocia al lote
+                if (estado == 0 && chequeado) { 
                     ActualizarDetalleProtocolo(row, idLote);
+                    continue; // ✅ La línea continue; en un foreach (o cualquier bucle) salta inmediatamente al siguiente ciclo de iteración, evitando que se siga ejecutando el resto del código dentro del bucle actual.
+                }
+
+                // 2 - Tiene estado "Pendiente para enviar" (4) y no tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
+                if (estado == 4 && !chequeado) { 
+                    ActualizarDetalleProtocolo(row, null, true);
+                    continue; 
+                }
+
+                // 3 - Estado "No enviado" y esta chequeado
+                if (estado == 2 && chequeado) { 
+                    if (idLote != null) {
+                        ActualizarDetalleProtocolo(row, idLote, true);//Se debe asociar el lote generado y se debe guardar el historial
+                    } else {
+                        string motivo = ((Label)row.FindControl("lbl_motivo")).Text;
+                        bool tieneMotivo = !string.IsNullOrEmpty(motivo); // -> Si tiene motivo es porque ya se ha guardado con anterioridad la derivacion
+                        ActualizarDetalleProtocolo(row, null, tieneMotivo);
+                    }
+                    continue;
                 }
             }
         }
 
-        private void ActualizarDetalleProtocolo(GridViewRow row , Business.Data.Laboratorio.LoteDerivacion idLote, bool modifica = false) {
-            DetalleProtocolo oDetalle = new DetalleProtocolo();
-            oDetalle = (DetalleProtocolo) oDetalle.Get(typeof(DetalleProtocolo), int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
+        private void ActualizarDetalleProtocolo(GridViewRow row , Business.Data.Laboratorio.LoteDerivacion idLote = null, bool modifica = false) {
+            int idDetalle = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
+           
+            DetalleProtocolo oDetalle = (DetalleProtocolo) new DetalleProtocolo().Get(typeof(DetalleProtocolo), idDetalle);
+            int numeroProtocolo = oDetalle.IdProtocolo.Numero;
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
             crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
+
             IList lista = crit.List();
             if (lista.Count > 0) {
+                int estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);
+                string observacion = txt_observacion.Text;
+                int idUsuario = Convert.ToInt32(Session["idUsuario"]);
+                DateTime fechaHora = DateTime.Now;
+
                 foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista) {
-                    oDeriva.Estado = int.Parse(ddlEstado.SelectedValue);
-                    oDeriva.Observacion = txtObservacion.Text;
-                    oDeriva.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
-                    oDeriva.FechaRegistro = DateTime.Now;
+                    //Cambia valores de la derivacion
+                    #region Derivacion
+                    oDeriva.Estado = estadoSeleccionado;
+                    oDeriva.Observacion = observacion;
+                    oDeriva.IdUsuarioRegistro = idUsuario;
+                    oDeriva.FechaRegistro = fechaHora;
                     oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                     oDeriva.Idlote = idLote;
                     oDeriva.Save();
+                    #endregion
 
-                    if (modifica) { //Cambia el resultado de LAB_DetalleProtocolo
-                        DetalleProtocolo oDet = new DetalleProtocolo();
-                        oDet = (DetalleProtocolo) oDet.Get(typeof(DetalleProtocolo), oDeriva.IdDetalleProtocolo.IdDetalleProtocolo);
-                        //Inserta auditoria del detalle del protocolo
-                        oDet.GrabarAuditoriaDetalleProtocolo("Modifica", oDet.IdUsuarioResultado);
+                    //Cambia valores del detalle del protocolo
+                    #region Detalle_Protocolo
+                    //Estado seleccionado =>
+                    // 2	No Enviado
+                    // 4  Pendiente para enviar
+                    string resultadoDerivacion = ( estadoSeleccionado  == 2 ) ?  "No Derivado: " + ddl_motivoCancelacion.SelectedItem.Text : "Pendiente para enviar " ;
+                    
+                    oDetalle.ResultadoCar = resultadoDerivacion;
+                    oDetalle.ConResultado = true;
+                    oDetalle.IdUsuarioResultado = idUsuario;
+                    oDetalle.FechaResultado = fechaHora;
+                    oDetalle.Save();
+
+                    #endregion
+
+                    #region estado_protocolo
+                    /*Actualiza estado de protocolo*/
+                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuario))
+                        oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                    else {
+                        if (oDetalle.IdProtocolo.EnProceso()) {
+                            oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                                            // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                        } else
+                            oDetalle.IdProtocolo.Estado = 0;
                     }
+                    oDetalle.IdProtocolo.Save();
+                    #endregion
+
+                    //Auditoria:
+                    string accion = (modifica) ? "Modifica" : "Alta";
+                    /*string motivo = (estadoSeleccionado == 2) ? ddl_motivoCancelacion.SelectedItem.Text : "";
+                    accion = accion + ": " + motivo;*/
+                    oDetalle.GrabarAuditoriaDetalleProtocolo(accion , idUsuario );
                 }
             }
         }

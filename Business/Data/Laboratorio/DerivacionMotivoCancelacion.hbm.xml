@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.DerivacionMotivoCancelacion,Business" table="LAB_DerivacionMotivoCancelacion">
+
+		<id name="IdMotivo" column="idMotivo" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		
+   <property column="descripcion" type="String" name="Descripcion" not-null="true" length="500" />
+   <property column="baja" type="Boolean" name="Baja" not-null="true" />
+	</class>
+</hibernate-mapping>

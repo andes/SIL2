@@ -3,10 +3,12 @@
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
     <script type="text/javascript">
+
         function validarFormulario() {
             var todoOk = false;
             var validatorEstado = document.getElementById('<%= rv_estado.ClientID %>');
-            var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');
+            <%--var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');--%> //--> Cambio TextBox por DropDownList
+            var motivoCancelacion = document.getElementById('<%= ddl_motivoCancelacion.ClientID%>');
             var estado = document.getElementById('<%= ddlEstado.ClientID %>');
             var label = document.getElementById('<%= lbl_ErrorMotivo.ClientID %>');
             
@@ -16,6 +18,8 @@
             reseteaLabelErrorGrilla();
 
             //Verifico los estados para el armado del Lote
+            //console.log("estado.value", estado.value);
+            //console.log("motivoCancelacion.value", motivoCancelacion.value);
             switch (estado.value) {
                 case "0": //Opcion  --Seleccion--
                     validatorEstado.style.visibility = 'visible';
@@ -23,7 +27,7 @@
                     break;
 
                 case "2": //Opcion: No enviado
-                    if (txtObservacion.value.trim() == "") {
+                    if (motivoCancelacion.value == "0") { // if (txtObservacion.value.trim() == "") --> Cambio TextBox por DropDownList
                         label.className = 'exposed';
                         todoOk = false; // Evitar el envío del formulario
                     }
@@ -36,7 +40,7 @@
                     todoOk = validarGrilla();
                     break;
             }
-
+            console.log("final validacion ", todoOk);
             return todoOk;
 
         }
@@ -55,7 +59,7 @@
                      return true; // Detiene la validación con al menos un check
                  }
              }
-             var label = document.getElementById('<%= lbl_errorLista.ClientID %>');
+            var label = document.getElementById('<%= lbl_errorLista.ClientID %>');
              label.className = 'exposed';
              return todoOk;
         }
@@ -77,19 +81,39 @@
                 reseteaLabelErrorGrilla();
             }// agrego que si la determinacion ya esta en un Lote mande un alerta
             else {
-                
+
                 //console.log(estado);
-                if (estado == '4') { //Estado 4 es Pendiente de envio
+                const params = new URLSearchParams(window.location.search);
+                console.log(params);
+                const tipo = params.get("Tipo");
+                console.log(tipo);
+                if (estado == '4' && tipo == 'Modifica') { //Estado 4 es Pendiente de envio
+                    console.log(window.location.search);
                     alert("Cuidado! Al desmarcar la determinacion no se enviara en el lote.");
                 }
             }
         }
 
         function validaObservacion(text) {
-            if (text.value.trim()) {
+            //console.log("validaObservacion", text);
+            //console.log("validaObservacion value", text.value);
+            if (text.value != "0") { /* if (text.value.trim()) {//--> Cambio TextBox por DropDownList */
                 reseteaLabelErrorMotivo();
             }
         }
+
+        function activaMotivos(estado) {
+            var motivos = document.getElementById('<%= ddl_motivoCancelacion.ClientID %>');
+            console.log(motivos);
+            console.log(estado.value);
+            if (estado.value == 2) {
+                //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
+                motivos.disabled = false;
+            } else {
+                motivos.disabled = true;
+            }
+        }
+
     </script>
 </asp:Content>
  
@@ -122,7 +146,7 @@
                                     <tr style="vertical-align: sub">
                                         <td>Marcar como:</td>
                                         <td >
-                                             <asp:DropDownList ID="ddlEstado" runat="server"  class="form-control input-sm"> </asp:DropDownList> 
+                                             <asp:DropDownList ID="ddlEstado" runat="server"  class="form-control input-sm" onchange="activaMotivos(this);"> </asp:DropDownList> 
                                              <asp:RangeValidator id="rv_estado"
                                                ControlToValidate="ddlEstado"
                                                MinimumValue="1"
@@ -133,11 +157,20 @@
                                                ValidationGroup="0" />
                                         </td>
                                         <td>
-                                            Observaciones: </td>
+                                            Motivo Cancelaci&oacute;n: </td>
                                         <td>
-                                            <asp:TextBox ID="txtObservacion" runat="server" MaxLength="100"   class="form-control input-sm" onchange="return validaObservacion(this);"></asp:TextBox></td>
+                                           <%-- <asp:TextBox ID="txtObservacion" runat="server" MaxLength="100"   class="form-control input-sm" onchange="return validaObservacion(this);"></asp:TextBox>--%>
+                                            <asp:DropDownList ID="ddl_motivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" Enabled="false"/>
+
+                                        </td>
                                         <td>
                                             <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                        </td>
+                                        <td>
+                                            Observaci&oacute;n:
+                                        </td>
+                                        <td>
+                                            <asp:TextBox ID="txt_observacion" runat="server" CssClass="form-control input-sm" ></asp:TextBox>
                                         </td>
                                         <td>
                                             <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary"  Width="100" Text="Guardar" 
@@ -159,7 +192,7 @@
 				    </tr>
 				    <tr>
 					    <td colspan="2">
-                             <asp:Label Text="* Seleccione un lote" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
+                             <asp:Label Text="* Seleccione una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
                             <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
                             <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0" ID="lnkDesMarcar" onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
@@ -200,8 +233,7 @@
                                            </ItemTemplate>
                                        </asp:TemplateField>
 
-                                    <asp:BoundField DataField="numero" 
-                                        HeaderText="Protocolo" >
+                                    <asp:BoundField DataField="numero"  HeaderText="Protocolo" >
                                         <ItemStyle Width="5%" HorizontalAlign="Center" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="fecha" HeaderText="Fecha" >
@@ -222,9 +254,12 @@
                                     <asp:BoundField DataField="username" HeaderText="Usuario" >
                                         <ItemStyle Width="15%" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="observacion" HeaderText="Observaciones">
+                                   <%-- <asp:BoundField ID="motivo" DataField="observacion" HeaderText="Motivo">
                                         <ItemStyle Width="10%" />
-                                    </asp:BoundField>
+                                    </asp:BoundField>--%>
+                                    <asp:TemplateField HeaderText="Motivo Cancelaci&oacute;n">
+                                          <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("observacion") %>'/> </ItemTemplate>
+                                    </asp:TemplateField>
                                     <asp:BoundField DataField="idLote" Visible="false">
                                     </asp:BoundField>
                                     <asp:TemplateField visible="false">
