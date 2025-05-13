@@ -42,13 +42,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RangeValidator rv_estado;
 
         /// <summary>
-        /// txtObservacion control.
+        /// ddl_motivoCancelacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_motivoCancelacion;
 
         /// <summary>
         /// lbl_ErrorMotivo control.
@@ -58,6 +58,15 @@ namespace WebLab.Derivaciones
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbl_ErrorMotivo;
+
+        /// <summary>
+        /// txt_observacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txt_observacion;
 
         /// <summary>
         /// btnGuardar control.

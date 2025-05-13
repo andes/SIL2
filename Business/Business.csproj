@@ -142,13 +142,13 @@
     <Compile Include="Data\Laboratorio\AlarmaScreening.cs" />
     <Compile Include="Data\Laboratorio\AuditoriaItem.cs" />
     <Compile Include="Data\Laboratorio\AuditoriaLoteDerivacion.cs" />
+    <Compile Include="Data\Laboratorio\DerivacionMotivoCancelacion.cs" />
     <Compile Include="Data\Laboratorio\EfectorRel.cs" />
     <Compile Include="Data\Laboratorio\Ficha.cs" />
     <Compile Include="Data\Laboratorio\ItemMuestra.cs" />
     <Compile Include="Data\Laboratorio\ItemPresentacion.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacionEstado.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacion.cs" />
-	
     <Compile Include="Data\Laboratorio\Marca.cs" />
     <Compile Include="Data\Laboratorio\MuestraEfector.cs" />
     <Compile Include="Data\Laboratorio\Area.cs">
@@ -323,6 +323,7 @@
     <EmbeddedResource Include="Data\Laboratorio\AuditoriaLoteDerivacion.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacion.hbm.xml" />
     <Content Include="Data\AutoAnalizador\CobasC311.hbm.xml" />
+    <EmbeddedResource Include="Data\Laboratorio\DerivacionMotivoCancelacion.hbm.xml" />
     <Content Include="Data\Laboratorio\Ficha.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ItemMuestra.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\Marca.hbm.xml" />
