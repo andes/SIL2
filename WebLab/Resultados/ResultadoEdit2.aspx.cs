@@ -1497,6 +1497,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 estadoDerivacion = oDetalle.ResultadoCar; //  "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
                             if (oDeriva.Estado == 2) /// no enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; //" No Derivado. " + oDeriva.Observacion;
+
+                            if (oDeriva.Estado == 4) // --> Pendiente de Derivar
+                             {
+                                estadoDerivacion = oDetalle.ResultadoCar;
+                                lblDerivacion.ForeColor = Color.Red;
+                            }
+
                             lblDerivacion.Font.Bold = true;
 
                             if (oDeriva.Resultado != "")
@@ -1563,13 +1570,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //{
                             if (oDeriva.Estado == 0) /// pendiente                            
                             {
-                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
+                                estadoDerivacion = "Pendiente de Derivacion";
                                 lblDerivacion.ForeColor = Color.Red;
                             }
                             if (oDeriva.Estado == 1) /// enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; //"Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
                             if (oDeriva.Estado == 2) /// no enviado
                                 estadoDerivacion = oDetalle.ResultadoCar; // " No Derivado. " + oDeriva.Observacion;
+                            if (oDeriva.Estado == 4) // --> Pendiente de Derivar
+                            {
+                                estadoDerivacion = oDetalle.ResultadoCar;
+                                lblDerivacion.ForeColor = Color.Red;
+                            }
+
                             lblDerivacion.Font.Bold = true;
 
                             if (oDeriva.Resultado != "")
