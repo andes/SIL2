@@ -296,6 +296,8 @@ namespace WebLab.Estadisticas
             else
                 cmd.Parameters["@agrupado"].Value = 0;  ///agrupado por efectores
 
+            cmd.Parameters.Add("@salida", SqlDbType.VarChar);
+            cmd.Parameters["@salida"].Value = rblFormato.SelectedValue;
             //cmd.Parameters.Add("@derivacion", SqlDbType.Bit);
             //if (ddlDerivaciones.SelectedValue == "S")
             //    cmd.Parameters["@derivacion"].Value = 1;  ///tabla cruzada con efectores

@@ -1,4 +1,4 @@
-<%@ Page  Language="C#"  AutoEventWireup="true" CodeBehind="ResultadoEdit2.aspx.cs" Inherits="WebLab.Resultados.ResultadoEdit2" EnableEventValidation="true"  MasterPageFile="~/Site1.Master"%>
+<%@ Page  Language="C#"   AutoEventWireup="true" CodeBehind="ResultadoEdit2.aspx.cs" Inherits="WebLab.Resultados.ResultadoEdit2" EnableEventValidation="true"  MasterPageFile="~/Site1.Master"%>
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 
 
@@ -17,8 +17,7 @@
     
 
                    <script type="text/javascript">                     
-                    
-                      
+                                      
 
   
   
@@ -56,24 +55,20 @@
     </asp:Content>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">               
-  
-    
-<div align="left" style="width: 1400px" class="form-inline">
      
-                 <table  width="98%"    align="center" cellpadding="0" cellspacing="0">
+<div align="left" style="width: 1400px">
+     
+                 <table  width="98%"    align="center" cellpadding="0" cellspacing="0" style="vertical-align: top">
                      <tr>
                         <td colspan="3">
-                            <div class="page-header">
+                        
   <h5> <asp:Label ID="lblTitulo" runat="server" Text="Carga de Resultados" 
                                 ForeColor="#2B7EBD"></asp:Label><small>  &nbsp;    <asp:Label ID="lblServicio" runat="server" 
                                        Text="Label"></asp:Label></small></h5>  <input id="HdidEventoSISA" type="hidden" runat="server" />
-</div>
-                          
-
-                        </td>
+             
+                                                    </td>
 					</tr>
-                    
-						
+                    				
 					
 					
 					

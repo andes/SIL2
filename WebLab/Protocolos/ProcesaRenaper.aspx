@@ -63,7 +63,8 @@
     <div class="container" >
    
      <div id="pnlTitulo" runat="server" class="panel panel-default">
-              
+                   <input id="hidToken" type="hidden" runat="server" />
+                                
               <img runat="server"  id="imgRenaper" style="text-align:right; width: 80px; height: 80px;" src="../App_Themes/default/images/renaper.jpg" />  
                        <img runat="server"  id="imgAndes" style="text-align:right; width: 190px; height: 107px;" src="../App_Themes/default/images/andes.jpg" />  
                       
