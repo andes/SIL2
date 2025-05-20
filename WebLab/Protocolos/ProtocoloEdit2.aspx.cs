@@ -141,7 +141,8 @@ namespace WebLab.Protocolos
         {
 
             if (!Page.IsPostBack)
-            {           
+            {
+                Session["matricula"] = ""; //para que lo borre de la sesion al entrar a un nuevo protocolo
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
                 if (Session["idUsuario"] != null)
@@ -4884,7 +4885,10 @@ ORDER BY cantidad desc";
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "") 
+                //Agregue que sea distinto de vacio porque al Cancelar sin traer matricula,
+                //deja un string vacio, que hacia que entrara al if y buscara nuevamente un medico
+                //haciendo que la ejecucion se extendiera innecesariamente
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();

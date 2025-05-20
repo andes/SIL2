@@ -397,7 +397,8 @@
                                         
                          
                                         <asp:LinkButton ID="LinkButton1"  Width="60px" CssClass="btn btn-primary" runat="server" OnClientClick="SelMedico(); return false;" OnClick="Button1_Click"> <span class="glyphicon glyphicon-zoom-in"></span></asp:LinkButton>
-                                             
+                                         <asp:HiddenField ID="hf_selMedico" runat="server" Value="" />
+
                                         
                           
                                         
@@ -544,7 +545,7 @@
 
                                          <tr><td  >  <anthem:DropDownList ID="ddlRutina" runat="server" AutoCallBack="True"                                                
                                                 
-                               class="form-control input-sm" TabIndex="20"  Width="250px"
+                               class="form-control input-sm" TabIndex="20" 
                                 onselectedindexchanged="ddlRutina_SelectedIndexChanged">
                                           </anthem:DropDownList>
                                                  <anthem:LinkButton ID="lnkAgregarRutina" runat="server" ToolTip="Agregar Rutina" OnClientClick="javascript:AgregarDeLaListaRutina();"  Width="40px" >
@@ -860,596 +861,699 @@
                      HeaderText="Debe completar los datos requeridos:" ShowMessageBox="True" 
                      ValidationGroup="0" ShowSummary="False" />			
 
-<script language="javascript" type="text/javascript">
-
-var contadorfilas = 0;
-InicioPagina();
-    document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value  = contadorfilas;
-    
-
-function VerificaLargo (source, arguments)
-    {                
-    var Observacion = arguments.Value.toString().length;
- //   alert(Observacion);
-    if (Observacion>4000 )
-        arguments.IsValid=false;    
-    else   
-        arguments.IsValid=true;    //Si llego hasta aqui entonces la validación fue exitosa        
-}              
+    <script language="javascript" type="text/javascript">
+        var contadorfilas = parseInt(document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value);
+        InicioPagina();
         
-        
-        
-        function InicioPagina()
-{
-         
 
-            //Antes
-        if (document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value == "")
-            {///protocolo nuevo
-                CrearFila(true);         
-            }
+        function VerificaLargo(source, arguments) {
+            var Observacion = arguments.Value.toString().length;
+            //   alert(Observacion);
+            if (Observacion > 4000)
+                arguments.IsValid = false;
             else
-            {        ///modificacion de protocolo
-                AgregarCargados();              
-            } 
-              
+                arguments.IsValid = true;    //Si llego hasta aqui entonces la validación fue exitosa        
         }
-        
-        
-        function NuevaFila()
-        {
+
+        function decidirComoCarga(postBack, validatorSpan) {
+            if (postBack || validatorSpan) { //Si es un postback no quiero verificar si los analisis estan repetidos
+                AgregarCargadoSinVerificar();
+            } else {
+                AgregarCargados();
+            }
+        }
+
+
+        function InicioPagina() {
+            const postBack = esPostBackSelMedico();
+            const validatorSpan = esPostBackValidacion();
+            const txtDatosCargados = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
+
+            //console.log("postBack", postBack);
+            //console.log("validatorSpan", validatorSpan);
+
+            if (EsNuevoProtocolo()) {
+                if (txtDatosCargados === "") {
+                    CrearFila(!validatorSpan); // true si NO hay error de validación
+                } else {
+                    decidirComoCarga(postBack, validatorSpan);
+                }
+            } else {
+                decidirComoCarga(postBack, validatorSpan);
+            }
+
+            //mantengo actualizado el contadorfilas por si se agregan más filas, para que estas sean tomadas en cuenta al actualizar los hidden TxtDatosCargados y TxtDatos
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+        }
+
+
+        function NuevaFila(indice) {
             Grilla = document.getElementById('Datos');
-         
-             
             fila = document.createElement('tr');
-            fila.id = 'cod_'+contadorfilas;
-            fila.name='cod_'+contadorfilas;
-        	
+            fila.id = 'cod_' + indice;
+            fila.name = 'cod_' + indice;
+
+            //#region Celda 1 Nro de fila
             celda1 = document.createElement('td');
             oNroFila = document.createElement('input');
             oNroFila.type = 'text';
-            oNroFila.readOnly=true;
-            
+            oNroFila.readOnly = true;
             oNroFila.runat = 'server';
-            oNroFila.name = 'NroFila_'+contadorfilas;
-            oNroFila.id = 'NroFila_'+contadorfilas;
+            oNroFila.name = 'NroFila_' + indice;
+            oNroFila.id = 'NroFila_' + indice;
             //oNroFila.onfocus= function() {PasarFoco(this)}
             oNroFila.className = 'fila';
             celda1.appendChild(oNroFila);
             fila.appendChild(celda1);
-        			
-            celda2 = document.createElement('td');		
+            //#endregion
+
+            //#region Celda 2 Codigo
+            celda2 = document.createElement('td');
             oCodigo = document.createElement('input');
-            
             oCodigo.type = 'text';
             oCodigo.runat = 'server';
-            oCodigo.name = 'Codigo_'+contadorfilas;
-            oCodigo.id = 'Codigo_'+contadorfilas;
-            oCodigo.className = 'codigo';            
-            oCodigo.onblur= function () {              
+            oCodigo.name = 'Codigo_' + indice;
+            oCodigo.id = 'Codigo_' + indice;
+            //console.log("(Desde: Nueva Fila) Codigo_", oCodigo.id);
+            oCodigo.className = 'codigo';
+            oCodigo.onblur = function () {
                 CargarTarea(this);
             };
 
-            oCodigo.setAttribute("onkeypress", "javascript:return Enter(this, event)"); 
+            oCodigo.setAttribute("onkeypress", "javascript:return Enter(this, event)");
             //oCodigo onkeypress = function(){ return Enter(this, event) };
             //oCodigo.setAttribute( = function () { alert('hola'); if (event.keyCode == 13) event.keyCode = 9; };
             //oCodigo.onchange = function () {CargarDatos()};
             celda2.appendChild(oCodigo);
-    	    fila.appendChild(celda2);
-        	
-    	    celda3 = document.createElement('td');		
+            fila.appendChild(celda2);
+            //#endregion
+
+            //#region Celda 3 Descripcion de la tarea
+            celda3 = document.createElement('td');
             oTarea = document.createElement('input');
             oTarea.type = 'text';
-            oTarea.readOnly=true;
+            oTarea.readOnly = true;
             oTarea.runat = 'server';
-            oTarea.name = 'Tarea_'+contadorfilas;
-            oTarea.id = 'Tarea_'+contadorfilas;
+            oTarea.name = 'Tarea_' + indice;
+            oTarea.id = 'Tarea_' + indice;
             oTarea.className = 'descripcion';
-            oTarea.onchange = function () {CargarDatos()};
+            oTarea.onchange = function () { CargarDatos() };
             celda3.appendChild(oTarea);
-    	    fila.appendChild(celda3);
-        	
-    	    celda4 = document.createElement('td');		
+            fila.appendChild(celda3);
+            //#endregion
+
+            //#region Celda 4 Muestra
+            celda4 = document.createElement('td');
             oDesde = document.createElement('input');
             oDesde.type = 'checkbox';
-         //   oDesde.disabled = 'true';
-            oDesde.runat = 'server';         
-            
-            
-            
-            oDesde.name = 'Desde_'+contadorfilas;
-            oDesde.id = 'Desde_'+contadorfilas;
-               oDesde.alt="Sin muestra";
-            
+            //   oDesde.disabled = 'true';
+            oDesde.runat = 'server';
+            oDesde.name = 'Desde_' + indice;
+            oDesde.id = 'Desde_' + indice;
+            oDesde.alt = "Sin muestra";
             oDesde.className = 'muestra';
-            oDesde.onblur= function () {CargarDatos(); };
-
+            oDesde.onblur = function () { CargarDatos(); };
             celda4.appendChild(oDesde);
-    	    fila.appendChild(celda4);
-        	
+            fila.appendChild(celda4);
+            //#endregion
 
-        	        	
+            //#region Celda 6 Boton de borrar
             celda6 = document.createElement('td');
             oBoton = document.createElement('input');
-            oBoton.className='boton';
-            oBoton.name= 'boton_'+contadorfilas;
+            oBoton.className = 'boton';
+            oBoton.name = 'boton_' + indice;
             oBoton.type = 'button';
-            oBoton.value= 'X';
-            oBoton.onclick = function () {borrarfila(this)};
+            oBoton.value = 'X';
+            oBoton.onclick = function () { borrarfila(this) };
             celda6.appendChild(oBoton);
             fila.appendChild(celda6);
-        	
-            Grilla.appendChild(fila);
-            contadorfilas = contadorfilas + 1;
-        }
-    
-  
-       function CrearFila(validar)
-        {
-            var valFila = contadorfilas - 1;
-	        if (UltimaFilaCompleta(valFila, validar))
-	        {
-	   
-	            NuevaFila();
-    	       
-    	        valFila = contadorfilas - 1;
-    	        document.getElementById('NroFila_' + valFila).value = contadorfilas;
-    	        
-	            if (contadorfilas > 1)
-	            {
-	                var filaAnt = contadorfilas - 2;
+            //#endregion
 
-	            }
-    	        
-	            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;	           	            
-	            document.getElementById('Codigo_' + valFila).focus();
-	        }
+            Grilla.appendChild(fila);
+            indice = indice + 1;
+            return indice;
         }
-        
-        
-        function UltimaFilaCompleta(fila, validar)
-        {
-            if ((fila >= 0) && (validar))
-            { 
+
+
+        function CrearFila(validar) {
+            var valFila = contadorfilas - 1;
+            if (UltimaFilaCompleta(valFila, validar)) {
+
+                contadorfilas = NuevaFila(contadorfilas);
+
+                valFila = contadorfilas - 1;
+                document.getElementById('NroFila_' + valFila).value = contadorfilas;
+
+                if (contadorfilas > 1) {
+                    var filaAnt = contadorfilas - 2;
+
+                }
+
+                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+                document.getElementById('Codigo_' + valFila).focus();
+                console.log("fila nueva");
+            }
+            else {
+                console.log("fila nueva: no valido");
+            }
+        }
+
+
+        function UltimaFilaCompleta(fila, validar) {
+            if ((fila >= 0) && (validar)) {
                 var cod = document.getElementById('Codigo_' + fila);
-                if (cod.value == '') 
-                {
-       
+                if (cod == null || cod.value == '') {
+
                     return false;
                 }
 
             }
-            
+
             return true;
         }
-        
-        function CargarDatos()
-        {
-            var str = '';            
-	        for (var i=0; i<contadorfilas; i++)
-	        {	        
-	            var nroFila = document.getElementById('NroFila_' + i);
-	            var cod = document.getElementById('Codigo_' + i);
-	            var tarea = document.getElementById('Tarea_' + i);
-	            var desde = document.getElementById('Desde_' + i);	    	            		        
-		        if (cod.value!='')
-		         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
-	        }	     
-	         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
-	        
-	        
+
+        function CargarDatos() {
+            var str = '';
+            for (var i = 0; i < contadorfilas; i++) {
+                var nroFila = document.getElementById('NroFila_' + i);
+                var cod = document.getElementById('Codigo_' + i);
+                var tarea = document.getElementById('Tarea_' + i);
+                var desde = document.getElementById('Desde_' + i);
+                if (cod != null && cod.value != '')
+                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+            }
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
+            //console.log("str TxtDatos", str);
+
+            //Mantengo actualizado TxtDatosCargados por si se produce un postback al abrir el pop up de seleccionar medico
+            CargarDatosTxtDatosCargados();
+
         }
-        
-        function PasarFoco(Fila)
-        {
-            var fila = Fila.id.substr(8);            
+
+        function PasarFoco(Fila) {
+            var fila = Fila.id.substr(8);
             document.getElementById('Codigo_' + fila).focus();
         }
-        
-        function CargarTarea(codigo)
-        {
-            var nroFila = codigo.name.replace('Codigo_', '');
-            var tarea = document.getElementById('Tarea_' + nroFila);            
-            var sinMu = document.getElementById('Desde_' + nroFila); 
-             	     
 
-           var lista =     document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value ;                             
-          
-            if (codigo.value == '')
-            {
+        function CargarTarea(codigo) {
+            var nroFila = codigo.name.replace('Codigo_', '');
+            var tarea = document.getElementById('Tarea_' + nroFila);
+            var sinMu = document.getElementById('Desde_' + nroFila);
+
+
+            var lista = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value;
+
+            if (codigo.value == '') {
                 tarea.value = '';
             }
-            else
-            {            
-          
-   
-	            if (verificarRepetidos(codigo,tarea))	            
-                {             
-                    var i = lista.indexOf('#' + codigo.value + '#',0);                  
-                    if (i < 0)
-                    {
+            else {
+
+
+                if (verificarRepetidos(codigo, tarea)) {
+                    var i = lista.indexOf('#' + codigo.value + '#', 0);
+                    if (i < 0) {
                         codigo.value = '';
                         tarea.value = '';
                         alert('El codigo de analisis no existe o no es válido.');
                         document.getElementById('Codigo_' + nroFila).focus();
-                       
+
                     }
-                    else
-                    {          
-                    
-                           if (!verificaDisponible (codigo))
-          {
-           
-                        alert('El codigo ' + codigo.value +' no está disponible. Verifique con al administrador del sistema.');
-                        codigo.value = '';
-                        tarea.value = '';
-                        document.getElementById('Codigo_' + nroFila).focus();
-          }
-          else                                         
-          {
-                        var j = lista.indexOf('@',i);
-                        i = lista.indexOf('#',i+1) +1;                    
-                                        
-//                        alert(i);alert(j);
-                        tarea.value = lista.substring(i,j).replace ('#True','').replace ('#False',''); 
-                    
-                        //  sinMu.checked= sinMuestra;
-                         CargarDatos();
-                         CrearFila(true);                
-                         }
-                        
+                    else {
+
+                        if (!verificaDisponible(codigo)) {
+
+                            alert('El codigo ' + codigo.value + ' no está disponible. Verifique con al administrador del sistema.');
+                            codigo.value = '';
+                            tarea.value = '';
+                            document.getElementById('Codigo_' + nroFila).focus();
+                        }
+                        else {
+                            var j = lista.indexOf('@', i);
+                            i = lista.indexOf('#', i + 1) + 1;
+
+                            //                        alert(i);alert(j);
+                            tarea.value = lista.substring(i, j).replace('#True', '').replace('#False', '');
+
+                            //  sinMu.checked= sinMuestra;
+                            CargarDatos();
+                            CrearFila(true);
+                        }
+
                     }
                 }
-               
             }
         }
-        
-        
-        function verificaDisponible (objCodigo)
-        { 
-            var devolver=true;
-            var esnuevo=true;
-            var listaDatos=document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value ;
 
 
-            var sTabla1 = listaDatos.split(';');                                    
-            for (var i=0; i<(sTabla1.length); i++)
-            {
-                var sItem=sTabla1[i].split('#'); 
+        function verificaDisponible(objCodigo) {
+            var devolver = true;
+            var esnuevo = true;
+            var listaDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
+
+
+            var sTabla1 = listaDatos.split(';');
+            for (var i = 0; i < (sTabla1.length); i++) {
+                var sItem = sTabla1[i].split('#');
                 var valorCodigo = sItem[0];
-                if (valorCodigo==objCodigo.value)
-                {
-                    esnuevo=false; break;
+                if (valorCodigo == objCodigo.value) {
+                    esnuevo = false; break;
                 }
             }
 
-            if (esnuevo)
-            {         //no esta el codigo
-                var listaItem =     document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value ;                             
-                var sTabla = listaItem.split('@');                                 
-                for (var i=0; i<(sTabla.length-1); i++)
-                {
-                    var sFila = sTabla[i].split('#');	                
-                    if  (sFila[1]!="")
-                    {
-                        if (objCodigo.value== sFila[1])	                    
-                        {
-                            if (sFila[3]=="False")// campo que indica si está disponible
+            if (esnuevo) {         //no esta el codigo
+                var listaItem = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value;
+                var sTabla = listaItem.split('@');
+                for (var i = 0; i < (sTabla.length - 1); i++) {
+                    var sFila = sTabla[i].split('#');
+                    if (sFila[1] != "") {
+                        if (objCodigo.value == sFila[1]) {
+                            if (sFila[3] == "False")// campo que indica si está disponible
                             {
-                                devolver=false;
+                                devolver = false;
                                 break;
                             }
                         }
-                    }	 
+                    }
                 }
             }
-            return devolver;
+             return devolver;
         }
-        
-        
-        function verificarRepetidos(objCodigo, objTarea)
-        {
+
+
+        function verificarRepetidos(objCodigo, objTarea) {
             ///Verifica si ya fue cargado en el txtDatos
-            var devolver=true;
-            var codigo=objCodigo.value;
-            if (objTarea.value=='')
-            {
-                var listaExistente =document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtDatos").ClientID %>').value ;
-                var cantidad=1;
-                var sTabla = listaExistente.split('@');                                 
-                for (var i=0; i<(sTabla.length-1); i++)
-                {
-                    var sFila = sTabla[i].split('#');	                
-                    if  (sFila[1]!="")
-                    {
-                        if (codigo== sFila[1]) cantidad+=1;	                        	                     
-                    }	 
+            var devolver = true;
+            var codigo = objCodigo.value;
+            if (objTarea.value == '') {
+                var listaExistente = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtDatos").ClientID %>').value;
+                var cantidad = 1;
+                var sTabla = listaExistente.split('@');
+                for (var i = 0; i < (sTabla.length - 1); i++) {
+                    var sFila = sTabla[i].split('#');
+                    if (sFila[1] != "") {
+                        if (codigo == sFila[1]) cantidad += 1;
+                    }
 
                 }
 
-                if (cantidad>1)
-                {
+                if (cantidad > 1) {
                     objCodigo.value = '';
                     objTarea.value = '';
-                    alert('El código '+ codigo +' ya fue cargado. No se admiten analisis repetidos.');	
-                    objCodigo.focus();	                    
-                    devolver=false;       
+                    alert('El código ' + codigo + ' ya fue cargado. No se admiten analisis repetidos.');
+                    objCodigo.focus();
+                    devolver = false;
                 }
                 else
-                    devolver=true;
+                    devolver = true;
                 ///Fin Verifica si ya fue cargado en el txtDatos
             }
             else
-                devolver=true;
-                
+                devolver = true;
+
             return devolver;
         }
-        
-        
-        function borrarfila(obj)
-        {
-            if(contadorfilas > 1)
-            {
-	            var delRow = obj.parentNode.parentNode;
-	            var tbl = delRow.parentNode.parentNode;
-	            var rIndex = delRow.sectionRowIndex;
-	            Grilla = document.getElementById('Datos'); 
-	            Grilla.parentNode.deleteRow(rIndex);
-	            //alert('entra aca');
-	            OrdenarDatos();
-	            
-	            contadorfilas = contadorfilas - 1;
+
+
+        function borrarfila(obj) {
+            if (contadorfilas > 1) {
+                var delRow = obj.parentNode.parentNode;
+                var tbl = delRow.parentNode.parentNode;
+                var rIndex = delRow.sectionRowIndex;
+                Grilla = document.getElementById('Datos');
+                Grilla.parentNode.deleteRow(rIndex);
+                OrdenarDatos();
+
+                contadorfilas = contadorfilas - 1;
             }
-            else
-            {
-                
-	            var cod = document.getElementById('Codigo_0').value = '';
-	            var tarea = document.getElementById('Tarea_0').value = '';
-	            var desde = document.getElementById('Desde_0').value = '';	           
-	            	            
-	            CargarDatos();
+            else {
+
+                var cod = document.getElementById('Codigo_0').value = '';
+                var tarea = document.getElementById('Tarea_0').value = '';
+                var desde = document.getElementById('Desde_0').value = '';
+
+                CargarDatos();
             }
         }
-        
-        
-        
-        function OrdenarDatos()
-        {
+
+
+
+        function OrdenarDatos() {
             var pos = 0;
             var str = '';
-            
-	        for (var i=0; i<contadorfilas; i++)
-	        {
-	            var nroFila = document.getElementById('NroFila_' + i);
-	            
-	            if (nroFila != null)
-	            {
-	                nroFila.name = 'NroFila_' + pos;
-	                nroFila.id = 'NroFila_' + pos;
-	                nroFila.value = pos + 1;
-	                var cod = document.getElementById('Codigo_' + i);
-	                cod.name = 'Codigo_' + pos;
-	                cod.id = 'Codigo_' + pos;
-	                var tarea = document.getElementById('Tarea_' + i);
-	                tarea.name = 'Tarea_' + pos;
-	                tarea.id = 'Tarea_' + pos;
-	                var desde = document.getElementById('Desde_' + i);
-	                desde.name = 'Desde_' + pos;
-	                desde.id = 'Desde_' + pos;
-	                	                
-	                pos = pos + 1;	                	               
-	                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '@';
-	            }   
-	        }	        	        
-	         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
-	      
+
+            for (var i = 0; i < contadorfilas; i++) {
+                var nroFila = document.getElementById('NroFila_' + i);
+
+                if (nroFila != null) {
+                    nroFila.name = 'NroFila_' + pos;
+                    nroFila.id = 'NroFila_' + pos;
+                    nroFila.value = pos + 1;
+                    var cod = document.getElementById('Codigo_' + i);
+                    cod.name = 'Codigo_' + pos;
+                    cod.id = 'Codigo_' + pos;
+                    var tarea = document.getElementById('Tarea_' + i);
+                    tarea.name = 'Tarea_' + pos;
+                    tarea.id = 'Tarea_' + pos;
+                    var desde = document.getElementById('Desde_' + i);
+                    desde.name = 'Desde_' + pos;
+                    desde.id = 'Desde_' + pos;
+
+                    pos = pos + 1;
+                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '@';
+                }
+            }
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
+
         }
-        
-        function AgregarDeLaLista()
-        {    
-            var elvalor= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtCodigo").ClientID %>').value;
-            if (elvalor!='')
-            {
-                var con= contadorfilas-1;                   
-	            if (UltimaFilaCompleta(con, true))	     
-	            {
-	            NuevaFila();
-	            }       
-                document.getElementById( 'Codigo_'+con).value=elvalor;          
-                CargarTarea( document.getElementById( 'Codigo_'+con)); 
+
+        function AgregarDeLaLista() {
+            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtCodigo").ClientID %>').value;
+            if (elvalor != '') {
+                var con = contadorfilas - 1;
+                if (UltimaFilaCompleta(con, true)) {
+                    contadorfilas = NuevaFila(contadorfilas);
+                }
+                document.getElementById('Codigo_' + con).value = elvalor;
+                CargarTarea(document.getElementById('Codigo_' + con));
 
                 OrdenarDatos();
             }
         }
-        
-        
-        function AgregarDeLaListaRutina()
-        {      
-            var elvalor= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtCodigosRutina").ClientID %>').value;
-            if (elvalor!='')
-            {
-                var sTabla = elvalor.split(';');                                    
-	            for (var i=0; i<(sTabla.length); i++)
-	            {
-	            
-	                var valorCodigo = sTabla[i];	         
-	                var con= contadorfilas-1;	            
 
-	                document.getElementById( 'Codigo_'+con).value=valorCodigo;          
-                    CargarTarea( document.getElementById( 'Codigo_'+con)); 
-                
-	            }
-	                          
-            }                    
+
+        function AgregarDeLaListaRutina() {
+            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtCodigosRutina").ClientID %>').value;
+            if (elvalor != '') {
+                var sTabla = elvalor.split(';');
+                for (var i = 0; i < (sTabla.length); i++) {
+
+                    var valorCodigo = sTabla[i];
+                    var con = contadorfilas - 1;
+
+                    document.getElementById('Codigo_' + con).value = valorCodigo;
+                    CargarTarea(document.getElementById('Codigo_' + con));
+
+                }
+
+            }
         }
-        
-        
-        function AgregarCargados()
-        {      
-    //    alert('entra');
-            CrearFila(true); 
-            var elvalor= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;    
-           
-            if (elvalor!='')
-            {                           	            
-                var sTabla = elvalor.split(';');                                    
-	            for (var i=0; i<(sTabla.length); i++)
-	            {
-	                var sItem=sTabla[i].split('#'); 	                
-	                
-	                var valorCodigo = sItem[0];	  
-	                var sinMuestra=true;
-	                if  (      sItem[1]=='No') sinMuestra=true;
-	                else 	   sinMuestra=false; 	                      	               
-	                
-	                var con= contadorfilas-1;	               
-	                document.getElementById( 'Codigo_'+con).value=valorCodigo;   
-	                   
-                    CargarTarea( document.getElementById( 'Codigo_'+con)); 
-                      var desde = document.getElementById('Desde_' + con);	    	
-                      var boton= document.getElementById( 'boton_'+con); 
-                               
-                            		        
-	                //if  (sItem[2]=='True') 
-                      if (sItem[2] == '1') ///resultado cargado
-                          document.getElementById('Codigo_' + con).className = 'codigoConResultado';
-                      if (sItem[2] == '2')///resultado validado
-                          document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
-		          desde.checked= sinMuestra;
-		        
-		         
-	            }
-            }                    
+
+
+        function AgregarCargados() {
+            CrearFila(true);
+            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
+            if (elvalor != '') {
+                var sTabla = elvalor.split(';');
+                for (var i = 0; i < (sTabla.length); i++) {
+                    var sItem = sTabla[i].split('#');
+                   //console.log("sItem", sItem);
+                    var valorCodigo = sItem[0];
+                    var sinMuestra = true;
+                    if (sItem[1] == 'No') sinMuestra = true;
+                    else sinMuestra = false;
+                    var con = contadorfilas - 1;
+                    document.getElementById('Codigo_' + con).value = valorCodigo;
+
+                    CargarTarea(document.getElementById('Codigo_' + con));
+                    var desde = document.getElementById('Desde_' + con);
+                    var boton = document.getElementById('boton_' + con);
+
+                    if (sItem[2] == '1') ///resultado cargado
+                        document.getElementById('Codigo_' + con).className = 'codigoConResultado';
+                    if (sItem[2] == '2')///resultado validado
+                        document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
+
+                    desde.checked = sinMuestra;
+                }
+            }
         }
-        
-        
-
-     function PreguntoImprimir() {
-         if (confirm('¿Está seguro de enviar a imprimir a la impresora seleccionada?'))
-             return true;
-         else
-             return false;
-     }
-
-     var idPaciente = $("#<%= HFIdPaciente.ClientID %>").val();
-     function SelObraSocial() {
-         var dom = document.domain;
-         var domArray = dom.split('.');
-         for (var i = domArray.length - 1; i >= 0; i--) {
-             try {
-                 var dom = '';
-                 for (var j = domArray.length - 1; j >= i; j--) {
-                     dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
-                 }
-                 document.domain = dom;
-                 break;
-             } catch (E) {
-             }
-         }
 
 
-         var $this = $(this);
-         $('<iframe src="ObraSocialSel.aspx?idPaciente=' + idPaciente + '" />').dialog({
-             title: 'Financiador del Protocolo',
-             autoOpen: true,
-             width: 550,
-             height: 400,
-             modal: true,
-             resizable: false,
-             autoResize: true,
+
+        function PreguntoImprimir() {
+            if (confirm('¿Está seguro de enviar a imprimir a la impresora seleccionada?'))
+                return true;
+            else
+                return false;
+        }
+
+        var idPaciente = $("#<%= HFIdPaciente.ClientID %>").val();
+        function SelObraSocial() {
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
+                }
+            }
+
+
+            var $this = $(this);
+            $('<iframe src="ObraSocialSel.aspx?idPaciente=' + idPaciente + '" />').dialog({
+                title: 'Financiador del Protocolo',
+                autoOpen: true,
+                width: 550,
+                height: 400,
+                modal: true,
+                resizable: false,
+                autoResize: true,
                 buttons: {
-             'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnSelObraSocial))%>; }               
-            },
-             overlay: {
-                 opacity: 0.5,
-                 background: "black"
-             }
-         }).width(600);
-     }
-
-
-    var sexo =        $("#<%= HFSexo.ClientID %>").val(); 
-         var numeroDocumento = $("#<%= HFNumeroDocumento.ClientID %>").val();
-
-     function SelRenaper() {
-         var dom = document.domain;
-         var domArray = dom.split('.');
-         for (var i = domArray.length - 1; i >= 0; i--) {
-             try {
-                 var dom = '';
-                 for (var j = domArray.length - 1; j >= i; j--) {
-                     dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnSelObraSocial))%>;
                  }
-                 document.domain = dom;
-                 break;
-             } catch (E) {
-             }
-         }
-      
-          
-         var $this = $(this);
-         $('<iframe src="ProcesaRenaper.aspx?master=1&Tipo=DNI&sexo=' + sexo + '&dni=' + numeroDocumento + '&id='+idPaciente+'" />').dialog({
-             title: 'Valida Renaper',
-             autoOpen: true,
-             width: 600,
-             height: 600,
-             modal: true,
-             resizable: false,
-             autoResize: true,
-           open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
-                 buttons: {
-             'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.lnkValidarRenaper))%>; }               
-            },
-        
+             },
              overlay: {
                  opacity: 0.5,
                  background: "black"
              }
          }).width(600);
-     }
+        }
+
+
+        var sexo = $("#<%= HFSexo.ClientID %>").val();
+        var numeroDocumento = $("#<%= HFNumeroDocumento.ClientID %>").val();
+
+        function SelRenaper() {
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
+                }
+            }
+
+
+            var $this = $(this);
+            $('<iframe src="ProcesaRenaper.aspx?master=1&Tipo=DNI&sexo=' + sexo + '&dni=' + numeroDocumento + '&id=' + idPaciente + '" />').dialog({
+                title: 'Valida Renaper',
+                autoOpen: true,
+                width: 600,
+                height: 600,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+                buttons: {
+                    'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.lnkValidarRenaper))%>; }
+             },
+
+             overlay: {
+                 opacity: 0.5,
+                 background: "black"
+             }
+         }).width(600);
+        }
 
 
 
-     function SelMedico() {
-         var dom = document.domain;
-         var domArray = dom.split('.');
-         for (var i = domArray.length - 1; i >= 0; i--) {
-             try {
-                 var dom = '';
-                 for (var j = domArray.length - 1; j >= i; j--) {
-                     dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+        function SelMedico() {
+            var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value = 'Si';
+            //console.log('abrioPopUp!!!', abrioPopUp);
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
+                    console.warn("document.domain no se pudo modificar:", E);
+                }
+            }
+
+
+            var $this = $(this);
+            $('<iframe src="MedicoSel.aspx?id=' + idPaciente + '" />').dialog({
+                title: 'Buscar Médico',
+                autoOpen: true,
+                width: 620,
+                height: 400,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+
+                buttons: {
+                    'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.LinkButton1))%>; }
+                },
+                 overlay: {
+                     opacity: 0.5,
+                     background: "black"
                  }
-                 document.domain = dom;
-                 break;
-             } catch (E) {
-             }
-         }
-      
-          
-         var $this = $(this);
-         $('<iframe src="MedicoSel.aspx?id='+idPaciente+'" />').dialog({
-             title: 'Buscar Médico',
-             autoOpen: true,
-             width: 620,
-             height: 400,
-             modal: true,
-             resizable: false,
-             autoResize: true,
-           open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
-                 
-          buttons: {
-             'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.LinkButton1))%>; }               
-            },
-             overlay: {
-                 opacity: 0.5,
-                 background: "black"
-             }
-         }).width(600);
-     }
-  
+             }).width(600);
+        }
 
+        function esPostBackSelMedico() {
+
+            var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value;
+            // console.log('Verifico si es un PostBack del SelMed():', abrioPopUp);
+
+            if (abrioPopUp == 'Si') {
+                // despues de verificar que ingreso lo vuelvo a un estado vacio
+                abrioPopUp = "";
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function AgregarCargadoSinVerificar() {
+
+            CrearFilaInicial(0);
+            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
+            //console.log("el valor desde recargo es ", elvalor);
+             if (elvalor != '') {
+                var sTabla = elvalor.split(';');
+                var largoTabla = (sTabla.length);
+                var con = 0;
+
+                for (var i = 0; i < largoTabla; i++) {
+                    var sItem = sTabla[i].split('#');
+                   // console.log("sItem", sItem);
+                    var valorCodigo = sItem[0];
+                    //var sinMuestra = true;
+                    //sinMuestra =  (sItem[1] == 'No') ? true : sinMuestra = false;
+                    var sinMuestra = true;
+                   
+                    if (sItem[1] == 'No') sinMuestra = true;
+                    else sinMuestra = false;
+
+                   // console.log("Con", 'Codigo_' + con);
+                    document.getElementById('Codigo_' + con).value = valorCodigo;
+
+
+                    //Aca se carga la tarea que reemplaza al metodo CargarTarea(document.getElementById('Codigo_' + con));
+                    var codigo = document.getElementById('Codigo_' + con);
+                    var nroFila = codigo.name.replace('Codigo_', '');
+                    var tarea = document.getElementById('Tarea_' + nroFila);
+                    var lista = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value;
+                    if (codigo.value == '') {
+                        tarea.value = '';
+                    }
+                    else {
+                        //No verifico repetidos porque estoy recargando del original sin cambios, solo vengo del postback
+                        var k = lista.indexOf('#' + codigo.value + '#', 0);
+                        if (k < 0) {
+                            codigo.value = '';
+                            tarea.value = '';
+                            alert('El codigo de analisis no existe o no es válido.');
+                            document.getElementById('Codigo_' + nroFila).focus();
+                        }
+                        else {
+                            var j = lista.indexOf('@', k);
+                            k = lista.indexOf('#', k + 1) + 1;
+                            tarea.value = lista.substring(k, j).replace('#True', '').replace('#False', '');
+                            CrearFilaInicial(con + 1);
+                        }
+
+                    }
+
+                        // ---> fin de cargar tarea
+                
+                    var desde = document.getElementById('Desde_' + con);
+                   // console.log("desde input", desde);
+
+                    if (sItem[2] == '1') ///resultado cargado
+                        document.getElementById('Codigo_' + con).className = 'codigoConResultado';
+                    if (sItem[2] == '2')///resultado validado
+                        document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
+                    desde.checked = sinMuestra;
+                   // console.log("desde checked", desde.checked);
+                    con = con + 1;
+                }
+                CargarDatos();
+             }
+            console.log("Valores en memoria 'TxtDatosCargados' ", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value);
+            console.log("Valores en memoria 'TxtDatos'", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value)
+
+        }
+
+        function EsNuevoProtocolo() {
+            var numero = document.getElementById("<%= lblTitulo.ClientID %>");
+
+            if (numero == null) {
+                return true;
+            } else
+                return false;
+        }
+
+
+        function CrearFilaInicial( indice) {
+            var valFila = indice;
+            NuevaFila(valFila);
+            document.getElementById('NroFila_' + valFila).value = valFila + 1;
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = valFila + 1;
+            document.getElementById('Codigo_' + valFila).focus();
+
+        }
+
+        function CargarDatosTxtDatosCargados() {
+            var str = '';
+            for (var i = 0; i < contadorfilas; i++) {
+                var cod = document.getElementById('Codigo_' + i);
+
+                if (cod != null) { //si no es la ultima fila
+                    var estado = cod.className;
+                    switch (estado) {
+                        case "codigo": estado = 0; break;
+                        case "codigoConResultado": estado = 1; break;
+                        case "codigoConResultadoValidado": estado = 2; break;
+                    }
+                    var desde = (document.getElementById('Desde_' + i).checked == true) ? "No" : "Si"; // desde.checked = sinMuestra;
+
+                    if (cod != null && cod.value != '')
+                        str = str + cod.value + '#' + desde + '#' + estado + ';';
+                }
+            }
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = str;
+        }
+
+        function esPostBackValidacion(){
+            var validatorSpan = document.getElementById('<%= cvValidacionInput.ClientID %>');
+            var mensaje = validatorSpan.innerText;
+            if (mensaje != '') {
+                return true;
+            } else {
+                return false;
+            }
+        }
     </script>
-   
- 
- </asp:Content>
+
+
+</asp:Content>
 
