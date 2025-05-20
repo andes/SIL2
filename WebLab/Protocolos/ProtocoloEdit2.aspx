@@ -1009,10 +1009,10 @@
 
                 document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
                 document.getElementById('Codigo_' + valFila).focus();
-                console.log("fila nueva");
+               // console.log("fila nueva");
             }
             else {
-                console.log("fila nueva: no valido");
+              //  console.log("fila nueva: no valido");
             }
         }
 
@@ -1496,8 +1496,8 @@
                 }
                 CargarDatos();
              }
-            console.log("Valores en memoria 'TxtDatosCargados' ", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value);
-            console.log("Valores en memoria 'TxtDatos'", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value)
+           // console.log("Valores en memoria 'TxtDatosCargados' ", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value);
+           // console.log("Valores en memoria 'TxtDatos'", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value)
 
         }
 
