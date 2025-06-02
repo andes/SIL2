@@ -384,7 +384,7 @@ namespace WebLab.Derivaciones
                     // lote.FechaEnvio = (estadoLote == 2) ? DateTime.Now.ToString() : "";
 
                     string fecha_hora = txt_Fecha.Text + " " + txt_Hora.Text;
-                    lote.FechaEnvio = Convert.ToDateTime(fecha_hora).ToString();
+                    lote.FechaEnvio = Convert.ToDateTime(fecha_hora);
 
                     //Inserta auditoria del lote
                     lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), idUsuario);
@@ -447,7 +447,7 @@ namespace WebLab.Derivaciones
                     lote.Observacion = observacion;
                     lote.IdUsuarioEnvio = idUsuario;
                     //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
-                    lote.FechaEnvio = (estadoLote == 2) ? DateTime.Now.ToString() : "";
+                    lote.FechaEnvio = (estadoLote == 2) ? DateTime.Now : DateTime.MinValue;
 
                     //Inserta auditoria del lote
                     lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), idUsuario);
@@ -455,8 +455,6 @@ namespace WebLab.Derivaciones
                     if (estadoLote == 2)  //Si deriva indica con que transportista fue
                         //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
                         lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
-
-
 
                 }
             }
