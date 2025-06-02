@@ -30,6 +30,7 @@ namespace Business.Data.Laboratorio
         private Efector m_idEfector;
         private LoteDerivacion idLote;
         private int idProtocoloDerivacion;
+		private int idMotivoCancelacion;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -50,7 +51,9 @@ namespace Business.Data.Laboratorio
             m_idEfector = new Efector();
             idLote = null;
             idProtocoloDerivacion = 0;
-        }
+			idMotivoCancelacion = 0;
+
+		}
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -79,7 +82,8 @@ namespace Business.Data.Laboratorio
             m_fecharesultado = fecharesultado;
             m_idEfector = idEfector;
             idLote = null;
-        }
+			idMotivoCancelacion = 0;
+		}
 		#endregion // End Required Fields Only Constructor
 
 		#region Public Properties
@@ -248,6 +252,15 @@ namespace Business.Data.Laboratorio
             }
             set {
                 idProtocoloDerivacion = value;
+            }
+        }
+
+		public int IdMotivoCancelacion {
+            get {
+				return idMotivoCancelacion;
+            }
+            set {
+				idMotivoCancelacion = value;
             }
         }
         #endregion

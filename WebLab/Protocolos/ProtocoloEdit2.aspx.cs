@@ -247,7 +247,7 @@ namespace WebLab.Protocolos
 
 
                             }
-                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" || Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                             {
 
                                string numeroProtocolo= Request["numeroProtocolo"].ToString();
@@ -1328,8 +1328,9 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                   (Request["Operacion"].ToString() == "AltaDerivacion") ||
                   (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
                   (Request["Operacion"].ToString() == "AltaPeticion") ||
-                  (Request["Operacion"].ToString() == "AltaFFEE") 
-                  )
+                  (Request["Operacion"].ToString() == "AltaFFEE") ||
+                  (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") )
+                  
                     {
                         pnlImpresoraAlta.Visible = true;
                         pnlEtiquetas.Visible = false;
@@ -1700,6 +1701,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     (Request["Operacion"].ToString() == "AltaTurno") ||
                     (Request["Operacion"].ToString() == "AltaDerivacion") ||
                     (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
+                    (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ||
                     (Request["Operacion"].ToString() == "AltaPeticion"))
                     {
 

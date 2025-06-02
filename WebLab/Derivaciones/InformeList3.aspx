@@ -113,7 +113,20 @@
                 motivos.disabled = true;
             }
         }
+        function seleccionarTodos(seleccionar) {
+           var grid = document.getElementById('<%= gvLista.ClientID %>');
+           if (!grid) return;
+           // Buscar todos los checkbox dentro del GridView
+           var checkboxes = grid.querySelectorAll('input[type="checkbox"]');
 
+           checkboxes.forEach(function (chk) {
+               chk.checked = seleccionar;
+           });
+            //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
+            if (seleccionar && document.getElementById('<%= lbl_errorLista.ClientID %>').className == 'exposed') {
+                reseteaLabelErrorGrilla();
+            }
+        }
     </script>
 </asp:Content>
  
@@ -159,8 +172,7 @@
                                         <td>
                                             Motivo Cancelaci&oacute;n: </td>
                                         <td>
-                                           <%-- <asp:TextBox ID="txtObservacion" runat="server" MaxLength="100"   class="form-control input-sm" onchange="return validaObservacion(this);"></asp:TextBox>--%>
-                                            <asp:DropDownList ID="ddl_motivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" Enabled="false"/>
+                                            <asp:DropDownList ID="ddl_motivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" />
 
                                         </td>
                                         <td>
@@ -194,8 +206,8 @@
 					    <td colspan="2">
                              <asp:Label Text="* Seleccione una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
                             <div class="mylabelizquierda" >Seleccionar:                                           
-                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
-                            <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0" ID="lnkDesMarcar" onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
+                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
+                            <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
                                 &nbsp;&nbsp;
                                             
                                 </div>
@@ -254,11 +266,11 @@
                                     <asp:BoundField DataField="username" HeaderText="Usuario" >
                                         <ItemStyle Width="15%" />
                                     </asp:BoundField>
-                                   <%-- <asp:BoundField ID="motivo" DataField="observacion" HeaderText="Motivo">
+                                    <asp:BoundField  DataField="observacion" HeaderText="Observacion">
                                         <ItemStyle Width="10%" />
-                                    </asp:BoundField>--%>
+                                    </asp:BoundField>
                                     <asp:TemplateField HeaderText="Motivo Cancelaci&oacute;n">
-                                          <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("observacion") %>'/> </ItemTemplate>
+                                          <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("motivo") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField DataField="idLote" Visible="false">
                                     </asp:BoundField>

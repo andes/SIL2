@@ -31,7 +31,14 @@ namespace WebLab.Derivaciones {
         protected void Page_Load(object sender, EventArgs e) {
             if (!Page.IsPostBack) {
                 if (Session["idUsuario"] != null) {
-                    lblLote.Text = "Se genero el lote número " + Request["Lote"].ToString();
+                    if (Request["Tipo"] == "Alta") {
+                        lblLote.Text = "Se genero el lote número " + Request["Lote"].ToString();
+                        lblTitulo.Text = "Nuevo Lote generado";
+                    } else {
+                        lblLote.Text = "Se modifico el lote número " + Request["Lote"].ToString();
+                        lblTitulo.Text = "Lote Modificado";
+                    }
+                        
                 } else
                     Response.Redirect("../FinSesion.aspx", false);
             }

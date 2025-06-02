@@ -17,5 +17,6 @@
     <many-to-one name="IdEfectorDerivacion" column="idEfectorDerivacion" class="Business.Data.Efector,Business" />
     <many-to-one class="Business.Data.Laboratorio.LoteDerivacion,Business" name="Idlote" column="idLote"  />
     <property column="idProtocoloDerivacion" type="Int32" name="IdProtocoloDerivacion" />
+    <property column="idMotivoCancelacion" type="Int32" name="IdMotivoCancelacion" />
 	</class>
 </hibernate-mapping>
