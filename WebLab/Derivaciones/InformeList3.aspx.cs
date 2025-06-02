@@ -24,12 +24,24 @@ namespace WebLab.Derivaciones
 {
     public partial class InformeList3 : System.Web.UI.Page
     {
+        public Usuario oUser = new Usuario();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] != null)
                 {
+                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     CargarListas();
 
                     if (Request["Tipo"] == "Alta")
@@ -292,49 +304,54 @@ namespace WebLab.Derivaciones
 
         private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion idLote = null)
         {
-            foreach (GridViewRow row in gvLista.Rows)
+            if (Session["idUsuario"] != null)
             {
-                int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
-                bool chequeado = ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked;
-
-                //CASOS: Se evalua el estado anterior de las determinaciones
-
-                // 1 - Tiene estado "Pendiente de derivar" (0) y fue checkeado -> Se asocia al lote
-                if (estado == 0 && chequeado)
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                foreach (GridViewRow row in gvLista.Rows)
                 {
-                    ActualizarDetalleProtocolo(row, idLote);
-                    continue; // ✅ La línea continue; en un foreach (o cualquier bucle) salta inmediatamente al siguiente ciclo de iteración, evitando que se siga ejecutando el resto del código dentro del bucle actual.
-                }
+                    int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+                    bool chequeado = ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked;
 
-                // 2 - Tiene estado "Pendiente para enviar" (4) 
-                if (estado == 4)
-                {
+                    //CASOS: Se evalua el estado anterior de las determinaciones
 
-                    if (!chequeado) // No tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
-                        ActualizarDetalleProtocolo(row, null, true);
-                    else
-                        //Tiene check
-                        ActualizarDetalleProtocolo(row, idLote, true);
-                    continue;
-                }
-
-                // 3 - Estado "No enviado" y esta chequeado
-                if (estado == 2 && chequeado)
-                {
-                    if (idLote != null)
+                    // 1 - Tiene estado "Pendiente de derivar" (0) y fue checkeado -> Se asocia al lote
+                    if (estado == 0 && chequeado)
                     {
-                        ActualizarDetalleProtocolo(row, idLote, true);//Se debe asociar el lote generado y se debe guardar el historial
+                        ActualizarDetalleProtocolo(row, idLote);
+                        continue; // ✅ La línea continue; en un foreach (o cualquier bucle) salta inmediatamente al siguiente ciclo de iteración, evitando que se siga ejecutando el resto del código dentro del bucle actual.
                     }
-                    else
-                    {
-                        string motivo = ((Label)row.FindControl("lbl_motivo")).Text;
-                        bool tieneMotivo = !string.IsNullOrEmpty(motivo); // -> Si tiene motivo es porque ya se ha guardado con anterioridad la derivacion
-                        ActualizarDetalleProtocolo(row, null, tieneMotivo);
-                    }
-                    continue;
-                }
 
+                    // 2 - Tiene estado "Pendiente para enviar" (4) 
+                    if (estado == 4)
+                    {
+
+                        if (!chequeado) // No tiene check -> Se debe desasociar el lote y borrar el resultado de derivacion
+                            ActualizarDetalleProtocolo(row, null, true);
+                        else
+                            //Tiene check
+                            ActualizarDetalleProtocolo(row, idLote, true);
+                        continue;
+                    }
+
+                    // 3 - Estado "No enviado" y esta chequeado
+                    if (estado == 2 && chequeado)
+                    {
+                        if (idLote != null)
+                        {
+                            ActualizarDetalleProtocolo(row, idLote, true);//Se debe asociar el lote generado y se debe guardar el historial
+                        }
+                        else
+                        {
+                            string motivo = ((Label)row.FindControl("lbl_motivo")).Text;
+                            bool tieneMotivo = !string.IsNullOrEmpty(motivo); // -> Si tiene motivo es porque ya se ha guardado con anterioridad la derivacion
+                            ActualizarDetalleProtocolo(row, null, tieneMotivo);
+                        }
+                        continue;
+                    }
+
+                }
             }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
 
         private void ActualizarDetalleProtocolo(GridViewRow row, Business.Data.Laboratorio.LoteDerivacion idLote = null, bool modifica = false)
@@ -353,7 +370,7 @@ namespace WebLab.Derivaciones
             {
                 int estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);
                 string observacion = txt_observacion.Text;
-                int idUsuario = Convert.ToInt32(Session["idUsuario"]);
+                int idUsuario = oUser.IdUsuario;  //Convert.ToInt32(Session["idUsuario"]);
                 DateTime fechaHora = DateTime.Now;
                 int MotivoCancelacion = int.Parse(ddl_motivoCancelacion.SelectedItem.Value);
                 foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)

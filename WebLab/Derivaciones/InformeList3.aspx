@@ -119,14 +119,6 @@
             // Buscar todos los checkbox dentro del GridView
             var checkboxes = grid.querySelectorAll('input[type="checkbox"]');
 
-            checkboxes.forEach(function (chk) {
-                chk.checked = seleccionar;
-            });
-            //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
-            if (seleccionar && document.getElementById('<%= lbl_errorLista.ClientID %>').className == 'exposed') {
-                reseteaLabelErrorGrilla();
-            }
-        }
     </script>
 </asp:Content>
  
@@ -215,18 +207,6 @@
                                             <hr /></td>
 						
 				    </tr>
-                    <tr>
-                        <td>
-                          <%--  <asp:Panel runat="server" ID="pnlNroLote">
-                                <h2>
-                                    <span class="label label-default">
-                                          <asp:Label ID="lblNroLote" runat="server" ></asp:Label>  
-                                    </span>
-                                </h2>
-                            </asp:Panel>--%>
-                                
-                        </td>
-                    </tr>
 				    <tr>
 					    <td colspan="2">
                              <asp:Label Text="* Seleccione una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
