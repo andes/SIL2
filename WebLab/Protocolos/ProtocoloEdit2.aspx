@@ -1005,15 +1005,11 @@
                 if (contadorfilas > 1) {
                     var filaAnt = contadorfilas - 2;
 
-                }
-
-                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
-                document.getElementById('Codigo_' + valFila).focus();
-                console.log("fila nueva");
-            }
-            else {
-                console.log("fila nueva: no valido");
-            }
+	            }
+    	        
+	            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;	           	            
+	            document.getElementById('Codigo_' + valFila).focus();
+	        }
         }
 
 
@@ -1029,23 +1025,22 @@
 
             return true;
         }
-
-        function CargarDatos() {
-            var str = '';
-            for (var i = 0; i < contadorfilas; i++) {
-                var nroFila = document.getElementById('NroFila_' + i);
-                var cod = document.getElementById('Codigo_' + i);
-                var tarea = document.getElementById('Tarea_' + i);
-                var desde = document.getElementById('Desde_' + i);
-                if (cod != null && cod.value != '')
-                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
-            }
-            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
-            //console.log("str TxtDatos", str);
-
-            //Mantengo actualizado TxtDatosCargados por si se produce un postback al abrir el pop up de seleccionar medico
-            CargarDatosTxtDatosCargados();
-
+        
+        function CargarDatos()
+        {
+            var str = '';            
+	        for (var i=0; i<contadorfilas; i++)
+	        {	        
+	            var nroFila = document.getElementById('NroFila_' + i);
+	            var cod = document.getElementById('Codigo_' + i);
+	            var tarea = document.getElementById('Tarea_' + i);
+	            var desde = document.getElementById('Desde_' + i);	    	            		        
+		        if (cod.value!='')
+		         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+	        }	     
+	         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
+	        
+	        
         }
 
         function PasarFoco(Fila) {
@@ -1255,35 +1250,44 @@
 
             }
         }
-
-
-        function AgregarCargados() {
-            CrearFila(true);
-            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            if (elvalor != '') {
-                var sTabla = elvalor.split(';');
-                for (var i = 0; i < (sTabla.length); i++) {
-                    var sItem = sTabla[i].split('#');
-                   //console.log("sItem", sItem);
-                    var valorCodigo = sItem[0];
-                    var sinMuestra = true;
-                    if (sItem[1] == 'No') sinMuestra = true;
-                    else sinMuestra = false;
-                    var con = contadorfilas - 1;
-                    document.getElementById('Codigo_' + con).value = valorCodigo;
-
-                    CargarTarea(document.getElementById('Codigo_' + con));
-                    var desde = document.getElementById('Desde_' + con);
-                    var boton = document.getElementById('boton_' + con);
-
-                    if (sItem[2] == '1') ///resultado cargado
-                        document.getElementById('Codigo_' + con).className = 'codigoConResultado';
-                    if (sItem[2] == '2')///resultado validado
-                        document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
-
-                    desde.checked = sinMuestra;
-                }
-            }
+        
+        
+        function AgregarCargados()
+        {      
+    //    alert('entra');
+            CrearFila(true); 
+            var elvalor= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;    
+           
+            if (elvalor!='')
+            {                           	            
+                var sTabla = elvalor.split(';');                                    
+	            for (var i=0; i<(sTabla.length); i++)
+	            {
+	                var sItem=sTabla[i].split('#'); 	                
+	                
+	                var valorCodigo = sItem[0];	  
+	                var sinMuestra=true;
+	                if  (      sItem[1]=='No') sinMuestra=true;
+	                else 	   sinMuestra=false; 	                      	               
+	                
+	                var con= contadorfilas-1;	               
+	                document.getElementById( 'Codigo_'+con).value=valorCodigo;   
+	                   
+                    CargarTarea( document.getElementById( 'Codigo_'+con)); 
+                      var desde = document.getElementById('Desde_' + con);	    	
+                      var boton= document.getElementById( 'boton_'+con); 
+                               
+                            		        
+	                //if  (sItem[2]=='True') 
+                      if (sItem[2] == '1') ///resultado cargado
+                          document.getElementById('Codigo_' + con).className = 'codigoConResultado';
+                      if (sItem[2] == '2')///resultado validado
+                          document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
+		          desde.checked= sinMuestra;
+		        
+		         
+	            }
+            }                    
         }
 
 
