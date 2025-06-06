@@ -72,12 +72,15 @@ namespace WebLab.Turnos
             if (!Page.IsPostBack)
             {
                 SetToken();
-               VerificaPermisos("Asignacion de turnos");               
-            
+               VerificaPermisos("Asignacion de turnos");
+
 
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
-             
 
+                Session["matricula"] = null;
+                //Session["nombreMedico"] = null;
+                Session["apellidoMedico"] = null;
+                Session["cuilMedico"] = null;
                 if (Request["Modifica"].ToString() == "1")
                 {
                     lblTitulo.Text = "ACTUALIZACION TURNO";
@@ -1038,12 +1041,12 @@ ORDER BY cantidad desc";
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "")
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; 
             }
         }
 
@@ -1113,7 +1116,7 @@ ORDER BY cantidad desc";
                     {
 
                         List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(s);
-                        string espe;
+                        string espe, cuit;
                         if (pro.Count > 0)
                         {
                             ddlEspecialista.Items.Clear();
@@ -1121,12 +1124,25 @@ ORDER BY cantidad desc";
                             for (int i = 0; i < pro.Count; i++)
                             {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
-                                //documento = pro[i].documento.ToString();
+                                cuit = pro[i].cuit.ToString();
                                 // ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula));
-                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
+                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#' + cuit));
                             }
                             if (pro.Count > 1)
+                            { 
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+                                if (Session["apellidoMedico"] != null && Session["cuilMedico"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+                                        if (item.Value.Contains(Session["apellidoMedico"].ToString()) && item.Value.Contains(Session["cuilMedico"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
 
                             lblErrorMedico.Visible = false;
 
