@@ -4307,6 +4307,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     }
                 }//fin control
 
+                if(txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
+
             }
         }
 
@@ -4764,9 +4771,43 @@ ORDER BY cantidad desc";
                                 //documento = pro[i].documento.ToString();
                                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula+ '#' + espe));
                             }
+
                             if (pro.Count > 1)
+                            {
                                 if (Request["idProtocolo"] == null)
                                 { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
+
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion + 1).Trim();
+
+
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+
 
                             lblErrorMedico.Visible = false;
 
@@ -4802,12 +4843,14 @@ ORDER BY cantidad desc";
         {
             public List<Matricula> matriculacion { get; set; }
             public string titulo { get; set; }
+            public string codigo { get; set; }
         }
 
         public class Matricula
         {
             public string  matriculaNumero { get; set; }
             public DateTime fin { get; set; }
+
         }
 
        
@@ -4816,10 +4859,9 @@ ORDER BY cantidad desc";
         //    public int documento { get; set; }
             public string nombre { get; set; }
             public string apellido { get; set; }
+           public List<Profesiones> profesiones { get; set; }
             public string cuit { get; set; }
-            public List<Profesiones> profesiones { get; set; }
             public string id { get; set; } //id que trae de ANDES
-
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
             //public string FechaNac { get; set; }
