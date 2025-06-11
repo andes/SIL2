@@ -873,13 +873,7 @@
                 arguments.IsValid = true;    //Si llego hasta aqui entonces la validación fue exitosa        
         }
 
-        function decidirComoCarga(postBack, validatorSpan) {
-            if (postBack || validatorSpan) { //Si es un postback no quiero verificar si los analisis estan repetidos
-                AgregarCargadoSinVerificar();
-            } else {
-                AgregarCargados();
-            }
-        }
+       
 
 
         function InicioPagina() {
@@ -1434,7 +1428,7 @@
 
             CrearFilaInicial(0);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            //console.log("el valor desde recargo es ", elvalor);
+            console.log("el valor desde recargo es ", elvalor);
              if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 var largoTabla = (sTabla.length);
@@ -1548,6 +1542,14 @@
                 return true;
             } else {
                 return false;
+            }
+        }
+
+        function decidirComoCarga(postBack, validatorSpan) {
+            if (postBack || validatorSpan) { //Si es un postback no quiero verificar si los analisis estan repetidos
+                AgregarCargadoSinVerificar();
+            } else {
+                AgregarCargados();
             }
         }
     </script>
