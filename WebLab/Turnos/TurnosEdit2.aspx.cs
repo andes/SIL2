@@ -78,9 +78,7 @@ namespace WebLab.Turnos
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
 
                 Session["matricula"] = null;
-                //Session["nombreMedico"] = null;
-                Session["apellidoMedico"] = null;
-                Session["cuilMedico"] = null;
+                
                 if (Request["Modifica"].ToString() == "1")
                 {
                     lblTitulo.Text = "ACTUALIZACION TURNO";
@@ -1046,7 +1044,7 @@ ORDER BY cantidad desc";
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
-                //TxtDatos.Value = ""; 
+                //TxtDatos.Value = ""; //Comentado para que no borre lo que esta cargado dinamicamente
             }
         }
 
@@ -1116,7 +1114,7 @@ ORDER BY cantidad desc";
                     {
 
                         List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(s);
-                        string espe, cuit;
+                        string espe;
                         if (pro.Count > 0)
                         {
                             ddlEspecialista.Items.Clear();
@@ -1124,24 +1122,13 @@ ORDER BY cantidad desc";
                             for (int i = 0; i < pro.Count; i++)
                             {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
-                                cuit = pro[i].cuit.ToString();
+                               
                                 // ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula));
-                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#' + cuit));
+                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#'));
                             }
                             if (pro.Count > 1)
                             { 
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
-                                if (Session["apellidoMedico"] != null && Session["cuilMedico"] != null)
-                                {
-                                    foreach (ListItem item in ddlEspecialista.Items)
-                                    {
-                                        if (item.Value.Contains(Session["apellidoMedico"].ToString()) && item.Value.Contains(Session["cuilMedico"].ToString()))
-                                        {
-                                            ddlEspecialista.SelectedValue = item.Value;
-                                            break;
-                                        }
-                                    }
-                                }
                             }
 
                             lblErrorMedico.Visible = false;
