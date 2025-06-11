@@ -1791,11 +1791,15 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     else
                     {
                         //if (Request["Operacion"].ToString() == "AltaDerivacion") 
-                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" ||
+                            Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                         {
                             ActualizarEstadoDerivacion(oRegistro);
+                            if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                                Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
+                            else
+                                Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
 
-                            Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                         }
                         else
                         {
