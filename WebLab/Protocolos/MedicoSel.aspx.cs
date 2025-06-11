@@ -27,6 +27,8 @@ namespace WebLab.Protocolos
             }
         }
 
+
+
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             try
@@ -42,7 +44,7 @@ namespace WebLab.Protocolos
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
                 HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
                 JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-               
+
                 Stream st = ws1.GetResponseStream();
                 StreamReader sr = new StreamReader(st);
 
@@ -57,8 +59,9 @@ namespace WebLab.Protocolos
             catch (Exception ex)
             {
                 
+
             }
- 
+
 
         }
         public static DataTable GetJSONToDataTableUsingMethod(string JSONData)
@@ -113,43 +116,13 @@ namespace WebLab.Protocolos
             }
             return dtUsingMethodReturn;
         }
-        protected void gvMedico_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.Cells.Count > 1)
-            {
-                if (e.Row.RowType == DataControlRowType.DataRow)
-                {
-                    LinkButton CmdModificar = (LinkButton)e.Row.Cells[3].Controls[1];
-                    CmdModificar.CommandArgument = this.gvMedico.DataKeys[e.Row.RowIndex].Value.ToString();
-                    CmdModificar.CommandName = "Seleccionar";
-                    CmdModificar.ToolTip = "Seleccionar";
-
-                    // Valor adicional (Nombre y apellido)
-                    DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
-                    CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
-                    CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
-
-
-                }
-            }
-        }
-
-        protected void gvMedico_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName== "Seleccionar")
-            {
-                Session["matricula"] = e.CommandArgument.ToString();
-                LinkButton boton = (LinkButton)e.CommandSource;
-                Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
-            }
-        }
 
         private static DataTable GetDataTableMatriculaciones(string json)
         {
             //Pasa de JSON al tipo de objeto ProfesionalMatriculado
-            List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>  personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
+            List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado> personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
             DataTable dt = new DataTable();
-           
+
             if (personas.Count > 0)
             {
                 //Guardo solo en la tabla aquellos datos que necesito
@@ -171,6 +144,40 @@ namespace WebLab.Protocolos
                         }
                     }
                 }
+            }
+            return dt;
+        }
+        protected void gvMedico_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.Cells.Count > 1)
+            {
+                if (e.Row.RowType == DataControlRowType.DataRow)
+                {
+                    LinkButton CmdModificar = (LinkButton)e.Row.Cells[3].Controls[1];
+                    CmdModificar.CommandArgument = this.gvMedico.DataKeys[e.Row.RowIndex].Value.ToString();
+                    CmdModificar.CommandName = "Seleccionar";
+                    CmdModificar.ToolTip = "Seleccionar";
+
+                    // Valor adicional (Nombre y apellido)
+                    DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
+                    CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
+                    CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
+
+                    // Valor adicional (Nombre y apellido)
+                    DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
+                    CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
+                    CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
+                }
+            }
+        }
+
+        protected void gvMedico_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Seleccionar")
+            {
+                Session["matricula"] = e.CommandArgument.ToString();
+                LinkButton boton = (LinkButton)e.CommandSource;
+                Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
             }
             return dt;
         }

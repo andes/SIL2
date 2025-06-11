@@ -875,13 +875,7 @@
                 arguments.IsValid = true;    //Si llego hasta aqui entonces la validación fue exitosa        
         }
 
-        function decidirComoCarga(postBack, validatorSpan) {
-            if (postBack || validatorSpan) { //Si es un postback no quiero verificar si los analisis estan repetidos
-                AgregarCargadoSinVerificar();
-            } else {
-                AgregarCargados();
-            }
-        }
+       
 
 
         function InicioPagina() {
@@ -891,10 +885,10 @@
 
             //console.log("postBack", postBack);
             //console.log("validatorSpan", validatorSpan);
-
+            console.log("INICIO txtDatosCargados", txtDatosCargados);
             if (EsNuevoProtocolo()) {
                 if (txtDatosCargados === "") {
-                    CrearFila(!validatorSpan); // true si NO hay error de validación
+                    CrearFila(!validatorSpan && !postBack); // true si NO hay error de validación
                 } else {
                     decidirComoCarga(postBack, validatorSpan);
                 }
@@ -904,6 +898,7 @@
 
             //mantengo actualizado el contadorfilas por si se agregan más filas, para que estas sean tomadas en cuenta al actualizar los hidden TxtDatosCargados y TxtDatos
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+            //console.log("FINAL contadorfilas", contadorfilas);
         }
 
 
@@ -972,7 +967,7 @@
             oDesde.id = 'Desde_' + indice;
             oDesde.alt = "Sin muestra";
             oDesde.className = 'muestra';
-            oDesde.onblur = function () { CargarDatos(); };
+            oDesde.onchange  = function () { CargarDatos(); };
             celda4.appendChild(oDesde);
             fila.appendChild(celda4);
             //#endregion
@@ -996,26 +991,35 @@
 
 
         function CrearFila(validar) {
+            //console.log("validar", validar);
+            //console.log("CREAR FILA contadorfilas", contadorfilas);
             var valFila = contadorfilas - 1;
-            if (UltimaFilaCompleta(valFila, validar)) {
 
-                contadorfilas = NuevaFila(contadorfilas);
+            if (validar) {
+                if (UltimaFilaCompleta(valFila, validar)) {
 
-                valFila = contadorfilas - 1;
-                document.getElementById('NroFila_' + valFila).value = contadorfilas;
+                    contadorfilas = NuevaFila(contadorfilas);
 
-                if (contadorfilas > 1) {
-                    var filaAnt = contadorfilas - 2;
+                    valFila = contadorfilas - 1;
+                    document.getElementById('NroFila_' + valFila).value = contadorfilas;
 
+                    if (contadorfilas > 1) {
+                        var filaAnt = contadorfilas - 2;
+
+                    }
+
+                    document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+                    document.getElementById('Codigo_' + valFila).focus();
+                    // console.log("fila nueva");
                 }
-
-                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
-                document.getElementById('Codigo_' + valFila).focus();
-               // console.log("fila nueva");
+                else {
+                    //  console.log("fila nueva: no valido");
+                }
             }
             else {
-              //  console.log("fila nueva: no valido");
+                CrearFilaInicial(0); // Para casos que la grilla esta vacia y viene de un postback
             }
+           
         }
 
 
@@ -1039,11 +1043,12 @@
                 var cod = document.getElementById('Codigo_' + i);
                 var tarea = document.getElementById('Tarea_' + i);
                 var desde = document.getElementById('Desde_' + i);
+                console.log("cod.value", cod.value, "desde.checked", desde.checked);
                 if (cod != null && cod.value != '')
                     str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
             }
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
-            //console.log("str TxtDatos", str);
+            console.log("str TxtDatos", str);
 
             //Mantengo actualizado TxtDatosCargados por si se produce un postback al abrir el pop up de seleccionar medico
             CargarDatosTxtDatosCargados();
@@ -1436,7 +1441,7 @@
 
             CrearFilaInicial(0);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            //console.log("el valor desde recargo es ", elvalor);
+            console.log("el valor desde recargo es ", elvalor);
              if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 var largoTabla = (sTabla.length);
@@ -1498,8 +1503,8 @@
                 }
                 CargarDatos();
              }
-           // console.log("Valores en memoria 'TxtDatosCargados' ", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value);
-           // console.log("Valores en memoria 'TxtDatos'", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value)
+            console.log("Valores en memoria 'TxtDatosCargados' ", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value);
+            console.log("Valores en memoria 'TxtDatos'", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value)
 
         }
 
@@ -1526,7 +1531,7 @@
             var str = '';
             for (var i = 0; i < contadorfilas; i++) {
                 var cod = document.getElementById('Codigo_' + i);
-
+               
                 if (cod != null) { //si no es la ultima fila
                     var estado = cod.className;
                     switch (estado) {
@@ -1535,9 +1540,10 @@
                         case "codigoConResultadoValidado": estado = 2; break;
                     }
                     var desde = (document.getElementById('Desde_' + i).checked == true) ? "No" : "Si"; // desde.checked = sinMuestra;
-
+                    
                     if (cod != null && cod.value != '')
                         str = str + cod.value + '#' + desde + '#' + estado + ';';
+                  
                 }
             }
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = str;
@@ -1550,6 +1556,14 @@
                 return true;
             } else {
                 return false;
+            }
+        }
+
+        function decidirComoCarga(postBack, validatorSpan) {
+            if (postBack || validatorSpan) { //Si es un postback no quiero verificar si los analisis estan repetidos
+                AgregarCargadoSinVerificar();
+            } else {
+                AgregarCargados();
             }
         }
     </script>
