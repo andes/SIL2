@@ -224,7 +224,7 @@
 
                         <td colspan="4">
 
-                            <div id="tabContainer" style="width: 100%; z-index: 200; position: relative;">
+                            <div id="tabContainer" style="width: 100%; z-index: 100; position: relative;">
                                 <ul class="nav nav-pills">
                                     <li><a href="#tab1">Analisis</a></li>
                                     <li><a href="#tab2">Diagnósticos</a></li>
