@@ -36,6 +36,7 @@ namespace WebLab.Derivaciones
                     {
                         int estado = Convert.ToInt32(Request["Estado"]);
                         activarControles(estado == 0 || estado == 2);
+                        pnlNroLote.Visible = false;
                     }
                     else
                     {
@@ -43,6 +44,8 @@ namespace WebLab.Derivaciones
                         {
                             activarControles(true);
                             CargarParaModificacion();
+                            lblNroLote.Text = "Número de Lote: " + Convert.ToInt32(Request["idLote"]);
+                            pnlNroLote.Visible = true;
                         }
 
                     }
