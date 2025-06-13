@@ -1792,10 +1792,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         //if (Request["Operacion"].ToString() == "AltaDerivacion") 
                         if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" ||
-                            Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
+                            Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") //SE PISO EN ALGUN PR........
                         {
                             ActualizarEstadoDerivacion(oRegistro);
-                            if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                            VerificacionEstadoLote(oRegistro); //SE PISO EN ALGUN PR........
+                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                             else
                                 Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
@@ -3117,6 +3118,9 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                                 Response.Redirect("../PeticionElectronica/PeticionList.aspx", false);
                             else
                             {
+                                if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") //Se piso en un merge..
+                                        Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString());
+
                                 if (Session["idUrgencia"].ToString() != "0")
                                     Response.Redirect("Default2.aspx?idServicio=1&idUrgencia=" + Session["idUrgencia"].ToString(), false);
                                 else
@@ -4921,6 +4925,66 @@ private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA
             }
 
 
+        }
+
+        private void VerificacionEstadoLote(Protocolo oRegistro) //SE PISO CON EL PR MantenimientoVarios (#15)
+        {
+            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+            {
+                //Casos viejos y tambien casos donde los analisis prodrian provenir de diferente lotes
+
+                if (Session["VariosLotes"] != null)
+                {
+                    if (((HashSet<string>)Session["VariosLotes"]).Count > 0)
+                    {
+                        //tiene al menos un lote
+                        HashSet<string> lotes = (HashSet<string>)Session["VariosLotes"];
+                        foreach (string item in lotes)
+                        {
+                            ActualizaEstadoLote(Convert.ToInt32(item), oRegistro);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ActualizaEstadoLote(Convert.ToInt32(Request["idLote"]), oRegistro);
+            }
+
+        }
+
+        private void ActualizaEstadoLote(int idLote, Protocolo oRegistro) //SE PISO CON EL PR MantenimientoVarios (#15)
+        {
+            try
+            {
+                if (idLote != 0)
+                {
+
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                    lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
+
+                    if (lote.Estado == 2 || lote.Estado == 4)
+                    {
+                        if (lote.Estado == 2)  //Con iEstado=4 lo graba el id desde la pantalla DerivacionRecibirLote.aspx.cs
+                            lote.IdUsuarioRecepcion = oUser.IdUsuario;
+
+                        lote.Estado = 5;
+                    }
+
+                    //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
+                    if (!lote.HayDerivacionesPendientes())
+                    {
+                        lote.Estado = 6;
+                    }
+
+                    lote.Save();
+                    lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), oUser.IdUsuario);
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
     }
