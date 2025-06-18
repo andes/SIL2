@@ -37,7 +37,7 @@ namespace WebLab.Protocolos
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oC = (Configuracion)oC.Get(typeof(Configuracion),   "IdEfector", oUser.IdEfector);
-
+              
             }
             else Response.Redirect("../FinSesion.aspx", false);
         }
@@ -47,7 +47,20 @@ namespace WebLab.Protocolos
             {
 
                 //if (oC.CantidadProtocolosPorPagina!=0)
-                Inicializar();
+              
+                if (Session["idUsuario"] != null)
+                {
+                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                    oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+                    if (oC != null)
+                    {
+                        Inicializar();
+                        gvLista.PageSize = oC.CantidadProtocolosPorPagina;
+                        gvListaProducto.PageSize = oC.CantidadProtocolosPorPagina;
+                    }
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
+                
                 //else Response.Redirect("../FinSesion.aspx", false);
 
             }
@@ -315,11 +328,7 @@ namespace WebLab.Protocolos
             //oUtil.CargarCombo(ddlEspecialista, m_ssql, "idProfesional", "nombre");
             //ddlEspecialista.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
-            if (oC != null)
-            {
-                gvLista.PageSize = oC.CantidadProtocolosPorPagina;
-                gvListaProducto.PageSize = oC.CantidadProtocolosPorPagina;
-            }
+            
 
             if (Request["idServicio"].ToString() != "1")//microbiologia o pesquisa
             {

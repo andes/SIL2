@@ -30,25 +30,30 @@ namespace WebLab.Protocolos
     public partial class ProcesaRenaper : System.Web.UI.Page
     {
         Configuracion oCon = new Configuracion();
-
+        Usuario us = new Usuario();
         protected void Page_PreInit(object sender, EventArgs e)
         {
 
             oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-
-            if (Request["master"] == null)
-                Page.MasterPageFile = "~/Site1.master";
-            else
-                Page.MasterPageFile = "~/Site2.master";
-
-            if (Request["llamada"] != null)
+            //instancio el usuario
+            if (Session["idUsuario"] != null)
             {
-                if (Request["llamada"] == "LaboEfector")
+                us = (Usuario)us.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                if (Request["master"] == null)
+                    Page.MasterPageFile = "~/Site1.master";
+                else
+                    Page.MasterPageFile = "~/Site2.master";
+
+                if (Request["llamada"] != null)
+                {
+                    if (Request["llamada"] == "LaboEfector")
 
 
-                    this.MasterPageFile = "~/Resultados/SitePE.master";
+                        this.MasterPageFile = "~/Resultados/SitePE.master";
+                }
             }
-
+            else
+                Response.Redirect("../FinSesion.aspx", false);
 
 
 
@@ -214,12 +219,46 @@ string mensaje = ex.ToString();
             m_ssql = null;
             oUtil = null;
         }
+        private Random
+    random = new Random();
 
+     
+
+        private bool IsTokenValid()
+        {
+            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+            SetToken();
+            return result;
+        }
+
+        private void SetToken()
+        {
+            double next = random.Next();
+            hidToken.Value = next + "";
+            Session["NextToken"] = next;
+        }
+        private void PreventingDoubleSubmit(Button button)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+            sb.Append("this.value = 'Processing...';");
+            sb.Append("this.disabled = true;");
+            sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+            sb.Append("return true;");
+
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
+                SetToken();
+                PreventingDoubleSubmit(btnConfirmar);
                 bool conOK = false;
                 CargarListas();
 
@@ -744,15 +783,15 @@ INSERT INTO LAB_LogAccesoServicio
             {
                 if (validamail())
                 {
-                    Configuracion oC = new Configuracion();
+                    //Configuracion oC = new Configuracion();
 
-                    oC = (Configuracion)oC.Get(typeof(Configuracion), 1); // "IdEfector", oUser.IdEfector);
+                    //oC = (Configuracion)oC.Get(typeof(Configuracion), 1); // "IdEfector", oUser.IdEfector);
 
 
                     Utility oUtil = new Utility();
-                    //instancio el usuario
-                    Usuario us = new Usuario();
-                    us = (Usuario)us.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                    ////instancio el usuario
+                    //Usuario us = new Usuario();
+                    //us = (Usuario)us.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
                     int id = Convert.ToInt32(Request.QueryString["id"]);
                     //datos del Paciente           
@@ -760,7 +799,7 @@ INSERT INTO LAB_LogAccesoServicio
                     if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
 
 
-                    pac.IdEfector = oC.IdEfector; // us.IdEfector;
+                    pac.IdEfector = oCon.IdEfector; // us.IdEfector;
                     pac.Apellido = oUtil.SacaComillas(txtApellido.Text.ToUpper());
                     pac.Nombre = oUtil.SacaComillas(txtNombre.Text.ToUpper());
 

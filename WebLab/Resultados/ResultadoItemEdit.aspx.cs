@@ -1000,28 +1000,35 @@ namespace WebLab.Resultados
 
                         case 4://Lista predefinida de resultados con seleccion multiple 
                             {
-                                string m_resultadoDefecto = "";
-                                ISession m_session = NHibernateHttpModule.CurrentSession;
-                                ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
-                                crit.Add(Expression.Eq("IdItem", oItem));
-                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                crit.Add(Expression.Eq("Baja", false));
-                                ///      crit.AddOrder(Order.Asc("Resultado")); /// el orden lo define el usuario
-                                ///Si tiene resultados predeterminados muestra un combo
-                                IList resultados = crit.List();
-                                foreach (ResultadoItem oResultado in resultados)
-                                {
-                                    ListItem Item = new ListItem();
-                                    Item.Value = oResultado.IdResultadoItem.ToString();
-                                    Item.Text = oResultado.Resultado;
-                                   
-                                    if (oResultado.ResultadoDefecto)
-                                        m_resultadoDefecto = oResultado.Resultado;
-                                }
+
                                
+                                
+                                 string m_resultadoDefecto = "";
+                                ///busqueda de resultado por defecto solo si no tiene resultado cargado
+                                  if (s_conResultado == "0")// sin resultado
+                                    {
+                                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                                    ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                                    crit.Add(Expression.Eq("IdItem", oItem));
+                                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                    crit.Add(Expression.Eq("Baja", false));
+                                    ///      crit.AddOrder(Order.Asc("Resultado")); /// el orden lo define el usuario
+                                    ///Si tiene resultados predeterminados muestra un combo
+                                    IList resultados = crit.List();
+                                    foreach (ResultadoItem oResultado in resultados)
+                                    {
+                                        ListItem Item = new ListItem();
+                                        Item.Value = oResultado.IdResultadoItem.ToString();
+                                        Item.Text = oResultado.Resultado;
+
+                                        if (oResultado.ResultadoDefecto)
+                                            m_resultadoDefecto = oResultado.Resultado;
+                                    }
+                                }
 
                                 TextBox txt1 = new TextBox();
                                 txt1.ID = s_idDetalleProtocolo;
+                                txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones
                                 txt1.TabIndex = short.Parse(i + 1.ToString());
                                 txt1.Text = s_resultadoCar;
                                 txt1.TextMode = TextBoxMode.MultiLine;
@@ -1033,6 +1040,7 @@ namespace WebLab.Resultados
                                 if (s_conResultado == "0")// sin resultado
                                     txt1.Text = m_resultadoDefecto;
 
+                                ///agrega boton para seleccionar las opciones
                                 ImageButton btnAddDetalle = new ImageButton();
                                 btnAddDetalle.TabIndex = short.Parse("500");
                                 //btnAddDetalle.AutoUpdateAfterCallBack = true;
@@ -1057,7 +1065,31 @@ namespace WebLab.Resultados
                                 objCellResultado.Controls.Add(txt1);
                                 objCellResultado.Controls.Add(btnAddDetalle);
 
-                              
+                                ////Otra forma de observacion
+                                ImageButton btnObservacionDetalle2 = new ImageButton();
+                                btnObservacionDetalle2.TabIndex = short.Parse("500");
+
+                                btnObservacionDetalle2.ID = "Obs2|" + oDetalle.IdDetalleProtocolo.ToString(); // +"|" + m_estadoObservacion.ToString();//  m_idItem.ToString();
+
+                                if (oDetalle.Observaciones != "")//tiene observaciones
+                                {
+
+                                    if (oDetalle.IdUsuarioValidaObservacion == 0)
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                    else
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                }
+                                else
+                                {
+
+                                    btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
+                                }
+
+                                btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
+                                //  btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
+                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+
+                                objCellObservaciones.Controls.Add(btnObservacionDetalle2);
 
                             } //fin case 4
 

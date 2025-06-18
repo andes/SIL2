@@ -84,49 +84,54 @@ namespace WebLab.Resultados
                 if (Session["idUsuarioValida"] == null)                
                     //Session["idUsuarioValida"] = Request["idUsuarioValida"];                                   
                 //else
-                    Session["idUsuarioValida"] = Session["idUsuario"];                                   
+                    Session["idUsuarioValida"] = Session["idUsuario"];
 
-                Usuario oUserValida = new Usuario();
-                oUserValida = (Usuario)oUserValida.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
-                lblUsuarioValida.Text = "Usuario Autenticado para validar: " + oUserValida.Apellido + " " + oUserValida.Nombre;
-                hplCambiarContrasenia.NavigateUrl = "../Usuarios/PasswordEdit.aspx?id=" + oUserValida.IdUsuario.ToString();
-                hplCambiarContrasenia.Visible = true;
-                divValidacion.Visible = true;
-                //////////////////fin ///////////////////////////////////////////
-                if (Request["Operacion"].ToString() == "Confirma")
-                    Response.Redirect("ResultadoConfirmacion.aspx?idServicio=3&Operacion=Confirma&Modo=Normal");
-                VerificaPermisos("Validacion");
-                CargarListas();
-
-                lblTitulo.Text = "VALIDACION DE RESULTADOS";
-                pnlTitulo.Attributes.Add("class", "panel panel-danger");
-
-                if (Request["idServicio"].ToString() == "6")
+                if (Session["idUsuarioValida"] != null)
                 {
-                    pnlTitulo.Attributes.Add("class", "panel panel-success");
-                    lnkBuscar.CssClass= "btn btn-success";
+                    Usuario oUserValida = new Usuario();
+                    oUserValida = (Usuario)oUserValida.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
+                    lblUsuarioValida.Text = "Usuario Autenticado para validar: " + oUserValida.Apellido + " " + oUserValida.Nombre;
+                    hplCambiarContrasenia.NavigateUrl = "../Usuarios/PasswordEdit.aspx?id=" + oUserValida.IdUsuario.ToString();
+                    hplCambiarContrasenia.Visible = true;
+                    divValidacion.Visible = true;
+                    //////////////////fin ///////////////////////////////////////////
+                    if (Request["Operacion"].ToString() == "Confirma")
+                        Response.Redirect("ResultadoConfirmacion.aspx?idServicio=3&Operacion=Confirma&Modo=Normal");
+                    VerificaPermisos("Validacion");
+                    CargarListas();
+
+                    lblTitulo.Text = "VALIDACION DE RESULTADOS";
+                    pnlTitulo.Attributes.Add("class", "panel panel-danger");
+
+                    if (Request["idServicio"].ToString() == "6")
+                    {
+                        pnlTitulo.Attributes.Add("class", "panel panel-success");
+                        lnkBuscar.CssClass = "btn btn-success";
+                    }
+
+
+
+                    //rdbCargaResultados.Visible = false;
+
+                    //rdbValidaResultados.Visible = true;
+                    //rdbValidaResultados.Items[0].Selected = true;
+                    //lblFormaCarga.Visible = false;
+
+                    ddlHojaTrabajo.Visible = false;
+                    rvHojaTrabajo.Enabled = false;
+
+                    //ddlAnalisis.Visible = false;
+                    //lblAnalisis.Visible = false;
+                    //txtCodigo.Visible = false;
+                    //rvAnalisis.Visible = false;
+                    //lblMensaje.Visible = false;
+                    if (Request["modo"].ToString() != "Urgencia")
+                        IniciarValoresValidacion();
+
+                    HabilitarCargaResultados();
                 }
+                else Response.Redirect("../FinSesion.aspx", false);// correccion caida de sesion
 
-
-
-                //rdbCargaResultados.Visible = false;
-
-                //rdbValidaResultados.Visible = true;
-                //rdbValidaResultados.Items[0].Selected = true;
-                //lblFormaCarga.Visible = false;
-
-                ddlHojaTrabajo.Visible = false;
-                rvHojaTrabajo.Enabled = false;
-         
-                //ddlAnalisis.Visible = false;
-                //lblAnalisis.Visible = false;
-                //txtCodigo.Visible = false;
-                //rvAnalisis.Visible = false;
-                //lblMensaje.Visible = false;
-                if (Request["modo"].ToString() != "Urgencia")
-                IniciarValoresValidacion();
-
-                HabilitarCargaResultados();
             }
 
             if (Request["Operacion"].ToString() == "Control")

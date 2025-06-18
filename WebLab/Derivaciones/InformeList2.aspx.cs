@@ -49,12 +49,15 @@ namespace WebLab.Derivaciones
         {
             if (!Page.IsPostBack)
             {
-              //  CargarListas();
-                  //if (Request["Estado"].ToString() == "0"){   CargarItem();}
-                  //else ddlItem.Enabled=false;
+                if (Session["idUsuario"] != null)
+                {
+                    //  CargarListas();
+                    //if (Request["Estado"].ToString() == "0"){   CargarItem();}
+                    //else ddlItem.Enabled=false;
 
-                CargarGrilla();
-              
+                    CargarGrilla();
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
             }
 
         }
@@ -302,15 +305,15 @@ namespace WebLab.Derivaciones
                    oRegistro.IdDetalleProtocolo = oDetalle;
                    oRegistro.Estado = int.Parse(ddlEstado.SelectedValue);
                    oRegistro.Observacion = txtObservacion.Text;
-                    oRegistro.IdUsuarioRegistro =  int.Parse(Session["idUsuario"].ToString());
+                    oRegistro.IdUsuarioRegistro = oUser.IdUsuario;// int.Parse(Session["idUsuario"].ToString());
                    oRegistro.FechaRegistro = DateTime.Now;
                    oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
                    oRegistro.Save();
 
                     // nuevo: se graba el lugar a donde se derivó en ese momento.
 
-                    Usuario oUser = new Usuario();
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                    //Usuario oUser = new Usuario();
+                    //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
                     if (ddlEstado.SelectedValue == "0") /// pendiente 
                         oDetalle.ResultadoCar = "Pendiente de Derivacion";                       

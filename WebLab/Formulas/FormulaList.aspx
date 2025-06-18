@@ -29,6 +29,11 @@
                         EmptyDataText="No hay fórmulas creadas" CssClass="table table-bordered bs-table"  GridLines="None">
             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
             <Columns>
+                  <asp:BoundField DataField="codigo" 
+                    HeaderText="Codigo" >
+                    <HeaderStyle HorizontalAlign="Left" />
+                    <ItemStyle Width="20%" />
+                </asp:BoundField>
              <asp:BoundField DataField="item" 
                     HeaderText="Analisis" >
                     <HeaderStyle HorizontalAlign="Left" />

@@ -48,10 +48,10 @@ namespace WebLab
         {
             Utility oUtil = new Utility();
             string m_password = oUtil.Encrypt(Login1.Password);
-            //string admin = oUtil.Decrypt("XlvQvuBhaPuYaHQuhVbPKQ==");
+
 
             int i_idusuario = 0;
-            string m_strSQL = @" SELECT top 1 idUsuario FROM Sys_usuario with (nolock)  WHERE (username = '" + Login1.UserName + "') AND ([password] = '" + m_password + "') AND  (activo=1 ) ";
+            string m_strSQL = @" SELECT top 1 idUsuario FROM Sys_usuario with (nolock)  WHERE (username = '" + Login1.UserName + "') AND ([password] = '" + m_password + "')  ";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
@@ -179,7 +179,7 @@ namespace WebLab
                 else
                 {
                     e.Authenticated = false;
-                    Login1.FailureText = "El usuario no está activo.";
+                    Login1.FailureText = "El usuario no está activo por inactividad.";
                 }
             }
             else

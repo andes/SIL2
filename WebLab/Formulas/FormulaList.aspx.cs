@@ -67,10 +67,10 @@ namespace WebLab.Formulas
 
         private object LeerDatos()
         {
-            string m_strSQL = @" select F.idformula, I.nombre as item , F.formula + ' ...' as nombre, 
+            string m_strSQL = @" select F.idformula, I.codigo as codigo, I.nombre as item , F.formula + ' ...' as nombre, 
                  case when F.idtipoFormula=1 then 'Formula' else 'Control' end  as tipo 
-                               from Lab_Formula F
-                               inner join Lab_Item I on I.idItem= F.idItem
+                               from Lab_Formula F with (nolock)
+                               inner join Lab_Item I with (nolock) on I.idItem= F.idItem
                                where F.baja=0 
                                order by I.nombre";
             DataSet Ds = new DataSet();
@@ -135,11 +135,11 @@ namespace WebLab.Formulas
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                ImageButton CmdModificar = (ImageButton)e.Row.Cells[3].Controls[1];
+                ImageButton CmdModificar = (ImageButton)e.Row.Cells[4].Controls[1];
                 CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdModificar.CommandName = "Modificar";
 
-                ImageButton CmdEliminar = (ImageButton)e.Row.Cells[4].Controls[1];
+                ImageButton CmdEliminar = (ImageButton)e.Row.Cells[5].Controls[1];
                 CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdEliminar.CommandName = "Eliminar";
 

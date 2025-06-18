@@ -66,11 +66,7 @@ namespace WebLab.Items
             {
                 if (Session["idUsuario"] != null)
                 {
-
-
-
-
-
+                    
                     VerificaPermisos("Analisis");
                     CargarListas();
                     if (Request["id"] != null)
@@ -95,6 +91,7 @@ namespace WebLab.Items
                         btnNuevo.Visible = true;
                         btnAgregarPresentacion.Visible = true;
                         btnAgregarMuestra.Visible = true;
+                        chkEtiquetaAdicional.Enabled = true;
                     }
                     else
                     {
@@ -109,6 +106,7 @@ namespace WebLab.Items
                             btnAgregarPresentacion.Visible = false;
                             btnAgregarMuestra.Visible = false;
                             btnGuardarRPDefecto.Enabled = true;
+                            chkEtiquetaAdicional.Enabled = false; ///el efector no puede cambiar por que es la misma configuracion para todos
                         }
                     }
                 }
@@ -143,6 +141,7 @@ namespace WebLab.Items
                 ddlRecomendacion.Enabled = false;
                 btnAgregarRecomendacion.Enabled = false;
                 gvListaRecomendacion.Enabled = false;
+                chkEtiquetaAdicional.Enabled = false;
 
 
                 Efector oEfector = new Efector();
@@ -234,10 +233,10 @@ namespace WebLab.Items
 
         private object LeerDatosRecomendacion()
         {
-            string m_strSQL = " SELECT IR.idItemRecomendacion, R.descripcion as recomendacion " +
-                              " FROM LAB_ItemRecomendacion IR with (nolock)" +
-                              "INNER JOIN LAB_Recomendacion R with (nolock) ON R.idRecomendacion=IR.idRecomendacion " +
-                              " WHERE IR.idItem=" + Request["id"].ToString();
+            string m_strSQL = @" SELECT IR.idItemRecomendacion, R.descripcion as recomendacion 
+                              FROM LAB_ItemRecomendacion IR with (nolock)
+                              INNER JOIN LAB_Recomendacion R with (nolock) ON R.idRecomendacion=IR.idRecomendacion 
+                               WHERE IR.idItem=" + Request["id"].ToString();
 
 
             DataSet Ds = new DataSet();
@@ -266,8 +265,9 @@ namespace WebLab.Items
         {
             ItemRecomendacion oRegistro = new ItemRecomendacion();
             Item oItem = new Item();
-            Recomendacion oRec = new Recomendacion();
 
+            Recomendacion oRec = new Recomendacion();
+            
             oRegistro.IdItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
             oRegistro.IdRecomendacion = (Recomendacion)oRec.Get(typeof(Recomendacion), int.Parse(ddlRecomendacion.SelectedValue));
             oRegistro.Save();
@@ -2804,17 +2804,37 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
         protected void btnGuardarHIV_Click(object sender, EventArgs e)
         {
+            string valor = "";
             if (Request["id"] != null)
             {
-                Item oItem = new Item();
+                
+                  Item oItem = new Item();
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
                 if (oItem != null)
                 {
+                    if (oItem.EtiquetaAdicional != chkEtiquetaAdicional.Checked)
+                    { 
+                            if (chkEtiquetaAdicional.Checked)
+                            valor += "Cambiar Marca a imprimir Etiqueta Adicional";
+                            else
+                            valor += "Cambiar Marca a NO imprimir  Etiqueta Adicional";
+                    }
+
+                    if (oItem.CodificaHiv != chkCodificaHiv.Checked)
+                    {
+                        if (chkCodificaHiv.Checked)
+                            valor = "Cambiar Marca a Codificar Datos de Paciente";
+                        else
+                            valor = "Cambiar Marca a NO Codificar Datos de Paciente";
+                    }
                     oItem.CodificaHiv = chkCodificaHiv.Checked;
-                    oItem.LimiteTurnosDia = int.Parse(txtLimite.Value);
+                    oItem.LimiteTurnosDia = int.Parse(txtLimite.Value);  ///pasar a dato por efector
                     oItem.EtiquetaAdicional = chkEtiquetaAdicional.Checked;
                     //oItem.IsScreeening = chkIsScreening.Checked;
                     oItem.Save();
+                    
+                
+                    oItem.GrabarAuditoriaDetalleItem("Guardar", oUser, "Mas Opciones", valor, "");
                 }
             }
         }
@@ -2862,34 +2882,21 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
         }
 
         private DataTable GetDataSetAuditoria()
-        {
-            string m_strSQL = "";
-
-            //  string m_strCondicion = "";
-
-            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        {                        
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
-
-            //if (!oUser.Administrador)
-            //{
-            //    m_strCondicion = " and P.idefector=" + oUser.IdEfector.IdEfector.ToString();
-            //}
-
-
-            m_strSQL = @"  SELECT  P.codigo  AS numero, a.apellidousuario as username, A.fecha AS fecha, A.hora, A.accion, A.analisis, A.valor, A.valorAnterior
-            FROM LAB_AuditoriaItem (nolock) AS A
-    inner join  LAB_Item (nolock)  P on P.iditem = A.iditem
+            
+            string m_strSQL = @"  SELECT  P.codigo  AS numero, a.apellidousuario as username, A.fecha AS fecha, A.hora, A.accion, A.analisis, A.valor, A.valorAnterior
+            FROM LAB_AuditoriaItem  AS A  with (nolock)
+    inner join  LAB_Item  P with (nolock)  on P.iditem = A.iditem
     where P.iditem = " + Request["id"].ToString() + @" ORDER BY A.idAuditoriaitem";
 
             DataSet Ds1 = new DataSet();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds1, "auditoria");
 
-
             DataTable data = Ds1.Tables[0];
             return data;
-
 
         }
 
@@ -3026,8 +3033,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
         private object LeerDatosPresentaciones(string v)
         {
             string m_strSQL = @" select iditempresentacion, M.nombre as marca , I.presentacion, I.codigo 
- from LAB_ItemPresentacion I
- inner join LAB_MarcaEquipo M on I.idmarca = M.idMarcaEquipo
+ from LAB_ItemPresentacion I with (nolock)
+ inner join LAB_MarcaEquipo M with (nolock) on I.idmarca = M.idMarcaEquipo
  where I.baja=0 and iditem =  " + Request["id"].ToString();
 
 
