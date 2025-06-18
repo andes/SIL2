@@ -1643,10 +1643,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             ///Carga del combo de determinaciones
             string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
                            " IE.disponible " +
-                            " FROM Lab_item I  (nolock) " +
-                            " inner join lab_itemEfector IE  (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oC.IdEfector.IdEfector.ToString() + //MultiEfector 
-                            " INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea " +
-                            " where A.baja=0 and I.baja=0 "+  
+                            " FROM Lab_item I with (nolock) " +
+                            " inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oC.IdEfector.IdEfector.ToString() + //MultiEfector 
+                            " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
+                            " where A.baja=0 and I.baja=0 and IE.disponible=1 "+  
                             " and  A.idtipoServicio= " + Session["idServicio"].ToString() + " AND (I.tipo= 'P') order by I.nombre ";
             SqlConnection strconn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
@@ -2325,26 +2325,31 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                 }
               */
 
-                if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
-                {
-                    oRegistro.Estado = 2;  //validado total (cerrado);
-                                            //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                    if (!oRegistro.Notificarresultado) // no se notifica a sips
-                        oRegistro.Estado = 3; ///Accceso Restringido;
-                }
-                else
-                {
-                    if (oRegistro.EnProceso())
-                    {
-                        oRegistro.Estado = 1;//en proceso
-                                              // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                    }
-                    else
-                        oRegistro.Estado = 0;
+                 if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
+                  {
+                      oRegistro.Estado = 2;  //validado total (cerrado);
+                                              //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                      if (!oRegistro.Notificarresultado) // no se notifica a sips
+                          oRegistro.Estado = 3; ///Accceso Restringido;
+                  }
+                  else
+                  {
+                      if (oRegistro.EnProceso())
+                      {
+                          oRegistro.Estado = 1;//en proceso
+                                                // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                      }
+                      else
+                          oRegistro.Estado = 0;
 
-                }
+                  }
 
-
+                /////optimizacion Caro: para recorrer detalleprotocolo una sola ve y no dos con ValidadoTotal y EnProceso
+                //int estadoProt = oRegistro.GetEstadoProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
+                //if ((estadoProt == 2) && (!oRegistro.Notificarresultado))
+                //    oRegistro.Estado = 3; ///Accceso Restringido;
+                //else
+                //    oRegistro.Estado = estadoProt;
 
 
                 oRegistro.Save();
@@ -2560,8 +2565,8 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                         //Item oItem = new Item();
                         oDetalle.IdProtocolo = oRegistro;
                         oDetalle.IdEfector = oRegistro.IdEfector;
-                         
-                       
+
+
 
                         oDetalle.IdItem = oItem; // (Item)oItem.Get(typeof(Item), "Codigo", codigo);
 
@@ -2576,6 +2581,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                         {
                             oDetalle.TrajoMuestra = "No";
                             oDetalle.FechaResultado = DateTime.Now;
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
                         }
                         else
                         {
@@ -2584,7 +2590,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                         }
 
 
-                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                         oDetalle.FechaControl = DateTime.Parse("01/01/1900");
                         oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
@@ -2593,32 +2599,62 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
 
-                      
-                            GuardarDetallePractica(oDetalle);
 
-                            // GuardarDerivacion(oDetalle);
-                            oDetalle.GuardarDerivacion(oUser);
-                         
+                        GuardarDetallePractica(oDetalle);
+
+                        // GuardarDerivacion(oDetalle);
+                        oDetalle.GuardarDerivacion(oUser);
+
 
                         if (i == 0)///correccion de que se graba con la session el tipo de servicio, se vuelve a controlar que sea el de la deterinacion
                         {
                             oRegistro.IdTipoServicio = oItem.IdArea.IdTipoServicio;
                             oRegistro.Save();
                         }
-                    }
-                    else  //si ya esta actualizo si trajo muestra o no
-                    {
+
+
+
+                        //si ya esta actualizo si trajo muestra o no
+
+                        ////foreach (DetalleProtocolo oDetalle in listadetalle)
+                        ////{
+                        //    if (trajomuestra == "true")
+                        //        oDetalle.TrajoMuestra = "No";
+                        //    else
+                        //        oDetalle.TrajoMuestra = "Si";
+
+                        //    oDetalle.Save();
+                        //    oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
+                        ////}
+
+
+                    }  // fin if count()
+                    else
+                    { /// si cambió la marca de sin muetsra
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
-                            if (trajomuestra == "true")
-                                oDetalle.TrajoMuestra = "No";
-                            else
-                                oDetalle.TrajoMuestra = "Si";
+                            if (trajomuestra == "true") /// es no trajo
+                            {
+                                if (oDetalle.TrajoMuestra == "Si") // estaba grabado Si
+                                {
+                                    oDetalle.TrajoMuestra = "No";
+                                    oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
+                                    oDetalle.Save();
+                                }
+                            }
+                            else  // si  trajo muestra
+                            {
+                                if (oDetalle.TrajoMuestra == "No")  /// si estaba grabado que no cambia
+                                {
+                                    oDetalle.TrajoMuestra = "Si";
+                                    oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario);
+                                    oDetalle.Save();
+                                }
+                            }
 
-                            oDetalle.Save();
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
+                          
+                            
                         }
-
                     }
                 }
             }

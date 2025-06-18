@@ -39,6 +39,8 @@
                     <div class="panel-heading">
                          <asp:Label ID="lblTitulo" runat="server" Text="Label"></asp:Label>
      <br />
+                        	<asp:ImageButton ImageUrl="~/App_Themes/default/images/actualizar.gif"  ID="btnActualizar"  runat="server"  ToolTip="Ctrl+F4"   onclick="btnActualizarPracticas_Click"
+                        ></asp:ImageButton> 
          <h4>       <asp:Label ID="lblArea" runat="server"  
                     Font-Bold="False"></asp:Label>
              </h4>
@@ -203,14 +205,50 @@ function desmarcar_todo() {//Funcion que permite desmarcar todos los checkbox ex
             modal: true,
             resizable: false,
             autoResize: true,
-          
+             
             overlay: {
                 opacity:0.5,
                 background: "black"
             }
+            
         }).width(670);
     }
- 
+  function PredefinidoSelect(idDetalle, operacion) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+      
+        var $this = $(this);         
+        $('<iframe src="PredefinidoSelect.aspx?idDetalleProtocolo=' + idDetalle +'&Operacion='+operacion+'" />').dialog({        
+            title: 'Resultados',
+            autoOpen: true,
+            width: 500,
+            height: 500,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+           
+             open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide();},
+            buttons: {
+             'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnActualizar))%>; }               
+            },
+            overlay: {
+                opacity:0.5,
+                background: "black"
+            }
+        }).width(510);
+    }
  
 </script>
 

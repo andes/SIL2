@@ -1835,6 +1835,99 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             return enproceso;
         }
 
+
+    /*    public int GetEstadoProtocolo(string s_operacion, int i_idusuario )
+        {
+            bool enproceso = false; int i_estado = 0;
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+            crit.Add(Expression.Eq("IdProtocolo", this));
+            //crit.Add(Expression.Eq("IdEfector", this.IdEfector));
+            bool validado  = false;
+
+            IList detalle = crit.List();
+            if (detalle.Count > 0)
+            {
+                foreach (DetalleProtocolo oDetalle in detalle)
+                {
+                    if (oDetalle.TrajoMuestra == "No") //sin muestra
+                    {
+                        validado = true;
+                      
+                        if (s_operacion == "Carga")
+                        {
+                            oDetalle.IdUsuarioResultado = i_idusuario;
+                            oDetalle.FechaResultado = DateTime.Now;
+                        }
+                        else
+                        {
+                            oDetalle.IdUsuarioValida = i_idusuario;
+                            oDetalle.FechaValida = DateTime.Now;
+                            enproceso = true;
+                        }
+                        oDetalle.Save();
+                    }
+
+                    if (oDetalle.IdUsuarioResultado > 0)
+                    {
+                        enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.IdUsuarioControl > 0)
+                    {
+                        enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.IdUsuarioValida > 0)
+                    {
+                        validado = true;
+                           enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.Enviado > 1)///tiene resultado desde el equipo
+                    {
+                        enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.IdUsuarioObservacion > 0)///tiene cargada alguna observacion desde el equipo
+                    {
+                        enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.IdUsuarioValidaObservacion > 0)
+                    {
+                        validado = true;
+                        enproceso = true;
+                        break;
+                    }
+                    if (oDetalle.ConResultado)  //si tiene alguna derivacion  
+                    {
+                        enproceso = true;
+
+                        Derivacion oDeriva = new Derivacion();
+                        oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
+                        if (oDeriva != null)
+                        {
+                            if (oDeriva.Estado >= 1)
+                                validado = true;
+                            else
+                                validado = false;
+                        }
+                        break;
+                    }
+
+                   
+                }
+            }
+            //return enproceso;
+            if (validado) i_estado=2; /// terminado
+            if ((!validado) && (enproceso)) i_estado = 1; //en proceso
+            if ((!validado) && (!enproceso)) i_estado = 0; //no procesado
+
+            return i_estado;
+
+        }*/
+
         public void ActualizarResultados(string s_operacion, int i_idusuario)
         {
             ///Esta funcion pone como cargados los item del tipo compuestos.
@@ -1871,7 +1964,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                         }
                     }
 
-                    if (oDet.IdSubItem.IdEfectorDerivacion != oDet.IdSubItem.IdEfector) //derivado
+                 /*   if (oDet.IdSubItem.IdEfectorDerivacion != oDet.IdSubItem.IdEfector) //derivado
                     {
 
 
@@ -1899,7 +1992,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                             }
                             oDet.Save();
                         
-                    }
+                    }*/
 
                     
                 }
@@ -1953,7 +2046,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
             crit.Add(Expression.Eq("IdProtocolo", this));
             crit.Add(Expression.Eq("IdEfector", this.IdEfector));
-            crit.Add(Expression.Eq("Informable", true));
+            crit.Add(Expression.Eq("Informable", true));//Caro: se debe cerrar aunque no sea informable
 
             IList detalle = crit.List();
             if (detalle.Count > 0)
@@ -1964,12 +2057,12 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                         validado = true;
                     else
                     {
-                        
 
-                        if (oDetalle.IdSubItem.IdCategoria == 1) //compuesto
-                            validado = true;
-                        else
-                        {
+                        //if (oDetalle.IdItem.IdCategoria == 1) //compuesto
+                        //                                         //if (oDetalle.IdSubItem.IdCategoria == 1) //compuesto
+                        //    validado = true;
+                        //else
+                        //{
                             if (oDetalle.TrajoMuestra == "No") //sin muestra
                             {
                                 validado = true;
@@ -1988,19 +2081,33 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                             else
                             {
                              //   if (oDetalle.IdSubItem.IdEfectorDerivacion != oDetalle.IdSubItem.IdEfector) //derivado: esto para sil no multiefector
-                             if ((s_operacion == "Derivacion") && (oDetalle.ConResultado))
-                                {
-
- 
-                                        validado = true;
-                                    
-                                }
+                              //if ((s_operacion == "Derivacion") && (oDetalle.ConResultado))
+                              //  { 
+                              //          validado = true;                                    
+                              //  }
+                              //  else 
+                              //  {
+                                    Derivacion oDeriva = new Derivacion();
+                                    oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle );
+                            if (oDeriva != null)
+                            {
+                                if (oDeriva.Estado >= 1)
+                                    validado = true;
                                 else
-                                {
                                     validado = false;
-                                    break;
-                                }
                             }
+                            else
+                            {
+                                validado = false;
+
+                              //  break;
+                            }
+
+                            //     Aca falta algo
+
+                            if (!validado) break;
+
+                            //}
                         }
                     }
                 }

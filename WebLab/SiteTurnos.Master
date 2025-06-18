@@ -222,7 +222,7 @@ document.onkeydown=checkKeyCode;
   font-weight: normal;
   font-size: 14px;
   font-family: Arial;
-   text-align:center;">Versión MultiEfector Marzo 2025-18. <a href="<%= Page.ResolveUrl("~/controldecambios.html") %>"  target="_blank" >Ver Cambios Version</a></p>
+   text-align:center;">Versión MultiEfector Mayo 2025-14.<a href="<%= Page.ResolveUrl("~/controldecambios.html") %>"  target="_blank" >Ver Cambios Version</a></p>
    
 	</div>	</form>
 </body>

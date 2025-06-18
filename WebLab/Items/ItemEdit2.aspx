@@ -70,6 +70,7 @@
     <li><a href="#tab5">Recomendaciones</a></li>
      <li><a href="#tab8"  >Muestras</a></li>
  <li><a href="#tab6">Mas opciones</a></li>
+     <li><a href="#tab9">Turnos</a></li>
 </ul>
 
     <div id="tab1" class="tab_content" style="border: 1px solid #C0C0C0">
@@ -1223,7 +1224,7 @@
 <tr>
 						<td class="control-label" colspan="2" >Análisis:		
 							<asp:Label ID="lblItemHiv" runat="server" Font-Bold="True" 
-                                CssClass="mytituloGris"></asp:Label>
+                               class="control-label"></asp:Label>
 								
                                                                                 </td>
 					</tr>
@@ -1233,26 +1234,24 @@
 					</tr>
                     <tr>
 						<td class="mytituloGris" >&nbsp;</td>
-						<td class="mytituloGris" colspan="2" >Confidencialidad<hr /> 
-</td></tr>
-<tr>
-						<td class="control-label" >
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</td>
-						<td class="control-label" colspan="2" >
-<p class="myLabel">
-    Si el analisis corresponde a una <b>Prueba Diagnóstica</b>; que requiere que se codifiquen los datos del paciente de acuerdo a la <b>LEY NACIONAL 23798</b> y a la correspondiente provincial <b>1922/91</b>;
+						<td  colspan="2" ><h4>CONFIDENCIALIDAD </h4><hr />
+                            <small  >
+    Si la determinación corresponde a una <b>Prueba Diagnóstica</b> que requiere que se codifiquen los datos del paciente de acuerdo a la <b>LEY NACIONAL 23798</b> y a la correspondiente provincial <b>1922/91</b>;
     tilde <b>"Codificar Datos del Paciente"</b>.
-    </p>
-                        </td>
-					</tr>
+    </small>
+</td></tr>
+                         
+ 
 <tr>
-						<td class="myLabelDerechaGde" >
+						<td   >
 
                             &nbsp;</td>
-						<td class="myLabelDerechaGde" >
+						<td >
 
     <asp:CheckBox ID="chkCodificaHiv" runat="server" CssClass="control-label" 
-        Text="Codificar Datos del Paciente" /><br /><br />
+        Text="Codificar Datos del Paciente" /> <br />
+                              <small>Solo modificable por Administrador</small>
+                            <br />
                         </td>
 						<td class="myLabelDerechaGde" align="right" >
 
@@ -1266,23 +1265,7 @@
 
                             &nbsp;</td>
 					</tr>
-                     <tr>
-						<td class="mytituloGris" >&nbsp;</td>
-						<td class="mytituloGris" colspan="2" >TURNOS<hr />
-</td></tr>
-<tr>
-						<td class="control-label" >
-
-                            &nbsp;</td>
-						<td class="control-label" colspan="2" >
-
-                         Límite de Turnos por Día:&nbsp;&nbsp;  <input id="txtLimite" runat="server" type="text" maxlength="3" 
-                          style="width: 40px"  onblur="valNumero(this)" tabindex="4" class="form-control input-sm"
-                                title="Ingrese el limite de turnos" />&nbsp;<asp:RequiredFieldValidator 
-                                ID="rfvLimite" runat="server" 
-                          ControlToValidate="txtLimite" ErrorMessage="Limite de turnos" 
-                                ValidationGroup="0">*</asp:RequiredFieldValidator> &nbsp;<p class="myLabelLitlle">Colocar 0 para especificar sin limites de turnos.<br /> Colocar -1 para NO permitir la dación de turnos para esta práctica.</p> </td>
-					</tr>
+                  
     <%--<tr>
 						<td class="myLabelDerechaGde" colspan="2" >
 
@@ -1310,13 +1293,13 @@
 					</tr>
                      <tr>
 						<td class="mytituloGris" >&nbsp;</td>
-						<td class="mytituloGris" colspan="2" >ETIQUETA CODIGO DE BARRAS <hr />
+						<td  colspan="2" ><h4>ETIQUETA CODIGO DE BARRAS  </h4> <hr />
 </td></tr>
 <tr align="left">
 						<td class="control-label" align="left" >
                             &nbsp;</td>
 						<td class="control-label" align="left" colspan="2" >
-                           <p class="myLabel">Si el análisis requiere un tubo o contenedor adicional a etiquetar; dentro del area al que corresponde; tilde la opción <b>"Generar Etiqueta Adicional"</b></p></td>
+                             <small>Si la determinación requiere un tubo o contenedor adicional a etiquetar; tilde la opción <b>"Generar Etiqueta Adicional"</b></small></td>
 					</tr>
 <tr align="left">
 						<td class="control-label" align="left" >
@@ -1324,26 +1307,23 @@
                             &nbsp;</td>
 						<td class="control-label" align="left" >
 
-    <asp:CheckBox ID="chkEtiquetaAdicional" runat="server" CssClass="control-label" 
+    <asp:CheckBox ID="chkEtiquetaAdicional" Enabled="false" runat="server" CssClass="control-label" 
         Text="Generar Etiqueta Adicional (envase propio)" />
+                            <br />
+                            <small>Solo modificable por Administrador</small>
                         </td>
 						<td class="control-label" align="right" >
 
                                             &nbsp;</td>
 					</tr>
-<tr>
-						<td >
-                            &nbsp;</td>
-						<td  colspan="2" >
-                           <hr /></td>
-					</tr>
+
 <tr align="left">
 						<td class="control-label" align="right" >
                             &nbsp;</td>
 						<td class="control-label" align="right" >
                             &nbsp;</td>
 						<td class="control-label" align="right" >
-                            <hr />
+                           
                                             <asp:Button ID="btnGuardarHIV" runat="server" Text="Guardar" 
                                                 onclick="btnGuardarHIV_Click" CssClass="btn btn-primary" Width="100px"  TabIndex="20" 
                                                 ToolTip="Hacer clic aqui para guardar" />
@@ -1351,6 +1331,30 @@
 					</tr>
 </table>
 </div>
+
+    <div id="tab9" class="tab_content" style="border: 1px solid #C0C0C0">
+        <table>
+               <tr>
+						<td class="mytituloGris" >&nbsp;</td>
+						<td class="mytituloGris" colspan="2" >TURNOS<hr />
+</td></tr>
+<tr>
+						<td class="control-label" >
+
+                            &nbsp;</td>
+						<td class="control-label" colspan="2" >
+
+                         Límite de Turnos por Día:&nbsp;&nbsp;  <input id="txtLimite" runat="server" type="text" maxlength="3" 
+                          style="width: 40px"  onblur="valNumero(this)" tabindex="4" class="form-control input-sm"
+                                title="Ingrese el limite de turnos" />&nbsp;<asp:RequiredFieldValidator 
+                                ID="rfvLimite" runat="server" 
+                          ControlToValidate="txtLimite" ErrorMessage="Limite de turnos" 
+                                ValidationGroup="0">*</asp:RequiredFieldValidator> &nbsp;<p class="myLabelLitlle">Colocar 0 para especificar sin limites de turnos.<br /> Colocar -1 para NO permitir la dación de turnos para esta práctica.</p> </td>
+					</tr>
+        </table>
+
+        </div>
+
 				
 					
 					

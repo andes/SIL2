@@ -74,7 +74,10 @@ namespace WebLab.Resultados
                     if (Request["idProtocolo"] != null)
                     {
                         if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
+                        {
+                       
                             LlenarTabla(Request["idProtocolo"].ToString());
+                        }
                         else
                             Response.Redirect("../FinSesion.aspx", false);
                            
@@ -1662,6 +1665,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     //TextBox txt1 = new TextBox();
 
                                                     txt1.ID = m_idItem.ToString();
+                                                    txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones
                                                     //txt1.ID =m_idSuperItem +";"+ m_idItem.ToString();
                                                     txt1.TabIndex = short.Parse(i + 1.ToString());
                                                     txt1.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
@@ -1739,6 +1743,33 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     objCellResultado.Controls.Add(chk1);
 
                                                     objCellResultado.Controls.Add(btnAddDetalle);
+                                                    ////Habilitacion de observaciones
+                                                    ImageButton btnObservacionDetalle2 = new ImageButton();
+                                                    btnObservacionDetalle2.TabIndex = short.Parse("500");
+                                                    btnObservacionDetalle2.ID = "OBS" + i_iddetalleProtocolo.ToString();
+                                                    //btnObservacionDetalle2.ID = "Obs2|" + oDetalle.IdDetalleProtocolo.ToString() + "|" + m_estadoObservacion.ToString();//  m_idItem.ToString();
+
+                                                    if (oDetalle.Observaciones != "")//tiene observaciones
+                                                    {
+
+                                                        if (oDetalle.IdUsuarioValidaObservacion == 0)
+                                                            btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                                        else
+                                                            btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                                    }
+                                                    else
+                                                    {
+
+                                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
+                                                    }
+
+                                                    btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
+                                                    btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
+
+
+                                                    btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+
+                                                    objCellObservaciones.Controls.Add(btnObservacionDetalle2);
                                                     ////////////////////                                        
                                                     ///IMAGENES ADJUNTAS
                                                     if (Request["Operacion"].ToString() != "HC")
@@ -2635,7 +2666,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 if (chk1.Items[i].Selected)
                 {
                     if (val == "") val = chk1.Items[i].Text;
-                    else val += ", " + chk1.Items[i].Text;
+                    else val += "\n" + chk1.Items[i].Text;//salto de linea
                 }
             }
             //////Guarda las observaciones asociadas a un resultado numerico
@@ -3393,7 +3424,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 {
                     oProtocolo.Estado = 2;
                     //if (oProtocolo.IdTipoServicio.IdTipoServicio==3) oProtocolo.exportarDatos();
-
+                    oProtocolo.GrabarAuditoriaProtocolo("Terminado", int.Parse(Session["idUsuario"].ToString())); // agrego auditoria de cierre de protocolo
                     if (!oProtocolo.Notificarresultado)
                         oProtocolo.Estado = 3; //Acceso Restringido
                 }

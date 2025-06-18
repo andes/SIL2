@@ -922,6 +922,11 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
             cmd.Parameters.Add("@estado", SqlDbType.NVarChar);
             cmd.Parameters["@estado"].Value = rdbEstadoAnalisis.SelectedValue;
 
+
+            ///////Parametro @@@@numeroDesde
+            cmd.Parameters.Add("@idEfector", SqlDbType.NVarChar);
+            cmd.Parameters["@idEfector"].Value = oUser.IdEfector.IdEfector.ToString();
+
             cmd.Connection = conn;
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);

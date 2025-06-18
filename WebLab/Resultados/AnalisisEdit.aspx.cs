@@ -150,19 +150,26 @@ namespace WebLab.Resultados
         private void CargarListas(Protocolo oRegistro)
         {
             Utility oUtil = new Utility();
-            Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+            //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
 
-           
 
-         string   m_ssql = @"SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre 
-                     FROM Lab_item I  with (nolock)
-                     INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea 
-                     where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
+
+            //string   m_ssql = @"SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre 
+            //            FROM Lab_item I  with (nolock)
+            //            INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea 
+            //            where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
+
+            string m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +                       
+                        " FROM Lab_item I with (nolock) " +
+                        " inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oRegistro.IdEfector.IdEfector.ToString() + //MultiEfector 
+                        " INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea " +
+                        " where A.baja=0 and I.baja=0 and IE.disponible=1 " +
+                        " and  A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
             if (oRegistro.IdTipoServicio.IdTipoServicio==5)
                 m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +
                   " FROM Lab_item I  with (nolock)  " +
                   " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-                  " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio=3 AND (I.tipo= 'P') order by I.nombre ";
+                  " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio (1,3) AND (I.tipo= 'P') order by I.nombre ";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
 
@@ -191,12 +198,20 @@ namespace WebLab.Resultados
         {
             Utility oUtil = new Utility();
             ///Carga del combo de determinaciones
-            string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
-                           " I.disponible " +
-                            " FROM Lab_item I with (nolock) " +
-                            " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-                            " where A.baja=0 and I.baja=0  and A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
+            //string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
+            //               " I.disponible " +
+            //                " FROM Lab_item I with (nolock) " +
+            //                " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
+            //                " where A.baja=0 and I.baja=0  and A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
 
+            /////Correccion MultiEfector 
+            string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
+                          " IE.disponible " +
+                           " FROM Lab_item I with (nolock) " +
+                           " inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oRegistro.IdEfector.IdEfector.ToString() + //MultiEfector 
+                           " INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea " +
+                           " where A.baja=0 and I.baja=0 and IE.disponible=1 " +
+                           " and  A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
             if (oRegistro.IdTipoServicio.IdTipoServicio==5)
                 m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
                           " I.disponible " +
@@ -223,10 +238,11 @@ namespace WebLab.Resultados
             txtTareas.Value = sTareas;
 
             //Carga de combo de rutinas
-
-            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and idTipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " order by nombre ";
+            ///Correccion multiEfector
+            m_ssql = @"SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and IdEfector= " + oRegistro.IdEfector.IdEfector.ToString() +
+                @" and idTipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " order by nombre ";
             if (oRegistro.IdTipoServicio.IdTipoServicio==5)
-                m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and idTipoServicio in (1, 3) order by nombre ";
+                m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and IdEfector= " + oRegistro.IdEfector.IdEfector.ToString() + " and idTipoServicio in (1, 3) order by nombre ";
                 
             oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre");
             ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
@@ -245,9 +261,10 @@ namespace WebLab.Resultados
             { ///Verifica si se trata de un alta o modificacion de protocolo               
                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                 oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-
-
-                Guardar(oRegistro);
+                if (oRegistro != null)
+                {
+                    Guardar(oRegistro);
+                }
                 Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
             }
                
@@ -401,7 +418,7 @@ namespace WebLab.Resultados
                 }
             
 
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
 
             //if (oCon.TipoCalculoDiasRetiro == 0)
 
@@ -480,7 +497,7 @@ namespace WebLab.Resultados
             }
 
 
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
           //  DateTime fechaentrega;
             //if (oCon.TipoCalculoDiasRetiro == 0)
 
@@ -505,11 +522,12 @@ namespace WebLab.Resultados
         private void GuardarDetallePractica(DetalleProtocolo oDet)
         {
 
-               
-            if (VerificarSiEsDerivable(oDet )) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            if (oDet.VerificarSiEsDerivable(oDet.IdItem.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
+                oDet.GuardarValorReferencia();
+
             }
             else
             {
@@ -615,31 +633,31 @@ namespace WebLab.Resultados
         }
 
 
-        private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
-        {
-            bool ok=false;
-            /// buscar idefectorderivacion desde lab_itemefector
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
-            critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
-            critItemEfector.Add(Expression.Eq("IdEfector", oDet.IdProtocolo.IdEfector));
-            IList detalle1 = critItemEfector.List();
-            if (detalle1.Count > 0)
-            {
-                foreach (ItemEfector oitemEfector in detalle1)
-                {
-                    if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
-                    {
-                        ok = true; break;
-                    }
-                }
-            }
-            else
-                ok = false;
+        //private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
+        //{
+        //    bool ok=false;
+        //    /// buscar idefectorderivacion desde lab_itemefector
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
+        //    critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
+        //    critItemEfector.Add(Expression.Eq("IdEfector", oDet.IdProtocolo.IdEfector));
+        //    IList detalle1 = critItemEfector.List();
+        //    if (detalle1.Count > 0)
+        //    {
+        //        foreach (ItemEfector oitemEfector in detalle1)
+        //        {
+        //            if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
+        //            {
+        //                ok = true; break;
+        //            }
+        //        }
+        //    }
+        //    else
+        //        ok = false;
 
-            return ok;
+        //    return ok;
 
-        }
+        //}
 
         protected void ddlSexo_SelectedIndexChanged(object sender, EventArgs e)
         {

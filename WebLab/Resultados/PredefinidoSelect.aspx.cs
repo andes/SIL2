@@ -168,7 +168,7 @@ namespace WebLab.Resultados
                 if (chk1.Items[i].Selected)
                 {
                     if (val == "") val = chk1.Items[i].Text;
-                    else val += ", " + chk1.Items[i].Text;
+                    else val += "\n" + chk1.Items[i].Text;//salto de linea
                 }
             }
             txtObservacionAnalisis.Text = val;
