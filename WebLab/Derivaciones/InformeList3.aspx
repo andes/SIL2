@@ -320,8 +320,7 @@
 				    </tr>
 				    <tr>
 					    <td colspan="3">
-                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink" 
-                                NavigateUrl="~/Derivaciones/Derivados2.aspx?tipo=informe">Regresar</asp:HyperLink>
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink"  >Regresar</asp:HyperLink>
                         </td>
 				    </tr>
 				</table>

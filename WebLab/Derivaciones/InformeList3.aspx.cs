@@ -26,17 +26,19 @@ namespace WebLab.Derivaciones
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            if (Session["idUsuario"] != null)
             {
-                if (Session["idUsuario"] != null)
+                if (!Page.IsPostBack)
                 {
+                
                     CargarListas();
-
+                    
                     if (Request["Tipo"] == "Alta")
                     {
                         int estado = Convert.ToInt32(Request["Estado"]);
                         activarControles(estado == 0 || estado == 2);
                         pnlNroLote.Visible = false;
+                        HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
                     }
                     else
                     {
@@ -50,11 +52,14 @@ namespace WebLab.Derivaciones
 
                     }
                     CargarGrilla();
-                }
-                else
-                {
+                } else {
                     Response.Redirect("../FinSesion.aspx", false);
                 }
+
+            }
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
             }
         }
 
@@ -217,6 +222,8 @@ namespace WebLab.Derivaciones
                 return false;
 
         }
+
+
         #endregion
 
         #region marcar
