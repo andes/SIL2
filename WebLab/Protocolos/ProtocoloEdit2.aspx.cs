@@ -1795,6 +1795,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                         {
                             ActualizarEstadoDerivacion(oRegistro);
+                            VerificacionEstadoLote(oRegistro);
                             if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                             else
@@ -4878,12 +4879,12 @@ System.Net.ServicePointManager.SecurityProtocol =
         //private void GenerarResultadoSISA(DetalleProtocolo oDetalle)
 
 
-private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA)
+        private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA)
 
         {
-            
+
             int ideventomuestra = oDetalle.IdeventomuestraSISA;
-          
+
             string URL = oC.URLResultadoSISA;
 
 
@@ -4892,7 +4893,7 @@ private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA
                 int id_resultado_a_informar = int.Parse(idResultadoSISA); // 0;
                 int idevento = int.Parse(idEventoSISA); //  307; // sospechoso
 
- 
+
 
                 if (id_resultado_a_informar != 0)
                 {
@@ -4942,7 +4943,7 @@ private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA
                     if (body != "")
                     {
                         oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Resultado en SISA", oDetalle.IdUsuarioValida);
-                        
+
                     }
 
                 }
@@ -4952,11 +4953,44 @@ private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA
             catch (WebException ex)
             {
                 string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
-                 
+
 
             }
+        }
 
 
+        private void ActualizaEstadoLote(int idLote, Protocolo oRegistro) //SE PISO CON EL PR MantenimientoVarios (#15)
+        {
+            try
+            {
+                if (idLote != 0)
+                {
+
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                    lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
+
+                    if (lote.Estado == 2 || lote.Estado == 4)
+                    {
+                        if (lote.Estado == 2)  //Con iEstado=4 lo graba el id desde la pantalla DerivacionRecibirLote.aspx.cs
+                            lote.IdUsuarioRecepcion = oUser.IdUsuario;
+
+                        lote.Estado = 5;
+                    }
+
+                    //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
+                    if (!lote.HayDerivacionesPendientes())
+                    {
+                        lote.Estado = 6;
+                    }
+
+                    lote.Save();
+                    lote.GrabarAuditoriaLoteDerivacion( lote.descripcionEstadoLote(), oUser.IdUsuario);
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
     }
