@@ -9,28 +9,28 @@ namespace Business.Data.Laboratorio  {
     {
 
         private int idLoteDerivacion;
-        private int idEfectorOrigen;
-        private int idEfectorDestino;
+        private Efector idEfectorOrigen;
+        private Efector idEfectorDestino;
         private int estado;
-        private string fechaRegistro;
-        private string fechaEnvio;
-        private string fechaingreso;
+        private DateTime fechaRegistro;
+        private DateTime fechaEnvio;
+        private DateTime fechaingreso;
         private bool baja;
-        private System.Nullable<int> idUsuarioRegistro;
-        private System.Nullable<int> idusuarioreceptor;
-        private System.Nullable<int> idusuarioEnvio;
+        private int idUsuarioRegistro;
+        private int idusuarioreceptor;
+        private int idusuarioEnvio;
 
         private string observacion;
 
 
         public LoteDerivacion() {
             idLoteDerivacion = 0;
-            idEfectorOrigen = 0;
-            idEfectorDestino = 0;
+            idEfectorOrigen = new Efector();
+            idEfectorDestino = new Efector();
             estado = 0;
-            fechaRegistro = DateTime.Now.ToString();
-            fechaEnvio = new DateTime(1900,1,1).ToString();
-            fechaingreso = new DateTime(1900,1,1).ToString();
+            fechaRegistro = DateTime.Now;
+            fechaEnvio = DateTime.Parse("01/01/1900"); //DateTime.MinValue;
+            fechaingreso = DateTime.Parse("01/01/1900");
             baja = false;
             idUsuarioRegistro = 0;
             idusuarioreceptor = 0;
@@ -44,11 +44,11 @@ namespace Business.Data.Laboratorio  {
             get { return this.idLoteDerivacion; }
             set { this.idLoteDerivacion = value; }
         }
-        public int IdEfectorOrigen { 
+        public Efector IdEfectorOrigen { 
             get { return idEfectorOrigen; }
             set { idEfectorOrigen = value; } 
         }
-        public int IdEfectorDestino {
+        public Efector IdEfectorDestino {
             get { return idEfectorDestino; }
             set { idEfectorDestino = value; }
         }
@@ -56,15 +56,15 @@ namespace Business.Data.Laboratorio  {
             get { return estado; }
             set { estado = value; } 
         }
-        public string FechaRegistro {
+        public DateTime FechaRegistro {
             get { return fechaRegistro; }
             set { fechaRegistro = value; }
         }
-        public string FechaEnvio {
+        public DateTime FechaEnvio {
             get { return fechaEnvio; }
             set { fechaEnvio = value; }
         }
-        public string FechaIngreso {
+        public DateTime  FechaIngreso {
             get { return fechaingreso; }
             set { fechaingreso = value; } 
         }
@@ -72,15 +72,15 @@ namespace Business.Data.Laboratorio  {
             get { return baja; }
             set { baja = value; }
         }
-        public System.Nullable<int> IdUsuarioRegistro {
+        public int IdUsuarioRegistro {
             get { return idUsuarioRegistro; }
             set { idUsuarioRegistro = value; } 
         }
-        public System.Nullable<int> IdUsuarioRecepcion {
+        public int IdUsuarioRecepcion {
             get { return idusuarioreceptor; }
             set { idusuarioreceptor = value; }
         }
-        public System.Nullable<int>  IdUsuarioEnvio { 
+        public int IdUsuarioEnvio { 
             
             get { return idusuarioEnvio; }
             set { idusuarioEnvio = value; }

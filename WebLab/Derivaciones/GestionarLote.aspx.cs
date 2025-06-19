@@ -24,10 +24,11 @@ namespace WebLab.Derivaciones
     {      
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            if (Session["idUsuario"] != null)
             {
-                if (Session["idUsuario"] != null)
+                if (!Page.IsPostBack)
                 {
+                
                     lblTitulo.Text = "LOTES";
                       
                     CargarListas();
@@ -37,9 +38,10 @@ namespace WebLab.Derivaciones
                     txtFechaDesde.Focus();
                     
                 }
-                else Response.Redirect("../FinSesion.aspx", false);
+                
 
             }
+                else Response.Redirect("../FinSesion.aspx", false);
         }
 
         private void VerificaPermisos(string sObjeto)

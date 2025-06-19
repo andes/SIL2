@@ -4,7 +4,7 @@
      <id name="IdEstado" column="IdEstado" type="Int32" unsaved-value="0">
        <generator class="native"/>
      </id>
-    <property name="Baja" column="baja" />
+    <property name="Baja" column="baja" type ="Boolean"/>
     <property name="Nombre" column="nombre" type="String" />
     
   </class>

@@ -44,10 +44,10 @@ namespace WebLab.Protocolos {
             lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
             //lbl_FechaRegistro.Text = lote.FechaRegistro.Substring(0, 10);
             //fechaEnvio.Text = DateTime.Parse(lote.FechaEnvio.Substring(0, 10)).ToString("yyyy-MM-dd");
-            hid_fechaEnvio.Value =  DateTime.Parse(lote.FechaEnvio.Substring(0, 10)).ToString("yyyy-MM-dd");
-            lbl_fechaPermitida.Text = "Fecha envio: " + lote.FechaEnvio.Substring(0,10);
+            hid_fechaEnvio.Value = lote.FechaEnvio.ToString("yyyy-MM-dd");
+            lbl_fechaPermitida.Text = "Fecha envio: " + lote.FechaEnvio;
             Efector origen = new Efector();
-            origen = (Efector) origen.Get(typeof(Efector), lote.IdEfectorOrigen);
+            origen = (Efector) origen.Get(typeof(Efector), lote.IdEfectorOrigen.IdEfector);
             lb_efector.Text = origen.Nombre;
             
             CargarFechaHoraActual();

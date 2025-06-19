@@ -28,8 +28,9 @@ namespace Business.Data.Laboratorio
         private int m_idusuarioresultado;
         private DateTime m_fecharesultado;
         private Efector m_idEfector;
-        private LoteDerivacion idLote;
-        private int idProtocoloDerivacion;
+        private int idLote; //Cambio ya que al crear una Derivacion con idlote=0 despues NHibernate da error  'No row with the given identifier exists'
+		private int idProtocoloDerivacion;
+		private int idMotivoCancelacion;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -48,9 +49,11 @@ namespace Business.Data.Laboratorio
             m_idusuarioresultado = 0;
             m_fecharesultado = DateTime.MinValue;
             m_idEfector = new Efector();
-            idLote = null;
+            idLote = 0;
             idProtocoloDerivacion = 0;
-        }
+			idMotivoCancelacion = 0;
+
+		}
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -78,8 +81,9 @@ namespace Business.Data.Laboratorio
             m_idusuarioresultado = idusuarioresultado;
             m_fecharesultado = fecharesultado;
             m_idEfector = idEfector;
-            idLote = null;
-        }
+            idLote = 0;
+			idMotivoCancelacion = 0;
+		}
 		#endregion // End Required Fields Only Constructor
 
 		#region Public Properties
@@ -234,7 +238,7 @@ namespace Business.Data.Laboratorio
 		}
 
 
-        public LoteDerivacion Idlote {
+        public int Idlote {
             get { return idLote; }
             set {
                 m_isChanged |= (idLote != value);
@@ -248,6 +252,15 @@ namespace Business.Data.Laboratorio
             }
             set {
                 idProtocoloDerivacion = value;
+            }
+        }
+
+		public int IdMotivoCancelacion {
+            get {
+				return idMotivoCancelacion;
+            }
+            set {
+				idMotivoCancelacion = value;
             }
         }
         #endregion

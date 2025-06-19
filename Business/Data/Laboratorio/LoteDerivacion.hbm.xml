@@ -6,16 +6,16 @@
      <id name="IdLoteDerivacion" column="IdLoteDerivacion" type="Int32" unsaved-value="0">
        <generator class="native"/>
      </id>
-    <property name="IdEfectorOrigen" column="idEfectorOrigen" />
-    <property name="IdEfectorDestino" column="idEfectorDestino" />
-    <property name="Estado" column="estado" />
-    <property name="FechaRegistro" column="fechaRegistro" />
-    <property name="FechaEnvio" column="fechaEnvio" />
-    <property name="FechaIngreso" column="fechaIngreso" />
-    <property name="Baja" column="baja" />
+    <many-to-one name="IdEfectorOrigen" column="idEfectorOrigen" class="Business.Data.Efector,Business" />
+    <many-to-one name="IdEfectorDestino" column="idEfectorDestino" class="Business.Data.Efector,Business"/>
+    <property name="Estado" column="estado" type="Int32" />
+    <property name="FechaRegistro" column="fechaRegistro" type="DateTime" not-null="false"/>
+    <property name="FechaEnvio" column="fechaEnvio" type="DateTime" not-null="false"/>
+    <property name="FechaIngreso" column="fechaIngreso" type="DateTime" not-null="false"/>
+    <property name="Baja" column="baja" type="Boolean" />
     <property name="IdUsuarioRegistro" column="idUsuarioRegistro" type="Int32" />
     <property name="IdUsuarioEnvio" column="idUsuarioEnvio" type="Int32"/>
     <property name="IdUsuarioRecepcion" column="idUsuarioRecepcion" type="Int32"/>
-    <property name="Observacion" column="observacion" />
+    <property name="Observacion" column="observacion" type="String"/>
   </class>
 </hibernate-mapping>

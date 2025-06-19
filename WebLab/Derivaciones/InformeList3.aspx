@@ -11,7 +11,7 @@
             var motivoCancelacion = document.getElementById('<%= ddl_motivoCancelacion.ClientID%>');
             var estado = document.getElementById('<%= ddlEstado.ClientID %>');
             var label = document.getElementById('<%= lbl_ErrorMotivo.ClientID %>');
-            
+
             //Limpio los labels de error 
             label.className = 'hidden';
             validatorEstado.style.visibility = 'hidden';
@@ -44,29 +44,29 @@
             return todoOk;
 
         }
-      
+
 
         function validarGrilla() {
             var todoOk = false;
             var gridView = document.getElementById('<%= gvLista.ClientID %>');
-             var rows = gridView.getElementsByTagName('tr');
+            var rows = gridView.getElementsByTagName('tr');
 
-             for (var i = 1; i < rows.length; i++) { // Empieza en 1 para omitir el encabezado
-                 var row = rows[i];
-                 var CheckBox1 = row.querySelector('[id$="CheckBox1"]');
+            for (var i = 1; i < rows.length; i++) { // Empieza en 1 para omitir el encabezado
+                var row = rows[i];
+                var CheckBox1 = row.querySelector('[id$="CheckBox1"]');
 
-                 if (CheckBox1.checked) {
-                     return true; // Detiene la validación con al menos un check
-                 }
-             }
+                if (CheckBox1.checked) {
+                    return true; // Detiene la validación con al menos un check
+                }
+            }
             var label = document.getElementById('<%= lbl_errorLista.ClientID %>');
-             label.className = 'exposed';
-             return todoOk;
+            label.className = 'exposed';
+            return todoOk;
         }
 
         function reseteaLabelErrorGrilla() {
             var labelGrilla = document.getElementById('<%= lbl_errorLista.ClientID %>');
-              labelGrilla.className = 'hidden';
+            labelGrilla.className = 'hidden';
         }
 
         function reseteaLabelErrorMotivo() {
@@ -113,15 +113,41 @@
                 motivos.disabled = true;
             }
         }
+        function seleccionarTodos(seleccionar) {
+            var grid = document.getElementById('<%= gvLista.ClientID %>');
+            if (!grid) return;
+            // Buscar todos los checkbox dentro del GridView
+            var checkboxes = grid.querySelectorAll('input[type="checkbox"]');
 
+            checkboxes.forEach(function (chk) {
+                chk.checked = seleccionar;
+            });
+            //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
+            if (seleccionar && document.getElementById('<%= lbl_errorLista.ClientID %>').className == 'exposed') {
+                reseteaLabelErrorGrilla();
+            }
+        }
     </script>
 </asp:Content>
  
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
-<div align="left" style="width:1200px">
+<div align="left" style="width:1050px">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>DERIVACIONES</b> 
+                <div class="row">
+                    <div class="col-md-6">
+                    <b>DERIVACIONES</b> 
+                    </div>
+                     <div class="col-md-6" align="right"  rowspan="4">
+                    <asp:Panel runat="server" ID="pnlNroLote" >
+                    <h3>
+                        <span class="label label-default"><asp:Label ID="lblNroLote" runat="server" ></asp:Label> </span>
+                    </h3>
+                </asp:Panel>
+                </div>
+                </div>
+                
+               
             </div>
 
 			<div class="panel-body">
@@ -159,8 +185,7 @@
                                         <td>
                                             Motivo Cancelaci&oacute;n: </td>
                                         <td>
-                                           <%-- <asp:TextBox ID="txtObservacion" runat="server" MaxLength="100"   class="form-control input-sm" onchange="return validaObservacion(this);"></asp:TextBox>--%>
-                                            <asp:DropDownList ID="ddl_motivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" Enabled="false"/>
+                                            <asp:DropDownList ID="ddl_motivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" />
 
                                         </td>
                                         <td>
@@ -190,12 +215,24 @@
                                             <hr /></td>
 						
 				    </tr>
+                    <tr>
+                        <td>
+                          <%--  <asp:Panel runat="server" ID="pnlNroLote">
+                                <h2>
+                                    <span class="label label-default">
+                                          <asp:Label ID="lblNroLote" runat="server" ></asp:Label>  
+                                    </span>
+                                </h2>
+                            </asp:Panel>--%>
+                                
+                        </td>
+                    </tr>
 				    <tr>
 					    <td colspan="2">
                              <asp:Label Text="* Seleccione una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
                             <div class="mylabelizquierda" >Seleccionar:                                           
-                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
-                            <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0" ID="lnkDesMarcar" onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
+                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
+                            <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
                                 &nbsp;&nbsp;
                                             
                                 </div>
@@ -254,11 +291,11 @@
                                     <asp:BoundField DataField="username" HeaderText="Usuario" >
                                         <ItemStyle Width="15%" />
                                     </asp:BoundField>
-                                   <%-- <asp:BoundField ID="motivo" DataField="observacion" HeaderText="Motivo">
+                                    <asp:BoundField  DataField="observacion" HeaderText="Observacion">
                                         <ItemStyle Width="10%" />
-                                    </asp:BoundField>--%>
+                                    </asp:BoundField>
                                     <asp:TemplateField HeaderText="Motivo Cancelaci&oacute;n">
-                                          <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("observacion") %>'/> </ItemTemplate>
+                                          <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("motivo") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:BoundField DataField="idLote" Visible="false">
                                     </asp:BoundField>
@@ -283,8 +320,7 @@
 				    </tr>
 				    <tr>
 					    <td colspan="3">
-                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink" 
-                                NavigateUrl="~/Derivaciones/Derivados2.aspx?tipo=informe">Regresar</asp:HyperLink>
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink"  >Regresar</asp:HyperLink>
                         </td>
 				    </tr>
 				</table>

@@ -238,8 +238,8 @@ namespace WebLab.Protocolos {
                         } else {
                             pivot += "|" + oDerivacion.IdDetalleProtocolo.IdItem.IdItem.ToString();
                         }
-                        if (oDerivacion.Idlote != null) {
-                            lotes.Add(oDerivacion.Idlote.IdLoteDerivacion.ToString());
+                        if (oDerivacion.Idlote != 0) {
+                            lotes.Add(oDerivacion.Idlote.ToString());
                         }
                     }
                     cantidad += 1;
