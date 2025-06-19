@@ -1795,6 +1795,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                         {
                             ActualizarEstadoDerivacion(oRegistro);
+                            VerificacionEstadoLote(oRegistro);
                             if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                             else
@@ -5014,7 +5015,7 @@ private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA
                     }
 
                     lote.Save();
-                    lote.GrabarAuditoriaLoteDerivacion("Estado: " + lote.descripcionEstadoLote(), oUser.IdUsuario);
+                    lote.GrabarAuditoriaLoteDerivacion( lote.descripcionEstadoLote(), oUser.IdUsuario);
                 }
             }
             catch (Exception)
