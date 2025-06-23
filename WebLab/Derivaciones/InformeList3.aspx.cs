@@ -83,7 +83,7 @@ namespace WebLab.Derivaciones
             lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
-            crit.Add(Expression.Eq("Idlote", lote));
+            crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
             IList lista = crit.List();
             if (lista.Count > 0)
                 txt_observacion.Text = ((Business.Data.Laboratorio.Derivacion)lista[0]).Observacion;
@@ -159,7 +159,7 @@ namespace WebLab.Derivaciones
 
                     m_strSQL +=
                        "    (" +
-                           "     (estado = 0 and idlote is null " +//Traer derivaciones pendientes por si se necesitan agregar 
+                           "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
                            "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
                            "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
                               ")" +
