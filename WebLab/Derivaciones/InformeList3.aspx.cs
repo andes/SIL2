@@ -49,6 +49,7 @@ namespace WebLab.Derivaciones
                         int estado = Convert.ToInt32(Request["Estado"]);
                         activarControles(estado == 0 || estado == 2);
                         pnlNroLote.Visible = false;
+                        HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
                     }
                     else
                     {
@@ -58,6 +59,7 @@ namespace WebLab.Derivaciones
                             CargarParaModificacion();
                             lblNroLote.Text = "NUMERO DE LOTE " + Convert.ToInt32(Request["idLote"]);
                             pnlNroLote.Visible = true;
+                            HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
                         }
 
                     }
