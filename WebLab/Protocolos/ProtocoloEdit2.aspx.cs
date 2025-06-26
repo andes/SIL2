@@ -3154,6 +3154,9 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                                 Response.Redirect("../PeticionElectronica/PeticionList.aspx", false);
                             else
                             {
+                                if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") //Se piso en un merge..
+                                        Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString());
+
                                 if (Session["idUrgencia"].ToString() != "0")
                                     Response.Redirect("Default2.aspx?idServicio=1&idUrgencia=" + Session["idUrgencia"].ToString(), false);
                                 else
@@ -4992,6 +4995,34 @@ System.Net.ServicePointManager.SecurityProtocol =
             {
             }
         }
+
+        private void VerificacionEstadoLote(Protocolo oRegistro) //SE PISO CON EL PR MantenimientoVarios (#15)
+        {
+            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+            {
+                //Casos viejos y tambien casos donde los analisis prodrian provenir de diferente lotes
+
+                if (Session["VariosLotes"] != null)
+                {
+                    if (((HashSet<string>)Session["VariosLotes"]).Count > 0)
+                    {
+                        //tiene al menos un lote
+                        HashSet<string> lotes = (HashSet<string>)Session["VariosLotes"];
+                        foreach (string item in lotes)
+                        {
+                            ActualizaEstadoLote(Convert.ToInt32(item), oRegistro);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ActualizaEstadoLote(Convert.ToInt32(Request["idLote"]), oRegistro);
+            }
+
+        }
+
+        
 
     }
 

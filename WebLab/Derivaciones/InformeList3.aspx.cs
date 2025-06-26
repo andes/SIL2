@@ -68,6 +68,10 @@ namespace WebLab.Derivaciones
                     Response.Redirect("../FinSesion.aspx", false);
                 }
             }
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
         }
 
 
@@ -229,6 +233,8 @@ namespace WebLab.Derivaciones
                 return false;
 
         }
+
+
         #endregion
 
         #region marcar
