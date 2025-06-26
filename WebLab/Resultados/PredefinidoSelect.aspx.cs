@@ -101,20 +101,30 @@ namespace WebLab.Resultados
           
                
         }
-       
+
+        protected void btnBorrarResultados_Click(object sender, EventArgs e)
+        {
+
+            txtObservacionAnalisis.Text = "";
+            txtObservacionAnalisis.UpdateAfterCallBack = true;
+
+        }
+
+        
 
         protected void btnValidarObservacionesAnalisis_Click(object sender, EventArgs e)
         {
             ValidarObservacionesDetalle();
         }
 
-         private void GuardarObservacionesDetalle()
+         private void GuardarObservacionesDetalle( )
         {
             string m_idDetalleProtocolo = Request["idDetalleProtocolo"].ToString();
             DetalleProtocolo oDetalle = new DetalleProtocolo();
             oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(m_idDetalleProtocolo));
             if (oDetalle != null)
             {
+                 
                 oDetalle.ResultadoCar = txtObservacionAnalisis.Text;
                 
                 oDetalle.IdUsuarioResultado = int.Parse(Session["idUsuario"].ToString());

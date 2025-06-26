@@ -135,14 +135,35 @@ namespace WebLab.Estadisticas
             else
                 if (txtFechaHasta.Value == "") args.IsValid = false;
                 else args.IsValid = true;
+            try
+            {
+                if (DateTime.Parse(txtFechaDesde.Value) > DateTime.Parse(txtFechaHasta.Value))
+                {
+                    args.IsValid = false;
+                    CustomValidator1.ErrorMessage = "Fecha hasta debe ser menor o igual que fecha desde";
+                }
+                else args.IsValid = true;
+
+            }
+            catch
+            {
+                args.IsValid = false;
+                CustomValidator1.ErrorMessage = "Error fecha invalida ingresada";
+            }
         }
 
     
         private void MostrarReporte()
         {
+            if (ddlEfector.SelectedValue == "0")
+                imgPdf.Visible = false;
+            else
+            imgPdf.Visible = true;
+
             DataTable dt= getDatosEstadisticos("G");
 
-            if (dt.Rows[2][1].ToString() != "0")
+            //if (dt.Rows[2][1].ToString() != "0")
+            if (dt.Rows.Count>0)
             {
                 pnlDatos.Visible = true;
                 pnlSinDatos.Visible = false;
@@ -287,6 +308,8 @@ namespace WebLab.Estadisticas
                     oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
                     if (oEfector != null)
                     {
+                        Configuracion oCon = new Configuracion();
+                        oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oEfector );
                         //ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                         encabezado1.Value = oCon.EncabezadoLinea1;
 
@@ -336,6 +359,9 @@ namespace WebLab.Estadisticas
             ExportarExcel();
         }
 
-       
+        protected void btnDescargarDetallado_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
