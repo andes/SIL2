@@ -19,6 +19,18 @@ namespace WebLab.Resultados
 {
     public partial class AdjuntoEdit : System.Web.UI.Page
     {
+        Configuracion oCon = new Configuracion();
+        public Usuario oUser = new Usuario();
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
 
@@ -30,11 +42,13 @@ namespace WebLab.Resultados
                 string s_idDetalleProtocolo = Request["idDetalleProtocolo"].ToString();
                 DetalleProtocolo oDetalle = new DetalleProtocolo();
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(s_idDetalleProtocolo));
-                //    lblObservacionAnalisis.Text = oDetalle.IdProtocolo.GetNumero() + " - " + oDetalle.IdSubItem.Nombre;
-                lblObservacionAnalisis.Text = oDetalle.IdProtocolo.Numero.ToString() + " - " + oDetalle.IdSubItem.Nombre;
-                hdnidDetalleProtocolo.Value = s_idDetalleProtocolo;
-                CargarGrilla();
-
+                if (oDetalle != null)
+                {
+                    //    lblObservacionAnalisis.Text = oDetalle.IdProtocolo.GetNumero() + " - " + oDetalle.IdSubItem.Nombre;
+                    lblObservacionAnalisis.Text = oDetalle.IdProtocolo.Numero.ToString() + " - " + oDetalle.IdSubItem.Nombre;
+                    hdnidDetalleProtocolo.Value = s_idDetalleProtocolo;
+                    CargarGrilla();
+                }
                 if (Request["operacion"] == "HC")
                     pnlbody.Visible = false;
 
@@ -78,8 +92,8 @@ namespace WebLab.Resultados
                         {
                             trepador.SaveAs(archivo);
                             estatus.Text = "El archivo se ha guardado exitosamente.";
-                            Usuario oUser = new Usuario();
-                            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                            //Usuario oUser = new Usuario();
+                            //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
                             oOs.IdProtocolo.GuardarAnexo(trepador.FileName, txtDescripcion.Text, ddlVisibilidad.SelectedValue, oUser, oOs.IdDetalleProtocolo);
 
@@ -100,7 +114,7 @@ namespace WebLab.Resultados
         {
 
             ProtocoloAnexo r = new ProtocoloAnexo();
-            r = (ProtocoloAnexo)r.Get(typeof(ProtocoloAnexo), "IdDetalleProtocolo", oOs.IdDetalleProtocolo);
+            r = (ProtocoloAnexo)r.Get(typeof(ProtocoloAnexo), "IdDetalleProtocolo", oOs.IdDetalleProtocolo, "Url", fileName);//correccion para que deje subir mas de un archivo
             if (r != null)
                 return true;
             else
@@ -190,7 +204,7 @@ WHERE  a.idDetalleProtocolo=" + hdnidDetalleProtocolo.Value;
 
             Response.TransmitFile(Server.MapPath(directorio));
             Response.End();
-            oRegistro1.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Descarga Adjunto", int.Parse(Session["idUsuario"].ToString()), oRegistro1.Url, "");
+            oRegistro1.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Descarga Adjunto", oUser.IdUsuario, oRegistro1.Url, "");
 
 
         }
@@ -202,7 +216,7 @@ WHERE  a.idDetalleProtocolo=" + hdnidDetalleProtocolo.Value;
             if (oRegistro1 != null)
             {
 
-                oRegistro1.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Elimina Adjunto", int.Parse(Session["idUsuario"].ToString()), oRegistro1.Url, "");
+                oRegistro1.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Elimina Adjunto", oUser.IdUsuario, oRegistro1.Url, "");
 
                 oRegistro1.Delete();
                 CargarGrilla();
