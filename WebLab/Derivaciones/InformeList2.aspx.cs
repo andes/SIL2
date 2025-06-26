@@ -271,72 +271,78 @@ namespace WebLab.Derivaciones
             CargarGrilla();
         }
 
-        private void GuardarDerivaciones()
-        {
+        //private void GuardarDerivaciones()
+        //{
            
           
-            foreach (GridViewRow row in gvLista.Rows)
-            {
+        //    foreach (GridViewRow row in gvLista.Rows)
+        //    {
 
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked == true)
-                {
-                    DetalleProtocolo oDetalle= new DetalleProtocolo();
-                    oDetalle= (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo),int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
+        //        CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //        if (a.Checked == true)
+        //        {
+        //            DetalleProtocolo oDetalle= new DetalleProtocolo();
+        //            oDetalle= (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo),int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
 
-                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof( Business.Data.Laboratorio.Derivacion));
-                    crit.Add(Expression.Eq("IdDetalleProtocolo",oDetalle));
-                   // crit.Add(Expression.Eq("Baja", false));
+        //            ISession m_session = NHibernateHttpModule.CurrentSession;
+        //            ICriteria crit = m_session.CreateCriteria(typeof( Business.Data.Laboratorio.Derivacion));
+        //            crit.Add(Expression.Eq("IdDetalleProtocolo",oDetalle));
+        //           // crit.Add(Expression.Eq("Baja", false));
 
 
-                    ///Si tiene resultados predeterminados muestra un combo
-                    IList lista = crit.List();
+        //            ///Si tiene resultados predeterminados muestra un combo
+        //            IList lista = crit.List();
 
-                      if (lista.Count > 0)
-                      {
-                          foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
-                          {
-                              oDeriva.Delete();
-                          }
-                      }
+        //              if (lista.Count > 0)
+        //              {
+        //                  foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
+        //                  {
+        //                      oDeriva.Delete();
+        //                  }
+        //              }
 
-                   Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
-                   oRegistro.IdDetalleProtocolo = oDetalle;
-                   oRegistro.Estado = int.Parse(ddlEstado.SelectedValue);
-                   oRegistro.Observacion = txtObservacion.Text;
-                    oRegistro.IdUsuarioRegistro = oUser.IdUsuario;// int.Parse(Session["idUsuario"].ToString());
-                   oRegistro.FechaRegistro = DateTime.Now;
-                   oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
-                   oRegistro.Save();
+        //           Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
+        //           oRegistro.IdDetalleProtocolo = oDetalle;
+        //           oRegistro.Estado = int.Parse(ddlEstado.SelectedValue);
+        //           oRegistro.Observacion = txtObservacion.Text;
+        //            oRegistro.IdUsuarioRegistro = oUser.IdUsuario;// int.Parse(Session["idUsuario"].ToString());
+        //           oRegistro.FechaRegistro = DateTime.Now;
+        //           oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+        //           oRegistro.Save();
 
-                    // nuevo: se graba el lugar a donde se derivó en ese momento.
+        //            // nuevo: se graba el lugar a donde se derivó en ese momento.
 
-                    //Usuario oUser = new Usuario();
-                    //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+        //            //Usuario oUser = new Usuario();
+        //            //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-                    if (ddlEstado.SelectedValue == "0") /// pendiente 
-                        oDetalle.ResultadoCar = "Pendiente de Derivacion";                       
-                    if (ddlEstado.SelectedValue == "1") /// enviado
-                        oDetalle.ResultadoCar = "Derivado: " + oDetalle.IdItem.GetEfectorDerivacion(oUser.IdEfector);
-                    if (ddlEstado.SelectedValue == "2") /// no enviado
-                        oDetalle.ResultadoCar  = " No Derivado. " + txtObservacion.Text;
+        //            if (ddlEstado.SelectedValue == "0") /// pendiente 
+        //                oDetalle.ResultadoCar = "Pendiente de Derivacion";                       
+        //            if (ddlEstado.SelectedValue == "1") /// enviado
+        //                oDetalle.ResultadoCar = "Derivado: " + oDetalle.IdItem.GetEfectorDerivacion(oUser.IdEfector);
+        //            if (ddlEstado.SelectedValue == "2") /// no enviado
+        //                oDetalle.ResultadoCar  = " No Derivado. " + txtObservacion.Text;
 
-                    oDetalle.Save();
-                    oDetalle.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario);
+        //            oDetalle.Save();
+        //            oDetalle.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario);
 
-                    /// fin de grabar en resultado la derivacion
-                }
-            }
+        //            /// fin de grabar en resultado la derivacion
+        //        }
+        //    }
             
         
-        }
+        //}
 
 
         private void GuardarDerivaciones2()
         {
 
+            if (Session["idUsuario"] != null)
+            {
 
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+           
             foreach (GridViewRow row in gvLista.Rows)
             {
 
@@ -408,7 +414,8 @@ namespace WebLab.Derivaciones
                 }
             }
 
-
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
 
         protected void ddlEstadoFiltro_SelectedIndexChanged(object sender, EventArgs e)
@@ -419,6 +426,13 @@ namespace WebLab.Derivaciones
 
         private void MostrarInforme(string tipo)
         {
+            if (Session["idUsuario"] != null)
+            {
+
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+           
             DataTable dt = new DataTable();
             dt = GetDataSet(GenerarListaProtocolos(), "pdf");
 
@@ -431,7 +445,7 @@ namespace WebLab.Derivaciones
                 //Aca se deberá consultar los parametros para mostrar una hoja de trabajo u otra
                 //this.oCr.Report.FileName = "HTrabajo2.rpt";
                 string informe = "../Informes/Derivacion.rpt";
-                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            //    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
 
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                 encabezado1.Value = oCon.EncabezadoLinea1;
@@ -453,7 +467,7 @@ namespace WebLab.Derivaciones
                 oCr.DataBind();
 
                 Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones");
+                string nombrePDF = oUtil.CompletarNombrePDF(oUser.IdEfector.IdEfector2.Trim()+"_Derivaciones");
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
                  
 
@@ -461,7 +475,8 @@ namespace WebLab.Derivaciones
 
                 
             }
-
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
 
         protected void ImageButton1_Click(object sender, ImageClickEventArgs e)

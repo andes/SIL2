@@ -28,39 +28,132 @@
             </style>
         </head>
         <body>
-            <h2>Lista de cambios en SIL2</h2>
-            <div class="fecha">2025.05.13</div>
-            <ul>
-                <li class="cambio">
-                    Resultados Predefinidos Multiples. <strong>Nuevas funcionalidades</strong>
-                    <ul>
-                        <li class="cambio2">Se cambia funcionalidad para hacer que los mismos se ingresen tabulados uno debajo de otro, sin posibilidad de ingresar texto adicional.</li>
-                        <li class="cambio2">Se aplica el cambio en las tres formas de carga/validacion: Por lista de Protocolos, Por Hoja de Trabajo y Por Analisis</li>
-                        <li class="cambio2">Se habilita la opcion de agregar observaciones a este tipo de determinaciones desde la Cargar/validacion por Lista de Protocolos (que antes no tenian esta posibilidad).</li>
-                      
-                    </ul>
-                  
-                </li>
-                <li class="cambio">
-                    API Resultados para ANDES. Se corrige orden en los resultados.
-                </li>
-                <li class="cambio">
-                   Configuracion Formulas y Controles. Se agrega codigo de la determinación en la lista.
-                </li>
-
-            </ul>
            
-            <div class="fecha">2025.05.08</div>
+            <h2>Lista de cambios en SIL2</h2>
+            <div class="fecha">2025.06.25</div>
             <ul>
                 <li class="cambio">
-                    API Resultados para ANDES. Se corrige para que se muestren los protocolos con unica determinacion sin resultados pero con observaciones validadas.
+                    API Resultados para ANDES. Se agrega posibilidad de mostrar protocolos de microbiologia con ATB validados y sin determinaciones validadas.<strong>Nueva funcionalidad</strong>
                 </li>
                 <li class="cambio">
-                    Parametros del SI: se saca la posibilidad de cargar un logo en encabezado de resultados por efector.
+                    Estadistica de Turnos: Se agrega control para que las fechas ingresadas sean válidas.
                 </li>
-
+                <li class="cambio">
+                    Resultados de Contador Hematologico 5 poblaciones: Calculo automatico de formulas.
+                </li>
+                
             </ul>
-            
+
+            <div class="fecha">2025.06.10</div>
+            <ul>
+                <li class="cambio">
+                    Estadistica de Detalle de Derivaciones: Se agrega descarga de excel con determinaciones derivaadas desde efector.<strong>Nueva funcionalidad</strong>
+                </li>
+                <li class="cambio">
+                    Estadistica de Turnos: Se agrega estadistica consolidada por todos los efectores para nivel central.<strong>Nueva funcionalidad</strong>
+                </li>
+                <li class="cambio">
+                    Derivaciones: Se corrige perdida del dato de usuario de registracion el momento de la derivacion.
+                </li>
+                <li class="cambio">
+                    Adjuntos de Resultados: Se habilita para que se pueda adjuntar mas un archivo por determinación.<strong>Nueva funcionalidad</strong>
+                </li>
+                <li class="cambio">
+                    
+                    Resultados Predefinidos Multiples: se agrega la opcion de borrar resultados ingresado previamente.<strong>Nueva funcionalidad</strong>
+                    <ul>
+                        <li class="cambio2">Carga / Validacion por Hoja de Trabajo</li>
+                        <li class="cambio2">Carga / Validacion por Analisis</li>
+
+
+                    </ul>
+                </li>
+            </ul>
+            <div class="fecha">2025.06.03</div>
+            <ul>
+                <li class="cambio">
+                    Hoja Trabajo a Demanda: Se corrige para que muestre determinaciones que forman parte de Determinaciones compuestas.
+                </li>
+                <li class="cambio">
+                   Turnos: Se habilita la modificacion de turnos del dia y a futuro.
+                </li>
+            </ul>
+            <div class="fecha">2025.06.02</div>
+            <ul>
+               
+                <li class="cambio">
+                    Generacion de Hoja de Trabajo: Se corrige que no mostraban los antecedentes en las hojas marcadas con esta opcion.
+                    Los antecedentes se muestran considerando el resultado anterior del paciente para una determincion en cualquier laboratorio.             
+                </li>
+                <li class="cambio">
+                    Estadistica: Cambio de nombre de origen "Externo" por "Ambulatorio".
+                </li>
+            </ul>
+            <div class="fecha">2025.05.28</div>
+            <ul>
+                <li class="cambio">
+
+                    Carga / Validacion por Hoja de Trabajo
+                    <ul>
+                        <li class="cambio2">Se corrige alineación de la grilla cuando tiene determinaciones con resultados predefinidos multiples.</li>
+                        <li class="cambio2">Resultados Predefinidos Multiples: Se saca boton para agregar opcion; reemplazando por el click en la caja de texto para mostrar y elegir las opciones multiples<strong>Nueva funcionalidad</strong></li>
+                        
+
+                    </ul>
+                </li>
+            </ul>
+            <div class="fecha">2025.05.22</div>
+            <ul>
+                <li class="cambio">
+                    Impresion de Resultados: Se corrige para que no se visualicen los titulos no informables de determinaciones compuestas.
+                </li>
+                <li class="cambio">
+                    Auditoria: Se controla que se ingresen numeros de protocolos válidos.
+                </li>
+            </ul>
+                <div class="fecha">2025.05.19</div>
+                <ul>
+                    <li class="cambio">
+                        Hoja Trabajo a Demanda: Se corrige el filtro de "Solo determinaciones pendientes"
+                    </li>
+                </ul>
+
+                <div class="fecha">2025.05.14</div>
+                <ul>
+                    <li class="cambio">
+                        Resultados Predefinidos Multiples. <strong>Nuevas funcionalidades</strong>
+                        <ul>
+                            <li class="cambio2">Se cambia funcionalidad para hacer que los mismos se ingresen tabulados uno debajo de otro, sin posibilidad de ingresar texto adicional.</li>
+                            <li class="cambio2">Se aplica el cambio en las tres formas de carga/validacion: Por lista de Protocolos, Por Hoja de Trabajo y Por Analisis</li>
+                            <li class="cambio2">Se habilita la opcion de agregar observaciones a este tipo de determinaciones desde la Cargar/validacion por Lista de Protocolos (que antes no tenian esta posibilidad).</li>
+
+                        </ul>
+
+                    </li>
+
+                    <li class="cambio">
+                        Configuracion Formulas y Controles. Se agrega código de la determinación en la lista.<strong>Nueva funcionalidad</strong>
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.05.13</div>
+                <ul>
+                    <li class="cambio">
+                        API Resultados para ANDES. Se corrige orden en los resultados.
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.05.08</div>
+                <ul>
+                    <li class="cambio">
+                        API Resultados para ANDES. Se corrige para que se muestren los protocolos con unica determinacion sin resultados pero con observaciones validadas.
+                    </li>
+                    <li class="cambio">
+                        Parametros del SI: se saca la posibilidad de cargar un logo en encabezado de resultados por efector.
+                    </li>
+
+                </ul>
+
                 <div class="fecha">2025.05.07</div>
                 <ul>
                     <li class="cambio">
