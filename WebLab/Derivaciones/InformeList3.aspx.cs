@@ -70,10 +70,7 @@ namespace WebLab.Derivaciones
                     Response.Redirect("../FinSesion.aspx", false);
                 }
             }
-            else
-            {
-                Response.Redirect("../FinSesion.aspx", false);
-            }
+            
         }
 
 
