@@ -335,6 +335,8 @@ namespace WebLab.Derivaciones
                         else
                             //Tiene check
                             ActualizarDetalleProtocolo(row, idLote, true);
+                                                
+                        idLote.GrabarAuditoriaLoteDerivacion("Modifica", oUser.IdUsuario);//Se guarda auditoria de modificacion de lote
                         continue;
                     }
 
@@ -351,6 +353,8 @@ namespace WebLab.Derivaciones
                             bool tieneMotivo = !string.IsNullOrEmpty(motivo); // -> Si tiene motivo es porque ya se ha guardado con anterioridad la derivacion
                             ActualizarDetalleProtocolo(row, null, tieneMotivo);
                         }
+
+                        idLote.GrabarAuditoriaLoteDerivacion("Modifica", oUser.IdUsuario);//Se guarda auditoria de modificacion de lote
                         continue;
                     }
 
