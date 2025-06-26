@@ -4315,14 +4315,7 @@
     <Compile Include="AutoAnalizador\SysmexXN1000\ConfiguracionEdit.aspx.designer.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
-    <Compile Include="AutoAnalizador\SysmexXS1000\ConfiguracionEdit.aspx.cs">
-      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="AutoAnalizador\SysmexXS1000\ConfiguracionEdit.aspx.designer.cs">
-      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.cs">
+   <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -6446,7 +6439,6 @@
     <Content Include="App_Themes\default\principal\images\validacion2.png" />
     <Content Include="AutoAnalizador\EnvioMensaje.aspx" />
     <Content Include="AutoAnalizador\MindrayBS300\ConfiguracionEdit.aspx" />
-    <Content Include="AutoAnalizador\SysmexXS1000\ConfiguracionEdit.aspx" />
     <Content Include="CerrarSesion.aspx" />
     <Content Include="ControlResultados\ControlPlanilla.aspx" />
     <Content Include="ControlResultados\ProtocoloList.aspx" />
