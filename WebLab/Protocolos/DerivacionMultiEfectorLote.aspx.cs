@@ -137,7 +137,7 @@ namespace WebLab.Protocolos {
 
             //Cargo el efector de Origen
             Efector efectorOrigen = new Efector();
-            efectorOrigen = (Efector) efectorOrigen.Get(typeof(Efector), "IdEfector", lote.IdEfectorOrigen);
+            efectorOrigen = (Efector) efectorOrigen.Get(typeof(Efector), "IdEfector", lote.IdEfectorOrigen.IdEfector);
             lbl_efectorOrigen.Text = efectorOrigen.Nombre;
 
             //Cargo grilla de protocolos para ingresar
@@ -168,14 +168,14 @@ namespace WebLab.Protocolos {
         private bool efectorCorrecto(LoteDerivacion lote) {
             try {
                 //Verifico que el efector de Destino sea el que se tenga que ingresar
-                if (lote.IdEfectorDestino == oUser.IdEfector.IdEfector) {
+                if (lote.IdEfectorDestino.IdEfector == oUser.IdEfector.IdEfector) {
                     gvProtocolosDerivados.Visible = true;
                     return true;
                 } else {
                     Efector e = new Efector();
-                    e = (Efector) e.Get(typeof(Efector), lote.IdEfectorDestino);
+                    e = (Efector) e.Get(typeof(Efector), lote.IdEfectorDestino.IdEfector);
                     lbl_errorEfectorOrigen.Visible = true;
-                    lbl_errorEfectorOrigen.Text = "El lote con efector Destino '" + e.Nombre + "' no coincide con Efector del usuario '" + oC.IdEfector.Nombre + "'";
+                    lbl_errorEfectorOrigen.Text = "El lote no corresponde al efector del usuario '" + oC.IdEfector.Nombre + "'";
                     div_controlLote.Attributes["class"] = "form-group has-error";
                     gvProtocolosDerivados.Visible = false; //para que no salga el cartel de grilla vacia
                     return false;
