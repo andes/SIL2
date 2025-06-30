@@ -51,6 +51,9 @@ namespace WebLab.Protocolos
                 string s = sr.ReadToEnd();
                 if (s != "0")
                 {
+
+                    //List<ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<ProtocoloEdit2.ProfesionalMatriculado>>(s);
+
                     DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
                     gvMedico.DataSource = t;
                     gvMedico.DataBind();
@@ -177,6 +180,36 @@ namespace WebLab.Protocolos
             }
           
         }
-      
+
+        private static DataTable GetDataTableMatriculaciones(string json)
+        {
+            //Pasa de JSON al tipo de objeto ProfesionalMatriculado
+            var personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
+
+            //Guardo solo en la tabla aquellos datos que necesito
+            DataTable dt = new DataTable();
+            dt.Columns.Add("nombre");
+            dt.Columns.Add("apellido");
+            dt.Columns.Add("titulo");
+            dt.Columns.Add("CodigoProfesion");
+            dt.Columns.Add("matriculaNumero");
+
+            foreach (Protocolos.ProtocoloEdit2.ProfesionalMatriculado persona in personas)
+            {
+                foreach (var prof in persona.profesiones)
+                {
+                    foreach (var mat in prof.matriculacion)
+                    {
+                        if (DateTime.Compare(mat.fin, DateTime.Now) > 0) //Solo agrega las matriculas no vencidas
+                        {
+                            dt.Rows.Add(persona.nombre, persona.apellido,  prof.titulo, prof.codigo, mat.matriculaNumero);
+                        }
+                    }
+                }
+            }
+            return dt;
+        }
+
+
     }
 }
