@@ -72,8 +72,8 @@ namespace WebLab.Turnos
             if (!Page.IsPostBack)
             {
                 SetToken();
-               VerificaPermisos("Asignacion de turnos");               
-            
+               VerificaPermisos("Asignacion de turnos");
+
 
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
 
@@ -1152,6 +1152,7 @@ ORDER BY cantidad desc";
                             if (pro.Count > 1)
                             {
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+                            }
 
 
                                 //LAB-119  Seleccion de profesionales solicitantes en dación de turnos filtro por matricula y apellido
