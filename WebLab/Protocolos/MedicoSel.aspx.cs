@@ -162,11 +162,6 @@ namespace WebLab.Protocolos
                     DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
                     CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
                     CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
-
-                    // Valor adicional (Nombre y apellido)
-                    DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
-                    CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
-                    CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
                 }
             }
         }
@@ -179,7 +174,7 @@ namespace WebLab.Protocolos
                 LinkButton boton = (LinkButton)e.CommandSource;
                 Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
             }
-            return dt;
+          
         }
 
 
