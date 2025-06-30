@@ -128,6 +128,7 @@ namespace WebLab.Protocolos
                     DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
                     CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
                     CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
+
                 }
             }
         }
