@@ -4807,12 +4807,14 @@ ORDER BY cantidad desc";
         {
             public List<Matricula> matriculacion { get; set; }
             public string titulo { get; set; }
+            public string codigo { get; set; }
         }
 
         public class Matricula
 
         {
             public string  matriculaNumero { get; set; }
+            public DateTime fin { get; set; }
            
         }
 
