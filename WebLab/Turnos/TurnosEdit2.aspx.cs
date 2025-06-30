@@ -72,12 +72,13 @@ namespace WebLab.Turnos
             if (!Page.IsPostBack)
             {
                 SetToken();
-               VerificaPermisos("Asignacion de turnos");               
-            
+               VerificaPermisos("Asignacion de turnos");
+
 
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
-             
 
+                Session["matricula"] = null;
+                
                 if (Request["Modifica"].ToString() == "1")
                 {
                     lblTitulo.Text = "ACTUALIZACION TURNO";
@@ -1056,12 +1057,12 @@ ORDER BY cantidad desc";
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "")
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //Comentado para que no borre lo que esta cargado dinamicamente
             }
         }
 
@@ -1139,12 +1140,14 @@ ORDER BY cantidad desc";
                             for (int i = 0; i < pro.Count; i++)
                             {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
-                                //documento = pro[i].documento.ToString();
+                               
                                 // ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula));
-                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
+                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#'));
                             }
                             if (pro.Count > 1)
+                            { 
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+                            }
 
                             lblErrorMedico.Visible = false;
 

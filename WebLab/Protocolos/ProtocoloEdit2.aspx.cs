@@ -4822,6 +4822,7 @@ ORDER BY cantidad desc";
         //    public int documento { get; set; }
             public string nombre { get; set; }
             public string apellido { get; set; }
+            public string cuit { get; set; }
            public List<Profesiones> profesiones { get; set; }
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
