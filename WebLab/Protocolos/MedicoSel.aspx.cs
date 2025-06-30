@@ -49,6 +49,9 @@ namespace WebLab.Protocolos
                 string s = sr.ReadToEnd();
                 if (s != "0")
                 {
+
+                    //List<ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<ProtocoloEdit2.ProfesionalMatriculado>>(s);
+
                     DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
                     gvMedico.DataSource = t;
                     gvMedico.DataBind();
