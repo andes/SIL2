@@ -479,16 +479,15 @@ namespace WebLab.Derivaciones
 
                             #region cambio_codificacion_a_derivacion
                             //Cambia el resultado de LAB_DetalleProtocolo
-                            //DetalleProtocolo oDet = new DetalleProtocolo();
-                            //oDet = (DetalleProtocolo) oDet.Get(typeof(DetalleProtocolo), oDeriva.IdDetalleProtocolo.IdDetalleProtocolo);
-                            //oDet.ResultadoCar = resultadoDerivacion;
-                            //oDet.ConResultado = true;
-                            //oDet.IdUsuarioResultado = idUsuario;
-                            ////oDet.FechaResultado = DateTime.Now;
-                            //oDet.FechaResultado = Convert.ToDateTime(fecha_hora);
-                            //oDet.Save();
-                            ////Inserta auditoria del detalle del protocolo
-                            //oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
+                            DetalleProtocolo oDet = new DetalleProtocolo();
+                            oDet = (DetalleProtocolo)oDet.Get(typeof(DetalleProtocolo), oDeriva.IdDetalleProtocolo.IdDetalleProtocolo);
+                            oDet.ResultadoCar = resultadoDerivacion;
+                            oDet.ConResultado = true;
+                            oDet.IdUsuarioResultado = idUsuario;
+                            oDet.FechaResultado = Convert.ToDateTime(fecha_hora);
+                            oDet.Save();
+                            //Inserta auditoria del detalle del protocolo
+                            oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
                             #endregion
                         }
                     }
