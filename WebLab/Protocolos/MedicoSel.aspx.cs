@@ -133,6 +133,11 @@ namespace WebLab.Protocolos
                     CmdModificar.CommandName = "Seleccionar";
                     CmdModificar.ToolTip = "Seleccionar";
 
+                    // Valor adicional 
+                    DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
+                    CmdModificar.Attributes["data-apellidoMedico"] = rowData.ItemArray[3].ToString();//Apellido 
+                    CmdModificar.Attributes["data-cuilMedico"] = rowData.ItemArray[5].ToString();//cuil/cuit
+
 
                 }
 
@@ -145,11 +150,12 @@ namespace WebLab.Protocolos
             if (e.CommandName== "Seleccionar")
             {
                
-                        Session["matricula"] = e.CommandArgument.ToString();
-                     
-                     
-               
+                Session["matricula"] = e.CommandArgument.ToString();
+                LinkButton boton = (LinkButton)e.CommandSource;
+                Session["cuilMedico"] = boton.Attributes["data-cuilMedico"];
+                Session["apellidoMedico"] = boton.Attributes["data-apellidoMedico"];
             }
         }
+      
     }
 }
