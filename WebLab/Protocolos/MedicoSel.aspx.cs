@@ -49,9 +49,6 @@ namespace WebLab.Protocolos
                 string s = sr.ReadToEnd();
                 if (s != "0")
                 {
-
-                    //List<ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<ProtocoloEdit2.ProfesionalMatriculado>>(s);
-
                     DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
                     gvMedico.DataSource = t;
                     gvMedico.DataBind();
@@ -131,6 +128,7 @@ namespace WebLab.Protocolos
                     DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
                     CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
                     CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
+
 
                 }
             }
