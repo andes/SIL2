@@ -51,9 +51,6 @@ namespace WebLab.Protocolos
                 string s = sr.ReadToEnd();
                 if (s != "0")
                 {
-
-                    //List<ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<ProtocoloEdit2.ProfesionalMatriculado>>(s);
-
                     DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
                     gvMedico.DataSource = t;
                     gvMedico.DataBind();
@@ -184,25 +181,27 @@ namespace WebLab.Protocolos
         private static DataTable GetDataTableMatriculaciones(string json)
         {
             //Pasa de JSON al tipo de objeto ProfesionalMatriculado
-            var personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
-
-            //Guardo solo en la tabla aquellos datos que necesito
+            List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>  personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
             DataTable dt = new DataTable();
-            dt.Columns.Add("nombre");
-            dt.Columns.Add("apellido");
-            dt.Columns.Add("titulo");
-            dt.Columns.Add("CodigoProfesion");
-            dt.Columns.Add("matriculaNumero");
-
-            foreach (Protocolos.ProtocoloEdit2.ProfesionalMatriculado persona in personas)
+           
+            if (personas.Count > 0)
             {
-                foreach (var prof in persona.profesiones)
+                //Guardo solo en la tabla aquellos datos que necesito
+                dt.Columns.Add("nombre");
+                dt.Columns.Add("apellido");
+                dt.Columns.Add("titulo");
+                dt.Columns.Add("matriculaNumero");
+
+                foreach (Protocolos.ProtocoloEdit2.ProfesionalMatriculado persona in personas)
                 {
-                    foreach (var mat in prof.matriculacion)
+                    foreach (Protocolos.ProtocoloEdit2.Profesiones prof in persona.profesiones)
                     {
-                        if (DateTime.Compare(mat.fin, DateTime.Now) > 0) //Solo agrega las matriculas no vencidas
+                        foreach (Protocolos.ProtocoloEdit2.Matricula mat in prof.matriculacion)
                         {
-                            dt.Rows.Add(persona.nombre, persona.apellido,  prof.titulo, prof.codigo, mat.matriculaNumero);
+                            if (DateTime.Compare(mat.fin, DateTime.Now) > 0) //Solo agrega las matriculas no vencidas
+                            {
+                                dt.Rows.Add(persona.nombre, persona.apellido, prof.titulo, mat.matriculaNumero);
+                            }
                         }
                     }
                 }
