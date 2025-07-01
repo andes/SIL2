@@ -1,5 +1,6 @@
 ﻿using Business.Data;
 using Business.Data.Laboratorio;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,14 +20,12 @@ namespace WebLab.Protocolos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-          if (!Page.IsPostBack)
-            { 
-            
+            if (!Page.IsPostBack)
+            {
+                Session["matricula"] = null;
+                Session["apellidoNombre"] = null;
             }
-
         }
-
-     
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
@@ -50,19 +49,14 @@ namespace WebLab.Protocolos
                 string s = sr.ReadToEnd();
                 if (s != "0")
                 {
-
-                    //List<ProtocoloEdit2.ProfesionalMatriculado> pro = jsonSerializer.Deserialize<List<ProtocoloEdit2.ProfesionalMatriculado>>(s);
-
-                    DataTable t = GetJSONToDataTableUsingMethod(s);
+                    DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
                     gvMedico.DataSource = t;
                     gvMedico.DataBind();
- 
-                    
                 }
             }
             catch (Exception ex)
             {
-                 
+                
             }
  
 
@@ -123,9 +117,6 @@ namespace WebLab.Protocolos
         {
             if (e.Row.Cells.Count > 1)
             {
-
-
-
                 if (e.Row.RowType == DataControlRowType.DataRow)
                 {
                     LinkButton CmdModificar = (LinkButton)e.Row.Cells[3].Controls[1];
@@ -133,10 +124,11 @@ namespace WebLab.Protocolos
                     CmdModificar.CommandName = "Seleccionar";
                     CmdModificar.ToolTip = "Seleccionar";
 
-
+                    // Valor adicional (Nombre y apellido)
+                    DataRow rowData = ((DataRowView)e.Row.DataItem).Row;
+                    CmdModificar.Attributes["nombre"] = rowData.ItemArray[0].ToString();
+                    CmdModificar.Attributes["apellido"] = rowData.ItemArray[1].ToString();
                 }
-
-
             }
         }
 
@@ -144,12 +136,43 @@ namespace WebLab.Protocolos
         {
             if (e.CommandName== "Seleccionar")
             {
-               
-                        Session["matricula"] = e.CommandArgument.ToString();
-                     
-                     
-               
+                Session["matricula"] = e.CommandArgument.ToString();
+                LinkButton boton = (LinkButton)e.CommandSource;
+                Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
             }
         }
+
+        private static DataTable GetDataTableMatriculaciones(string json)
+        {
+            //Pasa de JSON al tipo de objeto ProfesionalMatriculado
+            List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>  personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
+            DataTable dt = new DataTable();
+           
+            if (personas.Count > 0)
+            {
+                //Guardo solo en la tabla aquellos datos que necesito
+                dt.Columns.Add("nombre");
+                dt.Columns.Add("apellido");
+                dt.Columns.Add("titulo");
+                dt.Columns.Add("matriculaNumero");
+
+                foreach (Protocolos.ProtocoloEdit2.ProfesionalMatriculado persona in personas)
+                {
+                    foreach (Protocolos.ProtocoloEdit2.Profesiones prof in persona.profesiones)
+                    {
+                        foreach (Protocolos.ProtocoloEdit2.Matricula mat in prof.matriculacion)
+                        {
+                            if (DateTime.Compare(mat.fin, DateTime.Now) > 0) //Solo agrega las matriculas no vencidas
+                            {
+                                dt.Rows.Add(persona.nombre, persona.apellido, prof.titulo, mat.matriculaNumero);
+                            }
+                        }
+                    }
+                }
+            }
+            return dt;
+        }
+
+
     }
 }
