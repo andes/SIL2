@@ -78,7 +78,8 @@ namespace WebLab.Turnos
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
 
                 Session["matricula"] = null;
-                
+                Session["apellidoNombre"] = null;
+
                 if (Request["Modifica"].ToString() == "1")
                 {
                     lblTitulo.Text = "ACTUALIZACION TURNO";
@@ -1140,13 +1141,44 @@ ORDER BY cantidad desc";
                             for (int i = 0; i < pro.Count; i++)
                             {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
-                               
+
                                 // ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula));
                                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#'));
                             }
                             if (pro.Count > 1)
                             { 
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+
+                                //LAB-119  Seleccion de profesionales solicitantes en dación de turnos filtro por matricula y apellido
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+                                       
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+                                        
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion+1).Trim();
+
+                                       
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
                             }
 
                             lblErrorMedico.Visible = false;
