@@ -392,7 +392,11 @@ namespace WebLab.Derivaciones
                     oDeriva.IdUsuarioRegistro = idUsuario;
                     oDeriva.FechaRegistro = fechaHora;
                     oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
+<<<<<<< HEAD
+                    //oDeriva.Idlote = idLote is null? 0 : idLote.IdLoteDerivacion;
+=======
                     oDeriva.Idlote = idLote;
+>>>>>>> 569c8c5 (fix: Evitar pasar parametros con valores null , usar tipos de datos 0 en el caso de numericos cuando  son ID que sería equivalente a null.)
                     oDeriva.IdMotivoCancelacion = MotivoCancelacion;
                     oDeriva.Save();
                     #endregion
