@@ -107,7 +107,7 @@ namespace WebLab.Derivaciones
             string m_strSQL = Business.Data.Laboratorio.LoteDerivacion.derivacionPDF(int.Parse(Request["Lote"]));
 
             DataSet Ds = new DataSet();
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;//LAB-130 usar conexion principal no la de consulta
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
