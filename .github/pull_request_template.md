@@ -29,12 +29,14 @@ _____________________________________________
 <!-- Marca con una X la casilla correcta-->
 - [ ] Si
 - [ ] No
+- [ ] No corresponde
 
 ### Requiere actualizaciones en la base de datos
 <!-- Marca con una X la casilla correcta-->
 <!-- Indique el cambio en caso afirmativo, agradecemos si es en forma de comando en mongo además de una explicación -->
 - [ ] Si
 - [ ] No
+- [ ] - [ ] No corresponde
 
 
 <!-- Agregar captura de pantalla, si fuera relevante  -->
