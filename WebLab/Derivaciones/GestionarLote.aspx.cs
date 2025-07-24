@@ -41,28 +41,14 @@ namespace WebLab.Derivaciones
                     txtFechaDesde.Focus();
                     
                 }
-                
-
             }
                 else Response.Redirect("../FinSesion.aspx", false);
         }
 
-        private void VerificaPermisos(string sObjeto)
-        {
-            if (Session["s_permiso"] != null)
-            {
-                Utility oUtil = new Utility();
-                int i_permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
-                switch (i_permiso)
-                {
-                    case 0: Response.Redirect("../AccesoDenegado.aspx", false); break;
-                }
-            }
-            else Response.Redirect("../FinSesion.aspx", false);
-        }
+         
+        
 
         private void CargarListas()
-
         {
             
             Utility oUtil = new Utility();
@@ -87,11 +73,10 @@ namespace WebLab.Derivaciones
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                if (Session["idUsuario"] != null)
+             if (Session["idUsuario"] != null)
+             {
+                if (Page.IsValid)
                 {
-                    
                     DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
                     DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
                     string str_condicion = " 1= 1 AND fechaRegistro >='" + fecha1.ToString("yyyyMMdd") + " 00:00:00.000' and fechaRegistro <='" + fecha2.ToString("yyyyMMdd") + " 23:59:59.999'";
@@ -99,14 +84,33 @@ namespace WebLab.Derivaciones
                     if (ddlEfector.SelectedValue != "0") str_condicion += " AND l.idEfectorDestino = " + ddlEfector.SelectedValue;
                     str_condicion += " AND idEfectorOrigen = " + oUser.IdEfector.IdEfector.ToString();
 
-                    if (!string.IsNullOrWhiteSpace(tb_nrolote.Text)){
+                    if (!string.IsNullOrWhiteSpace(tb_nrolote.Text))
+                    {
                         str_condicion += " AND idLoteDerivacion = " + tb_nrolote.Text;
                     }
 
                    Response.Redirect("InformeLote.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue, false);
                    
                 }
-                else Response.Redirect("../FinSesion.aspx", false);
+                
+             }
+              else 
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+
+        
+
+        protected void cv_nroLote_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            try
+            {
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(args.Value));
+                args.IsValid = true;
+            }
+            catch (Exception)
+            {
+                args.IsValid = false;
             }
         }
     }
