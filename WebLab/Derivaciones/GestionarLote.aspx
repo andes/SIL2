@@ -69,6 +69,7 @@
                       </td>
                       <td class="" >
                           <asp:TextBox runat="server" ID="tb_nrolote" CssClass="form-control input-sm" Width="200px"  />
+                          <asp:CustomValidator id="cv_nroLote" runat="server" ErrorMessage="Nro de Lote inexistente" OnServerValidate="cv_nroLote_ServerValidate" ControlToValidate="tb_nrolote" Display="Static" ValidationGroup="0"/>
                       </td>
                   </tr>
 						
