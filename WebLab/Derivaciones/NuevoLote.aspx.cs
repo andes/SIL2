@@ -61,7 +61,10 @@ namespace WebLab.Derivaciones
 
         protected void lnkPDF_Click(object sender, EventArgs e)
         {
-            MostrarInforme();
+            if (Session["idUsuario"] != null)
+                MostrarInforme();
+            else
+                Response.Redirect("../FinSesion.aspx", false);
         }
 
 
