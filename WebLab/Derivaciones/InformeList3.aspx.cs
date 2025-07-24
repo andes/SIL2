@@ -157,9 +157,7 @@ namespace WebLab.Derivaciones
             {
                 if (Request["Tipo"] == "Modifica")
                 {
-                    Usuario oUser = new Usuario();
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
+                   
                     m_strSQL +=
                        "    (" +
                            "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
@@ -259,40 +257,45 @@ namespace WebLab.Derivaciones
         #region Guardar
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-
-            if (int.Parse(ddlEstado.SelectedValue) == 2)
-            { //Cambia el estado a "No enviado"
-                Business.Data.Laboratorio.LoteDerivacion lote = new Business.Data.Laboratorio.LoteDerivacion();//con idLote=0
-                GuardarDerivaciones(lote); 
-                CargarGrilla();
-                limpiarForm();
-            }
-            else
+            if (Session["idUsuario"] != null)
             {
-                Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
-                if (Request["Tipo"] == "Alta")
-                {    //Genera Lote y cambia determinaciones
-                    lote = GenerarLote();
+                int idUsuario = int.Parse(Session["idUsuario"].ToString());
+                Usuario oUser = new Usuario();
+                oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
+
+                if (int.Parse(ddlEstado.SelectedValue) == 2)
+                { //Cambia el estado a "No enviado"
+                    Business.Data.Laboratorio.LoteDerivacion lote = new Business.Data.Laboratorio.LoteDerivacion();//con idLote=0
+                    GuardarDerivaciones(lote, oUser.IdUsuario);
+                    CargarGrilla();
+                    limpiarForm();
                 }
                 else
                 {
-                    if (Request["Tipo"] == "Modifica")
-                    {
-                        lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), "IdLoteDerivacion", Request["idLote"]);
+                    Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
+                    if (Request["Tipo"] == "Alta")
+                    {    //Genera Lote y cambia determinaciones
+                        lote = GenerarLote(oUser.IdUsuario);
                     }
+                    else
+                    {
+                        if (Request["Tipo"] == "Modifica")
+                        {
+                            lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), "IdLoteDerivacion", Request["idLote"]);
+                        }
+                    }
+                    GuardarDerivaciones(lote, oUser.IdUsuario);
+                    Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
                 }
-                GuardarDerivaciones(lote);
-                Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
             }
+            else Response.Redirect("../FinSesion.aspx", false);
+
+            
 
         }
 
-        private Business.Data.Laboratorio.LoteDerivacion GenerarLote()
+        private Business.Data.Laboratorio.LoteDerivacion GenerarLote(int idUsuario)
         {
-            Usuario oUser = new Usuario();
-            int idUsuario = int.Parse(Session["idUsuario"].ToString());
-            oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
-
             Efector d_efector = new Efector();
             d_efector = (Efector)d_efector.Get(typeof(Efector), Convert.ToInt32(Request["Destino"]));
 
@@ -304,15 +307,14 @@ namespace WebLab.Derivaciones
             lote.Save();
 
             //Se guarda auditoria de creacion de lote
-            lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);// LAB-54 Sacar la palabra "Estado: xxxxx"
+            lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario);// LAB-54 Sacar la palabra "Estado: xxxxx"
             return lote;
         }
 
-        private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion lote)
+        private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion lote, int idUsuario)
         {
             if (Session["idUsuario"] != null)
             {
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 foreach (GridViewRow row in gvLista.Rows)
                 {
                     int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
@@ -337,7 +339,7 @@ namespace WebLab.Derivaciones
                             //Tiene check
                             ActualizarDetalleProtocolo(row, idLote, true);
                                                 
-                        lote.GrabarAuditoriaLoteDerivacion("Modifica", oUser.IdUsuario);//Se guarda auditoria de modificacion de lote
+                        lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
                         continue;
                     }
 
@@ -355,7 +357,7 @@ namespace WebLab.Derivaciones
                             ActualizarDetalleProtocolo(row, idLote, tieneMotivo);
                         }
 
-                        lote.GrabarAuditoriaLoteDerivacion("Modifica", oUser.IdUsuario);//Se guarda auditoria de modificacion de lote
+                        lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
                         continue;
                     }
 

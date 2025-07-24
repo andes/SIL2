@@ -21,11 +21,14 @@ using Business.Data;
 namespace WebLab.Derivaciones
 {
     public partial class GestionarLote : System.Web.UI.Page
-    {      
+    {
+        public Usuario oUser = new Usuario();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
             {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (!Page.IsPostBack)
                 {
                 
@@ -61,9 +64,7 @@ namespace WebLab.Derivaciones
         private void CargarListas()
 
         {
-            Usuario oUser = new Usuario();
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-           
+            
             Utility oUtil = new Utility();
 
             string m_ssql = "SELECT  E.idEfector, E.nombre " +
@@ -90,9 +91,7 @@ namespace WebLab.Derivaciones
             {
                 if (Session["idUsuario"] != null)
                 {
-                    Usuario oUser = new Usuario();
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
+                    
                     DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
                     DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
                     string str_condicion = " 1= 1 AND fechaRegistro >='" + fecha1.ToString("yyyyMMdd") + " 00:00:00.000' and fechaRegistro <='" + fecha2.ToString("yyyyMMdd") + " 23:59:59.999'";
