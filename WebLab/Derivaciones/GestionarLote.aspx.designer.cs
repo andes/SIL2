@@ -69,6 +69,15 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.TextBox tb_nrolote;
 
         /// <summary>
+        /// cv_nroLote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cv_nroLote;
+
+        /// <summary>
         /// ddlEfector control.
         /// </summary>
         /// <remarks>
