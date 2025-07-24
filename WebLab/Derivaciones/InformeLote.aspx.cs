@@ -24,7 +24,7 @@ namespace WebLab.Derivaciones
 {
     public partial class InformeLote : System.Web.UI.Page
     {
-
+        public Usuario oUser = new Usuario();
         public CrystalReportSource oCr = new CrystalReportSource();
 
         protected void Page_PreInit(object sender, EventArgs e)
@@ -40,6 +40,8 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
                 if (!Page.IsPostBack)
                 {
                     int estado = Convert.ToInt32(Request["Estado"]);
@@ -322,8 +324,6 @@ namespace WebLab.Derivaciones
 
             if (dt.Rows.Count > 0)
             {
-                Usuario oUser = new Usuario();
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 string informe = "../Informes/DerivacionLote.rpt";
                 Configuracion oCon = new Configuracion();
                 oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
@@ -417,7 +417,7 @@ namespace WebLab.Derivaciones
                 {
 
                     int idLote = Convert.ToInt32(row.Cells[2].Text);
-                    int idUsuario = int.Parse(Session["idUsuario"].ToString());
+                    int idUsuario = oUser.IdUsuario;
                     int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
                     string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
                     //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
@@ -466,8 +466,7 @@ namespace WebLab.Derivaciones
 
                             #region cambio_codificacion_a_derivacion
                             //Cambia el resultado de LAB_DetalleProtocolo
-                            DetalleProtocolo oDet = new DetalleProtocolo();
-                            oDet = (DetalleProtocolo)oDet.Get(typeof(DetalleProtocolo), oDeriva.IdDetalleProtocolo.IdDetalleProtocolo);
+                            DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
                             oDet.ResultadoCar = resultadoDerivacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
