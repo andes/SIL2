@@ -175,13 +175,13 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HdidEventoSISA;
         
         /// <summary>
-        /// btnNoInformarSISA control.
+        /// HidItemSIL control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNoInformarSISA;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidItemSIL;
         
         /// <summary>
         /// btnSISA control.
@@ -200,5 +200,14 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvLista;
+        
+        /// <summary>
+        /// btnNoInformarSISA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNoInformarSISA;
     }
 }

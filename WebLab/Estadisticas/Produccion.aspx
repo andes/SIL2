@@ -185,6 +185,8 @@
                               
                            <asp:Button ID="btnGenerar" runat="server" CssClass="btn btn-primary" Width="130px"
                                 onclick="btnGenerar_Click" Text="Generar Reporte" 
+                                 OnClientClick="this.disabled=true; this.value='Procesando...';"
+     UseSubmitBehavior="false"
                                 ValidationGroup="0" />
                                  <asp:GridView ID="gvEstadistica" runat="server" CellPadding="0" 
           CssClass="table table-bordered bs-table"

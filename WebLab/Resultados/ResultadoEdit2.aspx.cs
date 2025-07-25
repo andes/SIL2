@@ -1573,7 +1573,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //{
                             if (oDeriva.Estado == 0) /// pendiente                            
                             {
-                                estadoDerivacion = "Pendiente de Derivacion";
+                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
                                 lblDerivacion.ForeColor = Color.Red;
                             }
                             if (oDeriva.Estado == 1) /// enviado
@@ -2056,6 +2056,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                                             if (Request["Operacion"].ToString() != "HC")
                                             {
+                                                objCellResultado.CssClass = "CeldaContenedor";
+                                                objCellResultado.Width = Unit.Pixel(150);
                                                 TextBox txt1 = new TextBox();
                                                 txt1.ID = m_idItem.ToString();
                                                 //txt1.ID = m_idSuperItem + ";" + m_idItem.ToString();

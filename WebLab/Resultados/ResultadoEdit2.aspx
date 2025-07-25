@@ -51,7 +51,15 @@
                 }
             }            
     </script>   
-   
+       <style type="text/css">
+#CeldaContenedor > * {
+    display: inline-block; /* Hace que los controles se alineen en una sola línea */
+    float: left; /* Alinea los controles a la izquierda */
+}
+#CeldaContenedor {
+    text-align: left; /* Alinea todo el contenido a la izquierda */
+}
+</style>
     </asp:Content>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">               
@@ -511,9 +519,10 @@
 
 						     <asp:Panel ID="Panel1" runat="server" > 
                                                                                                                                                                 						 
-                                               <asp:Table ID="tContenido"   enableviewstate="true"
+                                               <asp:Table ID="tContenido"   enableviewstate="true" CssClass="CeldaContenedor"
                                                    Runat="server" CellPadding="0" CellSpacing="0"  
-                                                   Width="100%" GridLines="Both" BorderColor="#CCCCCC"></asp:Table>                                                                                                                                     
+                                                   Width="100%" GridLines="Both" BorderColor="#CCCCCC"
+                                                   ></asp:Table>                                                                                                                                     
                                      
                                            </asp:Panel>
                            </div>

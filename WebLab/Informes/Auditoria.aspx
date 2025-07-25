@@ -63,13 +63,17 @@
                                 <asp:TextBox class="form-control input-sm" ID="txtProtocolo" runat="server" MaxLength="9" Width="200px"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
                                     ControlToValidate="txtProtocolo" ErrorMessage="*" ValidationGroup="0"></asp:RequiredFieldValidator>
+                                <asp:CompareValidator ID="cvDni" 
+                                 runat="server" ControlToValidate="txtProtocolo" 
+                                ErrorMessage="Debe ingresar solo numeros" Operator="DataTypeCheck" 
+                                Type="Integer" ValidationGroup="0">Debe ingresar solo numeros</asp:CompareValidator>
                             </td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td class="myLabelIzquierda" style="width: 63px">Usuario:</td>
                             <td>
-                                <asp:DropDownList ID="ddlUsuario" runat="server" class="form-control input-sm">
+                                <asp:DropDownList ID="ddlUsuario" runat="server" class="form-control input-sm" Width="300px" TabIndex="2">
                                 </asp:DropDownList>
                             </td>
                             <td>&nbsp;</td>
@@ -119,7 +123,7 @@
                             <td class="myLabelIzquierda" style="width: 79px">Usuario:
                             </td>
                             <td>
-                                <asp:DropDownList ID="ddlUsuario2" runat="server" class="form-control input-sm">
+                               <asp:DropDownList ID="ddlUsuario2" runat="server" class="form-control input-sm" Width="300px">
                                 </asp:DropDownList>
                                 <asp:Label ID="lblMensaje" runat="server" ForeColor="#FF3300" Text="Label" Visible="False"></asp:Label>
                             </td>

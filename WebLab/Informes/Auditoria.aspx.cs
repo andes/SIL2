@@ -127,46 +127,74 @@ namespace WebLab.Informes {
             }
         }
 
-        private void ImprimirAuditoria() {
+        private void ImprimirAuditoria()
+        {
+            try {
+
+                Protocolo oRegistro = new Protocolo();
+                oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo),"Numero", int.Parse(txtProtocolo.Text));
+                if (oRegistro != null)
+                {
+                    DataTable dtAuditoria = GetDataSetAuditoriaProtocolo();
 
 
-            DataTable dtAuditoria = GetDataSetAuditoriaProtocolo();
+                    if (dtAuditoria.Columns.Count > 2)
+                    {
+                        ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
+                        ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+
+                        //Se imprime con el encabzado del efector dueño del protocolo
+                        Configuracion oCon = new Configuracion();
+
+                        oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
+                if (oCon!=null)
+                        {
+                            
+                            encabezado1.Value = oCon.EncabezadoLinea1;
+                            encabezado2.Value = oCon.EncabezadoLinea2;
+                        }
+                        //else
+
+                        //{
+                        //    //como titulo deberia ir el efector del protocolo.
+                        //    encabezado1.Value = oRegistro.IdEfector.Nombre;// oUser.IdEfector.Nombre;
+                        //    encabezado2.Value = oRegistro.IdEfector.Domicilio;
+                        //}
+                        ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+                        encabezado3.Value = "Auditoria de Protocolo";
+
+                        oCr.Report.FileName = "AuditoriaProtocolo.rpt";
+                        oCr.ReportDocument.SetDataSource(dtAuditoria);
+                        oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
+                        oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
+                        oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
+                        oCr.DataBind();
+
+                        Utility oUtil = new Utility();
+                        string nombrePDF = oUtil.CompletarNombrePDF("Auditoria" + txtProtocolo.Text);
+                        oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
 
 
-            if (dtAuditoria.Columns.Count > 2) {
-                ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
-                ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
-                if (oC != null) {
 
-                    encabezado1.Value = oC.EncabezadoLinea1;
-                    encabezado2.Value = oC.EncabezadoLinea2;
-                } else {
 
-                    encabezado1.Value = oUser.IdEfector.Nombre;
-                    encabezado2.Value = oUser.IdEfector.Domicilio;
+                    }
+                    else
+                    {
+                        string popupScript = "<script language='JavaScript'> alert('No se encontraron datos para el numero de protocolo ingresado.'); </script>";
+                        Page.RegisterStartupScript("PopupScript", popupScript);
+                    }
                 }
-                ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
-                encabezado3.Value = "Auditoria de Protocolo";
-
-                oCr.Report.FileName = "AuditoriaProtocolo.rpt";
-                oCr.ReportDocument.SetDataSource(dtAuditoria);
-                oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
-                oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
-                oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
-                oCr.DataBind();
-
-                Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Auditoria" + txtProtocolo.Text);
-                oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
-
-
-
-
-            } else {
-                string popupScript = "<script language='JavaScript'> alert('No se encontraron datos para el numero de protocolo ingresado.'); </script>";
+                else
+                {
+                    string popupScript = "<script language='JavaScript'> alert('Numero de protocolo inválido para el efector.'); </script>";
+                    Page.RegisterStartupScript("PopupScript", popupScript);
+                }
+            }
+            catch (Exception ex)
+            {
+                string popupScript = "<script language='JavaScript'> alert('Numero de protocolo ingresado inválido.'); </script>";
                 Page.RegisterStartupScript("PopupScript", popupScript);
             }
-
         }
 
         private DataTable GetDataSetAuditoriaProtocolo() {

@@ -291,7 +291,7 @@
                   
 
                     <Columns>
-                        <asp:BoundField DataField="efector" HeaderText="" />
+                      <asp:BoundField DataField="efector" HeaderText="" />
                           <asp:BoundField DataField="efector" HeaderText="Efector" />
                         <asp:BoundField DataField="hora" HeaderText="Hora" >
                           <ItemStyle Width="10%" />
