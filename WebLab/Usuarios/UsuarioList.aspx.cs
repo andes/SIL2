@@ -12,12 +12,28 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using System.Data.SqlClient;
 using Business;
+using System.Text;
+using System.IO;
+using Business.Data;
 
 namespace WebLab.Usuarios
 {
     public partial class UsuarioList : System.Web.UI.Page
     {
         Utility oUtil = new Utility();
+        public Usuario oUser = new Usuario();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                //  oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -25,6 +41,10 @@ namespace WebLab.Usuarios
                 VerificaPermisos("Usuarios");
                 CargarListas();
                 CargarGrilla();
+                if (oUser.IdEfector.IdEfector == 227) /// nivel central
+                {
+                    btnAgregar.Visible = true;
+                }
             }
         }
 
@@ -36,7 +56,8 @@ namespace WebLab.Usuarios
 
         private void VerificaPermisos(string sObjeto)
         {
-            if (Session["s_permiso"] != null)
+           
+                if (Session["s_permiso"] != null)
             {
                 //   Utility oUtil = new Utility();
                 Permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
@@ -51,13 +72,20 @@ namespace WebLab.Usuarios
         }
         private void CargarListas()
         {
-            Utility oUtil = new Utility();
-
-            string m_ssql  = @"   SELECT idEfector, nombre FROM Sys_Efector e (nolock) 
-					  where exists (select 1 from Sys_UsuarioEfector u (nolock)  where e.idefector= u.idefector) ORDER BY nombre ";
-
-            
+            Utility oUtil = new Utility(); bool nivelcentral = false;
+            string m_ssql;
+            if (oUser.IdEfector.IdEfector == 227) /// nivel central
+            {
+                nivelcentral = true;
+                m_ssql = @"   SELECT idEfector, nombre FROM Sys_Efector e with (nolock) 
+					  where exists (select 1 from Sys_UsuarioEfector u with (nolock)  where e.idefector= u.idefector) ORDER BY nombre ";
+            }
+            else
+                m_ssql = @"   SELECT idEfector, nombre FROM Sys_Efector e with (nolock) 
+					  where E.idEfector=" + oUser.IdEfector.IdEfector.ToString() + " and exists (select 1 from Sys_UsuarioEfector u with (nolock)  where e.idefector= u.idefector) ORDER BY nombre ";
+             
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
+            if   (nivelcentral)
                ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
          
         }
@@ -67,7 +95,7 @@ namespace WebLab.Usuarios
             gvLista.DataSource = LeerDatos();
             gvLista.DataBind();
         }
-
+        
         private object LeerDatos()
         {
             string m_strSQL = @"SELECT     U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
@@ -136,15 +164,19 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-             
+
                 ImageButton CmdModificar = (ImageButton)e.Row.Cells[6].Controls[1];
                 CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdModificar.CommandName = "Modificar";
 
-                
+
                 if (Permiso == 1)
-                {                
+                {
                     CmdModificar.ToolTip = "Consultar";
+                }
+                if (oUser.IdEfector.IdEfector != 227) /// nivel central
+                {
+                    CmdModificar.Visible = false;
                 }
             }
         }
@@ -152,6 +184,73 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
         protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarGrilla();
+        }
+
+        protected void lnkExcel_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+                dataTableAExcel(LeerDatosExcel(),"ListaUsuarios" );
+          
+        }
+
+        private DataTable LeerDatosExcel()
+        {
+            string m_strFiltro = "";
+            DataSet Ds = new DataSet();
+            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            if (ddlEfector.SelectedValue != "0")
+                m_strFiltro = "   E.idEfector=" + ddlEfector.SelectedValue.ToString();
+
+
+
+            cmd.CommandText = "[LAB_ListaUsuarios]";
+
+            cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
+            cmd.Parameters["@FiltroBusqueda"].Value = m_strFiltro;
+
+
+            cmd.Connection = conn;
+
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            da.Fill(Ds);
+            //////////
+
+
+            return Ds.Tables[0];
+        }
+
+        private void dataTableAExcel(DataTable tabla, string nombreArchivo)
+        {
+            if (tabla.Rows.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                Page pagina = new Page();
+                HtmlForm form = new HtmlForm();
+                GridView dg = new GridView();
+                dg.EnableViewState = false;
+                dg.DataSource = tabla;
+                dg.DataBind();
+                pagina.EnableEventValidation = false;
+                pagina.DesignerInitialize();
+                pagina.Controls.Add(form);
+                form.Controls.Add(dg);
+                pagina.RenderControl(htw);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.ContentType = "application/vnd.ms-excel";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
+                Response.Charset = "UTF-8";
+                Response.ContentEncoding = Encoding.Default;
+                Response.Write(sb.ToString());
+                Response.End();
+            }
         }
     }
 }

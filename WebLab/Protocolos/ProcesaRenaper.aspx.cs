@@ -380,7 +380,10 @@ string mensaje = ex.ToString();
 
                                 }
                             }
+                            if (respuesta_Paciente.gender!=null)
                             alfinSexo = respuesta_Paciente.gender.ToUpper();
+
+                            if (respuesta_Paciente.birthDate!=null)
                             alfinfechanac = respuesta_Paciente.birthDate;
 
                             string anio, mes, dia;
@@ -751,7 +754,7 @@ string mensaje = ex.ToString();
             return ok;
         }
 
-        private void GrabarLogAcceso(string servicio, string dni)
+        public void GrabarLogAcceso(string servicio, string dni)
         {
             try
             {
