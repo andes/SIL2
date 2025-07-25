@@ -25,7 +25,14 @@
      </div>
                <br />
                 <asp:Button ID="btnAgregar" runat="server" onclick="btnAgregar_Click" 
-                                        Text="Agregar" Width="100px" Font-Size="10pt" CssClass="btn btn-primary" />
+                                        Text="Agregar" Width="100px" Font-Size="10pt" CssClass="btn btn-primary" Visible="False" />
+	
+
+   
+        
+              
+                  <img alt="" src="../App_Themes/default/images/excelPeq.gif" />
+            <asp:LinkButton ID="lnkExcel" runat="server" CssClass="myLittleLink"   ValidationGroup="0" OnClick="lnkExcel_Click">Exportar a Excel</asp:LinkButton>
 	
 
    

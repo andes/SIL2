@@ -28,7 +28,15 @@
                 }
              }             
                   </script> 
-
+    <style type="text/css">
+#CeldaContenedor  {
+   /*display: inline-block; position: relative;
+      float: left;Alinea los controles a la izquierda 
+   border-collapse: collapse;
+    border: 3px solid orange;*/
+    text-align: left; /* Alinea todo el contenido a la izquierda */
+}
+</style>
   
     </asp:Content>
 
@@ -65,22 +73,22 @@
                                             <asp:Panel ID="PanelEncabezado" runat="server"  ScrollBars="Both"   Width="1080px" 
                                                     Height="32px" style="OVERFLOW-Y: hidden; OVERFLOW-X: hidden;" 
                        >                               
-                   <asp:Table ID="tEncabezado"  Runat="server" CssClass="table table-bordered bs-table" ></asp:Table>                   
+                   <asp:Table ID="tEncabezado" GridLines="Both" Runat="server"  ></asp:Table>                   
                                            </asp:Panel>
                </td>
                                             </tr>
                                                 <tr>
                                                     <td  style="vertical-align: top">
                <asp:Panel ID="PanelPrimeraColumna" runat="server" HorizontalAlign="Left"  ScrollBars="Both" Width="100px" Height="400px" style="OVERFLOW-Y: hidden; OVERFLOW-X: hidden;" >                               
-                   <asp:Table ID="tContenido0"  Runat="server" CssClass="table table-bordered bs-table"  Width="100px" ></asp:Table> 
+                   <asp:Table ID="tContenido0"  Runat="server"   CssClass="table table-bordered bs-table"  ></asp:Table> 
                                            </asp:Panel>
                                     
                                                     </td>
                                                     <td align="left" style="vertical-align: top">
                                     
                <asp:Panel onkeydown="enterToTab(event)" ID="Panel1" runat="server"  ScrollBars="Auto"  onscroll="javascript:hacerScrollHorizontal();hacerScrollVertical();"   Width="1100px" Height="410px"  >                               
-                   <asp:Table  ID="tContenido" BorderStyle="Solid" BorderWidth="1px"
-                                                   Runat="server" CssClass="table table-bordered bs-table" ></asp:Table> 
+                   <asp:Table  ID="tContenido" 
+                                                   Runat="server" GridLines="Both"></asp:Table> 
                                            </asp:Panel>
                                                     </td>
                                                 </tr>

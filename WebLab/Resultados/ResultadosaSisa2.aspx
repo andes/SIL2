@@ -52,7 +52,7 @@
 
                         </div>
                    <div class="panel-body">
-     <table width="100%"
+     <table width="1100px"
          >
      <tr>
 
@@ -73,14 +73,14 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                 <p>Fecha Validacion Desde:<input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
                         style="width: 120px"  onblur="valFecha(this)" 
                         onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  /></p>
-                  <p> Determinacion:  <asp:DropDownList ID="ddlItem" runat="server" class="form-control input-sm" OnSelectedIndexChanged="ddlItem_SelectedIndexChanged" AutoPostBack="True" Font-Bold="True" Font-Size="12pt" >
+                  <p> Evento SISA:  <asp:DropDownList ID="ddlItem" runat="server" class="form-control input-sm" OnSelectedIndexChanged="ddlItem_SelectedIndexChanged" AutoPostBack="True" Font-Bold="True" Font-Size="12pt" >
                 </asp:DropDownList>
 
    Resultado: <asp:DropDownList ID="ddlResultado" runat="server" 
-                                ToolTip="Seleccione el resultado a informar" TabIndex="1" class="form-control input-sm" Font-Bold="True" Font-Size="12pt"  >
+                                ToolTip="Seleccione el resultado a informar" TabIndex="1" class="form-control input-sm" Font-Bold="True" Font-Size="12pt" AutoPostBack="True" OnSelectedIndexChanged="ddlResultado_SelectedIndexChanged"  >
                             </asp:DropDownList>
 
-                      <asp:RangeValidator ID="rvItem" runat="server" ControlToValidate="ddlItem" ErrorMessage="RangeValidator" MaximumValue="99999999" MinimumValue="1" Type="Integer" ValidationGroup="0">Debe seleccionar una determinacion</asp:RangeValidator>
+                      <asp:RangeValidator ID="rvItem" runat="server" ControlToValidate="ddlItem" ErrorMessage="RangeValidator" MaximumValue="99999999" MinimumValue="1" Type="Integer" ValidationGroup="0">Debe seleccionar un evento</asp:RangeValidator>
 
                 </p>
                 <p> 
@@ -88,12 +88,12 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                         <asp:ListItem Selected="True" Value="0">Pendientes de Enviar</asp:ListItem>
                         <asp:ListItem Value="1">Enviados por Interoperabilidad</asp:ListItem>
                         <asp:ListItem Value="2">Excluidos de enviar</asp:ListItem>
-                    </asp:RadioButtonList>
+                    </asp:RadioButtonList> </p>
 
      <asp:Button ID="btnBuscar" runat="server" onclick="btnBuscar_Click"   CssClass="btn btn-primary" Width="150px"
                 Text="Buscar" ValidationGroup="0" />
 
-                </p>
+               
                 
                 
             </div>
@@ -134,14 +134,13 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                 <input id="HdIdTipoPrueba" type="hidden" runat="server" />
                      <input id="HdidResultadoSISA" type="hidden" runat="server" />
                            <input id="HdidEventoSISA" type="hidden" runat="server" />
+                       <input id="HidItemSIL" type="hidden" runat="server" />
 
-     <asp:Button ID="btnNoInformarSISA" runat="server"   CssClass="btn btn-danger" Width="250px"  OnClientClick="return PreguntoExcluir();"
-                Text="Descartar Informar a SISA" OnClick="btnNoInformarSISA_Click" />
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
    
 
-     <asp:Button ID="btnSISA" runat="server" onclick="btnGuardar_Click"   CssClass="btn btn-danger" Width="150px"
-                Text="Informar a SISA" />
+     <asp:Button ID="btnSISA" runat="server" onclick="btnGuardar_Click"   CssClass="btn btn-primary" Width="150px"
+                Text="Informar a SISA" Visible="False" />
 
    
 
@@ -149,10 +148,10 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                 </tr> </table>
                         </div>
                     <div class="panel-footer">
-                		<div style="border: 1px solid #999999; height: 450px; width:1050px; overflow: scroll; background-color: #EFEFEF;"> 
+                		<div style="border: 1px solid #999999; height: 450px; width:1080px; overflow: scroll; background-color: #EFEFEF;"> 
          <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"
                 DataKeyNames="idDetalleProtocolo" CssClass="table table-bordered bs-table"  Font-Names="Arial" Font-Size="10pt"
-                EmptyDataText="No se encontraron resultados para incorporar" Width="100%" Font-Bold="True">
+                EmptyDataText="No se encontraron resultados para incorporar"  Font-Bold="True">
             <Columns>
                 <asp:TemplateField HeaderText="Sel." >
                     <ItemTemplate>
@@ -163,16 +162,27 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                 </asp:TemplateField>
                 <asp:BoundField DataField="numero"   HeaderText="Numero" >
                
+                <ItemStyle Width="10%" />
+               
                 </asp:BoundField>
-                <asp:BoundField DataField="dni" HeaderText="dni" >
+                <asp:BoundField DataField="dni" HeaderText="DNI" >
+            
+                <ItemStyle Width="10%" />
             
                 </asp:BoundField>
                 
                 
-                <asp:BoundField DataField="apellido" HeaderText="Apellido" />
+                <asp:BoundField DataField="apellido" HeaderText="Apellido" >
                 
                 
-                  <asp:BoundField DataField="nombre" HeaderText="Nombre" />
+                  <ItemStyle Width="15%" />
+                </asp:BoundField>
+                
+                
+                  <asp:BoundField DataField="nombre" HeaderText="Nombre"  >
+                      
+                <ItemStyle Width="20%" />
+                </asp:BoundField>
                 
                         
          
@@ -182,33 +192,42 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                         
          
                         
-                <ItemStyle Width="40%" />
+                <ItemStyle Width="20%" />
                 </asp:BoundField>
                 
                         
          
                         
-                <asp:BoundField DataField="fechatoma" HeaderText="Fecha Toma" />
-                
+                <asp:BoundField DataField="fechatoma" HeaderText="Fecha Toma" >
                         
-         
+                <ItemStyle Width="10%" />
+                </asp:BoundField>
                         
-                <asp:BoundField DataField="nombreEvento" HeaderText="Evento SISA" />
-                
-                        
-         
-                        
-                <asp:BoundField DataField="IdMuestraSISA"  HeaderText="idMuestra" />
-                <asp:BoundField DataField="idTipoMuestraSISA" HeaderText="idTipoMuestraSISA" />
-                
+                <asp:BoundField DataField="nombreDet" HeaderText="Determinacion" >
+                <ItemStyle Width="10%" />
+                </asp:BoundField>
+                <asp:BoundField DataField="IdMuestraSISA"  HeaderText="idM" >
+            
+                <ItemStyle Width="2%" />
+            
+                </asp:BoundField>
+                <asp:BoundField DataField="idTipoMuestraSISA" HeaderText="idTM" >
+            
+                <ItemStyle Width="2%" />
+            
+                </asp:BoundField>               
                              
-                <asp:BoundField DataField="IdPruebaSISA"  HeaderText="IdPruebaSISA" />
-                <asp:BoundField DataField="idTipoPruebaSISA" HeaderText="idTipoPruebaSISA" />
-                  <asp:BoundField DataField="idResultadoSISA" HeaderText="idResultadoSISA" />
+                <asp:BoundField DataField="IdPruebaSISA"  HeaderText="IdP" >
+            
+                <ItemStyle Width="2%" />
+            
+                </asp:BoundField>
+                <asp:BoundField DataField="idTipoPruebaSISA" HeaderText="idTP" />
+                  <asp:BoundField DataField="idResultadoSISA" HeaderText="idREs" />
                       
-                  <asp:BoundField DataField="idEvento" HeaderText="idEventoSISA" />
-                  <asp:BoundField DataField="idcasosisa" HeaderText="idcasosisa" />
-                 
+                  <asp:BoundField DataField="idEvento" HeaderText="idEv" />
+                  <asp:BoundField DataField="idcasosisa" HeaderText="idCasoSisa" />
+                <asp:BoundField DataField="iditem" HeaderText="idDetSIL" />                 
          
                         
             </Columns>
@@ -218,12 +237,16 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
          </asp:GridView>
 
          </div>
+   
+     <asp:Button ID="btnNoInformarSISA" runat="server"   CssClass="btn btn-danger" Width="250px"  OnClientClick="return PreguntoExcluir();"
+                Text="Descartar Informar a SISA" OnClick="btnNoInformarSISA_Click" Visible="False" />
+
                         </div>
       
 
-
         </div>
 
+     
         
     </div>
 

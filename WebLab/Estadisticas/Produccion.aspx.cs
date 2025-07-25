@@ -18,8 +18,7 @@ using System.Data.SqlClient;
 using Business;
 using System.Text;
 using Business.Data;
-
-using OfficeOpenXml;
+//using OfficeOpenXml;
 
 namespace WebLab.Estadisticas
 {
@@ -52,6 +51,7 @@ namespace WebLab.Estadisticas
                     Response.Redirect("logout.aspx", false);
                 else
                 {
+              ///      PreventingDoubleSubmit(btnGenerar);
                     VerificaPermisos("De Produccion");
                     txtFechaDesde.Value = DateTime.Now.AddDays(-30).ToShortDateString();
                     txtFechaHasta.Value = DateTime.Now.ToShortDateString();
@@ -60,7 +60,21 @@ namespace WebLab.Estadisticas
                 }
             }
         }
+        //private void PreventingDoubleSubmit(Button button)
+        //{
+        //    StringBuilder sb = new StringBuilder();
+        //    sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+        //    sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+        //    sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+        //    sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+        //    sb.Append("this.value = 'Processing...';");
+        //    sb.Append("this.disabled = true;");
+        //    sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+        //    sb.Append("return true;");
 
+        //    string submit_Button_onclick_js = sb.ToString();
+        //    button.Attributes.Add("onclick", submit_Button_onclick_js);
+        //}
         private void VerificaPermisos(string sObjeto)
         {
             if (Session["idUsuario"] != null)
@@ -139,8 +153,8 @@ namespace WebLab.Estadisticas
                     else
                         dataTableAExcel(GetDataSet(), "Produccion");
                 }
-
-            }
+              
+            } 
         }
 
         private void ImprimirReporteAgrupado()
@@ -256,9 +270,39 @@ namespace WebLab.Estadisticas
             if (txtFechaDesde.Value == "")
                 args.IsValid = false;
             else
+            {
                 if (txtFechaHasta.Value == "") args.IsValid = false;
-                else args.IsValid = true;
+                else
+                { if (diferenciamayorunanio(DateTime.Parse(txtFechaDesde.Value), DateTime.Parse(txtFechaHasta.Value)) > 1)
+                    {
+                        CustomValidator1.Text = "No es posible generar información para mas de 1 año. Verifique.";                       
+                        args.IsValid = false;
+                    }
+                    else args.IsValid = true; }
+            }
         }
+
+        private double diferenciamayorunanio(DateTime desde, DateTime hasta)
+        {
+            double dif = 0;
+               TimeSpan diferencia = hasta - desde;
+
+            // 365.2425 días es la duración media de un año gregoriano (considerando años bisiestos)
+            dif=diferencia.TotalDays / 365.2425;
+            return dif;
+
+
+            //int años = hasta.Year - desde.Year;
+
+            //// Si todavía no ha llegado el aniversario este año, restar 1
+            //if (hasta.Month < desde.Month || (hasta.Month == desde.Month && hasta.Day < desde.Day))
+            //{
+            //    años--;
+            //}
+
+            //return años;
+        }
+
         public DataTable GetDataSet()
         {       
             DataSet Ds = new DataSet();
@@ -369,7 +413,41 @@ namespace WebLab.Estadisticas
         //        dataTableAExcel(GetDataSet(), "ProduccionLaboratorio");
         //    }
         //}
+        //private void dataTableAExcel(DataTable tabla, string nombreArchivo)
+        //{
+        //    if (tabla == null || tabla.Rows.Count == 0)
+        //        return;
 
+        //    // Si usas EPPlus 5+, descomenta esta línea:
+        //    // ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        //    using (ExcelPackage pck = new ExcelPackage())
+        //    {
+        //        var hoja = pck.Workbook.Worksheets.Add("Datos");
+
+        //        // Cargar los datos desde la DataTable (true = incluye encabezados)
+        //        hoja.Cells["A1"].LoadFromDataTable(tabla, true);
+
+        //        // Ajustar el ancho de columnas
+        //        hoja.Cells[hoja.Dimension.Address].AutoFitColumns();
+
+        //        // Crear archivo en memoria y enviarlo como respuesta
+        //        using (MemoryStream ms = new MemoryStream())
+        //        {
+        //            pck.SaveAs(ms);
+        //            ms.Position = 0;
+
+        //            Response.Clear();
+        //            Response.Buffer = true;
+        //            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        //            string nombreFinal = $"{nombreArchivo}_{oUser.IdEfector.IdEfector2}.xlsx";
+        //            Response.AddHeader("content-disposition", "attachment;filename=" + nombreFinal);
+        //            Response.BinaryWrite(ms.ToArray());
+        //            Response.End();
+        //        }
+        //    }
+        //}
         private void dataTableAExcel(DataTable tabla, string nombreArchivo)
         {
             if (tabla.Rows.Count > 0)
@@ -391,13 +469,45 @@ namespace WebLab.Estadisticas
                 Response.Clear();
                 Response.Buffer = true;
                 Response.ContentType = "application/vnd.ms-excel";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo+"_"+ oUser.IdEfector.IdEfector2 + ".xls");
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + "_" + oUser.IdEfector.IdEfector2 + ".xls");
                 Response.Charset = "UTF-8";
                 Response.ContentEncoding = Encoding.Default;
                 Response.Write(sb.ToString());
                 Response.End();
             }
         }
+        //private void dataTableAExcel(DataTable tabla, string nombreArchivo)
+        //{
+        //    if (tabla == null || tabla.Rows.Count == 0)
+        //        return;
+
+        //    using (XLWorkbook wb = new XLWorkbook())
+        //    {
+        //        // Agregar la DataTable como hoja
+        //        var hoja = wb.Worksheets.Add(tabla, "Datos");
+
+        //        // Opcional: ajustar automáticamente el ancho de columnas
+        //        hoja.Columns().AdjustToContents();
+
+        //        using (MemoryStream stream = new MemoryStream())
+        //        {
+        //            wb.SaveAs(stream);
+        //            stream.Position = 0;
+
+        //            Response.Clear();
+        //            Response.Buffer = true;
+        //            Response.Charset = "";
+        //            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        //            // Agregar nombre con sufijo del efector
+        //            string nombreCompleto = $"{nombreArchivo}_{oUser.IdEfector.IdEfector2}.xlsx";
+        //            Response.AddHeader("content-disposition", "attachment;filename=" + nombreCompleto);
+
+        //            Response.BinaryWrite(stream.ToArray());
+        //            Response.End();
+        //        }
+        //    }
+        //}
 
         protected void lnkMarcar_Click(object sender, EventArgs e)
         {

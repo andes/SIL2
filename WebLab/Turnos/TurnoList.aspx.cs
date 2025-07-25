@@ -236,7 +236,8 @@ namespace WebLab.Turnos
         }
 
         private bool VerificarAgenda()
-        {bool result = false;
+        {
+            bool result = false;
             if (ddlTipoServicio.SelectedValue != "")
             {
                 string s_item = ""; string m_ssqlItem = "";
@@ -389,7 +390,8 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             if (oUser.IdPerfil.IdPerfil == 15)
             {
                 m_ssql = @"select idEfector, nombre 
-							  from sys_Efector where idEfector in (select idEfectorSolicitante from LAB_Agenda A where baja=0 and A.idEfectorSolicitante = " + oUser.IdEfector.IdEfector.ToString() + ") order by nombre";
+							  from sys_Efector where idEfector in
+(select idEfectorSolicitante from LAB_Agenda A where baja=0 and A.idEfectorSolicitante = " + oUser.IdEfector.IdEfector.ToString() + ") order by nombre";
                 oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre");
                 ddlEfectorSolicitante.SelectedValue = oUser.IdEfector.IdEfector.ToString();
                 ddlEfectorSolicitante.Enabled = false;
@@ -397,14 +399,15 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             else
             {
                 m_ssql = @"select idEfector, nombre 
-							  from sys_Efector where idEfector in (select idEfectorSolicitante from LAB_Agenda A where baja=0 and A.idEfector = " + oUser.IdEfector.IdEfector.ToString() + ") order by nombre";
+							  from sys_Efector where idEfector in
+(select idEfectorSolicitante from LAB_Agenda A where baja=0 and A.idEfector = " + oUser.IdEfector.IdEfector.ToString() + ") order by nombre";
                 oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre");
                 ddlEfectorSolicitante.Items.Insert(0, new ListItem("--Todos--", "0"));
             }
 
 
-            m_ssql = @"SELECT I.idItem, I.nombre FROM  LAB_Agenda A 
-INNER JOIN LAB_Item I ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_filtro; //and A.fechaDesde>='" + fecha.ToString("yyyyMMdd") + "'";
+            m_ssql = @"SELECT distinct I.idItem, I.nombre FROM  LAB_Agenda A with (nolock)
+INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_filtro; //and A.fechaDesde>='" + fecha.ToString("yyyyMMdd") + "'";
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
             ddlItem.Items.Insert(0, new ListItem("--Seleccione práctica--", "0"));
             if (Session["idItem"] != null) ddlItem.SelectedValue = Session["idItem"].ToString();
@@ -478,7 +481,7 @@ INNER JOIN LAB_Item I ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_
              INNER JOIN   LAB_TipoServicio as S (nolock)  ON T.idTipoServicio = S.idTipoServicio 
                                INNER JOIN     Sys_Usuario AS U (nolock)  ON T.idUsuarioRegistro = U.idUsuario 
  inner join sys_Efector E (nolock) on E.idEfector=T.idEfectorSolicitante
-                              WHERE  T.fecha='" + fecha.ToString("yyyyMMdd") + "'"+                              m_Condicion + " ORDER BY T.idTurno ";
+                              WHERE  T.fecha='" + fecha.ToString("yyyyMMdd") + "'"+ m_Condicion + " ORDER BY T.idTurno ";
 
             //and Pro.idEfector=" + oCon.IdEfector.IdEfector.ToString() +
             DataSet Ds = new DataSet();
@@ -616,6 +619,10 @@ INNER JOIN LAB_Item I ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_
                     CmdProtocolo.CommandName = "Protocolo";
                     CmdProtocolo.ToolTip = "Protocolo";
 
+                    CmdModificar.Visible = true;
+                    CmdImprimir.Visible = true;
+                    CmdEliminar.Visible = true;
+                    CmdProtocolo.Visible = true;
 
                     if (Request["tipo"] != null) Session["tipo"] = Request["tipo"];
                     if (Session["tipo"].ToString() == "generacion")
@@ -650,10 +657,18 @@ INNER JOIN LAB_Item I ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_
                        
                         hlnk.ImageUrl = "~/App_Themes/default/images/verde.gif";
                         e.Row.Cells[0].Controls.Add(hlnk);                        
-                    }                                                    
+                    }
+
+                    if (cldTurno.SelectedDate.Date < DateTime.Now.Date)// no se permiten acciones a protocolos pasados.
+                    {
+                        CmdModificar.Visible = false;
+                        CmdImprimir.Visible = false;
+                        CmdEliminar.Visible = false;
+                        CmdProtocolo.Visible = false;
+                    }
                 }
              //   Configuracion oCon = new Configuracion();oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);              
-                e.Row.Cells[7].Visible = oCon.GeneraComprobanteTurno;
+                e.Row.Cells[8].Visible = oCon.GeneraComprobanteTurno;
                 
             }
         }
@@ -693,11 +708,13 @@ INNER JOIN LAB_Item I ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_
               //  Usuario oUser = new Usuario();
                 Turno oRegistro = new Turno();
                 oRegistro = (Turno)oRegistro.Get(typeof(Turno), int.Parse(p.ToString()));
+            if (oRegistro != null)
+            {
                 oRegistro.Baja = true;
-            oRegistro.IdUsuarioRegistro = oUser;
+                oRegistro.IdUsuarioRegistro = oUser;
                 oRegistro.FechaRegistro = DateTime.Now;
                 oRegistro.Save();
-                
+            }  
                 Actualizar();
          /*   }
           

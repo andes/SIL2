@@ -20,6 +20,11 @@ using System.Data.SqlClient;
 using System.Xml.Linq;
 using System.Xml;
 using System.Net.Mail;
+using System.ServiceModel;
+
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 
 namespace WebLab.Pacientes
 {
@@ -85,9 +90,9 @@ namespace WebLab.Pacientes
                             if (oCon.ConectaRenaper)
                             {
 
+                                ConectarRenaperXRoad();
 
-
-                                SolicitarServicio();
+                                //SolicitarServicio();
 
                             }
                         }
@@ -349,8 +354,186 @@ where P.idPaciente=" + pac.IdPaciente.ToString();
 
         }
 
-        
+        public void GrabarLogAcceso(string servicio, string dni)
+        {
+            try
+            {
 
+                SqlConnection conn2 = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+                string query = @"
+INSERT INTO LAB_LogAccesoServicio 
+           ([numerodocumento]
+           ,[servicio]
+           ,[idUsuario]
+           ,[fecha])
+     VALUES
+           ('" + dni + "','" + servicio + "'," + Session["idUsuario"].ToString() + ", getdate()     )";
+
+                SqlCommand cmd = new SqlCommand(query, conn2);
+
+
+                int idres2 = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            catch (Exception ex)
+            { }
+        }
+
+        private bool ConectarRenaperXRoad()
+        {
+            bool ok = false;
+            try
+            {
+
+                 GrabarLogAcceso("RENAPER", Request["dni"].ToString());
+
+                long nrodocumento = long.Parse(Request["dni"].ToString());
+                string sexo = Request["sexo"].ToString();
+
+                string rutaCert = ConfigurationManager.AppSettings["RutaCert"].ToString();
+                string BaseUrl = ConfigurationManager.AppSettings["BaseUrlXroad"].ToString();
+                string Serv = "GP-RENAPER/WS_RENAPER_DOCUMENTO/";
+                string clie = ConfigurationManager.AppSettings["ClienteXroad"].ToString();
+                string param = nrodocumento.ToString() + "/" + sexo.ToUpper();
+                string host = BaseUrl + Serv + param;
+
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.ServerCertificateValidationCallback = (snder, cert, chain, error) => true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(host);
+
+                //certificado
+                X509Certificate certificate = new X509Certificate(rutaCert, "", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet
+                  | X509KeyStorageFlags.PersistKeySet);
+
+                req.ClientCertificates = new X509CertificateCollection() { certificate };
+                req.ContentType = "application/json";
+                req.AllowAutoRedirect = true;
+                req.Timeout = 10 * 1000;
+                req.Method = "GET";
+                req.Headers.Add("X-Road-Client", clie);
+
+
+                Protocolos.ProcesaRenaper.ResultadoRenaperModel resultado2;
+
+
+                using (WebResponse response = req.GetResponse())
+                {
+                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+
+                            string responseBody = objReader.ReadToEnd();
+
+                            if (!responseBody.Contains("error"))
+                            {
+                                resultado2 = jsonSerializer.Deserialize<Protocolos.ProcesaRenaper.ResultadoRenaperModel>(responseBody);
+                                Protocolos.ProcesaRenaper.PersonaRenaperModel persona_d = resultado2.data;
+
+                                if (resultado2.resultado.ToUpper() == "CORRECTO")
+                                {
+                                    //lblValidador.Visible = true;
+                                    //lblValidador.Text = "Paciente VALIDADO POR RENAPER";
+                                    ok = true;
+                                    txtDNI.Text = Request["dni"].ToString();
+                                    txtApellido.Text = persona_d.apellido.ToUpper();
+                                    txtNombre.Text = persona_d.nombres.ToUpper();
+                                    txtFechaNacimiento.Value = persona_d.fecha_nacimiento;
+                                    txtCalle.Value = persona_d.calle + " " + persona_d.numero;
+                                    txtCuil.Value = persona_d.cuil;
+                                    if (persona_d.ciudad == "") txtCiudad.Value = "SIN DATOS";
+                                    else txtCiudad.Value = persona_d.ciudad;
+
+                                    if (persona_d.provincia == "") txtProvincia.Value = "SIN DATOS";
+                                    else txtProvincia.Value = persona_d.provincia;
+                                    if (persona_d.pais == "") txtPais.Value = "SIN DATOS";
+                                    else txtPais.Value = persona_d.pais;
+                                    if (persona_d.codigo_postal == "") txtCodigoPostal.Value = "SIN DATOS";
+                                    else txtCodigoPostal.Value = persona_d.codigo_postal;
+                                    if (persona_d.monoblock == "") txtBarrio.Value = "SIN DATOS";
+                                    else
+                                        txtBarrio.Value = persona_d.monoblock;
+                                    fallecimiento.Text = persona_d.mensaje_fallecido;
+                                    fechaDomicilio.Text = persona_d.emision;
+
+                                    //if (fechaDomicilio.Text == "")
+                                    //    lblFechaDomicilio.Visible = false;
+                                    //else
+                                    //    lblFechaDomicilio.Visible = true;
+                                    
+                                     
+                                    //if (Request["sexo"].ToString() == "F") { txtSexo.Value = "FEMENINO"; ddlSexo.SelectedValue = "2"; }
+                                    //if (Request["sexo"].ToString() == "M") { txtSexo.Value = "MASCULINO"; ddlSexo.SelectedValue = "3"; }
+                                    //if (Request["sexo"].ToString() == "X") { txtSexo.Value = "X"; ddlSexo.SelectedValue = "0"; }
+
+                                    if (Request["sexo"].ToString() == "F")
+                                    {
+                                        ddlSexo.SelectedValue = "2";
+                                        ddlSexoLegal.SelectedValue = "2";
+                                    }
+                                    else
+                                    {
+                                        ddlSexo.SelectedValue = "3";
+                                        ddlSexoLegal.SelectedValue = "3";
+                                    }
+
+                                    if (Request["sexo"].ToString() == "X")
+                                    {
+                                        ddlSexo.SelectedValue = "0";
+                                        ddlSexoLegal.SelectedValue = "0";
+                                    }
+                                        idEstado.Value = "3"; // validado con renaper
+                                                          // System.Text.ASCIIEncoding codificador = new System.Text.ASCIIEncoding();
+                                                          //string foti= codificador.GetString(persona_d.foto);
+                                                          //  Image1.ImageUrl = persona_d.foto;
+
+
+                                    /// traer al paciente si no es nuevo, es modificacion
+                                    int id = Convert.ToInt32(Request.QueryString["id"]);
+                                    //datos del Paciente           
+                                    Paciente pac = new Paciente();
+                                    if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
+                                    txtTelefono.Value = pac.InformacionContacto;
+                                    /// 
+
+                                    //imgRenaper.Visible = true;
+                                }
+                                else
+                                    ok = false;
+                            }
+                            else
+                                ok = false;
+
+                        }
+                        response.Close();
+                    }
+                    //   lstRetorno.Add(resultado);
+                }
+
+
+            }
+            catch (WebException ex)
+            {
+                ok = false;
+                string mensaje = ex.ToString();
+
+            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ok = false;
+            //    string mensaje = ex.Message.ToString();
+            //}
+
+            return ok;
+
+        }
         private void SolicitarServicio()
         {
             string mensaje = "";

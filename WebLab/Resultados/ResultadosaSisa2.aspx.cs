@@ -85,17 +85,18 @@ namespace WebLab.Resultados
             cmd.CommandType = CommandType.StoredProcedure;
 
             string str_condicion = " and C.idEfector=" + ddlEfector.SelectedValue;
-            Item oDet = new Item();
-            oDet = (Item)oDet.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-            if (oDet != null)
-            {
+            //Item oDet = new Item();
+            //oDet = (Item)oDet.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
+            //if (oDet != null)
+            //{
                 if (txtFechaDesde.Value != "")
                 {
                     DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
-                    if (oDet.Informable)
+                //    if (oDet.Informable)
                         str_condicion += " AND d.fechaValida>= '" + fecha1.ToString("yyyyMMdd") + "'";
-                    else
+                  /*  else
                         str_condicion += " AND c.fecha >= '" + fecha1.ToString("yyyyMMdd") + "'";
+                        */
                 }
 
                 if (ddlResultado.SelectedValue != "0")
@@ -129,140 +130,9 @@ namespace WebLab.Resultados
                 gvLista.DataBind();
                 lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
                 conn.Close();
-            }
+            //}
         }
-        //        private void CargarGrilla_ant()
-        //        {
-        //            string str_condicion = " and C.idEfector=" + ddlEfector.SelectedValue;
-        //            Item oDet = new Item();
-        //            oDet = (Item)oDet.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-        //            if (oDet != null)
-        //            {
-        //                if (txtFechaDesde.Value != "")
-        //                {
-        //                    DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
-        //                    if (oDet.Informable)
-        //                        str_condicion += " AND d.fechaValida>= '" + fecha1.ToString("yyyyMMdd") + "'";
-        //                    else
-        //                        str_condicion += " AND c.fecha >= '" + fecha1.ToString("yyyyMMdd") + "'";
-        //                }
-
-        //                if (ddlResultado.SelectedValue != "0")
-        //                    str_condicion += " AND d.resultadocar= '" + ddlResultado.SelectedValue + "'";
-
-//        string m_strSQL = @"SELECT  distinct iddetalleprotocolo,
-//	 c.numero 	
-//      ,a.numeroDocumento as dni
-//      ,A.[nombre]
-//      ,A.apellido as apellido
-//	  , d.resultadoCar ,
-//	  c.fechatomamuestra as fechatoma, 
-//	  S.idMuestra as IdMuestraSISA,
-//	  S.idTipoMuestra as idTipoMuestraSISA,
-//s.idPrueba as idPruebaSISA,
-//s.idTipoPrueba as idTipoPruebaSISA,  
-//ds.idResultadoSISA,
-//S.idEvento, S.nombreEvento
-
-//  FROM [dbo].sys_paciente a (nolock)
-  
-
-//  INNER JOIN LAB_Protocolo C (nolock) ON c.idpaciente= a.idPaciente
-//  inner join LAB_DetalleProtocolo d (nolock) on d.idProtocolo= c.idProtocolo 
-//  inner join lab_item i (nolock) on i.idItem= d.idsubItem  
-//   inner join LAB_ConfiguracionSISA S (nolock) on S.idCaracter= c.idCaracter and s.idItem= d.idSubItem
-//   inner join LAB_ConfiguracionSISADetalle DS (nolock) on DS.idItem=d.idSubItem  and resultadocar= ds.resultado
-//      where  
-// -- c.idCasoSISA=0  
-//                d.ideventomuestraSISA=0 
-//and a.idestado<>2
-//  and c.idpaciente>0
-//   and c.notificarresultado=1 and (d.idUsuarioValida>0 and d.informable=1 and d.conResultado=1 )
-//    and d.idSubItem= " + ddlItem.SelectedValue + str_condicion;
-//        // agrego control de vigencia
-//        m_strSQL += @"  and S.fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
-//and ( S.fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, S.fechavigenciahasta, 103) = '01/01/1900')
-//and (S.idOrigen=0 or S.idOrigen= c.idorigen) and (C.Embarazada=S.soloEmbarazada) and (C.edad between S.edadDesde and S.edadHasta and C.unidadEdad=0) ";
-
-//                DataSet Ds = new DataSet();
-//                //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-//                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-//                SqlDataAdapter adapter = new SqlDataAdapter();
-//                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-//                adapter.Fill(Ds);
-
-
-
-//                gvLista.DataSource = Ds.Tables[0];
-//                gvLista.DataBind();
-//                lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
-//           }
-
-//        }
-
-//        private void CargarGrillaEnviados()
-//        {
-//            string str_condicion = " and C.idEfector=" + ddlEfector.SelectedValue;
-//            Item oDet = new Item();
-//            oDet = (Item)oDet.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-//            if (oDet != null)
-//            {
-//                if (txtFechaDesde.Value != "")
-//                {
-//                    DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
-//                    if (oDet.Informable)
-//                        str_condicion += " AND d.fechaValida>= '" + fecha1.ToString("yyyyMMdd") + "'";
-//                    else
-//                        str_condicion += " AND c.fecha >= '" + fecha1.ToString("yyyyMMdd") + "'";
-//                }
-
-//                if (ddlResultado.SelectedValue != "0")
-//                    str_condicion += " AND d.resultadocar= '" + ddlResultado.SelectedValue + "'";
-
-//                string m_strSQL = @"SELECT  distinct iddetalleprotocolo,
-//	 c.numero 	
-//      ,a.numeroDocumento as dni
-//      ,A.[nombre]
-//      ,A.apellido as apellido
-//	  , d.resultadoCar ,
-//	  c.fechatomamuestra as fechatoma, 
-//	  S.idMuestra as IdMuestraSISA,
-//	  S.idTipoMuestra as idTipoMuestraSISA,
-//s.idPrueba as idPruebaSISA,
-//s.idTipoPrueba as idTipoPruebaSISA,  
-//ds.idResultadoSISA,
-//S.idEvento, S.nombreEvento
-
-//  FROM [dbo].sys_paciente a (nolock)
-  
-
-//  INNER JOIN LAB_Protocolo C (nolock) ON c.idpaciente= a.idPaciente
-//  inner join LAB_DetalleProtocolo d (nolock) on d.idProtocolo= c.idProtocolo 
-//  inner join lab_item i (nolock) on i.idItem= d.idsubItem  
-//   inner join LAB_ConfiguracionSISA S (nolock) on S.idCaracter= c.idCaracter and s.idItem= d.idSubItem
-//   inner join LAB_ConfiguracionSISADetalle DS (nolock) on DS.idItem=d.idSubItem  and resultadocar= ds.resultado
-//      where   d.ideventomuestraSISA>0   
-//       and d.idSubItem= " + ddlItem.SelectedValue + str_condicion;
-//                // agrego control de vigencia
-//                m_strSQL += @"  and S.fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
-//and ( S.fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, S.fechavigenciahasta, 103) = '01/01/1900')
-//and (S.idOrigen=0 or S.idOrigen= c.idorigen) and (C.Embarazada=S.soloEmbarazada) and (C.edad between S.edadDesde and S.edadHasta and C.unidadEdad=0) ";
-
-//                DataSet Ds = new DataSet();
-//                //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-//                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-//                SqlDataAdapter adapter = new SqlDataAdapter();
-//                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-//                adapter.Fill(Ds);
-
-
-
-//                gvLista.DataSource = Ds.Tables[0];
-//                gvLista.DataBind();
-//                lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
-//            }
-
-//        }
+        
 
         protected void lnkMarcar_Click(object sender, EventArgs e)
         {
@@ -417,16 +287,16 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
 
 
                 /*si el idcasosisa lo trae desde la vdrl reactiva y el protocolo del treponema es otro le pone el mismo caso al treponema*/
-                if ((oDetalle.IdProtocolo.IdCasoSISA == 0) && (int.Parse(idcasosisa) > 0))
-                {
-                    oDetalle.IdProtocolo.IdCasoSISA = int.Parse(idcasosisa);
-                    oDetalle.IdProtocolo.Save();
-                    oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + int.Parse(idcasosisa), oUser.IdUsuario);
+                //if ((oDetalle.IdProtocolo.IdCasoSISA == 0) && (int.Parse(idcasosisa) > 0))
+                //{
+                //    oDetalle.IdProtocolo.IdCasoSISA = int.Parse(idcasosisa);
+                //    oDetalle.IdProtocolo.Save();
+                //    oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + int.Parse(idcasosisa), oUser.IdUsuario);
 
-                }
+                //}
 
                 if ((oDetalle.IdProtocolo.IdCasoSISA > 0) && (oDetalle.IdeventomuestraSISA == 0))
-                    GenerarMuestraSISA(oDetalle.IdProtocolo, int.Parse(idcasosisa));
+                    GenerarMuestraSISA(oDetalle.IdProtocolo, oDetalle.IdProtocolo.IdCasoSISA);
 
                 if (oDetalle.IdeventomuestraSISA > 0)
                     GenerarResultadoSISA(oDetalle, res);
@@ -434,7 +304,7 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
 
                 /****/
 
-                if (oDetalle.IdProtocolo.IdCasoSISA == 0)
+          /*      if (oDetalle.IdProtocolo.IdCasoSISA == 0)
                     {
                         // generacaso = GenerarCasoSISA(oDetalle, res);
                         generacaso = GenerarCasoSISA_V2(oDetalle, res);
@@ -453,7 +323,7 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
                     if (oDetalle.IdeventomuestraSISA > 0)
                         GenerarResultadoSISA(oDetalle, res);
 
-
+                */
                 BorrarDescartado(oDetalle);
                 //}
             }
@@ -510,16 +380,22 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             }
 
-           
+
 
             ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos
-              m_ssql = @"SELECT distinct i.idItem, i.nombre FROM LAB_item i (nolock)
-inner join LAB_ConfiguracionSISA c (nolock) on c.idItem = i.idItem
-order by i.nombre ";
+            //              m_ssql = @"SELECT distinct i.idItem, i.nombre FROM LAB_item i (nolock)
+            //inner join LAB_ConfiguracionSISA c (nolock) on c.idItem = i.idItem
+            //order by i.nombre ";
 
-            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
+            //            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
+            //            ddlItem.Items.Insert(0, new ListItem("Seleccione", "0"));
+
+            m_ssql = @"SELECT distinct c.idEvento, c.nombreEvento
+                    FROM   LAB_ConfiguracionSISA c with (nolock)  
+                    order by c.nombreEvento";
+
+            oUtil.CargarCombo(ddlItem, m_ssql, "idEvento", "nombreEvento", connReady);
             ddlItem.Items.Insert(0, new ListItem("Seleccione", "0"));
-           
             m_ssql = null;
             oUtil = null;
         }
@@ -543,11 +419,11 @@ order by i.nombre ";
             try
             {
                 // query levanta todos los que se generan segun el caracter
-                m_strSQL = " select * from LAB_ConfiguracionSISA (nolock) where  idCaracter="+oDetalle.IdProtocolo.IdCaracter.ToString() +" and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+                m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter="+oDetalle.IdProtocolo.IdCaracter.ToString() +" and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
                // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
                 if ((res == "SE DETECTA") &&  (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid==oDetalle.IdSubItem.Codigo))
                 {
-                    m_strSQL = " select * from LAB_ConfiguracionSISA (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+                    m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
                 }
 
               
@@ -703,11 +579,11 @@ order by i.nombre ";
             try
             {
                 // query levanta todos los que se generan segun el caracter
-                m_strSQL = @" select * from LAB_ConfiguracionSISA (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+                m_strSQL = @" select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
                 // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
                 if ((res == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid == oDetalle.IdSubItem.Codigo))
                 {
-                    m_strSQL = " select * from LAB_ConfiguracionSISA (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+                    m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
                 }
 
 
@@ -779,19 +655,20 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                     ICriteria crit = m_session.CreateCriteria(typeof(DomicilioPaciente));
                     crit.Add(Expression.Eq("IdPaciente", oDetalle.IdProtocolo.IdPaciente));
                     IList detalle = crit.List();
-                    string s_calle = "";
+                    string s_calle = "SIN DATOS";// PARA CORREGIR ERROR QUE DA CUANDO NO SE ENVIAN DATOS: ciudadano.domicilio.calle":"No se debe superar los 200 caracteres.
                     foreach (DomicilioPaciente oDom in detalle)
                     {
                         
                           s_calle = oDom.Calle;
-                    if (s_calle.Length >= 200) s_calle = s_calle.Substring(0, 199);
-                    if (s_calle.Trim() == "") s_calle = null;
+                        if (s_calle.Length >= 200) s_calle = s_calle.Substring(0, 199);
+                        if (s_calle.Trim() == "") s_calle = null;
                     }
 
                   
                     string s_telefono = oDetalle.IdProtocolo.IdPaciente.InformacionContacto;
-                    if (s_telefono.Length < 7)
-                        s_telefono = "sindatos";
+                    if (s_telefono.Length < 7)                         s_telefono = "sindatos";
+                    if (s_telefono.Length > 15)                        s_telefono = "sindatos";
+                  ///  s_telefono = "sindatos444444444444444444444444444444444444444444";// prueba para forzar error
                     string s_tipodocumento = "1";
                     if (oDetalle.IdProtocolo.IdPaciente.IdEstado == 2)
                     {
@@ -912,6 +789,8 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
             catch (WebException ex)
             {
                 string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+                grabarLogMensaje(mensaje+ " protocolo: " + oDetalle.IdProtocolo.Numero.ToString());
+
                 RespuestaCaso respuesta_error = jsonSerializer.Deserialize<RespuestaCaso>(mensaje);
                 if (respuesta_error.id_caso != "")
                 { //  devolver el idcaso para guardar en la base de datos
@@ -934,7 +813,17 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
         }
 
-      
+        private void grabarLogMensaje(string mensaje)
+        {
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            mensaje = "Error SISA:" + mensaje;
+            string query = @"INSERT INTO [dbo].[Temp_Mensaje]
+           ( fecharegistro, mensaje, idEfector)           
+     VALUES  (GETDATE()  ,'" + mensaje + "'," + oUser.IdEfector.IdEfector.ToString()+")";
+            SqlCommand cmd = new SqlCommand(query, conn);                       
+
+            int mensajegrabado = Convert.ToInt32(cmd.ExecuteScalar());
+        }
 
         private void GenerarMuestraSISA(Protocolo protocolo, int idCasoSISA)
 
@@ -1001,8 +890,8 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                     if (respuesta_d.id != 1)
                     {
                         Item oItem = new Item();
-                        oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue.ToString()));
-
+                        oItem = (Item)oItem.Get(typeof(Item), int.Parse(HidItemSIL.Value));//se cambia al cambiar filtro por evento y no por determinacion
+                        
                         //string trajomuestra = fila[3].ToString();
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
@@ -1032,6 +921,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
             catch (WebException ex)
             {
                 string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+                grabarLogMensaje(mensaje+"- idcasosisa:" + idCasoSISA.ToString());
             }
 
         }
@@ -1053,13 +943,13 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
 
                 // query levanta todos los que se generan segun el caracter
-               string m_strSQL = " select * from LAB_ConfiguracionSISA (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+               string m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
 
                
                 // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
                 if ((resul == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid == oDetalle.IdSubItem.Codigo))
                 {
-                    m_strSQL = " select * from LAB_ConfiguracionSISA  (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+                    m_strSQL = " select * from LAB_ConfiguracionSISA  with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
                 }
                 m_strSQL += @"  and fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
 and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, fechavigenciahasta, 103) = '01/01/1900')
@@ -1075,10 +965,10 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                 m_strSQL += @" and (" + oDetalle.IdProtocolo.Edad + " between edadDesde and edadHasta and " + oDetalle.IdProtocolo.UnidadEdad + " = 0) ";
 
 
-                string idestablecimientodiagnostico = oDetalle.IdProtocolo.IdEfectorSolicitante.CodigoSISA;
-                if ((idestablecimientodiagnostico == "") || (idestablecimientodiagnostico == "0"))                    
-                idestablecimientodiagnostico = oDetalle.IdProtocolo.IdEfector.CodigoSISA;
-                //idestablecimientodiagnostico = "107093";
+                string idestablecimientodiagnostico = oDetalle.IdProtocolo.IdEfector.CodigoSISA;///.IdEfectorSolicitante.CodigoSISA;
+                //if ((idestablecimientodiagnostico == "") || (idestablecimientodiagnostico == "0"))                    
+                //idestablecimientodiagnostico = oDetalle.IdProtocolo.IdEfector.CodigoSISA;
+                ////idestablecimientodiagnostico = "107093";
 
 
                 DataSet Ds = new DataSet();
@@ -1179,7 +1069,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
             {
                 string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
 
-               
+                grabarLogMensaje(mensaje+ " ideventomuestra:" + oDetalle.IdeventomuestraSISA.ToString());
 
             }
 
@@ -1205,6 +1095,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                 HdIdTipoPrueba.Value = gvLista.Rows[row.RowIndex].Cells[11].Text;
 
                 HdidResultadoSISA.Value = gvLista.Rows[row.RowIndex].Cells[12].Text;
+                HidItemSIL.Value= gvLista.Rows[row.RowIndex].Cells[15].Text;
 
                 string idcasosisa= gvLista.Rows[row.RowIndex].Cells[14].Text;
                 CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
@@ -1253,7 +1144,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
             rdbEstado.SelectedValue = "1";
             CargarGrilla();
-            estatus.Text = "se han informado " + i.ToString() + " resultados";
+         //   estatus.Text = "se han informado " + i.ToString() + " resultados";
       //      btnDescargarExcelControl.Visible = true;
             //GenerarResultadoSISA(  );
 
@@ -1458,12 +1349,12 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
             DateTime fecha1 = DateTime.Now;
            
 
-            string m_strSQL = @" select P.numero, P.fecha, pa.numeroDocumento as dni,  pa.apellido, pa.nombre, d.resultadoCar from 
-LAB_AuditoriaProtocolo A
-inner join LAB_Protocolo P on P.idProtocolo= A.idProtocolo
-inner join Sys_Paciente pa on pa.idPaciente= P.idPaciente
-inner join LAB_DetalleProtocolo d on d.idProtocolo= P.idProtocolo
- where A.idUsuario="+ Session["idUsuario"].ToString() +"  and A.fecha>='"+fecha1.ToString("yyyyMMdd")+"' and accion='Genera Resultado en SISA'  ";           
+            string m_strSQL = @" select P.numero, P.fecha, pa.numeroDocumento as dni,  pa.apellido, pa.nombre, d.resultadoCar 
+            from            LAB_AuditoriaProtocolo A
+            inner join LAB_Protocolo P on P.idProtocolo= A.idProtocolo
+            inner join Sys_Paciente pa on pa.idPaciente= P.idPaciente
+            inner join LAB_DetalleProtocolo d on d.idProtocolo= P.idProtocolo
+            where A.idUsuario="+ Session["idUsuario"].ToString() +"  and A.fecha>='"+fecha1.ToString("yyyyMMdd")+"' and accion='Genera Resultado en SISA'  ";           
 
 
             DataSet Ds = new DataSet();
@@ -1521,29 +1412,29 @@ inner join LAB_DetalleProtocolo d on d.idProtocolo= P.idProtocolo
 
         protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CargarResultado();
+            if (ddlItem.SelectedValue != "0")
+            {
+                CargarResultado();
+                Buscar();
+            }
 
-            
-         
-            
+
 
         }
 
         private void CargarResultado()
-        {
-            
-        
+        {                    
             Utility oUtil = new Utility();  string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-            if (ddlItem.SelectedValue != "0")
-            {
-                string m_ssql = @" select distinct ds.resultado from 
-  LAB_ConfiguracionSISA S (nolock)
-   inner join LAB_ConfiguracionSISADetalle DS (nolock) on DS.idItem=s.iditem  
-   where s.iditem=  " + ddlItem.SelectedValue;
+           
+                string m_ssql = @" select distinct ds.resultado 
+                                from   LAB_ConfiguracionSISA S with (nolock)
+                                inner join LAB_ConfiguracionSISADetalle DS with  (nolock) on DS.idItem=s.iditem  
+                                where s.idEvento=  " + ddlItem.SelectedValue;
+                ///where s.iditem=  " + ddlItem.SelectedValue;
 
                 oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado", connReady);
-            }
+           
                 ddlResultado.Items.Insert(0, new ListItem("--Todos--", "0"));
             
 
@@ -1552,9 +1443,16 @@ inner join LAB_DetalleProtocolo d on d.idProtocolo= P.idProtocolo
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
+            Buscar();
+
+        }
+
+        private void Buscar()
+        {
             CargarGrilla();
             if (rdbEstado.SelectedValue == "0")
-            { btnSISA.Visible = true;
+            {
+                btnSISA.Visible = true;
                 btnNoInformarSISA.Visible = true;
             }
 
@@ -1571,7 +1469,6 @@ inner join LAB_DetalleProtocolo d on d.idProtocolo= P.idProtocolo
                     btnNoInformarSISA.Visible = false;
                 }
             }
-            
 
         }
 
@@ -1605,6 +1502,11 @@ inner join LAB_DetalleProtocolo d on d.idProtocolo= P.idProtocolo
                     }
                 }
             }
+        }
+
+        protected void ddlResultado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Buscar();
         }
     }
 }
