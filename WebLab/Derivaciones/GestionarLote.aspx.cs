@@ -31,7 +31,8 @@ namespace WebLab.Derivaciones
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (!Page.IsPostBack)
                 {
-                
+
+                    Session["GrillaGestionLotes"] = null;
                     lblTitulo.Text = "LOTES";
                       
                     CargarListas();
@@ -39,7 +40,6 @@ namespace WebLab.Derivaciones
                     txtFechaDesde.Value = DateTime.Now.ToShortDateString();
                     txtFechaHasta.Value = DateTime.Now.ToShortDateString();
                     txtFechaDesde.Focus();
-                    
                 }
             }
                 else Response.Redirect("../FinSesion.aspx", false);
@@ -89,7 +89,8 @@ namespace WebLab.Derivaciones
                         str_condicion += " AND idLoteDerivacion = " + tb_nrolote.Text;
                     }
 
-                   Response.Redirect("InformeLote.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue, false);
+                    verificaResultados(Convert.ToInt32(rdbEstado.SelectedValue), str_condicion);
+                  
                    
                 }
                 
@@ -112,6 +113,44 @@ namespace WebLab.Derivaciones
             {
                 args.IsValid = false;
             }
+        }
+
+        private void verificaResultados(int estado, string parametros)
+        {
+            string m_strSQL = " SELECT idLoteDerivacion as numero, e.nombre as efectorderivacion, l.estado, l.idEfectorDestino as idEfectorDerivacion," +
+                             " fechaRegistro, " +
+                             " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
+                             "  l.observacion ,uEmi.username as usernameE, isnull(uRecep.username, '' )  as usernameR " +
+                             " FROM LAB_LoteDerivacion l " +
+                             " inner join Sys_Efector e on e.idEfector=l.idEfectorDestino " +
+                             " inner join Sys_Usuario uEmi on uEmi.idUsuario = idUsuarioRegistro " +
+                             " left join Sys_Usuario uRecep on uRecep.idUsuario = idUsuarioEnvio " +
+                             " where " + parametros + " AND baja = 0  AND estado = " + estado +
+                             " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
+
+            DataTable dt = GetData(m_strSQL);
+
+            if (dt.Rows.Count > 0)
+            {
+                Response.Redirect("InformeLote.aspx?Parametros=" + parametros + "&Estado=" + estado, false);
+            }
+            else
+            {
+                cv_botonBuscar.IsValid = false; //que de error sin enviar alert
+            }
+
+            
+        }
+        private DataTable GetData(string m_strSQL)
+        {
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;//LAB-130 usar conexion principal no la de consulta
+            SqlDataAdapter adapter = new SqlDataAdapter
+            {
+                SelectCommand = new SqlCommand(m_strSQL, conn)
+            };
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
         }
     }
 }
