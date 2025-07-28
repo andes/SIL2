@@ -19,47 +19,61 @@ using System.Data.SqlClient;
 using System.Text;
 using Business.Data;
 
-namespace WebLab.Informes {
-    public partial class Auditoria : System.Web.UI.Page {
+namespace WebLab.Informes
+{
+    public partial class Auditoria : System.Web.UI.Page
+    {
         CrystalReportSource oCr = new CrystalReportSource();
         Configuracion oC = new Configuracion();
         public Usuario oUser = new Usuario();
 
-        protected void Page_PreInit(object sender, EventArgs e) {
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
             //oCr.Report.FileName = "";
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
-            if (Session["idUsuario"] != null) {
-                oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                oC = (Configuracion) oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-            } else
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            }
+            else
                 Response.Redirect("../FinSesion.aspx", false);
 
 
 
         }
-        protected void Page_Load(object sender, EventArgs e) {
-            if (!Page.IsPostBack) {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack)
+            {
 
-                if (Session["idUsuario"] != null) {
+                if (Session["idUsuario"] != null)
+                {
                     Inicializar();
 
-                } else
+                }
+                else
                     Response.Redirect("../FinSesion.aspx", false);
 
             }
         }
-        protected void Page_Unload(object sender, EventArgs e) {
-            if (this.oCr.ReportDocument != null) {
+        protected void Page_Unload(object sender, EventArgs e)
+        {
+            if (this.oCr.ReportDocument != null)
+            {
                 this.oCr.ReportDocument.Close();
                 this.oCr.ReportDocument.Dispose();
             }
         }
-        private void Inicializar() {
+        private void Inicializar()
+        {
             CargarListas();
 
-            switch (Request["tipo"].ToString()) {
-                case "controlAcceso": {
+            switch (Request["tipo"].ToString())
+            {
+                case "controlAcceso":
+                {
                     lblTitulo.Text = "AUDITORIA DE ACCESOS";
                     txtFechaDesde.Value = DateTime.Now.ToShortDateString();
                     txtFechaHasta.Value = DateTime.Now.ToShortDateString();
@@ -69,9 +83,11 @@ namespace WebLab.Informes {
 
                 }
                 break;
-                case "controlProtocolo": {
+                case "controlProtocolo":
+                {
                     ddlTipoServicio.Visible = false;
-                    if (oC != null) {
+                    if (oC != null)
+                    {
                         if (oC.TipoNumeracionProtocolo == 3)
                             ddlTipoServicio.Visible = true;
                         else
@@ -86,7 +102,8 @@ namespace WebLab.Informes {
                 }
                 break;
 
-                case "controlLote": {
+                case "controlLote":
+                {
 
                     ddlTipoServicio.Visible = false;
                     lblTitulo.Text = "AUDITORIA DE LOTE";
@@ -97,7 +114,8 @@ namespace WebLab.Informes {
                 break;
             }
         }
-        private void CargarListas() {
+        private void CargarListas()
+        {
             Utility oUtil = new Utility();
             ///Carga de combos de tipos de servicios
 
@@ -107,7 +125,8 @@ namespace WebLab.Informes {
                     from sys_usuario u with (nolock)
                     where activo = 1
                     and exists (select 1 from sys_usuarioefector e (nolock) where e.idusuario = u.idusuario and e.idEfector = " + oUser.IdEfector.IdEfector.ToString() + @") order by apellido, nombre";
-            if (oUser.Administrador) {
+            if (oUser.Administrador)
+            {
                 m_ssql = @"	select idusuario, apellido + ' ' +nombre  as nombre  from sys_usuario u with (nolock) where activo = 1 order by apellido, nombre";
             }
             oUtil.CargarCombo(ddlUsuario, m_ssql, "idusuario", "nombre", connReady);
@@ -121,9 +140,11 @@ namespace WebLab.Informes {
         }
 
         #region Protocolo
-        protected void btnControlProtocolo_Click(object sender, EventArgs e) {
-            if (Page.IsValid) {
-               ImprimirAuditoria();
+        protected void btnControlProtocolo_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                ImprimirAuditoria();
             }
         }
 
@@ -197,7 +218,8 @@ namespace WebLab.Informes {
             }
         }
 
-        private DataTable GetDataSetAuditoriaProtocolo() {
+        private DataTable GetDataSetAuditoriaProtocolo()
+        {
             string m_strSQL = "";
 
             string m_strCondicion = "";
@@ -206,14 +228,15 @@ namespace WebLab.Informes {
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
 
-            if (!oUser.Administrador) {
+            if (!oUser.Administrador)
+            {
                 m_strCondicion = " and P.idefector=" + oUser.IdEfector.IdEfector.ToString();
             }
 
             if (ddlUsuario.SelectedValue != "0")
                 m_strCondicion += " and U.idusuario=" + ddlUsuario.SelectedValue;
 
-             m_strSQL = @" SELECT  P.numero  AS numero,isnull(U.apellido,'Automatico')  as username, A.fecha AS fecha, A.hora, A.accion, A.analisis, A.valor, A.valorAnterior
+            m_strSQL = @" SELECT  P.numero  AS numero,isnull(U.apellido,'Automatico')  as username, A.fecha AS fecha, A.hora, A.accion, A.analisis, A.valor, A.valorAnterior
                             FROM         LAB_AuditoriaProtocolo AS A with (nolock)
                              left JOIN Sys_Usuario AS U with (nolock) ON A.idUsuario = U.idUsuario
                             inner join  lab_protocolo P  with (nolock) on P.idprotocolo= A.idprotocolo
@@ -233,13 +256,18 @@ namespace WebLab.Informes {
         #endregion
 
         #region Acceso
-        protected void btnControlAcceso_Click(object sender, EventArgs e) {
-            if (Page.IsValid) {
+        protected void btnControlAcceso_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
                 if (rdbTipoAuditoria.SelectedValue == "1")
 
                     ImprimirAuditoriaAcceso();
-                if (rdbTipoAuditoria.SelectedValue == "2") {
-                    if (ddlUsuario2.SelectedValue != "0") { ImprimirAuditoriaAcciones(); } else {
+                if (rdbTipoAuditoria.SelectedValue == "2")
+                {
+                    if (ddlUsuario2.SelectedValue != "0") { ImprimirAuditoriaAcciones(); }
+                    else
+                    {
                         lblMensaje.Text = "Debe seleccionar un usuario";
                         lblMensaje.Visible = true;
                     }
@@ -250,19 +278,24 @@ namespace WebLab.Informes {
 
         }
 
-        private void ImprimirAuditoriaAcciones() {
+        private void ImprimirAuditoriaAcciones()
+        {
             DataTable dtAuditoria = GetDataSetAuditoriaAcciones();
-            if (dtAuditoria.Columns.Count > 0) {
+            if (dtAuditoria.Columns.Count > 0)
+            {
 
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                 ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
                 ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
 
-                if (oC != null) {
+                if (oC != null)
+                {
                     encabezado1.Value = oC.EncabezadoLinea1;
                     encabezado2.Value = oC.EncabezadoLinea2;
                     encabezado3.Value = oC.EncabezadoLinea3;
-                } else {
+                }
+                else
+                {
                     encabezado1.Value = oUser.IdEfector.Nombre;
                     encabezado2.Value = oUser.IdEfector.Domicilio;
                     encabezado3.Value = "";
@@ -282,13 +315,16 @@ namespace WebLab.Informes {
 
 
 
-            } else {
+            }
+            else
+            {
                 string popupScript = "<script language='JavaScript'> alert('No se encontraron datos para el numero de protocolo ingresado.'); </script>";
                 Page.RegisterStartupScript("PopupScript", popupScript);
             }
         }
 
-        protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args) {
+        protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
+        {
             if (txtFechaDesde.Value == "")
                 args.IsValid = false;
             else
@@ -298,20 +334,25 @@ namespace WebLab.Informes {
                 args.IsValid = true;
 
         }
-        private void ImprimirAuditoriaAcceso() {
+        private void ImprimirAuditoriaAcceso()
+        {
 
             DataTable dtAuditoria = GetDataSetAuditoriaAcceso();
-            if (dtAuditoria.Columns.Count > 0) {
+            if (dtAuditoria.Columns.Count > 0)
+            {
 
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                 ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
                 ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
 
-                if (oC != null) {
+                if (oC != null)
+                {
                     encabezado1.Value = oC.EncabezadoLinea1;
                     encabezado2.Value = oC.EncabezadoLinea2;
                     encabezado3.Value = oC.EncabezadoLinea3;
-                } else {
+                }
+                else
+                {
                     encabezado1.Value = oUser.IdEfector.Nombre;
                     encabezado2.Value = oUser.IdEfector.Domicilio;
                     encabezado3.Value = "";
@@ -330,18 +371,22 @@ namespace WebLab.Informes {
 
 
 
-            } else {
+            }
+            else
+            {
                 string popupScript = "<script language='JavaScript'> alert('No se encontraron datos para el numero de protocolo ingresado.'); </script>";
                 Page.RegisterStartupScript("PopupScript", popupScript);
             }
 
         }
-        private DataTable GetDataSetAuditoriaAcciones() {
+        private DataTable GetDataSetAuditoriaAcciones()
+        {
             DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
 
             string m_strCondicion = " Where 1=1 ";
-            if (!oUser.Administrador) {
+            if (!oUser.Administrador)
+            {
                 m_strCondicion += " and P.idEfector=" + oUser.IdEfector.IdEfector.ToString();
             }
 
@@ -377,7 +422,8 @@ namespace WebLab.Informes {
             DataTable data = Ds.Tables[0];
             return data;
         }
-        private DataTable GetDataSetAuditoriaAcceso() {
+        private DataTable GetDataSetAuditoriaAcceso()
+        {
             DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
 
@@ -410,14 +456,16 @@ namespace WebLab.Informes {
         #endregion
 
         #region Lote
-        private DataTable GetDataSetAuditoraLote() {
+        private DataTable GetDataSetAuditoraLote()
+        {
             string m_strSQL;
             string m_strCondicion = "";
 
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
 
-            if (!oUser.Administrador) {
+            if (!oUser.Administrador)
+            {
                 m_strCondicion = " and L.idEfectorDestino = " + oUser.IdEfector.IdEfector.ToString();
             }
 
@@ -439,25 +487,33 @@ namespace WebLab.Informes {
             return data;
         }
 
-        protected void btn_informeLote_Click(object sender, EventArgs e) {
-            if (Page.IsValid) {
+        protected void btn_informeLote_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
                 ImprimirAuditoriaLote();
             }
         }
-        private void ImprimirAuditoriaLote() {
+        private void ImprimirAuditoriaLote()
+        {
             DataTable dtAuditoria = GetDataSetAuditoraLote();
-            if (dtAuditoria.Rows.Count > 0) {
+            if (dtAuditoria.Rows.Count > 0)
+            {
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                 ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
-                if (oC != null) {
+                if (oC != null)
+                {
                     encabezado1.Value = oC.EncabezadoLinea1;
                     encabezado2.Value = oC.EncabezadoLinea2;
-                } else {
+                }
+                else
+                {
 
                     encabezado1.Value = oUser.IdEfector.Nombre;
                     encabezado2.Value = oUser.IdEfector.Domicilio;
                 }
-                ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue {
+                ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue
+                {
                     Value = "Auditoria de Lote"
                 };
 
@@ -475,7 +531,9 @@ namespace WebLab.Informes {
 
 
 
-            } else {
+            }
+            else
+            {
                 string popupScript = "<script language='JavaScript'> alert('No se encontraron datos para el numero de lote ingresado.'); </script>";
                 Page.RegisterStartupScript("PopupScript", popupScript);
             }
