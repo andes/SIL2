@@ -93,11 +93,18 @@
                                         
 				    </tr>
 
-					<tr> 	<td colspan="2"><hr /></td> </tr>
-						
+					<tr> 	<td colspan="2">
+                        <hr />
+                            <asp:CustomValidator ID="cv_botonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
+
+
+					     	</td> </tr>
+					<tr colspan="2" align="right">
+                	</tr>
                      <tr>
 						<td colspan="2" align="right">
-                                <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" Width="100" onclick="btnBuscar_Click" Text="Buscar" ValidationGroup="0" /> </td>
+                                <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" Width="100" onclick="btnBuscar_Click" Text="Buscar" ValidationGroup="0" />
+						</td>
                      </tr>
 
 				  

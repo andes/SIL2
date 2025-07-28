@@ -91,21 +91,23 @@ namespace WebLab.Derivaciones
 
         private void CargarGrilla()
         {
+            DataTable dt;
             int estado = Convert.ToInt32(Request["Estado"]);
             string parametros = Request["Parametros"].ToString();
 
             string m_strSQL = " SELECT idLoteDerivacion as numero, e.nombre as efectorderivacion, l.estado, l.idEfectorDestino as idEfectorDerivacion," +
-                             " fechaRegistro, " +
-                             " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
-                             "  l.observacion ,uEmi.username as usernameE, isnull(uRecep.username, '' )  as usernameR " +
-                             " FROM LAB_LoteDerivacion l " +
-                             " inner join Sys_Efector e on e.idEfector=l.idEfectorDestino " +
-                             " inner join Sys_Usuario uEmi on uEmi.idUsuario = idUsuarioRegistro " +
-                             " left join Sys_Usuario uRecep on uRecep.idUsuario = idUsuarioEnvio " +
-                             " where " + parametros + " AND baja = 0  AND estado = " + estado +
-                             " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
+                                " fechaRegistro, " +
+                                " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
+                                "  l.observacion ,uEmi.username as usernameE, isnull(uRecep.username, '' )  as usernameR " +
+                                " FROM LAB_LoteDerivacion l " +
+                                " inner join Sys_Efector e on e.idEfector=l.idEfectorDestino " +
+                                " inner join Sys_Usuario uEmi on uEmi.idUsuario = idUsuarioRegistro " +
+                                " left join Sys_Usuario uRecep on uRecep.idUsuario = idUsuarioEnvio " +
+                                " where " + parametros + " AND baja = 0  AND estado = " + estado +
+                                " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
 
-            DataTable dt = GetData(m_strSQL);
+            dt = GetData(m_strSQL);
+             
 
             if (dt.Rows.Count > 0)
             {
@@ -120,16 +122,6 @@ namespace WebLab.Derivaciones
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
         }
 
-        //private void desactivarControles()
-        //{
-        //    btnGuardar.Enabled = false;
-        //    txtObservacion.Enabled = false;
-        //    ddlEstados.Enabled = false;
-        //    //rb_transportista.Enabled = false; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-        //    ddl_Transporte.Enabled = false;
-        //    lnkMarcar.Enabled = false;
-        //    lnkDesMarcar.Enabled = false;
-        //}
 
         private void activarControles(bool valor)
         {
@@ -247,61 +239,7 @@ namespace WebLab.Derivaciones
             }
         }
 
-        protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            /* DataTable dt = new DataTable();
-
-             if (Session["ListaSeleccionados"] == null){
-
-                 dt.Columns.Add("numero");
-                 dt.Columns.Add("efectorderivacion");
-                 dt.Columns.Add("estado");
-                 dt.Columns.Add("fechaAlta");
-                 dt.Columns.Add("usernameE");
-                 dt.Columns.Add("usernameR");
-                 dt.Columns.Add("idEfectorDerivacion");
-
-                 cargarRow(sender, dt);
-             }
-             else
-             {
-                 dt = (DataTable) Session["ListaSeleccionados"];
-                 if (((System.Web.UI.WebControls.CheckBox)sender).Checked){
-                     cargarRow(sender, dt);
-                 }
-                 else{
-                     int index = ((GridViewRow)((System.Web.UI.Control)sender).BindingContainer).DataItemIndex;
-                     string idLote = gvLista.Rows[index].Cells[2].Text;
-                     DataRow[] borrar = dt.Select("numero = " + idLote);
-
-                     if(borrar.Length > 0)
-                        dt.Rows.Remove(borrar[0]);
-                 }
-             }
-
-             Session["ListaSeleccionados"] = dt;*/
-        }
-
-        //private void cargarRow(object sender, DataTable dt)
-        //{
-        //    int index = ((GridViewRow)((System.Web.UI.Control)sender).BindingContainer).DataItemIndex;
-
-        //    string idLote = gvLista.Rows[index].Cells[2].Text;
-        //    string efectorderivacion = gvLista.Rows[index].Cells[3].Text;
-        //    string usernameE = gvLista.Rows[index].Cells[4].Text;
-        //    string usernameR = gvLista.Rows[index].Cells[5].Text;
-        //    string fechaAlta = gvLista.Rows[index].Cells[6].Text;
-        //    string idEfectorDerivacion = gvLista.Rows[index].Cells[8].Text;
-        //    DataRow dr = dt.NewRow();
-        //    dr["numero"] = idLote;
-        //    dr["efectorderivacion"] = efectorderivacion;
-        //    dr["estado"] = Request["Estado"].ToString();
-        //    dr["fechaAlta"] = fechaAlta;
-        //    dr["usernameE"] = usernameE;
-        //    dr["usernameR"] = usernameR;
-        //    dr["idEfectorDerivacion"] = idEfectorDerivacion;
-        //    dt.Rows.Add(dr);
-        //}
+        
         #endregion
 
         #region PDF
@@ -310,8 +248,16 @@ namespace WebLab.Derivaciones
 
         protected void lnkPDF_Command(object sender, CommandEventArgs e)
         {
-            string idLote = (((System.Web.UI.WebControls.LinkButton)sender).CommandArgument).ToString();
-            GenerarPDF(idLote);
+            if (Session["idUsuario"] != null)
+            {
+                string idLote = (((System.Web.UI.WebControls.LinkButton)sender).CommandArgument).ToString();
+                GenerarPDF(idLote);
+            }
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
+
         }
 
 
@@ -358,7 +304,15 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
-                Guardar();
+                if (Guardar())
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                }
+                else
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos\nRevisá los campos e intentá nuevamente');", true);
+
+                }
                 CargarGrilla();
                 limpiarForm();
             }
@@ -368,48 +322,12 @@ namespace WebLab.Derivaciones
             }
 
         }
-        //private void GuardarEstadoNuevo()
-        //{
-        //    foreach (GridViewRow row in gvLista.Rows)
-        //    {
-        //        CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-        //        if (a.Checked)
-        //        {
-        //            string idLote = row.Cells[2].Text;
-        //            int idUsuario = int.Parse(Session["idUsuario"].ToString());
-        //            int estado = Convert.ToInt32(ddlEstados.SelectedValue);
-        //            string resultado =  Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-        //            string observacion = txtObservacion.Text + " " + ( Convert.ToInt32(ddlEstados.SelectedValue) == 1 ? rb_transportista.SelectedValue : "");
+        
 
-        //            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-        //            SqlCommand cmd = new SqlCommand();
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.CommandText = "LAB_LoteDerivacion_Envio";
-
-        //            cmd.Parameters.Add("@idLote", SqlDbType.Int);
-        //            cmd.Parameters["@idLote"].Value = idLote;
-
-        //            cmd.Parameters.Add("@idUsuario", SqlDbType.Int);
-        //            cmd.Parameters["@idUsuario"].Value = idUsuario;
-
-        //            cmd.Parameters.Add("@resultado", SqlDbType.VarChar);
-        //            cmd.Parameters["@resultado"].Value = resultado;
-
-        //            cmd.Parameters.Add("@estado", SqlDbType.Int);
-        //            cmd.Parameters["@estado"].Value = estado;
-
-        //            cmd.Parameters.Add("@observacion", SqlDbType.VarChar);
-        //            cmd.Parameters["@observacion"].Value = observacion;
-
-        //            cmd.Connection = conn;
-        //            cmd.ExecuteNonQuery();
-        //        }
-        //    }
-
-        //}
-
-        private void Guardar()
+        private bool Guardar()
         {
+            bool seGuardoEnBd = false;
+
             foreach (GridViewRow row in gvLista.Rows)
             {
                 CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
@@ -488,9 +406,11 @@ namespace WebLab.Derivaciones
                     if (estadoLote == 2)  //Si deriva indica con que transportista fue
                         //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
                         lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
-
+                    seGuardoEnBd = true;
                 }
             }
+
+            return seGuardoEnBd;
         }
         #endregion
 
