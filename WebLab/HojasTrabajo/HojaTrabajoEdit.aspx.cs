@@ -73,6 +73,7 @@ namespace WebLab.HojasTrabajo
             chkDatosProtocolo.Items[3].Selected = oRegistro.ImprimirCorrelativo;
             chkDatosProtocolo.Items[4].Selected = oRegistro.ImprimirMedico;
             chkDatosProtocolo.Items[5].Selected = oRegistro.ImprimirMuestra;
+            chkDatosProtocolo.Items[6].Selected = oRegistro.ImprimirDiagnostico;
             //////////////////////////
 
             ////opciones de impresion de los datos del paciente
@@ -138,9 +139,10 @@ namespace WebLab.HojasTrabajo
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-            ///Carga de combos de tipos de servicios
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+                                                                                                        ///Carga de combos de tipos de servicios
             string m_ssql = "select idTipoServicio, nombre from Lab_TipoServicio WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre");
+            oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
             
             CargarArea();
            
@@ -151,21 +153,24 @@ namespace WebLab.HojasTrabajo
 
         private void CargarItem()
         {
+            if (Session["idUsuario"].ToString() != null)
+            {
+                Usuario oUser = new Usuario();
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-            Usuario oUser = new Usuario();
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-            Utility oUtil = new Utility();
-            ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
-            string m_ssql = @"select I.idItem, I.nombre from Lab_Item as I 
+                Utility oUtil = new Utility();
+                ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
+                string m_ssql = @"select I.idItem, I.nombre from Lab_Item as I 
                  inner join lab_itemEfector as IE on IE.idItem= I.idItem and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() +
-                 @" where I.baja=0 AND IE.idEfector=Ie.idEfectorDerivacion and I.idArea= " + ddlAreaDeterminacion.SelectedValue+ " and I.idCategoria=0 order by I.nombre";
-            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
-            ddlItem.Items.Insert(0, new ListItem("Seleccione Item", "0"));
-            ddlItem.UpdateAfterCallBack = true;
+                     @" where I.baja=0 AND IE.idEfector=Ie.idEfectorDerivacion and I.idArea= " + ddlAreaDeterminacion.SelectedValue + " and I.idCategoria=0 order by I.nombre";
+                oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
+                ddlItem.Items.Insert(0, new ListItem("Seleccione Item", "0"));
+                ddlItem.UpdateAfterCallBack = true;
 
-            m_ssql = null;
-            oUtil = null;
+                m_ssql = null;
+                oUtil = null;
+            }
+            else  Response.Redirect("../FinSesion.aspx", false);
         }
         protected void txtCodigo_TextChanged(object sender, EventArgs e)
         {
@@ -259,7 +264,8 @@ namespace WebLab.HojasTrabajo
 
         private void Guardar(HojaTrabajo oRegistro)
         {
-
+            if (Session["idUsuario"]!= null)
+            { 
             Usuario oUser = new Usuario();
             oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
@@ -291,6 +297,7 @@ namespace WebLab.HojasTrabajo
             oRegistro.ImprimirCorrelativo = chkDatosProtocolo.Items[3].Selected;
             oRegistro.ImprimirMedico = chkDatosProtocolo.Items[4].Selected;
             oRegistro.ImprimirMuestra = chkDatosProtocolo.Items[5].Selected;
+            oRegistro.ImprimirDiagnostico = chkDatosProtocolo.Items[6].Selected;
             //////////////////////////
 
             ////opciones de impresion de los datos del paciente
@@ -333,8 +340,9 @@ namespace WebLab.HojasTrabajo
 
 
             GuardarDetalle(oRegistro);
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
 
-             
         }
 
         private void GuardarDetalle(HojaTrabajo oRegistro)
@@ -401,10 +409,11 @@ namespace WebLab.HojasTrabajo
                 chkDatosProtocolo.Items[5].Enabled = false;
                 ddlAgrupaFecha.Enabled = false;
             }
-            ///Carga de combos de areas             
+            ///Carga de combos de areas     
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
             string m_ssql = "select idArea, nombre from Lab_Area where baja=0  and idTipoServicio=" + ddlServicio.SelectedValue + " order by nombre";
-            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
-            oUtil.CargarCombo(ddlAreaDeterminacion, m_ssql, "idArea", "nombre");
+            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
+            oUtil.CargarCombo(ddlAreaDeterminacion, m_ssql, "idArea", "nombre", connReady);
             ddlArea.Items.Insert(0, new ListItem("Seleccione un Area", "0"));
             ddlAreaDeterminacion.Items.Insert(0, new ListItem("Seleccione un Area", "0"));
             ddlArea.UpdateAfterCallBack = true;

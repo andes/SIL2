@@ -65,9 +65,10 @@ namespace WebLab.HojasTrabajo
         private void CargarLista()
         {
             Utility oUtil = new Utility();
-            ///Carga de combos de tipos de servicios
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+                                                                                                        ///Carga de combos de tipos de servicios
             string m_ssql = "select idTipoServicio, nombre from Lab_TipoServicio  WHERE (baja = 0) and idTipoServicio<5";
-            oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre");
+            oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
             ddlServicio.Items.Insert(0, new ListItem("Todos", "0"));
             CargarArea();
         }
@@ -109,12 +110,11 @@ namespace WebLab.HojasTrabajo
             if (ddlArea.SelectedValue != "0")   m_condicion += " and HT.idArea= " + ddlArea.SelectedValue;
             if (ddlServicio.SelectedValue != "0") m_condicion += " and A.idTipoServicio= " + ddlServicio.SelectedValue;
 
-            string m_strSQL = " SELECT HT.idHojaTrabajo AS idHojaTrabajo, A.nombre AS area, TS.nombre AS servicio, HT.codigo AS codigo" +
-                              "  FROM LAB_HojaTrabajo AS HT INNER JOIN" +
-                              "  LAB_Area AS A ON HT.idArea = A.idArea INNER JOIN " +
-                              "  LAB_TipoServicio AS TS ON A.idTipoServicio = TS.idTipoServicio" +
-                              " WHERE     (HT.baja = 0) AND (A.baja = 0) " + m_condicion+
-                              " order by A.nombre";
+            string m_strSQL = @" SELECT HT.idHojaTrabajo AS idHojaTrabajo, A.nombre AS area, TS.nombre AS servicio, HT.codigo AS codigo
+                                FROM LAB_HojaTrabajo AS HT 
+                                INNER JOIN  LAB_Area AS A ON HT.idArea = A.idArea 
+                                INNER JOIN LAB_TipoServicio AS TS ON A.idTipoServicio = TS.idTipoServicio
+                               WHERE     (HT.baja = 0) AND (A.baja = 0) " + m_condicion+      " order by A.nombre";
             DataSet Ds = new DataSet();
             //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura

@@ -30,6 +30,7 @@
     <property column="imprimirMedico" type="Boolean" name="ImprimirMedico" not-null="true" />
 
      <property column="imprimeMuestra" type="Boolean" name="ImprimirMuestra" not-null="true" />
+    <property column="imprimirDiagnostico" type="Boolean" name="ImprimirDiagnostico" not-null="true" />
          <property column="agrupaPorFecha" type="Boolean" name="AgrupaFecha" not-null="true" />
 
     <property column="textoInferiorDerecha" type="String" name="TextoInferiorDerecha" not-null="true" length="50" />
