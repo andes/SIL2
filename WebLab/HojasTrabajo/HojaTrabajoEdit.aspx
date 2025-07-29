@@ -165,7 +165,7 @@
                                     
                                     
                                     <asp:ListItem Enabled="False" Value="5">Muestra</asp:ListItem>
-                                    
+                                    <asp:ListItem  Value="6">Diagnostico</asp:ListItem>
                                     
                                 </anthem:CheckBoxList>
                         </td>
