@@ -1937,6 +1937,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
             crit.Add(Expression.Eq("IdProtocolo", this));
             crit.Add(Expression.Eq("IdEfector", this.IdEfector));
+            crit.Add(Expression.Eq("Informable", true));//Caro: se debe cerrar aunque no sea informable
 
             IList detalle = crit.List();
             if (detalle.Count > 0)

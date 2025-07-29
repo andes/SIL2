@@ -38,6 +38,7 @@ namespace Business.Data.Laboratorio
         private bool m_imprimirfechahora;
         private bool m_imprimircorrelativo;
         private bool m_imprimirmedico;
+        private bool m_imprimirDiagnostico;
         private string m_textoinferiorderecha;
         private string m_textoinferiorizquierda;
         private int m_cantidadlineaadicional;
@@ -73,7 +74,8 @@ namespace Business.Data.Laboratorio
              m_imprimirfechahora=true;
              m_imprimircorrelativo = false;
              m_imprimirmedico = false;
-        m_textoinferiorderecha=String.Empty;
+            m_imprimirDiagnostico = false;
+        m_textoinferiorderecha =String.Empty;
         m_textoinferiorizquierda = String.Empty;
             m_baja = false;
             m_tipohoja = false;
@@ -110,6 +112,7 @@ namespace Business.Data.Laboratorio
             bool imprimirantecedente,
             bool imprimirmuestra,
             bool imprimirmedico,
+            bool imprimirDiagnostico,
             bool agrupafecha,
 
            bool   imprimirfechahora,
@@ -146,7 +149,7 @@ namespace Business.Data.Laboratorio
             m_agrupafecha = agrupafecha;
             m_textoinferiorderecha = textoinferiorderecha;
             m_textoinferiorizquierda = textoinferiorizquierda;
-
+            m_imprimirDiagnostico = imprimirDiagnostico;
 
 
             m_formatoancho = formatoancho;
@@ -334,6 +337,17 @@ namespace Business.Data.Laboratorio
             {
                 m_isChanged |= (m_imprimirmuestra != value);
                 m_imprimirmuestra = value;
+            }
+
+        }
+
+        public bool ImprimirDiagnostico
+        {
+            get { return m_imprimirDiagnostico; }
+            set
+            {
+                m_isChanged |= (m_imprimirDiagnostico != value);
+                m_imprimirDiagnostico = value;
             }
 
         }
@@ -562,16 +576,17 @@ SELECT TOP (100) PERCENT 'A' as letra, linea AS  numero, '' as numeroOrigen,'___
                   CASE WHEN HT.imprimirPrioridad = 1 THEN 'R' ELSE '' END AS prioridad, '0'  as antecedente , 
                                 CASE WHEN HT.imprimirorigen = 1 THEN '-A' ELSE '' END AS origen, CHT.textoImprimir AS item, A.nombre AS area, 
                                 CHT.idDetalleHojaTrabajo AS ORDEN, 'XX/XX/XXXX' AS fecha, HT.responsable, HT.codigo AS codigoHT,  
-                                CASE WHEN HT.imprimirApellidoNombre = 1 THEN '-Paciente' ELSE '' END AS paciente,  
+                                CASE WHEN HT.imprimirApellidoNombre = 1 THEN '-Paciente' ELSE '' END +
+                                    CASE WHEN HT.imprimirDiagnostico = 1 then '-Diag' else '' end AS paciente,  
                                 CASE WHEN HT.imprimirEdad = 1 THEN '-0' ELSE '' END AS edad, CASE WHEN HT.imprimirSexo = 1 THEN '-F' ELSE '' END AS sexo,  
                                 CASE WHEN HT.imprimirApellidoNombre = 1 OR HT.imprimirEdad = 1 OR HT.imprimirSexo = 1 THEN 1 ELSE 0 END AS datosPaciente, 
                                HT.textoInferiorIzquierda, HT.textoinferiorDerecha, 1 as ordenProtocolo , case when ht.imprimemuestra=1 and a.idTipoServicio=3 then 'muestra' else '' end as muestra, convert(int,linea) as idProtocolo, '' as medico  
  
 
-  FROM         LAB_HojaTrabajo AS HT
+  FROM   LAB_HojaTrabajo AS HT
  INNER JOIN LAB_Area AS A ON A.idArea = HT.idArea
- INNER JOIN   LAB_DetalleHojaTrabajo AS CHT ON HT.idHojaTrabajo = CHT.idHojaTrabajo
- INNER JOIN   LAB_Item AS I ON I.idItem = CHT.idItem--HT.idArea = A.idArea
+ INNER JOIN  LAB_DetalleHojaTrabajo AS CHT ON HT.idHojaTrabajo = CHT.idHojaTrabajo
+ INNER JOIN  LAB_Item AS I ON I.idItem = CHT.idItem--HT.idArea = A.idArea
 inner join lineas as L on l.idhojatrabajo= HT.idHojaTrabajo
                                 WHERE  ht.idHojaTrabajo = " + this.IdHojaTrabajo.ToString() +
                               " ORDER BY  CHT.idDetalleHojaTrabajo";
