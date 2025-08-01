@@ -372,34 +372,40 @@ namespace WebLab.Derivaciones
             {
                 int estadoSeleccionado;
                 string resultadoDerivacion;
+                string observacion = txt_observacion.Text;
+                int idUsuarioRegistro = oUser.IdUsuario;  //Convert.ToInt32(Session["idUsuario"]);
+                int idUsuarioResultado = oUser.IdUsuario;
+                DateTime fechaDeHoy = DateTime.Now;
+                DateTime fechaDeHoyDetalle = DateTime.Now;
+                int MotivoCancelacion = int.Parse(ddl_motivoCancelacion.SelectedItem.Value);
+                bool conResultado = true;
+
                 if (desasociaLote == 0)
                 {
-                    //Estado seleccionado =>
-                    // 2	No Enviado
-                    // 4  Pendiente para enviar
-                    estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);
+                    estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);//Estado seleccionado => 2	No Enviado - 4  Pendiente para enviar
                     resultadoDerivacion = (estadoSeleccionado == 2) ? "No Derivado: " + ddl_motivoCancelacion.SelectedItem.Text : "Pendiente para enviar ";
                 }
                 else
                 {
-                    //Se desasocia del lote
+                    //Se desasocia del lote y se setean a vacio los valores correspondientes
                     estadoSeleccionado = 0;
                     resultadoDerivacion = "Pendiente de derivar";
+                    observacion = string.Empty;
                     idLote = 0;
+                    idUsuarioResultado = 0;
+                    fechaDeHoyDetalle = DateTime.Parse("01/01/1900");
+                    conResultado = false;
                 }
                 
-                string observacion = txt_observacion.Text;
-                int idUsuario = oUser.IdUsuario;  //Convert.ToInt32(Session["idUsuario"]);
-                DateTime fechaHora = DateTime.Now;
-                int MotivoCancelacion = int.Parse(ddl_motivoCancelacion.SelectedItem.Value);
+                
                 foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                 {
                     //Cambia valores de la derivacion
                     #region Derivacion
                     oDeriva.Estado = estadoSeleccionado;
                     oDeriva.Observacion = observacion;
-                    oDeriva.IdUsuarioRegistro = idUsuario;
-                    oDeriva.FechaRegistro = fechaHora;
+                    oDeriva.IdUsuarioRegistro = idUsuarioRegistro;
+                    oDeriva.FechaRegistro = fechaDeHoy;
                     oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                     oDeriva.Idlote = idLote;
                     oDeriva.IdMotivoCancelacion = MotivoCancelacion;
@@ -408,18 +414,17 @@ namespace WebLab.Derivaciones
 
                     //Cambia valores del detalle del protocolo
                     #region Detalle_Protocolo
-
                     oDetalle.ResultadoCar = resultadoDerivacion;
-                    oDetalle.ConResultado = true;
-                    oDetalle.IdUsuarioResultado = idUsuario;
-                    oDetalle.FechaResultado = fechaHora;
+                    oDetalle.ConResultado = conResultado;
+                    oDetalle.IdUsuarioResultado = idUsuarioResultado;
+                    oDetalle.FechaResultado = fechaDeHoyDetalle;
                     oDetalle.Save();
 
                     #endregion
 
                     #region estado_protocolo
                     /*Actualiza estado de protocolo*/
-                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuario))
+                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuarioRegistro))
                         oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
                     else
                     {
@@ -436,7 +441,7 @@ namespace WebLab.Derivaciones
 
                     //Auditoria:
                     string accion = Request["Tipo"].ToString();
-                    oDetalle.GrabarAuditoriaDetalleProtocolo(accion, idUsuario);
+                    oDetalle.GrabarAuditoriaDetalleProtocolo(accion, idUsuarioRegistro);
                 }
             }
         }
