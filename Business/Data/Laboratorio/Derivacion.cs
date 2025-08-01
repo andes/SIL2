@@ -158,7 +158,7 @@ namespace Business.Data.Laboratorio
 		}
 			
 		/// <summary>
-		/// 0: Pendiente - 1: Enviado - 2: No enviado
+		/// 0: Pendiente - 1: Enviado - 2: No enviado 3:Recibdo 4:Pendiente para Enviar
 		/// </summary>
 		public int Estado
 		{
