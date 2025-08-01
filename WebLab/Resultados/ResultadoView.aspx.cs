@@ -772,6 +772,9 @@ namespace WebLab.Resultados
                             estadoDerivacion = oDetalle.ResultadoCar; //  "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
                         if (oDeriva.Estado == 2) /// no enviado
                             estadoDerivacion = oDetalle.ResultadoCar; //" No Derivado. " + oDeriva.Observacion;
+                        if (oDeriva.Estado == 4) 
+                            estadoDerivacion = oDetalle.ResultadoCar;
+
                         lblDerivacion.Font.Bold = true;
 
                         if (oDeriva.Resultado != "")
