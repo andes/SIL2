@@ -127,7 +127,55 @@
                 reseteaLabelErrorGrilla();
             }
         }
+
     </script>
+
+  <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        const hdnDatos = document.getElementById('<%= hdnDatosModificados.ClientID %>');
+        const hdnGrid = document.getElementById('<%= gvLista.ClientID %>');
+        const formElements = document.querySelectorAll("input, select, textarea");
+
+        // Guardamos los valores originales al cargar la página
+        formElements.forEach(function (el) {
+            const tipo = el.type?.toLowerCase();
+            if (tipo === "checkbox") {
+                el.dataset.originalValue = el.checked.toString();
+            } else {
+                el.dataset.originalValue = el.value;
+            }
+        });
+
+        //Cuando se hace submit se evalua si hubo cambios (en la modificación)
+        const form = document.forms[0];
+        form.addEventListener("submit", function () {
+            let cambioGeneral = false;
+            let cambioEnGrid = false;
+
+            formElements.forEach(function (el) {
+                const tipo = el.type?.toLowerCase();
+                const original = el.dataset.originalValue;
+                const actual = (tipo === "checkbox") ? el.checked.toString() : el.value;
+
+                if (original !== actual) {
+                    cambioGeneral = true;
+
+                    // Detectar si el checkbox pertenece a un GridView (ajustá si tu GridView tiene otro ID)
+                    if (tipo === "checkbox" && el.closest("table")?.id?.includes("gv")) {
+                        cambioEnGrid = true;
+                    }
+                }
+            });
+
+            hdnDatos.value = cambioGeneral ? "true" : "false";
+            hdnGrid.value = cambioEnGrid ? "true" : "false";
+        });
+    });
+  </script>
+
+
+
+
 </asp:Content>
  
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
@@ -324,7 +372,7 @@
                         </td>
 				    </tr>
 				</table>
-                  
+                  <asp:HiddenField ID="hdnDatosModificados" runat="server" Value="false" />
             </div>
 						
 </div>
