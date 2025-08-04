@@ -192,6 +192,10 @@
       <HintPath>..\Referencias\MathParser.dll</HintPath>
     </Reference>
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Referencias\NHibernate.dll</HintPath>
@@ -4315,7 +4319,7 @@
     <Compile Include="AutoAnalizador\SysmexXN1000\ConfiguracionEdit.aspx.designer.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
-   <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.cs">
+    <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
