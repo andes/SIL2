@@ -40,8 +40,6 @@ namespace WebLab
                 }
             }
         
-            ////else 
-
         }
 
         protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
@@ -60,9 +58,9 @@ namespace WebLab
             adapter.Fill(Ds);
             DataTable dtPermisos = Ds.Tables[0];
 
-                if (dtPermisos.Rows.Count > 0) {
-                    i_idusuario = int.Parse(dtPermisos.Rows[0][0].ToString());
-                }
+            if (dtPermisos.Rows.Count > 0) {
+                i_idusuario = int.Parse(dtPermisos.Rows[0][0].ToString());
+            }
 
 
             Usuario oUser = new Usuario();
@@ -71,6 +69,13 @@ namespace WebLab
             {
 
                 oUser = (Usuario)oUser.Get(typeof(Usuario), i_idusuario);
+                if (MostrarTerminosCondiciones(oUser))
+                {
+                    Session["usuarioPendienteAceptacion"] = oUser;
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "$('#modalTerminosCondiciones').modal('show');", true);
+                    return;
+                }
+                
             }
             else
             {
@@ -80,113 +85,7 @@ namespace WebLab
             }
 
 
-            /* Habilitar cuando se quiera autogestion de usuarios medicos
-            if (oUser == null)
-                AutenticarUsuarioLdap(Login1.UserName, Login1.Password);
-             */
-            if (oUser != null)
-            {
-                if ((oUser.Activo)&&(oUser.IdPerfil.Activo))
-                {
-                    if ((oUser.Activo) && (oUser.Externo))
-                    {
-                        Session["idUsuario"] = oUser.IdUsuario.ToString();
-                        Response.Redirect("~/Consulta/Historiaclinicafiltro.aspx", false);
-
-                    }
-                    else
-                    {
-                        Session["idUsuarioValida"] = null;
-
-                    if (Request["Operacion"] == null)
-                    {//////////////nuevo login
-                         Session["SIL"] = "1";
-                           
-                        if (oUser.RequiereCambioPass)
-                            Response.Redirect("~/Usuarios/PasswordEdit2.aspx?idUsuario="+ oUser.IdUsuario.ToString(), false);
-
-                        else
-                        {
-                            Session["idUsuarioAux"] = oUser.IdUsuario.ToString();
-                            Response.Redirect("LoginEfector.aspx", false);
-
-                            //Session["idUsuario"] = oUser.IdUsuario.ToString();
-                            //Response.Redirect("Default.aspx", false);
-                        }
-                    }
-                    else
-                    {///////////////validacion
-                        if (Request["idCasoFiliacion"] != null)
-                        {
-
-                        
-                            if ((Request["idServicio"].ToString() == "6") && (VerificarSiTienePermisodeValidar(oUser.Username, "/CasoFiliacion/CasoResultado.aspx")))
-                            {
-                                //HttpContext Context;
-                                //Context = HttpContext.Current;
-                                //Context.Items.Add("id", Request["idCasoFiliacion"].ToString());
-                                Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
-                                //Context.Items.Add("Desde", "Valida");
-                                //Server.Transfer("~/CasoFiliacion/CasoResultado.aspx");
-
-                                Response.Redirect("~/casoFiliacion/CasoResultado3.aspx?id=" + Request["idCasoFiliacion"].ToString()+ "&Desde=Valida&logIn=1");
-
-
-                            }
-                            if ((Request["idServicio"].ToString() == "3") && (VerificarSiTienePermisodeValidar(oUser.Username, "/CasoFiliacion/CasoResultadoHisto.aspx")))
-                            {
-                                //HttpContext Context2;
-                                //Context2 = HttpContext.Current;
-                                //Context2.Items.Add("id", Request["idCasoFiliacion"].ToString());
-                                Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
-                                //Context2.Items.Add("Desde", "Valida");
-                                //Server.Transfer("~/CasoFiliacion/CasoResultadoHisto.aspx");
-
-                                Response.Redirect("~/CasoFiliacion/CasoResultadoHisto.aspx?id=" + Request["idCasoFiliacion"].ToString() + "&Desde=Valida&logIn=1", false);
-
-                                }
-
-                            }
-                            else
-                            {
-                                string idServicio = Request["idServicio"].ToString();
-                                string operacion = Request["Operacion"].ToString();
-                                string modo = Request["modo"].ToString();
-                                if (VerificarSiTienePermisodeValidar(oUser.Username, "/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo))
-                                {
-                                    Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
-                                    if (Request["urgencia"] != null)
-                                    {
-
-                                        string sredirect = "~/resultados/ResultadoEdit2.aspx?idServicio=1&Operacion=Valida&idProtocolo=" + Request["idProtocolo"].ToString() + "&Index=0&Parametros=" + Request["idProtocolo"].ToString() + "&idArea=0&urgencia=1&validado=0&modo=Urgencia"; //&idUsuarioValida=" + oUser.IdUsuario.ToString();
-                                        if (Request["desde"] != null)
-                                            sredirect += "&desde=" + Request["desde"].ToString();
-                                        Response.Redirect(sredirect, false);
-                                        //    Response.Redirect("~/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo + "&idUsuarioValida=" + oUser.IdUsuario, false);
-                                    }
-                                    else
-                                        Response.Redirect("~/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo + "&logIn=1", false);// + "&idUsuarioValida=" + oUser.IdUsuario, false);
-                                }
-                                else
-                                {
-                                    e.Authenticated = false;
-                                    Login1.FailureText = "El usuario no tiene permisos para validar.";
-                                }
-                            }
-                        }//fin else casofi
-                    }//externo
-                }//activo
-                else
-                {
-                    e.Authenticated = false;
-                    Login1.FailureText = "El usuario no está activo por inactividad.";
-                }
-            }
-            else
-            {
-                e.Authenticated = false;
-                Login1.FailureText = "El usuario y/o contraseña no son correctos.";
-            }
+            IngresoSistema(oUser, e);
         }
 
 
@@ -326,6 +225,172 @@ namespace WebLab
                 conn.Close();
                 return b_permiso;
             }
+        }
+
+        private void IngresoSistema(Usuario oUser, AuthenticateEventArgs e)
+        {
+            
+            /* Habilitar cuando se quiera autogestion de usuarios medicos
+            if (oUser == null)
+                AutenticarUsuarioLdap(Login1.UserName, Login1.Password);
+             */
+            if (oUser != null)
+            {
+                if ((oUser.Activo) && (oUser.IdPerfil.Activo))
+                {
+                    if ((oUser.Activo) && (oUser.Externo))
+                    {
+                        Session["idUsuario"] = oUser.IdUsuario.ToString();
+                        Response.Redirect("~/Consulta/Historiaclinicafiltro.aspx", false);
+
+                    }
+                    else
+                    {
+                        Session["idUsuarioValida"] = null;
+
+                        if (Request["Operacion"] == null)
+                        {//////////////nuevo login
+                            Session["SIL"] = "1";
+
+                            if (oUser.RequiereCambioPass)
+                                Response.Redirect("~/Usuarios/PasswordEdit2.aspx?idUsuario=" + oUser.IdUsuario.ToString(), false);
+
+                            else
+                            {
+                                Session["idUsuarioAux"] = oUser.IdUsuario.ToString();
+                                Response.Redirect("LoginEfector.aspx", false);
+
+                                //Session["idUsuario"] = oUser.IdUsuario.ToString();
+                                //Response.Redirect("Default.aspx", false);
+                            }
+                        }
+                        else
+                        {///////////////validacion
+                            if (Request["idCasoFiliacion"] != null)
+                            {
+
+
+                                if ((Request["idServicio"].ToString() == "6") && (VerificarSiTienePermisodeValidar(oUser.Username, "/CasoFiliacion/CasoResultado.aspx")))
+                                {
+                                    //HttpContext Context;
+                                    //Context = HttpContext.Current;
+                                    //Context.Items.Add("id", Request["idCasoFiliacion"].ToString());
+                                    Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
+                                    //Context.Items.Add("Desde", "Valida");
+                                    //Server.Transfer("~/CasoFiliacion/CasoResultado.aspx");
+
+                                    Response.Redirect("~/casoFiliacion/CasoResultado3.aspx?id=" + Request["idCasoFiliacion"].ToString() + "&Desde=Valida&logIn=1");
+
+
+                                }
+                                if ((Request["idServicio"].ToString() == "3") && (VerificarSiTienePermisodeValidar(oUser.Username, "/CasoFiliacion/CasoResultadoHisto.aspx")))
+                                {
+                                    //HttpContext Context2;
+                                    //Context2 = HttpContext.Current;
+                                    //Context2.Items.Add("id", Request["idCasoFiliacion"].ToString());
+                                    Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
+                                    //Context2.Items.Add("Desde", "Valida");
+                                    //Server.Transfer("~/CasoFiliacion/CasoResultadoHisto.aspx");
+
+                                    Response.Redirect("~/CasoFiliacion/CasoResultadoHisto.aspx?id=" + Request["idCasoFiliacion"].ToString() + "&Desde=Valida&logIn=1", false);
+
+                                }
+
+                            }
+                            else
+                            {
+                                string idServicio = Request["idServicio"].ToString();
+                                string operacion = Request["Operacion"].ToString();
+                                string modo = Request["modo"].ToString();
+                                if (VerificarSiTienePermisodeValidar(oUser.Username, "/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo))
+                                {
+                                    Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
+                                    if (Request["urgencia"] != null)
+                                    {
+
+                                        string sredirect = "~/resultados/ResultadoEdit2.aspx?idServicio=1&Operacion=Valida&idProtocolo=" + Request["idProtocolo"].ToString() + "&Index=0&Parametros=" + Request["idProtocolo"].ToString() + "&idArea=0&urgencia=1&validado=0&modo=Urgencia"; //&idUsuarioValida=" + oUser.IdUsuario.ToString();
+                                        if (Request["desde"] != null)
+                                            sredirect += "&desde=" + Request["desde"].ToString();
+                                        Response.Redirect(sredirect, false);
+                                        //    Response.Redirect("~/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo + "&idUsuarioValida=" + oUser.IdUsuario, false);
+                                    }
+                                    else
+                                        Response.Redirect("~/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo + "&logIn=1", false);// + "&idUsuarioValida=" + oUser.IdUsuario, false);
+                                }
+                                else
+                                {
+                                    e.Authenticated = false;
+                                    Login1.FailureText = "El usuario no tiene permisos para validar.";
+                                }
+                            }
+                        }//fin else casofi
+                    }//externo
+                }//activo
+                else
+                {
+                    e.Authenticated = false;
+                    Login1.FailureText = "El usuario no está activo por inactividad.";
+                }
+            }
+            else
+            {
+                e.Authenticated = false;
+                Login1.FailureText = "El usuario y/o contraseña no son correctos.";
+            }
+        }
+        protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)
+        {
+            Usuario oUser = (Usuario) Session["usuarioPendienteAceptacion"];
+
+            if (oUser != null)
+            {
+                Session["usuarioPendienteAceptacion"] = null;
+                //Actualizar la fecha en la bd
+                oUser.FechaAceptaTerminosCondiciones = DateTime.Now;
+                oUser.Save();
+                //Actualizo acceso en log
+                CrearLogAcceso(oUser);
+                //Ingreso al sistema
+                AuthenticateEventArgs evento = new AuthenticateEventArgs();
+                IngresoSistema(oUser, evento);
+            }
+            else
+            {
+                // Fallback: recargar página o mostrar error
+                Response.Redirect("Logout.aspx", true);
+            }
+        }
+        private void CrearLogAcceso(Usuario oUser)
+        {
+            LogAccesoTerminosCondiciones RegistroAcceso = new LogAccesoTerminosCondiciones();
+            RegistroAcceso.IdUsuario = oUser.IdUsuario;
+            RegistroAcceso.Fecha = DateTime.Now;
+            RegistroAcceso.Save();
+        }
+
+        private bool MostrarTerminosCondiciones(Usuario oUser)
+        {
+            int dias = Convert.ToInt32(ConfigurationManager.AppSettings["DiasTerminosCondiciones"]);
+            if(dias > 0)
+            {
+                DateTime ultimaFecha = oUser.FechaAceptaTerminosCondiciones;
+                DateTime hoy = DateTime.Now;
+
+                TimeSpan diferencia = hoy.Subtract(ultimaFecha);
+                int diferenciasDias = diferencia.Days;
+
+                if (diferenciasDias > dias)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "error", "alert('❌ No hay dias definidos para los terminos y condiciones');", true);
+                return true; 
+            }
+            
+          
         }
     }
 }
