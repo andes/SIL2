@@ -33,9 +33,10 @@ namespace Business.Data
         private int m_idarea;
         private bool m_requiereCambioPass;
         private bool m_administrador;
-   private bool m_externo;
+        private bool m_externo;
         private string m_email;
         private string m_telefono;
+        private DateTime m_fechaTerminosCondiciones;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -63,7 +64,7 @@ namespace Business.Data
 			    m_externo = false;
             m_email= String.Empty;
             m_telefono = String.Empty;
-
+            m_fechaTerminosCondiciones = new DateTime(1900,01,01);
 
         }
 
@@ -93,7 +94,7 @@ namespace Business.Data
             m_requiereCambioPass = false;
             m_administrador = false;
 			 m_externo = false;
-
+            m_fechaTerminosCondiciones = new DateTime(1900, 01, 01);
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -330,7 +331,7 @@ namespace Business.Data
 			}
 
 		}
-    public bool Externo
+        public bool Externo
         {
             get { return m_externo; }
             set
@@ -429,24 +430,32 @@ namespace Business.Data
 			get { return m_isChanged; }
 		}
 
-     
-
-            #endregion
 
 
-            #region Metodos
+        #endregion
 
 
-            #endregion
+        #region Metodos
 
-            //public bool esHemoterapia()
-            //{
-            //     var index=this.IdPerfil.Nombre.ToUpper().IndexOf("HEMOTERAPIA");
-            //     if (index > -1) return true;
-            //     else return false;
 
-            //}
+        #endregion
 
+        //public bool esHemoterapia()
+        //{
+        //     var index=this.IdPerfil.Nombre.ToUpper().IndexOf("HEMOTERAPIA");
+        //     if (index > -1) return true;
+        //     else return false;
+
+        //}
+
+
+        public DateTime FechaAceptaTerminosCondiciones {
+            get { return m_fechaTerminosCondiciones; }
+            set {
+                m_isChanged |= (m_fechaTerminosCondiciones != value);
+                m_fechaTerminosCondiciones = value;
+            }
 
         }
+    }
 }

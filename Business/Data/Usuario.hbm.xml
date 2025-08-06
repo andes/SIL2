@@ -30,5 +30,7 @@
 
     <!--<property column="matricula" type="String" name="Matricula" length="50" />-->
     <many-to-one name="IdEfectorDestino" column="idEfectorDestino" class="Business.Data.Efector,Business" />
+
+    <property column="fechaAceptaTerminosCondiciones" type="DateTime" name="FechaAceptaTerminosCondiciones" not-null="true" />
 	</class>
 </hibernate-mapping>

@@ -147,6 +147,7 @@
     <Compile Include="Data\Laboratorio\Ficha.cs" />
     <Compile Include="Data\Laboratorio\ItemMuestra.cs" />
     <Compile Include="Data\Laboratorio\ItemPresentacion.cs" />
+    <Compile Include="Data\Laboratorio\LogAccesoTerminosCondiciones.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacionEstado.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacion.cs" />
     <Compile Include="Data\Laboratorio\Marca.cs" />
@@ -318,6 +319,7 @@
     <Content Include="bin\Debug\Iesi.Collections.dll" />
     <Content Include="bin\Debug\log4net.dll" />
     <Content Include="bin\Debug\NHibernate.dll" />
+    <EmbeddedResource Include="Data\Laboratorio\LogAccesoTerminosCondiciones.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\Ficha.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacionEstado.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\AuditoriaLoteDerivacion.hbm.xml" />
