@@ -71,6 +71,7 @@
      <li><a href="#tab8"  >Muestras</a></li>
  <li><a href="#tab6">Mas opciones</a></li>
      <li><a href="#tab9">Turnos</a></li>
+     <li><a href="#tab10">AutoAnalizadores</a></li>
 </ul>
 
     <div id="tab1" class="tab_content" style="border: 1px solid #C0C0C0">
@@ -425,11 +426,11 @@
                                 <tr>
                                     <td colspan="2" 
                                         style="background-color: #008080; color: #FFFFFF; font-weight: bold;">
-                                        VINCULACION CON
-                                        NOMENCLADOR DE LA SUBSECRETARIA DE SALUD</td>
+                                       
+                                        NOMENCLADOR UNIFICADO</td>
                                 </tr>
                               	<tr>
-						<td class="control-label"  >	   Codigo:				</td>
+						<td class="control-label"  >	   CAPITULO:				</td>
 						<td >		  
                             <anthem:TextBox 
                                 ID="txtCodigoNomenclador" runat="server" AutoCallBack="True" ontextchanged="txtCodigo_TextChanged1" 
@@ -456,28 +457,28 @@
 						</tr>
                                 <tr>
                                     <td class="control-label" >
-                                        Valor($):</td>
+                                        U.B:</td>
                                     <td>
                                         <anthem:Label ID="lblValorNomenclador" runat="server" Text="" Font-Bold="True" 
                                             ForeColor="#333333"></anthem:Label>
                                     </td>
                                 </tr>
                                 	</tr>
-                                <tr>
+                            <%--    <tr>
                                     <td class="control-label" >
                                         Factor Producción:</td>
                                     <td>
                                         <anthem:Label ID="lblFactorProduccion" runat="server" Text="" Font-Bold="True" 
                                             ForeColor="#333333"></anthem:Label> 
                                     </td>
-                                </tr>
+                                </tr>--%>
                             </table>
         
-        </div>
+        <%--</div>
 
               </div>
                                </div>
-           </div>
+           </div>--%>
         </td>
 						
 					</tr>
@@ -584,6 +585,43 @@
                         </table>
                         </div>
 
+
+    		<div id="tab10" class="tab_content" style="border: 1px solid #C0C0C0">
+                        <table>
+                            
+                        <tr>
+                            <td colspan="2">
+                                <h4>Autoanalizadores
+                                </h4> 
+                                
+                                <anthem:GridView ID="gvAutoAnalizadores" runat="server" AutoGenerateColumns="False" 
+                                    AutoUpdateAfterCallBack="True" BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px" CellPadding="0" 
+                                    CssClass="table table-bordered bs-table" DataKeyNames="idEquipo" 
+                                    EmptyDataText="No hay datos relacionaos para la determinación" 
+                                    Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal" 
+                                   
+                                    TabIndex="9" Width="100%"  >
+                                    <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                                    <Columns>
+                                        <asp:BoundField DataField="Equipo" HeaderText="Equipo">                                        
+                                        </asp:BoundField>
+                                          <asp:BoundField DataField="Marca" HeaderText="Marca">                                        
+                                        </asp:BoundField>
+                                          <asp:BoundField DataField="Presentacion" HeaderText="Presentacion">                                        
+                                        </asp:BoundField>
+                                       
+                                    </Columns>
+                                    <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                                    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                                    <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                    <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
+                                    <EditRowStyle BackColor="#999999" />
+                                    <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                </anthem:GridView>
+                            </td>
+                        </tr>
+                        </table>
+                        </div>
     
     				<div id="tab8"   class="tab_content" style="border: 1px solid #C0C0C0">
                            <asp:Label ID="lblMensajeMuestra1" runat="server"    ForeColor="Red">Sección habilitada para Servicio Microbiologia</asp:Label>

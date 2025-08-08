@@ -1811,9 +1811,35 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             CargarGrillaPresentaciones();
             CargarGrillaMuestras();
 
+            CargarGrillaAutoanalizadores();
 
         }
 
+       
+        private void CargarGrillaAutoanalizadores()
+        {
+            DataSet Ds = new DataSet();
+            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;          
+
+            cmd.CommandText = "lab_GetEquipoItem";           
+
+            cmd.Parameters.Add("@idItemBuscar", SqlDbType.Int);
+            cmd.Parameters["@idItemBuscar"].Value = Request["id"].ToString();              
+            cmd.Connection = conn;
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(Ds);
+
+
+            gvAutoAnalizadores.DataSource = Ds.Tables[0];
+            gvAutoAnalizadores.DataBind();
+          ///  lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+            conn.Close();
+            //}
+        }
         private void CargarGrillaMuestras()
         {
             gvMuestraItem.AutoGenerateColumns = false;
@@ -1953,7 +1979,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
 
             ///Carga de combos del Nomenclador
-            m_ssql = "SELECT codigo, descrip FROM LAB_Nomenclador order by descrip";
+            m_ssql = "SELECT capitulo as codigo, descripcion as descrip FROM LAB_Nomenclador order by descripcion";
             oUtil.CargarCombo(ddlItemNomenclador, m_ssql, "codigo", "descrip");
             ddlItemNomenclador.Items.Insert(0, new ListItem("No Aplica", "0"));
 
@@ -2543,26 +2569,26 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 if (oItem != null)
                 {
                     ddlItemNomenclador.SelectedValue = oItem.Codigo;
-                    lblValorNomenclador.Text = oItem.ValMod.ToString();
-                    lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
+                    lblValorNomenclador.Text = oItem.Ug.ToString();//.ValMod.ToString();
+               //     lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
                     lblMensaje.Visible = false;
                 }
                 else
                 {
                     ddlItemNomenclador.SelectedValue = "0";
                     lblValorNomenclador.Text = "";
-                    lblFactorProduccion.Text = "";
+                //    lblFactorProduccion.Text = "";
                     if (txtCodigoNomenclador.Text != "")
                         lblMensaje.Visible = true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
 
             }
             ddlItemNomenclador.UpdateAfterCallBack = true;
             lblValorNomenclador.UpdateAfterCallBack = true;
-            lblFactorProduccion.UpdateAfterCallBack = true;
+       //     lblFactorProduccion.UpdateAfterCallBack = true;
             lblMensaje.UpdateAfterCallBack = true;
         }
 
@@ -2575,19 +2601,19 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 Nomenclador oItem = new Nomenclador();
                 oItem = (Nomenclador)oItem.Get(typeof(Nomenclador), ddlItemNomenclador.SelectedValue);
                 txtCodigoNomenclador.Text = oItem.Codigo;
-                lblValorNomenclador.Text = oItem.ValMod.ToString();
-                lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
+                lblValorNomenclador.Text = oItem.Ug.ToString();
+             //   lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
             }
             else
             {
                 txtCodigoNomenclador.Text = "";
                 lblValorNomenclador.Text = "";
-                lblFactorProduccion.Text = "";
+           //     lblFactorProduccion.Text = "";
 
             }
             txtCodigoNomenclador.UpdateAfterCallBack = true;
             lblValorNomenclador.UpdateAfterCallBack = true;
-            lblFactorProduccion.UpdateAfterCallBack = true;
+      //      lblFactorProduccion.UpdateAfterCallBack = true;
 
         }
 
