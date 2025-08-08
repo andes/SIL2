@@ -115,6 +115,8 @@ namespace WebLab.Resultados
                 cmd.Parameters.Add("@Estado", SqlDbType.Int);
                 cmd.Parameters["@Estado"].Value = rdbEstado.SelectedValue;
 
+            cmd.Parameters.Add("@agrupado", SqlDbType.Bit);
+            cmd.Parameters["@agrupado"].Value = 0;//a no grupado: lista de procotocolos
 
 
                 cmd.Connection = conn;
