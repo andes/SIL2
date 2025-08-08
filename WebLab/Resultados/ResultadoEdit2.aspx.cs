@@ -1493,7 +1493,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //{
                             if (oDeriva.Estado == 0) /// pendiente                            
                             {
-                                estadoDerivacion = "Pendiente de Derivacion";
+                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
                                 lblDerivacion.ForeColor = Color.Red;
                             }
                             if (oDeriva.Estado == 1) /// enviado
