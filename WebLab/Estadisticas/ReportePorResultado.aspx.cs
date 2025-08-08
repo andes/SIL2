@@ -620,13 +620,26 @@ namespace WebLab.Estadisticas
             }
 
             string listadiag = getListaDiagnostico();
+            //if (listadiag != "")
+            //    m_strCondicion += " and PD.iddiagnostico in ( " + listadiag +")";
+
+         
             if (listadiag != "")
-                m_strCondicion += " and PD.iddiagnostico in ( " + listadiag +")";
+                m_strCondicion +=  " and ( exists  (select 1 from lab_protocoloDiagnostico Di with (nolock)  where P.idProtocolo= Di.idprotocolo and iddiagnostico in (" + listadiag + ") ) ";
 
 
-            m_strCondicion = " and P.idPaciente>-1";
+            if (listadiag.Contains("-9"))
+                m_strCondicion += " or not exists (select idprotocolo from lab_protocoloDiagnostico Di with (nolock) where P.idProtocolo = Di.idprotocolo) )";
+            else
+                m_strCondicion += " ) ";
+ 
+
+
+
+
+            m_strCondicion += " and P.idPaciente>-1";
             if (i_idEfector > 0)
-                { m_strCondicion = " and P.idEfector="+ i_idEfector.ToString(); }
+                { m_strCondicion += " and P.idEfector="+ i_idEfector.ToString(); }
 
             if (ddlGrupoEtareo.SelectedValue != "0")
             {
@@ -722,7 +735,7 @@ dP.fechavalida as [F.Resultado],
                             " INNER JOIN LAB_Protocolo AS P ON DP.idProtocolo = P.idProtocolo " +
                             " INNER JOIN LAB_Item AS I ON DP.idSUBItem = I.idItem " +
                             " INNER JOIN Sys_Paciente AS Pa ON P.idPaciente = Pa.idPaciente" +
-                            " left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pac.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pac.idpaciente)  " +
+                            " left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pa.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pa.idpaciente)  " +
                             " left JOIN Lab_protocoloDiagnostico AS PD ON PD.idProtocolo = P.idProtocolo " +
                             " left join " + tablaDiag +
                             " INNER JOIN LAB_Origen as O on O.idOrigen= P.idOrigen " +

@@ -163,14 +163,14 @@ namespace WebLab.Items
                 if (ddlEfector.SelectedValue == "227") //Admisnitrador
                     m_strSQL = " select I.idItem,I.codigo, I.nombre as nombre, " +
                        "case when  I.idCategoria='0' then 'Simple' else 'Compuesta' end  as tipo, I.codigoNomenclador ,   CASE WHEN A.baja = 1 THEN '' ELSE A.nombre END AS area," +
-                       " I.disponible " +
+                       " I.disponible, I.codigoNomenclador " +
                                      " from Lab_Item I" +
                                      " left join Lab_Area A on A.idArea= I.idArea" +
                                      " where I.baja=0  " + m_condicion + m_orden;
                 else
                     m_strSQL = " select I.idItem,I.codigo, I.nombre as nombre, " +
                  "case when  I.idCategoria='0' then 'Simple' else 'Compuesta' end  as tipo, I.codigoNomenclador ,   CASE WHEN A.baja = 1 THEN '' ELSE A.nombre END AS area," +
-                 " Ie.disponible " +
+                 " Ie.disponible , I.codigoNomenclador" +
                                " from Lab_Item I" +
 
                                " inner join lab_itemefector IE on IE.iditem= I.iditem and Ie.idefector=" + ddlEfector.SelectedValue + // oUser.IdEfector.IdEfector.ToString()+
@@ -190,7 +190,7 @@ LAB_ValorReferencia as Vr
  SELECT I.idItem, I.codigo, I.nombre, CASE WHEN I.idCategoria = '0' THEN 'Simple' ELSE 'Compuesta' END AS categoria,
  case when I.tipo='P' then 'Practica' else 'Determinacion'  end as tipo,
  A.nombre AS area, UM.nombre AS umedida, M.metodo as metodo,
-                            I.requiereMuestra, I2.codigo AS referencia              
+                            I.requiereMuestra, I2.codigo AS referencia  , I.codigoNomenclador            
                             FROM         LAB_Item AS I 
                             LEFT OUTER JOIN     LAB_Item AS I2 ON I.idItemReferencia = I2.idItem 
                             LEFT OUTER JOIN    LAB_UnidadMedida AS UM ON I.idUnidadMedida = UM.idUnidadMedida 
@@ -202,7 +202,7 @@ LAB_ValorReferencia as Vr
                                 CASE WHEN I.idCategoria = '0' THEN 'Simple' ELSE 'Compuesta' END AS categoria,
                                 case when I.tipo='P' then 'Practica' else 'Determinacion'  end as tipo,
                             A.nombre AS area, UM.nombre AS umedida, 
-                            I.requiereMuestra, I2.codigo AS referencia, case when  IE.idEfector=IE.idEfectorDerivacion then '' else E.nombre end as EfectorDerivado              
+                            I.requiereMuestra, I2.codigo AS referencia, case when  IE.idEfector=IE.idEfectorDerivacion then '' else E.nombre end as EfectorDerivado  , I.codigoNomenclador            
                             FROM         LAB_Item AS I 
                             LEFT OUTER JOIN     LAB_Item AS I2 ON I.idItemReferencia = I2.idItem 
                             LEFT OUTER JOIN    LAB_UnidadMedida AS UM ON I.idUnidadMedida = UM.idUnidadMedida 
