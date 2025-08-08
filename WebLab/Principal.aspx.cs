@@ -79,13 +79,14 @@ namespace WebLab
 
                     //lblValidaPendiente.Text = oP.GetPendientesValidar().ToString();
                     divAlerta.Visible = false;
-
+                    /* Caro saco alerta por performance
                     if (oUser.IdEfector.IdEfector != 227)
                     {    ///caro :activar mas adelante
                         string s_alerta = GetAlerta(oCon); divAlerta.Visible = false;
                         if (s_alerta != "") divAlerta.Visible = true;
                         lblAlerta.Text = s_alerta;
                     }
+                    */
 
 
 
@@ -224,31 +225,38 @@ namespace WebLab
 
         private void CargarGrillaSISA()
         {
-            string m_strSQL = @"SELECT case when len(E.idefector2)>1 then E.idefector2 else  E.nombre end as Efector, count(*) as PendienteSISA
-  FROM [dbo].sys_paciente a (nolock)  
-  INNER JOIN LAB_Protocolo C (nolock) ON c.idpaciente= a.idPaciente
-  inner join LAB_DetalleProtocolo d (nolock) on d.idProtocolo= c.idProtocolo 
-  inner join lab_item i (nolock) on i.idItem= d.idsubItem  
-  inner join LAB_ConfiguracionSISA S (nolock) on S.idCaracter= c.idCaracter and s.idItem= d.idSubItem
-  inner join LAB_ConfiguracionSISADetalle DS (nolock) on DS.idItem=d.idSubItem  and resultadocar= ds.resultado
-  inner join sys_Efector e on e.idEfector= C.idEfector
-      where   
-	  c.notificarresultado=1
-and d.ideventomuestraSISA=0   and a.idestado<>2
-and c.idpaciente>0 
-and (d.idUsuarioValida>0 and (d.informable=1 and d.conResultado=1 ))  and S.fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
-and ( S.fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, S.fechavigenciahasta, 103) = '01/01/1900')
-and (S.idOrigen=0 or S.idOrigen= c.idorigen) and (C.Embarazada=S.soloEmbarazada) and (C.edad between S.edadDesde and S.edadHasta and C.unidadEdad=0) 
-
-group by E.nombre, E.idefector2
-order by PendienteSISA desc ";
-
             DataSet Ds = new DataSet();
-            //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            string str_condicion = " and C.idEfector>0";
+
+
+            cmd.CommandText = "[LAB_ResultadosASisa]";
+
+            cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
+            cmd.Parameters["@FiltroBusqueda"].Value = str_condicion;
+
+            cmd.Parameters.Add("@idItem", SqlDbType.Int);
+            cmd.Parameters["@idItem"].Value = 0; //todos
+
+            cmd.Parameters.Add("@Estado", SqlDbType.Int);
+            cmd.Parameters["@Estado"].Value = 0;//pendiente
+
+            cmd.Parameters.Add("@agrupado", SqlDbType.Bit);
+            cmd.Parameters["@agrupado"].Value = 1;//agrupado por cantidad
+
+
+
+            cmd.Connection = conn;
+
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            da.Fill(Ds);
+             
 
             gvProtocolosxSISA.DataSource = Ds;
             gvProtocolosxSISA.DataBind();
@@ -287,9 +295,10 @@ order by PendienteSISA desc ";
                     cmd.Parameters.Add("@Estado", SqlDbType.Int);
                     cmd.Parameters["@Estado"].Value = 0;//pendiente
 
+                cmd.Parameters.Add("@agrupado", SqlDbType.Bit);
+                cmd.Parameters["@agrupado"].Value = 1;//agrupado por cantidad
 
-
-                    cmd.Connection = conn;
+                cmd.Connection = conn;
 
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -300,8 +309,10 @@ order by PendienteSISA desc ";
                 conn.Close();
                 conn.Dispose();
                 conn = null;
-                if  (Ds.Tables[0].Rows.Count>0)
-                s_alerta = "Hay " + Ds.Tables[0].Rows.Count.ToString() + " eventos pendientes de notificar a SISA. Notifique desde el menu Informes - Resultados a SISA";
+                //if  (Ds.Tables[0].Rows.Count>0)
+                //s_alerta = "Hay " + Ds.Tables[0].Rows.Count.ToString() + " eventos pendientes de notificar a SISA. Notifique desde el menu Informes - Resultados a SISA";
+
+                s_alerta = "Hay " + Ds.Tables[0].Rows[0][1].ToString() + " eventos pendientes de notificar a SISA. Notifique desde el menu Informes - Resultados a SISA";
 
             }
             return s_alerta;

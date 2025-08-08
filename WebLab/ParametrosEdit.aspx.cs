@@ -267,29 +267,31 @@ namespace WebLab
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-            btnReinializacion.Visible = false;
+//            btnReinializacion.Visible = false;
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
             ///Carga de Sectores
             string m_ssql = " SELECT idSectorServicio,  nombre  + ' - ' + prefijo as nombre FROM LAB_SectorServicio WHERE (baja = 0) order by nombre";
-            oUtil.CargarCombo(ddlSectorUrgencia, m_ssql, "idSectorServicio", "nombre");
+            oUtil.CargarCombo(ddlSectorUrgencia, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorUrgencia.Items.Insert(0, new ListItem("", "0"));
 
-            oUtil.CargarCombo(ddlSectorDefecto, m_ssql, "idSectorServicio", "nombre");
+            oUtil.CargarCombo(ddlSectorDefecto, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorDefecto.Items.Insert(0, new ListItem("", "0"));
             ///Carga de combos de Origen
             m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlOrigenUrgencia, m_ssql, "idOrigen", "nombre");
+            oUtil.CargarCombo(ddlOrigenUrgencia, m_ssql, "idOrigen", "nombre", connReady);
             ddlOrigenUrgencia.Items.Insert(0, new ListItem("", "0"));
             oUtil.CargarCheckBox(chkOrigen, m_ssql, "idOrigen", "nombre");
             
             ///Carga de hojas de trabajo para histocomptaibilidad
             m_ssql = " SELECT idHojaTrabajo,  codigo FROM LAB_HojaTrabajo WHERE (baja = 0) order by codigo";
-            oUtil.CargarCombo(ddlHisto, m_ssql, "idHojaTrabajo", "codigo");
+            oUtil.CargarCombo(ddlHisto, m_ssql, "idHojaTrabajo", "codigo", connReady);
             ddlHisto.Items.Insert(0, new ListItem("", "0"));
 
 
             ///Carga de combos de REgiones
             m_ssql = "select idregion, nombre from sys_region";
-            oUtil.CargarCombo(ddlRegion, m_ssql, "idregion", "nombre");
+            oUtil.CargarCombo(ddlRegion, m_ssql, "idregion", "nombre", connReady);
             ddlRegion.Items.Insert(0, new ListItem("", "0"));
             //foreach (string MiImpresora in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
             //{
@@ -310,14 +312,14 @@ namespace WebLab
                      " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
                      "order by E.nombre";
 
-                oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
+                oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
 
-                btnReinializacion.Visible = true;
+              //  btnReinializacion.Visible = true;
             }
             else
             {
                 m_ssql = "select  E.idEfector, E.nombre  from sys_efector E  where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
-                oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
+                oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             }
 
             m_ssql = null;

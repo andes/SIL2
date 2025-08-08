@@ -418,15 +418,6 @@ namespace WebLab.Items {
         protected global::Anthem.Label lblValorNomenclador;
         
         /// <summary>
-        /// lblFactorProduccion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblFactorProduccion;
-        
-        /// <summary>
         /// btnAuditoria control.
         /// </summary>
         /// <remarks>
@@ -524,6 +515,15 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gdPresentacion;
+        
+        /// <summary>
+        /// gvAutoAnalizadores control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.GridView gvAutoAnalizadores;
         
         /// <summary>
         /// lblMensajeMuestra1 control.
