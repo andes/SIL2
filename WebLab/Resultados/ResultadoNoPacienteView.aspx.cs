@@ -605,6 +605,9 @@ namespace WebLab.Resultados
                                     estadoDerivacion = "Derivado: " + oItem.IdEfectorDerivacion.Nombre;
                                 if (oDeriva.Estado == 2) /// no enviado
                                     estadoDerivacion = " No Derivado. " + oDeriva.Observacion;
+                                if (oDeriva.Estado == 4) // 4:Pendiente para Enviar
+                                    estadoDerivacion = oDetalle.ResultadoCar;
+
                                 lblDerivacion.Font.Bold = true;
 
                                 if (oDeriva.Resultado!="")                                                           
