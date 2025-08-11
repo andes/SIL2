@@ -36,7 +36,7 @@ _____________________________________________
 <!-- Indique el cambio en caso afirmativo, agradecemos si es en forma de comando en mongo además de una explicación -->
 - [ ] Si
 - [ ] No
-- [ ] - [ ] No corresponde
+- [ ] No corresponde
 
 
 <!-- Agregar captura de pantalla, si fuera relevante  -->
