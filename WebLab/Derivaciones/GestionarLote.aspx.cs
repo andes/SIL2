@@ -31,8 +31,8 @@ namespace WebLab.Derivaciones
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (!Page.IsPostBack)
                 {
-
-                    Session["GrillaGestionLotes"] = null;
+                    VerificaPermisos("Gestionar Lotes");
+                    //Session["GrillaGestionLotes"] = null; --> no se usa
                     lblTitulo.Text = "LOTES";
                       
                     CargarListas();
@@ -45,8 +45,24 @@ namespace WebLab.Derivaciones
                 else Response.Redirect("../FinSesion.aspx", false);
         }
 
-         
-        
+        private void VerificaPermisos(string sObjeto)
+        {
+            if (Session["s_permiso"] != null)
+            {
+                Utility oUtil = new Utility();
+                int i_permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
+                switch (i_permiso)
+                {
+                    case 0:
+                        Response.Redirect("../AccesoDenegado.aspx", false);
+                        break;
+                        //case 1: btn .Visible = false; break;
+                }
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+
 
         private void CargarListas()
         {
@@ -152,5 +168,6 @@ namespace WebLab.Derivaciones
             adapter.Fill(Ds);
             return Ds.Tables[0];
         }
+
     }
 }
