@@ -176,8 +176,6 @@ namespace WebLab.Derivaciones
                     DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
                     string str_condicion = " 1= 1 AND fecha>='" + fecha1.ToString("yyyyMMdd") + "' and fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
 
-                    //if (txtProtocoloDesde.Value != "") str_condicion += " AND P.numero >= " + txtProtocoloDesde.Value;
-                    //if (txtProtocoloHasta.Value != "") str_condicion += " AND P.numero <= " + txtProtocoloHasta.Value;
                     if (ddlOrigen.SelectedValue != "0")
                         str_condicion += " AND idOrigen = " + ddlOrigen.SelectedValue;
                     if (ddlPrioridad.SelectedValue != "0")
@@ -192,15 +190,8 @@ namespace WebLab.Derivaciones
                         str_condicion += " AND idItem = " + ddlItem.SelectedValue;
                     str_condicion += " AND idEfector= " + oUser.IdEfector.IdEfector.ToString();
 
-                    //string m_lista = ListaEfectores();
-                    //if (m_lista != "")
-                    //    str_condicion += " AND idEfector in ( " + m_lista + ")";
-                    //  ddlEfector
+                    verificaResultados(str_condicion);
 
-                    if (Request["tipo"] == "informe")
-                        Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
-                    else if (Request["tipo"] == "resultado")
-                        Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
                 }
                 else
                     Response.Redirect("../FinSesion.aspx", false);
@@ -241,6 +232,50 @@ namespace WebLab.Derivaciones
                     ddlItem.Items.Insert(0, new ListItem("Todas", "0"));
                 }
             }
+        }
+        private void verificaResultados(string str_condicion)
+        {
+            DataTable dt = GetDataSet(str_condicion);
+
+            if (dt.Rows.Count > 0)
+            {
+                if (Request["tipo"] == "informe")
+                    Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
+                else
+                    if (Request["tipo"] == "resultado")
+                        Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+            }
+            else
+            {
+                cv_botonBuscar.IsValid = false; //que de error sin enviar alert
+            }
+
+
+        }
+
+        public DataTable GetDataSet(string parametros)
+        {
+
+            int estado = Convert.ToInt32(rdbEstado.SelectedValue);
+
+            string m_strSQL = @" 
+             SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, 
+                 apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , 
+                solicitante as especialista , isnull(idlote,0) as idLote , isnull(mot.descripcion,'') as motivo
+             FROM  vta_LAB_Derivaciones vta left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion 
+             WHERE " + parametros + "  and estado = " + estado;
+
+            if(estado == 0) //Pendiente de derivar
+                m_strSQL += " and idlote = 0 ";//No tiene que tener lote asociado
+            
+            
+           
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
         }
 
     }

@@ -247,15 +247,17 @@ namespace WebLab.Protocolos
 
 
                             }
-                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" || Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
+                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" )
                             {
 
                                string numeroProtocolo= Request["numeroProtocolo"].ToString();
                                 string analisis= Request["analisis"].ToString();
                                 CargarProtocoloDerivado(numeroProtocolo, analisis);
-                                
-                                
-
+                            }
+                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
+                            {
+                              
+                                CargarProtocoloDerivadoLote(); //llama a CargarProtocoloDerivado
                             }
                             if (Request["Operacion"].ToString() == "AltaFFEE")
                             {
@@ -486,7 +488,7 @@ namespace WebLab.Protocolos
                 ddlEspecialista.SelectedValue = oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
                 ddlEspecialista.UpdateAfterCallBack = true;
 
-                CargarDeterminacionesDerivacionMultiEfector(Request["analisis"].ToString());
+                CargarDeterminacionesDerivacionMultiEfector(analisis);
 
                 txtObservacion.Text = oRegistro.Observacion;
 
@@ -1799,7 +1801,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                             else
-                                Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
+                                Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString() + "&idLote=" + Request["idLote"]);
 
                         }
                         else
@@ -1850,13 +1852,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         {
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
 
-            string query = @"update LAB_Derivacion
-set estado=3---recibido
-,idProtocoloDerivacion="+oRegistro.IdProtocolo.ToString()+@"
-from LAB_Derivacion D
-inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
-inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
-where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (" + Request["analisis"].ToString().Replace("|",",") + ")";
+            string query =
+            @"update LAB_Derivacion
+            set estado=3---recibido
+            ,idProtocoloDerivacion="+oRegistro.IdProtocolo.ToString()+@"
+            from LAB_Derivacion D
+                inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
+                inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
+            where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idLote=" + Request["idLote"];
            
             SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -3155,7 +3158,7 @@ where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idsubItem in (
                             else
                             {
                                 if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") //Se piso en un merge..
-                                        Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString());
+                                        Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString() + "&idLote=" + Request["idLote"]);
 
                                 if (Session["idUrgencia"].ToString() != "0")
                                     Response.Redirect("Default2.aspx?idServicio=1&idUrgencia=" + Session["idUrgencia"].ToString(), false);
@@ -5022,7 +5025,41 @@ System.Net.ServicePointManager.SecurityProtocol =
 
         }
 
-        
+        private void CargarProtocoloDerivadoLote()
+        {
+            string numeroProtocolo = Request["numeroProtocolo"].ToString();
+            int idLote = Convert.ToInt32(Request["idLote"]);
+            string analisis;
+
+            ////// ---------------------->Buscar las derivaciones que no han sido ingresadas
+            //el protocolo me da los protocolos detalles
+            //los protocolos detalles me dan las derivaciones
+            //la derivacion debe estar enviada
+            //la derivacion debe tener el mismo lote que el ingresado (no todos los analisis pueden haber sido enviados con el mismo lote)
+
+            string m_strSQL =
+                @" select distinct STRING_AGG(Det.idItem ,' | ')  as Item
+                    from LAB_Derivacion D
+                        inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
+                        inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
+                        inner join LAB_DerivacionEstado as LE on LE.idEstado = D.estado
+                        inner join LAB_LoteDerivacion L on L.idLoteDerivacion = D.idLote
+                    where P.baja = 0
+                        and D.estado in (1) ---------------------- Buscar las derivaciones que no han sido ingresadas
+                        and L.idLoteDerivacion = " + idLote +  " and p.numero = " + numeroProtocolo;
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter
+            {
+                SelectCommand = new SqlCommand(m_strSQL, conn)
+            };
+            adapter.Fill(Ds);
+            analisis = Convert.ToString(Ds.Tables[0].Rows[0][0]);
+
+            CargarProtocoloDerivado(numeroProtocolo, analisis);
+
+        }
 
     }
 
