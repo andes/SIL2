@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.Laboratorio.ConfiguracionAreaEtiqueta,Business" table="LAB_ConfiguracionAreaEtiqueta">
+
+		<id name="IdConfiguracionAreaEtiqueta" column="idConfiguracionAreaEtiqueta" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+    <property column="idArea" type="Int32" name="IdArea" not-null="true" />
+    
+    <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
+
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
+    <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+
+  </class>
+</hibernate-mapping>

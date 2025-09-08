@@ -267,30 +267,30 @@ namespace WebLab
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-//            btnReinializacion.Visible = false;
+            //            btnReinializacion.Visible = false;
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             ///Carga de Sectores
-            string m_ssql = " SELECT idSectorServicio,  nombre  + ' - ' + prefijo as nombre FROM LAB_SectorServicio WHERE (baja = 0) order by nombre";
+            string m_ssql = " SELECT idSectorServicio,  nombre  + ' - ' + prefijo as nombre FROM LAB_SectorServicio with (nolock) WHERE (baja = 0) order by nombre";
             oUtil.CargarCombo(ddlSectorUrgencia, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorUrgencia.Items.Insert(0, new ListItem("", "0"));
 
             oUtil.CargarCombo(ddlSectorDefecto, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorDefecto.Items.Insert(0, new ListItem("", "0"));
             ///Carga de combos de Origen
-            m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen WHERE (baja = 0)";
+            m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen with (nolock) WHERE (baja = 0)";
             oUtil.CargarCombo(ddlOrigenUrgencia, m_ssql, "idOrigen", "nombre", connReady);
             ddlOrigenUrgencia.Items.Insert(0, new ListItem("", "0"));
-            oUtil.CargarCheckBox(chkOrigen, m_ssql, "idOrigen", "nombre");
-            
+            oUtil.CargarCheckBox(chkOrigen, m_ssql, "idOrigen", "nombre", connReady);
+
             ///Carga de hojas de trabajo para histocomptaibilidad
-            m_ssql = " SELECT idHojaTrabajo,  codigo FROM LAB_HojaTrabajo WHERE (baja = 0) order by codigo";
+            m_ssql = " SELECT idHojaTrabajo,  codigo FROM LAB_HojaTrabajo with (nolock) WHERE idEfector=" + oUser.IdEfector.IdEfector.ToString()+" and (baja = 0) order by codigo";
             oUtil.CargarCombo(ddlHisto, m_ssql, "idHojaTrabajo", "codigo", connReady);
             ddlHisto.Items.Insert(0, new ListItem("", "0"));
 
 
             ///Carga de combos de REgiones
-            m_ssql = "select idregion, nombre from sys_region";
+            m_ssql = "select idregion, nombre from sys_region with (nolock)";
             oUtil.CargarCombo(ddlRegion, m_ssql, "idregion", "nombre", connReady);
             ddlRegion.Items.Insert(0, new ListItem("", "0"));
             //foreach (string MiImpresora in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
@@ -301,15 +301,24 @@ namespace WebLab
 
 
             ///Carga de hojas de trabajo para histocomptaibilidad
-            m_ssql = " SELECT idCaracter,  nombre FROM LAB_caracter  ";
+            m_ssql = " SELECT idCaracter,  nombre FROM LAB_caracter with (nolock) ";
             oUtil.CargarCheckBox(chkFISCaracter, m_ssql, "idCaracter", "nombre");
 
-
+            ///Carga de areas a imprimir
+            m_ssql = @"with areas as (select -1 as idArea, 'Etiqueta general' as nombre
+union
+SELECT  idArea, A.nombre+ ' ('+ S.nombre + ')' as nombre FROM LAB_Area A with (nolock)
+inner join LAB_TipoServicio S with (nolock) on A.idTipoServicio= S.idTipoServicio 
+WHERE (A.baja = 0) and A.imprimecodigoBarra=1
+)
+select * from areas order by nombre ";
+            oUtil.CargarCheckBox (chkAreas, m_ssql, "idArea", "nombre", connReady);
+           
 
             if (oUser.IdEfector.IdEfector.ToString() == "227")
             {
-                m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E " +
-                     " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
+                m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E with (nolock) " +
+                     " INNER JOIN lab_Configuracion C with (nolock) on C.idEfector=E.idEfector " +
                      "order by E.nombre";
 
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
@@ -318,7 +327,7 @@ namespace WebLab
             }
             else
             {
-                m_ssql = "select  E.idEfector, E.nombre  from sys_efector E  where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
+                m_ssql = "select  E.idEfector, E.nombre  from sys_efector E  with (nolock) where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             }
 
@@ -326,6 +335,29 @@ namespace WebLab
             oUtil = null;
         }
 
+        private void MostrarAreasCodigoBarrasLaboratorio()
+        {
+           
+           
+
+            ConfiguracionAreaEtiqueta oItem = new ConfiguracionAreaEtiqueta();
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(ConfiguracionAreaEtiqueta));
+            crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+
+            IList items = crit.List();
+            foreach (ConfiguracionAreaEtiqueta oArea in items)
+            {
+                string s_idArea = oArea.IdArea.ToString();
+                for (int i = 0; i < chkAreas.Items.Count; i++)
+                {
+                   
+                    if (s_idArea == chkAreas.Items[i].Value)
+                        chkAreas.Items[i].Selected = true;
+                }              
+            }
+ 
+        }
 
         private void MostrarDatosCodigoBarrasLaboratorio()
         {
@@ -539,6 +571,8 @@ namespace WebLab
                     }
                 }
 
+                ////
+                MostrarAreasCodigoBarrasLaboratorio();
                 /////////Grupo referido al Comprobante para el paciente Protocolo//////////////
                 if (!oC.GeneraComprobanteProtocolo) ddlProtocoloComprobante.SelectedValue = "0";
                 else ddlProtocoloComprobante.SelectedValue = "1";
@@ -915,7 +949,12 @@ namespace WebLab
               oC.FISCaracter = fiscaracter;
 
 
-              oC.IdSectorDefecto = int.Parse(ddlSectorDefecto.SelectedValue);
+                ////guardar areas a imprimir
+                GuardarAreasImprimir();
+          
+                ////fin de areas de impresion
+
+                oC.IdSectorDefecto = int.Parse(ddlSectorDefecto.SelectedValue);
 
               if (ddlDiagnostico.SelectedValue == "0") oC.DiagObligatorio = false;
               else oC.DiagObligatorio = true;
@@ -1201,9 +1240,40 @@ namespace WebLab
                 GuardarCodigoBarrasMicrobiologia(); GuardarCodigoBarrasLaboratorio(); GuardarCodigoBarrasPesquisa();
             }
         }
-                 
 
+        private void GuardarAreasImprimir()
+        {
+            ///Primero borra lo que hay
+            ConfiguracionAreaEtiqueta oItem = new ConfiguracionAreaEtiqueta();
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(ConfiguracionAreaEtiqueta));
+            crit.Add(Expression.Eq("IdEfector",oUser.IdEfector));
 
+            IList items = crit.List();
+            foreach (ConfiguracionAreaEtiqueta oItemcito in items)
+            {
+                oItemcito.Delete();
+            }
+
+            ///
+            ///Escribe los nuevos datos
+            for (int i = 0; i < chkAreas.Items.Count; i++)
+            {
+                if (chkAreas.Items[i].Selected)
+                {
+                    string s_idarea = chkAreas.Items[i].Value;
+                    
+                        ConfiguracionAreaEtiqueta oRegistro = new ConfiguracionAreaEtiqueta();
+                        oRegistro.IdEfector = oUser.IdEfector;
+                        oRegistro.IdArea =int.Parse( s_idarea);
+                        oRegistro.IdUsuarioRegistro = oUser.IdUsuario;
+                        oRegistro.FechaRegistro = DateTime.Now;
+
+                        oRegistro.Save();
+                     
+                }
+            }
+        }
 
         private void GuardarCodigoBarrasPesquisa()
         {

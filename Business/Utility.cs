@@ -527,6 +527,17 @@ namespace Business
 
         }
 
+        public void CargarCheckBox(CheckBoxList Checks, String strSql, String CampoId, String CampoDetalle, string strconn)
+        { 
+            SqlDataAdapter da = new SqlDataAdapter(strSql, strconn);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "t");
+            Checks.DataTextField = CampoDetalle;
+            Checks.DataValueField = CampoId;
+            Checks.DataSource = ds.Tables["t"];
+            Checks.DataBind();
+
+        }
         public void CargarListBox(ListBox Lista, String strSql, String CampoId, String CampoDetalle,  string strconn)
         {
             NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
