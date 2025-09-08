@@ -78,6 +78,7 @@ $("#tabContainer").tabs({ selected: currTab });
                   <li><a href="#tab12">Histocompatibilidad</a></li>                
                      <li><a href="#tab13">Covid-19</a></li>    
                    <li><a href="#tab14">Interoperabilidad SISA</a></li>    
+                 <li><a href="#tab15">Etiquetas Areas</a></li>    
             </ul>
 
                  
@@ -1426,6 +1427,32 @@ $("#tabContainer").tabs({ selected: currTab });
                     </anthem:Panel>
                     </td>
                     </tr>
+     
+   
+</table>
+     
+ 
+   
+     </div>
+
+                     <div id="tab15"  class="tab_content" style="border: 1px solid #C0C0C0; width: 1000px;"> 
+
+ 
+
+
+<table style="width:90%">
+      
+       <tr>
+                        <td class="myLabelIzquierda" style="vertical-align: top">
+                           Areas que imprime el el alta de Protocolo:</td>
+
+                        <td class="myLabelIzquierda" >
+                            <asp:CheckBoxList ID="chkAreas" runat="server"></asp:CheckBoxList>
+                             </td>
+                    </tr>
+                    
+       
+              
      
    
 </table>
