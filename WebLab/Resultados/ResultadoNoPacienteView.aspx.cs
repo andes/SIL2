@@ -596,22 +596,24 @@ namespace WebLab.Resultados
                             }
                             else
                             {
-                                if (oDeriva.Estado == 0) /// pendiente                            
-                                {
-                                    estadoDerivacion = "Pendiente de Derivacion";
-                                    lblDerivacion.ForeColor = Color.Red;
-                                }
-                                if (oDeriva.Estado == 1) /// enviado
-                                    estadoDerivacion = "Derivado: " + oItem.IdEfectorDerivacion.Nombre;
-                                if (oDeriva.Estado == 2) /// no enviado
-                                    estadoDerivacion = " No Derivado. " + oDeriva.Observacion;
-                                lblDerivacion.Font.Bold = true;
+                                //if (oDeriva.Estado == 0) /// pendiente                            
+                                //{
+                                //    estadoDerivacion = "Pendiente de Derivacion";
+                                //    lblDerivacion.ForeColor = Color.Red;
+                                //}
+                                //if (oDeriva.Estado == 1) /// enviado
+                                //    estadoDerivacion = "Derivado: " + oItem.IdEfectorDerivacion.Nombre;
+                                //if (oDeriva.Estado == 2) /// no enviado
+                                //    estadoDerivacion = " No Derivado. " + oDeriva.Observacion;
 
-                                if (oDeriva.Resultado!="")                                                           
-                                    estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado; 
+                                lblDerivacion.Font.Bold = true;
+                                estadoDerivacion = oDetalle.ResultadoCar; //Para todos los estados
+                                if (oDeriva.Resultado != "")
+                                    estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado;
+
 
                             }
-
+                            
                         }
                         lblDerivacion.Text = estadoDerivacion;
                         
