@@ -1491,22 +1491,23 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //}
                         //else
                         //{
-                            if (oDeriva.Estado == 0) /// pendiente                            
-                            {
-                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
-                                lblDerivacion.ForeColor = Color.Red;
-                            }
-                            if (oDeriva.Estado == 1) /// enviado
-                                estadoDerivacion = oDetalle.ResultadoCar; //  "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
-                            if (oDeriva.Estado == 2) /// no enviado
-                                estadoDerivacion = oDetalle.ResultadoCar; //" No Derivado. " + oDeriva.Observacion;
+                        /* if (oDeriva.Estado == 0) /// pendiente                            
+                         {
+                             estadoDerivacion = "Pendiente de Derivacion";
+                             lblDerivacion.ForeColor = Color.Red;
+                         }
+                         if (oDeriva.Estado == 1) /// enviado
+                             estadoDerivacion = oDetalle.ResultadoCar; //  "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
+                         if (oDeriva.Estado == 2) /// no enviado
+                             estadoDerivacion = oDetalle.ResultadoCar; //" No Derivado. " + oDeriva.Observacion;
 
-                            if (oDeriva.Estado == 4) // --> Pendiente de Derivar
-                             {
-                                estadoDerivacion = oDetalle.ResultadoCar;
-                                lblDerivacion.ForeColor = Color.Red;
-                            }
-
+                         if (oDeriva.Estado == 4) // --> Pendiente de Derivar
+                          {
+                             estadoDerivacion = oDetalle.ResultadoCar;
+                             lblDerivacion.ForeColor = Color.Red;
+                         }
+                        */
+                            estadoDerivacion = oDetalle.ResultadoCar; //Para todos los estados
                             lblDerivacion.Font.Bold = true;
 
                             if (oDeriva.Resultado != "")
@@ -1566,12 +1567,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
                         if (oDeriva != null)  /// esta pendiente
                         {
-                        //    estadoDerivacion = "Pendiente de Derivacion";
-                        //    lblDerivacion.ForeColor = Color.Red;
-                        //}
-                        //else
-                        //{
-                            if (oDeriva.Estado == 0) /// pendiente                            
+                            //    estadoDerivacion = "Pendiente de Derivacion";
+                            //    lblDerivacion.ForeColor = Color.Red;
+                            //}
+                            //else
+                            //{
+                            /*if (oDeriva.Estado == 0) /// pendiente                            
                             {
                                 estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
                                 lblDerivacion.ForeColor = Color.Red;
@@ -1584,18 +1585,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             {
                                 estadoDerivacion = oDetalle.ResultadoCar;
                                 lblDerivacion.ForeColor = Color.Red;
-                            }
-
+                            }*/
+                            estadoDerivacion = oDetalle.ResultadoCar; //Para todos los estados
                             lblDerivacion.Font.Bold = true;
 
-                            if (oDeriva.Resultado != "")
-                                estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado; 
+                                if (oDeriva.Resultado != "")
+                                    estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado; 
                        
 
-                        lblDerivacion.Text = estadoDerivacion;
-                        objCellResultado.ColumnSpan = 1;
-                        objCellResultado.Controls.Add(lblDerivacion);
-                    }
+                            lblDerivacion.Text = estadoDerivacion;
+                            objCellResultado.ColumnSpan = 1;
+                            objCellResultado.Controls.Add(lblDerivacion);
+                        }
                     //}
                     else
                     {//No es derivado                     
