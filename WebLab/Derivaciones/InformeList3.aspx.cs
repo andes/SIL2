@@ -424,19 +424,23 @@ namespace WebLab.Derivaciones
 
                     #region estado_protocolo
                     /*Actualiza estado de protocolo*/
-                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuarioRegistro))
-                        oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
-                    else
+                    if(oDetalle.IdProtocolo.Estado < 2)
                     {
-                        if (oDetalle.IdProtocolo.EnProceso())
-                        {
-                            oDetalle.IdProtocolo.Estado = 1;//en proceso
-                                                            // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                        }
+                        if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuarioRegistro))
+                            oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
                         else
-                            oDetalle.IdProtocolo.Estado = 0;
+                        {
+                            if (oDetalle.IdProtocolo.EnProceso())
+                            {
+                                oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                            }
+                            else
+                                oDetalle.IdProtocolo.Estado = 0;
+                        }
+                        oDetalle.IdProtocolo.Save();
                     }
-                    oDetalle.IdProtocolo.Save();
+                    
                     #endregion
 
                     //Auditoria:
