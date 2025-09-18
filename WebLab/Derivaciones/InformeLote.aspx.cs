@@ -291,7 +291,7 @@ namespace WebLab.Derivaciones
                 oCr.DataBind();
 
                 Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones");
+                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+idLote);
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
             }
         }
@@ -385,7 +385,7 @@ namespace WebLab.Derivaciones
                             #region cambio_codificacion_a_derivacion
                             //Cambia el resultado de LAB_DetalleProtocolo
                             DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
-                            oDet.ResultadoCar = resultadoDerivacion;
+                            oDet.ResultadoCar = resultadoDerivacion + " "+observacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
                             oDet.FechaResultado = Convert.ToDateTime(fecha_hora);
@@ -401,11 +401,15 @@ namespace WebLab.Derivaciones
                     //Inserta auditoria del lote
                     lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
                     lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
-                    lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", txt_Fecha.Text);
-                    lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txt_Hora.Text);
-                    if (estadoLote == 2)  //Si deriva indica con que transportista fue
-                        //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+
+                    if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
+                    {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
                         lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
+                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", txt_Fecha.Text);
+                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txt_Hora.Text);
+                    }
+                    
+                  
                     seGuardoEnBd = true;
                 }
             }
