@@ -99,18 +99,19 @@
                             <asp:DropDownList ID="ddlOrigen" runat="server" 
                                 ToolTip="Seleccione el origen" TabIndex="5" CssClass="form-control input-sm">
                             </asp:DropDownList>
-                                        
+                        </td>                      
 					</tr>
-						<tr>
+					<tr>
 						<td class="myLabelIzquierda">Prioridad:</td>
 						<td>
                             <asp:DropDownList ID="ddlPrioridad" runat="server" 
                                 ToolTip="Seleccione la prioridad" TabIndex="6" CssClass="form-control input-sm">
                             </asp:DropDownList>
-                                        
+                         </td>          
 					</tr>
-						<tr>
+					<tr>
 						<td class="myLabelIzquierda" style="vertical-align: top" colspan="2"><hr /></td>
+                        </tr>
 						<tr>
 						<td class="myLabelIzquierda" style="vertical-align: top">Efector a Derivar:<asp:RangeValidator 
                                 ID="RangeValidator1" runat="server" ControlToValidate="ddlEfector" 
@@ -123,8 +124,8 @@
                                 AutoCallBack="True" onselectedindexchanged="ddlEfector_SelectedIndexChanged">
                             </anthem:DropDownList>
                                         
-					        </td>
-                            </tr>
+					    </td>
+                         </tr>
                         <tr>
 						<td class="myLabelIzquierda" style="vertical-align: top">Determinacion:</td>
 						<td>
@@ -141,14 +142,24 @@
                                 <asp:ListItem Value="2">Marcado como No enviados</asp:ListItem>--%>
                             </asp:RadioButtonList>
                                         
-					</tr>
+					  </tr>
 						<tr>
-						<td   colspan="2"><hr /></td>
+						<td   colspan="2">
+                            <hr />
+                            <asp:CustomValidator ID="cv_botonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
+
+
+						</td> 
+
+						</tr>
 						<tr>
 						<td   colspan="2" align="right">
                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" Width="100"
                                                onclick="btnBuscar_Click" Text="Buscar" ValidationGroup="0" />
-                                           </td>
+                                           </td> 
+						</tr>
+                    
+
 						<tr>
 						<td   colspan="2">
                                            <asp:Panel ID="pnlHojaTrabajo" runat="server" Visible="False">

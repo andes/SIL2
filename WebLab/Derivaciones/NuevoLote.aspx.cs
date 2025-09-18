@@ -61,7 +61,10 @@ namespace WebLab.Derivaciones
 
         protected void lnkPDF_Click(object sender, EventArgs e)
         {
-            MostrarInforme();
+            if (Session["idUsuario"] != null)
+                MostrarInforme();
+            else
+                Response.Redirect("../FinSesion.aspx", false);
         }
 
 
@@ -94,7 +97,7 @@ namespace WebLab.Derivaciones
             oCr.DataBind();
 
             Utility oUtil = new Utility();
-            string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones");
+            string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+ Request["Lote"]);
             oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
         }
 
@@ -104,7 +107,7 @@ namespace WebLab.Derivaciones
             string m_strSQL = Business.Data.Laboratorio.LoteDerivacion.derivacionPDF(int.Parse(Request["Lote"]));
 
             DataSet Ds = new DataSet();
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;//LAB-130 usar conexion principal no la de consulta
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);

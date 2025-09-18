@@ -1028,7 +1028,20 @@ namespace Business.Data.Laboratorio
 
             oRegistro.Save();
         }
+       
+        public void GrabarAuditoriaDetalleExtra(string m_accion, int m_idusuario, string observacionExtra)
+        {
+            AuditoriaProtocolo oRegistro = new AuditoriaProtocolo();
+            oRegistro.Accion = m_accion;
+            oRegistro.Fecha = DateTime.Now;
+            oRegistro.Hora = DateTime.Now.ToLongTimeString();
+            oRegistro.IdProtocolo = this.IdProtocolo.IdProtocolo;
+            oRegistro.IdUsuario = m_idusuario;
+            oRegistro.Analisis = this.IdSubItem.Nombre;
+            oRegistro.Valor = observacionExtra;
 
+            oRegistro.Save();
+        }
 
         public bool AnalizarLimites(string p)
         {

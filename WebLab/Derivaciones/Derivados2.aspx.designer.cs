@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Derivaciones {
-    
-    
-    public partial class Derivados2 {
-        
+namespace WebLab.Derivaciones
+{
+
+
+    public partial class Derivados2
+    {
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// ddlServicio control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlServicio;
-        
+
         /// <summary>
         /// ddlArea control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlArea;
-        
+
         /// <summary>
         /// rfvFechaDesde control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaDesde;
-        
+
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-        
+
         /// <summary>
         /// rfvFechaHasta control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaHasta;
-        
+
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-        
+
         /// <summary>
         /// ddlOrigen control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlOrigen;
-        
+
         /// <summary>
         /// ddlPrioridad control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPrioridad;
-        
+
         /// <summary>
         /// RangeValidator1 control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator RangeValidator1;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// ddlItem control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItem;
-        
+
         /// <summary>
         /// rdbEstado control.
         /// </summary>
@@ -128,7 +130,16 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbEstado;
-        
+
+        /// <summary>
+        /// cv_botonBuscar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cv_botonBuscar;
+
         /// <summary>
         /// btnBuscar control.
         /// </summary>
@@ -137,7 +148,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBuscar;
-        
+
         /// <summary>
         /// pnlHojaTrabajo control.
         /// </summary>
@@ -146,7 +157,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlHojaTrabajo;
-        
+
         /// <summary>
         /// lnkPDF control.
         /// </summary>
@@ -155,7 +166,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkPDF;
-        
+
         /// <summary>
         /// lnkImprimir control.
         /// </summary>
@@ -164,7 +175,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkImprimir;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>
