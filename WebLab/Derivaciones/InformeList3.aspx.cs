@@ -365,7 +365,7 @@ namespace WebLab.Derivaciones
         private void ActualizarDetalleProtocolo(GridViewRow row, int idLote = 0,  int desasociaLote = 0)
         {
             int idDetalle = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
-
+            string accion = Request["Tipo"].ToString();
             DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), idDetalle);
             //int numeroProtocolo = oDetalle.IdProtocolo.Numero;
 
@@ -395,15 +395,15 @@ namespace WebLab.Derivaciones
                 {
                     //Se desasocia del lote y se setean a vacio los valores correspondientes
                     estadoSeleccionado = 0;
-                    resultadoDerivacion = "Pendiente de derivar";
+                    resultadoDerivacion = "";
                     observacion = string.Empty;
                     idLote = 0;
                     idUsuarioResultado = 0;
                     fechaDeHoyDetalle = DateTime.Parse("01/01/1900");
                     conResultado = false;
                 }
-                
-                
+
+
                 foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                 {
                     //Cambia valores de la derivacion
@@ -446,12 +446,45 @@ namespace WebLab.Derivaciones
                         }
                         oDetalle.IdProtocolo.Save();
                     }
-                    
+
                     #endregion
 
-                    //Auditoria:
-                    string accion = Request["Tipo"].ToString();
-                    oDetalle.GrabarAuditoriaDetalleProtocolo(accion, idUsuarioRegistro);
+                    #region Auditorias
+                   
+                    if (desasociaLote == 0)
+                    {
+                        //Auditoria: Para el alta
+                        if (accion == "Alta" )
+                        {
+                            if(estadoSeleccionado == 2) //Se selecciono "No Enviado"
+                            {
+                                oDetalle.GrabarAuditoriaDetalleExtra("No Derivado", idUsuarioRegistro, resultadoDerivacion); //que se grabe el motivo de cancelacion
+                            }
+                            else //Se selecciono "Pendiente para enviar"
+                            {
+                                oDetalle.GrabarAuditoriaDetalleExtra(accion, idUsuarioRegistro, resultadoDerivacion + ": Lote  " + idLote);
+
+                            }
+                            continue;
+
+                        }
+
+                        //Auditoria:  Para la modificacion, si se selecciono "Pendiente para enviar", y antes tenian estado "Pendiente de derivar" o "No Enviado"
+                        // Si ya tiene estado "Pendiente para derivar" no le hacemos auditoria
+                        int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+                        if (accion == "Modifica" && estadoSeleccionado == 4 && (estado == 0 || estado == 2))
+                        {
+                            oDetalle.GrabarAuditoriaDetalleExtra(accion, idUsuarioRegistro, resultadoDerivacion + ": Lote  " + idLote);
+                        }
+                    }
+                    else
+                    {
+                        //Auditoria: Se destildo del lote
+                        oDetalle.GrabarAuditoriaDetalleExtra("Elimina", idUsuarioRegistro, "Eliminado del lote");
+                    }
+                        
+                  
+                    #endregion
                 }
             }
         }

@@ -1872,7 +1872,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             oPOrigen = (Business.Data.Laboratorio.Protocolo)oPOrigen.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(Request["numeroProtocolo"].ToString()));
             if (oPOrigen != null)
             {
-                oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "", oRegistro.Numero.ToString());
+                oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + Request["idLote"].ToString()  , "Protocolo "+ oRegistro.Numero.ToString());
             }
 
 
