@@ -97,7 +97,7 @@ namespace WebLab.Derivaciones
             oCr.DataBind();
 
             Utility oUtil = new Utility();
-            string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones");
+            string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+ Request["Lote"]);
             oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
         }
 
