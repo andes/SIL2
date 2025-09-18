@@ -14,17 +14,23 @@ using System.IO;
 using System.Web.UI.HtmlControls;
 using System.Collections;
 using System.Drawing;
+using System.Configuration;
 
 namespace WebLab
 {
     public partial class SeguimientoDerivaciones : System.Web.UI.Page
     {
-        Configuracion oCon = new Configuracion();
-
-      
+        Configuracion oC = new Configuracion();
+        public Usuario oUser = new Usuario();
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -53,21 +59,29 @@ namespace WebLab
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-            string    m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter ";
-            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre");
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            string m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock)";
+            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
             ddlCaracter.Items.Insert(0, new ListItem("Todos", "0"));
 
-            m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo
-where iditem in (select iditem from lab_item where codigo = '" + oCon.CodigoCovid + @"')
-order by resultadocar";
-            oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
+
+            m_ssql = @" SELECT DISTINCT dp.resultadocar AS resultado
+FROM LAB_detalleprotocolo dp with (nolock)
+inner JOIN lab_item li with (nolock) ON dp.idsubitem = li.iditem and li.baja=0
+WHERE li.codigo = '" + oC.CodigoCovid + @"'
+  AND dp.idEfector = " + oUser.IdEfector.IdEfector.ToString() + @" ORDER BY dp.resultadocar";
+//            m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo
+//where iditem in (select iditem from lab_item where codigo = '" + oC.CodigoCovid + @"')  and idEfector = "+ oUser.IdEfector.IdEfector.ToString() +" order by resultadocar";
+
+            oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado", connReady);
             ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
 
             m_ssql = @"select e.idEfector, e.nombre from sys_Efector  e
 
 inner join LAB_ResultadoItem as R on R.idEfectorDeriva =e.idEfector
 ";
-            oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
+            oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
 
         }
@@ -134,7 +148,7 @@ inner join LAB_ResultadoItem as R on R.idEfectorDeriva =e.idEfector
                 m_strSQLCondicionEfector2 += "  and E.idefector=  " + ddlEfector.SelectedValue;
 
             }
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+       //     Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
 
             string m_strSQL = @"  
@@ -145,7 +159,7 @@ INNER JOIN lAB_DetalleProtocolo DP on DP.idProtocolo = P.idProtocolo
 INNER JOIN LAB_iTEM I on i.iditem = dp.idsubitem
 inner join LAB_ResultadoItem as R on R.resultado = dp.resultadoCar and  r.idEfectorDeriva>0
 WHERE P.baja = 0  " + m_strSQLCondicion + m_strSQLCondicionEfector1 + @"
-and I.codigo='" + oCon.CodigoCovid + @"'
+and I.codigo='" + oC.CodigoCovid + @"'
 union
 
 
@@ -155,10 +169,10 @@ INNER JOIN lAB_DetalleProtocolo DP on DP.idProtocolo = P.idProtocolo
 inner join sys_paciente Pa on Pa.idpaciente= P.idpaciente
 INNER JOIN LAB_iTEM I on i.iditem = dp.idsubitem
 inner join sys_usuario U on U.idusuario= DP.idusuarioValida
-inner join sys_efector E on E.idefector=  U.idefector  AND e.IDeFECTOR<>" + oCon.IdEfector.IdEfector.ToString()+ @"
+inner join sys_efector E on E.idefector=  U.idefector  AND e.IDeFECTOR<>" + oC.IdEfector.IdEfector.ToString()+ @"
 inner join LAB_AuditoriaProtocolo as A on A.idprotocolo= P.idprotocolo and A.fecha in (select max (fecha) from LAB_AuditoriaProtocolo where accion ='Valida' and valor like   '%derivada%' and idProtocolo =P.idprotocolo)
 WHERE P.baja = 0  " + m_strSQLCondicion + m_strSQLCondicionEfector2 + @"
-and I.codigo='" + oCon.CodigoCovid + @"'";
+and I.codigo='" + oC.CodigoCovid + @"'";
 
 
           

@@ -16,6 +16,7 @@ using System.Collections;
 using System.Drawing;
 using NHibernate;
 using NHibernate.Expression;
+using System.Configuration;
 
 namespace WebLab
 {
@@ -69,13 +70,16 @@ namespace WebLab
         private void CargarListas(Item oItem)
         {
             Utility oUtil = new Utility();
-            string    m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter ";
-            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre");
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            string m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock) order by nombre ";
+            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
             ddlCaracter.Items.Insert(0, new ListItem("Todos", "0"));
 
-            m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo
-where iditem =" + oItem.IdItem.ToString()+ @" order by resultadocar";
-            oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
+            m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo with (nolock)
+where iditem =" + oItem.IdItem.ToString()+ " and idEfector = "+ oUser.IdEfector.IdEfector.ToString() +" order by resultadocar";
+
+            oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado", connReady);
             ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
              
         }

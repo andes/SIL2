@@ -27,14 +27,19 @@ using CrystalDecisions.Web;
 
 namespace WebLab.Placas {
     public partial class PlacaResultado : System.Web.UI.Page {
-        Configuracion oCon = new Configuracion();
-        private void Page_PreInit(object sender, System.EventArgs e)
-       {
-       
-            oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+        public Configuracion oCon = new Configuracion();
+        public Usuario oUser = new Usuario();
 
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
-         
+     
 
         protected void Page_Load(object sender, EventArgs e) {
             if (!IsPostBack)
@@ -124,7 +129,7 @@ namespace WebLab.Placas {
 
             /// lista de detalles diferentes
 
-            string m_strSQL = @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca (nolock) where idPlaca =" + oRegistro.IdPlaca.ToString();
+            string m_strSQL = @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca with (nolock) where idPlaca =" + oRegistro.IdPlaca.ToString();
 
             int cantidadPos = 0;
             int cantidadNega = 0;
@@ -681,7 +686,7 @@ namespace WebLab.Placas {
 
             /// lista de detalles diferentes
 
-            string m_strSQL = @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca (nolock) where idPlaca =" + oRegistro.IdPlaca.ToString();
+            string m_strSQL = @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca with (nolock) where idPlaca =" + oRegistro.IdPlaca.ToString();
 
             int cantidadPos = 0;
             int cantidadNega = 0;
@@ -1404,7 +1409,7 @@ namespace WebLab.Placas {
 
             /// lista de detalles diferentes
 
-            string m_strSQL =   @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca (nolock) where idPlaca ="+ oRegistro.IdPlaca.ToString();
+            string m_strSQL =   @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca with (nolock) where idPlaca ="+ oRegistro.IdPlaca.ToString();
 
   int cantidadPos = 0; string res1 = "";
                 int cantidadNega = 0;
@@ -2052,7 +2057,7 @@ from LAB_DetalleProtocolo d (nolock)
             int posi = 0;
             int nega = 0;
 
-            m_strSQL = @"select tipoct ,  substring(valorct,1,4)     from LAB_ResultadoTemp(nolock) where   celda='" + celda + "'  and  idPlaca=" + Request["idPlaca"].ToString();
+            m_strSQL = @"select tipoct ,  substring(valorct,1,4)     from LAB_ResultadoTemp with (nolock) where   celda='" + celda + "'  and  idPlaca=" + Request["idPlaca"].ToString();
 
             
             DataSet Ds = new DataSet();
@@ -2142,11 +2147,11 @@ from LAB_DetalleProtocolo d (nolock)
 
             m_strSQL = @"
 select distinct DTP.tipoCT, T.valorCT , DP.iditem
-from LAB_DetalleProtocoloPlaca as DPP (nolock)
-inner join lab_detalleprotocolo as DP (nolock) on DP.idDetalleProtocolo= DPP.idDetalleProtocolo
+from LAB_DetalleProtocoloPlaca as DPP with (nolock)
+inner join lab_detalleprotocolo as DP with (nolock) on DP.idDetalleProtocolo= DPP.idDetalleProtocolo
 
-inner join LAB_ResultadoTEmp as T (nolock) on T.idPlaca= DPP.idPlaca 
-inner join lab_detalletipoplaca as DTP (nolock) on DTP.iditem= DP.iditem and DTP.tipoCT=t.tipoct
+inner join LAB_ResultadoTEmp as T with (nolock) on T.idPlaca= DPP.idPlaca 
+inner join lab_detalletipoplaca as DTP with (nolock) on DTP.iditem= DP.iditem and DTP.tipoCT=t.tipoct
 where   DPP.idDetalleProtocolo= " + idDetalleProtocolo.ToString() + "  and DPP.idplaca=" + idplaca.ToString() + " and T.celda= '" + celda + "' order by DP.iditem ";
 
 
@@ -2961,12 +2966,12 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                         if (v == "CT")
                         {
                            
-                            oItem = (Item)oItem.Get(typeof(Item), "Codigo", arrRes[0].ToString());
+                            oItem = (Item)oItem.Get(typeof(Item), "Codigo", arrRes[0].ToString(),"Baja",false);
                         }
                         else
                         {
-                          
-                            oItem = (Item)oItem.Get(typeof(Item), "Nombre", arrRes[0].ToString());
+
+                            oItem = (Item)oItem.Get(typeof(Item), "Nombre", arrRes[0].ToString(), "Baja", false);
                         }
                         if (oItem != null)
                         {
@@ -3103,7 +3108,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                 {
                                     oDetalle.IdUsuarioValida = int.Parse(Session["idUsuarioValida"].ToString());
                                     oDetalle.FechaValida = DateTime.Now;
-                                    Notificar(oDetalle);
+                                    //Notificar(oDetalle);
                                 }
                             }
                             else
@@ -3118,8 +3123,8 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                 //    oDetalle.FechaImpresion = DateTime.Now;
                                 //}
 
-                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
-                                    Notificar(oDetalle);
+                                //if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
+                                //    Notificar(oDetalle);
 
                             }
                             oDetalle.Save();
@@ -3721,7 +3726,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                         oDetalle.FechaValida = DateTime.Now;
 
 
-                                        Notificar(oDetalle);
+                                        //Notificar(oDetalle);
 
                                     }
                                 }
@@ -3737,8 +3742,8 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                     //    oDetalle.FechaImpresion = DateTime.Now;
                                     //}
 
-                                    if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
-                                        Notificar(oDetalle);
+                                    //if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
+                                    //    Notificar(oDetalle);
 
                                 }
                                 oDetalle.Save();
@@ -3782,539 +3787,539 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
             }
         }
 
-        private void GenerarNotificacionAndes(DetalleProtocolo oDetalle)
-        {
+        //private void GenerarNotificacionAndes(DetalleProtocolo oDetalle)
+        //{
 
 
-            try
-            {
+        //    try
+        //    {
 
 
 
 
-                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+        //        Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
-                string URL = ConfigurationManager.AppSettings["urlnotifiacionandes"].ToString();
-                string s_token = ConfigurationManager.AppSettings["tokennotifiacionandes"].ToString();
-                string s_sexo = "";
-                switch (oDetalle.IdProtocolo.IdPaciente.IdSexo)
-                {
+        //        string URL = ConfigurationManager.AppSettings["urlnotifiacionandes"].ToString();
+        //        string s_token = ConfigurationManager.AppSettings["tokennotifiacionandes"].ToString();
+        //        string s_sexo = "";
+        //        switch (oDetalle.IdProtocolo.IdPaciente.IdSexo)
+        //        {
 
-                    case 2: s_sexo = "femenino"; break;
-                    case 3: s_sexo = "masculino"; break;
-                }
-                string fn = oDetalle.IdProtocolo.IdPaciente.FechaNacimiento.ToString("dd/MM/yyyy");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
-                string fs = oDetalle.IdProtocolo.FechaOrden.ToString("dd/MM/yyyy");
-                string numerodoc = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
-                if (oDetalle.IdProtocolo.IdPaciente.IdEstado == 2) // temporal
-                    numerodoc = "0";
+        //            case 2: s_sexo = "femenino"; break;
+        //            case 3: s_sexo = "masculino"; break;
+        //        }
+        //        string fn = oDetalle.IdProtocolo.IdPaciente.FechaNacimiento.ToString("dd/MM/yyyy");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
+        //        string fs = oDetalle.IdProtocolo.FechaOrden.ToString("dd/MM/yyyy");
+        //        string numerodoc = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
+        //        if (oDetalle.IdProtocolo.IdPaciente.IdEstado == 2) // temporal
+        //            numerodoc = "0";
 
-                string error = "";
-                string firma = "";
-                Usuario oUs = new Usuario(); oUs = (Usuario)oUs.Get(typeof(Usuario), oDetalle.IdUsuarioValida);
-                if (oUs != null)
+        //        string error = "";
+        //        string firma = "";
+        //        Usuario oUs = new Usuario(); oUs = (Usuario)oUs.Get(typeof(Usuario), oDetalle.IdUsuarioValida);
+        //        if (oUs != null)
 
-                    firma = oUs.FirmaValidacion;
+        //            firma = oUs.FirmaValidacion;
 
-                NotificacionPaciente newevento = new NotificacionPaciente
-                {
-                    nombre = oDetalle.IdProtocolo.IdPaciente.Nombre,
-                    apellido = oDetalle.IdProtocolo.IdPaciente.Apellido,
-                    documento = numerodoc,
-                    sexo = s_sexo,
-                    fechaNacimiento = DateTime.Parse("01-01-1900"),
-                    telefono = oDetalle.IdProtocolo.IdPaciente.InformacionContacto,
-                    protocolo = oDetalle.IdProtocolo.Numero.ToString(),
-                    resultado = oDetalle.ResultadoCar,
-                    fechaSolicitud = DateTime.Parse("01-01-1753"),
-                    validador = firma
-                };
+        //        NotificacionPaciente newevento = new NotificacionPaciente
+        //        {
+        //            nombre = oDetalle.IdProtocolo.IdPaciente.Nombre,
+        //            apellido = oDetalle.IdProtocolo.IdPaciente.Apellido,
+        //            documento = numerodoc,
+        //            sexo = s_sexo,
+        //            fechaNacimiento = DateTime.Parse("01-01-1900"),
+        //            telefono = oDetalle.IdProtocolo.IdPaciente.InformacionContacto,
+        //            protocolo = oDetalle.IdProtocolo.Numero.ToString(),
+        //            resultado = oDetalle.ResultadoCar,
+        //            fechaSolicitud = DateTime.Parse("01-01-1753"),
+        //            validador = firma
+        //        };
 
-                const string Comillas = "\"";
+        //        const string Comillas = "\"";
 
-                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+        //        JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
 
-                string DATA = jsonSerializer.Serialize(newevento);
-                DATA = DATA.Replace("\"\\/Date(", "").Replace(")\\/\"", "").Replace("-2208978000000", "&&");
+        //        string DATA = jsonSerializer.Serialize(newevento);
+        //        DATA = DATA.Replace("\"\\/Date(", "").Replace(")\\/\"", "").Replace("-2208978000000", "&&");
 
-                DATA = DATA.Replace("&&", Comillas + fn + Comillas);
+        //        DATA = DATA.Replace("&&", Comillas + fn + Comillas);
 
 
-                DATA = DATA.Replace("\"\\/Date(", "").Replace(")\\/\"", "").Replace("-6847794000000", "||");
+        //        DATA = DATA.Replace("\"\\/Date(", "").Replace(")\\/\"", "").Replace("-6847794000000", "||");
 
-                DATA = DATA.Replace("||", Comillas + fs + Comillas);
+        //        DATA = DATA.Replace("||", Comillas + fs + Comillas);
 
 
-                byte[] data = UTF8Encoding.UTF8.GetBytes(DATA);
+        //        byte[] data = UTF8Encoding.UTF8.GetBytes(DATA);
 
-                HttpWebRequest request;
-                request = WebRequest.Create(URL) as HttpWebRequest;
-                request.Timeout = 10 * 1000;
-                request.Method = "POST";
-                request.ContentLength = data.Length;
-                request.ContentType = "application/json";
-                request.Headers.Add("Authorization", s_token);
+        //        HttpWebRequest request;
+        //        request = WebRequest.Create(URL) as HttpWebRequest;
+        //        request.Timeout = 10 * 1000;
+        //        request.Method = "POST";
+        //        request.ContentLength = data.Length;
+        //        request.ContentType = "application/json";
+        //        request.Headers.Add("Authorization", s_token);
 
 
 
 
-                Stream postStream = request.GetRequestStream();
-                postStream.Write(data, 0, data.Length);
+        //        Stream postStream = request.GetRequestStream();
+        //        postStream.Write(data, 0, data.Length);
 
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string body = reader.ReadToEnd();
-                if (body != "")
-                {
+        //        HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+        //        StreamReader reader = new StreamReader(response.GetResponseStream());
+        //        string body = reader.ReadToEnd();
+        //        if (body != "")
+        //        {
 
 
-                    oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Notificacion Andes ", oDetalle.IdUsuarioValida);
+        //            oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Notificacion Andes ", oDetalle.IdUsuarioValida);
 
-                }
+        //        }
 
 
 
-            }
-            catch (Exception e)
-            {
-                //string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
-            }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        //string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+        //    }
 
 
-        }
-        private void Notificar(DetalleProtocolo oDetalle)
-        {
-            //bool notificasisa = oDetalle.NotificarSisa();
-
-            if ((oDetalle.IdUsuarioValida > 0) && (oDetalle.IdProtocolo.Notificarresultado))
-            {
-                if ((oCon.NotificaAndes) && (oDetalle.IdItem.Codigo == oCon.CodigoCovid)) // solo para covid
-                    GenerarNotificacionAndes(oDetalle);
-
-
-                if (oCon.NotificarSISA)
-                {
-                    string idItem = oDetalle.IdProtocolo.GenerarCasoSISA(); // se fija si hay algun item que tiene configurado notificacion a sisa
-                    if (idItem != "")
-                    {
-                        int i = 0;
-                        //if (oDetalle.IdProtocolo.IdCaracter != 2) // no se suben controles de alta
-                        //{
-                        //if ((oDetalle.IdProtocolo.IdPaciente.IdEstado != 2))
-                        //{
-                        string res = oDetalle.ResultadoCar;
-
-                        //if (oDetalle.IdProtocolo.VerificarProtocoloAnterior(14))
-                        //{
-                        if (res.Length > 10)
-                        {
-                            if ((res.Substring(0, 10) == "SE DETECTA") && (oCon.PreValida == false))
-                            { if (ProcesaSISA(oDetalle, "SE DETECTA")) i = i + 1; }
-                        }
-                        if (res.Length > 13)
-                        {
-                            if (res.Substring(0, 13) == "NO SE DETECTA")
-                            { if (ProcesaSISA(oDetalle, "NO SE DETECTA")) i = i + 1; }
-                        }
-                        /*  }// oDetalle.IdProtocolo.VerificarPr*/
-
-                        //}//  if ((oDetalle.IdProtocolo.IdPacie
-                        /*  }// if (oDetalle.IdProtocolo.IdCaracter != 2*/
-                    }//    if (oCon.NotificarSISA)
-                }
-            }
-        }
-
-
-        private bool GenerarCasoSISA(DetalleProtocolo oDetalle, string res)
-        {
-            bool generacaso = false;
-            string caracter = "";
-            string idevento = "";
-            string nombreevento = "";
-            string idclasificacionmanual = "";
-            string nombreclasificacionmanual = "";
-            string idgrupoevento = "";
-            string nombregrupoevento = "";
-            bool seguir = true;
-            string m_strSQL = "";
-
-            try
-            {
-
-
-                if (res == "SE DETECTA") // si es contacto y es positivo se sube como sospechoso
-                    m_strSQL = " select * from LAB_ConfiguracionSISA where idCaracter=1  and idItem=" + oDetalle.IdSubItem.IdItem.ToString();
-                else
-                {
-
-                    m_strSQL = " select * from LAB_ConfiguracionSISA where idCaracter=  " + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem=" + oDetalle.IdSubItem.IdItem.ToString();
-                }
-
-
-
-                // nose notificò antes y es sospechoso o contacto
-
-
-                if (seguir)
-                {
-                    DataSet Ds = new DataSet();
-                    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                    SqlDataAdapter adapter = new SqlDataAdapter();
-                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                    adapter.Fill(Ds);
-
-                    DataTable dt = Ds.Tables[0];
-
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        caracter = dt.Rows[i][1].ToString();
-                        idevento = dt.Rows[i][2].ToString();
-                        nombreevento = dt.Rows[i][3].ToString();
-                        idclasificacionmanual = dt.Rows[i][4].ToString();
-                        nombreclasificacionmanual = dt.Rows[i][5].ToString();
-                        idgrupoevento = dt.Rows[i][6].ToString();
-                        nombregrupoevento = dt.Rows[i][7].ToString();
-
-                    }
-
-
-                    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-                    string URL = oCon.UrlServicioSISA;
-                    string s_idestablecimiento = oCon.CodigoEstablecimientoSISA; // "14580562167000"
-                    string usersisa = ConfigurationManager.AppSettings["usuarioSisa"].ToString();
-                    string[] a = usersisa.Split(':');
-                    string s_user = a[0].ToString();
-                    string s_userpass = a[1].ToString();
-
-                    string s_sexo = "";
-                    switch (oDetalle.IdProtocolo.IdPaciente.IdSexo)
-                    {
-                        case 1: s_sexo = "I"; break;
-                        case 2: s_sexo = "F"; break;
-                        case 3: s_sexo = "M"; break;
-                    }
-                    string fn = oDetalle.IdProtocolo.IdPaciente.FechaNacimiento.ToShortDateString().Replace("/", "-");
-
-                    string fnpapel = oDetalle.IdProtocolo.FechaOrden.ToShortDateString().Replace("/", "-");
-
-
-                    string numerodocumento = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
-
-                    string error = "";
-                    bool hayerror = false;
-
-                    evento newevento = new evento
-                    {
-                        idTipodoc = "1",
-                        nrodoc = numerodocumento,
-                        sexo = s_sexo,
-                        fechaNacimiento = fn,  //"05-06-1989",
-                        idGrupoEvento = idgrupoevento,
-                        idEvento = idevento, // "77",
-                        idEstablecimientoCarga = s_idestablecimiento, //prod: "51580352167442",
-                        fechaPapel = fnpapel, // "10-12-2019",
-                        idClasificacionManualCaso = idclasificacionmanual, // "22"
-                    };
-
-                    AltaCaso caso = new AltaCaso
-                    {
-
-                        usuario = s_user, // "bcpintos",
-                        clave = s_userpass, // "2398HH6RK6",
-                        altaEventoCasoNominal = newevento
-                    };
-
-                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
-                    string DATA = jsonSerializer.Serialize(caso);
-
-
-
-                    System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-                    client.BaseAddress = new System.Uri(URL);
-
-                    System.Net.Http.HttpContent content = new StringContent(DATA, UTF8Encoding.UTF8, "application/json");
-                    HttpResponseMessage messge = client.PostAsync(URL, content).Result;
-                    string description = string.Empty;
-                    if (messge.IsSuccessStatusCode)
-                    {
-                        string result = messge.Content.ReadAsStringAsync().Result;
-                        description = result;
-                        RespuestaCaso respuesta_d = jsonSerializer.Deserialize<RespuestaCaso>(description);
-                        if (respuesta_d.id_caso != "")
-                        { //  devolver el idcaso para guardar en la base de datos
-                            string s_idcaso = respuesta_d.id_caso;
-
-                            oDetalle.IdProtocolo.IdCasoSISA = int.Parse(s_idcaso);
-                            oDetalle.IdProtocolo.Save();
-                            if (respuesta_d.resultado == "OK")
-                                oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Genera Caso SISA " + s_idcaso, int.Parse(Session["idUsuarioValida"].ToString()));
-                            else
-                                oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + s_idcaso, int.Parse(Session["idUsuarioValida"].ToString()));
-                            generacaso = true;
+        //}
+        //private void Notificar(DetalleProtocolo oDetalle)
+        //{
+        //    //bool notificasisa = oDetalle.NotificarSisa();
+
+        //    if ((oDetalle.IdUsuarioValida > 0) && (oDetalle.IdProtocolo.Notificarresultado))
+        //    {
+        //        if ((oCon.NotificaAndes) && (oDetalle.IdItem.Codigo == oCon.CodigoCovid)) // solo para covid
+        //            GenerarNotificacionAndes(oDetalle);
+
+
+        //        if (oCon.NotificarSISA)
+        //        {
+        //            string idItem = oDetalle.IdProtocolo.GenerarCasoSISA(); // se fija si hay algun item que tiene configurado notificacion a sisa
+        //            if (idItem != "")
+        //            {
+        //                int i = 0;
+        //                //if (oDetalle.IdProtocolo.IdCaracter != 2) // no se suben controles de alta
+        //                //{
+        //                //if ((oDetalle.IdProtocolo.IdPaciente.IdEstado != 2))
+        //                //{
+        //                string res = oDetalle.ResultadoCar;
+
+        //                //if (oDetalle.IdProtocolo.VerificarProtocoloAnterior(14))
+        //                //{
+        //                if (res.Length > 10)
+        //                {
+        //                    if ((res.Substring(0, 10) == "SE DETECTA") && (oCon.PreValida == false))
+        //                    { if (ProcesaSISA(oDetalle, "SE DETECTA")) i = i + 1; }
+        //                }
+        //                if (res.Length > 13)
+        //                {
+        //                    if (res.Substring(0, 13) == "NO SE DETECTA")
+        //                    { if (ProcesaSISA(oDetalle, "NO SE DETECTA")) i = i + 1; }
+        //                }
+        //                /*  }// oDetalle.IdProtocolo.VerificarPr*/
+
+        //                //}//  if ((oDetalle.IdProtocolo.IdPacie
+        //                /*  }// if (oDetalle.IdProtocolo.IdCaracter != 2*/
+        //            }//    if (oCon.NotificarSISA)
+        //        }
+        //    }
+        //}
+
+
+        //private bool GenerarCasoSISA(DetalleProtocolo oDetalle, string res)
+        //{
+        //    bool generacaso = false;
+        //    string caracter = "";
+        //    string idevento = "";
+        //    string nombreevento = "";
+        //    string idclasificacionmanual = "";
+        //    string nombreclasificacionmanual = "";
+        //    string idgrupoevento = "";
+        //    string nombregrupoevento = "";
+        //    bool seguir = true;
+        //    string m_strSQL = "";
+
+        //    try
+        //    {
+
+
+        //        if (res == "SE DETECTA") // si es contacto y es positivo se sube como sospechoso
+        //            m_strSQL = " select * from LAB_ConfiguracionSISA where idCaracter=1  and idItem=" + oDetalle.IdSubItem.IdItem.ToString();
+        //        else
+        //        {
+
+        //            m_strSQL = " select * from LAB_ConfiguracionSISA where idCaracter=  " + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem=" + oDetalle.IdSubItem.IdItem.ToString();
+        //        }
+
+
+
+        //        // nose notificò antes y es sospechoso o contacto
+
+
+        //        if (seguir)
+        //        {
+        //            DataSet Ds = new DataSet();
+        //            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        //            SqlDataAdapter adapter = new SqlDataAdapter();
+        //            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+        //            adapter.Fill(Ds);
+
+        //            DataTable dt = Ds.Tables[0];
+
+        //            for (int i = 0; i < dt.Rows.Count; i++)
+        //            {
+        //                caracter = dt.Rows[i][1].ToString();
+        //                idevento = dt.Rows[i][2].ToString();
+        //                nombreevento = dt.Rows[i][3].ToString();
+        //                idclasificacionmanual = dt.Rows[i][4].ToString();
+        //                nombreclasificacionmanual = dt.Rows[i][5].ToString();
+        //                idgrupoevento = dt.Rows[i][6].ToString();
+        //                nombregrupoevento = dt.Rows[i][7].ToString();
+
+        //            }
+
+
+        //            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+        //            string URL = oCon.UrlServicioSISA;
+        //            string s_idestablecimiento = oCon.CodigoEstablecimientoSISA; // "14580562167000"
+        //            string usersisa = ConfigurationManager.AppSettings["usuarioSisa"].ToString();
+        //            string[] a = usersisa.Split(':');
+        //            string s_user = a[0].ToString();
+        //            string s_userpass = a[1].ToString();
+
+        //            string s_sexo = "";
+        //            switch (oDetalle.IdProtocolo.IdPaciente.IdSexo)
+        //            {
+        //                case 1: s_sexo = "I"; break;
+        //                case 2: s_sexo = "F"; break;
+        //                case 3: s_sexo = "M"; break;
+        //            }
+        //            string fn = oDetalle.IdProtocolo.IdPaciente.FechaNacimiento.ToShortDateString().Replace("/", "-");
+
+        //            string fnpapel = oDetalle.IdProtocolo.FechaOrden.ToShortDateString().Replace("/", "-");
+
+
+        //            string numerodocumento = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
+
+        //            string error = "";
+        //            bool hayerror = false;
+
+        //            evento newevento = new evento
+        //            {
+        //                idTipodoc = "1",
+        //                nrodoc = numerodocumento,
+        //                sexo = s_sexo,
+        //                fechaNacimiento = fn,  //"05-06-1989",
+        //                idGrupoEvento = idgrupoevento,
+        //                idEvento = idevento, // "77",
+        //                idEstablecimientoCarga = s_idestablecimiento, //prod: "51580352167442",
+        //                fechaPapel = fnpapel, // "10-12-2019",
+        //                idClasificacionManualCaso = idclasificacionmanual, // "22"
+        //            };
+
+        //            AltaCaso caso = new AltaCaso
+        //            {
+
+        //                usuario = s_user, // "bcpintos",
+        //                clave = s_userpass, // "2398HH6RK6",
+        //                altaEventoCasoNominal = newevento
+        //            };
+
+        //            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+        //            string DATA = jsonSerializer.Serialize(caso);
+
+
+
+        //            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+        //            client.BaseAddress = new System.Uri(URL);
+
+        //            System.Net.Http.HttpContent content = new StringContent(DATA, UTF8Encoding.UTF8, "application/json");
+        //            HttpResponseMessage messge = client.PostAsync(URL, content).Result;
+        //            string description = string.Empty;
+        //            if (messge.IsSuccessStatusCode)
+        //            {
+        //                string result = messge.Content.ReadAsStringAsync().Result;
+        //                description = result;
+        //                RespuestaCaso respuesta_d = jsonSerializer.Deserialize<RespuestaCaso>(description);
+        //                if (respuesta_d.id_caso != "")
+        //                { //  devolver el idcaso para guardar en la base de datos
+        //                    string s_idcaso = respuesta_d.id_caso;
+
+        //                    oDetalle.IdProtocolo.IdCasoSISA = int.Parse(s_idcaso);
+        //                    oDetalle.IdProtocolo.Save();
+        //                    if (respuesta_d.resultado == "OK")
+        //                        oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Genera Caso SISA " + s_idcaso, int.Parse(Session["idUsuarioValida"].ToString()));
+        //                    else
+        //                        oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + s_idcaso, int.Parse(Session["idUsuarioValida"].ToString()));
+        //                    generacaso = true;
 
-                        }
-                        else
-                        {
-                            generacaso = false;
-                            hayerror = true;
-                            error = respuesta_d.resultado;
+        //                }
+        //                else
+        //                {
+        //                    generacaso = false;
+        //                    hayerror = true;
+        //                    error = respuesta_d.resultado;
 
-                        }
-                    }
-
-
-                }
-
-            }
-            catch
-            {
-                generacaso = false;
-
-
-            }
-            return generacaso;
-
-        }
-        private bool ProcesaSISA(DetalleProtocolo oDetalle, string res)
-        {
-            bool generacaso = false;
-
-            try
-            {
-                if (oDetalle.IdProtocolo.IdCasoSISA == 0)
-                    generacaso = GenerarCasoSISA(oDetalle, res);
-
-
-
-
-
-                string m_strSQL = @"SELECT  distinct idDetalleProtocolo,  S.idMuestra as IdMuestraSISA,	  S.idTipoMuestra as idTipoMuestraSISA, s.idPrueba as idPruebaSISA, s.idTipoPrueba as idTipoPruebaSISA,  
-                ds.idResultadoSISA,S.idEvento
-                  FROM    LAB_DetalleProtocolo d (nolock)
-                   inner join LAB_ConfiguracionSISA S on S.idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + @" and s.idItem= d.idSubItem
-                   inner join LAB_ConfiguracionSISADetalle DS on DS.idItem=d.idSubItem  and resultadocar= ds.resultado
-                    where d.idProtocolo= " + oDetalle.IdProtocolo.IdProtocolo.ToString();
-
+        //                }
+        //            }
+
+
+        //        }
+
+        //    }
+        //    catch
+        //    {
+        //        generacaso = false;
+
+
+        //    }
+        //    return generacaso;
+
+        //}
+        //private bool ProcesaSISA(DetalleProtocolo oDetalle, string res)
+        //{
+        //    bool generacaso = false;
+
+        //    try
+        //    {
+        //        if (oDetalle.IdProtocolo.IdCasoSISA == 0)
+        //            generacaso = GenerarCasoSISA(oDetalle, res);
+
+
+
+
+
+        //        string m_strSQL = @"SELECT  distinct idDetalleProtocolo,  S.idMuestra as IdMuestraSISA,	  S.idTipoMuestra as idTipoMuestraSISA, s.idPrueba as idPruebaSISA, s.idTipoPrueba as idTipoPruebaSISA,  
+        //        ds.idResultadoSISA,S.idEvento
+        //          FROM    LAB_DetalleProtocolo d (nolock)
+        //           inner join LAB_ConfiguracionSISA S on S.idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + @" and s.idItem= d.idSubItem
+        //           inner join LAB_ConfiguracionSISADetalle DS on DS.idItem=d.idSubItem  and resultadocar= ds.resultado
+        //            where d.idProtocolo= " + oDetalle.IdProtocolo.IdProtocolo.ToString();
+
 
 
-                DataSet Ds = new DataSet();
-                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
-                string idDetalleProtocolo;
-                string idMuestra;
-                string idTipoMuestra;
-                string idPrueba;
-                string idTipoPrueba;
-                string idResultadoSISA;
-                string idEvento;
-
-                DataTable dt = Ds.Tables[0];
+        //        DataSet Ds = new DataSet();
+        //        SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        //        SqlDataAdapter adapter = new SqlDataAdapter();
+        //        adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+        //        adapter.Fill(Ds);
+        //        string idDetalleProtocolo;
+        //        string idMuestra;
+        //        string idTipoMuestra;
+        //        string idPrueba;
+        //        string idTipoPrueba;
+        //        string idResultadoSISA;
+        //        string idEvento;
+
+        //        DataTable dt = Ds.Tables[0];
 
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    idDetalleProtocolo = dt.Rows[i][0].ToString();
-                    idMuestra = dt.Rows[i][1].ToString();
-                    idTipoMuestra = dt.Rows[i][2].ToString();
-                    idPrueba = dt.Rows[i][3].ToString();
-                    idTipoPrueba = dt.Rows[i][4].ToString();
-                    idResultadoSISA = dt.Rows[i][5].ToString();
-                    idEvento = dt.Rows[i][6].ToString();
+        //        for (int i = 0; i < dt.Rows.Count; i++)
+        //        {
+        //            idDetalleProtocolo = dt.Rows[i][0].ToString();
+        //            idMuestra = dt.Rows[i][1].ToString();
+        //            idTipoMuestra = dt.Rows[i][2].ToString();
+        //            idPrueba = dt.Rows[i][3].ToString();
+        //            idTipoPrueba = dt.Rows[i][4].ToString();
+        //            idResultadoSISA = dt.Rows[i][5].ToString();
+        //            idEvento = dt.Rows[i][6].ToString();
 
 
-                    if ((oDetalle.IdProtocolo.IdCasoSISA > 0) && (oDetalle.IdeventomuestraSISA == 0))
-                        GenerarMuestraSISA(oDetalle.IdProtocolo, idMuestra, idTipoMuestra, idDetalleProtocolo);
+        //            if ((oDetalle.IdProtocolo.IdCasoSISA > 0) && (oDetalle.IdeventomuestraSISA == 0))
+        //                GenerarMuestraSISA(oDetalle.IdProtocolo, idMuestra, idTipoMuestra, idDetalleProtocolo);
 
-                    if (oDetalle.IdeventomuestraSISA > 0)
-                        GenerarResultadoSISA(oDetalle, idPrueba, idTipoPrueba, idResultadoSISA, idEvento);
+        //            if (oDetalle.IdeventomuestraSISA > 0)
+        //                GenerarResultadoSISA(oDetalle, idPrueba, idTipoPrueba, idResultadoSISA, idEvento);
 
-                    break;
-                }
+        //            break;
+        //        }
 
-            }
-            catch (Exception e)
-            {
-                generacaso = false;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        generacaso = false;
 
 
-            }
-            return generacaso;
+        //    }
+        //    return generacaso;
 
-        }
-        private void GenerarMuestraSISA(Protocolo protocolo, string idMuestraSISA, string idtipoMuestraSISA, string idDetalleProtocolo)
+        //}
+        //private void GenerarMuestraSISA(Protocolo protocolo, string idMuestraSISA, string idtipoMuestraSISA, string idDetalleProtocolo)
 
-        {
-            string URL = oCon.URLMuestraSISA;
+        //{
+        //    string URL = oCon.URLMuestraSISA;
 
 
 
-            string ftoma = protocolo.FechaTomaMuestra.ToString("yyyy-MM-dd");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
+        //    string ftoma = protocolo.FechaTomaMuestra.ToString("yyyy-MM-dd");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
 
-            string idestablecimientotoma = protocolo.IdEfectorSolicitante.CodigoSISA;
-            if (idestablecimientotoma == "")
-                //pongo por defecto laboratorio central
-                idestablecimientotoma = "107093";
+        //    string idestablecimientotoma = protocolo.IdEfectorSolicitante.CodigoSISA;
+        //    if (idestablecimientotoma == "")
+        //        //pongo por defecto laboratorio central
+        //        idestablecimientotoma = "107093";
 
 
-            ResultadoxNro.EventoMuestra newmuestra = new ResultadoxNro.EventoMuestra
-            {
-                adecuada = true,
-                aislamiento = false,
-                fechaToma = ftoma, // "2020-08-23",
-                idEstablecimientoToma = int.Parse(idestablecimientotoma),  // 140618, // sacar del efector  solicitante
-                idEventoCaso = protocolo.IdCasoSISA, // 2061287,
-                idMuestra = int.Parse(idMuestraSISA),
-                idtipoMuestra = int.Parse(idtipoMuestraSISA),
-                muestra = true
-            };
-            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+        //    ResultadoxNro.EventoMuestra newmuestra = new ResultadoxNro.EventoMuestra
+        //    {
+        //        adecuada = true,
+        //        aislamiento = false,
+        //        fechaToma = ftoma, // "2020-08-23",
+        //        idEstablecimientoToma = int.Parse(idestablecimientotoma),  // 140618, // sacar del efector  solicitante
+        //        idEventoCaso = protocolo.IdCasoSISA, // 2061287,
+        //        idMuestra = int.Parse(idMuestraSISA),
+        //        idtipoMuestra = int.Parse(idtipoMuestraSISA),
+        //        muestra = true
+        //    };
+        //    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
 
-            string DATA = jsonSerializer.Serialize(newmuestra);
+        //    string DATA = jsonSerializer.Serialize(newmuestra);
 
 
-            byte[] data = UTF8Encoding.UTF8.GetBytes(DATA);
+        //    byte[] data = UTF8Encoding.UTF8.GetBytes(DATA);
 
-            HttpWebRequest request;
-            request = WebRequest.Create(URL) as HttpWebRequest;
-            request.Timeout = 10 * 1000;
-            request.Method = "POST";
-            request.ContentLength = data.Length;
-            request.ContentType = "application/json";
-            request.Headers.Add("app_key", "b0fd61c3a08917cfd20491b24af6049e");
-            request.Headers.Add("app_id", "22891c8f");
+        //    HttpWebRequest request;
+        //    request = WebRequest.Create(URL) as HttpWebRequest;
+        //    request.Timeout = 10 * 1000;
+        //    request.Method = "POST";
+        //    request.ContentLength = data.Length;
+        //    request.ContentType = "application/json";
+        //    request.Headers.Add("app_key", "b0fd61c3a08917cfd20491b24af6049e");
+        //    request.Headers.Add("app_id", "22891c8f");
 
-            try
-            {
+        //    try
+        //    {
 
-                Stream postStream = request.GetRequestStream();
-                postStream.Write(data, 0, data.Length);
+        //        Stream postStream = request.GetRequestStream();
+        //        postStream.Write(data, 0, data.Length);
 
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string body = reader.ReadToEnd();
+        //        HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+        //        StreamReader reader = new StreamReader(response.GetResponseStream());
+        //        string body = reader.ReadToEnd();
 
 
-                if (body != "")
-                {
-                    ResultadoxNro.EventoMuestraResultado respuesta_d = jsonSerializer.Deserialize<ResultadoxNro.EventoMuestraResultado>(body);
+        //        if (body != "")
+        //        {
+        //            ResultadoxNro.EventoMuestraResultado respuesta_d = jsonSerializer.Deserialize<ResultadoxNro.EventoMuestraResultado>(body);
 
-                    if (respuesta_d.id != 1)
-                    {
-                        DetalleProtocolo oDetalle = new DetalleProtocolo();
-                        oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+        //            if (respuesta_d.id != 1)
+        //            {
+        //                DetalleProtocolo oDetalle = new DetalleProtocolo();
+        //                oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
 
-                        if (oDetalle != null)
-                        {
+        //                if (oDetalle != null)
+        //                {
 
-                            oDetalle.IdeventomuestraSISA = respuesta_d.id;
-                            oDetalle.Save();
+        //                    oDetalle.IdeventomuestraSISA = respuesta_d.id;
+        //                    oDetalle.Save();
 
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Muestra SISA " + respuesta_d.id.ToString(), oDetalle.IdUsuarioValida);
+        //                    oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Muestra SISA " + respuesta_d.id.ToString(), oDetalle.IdUsuarioValida);
 
 
 
-                        } //for each
-                    } //respuesta_o
+        //                } //for each
+        //            } //respuesta_o
 
 
-                }// body
+        //        }// body
 
-            }
+        //    }
 
 
-            catch (WebException ex)
-            {
-                string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
-            }
+        //    catch (WebException ex)
+        //    {
+        //        string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+        //    }
 
-        }
-        private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA)
+        //}
+        //private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string idPruebaSISA, string idTipoPruebaSISA, string idResultadoSISA, string idEventoSISA)
 
-        {
+        //{
 
-            int ideventomuestra = oDetalle.IdeventomuestraSISA;
+        //    int ideventomuestra = oDetalle.IdeventomuestraSISA;
 
-            string URL = oCon.URLResultadoSISA;
+        //    string URL = oCon.URLResultadoSISA;
 
 
-            try
-            {
-                int id_resultado_a_informar = int.Parse(idResultadoSISA); // 0;
-                int idevento = int.Parse(idEventoSISA); //  307; // sospechoso
+        //    try
+        //    {
+        //        int id_resultado_a_informar = int.Parse(idResultadoSISA); // 0;
+        //        int idevento = int.Parse(idEventoSISA); //  307; // sospechoso
 
 
 
-                if (id_resultado_a_informar != 0)
-                {
-                    string femision = oDetalle.FechaValida.ToString("yyyy-MM-dd");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
+        //        if (id_resultado_a_informar != 0)
+        //        {
+        //            string femision = oDetalle.FechaValida.ToString("yyyy-MM-dd");//.ToShortDateString("yyyy/MM/dd").Replace("/", "-");
 
-                    string frecepcion = oDetalle.IdProtocolo.Fecha.ToString("yyyy-MM-dd");//ToShortDateString("yyyy/MM/dd").Replace("/", "-");
+        //            string frecepcion = oDetalle.IdProtocolo.Fecha.ToString("yyyy-MM-dd");//ToShortDateString("yyyy/MM/dd").Replace("/", "-");
 
 
-                    resultado newresultado = new resultado
-                    { // resultado de dni: 31935346
-                        derivada = false,
-                        fechaEmisionResultado = femision, //"2020-09-14", //
-                        fechaRecepcion = frecepcion, // "2020-09-13" 
-                        idDerivacion = null, //1125675,//
-                        idEstablecimiento = 107093,  //int.Parse( s_idestablecimiento), //prod: "51580352167442",
-                        idEvento = idevento, // sospechoso: 307 y 309 contacto.. idem a la tabla de configuracion sisa
-                        idEventoMuestra = ideventomuestra,  // 2131682, // sale del excel
-                        idPrueba = int.Parse(idPruebaSISA), //1076,  // RT-PCR en tiempo real para agregar en la tabla de configuracion sisa
-                        idResultado = id_resultado_a_informar,// 4, // 4: no detectable; 3: detectable
-                        idTipoPrueba = int.Parse(idTipoPruebaSISA), // Genoma viral SARS-CoV-2  para agregar en la tabla de configuracion sisa
-                        noApta = true,
-                        valor = ""
-                    };
+        //            resultado newresultado = new resultado
+        //            { // resultado de dni: 31935346
+        //                derivada = false,
+        //                fechaEmisionResultado = femision, //"2020-09-14", //
+        //                fechaRecepcion = frecepcion, // "2020-09-13" 
+        //                idDerivacion = null, //1125675,//
+        //                idEstablecimiento = 107093,  //int.Parse( s_idestablecimiento), //prod: "51580352167442",
+        //                idEvento = idevento, // sospechoso: 307 y 309 contacto.. idem a la tabla de configuracion sisa
+        //                idEventoMuestra = ideventomuestra,  // 2131682, // sale del excel
+        //                idPrueba = int.Parse(idPruebaSISA), //1076,  // RT-PCR en tiempo real para agregar en la tabla de configuracion sisa
+        //                idResultado = id_resultado_a_informar,// 4, // 4: no detectable; 3: detectable
+        //                idTipoPrueba = int.Parse(idTipoPruebaSISA), // Genoma viral SARS-CoV-2  para agregar en la tabla de configuracion sisa
+        //                noApta = true,
+        //                valor = ""
+        //            };
 
 
 
 
-                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+        //            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
 
-                    string DATA = jsonSerializer.Serialize(newresultado);
+        //            string DATA = jsonSerializer.Serialize(newresultado);
 
 
-                    byte[] data = UTF8Encoding.UTF8.GetBytes(DATA);
+        //            byte[] data = UTF8Encoding.UTF8.GetBytes(DATA);
 
-                    HttpWebRequest request;
-                    request = WebRequest.Create(URL) as HttpWebRequest;
-                    request.Timeout = 10 * 1000;
-                    request.Method = "POST";
-                    request.ContentLength = data.Length;
-                    request.ContentType = "application/json";
-                    request.Headers.Add("app_key", "8482d41353ecd747c271f2ec869345e4");
-                    request.Headers.Add("app_id", "0e4fcbbf");
+        //            HttpWebRequest request;
+        //            request = WebRequest.Create(URL) as HttpWebRequest;
+        //            request.Timeout = 10 * 1000;
+        //            request.Method = "POST";
+        //            request.ContentLength = data.Length;
+        //            request.ContentType = "application/json";
+        //            request.Headers.Add("app_key", "8482d41353ecd747c271f2ec869345e4");
+        //            request.Headers.Add("app_id", "0e4fcbbf");
 
 
 
-                    Stream postStream = request.GetRequestStream();
-                    postStream.Write(data, 0, data.Length);
+        //            Stream postStream = request.GetRequestStream();
+        //            postStream.Write(data, 0, data.Length);
 
-                    HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-                    StreamReader reader = new StreamReader(response.GetResponseStream());
-                    string body = reader.ReadToEnd();
-                    if (body != "")
-                    {
-                        oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Resultado en SISA", oDetalle.IdUsuarioValida);
-                    }
+        //            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+        //            StreamReader reader = new StreamReader(response.GetResponseStream());
+        //            string body = reader.ReadToEnd();
+        //            if (body != "")
+        //            {
+        //                oDetalle.GrabarAuditoriaDetalleProtocolo("Genera Resultado en SISA", oDetalle.IdUsuarioValida);
+        //            }
 
-                }
+        //        }
 
 
-            }
-            catch (WebException ex)
-            {
-                string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
+        //    }
+        //    catch (WebException ex)
+        //    {
+        //        string mensaje = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
 
 
-            }
+        //    }
 
 
-        }
+        //}
 
         protected void btnRegresar_Click(object sender, EventArgs e)
         {

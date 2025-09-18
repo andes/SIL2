@@ -297,8 +297,8 @@ ORDER BY B  ";
         private DataTable MostrarCaracter(Item oItem)
         {
 
-            Configuracion oCon = new Configuracion();
-            oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            //Configuracion oCon = new Configuracion();
+            //oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
 
             string m_strSQL = @"   
