@@ -1451,7 +1451,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
             ddlCaracter.Items.Insert(0, new ListItem("--Seleccione Caracteristica--", "0"));
 
-            if (ddlCaracter.Items.Count > 1)
+            if ((ddlCaracter.Items.Count > 1) && (oUser.IdEfector.IdEfector==228) )///Se agrega control exclusivo para Laboratorio Central
             {
                 lblCaracterSisa.Visible = true;
                 ddlCaracter.Visible = true;

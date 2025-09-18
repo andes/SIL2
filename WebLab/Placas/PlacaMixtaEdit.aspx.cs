@@ -90,16 +90,17 @@ namespace WebLab.Placas {
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-        
+
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
 
 
-            string m_ssql = "SELECT   distinct idusuario, apellido    as nombre FROM sys_usuario WHERE firmavalidacion like '%Bio%' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
+            string m_ssql = "SELECT   distinct idusuario, apellido    as nombre FROM sys_usuario WHERE firmavalidacion <>'' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
 
-            oUtil.CargarCombo(ddlOperador, m_ssql, "idusuario", "nombre");
+            oUtil.CargarCombo(ddlOperador, m_ssql, "idusuario", "nombre", connReady);
             ddlOperador.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
-            oUtil.CargarCombo(ddlOperador0, m_ssql, "idusuario", "nombre");
+            oUtil.CargarCombo(ddlOperador0, m_ssql, "idusuario", "nombre", connReady);
             ddlOperador0.Items.Insert(0, new ListItem("--Seleccione--", "0"));
             m_ssql = null;
             oUtil = null;
@@ -405,7 +406,8 @@ namespace WebLab.Placas {
 
         private void Guardar(Placa oRegistro, string estado)
         {
-           
+           if (Session["idUsuario"]!= null)
+            { 
             oRegistro.Operador = ddlOperador.SelectedItem.Text + " -" + ddlOperador0.SelectedItem.Text;
             oRegistro.Equipo = lblEquipo.Text;
             oRegistro.Fecha =DateTime.Parse( lblFecha.Text);
@@ -507,7 +509,7 @@ namespace WebLab.Placas {
             {
                 oRegistro.BorrarDetalle();
                 Item oItem1 = new Item();
-                oItem1 = (Item)oItem1.Get(typeof(Item), "Codigo", "9001", "Baja", false); //flu a
+                oItem1 = (Item)oItem1.Get(typeof(Item), "Codigo", "6728", "Baja", false); //flu a///alerta caro
 
                 guardarvalorCeldaAlplex(oRegistro, oItem1, txtA2.Value, txtA2.ID);
                 guardarvalorCeldaAlplex(oRegistro, oItem1, txtA3.Value, txtA3.ID);
@@ -521,7 +523,7 @@ namespace WebLab.Placas {
                 guardarvalorCeldaAlplex(oRegistro, oItem1, txtA11.Value, txtA11.ID);
                 guardarvalorCeldaAlplex(oRegistro, oItem1, txtA12.Value, txtA12.ID);
                 Item oItem2 = new Item();
-                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", "9002", "Baja", false); //flu a
+                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", "6769", "Baja", false); //flu a
                 guardarvalorCeldaAlplex(oRegistro, oItem, txtB1.Value, txtB1.ID);
                 guardarvalorCeldaAlplex(oRegistro, oItem, txtB2.Value, txtB2.ID);
                 guardarvalorCeldaAlplex(oRegistro, oItem, txtB3.Value, txtB3.ID);
@@ -617,7 +619,8 @@ namespace WebLab.Placas {
 
 
             }
-
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
 
         private void guardarvalorCeldaAlplex(Placa oRegistro, Item oItem, string value, string iD)
@@ -773,12 +776,14 @@ namespace WebLab.Placas {
                             Item oItem = new Item();
                             if ((letra == "A") || (letra == "E"))
                             {
-                                oItem = (Item)oItem.Get(typeof(Item), "Codigo", "9001", "Baja", false);
+                               // oItem = (Item)oItem.Get(typeof(Item), "Codigo", "9001", "Baja", false);///alerta Caro
+                                oItem = (Item)oItem.Get(typeof(Item), "Codigo", "6728", "Baja", false);///alerta Caro llevar a parametrizacion
 
                             }
                             if ((letra == "B")|| (letra == "F"))
                             {
-                                oItem = (Item)oItem.Get(typeof(Item), "Codigo", "9002", "Baja", false);
+                                //oItem = (Item)oItem.Get(typeof(Item), "Codigo", "9002", "Baja", false);
+                                oItem = (Item)oItem.Get(typeof(Item), "Codigo", "6769", "Baja", false);
 
                             }
                             if ((letra == "C")|| (letra == "G"))

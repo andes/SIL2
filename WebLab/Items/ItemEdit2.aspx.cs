@@ -2128,7 +2128,9 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
         {
             if (Page.IsValid)
             {
-                string m_accion = "Alta";
+                if (Session["idUsuario"] != null)
+                {
+                    string m_accion = "Alta";
 
                 Item oReg = new Item();
                 if (Request["id"] != null)
@@ -2157,10 +2159,14 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 else //Nuevo
                 {
 
-                    Response.Redirect("ItemEdit2.aspx?id=" + oReg.IdItem + m_parametroFiltro, false);
-                }
+                        Response.Redirect("ItemEdit2.aspx?id=" + oReg.IdItem + m_parametroFiltro, false);
+                    }
 
+                }
             }
+        
+            else
+                Response.Redirect("../FinSesion.aspx", false);
         }
 
         private void GuardarNuevoTodosEfectores(Item oReg)

@@ -16,6 +16,7 @@ using System.Collections;
 using System.Drawing;
 using NHibernate;
 using NHibernate.Expression;
+using System.Configuration;
 
 namespace WebLab
 {
@@ -79,18 +80,21 @@ namespace WebLab
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-            string    m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter ";
-            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre");
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            string m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock) order by nombre ";
+            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
             ddlCaracter.Items.Insert(0, new ListItem("Todos", "0"));
 
-//            m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo
-//where iditem in (select iditem from lab_item where codigo = '" + oCon.CodigoCovid + @"' )
-//order by resultadocar";
-//            oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
-//            ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
+            //            m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo
+            //where iditem in (select iditem from lab_item where codigo = '" + oCon.CodigoCovid + @"' )
+            //order by resultadocar";
+            //            oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
+            //            ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
 
-            m_ssql = "SELECT idItem, nombre   FROM LAB_Item where codigo in ('9001', '9002','9122') ";
-            oUtil.CargarCheckBox (chkItem, m_ssql, "idItem", "nombre");
+            //m_ssql = "SELECT idItem, nombre   FROM LAB_Item where codigo in ('9001', '9002','9122') ";
+            m_ssql = "SELECT idItem, nombre   FROM LAB_Item with (nolock) where codigo in ('6728', '6769','9122') and baja=0";//Codigosd psra Sil2- en un futuro poner en alguna guia
+            oUtil.CargarCheckBox (chkItem, m_ssql, "idItem", "nombre", connReady);
             for (int i = 0; i < chkItem.Items.Count; i++)
             {
                 chkItem.Items[i].Selected = true;
@@ -123,9 +127,11 @@ namespace WebLab
              
 
                  // d.calle as [Calle], d.numero as [Nro.],d.departamento as [Depto], d.cpostal as [CP], d.barrio as Barrio,d.municipio as Municipio,
-                string m_strSQLCondicion = " Ir.idEfector="+ oUser.IdEfector.IdEfector.ToString();
-                //DateTime fecha = DateTime.Parse(txtFechaDesde.Value);
-                if (txtFechaDesde.Value != "")
+                string m_strSQLCondicion = " 1=1 ";
+
+            m_strSQLCondicion = " and Ir.idEfector=" + oUser.IdEfector.IdEfector.ToString();
+            //DateTime fecha = DateTime.Parse(txtFechaDesde.Value);
+            if (txtFechaDesde.Value != "")
                 {
                     DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
                     m_strSQLCondicion += " AND ir.fecharegistro >= '" + fecha1.ToString("yyyyMMdd") + "'";
@@ -396,7 +402,7 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
             Utility oUtil = new Utility();
             string m_ssql = @"select distinct  resultadocar as resultado from LAB_detalleprotocolo with (nolock)
 where iditem in (" + GetDeterminaciones() + @")
-order by resultadocar";
+and idEfector="+ oUser.IdEfector.IdEfector.ToString() +" order by resultadocar";
             oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
             ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
         }

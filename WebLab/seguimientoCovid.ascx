@@ -65,10 +65,10 @@
               <i class="fa fa-check fa-5x"></i><br/>
               DERIVACIONES
             </a>
-              <a href="Estadisticas/ReportePorResultadoCovid.aspx" class="btn btn-sq btn-warning">
+            <%--  <a href="Estadisticas/ReportePorResultadoCovid.aspx" class="btn btn-sq btn-warning">
               <i class="fa fa-bars fa-5x"></i><br/>
               ESTADISTICAS  <br>RESULTADOS
-            </a>
+            </a>--%>
                  <a href="SeleccionSecuenciacion.aspx" class="btn btn-sq btn-primary">
               <i class="fa fa-bars fa-5x"></i><br/>
               POSITIVOS  <br>CON CT
