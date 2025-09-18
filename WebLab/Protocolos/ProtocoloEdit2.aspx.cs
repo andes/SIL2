@@ -5038,7 +5038,8 @@ System.Net.ServicePointManager.SecurityProtocol =
             //la derivacion debe tener el mismo lote que el ingresado (no todos los analisis pueden haber sido enviados con el mismo lote)
 
             string m_strSQL =
-                @" select distinct STRING_AGG(Det.idItem ,' | ')  as Item
+                //select distinct STRING_AGG(Det.idItem ,' | ')  as Item ---> (No esta disponible en SQL 2014)
+                @" SELECT  STUFF(( SELECT ' | ' + CAST(Det.idItem AS VARCHAR(20))
                     from LAB_Derivacion D
                         inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
                         inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
@@ -5046,7 +5047,8 @@ System.Net.ServicePointManager.SecurityProtocol =
                         inner join LAB_LoteDerivacion L on L.idLoteDerivacion = D.idLote
                     where P.baja = 0
                         and D.estado in (1) ---------------------- Buscar las derivaciones que no han sido ingresadas
-                        and L.idLoteDerivacion = " + idLote +  " and p.numero = " + numeroProtocolo;
+                        and L.idLoteDerivacion = " + idLote +  " and p.numero = " + numeroProtocolo + 
+                "       FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 3, '') AS Item; ";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;

@@ -143,6 +143,7 @@ namespace WebLab.Derivaciones
         {
             string s_vta_LAB = "vta_LAB_Derivaciones vta";
             string join = " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+            int estado = Convert.ToInt16(Request["Estado"]);
 
             string m_strSQL = " SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
             " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , " +
@@ -153,9 +154,14 @@ namespace WebLab.Derivaciones
 
             if (Request["Tipo"] == "Alta")
             {
-                m_strSQL += Request["Parametros"].ToString() + "  and estado = " + Request["Estado"].ToString() +
-                " and isnull(idlote,0) = 0 " + //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
-                " ORDER BY efectorDerivacion,numero ";
+                m_strSQL += Request["Parametros"].ToString() + "  and estado = " + Request["Estado"].ToString();
+                if (estado == 0 )//Pendiente de derivar , no tiene que tener lote asociado 
+                {
+                    m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
+                }
+                m_strSQL += " ORDER BY efectorDerivacion,numero ";
+
+
             }
             else
             {
