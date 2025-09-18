@@ -1851,7 +1851,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         private void ActualizarEstadoDerivacion(Protocolo oRegistro)
         {
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-
+            int idLote = 0;
+            if (Request["idLote"] != null) //Si es nulo es un protocolo anterior a la gestion por lotes
+                idLote =  Convert.ToInt32(Request["idLote"]);
+            
             string query =
             @"update LAB_Derivacion
             set estado=3---recibido
@@ -1859,7 +1862,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             from LAB_Derivacion D
                 inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
                 inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
-            where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idLote=" + Request["idLote"];
+            where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idLote=" + idLote;
            
             SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -1872,7 +1875,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             oPOrigen = (Business.Data.Laboratorio.Protocolo)oPOrigen.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(Request["numeroProtocolo"].ToString()));
             if (oPOrigen != null)
             {
-                oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + Request["idLote"].ToString()  , "Protocolo "+ oRegistro.Numero.ToString());
+                if(idLote != 0 )
+                    oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " +idLote  , "Protocolo "+ oRegistro.Numero.ToString());
+                else
+                    oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Protocolo", oRegistro.Numero.ToString());
             }
 
 
