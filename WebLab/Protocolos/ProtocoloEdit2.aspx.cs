@@ -4977,27 +4977,27 @@ System.Net.ServicePointManager.SecurityProtocol =
             {
                 if (idLote != 0)
                 {
-
                     LoteDerivacion lote = new LoteDerivacion();
                     lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
-                    lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
+                    
 
-                    if (lote.Estado == 2 || lote.Estado == 4)
+                    if (lote.Estado == 4) //Pasa de Recibido a Ingresado
                     {
-                        if (lote.Estado == 2)  //Con iEstado=4 lo graba el id desde la pantalla DerivacionRecibirLote.aspx.cs
-                            lote.IdUsuarioRecepcion = oUser.IdUsuario;
-
                         lote.Estado = 5;
+                        lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);
                     }
+
+                    //Graba el ingreso del protocolo en el lote
+                    lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
 
                     //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
                     if (!lote.HayDerivacionesPendientes())
                     {
-                        lote.Estado = 6;
+                        lote.Estado = 6; //Pasa a Completado si no tiene más derivaciones pendientes
+                        lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);
                     }
 
                     lote.Save();
-                    lote.GrabarAuditoriaLoteDerivacion( lote.descripcionEstadoLote(), oUser.IdUsuario);
                 }
             }
             catch (Exception)
@@ -5007,28 +5007,12 @@ System.Net.ServicePointManager.SecurityProtocol =
 
         private void VerificacionEstadoLote(Protocolo oRegistro) //SE PISO CON EL PR MantenimientoVarios (#15)
         {
-            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
-            {
-                //Casos viejos y tambien casos donde los analisis prodrian provenir de diferente lotes
 
-                if (Session["VariosLotes"] != null)
-                {
-                    if (((HashSet<string>)Session["VariosLotes"]).Count > 0)
-                    {
-                        //tiene al menos un lote
-                        HashSet<string> lotes = (HashSet<string>)Session["VariosLotes"];
-                        foreach (string item in lotes)
-                        {
-                            ActualizaEstadoLote(Convert.ToInt32(item), oRegistro);
-                        }
-                    }
-                }
-            }
-            else
+            if (Request["idLote"] != null) //Si no tiene Lote, no actualiza estado de Lote
             {
-                ActualizaEstadoLote(Convert.ToInt32(Request["idLote"]), oRegistro);
+                int idLote = Convert.ToInt32(Request["idLote"]);
+                ActualizaEstadoLote(idLote, oRegistro);
             }
-
         }
 
         private void CargarProtocoloDerivadoLote()
