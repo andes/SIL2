@@ -13,25 +13,32 @@ using System.Configuration;
 using System.Collections;
 using Business.Data;
 
-namespace WebLab.Protocolos {
-    public partial class DerivacionMultiEfector : System.Web.UI.Page {
+namespace WebLab.Protocolos
+{
+    public partial class DerivacionMultiEfector : System.Web.UI.Page
+    {
 
         public Configuracion oC = new Configuracion();
         public Usuario oUser = new Usuario();
 
-        protected void Page_PreInit(object sender, EventArgs e) {
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
 
             //MiltiEfector: Filtra para configuracion del efector del usuario 
-            if (Session["idUsuario"] != null) {
-                oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                oC = (Configuracion) oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-            } else
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            }
+            else
                 Response.Redirect("../FinSesion.aspx", false);
 
 
         }
-        protected void Page_Load(object sender, EventArgs e) {
-            if (!Page.IsPostBack) {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!Page.IsPostBack)
+            {
                 VerificaPermisos("Derivacion");
                 //PreventingDoubleSubmit(btnBuscar);
                 CargarListas();
@@ -39,16 +46,19 @@ namespace WebLab.Protocolos {
                 ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
                 Session["idServicio"] = Request["idServicio"].ToString();
                 txtNumeroProtocolo.Focus();
-                Session["VariosLotes"] = null;
             }
 
         }
-        private void VerificaPermisos(string sObjeto) {
-            if (Session["idUsuario"] != null) {
-                if (Session["s_permiso"] != null) {
+        private void VerificaPermisos(string sObjeto)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                if (Session["s_permiso"] != null)
+                {
                     Utility oUtil = new Utility();
-                    int i_permiso = oUtil.VerificaPermisos((ArrayList) Session["s_permiso"], sObjeto);
-                    switch (i_permiso) {
+                    int i_permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
+                    switch (i_permiso)
+                    {
                         case 0:
                             Response.Redirect("../AccesoDenegado.aspx", false);
                             break;
@@ -56,9 +66,11 @@ namespace WebLab.Protocolos {
                             Response.Redirect("../AccesoDenegado.aspx", false);
                             break;
                     }
-                } else
+                }
+                else
                     Response.Redirect("../FinSesion.aspx", false);
-            } else
+            }
+            else
                 Response.Redirect("../FinSesion.aspx", false);
         }
         //private void CargarGrillaProtocolo()
@@ -67,10 +79,12 @@ namespace WebLab.Protocolos {
         //    DataList1.DataSource = LeerDatosProtocolos();
         //    DataList1.DataBind();
         //}
-        private object LeerDatosProtocolos() {
+        private object LeerDatosProtocolos()
+        {
             string str_condicion = " WHERE P.baja=0 and P.idTipoServicio=" + Request["idServicio"].ToString(); // +Session["idServicio"].ToString();
             DateTime fecha1 = DateTime.Today;
-            if (Request["urgencia"] != null) {
+            if (Request["urgencia"] != null)
+            {
                 str_condicion += " and P.idPrioridad=2 ";
             }
 
@@ -94,21 +108,24 @@ namespace WebLab.Protocolos {
         }
 
 
-        protected void DataList1_ItemDataBound(object sender, DataListItemEventArgs e) {
-            HyperLink oHplInfo = (HyperLink) e.Item.FindControl("hplProtocoloEdit");
-            if (oHplInfo != null) {
+        protected void DataList1_ItemDataBound(object sender, DataListItemEventArgs e)
+        {
+            HyperLink oHplInfo = (HyperLink)e.Item.FindControl("hplProtocoloEdit");
+            if (oHplInfo != null)
+            {
                 string idProtocolo = oHplInfo.NavigateUrl;
                 oHplInfo.NavigateUrl = "ProtocoloEdit2.aspx?idServicio=1&Desde=Derivacion&Operacion=Modifica&idProtocolo=" + idProtocolo;
 
-                Label oMuestra = (Label) e.Item.FindControl("lblTipoMuestra");
+                Label oMuestra = (Label)e.Item.FindControl("lblTipoMuestra");
                 //if (Request["idServicio"].ToString() == "1")
                 //{
 
                 oMuestra.Visible = false;
-                HyperLink oHplBacteriologia = (HyperLink) e.Item.FindControl("lnkMicrobiologia");
-                if (oHplBacteriologia != null) {
+                HyperLink oHplBacteriologia = (HyperLink)e.Item.FindControl("lnkMicrobiologia");
+                if (oHplBacteriologia != null)
+                {
                     oHplBacteriologia.Visible = true;
-                    Label oIdPaciente = (Label) e.Item.FindControl("lblidPaciente");
+                    Label oIdPaciente = (Label)e.Item.FindControl("lblidPaciente");
                     oHplBacteriologia.NavigateUrl = "ProtocoloEdit2.aspx?idPaciente=" + oIdPaciente.Text + "&Operacion=Alta&idServicio=3&Urgencia=0";
                 }
                 //}
@@ -116,7 +133,8 @@ namespace WebLab.Protocolos {
                 //    oMuestra.Visible = true;
             }
         }
-        private void CargarListas() {
+        private void CargarListas()
+        {
             Utility oUtil = new Utility();
 
             //    string s_listaEfectores = ConfigurationManager.AppSettings["efectoresRPD"].ToString();
@@ -136,7 +154,8 @@ namespace WebLab.Protocolos {
             oUtil = null;
         }
 
-        private void PreventingDoubleSubmit(Button button) {
+        private void PreventingDoubleSubmit(Button button)
+        {
             StringBuilder sb = new StringBuilder();
             sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
             sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
@@ -151,7 +170,8 @@ namespace WebLab.Protocolos {
             button.Attributes.Add("onclick", submit_Button_onclick_js);
         }
 
-        protected void btnBuscar_Click(object sender, EventArgs e) {
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
             // if (Page.IsValid) { Response.Redirect("DerivacionProcesa.aspx?idEfector=" + ddlEfector.SelectedValue + "&protocolo=" + txtNumeroProtocolo.Text + "&idServicio="+ Request["idServicio"].ToString(), false); }//+"&isScreening=0"
 
             gvProtocolosDerivados.DataSource = LeerDatosProtocolosDerivados();
@@ -159,25 +179,30 @@ namespace WebLab.Protocolos {
             MarcarSeleccionados(true);
 
         }
-        protected void lnkMarcar_Click(object sender, EventArgs e) {
+        protected void lnkMarcar_Click(object sender, EventArgs e)
+        {
             MarcarSeleccionados(true);
             // PintarReferencias();
         }
 
-        protected void lnkDesmarcar_Click(object sender, EventArgs e) {
+        protected void lnkDesmarcar_Click(object sender, EventArgs e)
+        {
             MarcarSeleccionados(false);
             //    PintarReferencias();
         }
 
-        private void MarcarSeleccionados(bool p) {
-            foreach (GridViewRow row in gvProtocolosDerivados.Rows) {
-                CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
+        private void MarcarSeleccionados(bool p)
+        {
+            foreach (GridViewRow row in gvProtocolosDerivados.Rows)
+            {
+                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
                 if (a.Checked == !p)
-                    ((CheckBox) (row.Cells[0].FindControl("CheckBox1"))).Checked = p;
+                    ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
             }
         }
 
-        private object LeerDatosProtocolosDerivados() {
+        private object LeerDatosProtocolosDerivados()
+        {
 
 
             string m_strSQL = @" select D.idDerivacion,I.nombre as Determinacion, convert(varchar(10),P.fecha,103) as fecha , P.numero, Pac.apellido + ' ' + Pac.nombre  as paciente 
@@ -193,7 +218,8 @@ namespace WebLab.Protocolos {
                                 where d.idEfectorDerivacion =" + oUser.IdEfector.IdEfector.ToString() + @"-- - destino
                                 and P.numero=" + txtNumeroProtocolo.Text.Trim() + @"                 and P.idEfector =" + ddlEfector.SelectedValue.ToString() + @"--origen
                                 and P.baja = 0
-                                and D.estado = 1 ";
+                                and D.estado = 1 
+                                and D.idLote = 0 "; //actualizacion para Gestion de Lotes
 
 
             DataSet Ds = new DataSet();
@@ -207,12 +233,14 @@ namespace WebLab.Protocolos {
 
         }
 
-        protected void btnEnviar_Click(object sender, EventArgs e) {
+        protected void btnEnviar_Click(object sender, EventArgs e)
+        {
             GenerarProtocolo();
         }
 
 
-        private void GenerarProtocolo() {
+        private void GenerarProtocolo()
+        {
 
             string s_idPaciente = "";
             string pivot = "";
@@ -220,45 +248,41 @@ namespace WebLab.Protocolos {
             string m_numeroMuestra = pivot;
             string m_numero = "";
             string s_idServicio = "";
-            HashSet<string> lotes = new HashSet<string>();
+
 
             int cantidad = 1;
-            foreach (GridViewRow row in gvProtocolosDerivados.Rows) {
-                CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked == true) {
+            foreach (GridViewRow row in gvProtocolosDerivados.Rows)
+            {
+                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                if (a.Checked == true)
+                {
                     m_numero = row.Cells[1].Text;
                     m_idDerivacion = gvProtocolosDerivados.DataKeys[row.RowIndex].Value.ToString();
                     Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
-                    oDerivacion = (Business.Data.Laboratorio.Derivacion) oDerivacion.Get(typeof(Business.Data.Laboratorio.Derivacion), int.Parse(m_idDerivacion));
-                    if (oDerivacion != null) {
-                        if (cantidad == 1) {
+                    oDerivacion = (Business.Data.Laboratorio.Derivacion)oDerivacion.Get(typeof(Business.Data.Laboratorio.Derivacion), int.Parse(m_idDerivacion));
+                    if (oDerivacion != null)
+                    {
+                        if (cantidad == 1)
+                        {
                             s_idServicio = oDerivacion.IdDetalleProtocolo.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString();
                             s_idPaciente = oDerivacion.IdDetalleProtocolo.IdProtocolo.IdPaciente.IdPaciente.ToString();
                             pivot = oDerivacion.IdDetalleProtocolo.IdItem.IdItem.ToString();
-                        } else {
-                            pivot += "|" + oDerivacion.IdDetalleProtocolo.IdItem.IdItem.ToString();
                         }
-                        if (oDerivacion.Idlote != 0) {
-                            lotes.Add(oDerivacion.Idlote.ToString());
+                        else
+                        {
+                            pivot += "|" + oDerivacion.IdDetalleProtocolo.IdItem.IdItem.ToString();
                         }
                     }
                     cantidad += 1;
                 }
             }
 
-            CargarLotes(lotes);
 
-            if ((pivot != "") && (m_numero != "") && (cantidad >= 1)) {
+            if ((pivot != "") && (m_numero != "") && (cantidad >= 1))
+            {
                 Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + ddlEfector.SelectedValue + "&numeroProtocolo=" + m_numero + "&idServicio=" + s_idServicio + "&idPaciente=" + s_idPaciente + "&Operacion=AltaDerivacionMultiEfector&analisis=" + pivot, false);
             }
         }
 
-        private void CargarLotes(HashSet<string> lotes) {
-            if (Session["VariosLotes"] != null) {
-                Session["VariosLotes"] = lotes;
-            } else {
-                Session.Add("VariosLotes", lotes);
-            }
-        }
     }
 }
