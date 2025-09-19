@@ -405,7 +405,8 @@ namespace WebLab.Derivaciones
                     if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
                     {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
                         lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
-                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", txt_Fecha.Text);
+                        DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Text.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Text.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Text.Substring(8, 2)));
+                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
                         lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txt_Hora.Text);
                     }
                     
