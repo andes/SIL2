@@ -547,8 +547,9 @@ namespace WebLab.Resultados
             {
                 chkCaracterCovid.Items[i].Selected = true;
             }
+            chkCaracterCovid.Visible = false;
 
-            if (chkCaracterCovid.Items.Count > 1)
+            if ((chkCaracterCovid.Items.Count > 1) && (oUser.IdEfector.IdEfector==228))/// particularidad para labo central: ver com oparametrizar
             {
                 lblCaracterSisa.Visible = true;
                 chkCaracterCovid.Visible = true;
