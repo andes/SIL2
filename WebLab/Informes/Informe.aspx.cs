@@ -153,6 +153,7 @@ namespace WebLab.Informes
                 oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
 
                 lblCaracterCovid.Visible = false;
+                chkCaracterCovid.Visible = false;
                 m_ssql = "SELECT idCaracter,  nombre as nombre  FROM LAB_Caracter (nolock) ";
                 oUtil.CargarCheckBox(chkCaracterCovid, m_ssql, "idCaracter", "nombre");
                 for (int i = 0; i < chkCaracterCovid.Items.Count; i++)
@@ -161,6 +162,11 @@ namespace WebLab.Informes
                     chkCaracterCovid.Items[i].Selected = true;
                 }
 
+                if ((chkCaracterCovid.Items.Count > 1) && (oUser.IdEfector.IdEfector == 228))/// particularidad para labo central: ver com oparametrizar
+                {
+                    lblCaracterCovid.Visible = true;
+                    chkCaracterCovid.Visible = true;
+                }
                 ///Carga de combos de Origen
                 m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen (nolock)  WHERE (baja = 0)";
                 oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
