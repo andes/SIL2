@@ -69,6 +69,7 @@
                       </td>
                       <td class="" >
                           <asp:TextBox runat="server" ID="tb_nrolote" CssClass="form-control input-sm" Width="200px"  />
+                          <asp:CustomValidator id="cv_nroLote" runat="server" ErrorMessage="Nro de Lote inexistente" OnServerValidate="cv_nroLote_ServerValidate" ControlToValidate="tb_nrolote" Display="Static" ValidationGroup="0"/>
                       </td>
                   </tr>
 						
@@ -92,11 +93,18 @@
                                         
 				    </tr>
 
-					<tr> 	<td colspan="2"><hr /></td> </tr>
-						
+					<tr> 	<td colspan="2">
+                        <hr />
+                            <asp:CustomValidator ID="cv_botonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
+
+
+					     	</td> </tr>
+					<tr colspan="2" align="right">
+                	</tr>
                      <tr>
 						<td colspan="2" align="right">
-                                <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" Width="100" onclick="btnBuscar_Click" Text="Buscar" ValidationGroup="0" /> </td>
+                                <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" Width="100" onclick="btnBuscar_Click" Text="Buscar" ValidationGroup="0" />
+						</td>
                      </tr>
 
 				  

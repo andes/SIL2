@@ -142,6 +142,7 @@
     <Compile Include="Data\Laboratorio\AlarmaScreening.cs" />
     <Compile Include="Data\Laboratorio\AuditoriaItem.cs" />
     <Compile Include="Data\Laboratorio\AuditoriaLoteDerivacion.cs" />
+    <Compile Include="Data\Laboratorio\ConfiguracionAreaEtiqueta.cs" />
     <Compile Include="Data\Laboratorio\DerivacionMotivoCancelacion.cs" />
     <Compile Include="Data\Laboratorio\EfectorRel.cs" />
     <Compile Include="Data\Laboratorio\Ficha.cs" />
