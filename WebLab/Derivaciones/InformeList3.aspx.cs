@@ -25,6 +25,8 @@ namespace WebLab.Derivaciones
     public partial class InformeList3 : System.Web.UI.Page
     {
         public Usuario oUser = new Usuario();
+        public CrystalReportSource oCr = new CrystalReportSource();
+        Configuracion oCon = new Configuracion();
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -64,6 +66,7 @@ namespace WebLab.Derivaciones
 
                     }
                     CargarGrilla();
+                    habilitarImprresion(); //solo para derivaciones anteriores a lote
                 }
                 else
                 {
@@ -107,6 +110,23 @@ namespace WebLab.Derivaciones
             m_ssql = "SELECT idMotivo, descripcion FROM LAB_DerivacionMotivoCancelacion WHERE baja = 0";
             oUtil.CargarCombo(ddl_motivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
             ddl_motivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+
+            
+            
+        }
+        private void habilitarImprresion()
+        {
+            if (Convert.ToInt32(Request["Estado"]) == 1)
+            {
+                gvLista.Columns[11].Visible = true;
+                lnkPDF.Visible = true;
+                ddl_motivoCancelacion.Enabled = false;
+            }
+            else
+            {
+                gvLista.Columns[11].Visible = false;
+                lnkPDF.Visible = false;
+            }
         }
         private void limpiarForm()
         {
@@ -204,14 +224,22 @@ namespace WebLab.Derivaciones
             }
         }
 
-        protected bool HabilitarCheck(int estado)
+        protected bool HabilitarCheck(int estado, int idLote)
         {
             switch (estado)
             {
                 case 0: //Pendiente de derivar
                     return true;
                 case 1: //Enviado
-                    return false; //ya se envio el lote
+                    if(idLote == 0) //Son enviados sin lote, corresponde a version anterior
+                    {
+                        return true; //se habilita el check para que puedan seleccionar al imprimir
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                   
                 case 2: //No Enviado
                     return true;
                 case 3: //Recibido
@@ -490,5 +518,101 @@ namespace WebLab.Derivaciones
         }
         #endregion
 
+        protected void lnkPDF_Command(object sender, CommandEventArgs e)
+        {
+            //Para imprimir los PDF de las derivaciones anteriores a Lotes
+            MostrarInforme("pdf");
+        }
+        private void MostrarInforme(string tipo)
+        {
+            if (Session["idUsuario"] != null)
+            {
+
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+
+                DataTable dt = GetDataSet(GenerarListaProtocolos(), tipo);
+
+                if (dt.Rows.Count > 0)
+                {
+                    string informe = "../Informes/Derivacion.rpt";
+
+                    ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
+                    encabezado1.Value = oCon.EncabezadoLinea1;
+                    ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+                    encabezado2.Value = oCon.EncabezadoLinea2;
+                    ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+                    encabezado3.Value = oCon.EncabezadoLinea3;
+
+                    oCr.Report.FileName = informe;
+                    oCr.ReportDocument.SetDataSource(dt);
+                    oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
+                    oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
+                    oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
+                    oCr.DataBind();
+
+                    Utility oUtil = new Utility();
+                    string nombrePDF = oUtil.CompletarNombrePDF(oUser.IdEfector.IdEfector2.Trim() + "_Derivaciones");
+                    oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
+                }
+            }
+            else 
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+
+        protected void lnkPDF_Click(object sender, EventArgs e)
+        {
+            MostrarInforme("pdf");
+        }
+        private DataTable GetDataSet(string s_lista, string s_donde)
+        {
+            string s_vta_LAB = "vta_LAB_Derivaciones";
+            string s_iddetalle = "";
+            if (s_donde != "pdf")
+                s_iddetalle = "idDetalleProtocolo,";
+
+            string m_strSQL = " SELECT " + s_iddetalle + " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
+            " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , solicitante as especialista " +
+            " FROM  " + s_vta_LAB + " WHERE " + Request["Parametros"].ToString();
+           
+            if (s_donde != "pdf")
+            {
+                m_strSQL += "  and estado= " + Request["Estado"].ToString();
+            }
+            else
+                m_strSQL += "  and estado= 1";
+
+
+            if (s_lista != "")
+                m_strSQL += "  and idDetalleProtocolo in (" + s_lista + ")";
+
+            m_strSQL += " ORDER BY efectorDerivacion,numero ";
+
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
+        }
+        private string GenerarListaProtocolos()
+        {
+            string m_lista = "";
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+
+                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                if (a.Checked == true)
+                {
+                    if (m_lista == "")
+                        m_lista += gvLista.DataKeys[row.RowIndex].Value.ToString();
+                    else
+                        m_lista += "," + gvLista.DataKeys[row.RowIndex].Value.ToString();
+                }
+            }
+            return m_lista;
+        }
     }
 }
