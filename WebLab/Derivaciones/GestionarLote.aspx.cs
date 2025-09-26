@@ -21,14 +21,18 @@ using Business.Data;
 namespace WebLab.Derivaciones
 {
     public partial class GestionarLote : System.Web.UI.Page
-    {      
+    {
+        public Usuario oUser = new Usuario();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
             {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (!Page.IsPostBack)
                 {
-                
+                    VerificaPermisos("Gestionar Lotes");
+                    //Session["GrillaGestionLotes"] = null; --> no se usa
                     lblTitulo.Text = "LOTES";
                       
                     CargarListas();
@@ -36,10 +40,7 @@ namespace WebLab.Derivaciones
                     txtFechaDesde.Value = DateTime.Now.ToShortDateString();
                     txtFechaHasta.Value = DateTime.Now.ToShortDateString();
                     txtFechaDesde.Focus();
-                    
                 }
-                
-
             }
                 else Response.Redirect("../FinSesion.aspx", false);
         }
@@ -52,18 +53,20 @@ namespace WebLab.Derivaciones
                 int i_permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
                 switch (i_permiso)
                 {
-                    case 0: Response.Redirect("../AccesoDenegado.aspx", false); break;
+                    case 0:
+                        Response.Redirect("../AccesoDenegado.aspx", false);
+                        break;
+                        //case 1: btn .Visible = false; break;
                 }
             }
-            else Response.Redirect("../FinSesion.aspx", false);
+            else
+                Response.Redirect("../FinSesion.aspx", false);
         }
 
-        private void CargarListas()
 
+        private void CargarListas()
         {
-            Usuario oUser = new Usuario();
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-           
+            
             Utility oUtil = new Utility();
 
             string m_ssql = "SELECT  E.idEfector, E.nombre " +
@@ -86,13 +89,10 @@ namespace WebLab.Derivaciones
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            {
-                if (Session["idUsuario"] != null)
+             if (Session["idUsuario"] != null)
+             {
+                if (Page.IsValid)
                 {
-                    Usuario oUser = new Usuario();
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
                     DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
                     DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
                     string str_condicion = " 1= 1 AND fechaRegistro >='" + fecha1.ToString("yyyyMMdd") + " 00:00:00.000' and fechaRegistro <='" + fecha2.ToString("yyyyMMdd") + " 23:59:59.999'";
@@ -100,15 +100,74 @@ namespace WebLab.Derivaciones
                     if (ddlEfector.SelectedValue != "0") str_condicion += " AND l.idEfectorDestino = " + ddlEfector.SelectedValue;
                     str_condicion += " AND idEfectorOrigen = " + oUser.IdEfector.IdEfector.ToString();
 
-                    if (!string.IsNullOrWhiteSpace(tb_nrolote.Text)){
+                    if (!string.IsNullOrWhiteSpace(tb_nrolote.Text))
+                    {
                         str_condicion += " AND idLoteDerivacion = " + tb_nrolote.Text;
                     }
 
-                   Response.Redirect("InformeLote.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue, false);
+                    verificaResultados(Convert.ToInt32(rdbEstado.SelectedValue), str_condicion);
+                  
                    
                 }
-                else Response.Redirect("../FinSesion.aspx", false);
+                
+             }
+              else 
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+
+        
+
+        protected void cv_nroLote_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            try
+            {
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(args.Value));
+                args.IsValid = true;
+            }
+            catch (Exception)
+            {
+                args.IsValid = false;
             }
         }
+
+        private void verificaResultados(int estado, string parametros)
+        {
+            string m_strSQL = " SELECT idLoteDerivacion as numero, e.nombre as efectorderivacion, l.estado, l.idEfectorDestino as idEfectorDerivacion," +
+                             " fechaRegistro, " +
+                             " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
+                             "  l.observacion ,uEmi.username as usernameE, isnull(uRecep.username, '' )  as usernameR " +
+                             " FROM LAB_LoteDerivacion l " +
+                             " inner join Sys_Efector e on e.idEfector=l.idEfectorDestino " +
+                             " inner join Sys_Usuario uEmi on uEmi.idUsuario = idUsuarioRegistro " +
+                             " left join Sys_Usuario uRecep on uRecep.idUsuario = idUsuarioEnvio " +
+                             " where " + parametros + " AND baja = 0  AND estado = " + estado +
+                             " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
+
+            DataTable dt = GetData(m_strSQL);
+
+            if (dt.Rows.Count > 0)
+            {
+                Response.Redirect("InformeLote.aspx?Parametros=" + parametros + "&Estado=" + estado, false);
+            }
+            else
+            {
+                cv_botonBuscar.IsValid = false; //que de error sin enviar alert
+            }
+
+            
+        }
+        private DataTable GetData(string m_strSQL)
+        {
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;//LAB-130 usar conexion principal no la de consulta
+            SqlDataAdapter adapter = new SqlDataAdapter
+            {
+                SelectCommand = new SqlCommand(m_strSQL, conn)
+            };
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
+        }
+
     }
 }
