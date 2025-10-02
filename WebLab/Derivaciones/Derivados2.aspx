@@ -76,7 +76,7 @@
 						<td class="myLabelIzquierda">Fecha Desde:<asp:RequiredFieldValidator ID="rfvFechaDesde" 
                                 runat="server" ControlToValidate="txtFechaDesde" ErrorMessage="Fecha Desde" 
                                 ValidationGroup="0">*</asp:RequiredFieldValidator>
-                        </td>
+						</td>
 						<td>
                     <input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
                          onblur="valFecha(this)" 
@@ -146,7 +146,7 @@
 						<tr>
 						<td   colspan="2">
                             <hr />
-                            <asp:CustomValidator ID="cvBotonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
+                            <asp:CustomValidator ID="cvBotonBuscar"  runat="server" ValidationGroup="0"   OnServerValidate="cvBotonBuscar_ServerValidate"/>
 
 
 						</td> 
