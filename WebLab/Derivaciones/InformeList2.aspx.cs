@@ -390,19 +390,28 @@ namespace WebLab.Derivaciones
                             oDetalle.Save();
                             oDetalle.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario);
 
-                            /*Actualiza estado de protocolo*/
-                            if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
-                                oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
-                            else
-                            {
-                                if (oDetalle.IdProtocolo.EnProceso())
+                                /*Actualiza estado de protocolo
+                                0: no procesado --rojo
+                                1: en proceso - amarillo
+                                2: terminado - verde
+                                3: bloqueado - candadito
+                                Si el estado=2  (o 3) no recalcula el estado del protocolo.
+                                */
+                                if (oDetalle.IdProtocolo.Estado < 2)
                                 {
-                                    oDetalle.IdProtocolo.Estado = 1;//en proceso
-                                                                    // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
+                                        oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                                    else
+                                    {
+                                        if (oDetalle.IdProtocolo.EnProceso())
+                                        {
+                                            oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                                                            // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                        }
+                                        else
+                                            oDetalle.IdProtocolo.Estado = 0;
+                                    }
                                 }
-                                else
-                                    oDetalle.IdProtocolo.Estado = 0;
-                            }
                             oDetalle.IdProtocolo.Save();
 
                             

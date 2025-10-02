@@ -67,7 +67,7 @@
                  
                    <div class="form-group" >
 
-            <asp:CheckBoxList ID="chkItem" runat="server" RepeatDirection="Horizontal" Font-Size="14pt" OnSelectedIndexChanged="chkItem_SelectedIndexChanged"></asp:CheckBoxList>
+            <asp:CheckBoxList ID="chkItem" runat="server" RepeatDirection="Horizontal" Font-Size="14pt" OnSelectedIndexChanged="chkItem_SelectedIndexChanged" RepeatColumns="6"></asp:CheckBoxList>
                        </div>
                     <hr />
                    <div class="form-group" >

@@ -1,4 +1,4 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InformeList3.aspx.cs" Inherits="WebLab.Derivaciones.InformeList3" MasterPageFile="~/Site1.Master" %>
+Ôªø<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InformeList3.aspx.cs" Inherits="WebLab.Derivaciones.InformeList3" MasterPageFile="~/Site1.Master" %>
 <%--<%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>--%>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
@@ -29,7 +29,7 @@
                 case "2": //Opcion: No enviado
                     if (motivoCancelacion.value == "0") { // if (txtObservacion.value.trim() == "") --> Cambio TextBox por DropDownList
                         label.className = 'exposed';
-                        todoOk = false; // Evitar el envÌo del formulario
+                        todoOk = false; // Evitar el env√≠o del formulario
                     }
                     else {
                         todoOk = validarGrilla();
@@ -40,7 +40,7 @@
                     todoOk = validarGrilla();
                     break;
             }
-            console.log("final validacion ", todoOk);
+            //console.log("final validacion ", todoOk);
             return todoOk;
 
         }
@@ -56,7 +56,7 @@
                 var CheckBox1 = row.querySelector('[id$="CheckBox1"]');
 
                 if (CheckBox1.checked) {
-                    return true; // Detiene la validaciÛn con al menos un check
+                    return true; // Detiene la validaci√≥n con al menos un check
                 }
             }
             var label = document.getElementById('<%= lbl_errorLista.ClientID %>');
@@ -120,7 +120,9 @@
             var checkboxes = grid.querySelectorAll('input[type="checkbox"]');
 
             checkboxes.forEach(function (chk) {
-                chk.checked = seleccionar;
+                if (!chk.disabled) {   // ‚úÖ ignora los que est√°n inhabilitados
+                    chk.checked = seleccionar;
+                }
             });
             //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
             if (seleccionar && document.getElementById('<%= lbl_errorLista.ClientID %>').className == 'exposed') {
@@ -136,7 +138,7 @@
         const hdnGrid = document.getElementById('<%= gvLista.ClientID %>');
         const formElements = document.querySelectorAll("input, select, textarea");
 
-        // Guardamos los valores originales al cargar la p·gina
+        // Guardamos los valores originales al cargar la p√°gina
         formElements.forEach(function (el) {
             const tipo = el.type?.toLowerCase();
             if (tipo === "checkbox") {
@@ -146,7 +148,7 @@
             }
         });
 
-        //Cuando se hace submit se evalua si hubo cambios (en la modificaciÛn)
+        //Cuando se hace submit se evalua si hubo cambios (en la modificaci√≥n)
         const form = document.forms[0];
         form.addEventListener("submit", function () {
             let cambioGeneral = false;
@@ -160,7 +162,7 @@
                 if (original !== actual) {
                     cambioGeneral = true;
 
-                    // Detectar si el checkbox pertenece a un GridView (ajust· si tu GridView tiene otro ID)
+                    // Detectar si el checkbox pertenece a un GridView (ajust√° si tu GridView tiene otro ID)
                     if (tipo === "checkbox" && el.closest("table")?.id?.includes("gv")) {
                         cambioEnGrid = true;
                     }
@@ -208,7 +210,8 @@
                                             Referencias:
                                                 <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
                                                 <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
-                                                <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;<br />
+                                                <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
+                                                <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;<br />
                                                 &nbsp;<br />
                         </td>
 				    </tr>
@@ -265,13 +268,8 @@
 				    </tr>
                     <tr>
                         <td>
-                          <%--  <asp:Panel runat="server" ID="pnlNroLote">
-                                <h2>
-                                    <span class="label label-default">
-                                          <asp:Label ID="lblNroLote" runat="server" ></asp:Label>  
-                                    </span>
-                                </h2>
-                            </asp:Panel>--%>
+                        <!-- (Casos anteriores) -->
+                         <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink"  onclick="lnkPDF_Click">Generar PDF Derivacion (Sin Lote)</asp:LinkButton>
                                 
                         </td>
                     </tr>
@@ -303,7 +301,8 @@
             
                                     <asp:TemplateField HeaderText="Sel." >
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")))%> ' 
+                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true" 
+                                                Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")), Convert.ToInt32(Eval("idLote"))) %> ' 
                                                 onchange='<%# string.Format("checkDeterminaciones(this, {0});", Eval("estado")) %>'
                                                 Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> '/>
                                         </ItemTemplate>
@@ -345,12 +344,16 @@
                                     <asp:TemplateField HeaderText="Motivo Cancelaci&oacute;n">
                                           <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("motivo") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
-                                    <asp:BoundField DataField="idLote" Visible="false">
-                                    </asp:BoundField>
-                                    <asp:TemplateField visible="false">
+
+                                    <asp:TemplateField HeaderText="Lote">
+                                          <ItemTemplate> <asp:Label ID="lbl_nroLote" runat="server" Text='<%# Eval("idLote") %>'/> </ItemTemplate>
+                                    </asp:TemplateField>
+
+                                    <asp:TemplateField Visible="false">
                                         <ItemTemplate> <asp:Label ID="lbl_estado" runat="server" Text='<%# Eval("estado") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
-                                </Columns>
+                                       
+                                   </Columns>
                                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                                 <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
                                 <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />

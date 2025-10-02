@@ -176,6 +176,18 @@
 						
                             &nbsp;</td>
                         </tr>
+                     <tr>
+                         <td>
+                             <label class="control-label" id="lblLoteDesde" runat="server"> Lote Desde:</label>
+                         </td>
+                         <td>
+                              <input id="txtLoteDesde" runat="server" type="text" maxlength="9"  tabindex="9" class="form-control input-sm" onblur="valNumero(this)"  style="width: 100px" 
+                                title="Ingrese el numero de lote de inicio (sin puntos ni guiones)"  /><label class="control-label" id="lblLoteHasta" runat="server">&nbsp;&nbsp;&nbsp;&nbsp;
+                             hasta:&nbsp;</label>
+                               <input id="txtLoteHasta" runat="server" type="text" maxlength="9"   tabindex="10" class="form-control input-sm"  onblur="valNumero(this)"
+                                style="width: 100px" title="Ingrese el numero de lote de fin (sin puntos ni guiones)"  />
+                         </td>
+                     </tr>
                         
 					<tr>
 						<td class="myLabelIzquierda">&nbsp;</td>

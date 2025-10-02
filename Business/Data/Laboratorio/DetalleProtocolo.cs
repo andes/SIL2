@@ -925,7 +925,7 @@ namespace Business.Data.Laboratorio
         }
 
 
-        public string BuscarResultadoAnterior(Item subitem, Item itemprincipal, bool conFecha)
+        public string BuscarResultadoAnterior_old(Item subitem, Item itemprincipal, bool conFecha)
         {            
             string s_resultadoAnterior = "";
             string s_idPaciente = this.IdProtocolo.IdPaciente.IdPaciente.ToString();
@@ -991,6 +991,70 @@ namespace Business.Data.Laboratorio
         }
 
 
+        public string BuscarResultadoAnterior(Item subitem, Item itemprincipal, bool conFecha)
+        {
+            string s_resultadoAnterior = "";
+            string s_idPaciente = this.IdProtocolo.IdPaciente.IdPaciente.ToString();
+            //     int s_idSubItem = this.IdSubItem.IdItem;
+            string s_idProtocoloActual = this.IdProtocolo.IdProtocolo.ToString();
+
+            ///Caro Perfomance: buscar directamente por sql server
+
+            ICriteria critProtocolo = m_session.CreateCriteria(typeof(DetalleProtocolo));
+
+            string ssql_Protocolo = @" IdDetalleProtocolo in ( select max (IdDetalleProtocolo) from LAB_DetalleProtocolo inner join LAB_Protocolo on LAB_Protocolo.IdProtocolo = LAB_DetalleProtocolo.IdProtocolo where LAB_DetalleProtocolo.IdSubItem = " + subitem.IdItem.ToString()+ @" and  LAB_Protocolo.Baja = 0 and LAB_Protocolo.Estado > 0 and LAB_Protocolo.IdPaciente = " + s_idPaciente + "  and LAB_Protocolo.IdProtocolo < " + s_idProtocoloActual + " and LAB_DetalleProtocolo.IdUsuarioValida>0 )";
+            critProtocolo.Add(Expression.Sql(ssql_Protocolo));
+            //Protocolo oUltimoProtocolo = (Protocolo)critProtocolo.List;
+
+            IList detalle = critProtocolo.List();
+
+            if (detalle.Count > 0)
+            {
+                foreach (DetalleProtocolo oUltimoResultado in detalle)
+
+                //if (oUltimoProtocolo != null)
+                {
+
+                    //ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+                    ////      crit.Add(Expression.Eq("IdItem", itemprincipal));// sin importar quien es el padre
+                    //crit.Add(Expression.Eq("IdSubItem", subitem));
+                    //crit.Add(Expression.Eq("IdProtocolo", oDetalle));
+                    //DetalleProtocolo oUltimoResultado = (DetalleProtocolo)crit.UniqueResult();
+
+                    if (oUltimoResultado != null)
+                    {
+                        Utility oUtil = new Utility();
+                        if ((oUltimoResultado.IdUsuarioValida > 0) && (oUltimoResultado.ConResultado))
+                        {
+                            //if (oUltimoResultado.IdSubItem.IdTipoResultado == 1)
+                            if (oUltimoResultado.ResultadoCar.Trim() == "")
+                            {
+                                decimal resultadoAnterior = oUltimoResultado.ResultadoNum;
+                                //string formato = oUtil.Formato(subitem.FormatoDecimal.ToString());
+                                string formato = oUtil.Formato(oUltimoResultado.FormatoValida.ToString());
+                                decimal x = decimal.Parse(resultadoAnterior.ToString(formato));
+                                s_resultadoAnterior = x.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + oUltimoResultado.UnidadMedida;
+                            }
+                            else
+                            {
+                                s_resultadoAnterior = oUltimoResultado.ResultadoCar;
+                                if (s_resultadoAnterior.Length > 10)
+                                    s_resultadoAnterior = s_resultadoAnterior.Substring(0, 10);
+
+                            }
+                            if (conFecha) s_resultadoAnterior = s_resultadoAnterior + Environment.NewLine + oUltimoResultado.IdProtocolo.Fecha.ToShortDateString();
+                            //  break;
+                        }
+
+                        //else
+                        //  s_resultadoAnterior = "";
+                    }
+
+                }
+            }
+            return s_resultadoAnterior;
+
+        }
         public void GrabarAuditoriaDetalleProtocolo(string m_accion, int m_idusuario)
         {
             AuditoriaProtocolo oRegistro = new AuditoriaProtocolo();
