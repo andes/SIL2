@@ -239,11 +239,19 @@ namespace WebLab.Derivaciones
 
             if (dt.Rows.Count > 0)
             {
-                if (Request["tipo"] == "informe")
-                    Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta" , false);
+                if(dt.Rows.Count <= 5000)
+                {
+                    if (Request["tipo"] == "informe")
+                        Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
+                    else
+                        if (Request["tipo"] == "resultado")
+                            Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+                }
                 else
-                if (Request["tipo"] == "resultado")
-                    Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+                {
+                    cvBotonBuscar.IsValid = false;
+                    cvBotonBuscar.ErrorMessage = "La búsqueda ha superado el límite de procesamiento para la operación que desea realizar. Acote los filtros de búsqueda. Si cree que este mensaje es un error, póngase en contacto con el soporte del SIL.";
+                }
                
             }
             else
