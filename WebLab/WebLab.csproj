@@ -2087,6 +2087,7 @@
     <Content Include="Consulta\HistoriaClinicaFiltro.aspx" />
     <Content Include="Consulta\Procesa.aspx" />
     <Content Include="Consulta\ResultadoView.aspx" />
+    <Content Include="controldecambios.html" />
     <Content Include="Derivaciones\NuevoLote.aspx" />
     <Content Include="Derivaciones\InformeLote.aspx" />
     <Content Include="Derivaciones\GestionarLote.aspx" />
@@ -2690,26 +2691,6 @@
     <Content Include="Rutinas\RutinaMuestraEdit.aspx" />
     <Content Include="Rutinas\RutinaBroEdit.aspx" />
     <Content Include="Rutinas\RutinaBroList.aspx" />
-    <Content Include="Scripts SQL\20241223 LAB-18 Script derivaciones.sql" />
-    <Content Include="Scripts SQL\20250128 habilitacion cobas b211.sql" />
-    <Content Include="Scripts SQL\20250128 LAB_PostDatosEquipo_con_cobas.sql" />
-    <Content Include="Scripts SQL\20250129 actualiza impresion muestras.sql" />
-    <Content Include="Scripts SQL\20250129 Script para FFEE.sql" />
-    <Content Include="Scripts SQL\20250203 LABAPI_GetProtocolos_correccionEspacios %281%29.sql" />
-    <Content Include="Scripts SQL\20250204 LAB_GeneraProtocolosEnvio2_correcionFiltradoMuestrasCobasC311.sql" />
-    <Content Include="Scripts SQL\20250210 1.-NuevoCampoyPermisos.sql" />
-    <Content Include="Scripts SQL\20250210 2.-LAB_Resultados_correcionResultadoDeefcto.sql" />
-    <Content Include="Scripts SQL\20250318 ImpresionEtiquetaNoPaciente.sql" />
-    <Content Include="Scripts SQL\20250318 LAB_Mantenimiento.sql" />
-    <Content Include="Scripts SQL\20250319 LABAPI_GetResultadoProtocolo_Mejoras.sql" />
-    <Content Include="Scripts SQL\20250320 LAB_GeneraHT_correccion.sql" />
-    <Content Include="Scripts SQL\20250326 habilitacionEquiposJunin.sql" />
-    <Content Include="Scripts SQL\20250326 LABAPI_GetProtocolos_CorreccionCaracteresEspeciales.sql" />
-    <Content Include="Scripts SQL\20250326 LABAPI_GetResultadoProtocolo_conobservaciones.sql" />
-    <Content Include="Scripts SQL\20250421 API-Analizadores-v1.sql" />
-    <Content Include="Scripts SQL\20250422 LAB_AnalisisFueraHT.sql" />
-    <Content Include="Scripts SQL\20250422 LAB_EstadisticaProduccion_new.sql" />
-    <Content Include="Scripts SQL\20250424 nuevoparametrosysmex.sql" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -4315,7 +4296,7 @@
     <Compile Include="AutoAnalizador\SysmexXN1000\ConfiguracionEdit.aspx.designer.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
-   <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.cs">
+    <Compile Include="AutoAnalizador\SysmexXP300\ConfiguracionEdit.aspx.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

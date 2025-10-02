@@ -88,6 +88,10 @@ namespace WebLab.Informes
                         chkDesdeUltimoListado.Visible = true;
                         //pnlHojaTrabajo.Visible = true;
                         //btnBuscar.Visible = false;
+                        txtLoteDesde.Visible = false;
+                        txtLoteHasta.Visible = false;
+                        lblLoteDesde.Visible = false;   
+                        lblLoteHasta.Visible = false;
                         CargarGrilla();
 
                     } break;
@@ -100,10 +104,14 @@ namespace WebLab.Informes
                         pnlHojaTrabajoResultado.Visible = false;
                         chkDesdeUltimoListado.Visible = false;
                         pnlAnalisisFueraHT.Visible = true;
-                   //     CargarAnalisisFueraHT();
-                        //pnlHojaTrabajo.Visible = false;
-                     //   btnBuscar.Visible = true;
-                    }
+                    //     CargarAnalisisFueraHT();
+                    //pnlHojaTrabajo.Visible = false;
+                    //   btnBuscar.Visible = true;
+                        txtLoteDesde.Visible = false;
+                        txtLoteHasta.Visible = false;
+                        lblLoteDesde.Visible = false;
+                        lblLoteHasta.Visible = false;
+                }
                     break;
 
                 case "CodigoBarras":
@@ -116,6 +124,8 @@ namespace WebLab.Informes
                         pnlHojaTrabajoResultado.Visible = false;
                         pnlAnalisisFueraHT.Visible = false;
                         rdbEstadoAnalisis.Visible = false; tituloEstado.Visible = false;
+                        txtLoteDesde.Visible = true; 
+                        txtLoteHasta.Visible = true;
 
                     }
                     break;
@@ -158,7 +168,7 @@ namespace WebLab.Informes
                 oUtil.CargarCheckBox(chkCaracterCovid, m_ssql, "idCaracter", "nombre");
                 for (int i = 0; i < chkCaracterCovid.Items.Count; i++)
                 {
-                    lblCaracterCovid.Visible = true;
+                   // lblCaracterCovid.Visible = true;
                     chkCaracterCovid.Items[i].Selected = true;
                 }
 
@@ -1359,9 +1369,10 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
 
             s_condicion = " and A.idTipoServicio=" + ddlServicio.SelectedValue;
-            s_condicion += " and De.estado=1 "; //Solo etiquetas marcadas como enviadas por requerimiento del usuario.
             s_condicion += " and P.idEfector=" + oUser.IdEfector.IdEfector.ToString();
             s_condicion += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.Fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
+            s_condicion += " and ((De.estado=4 and L.estado=1) or (De.estado =1 and L.estado =2))"; //Si esta Pendiente de Enviar la determinacion el lote esta creado, Si se derivo el lote la determinacion pasa a Enviada
+
 
             //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
@@ -1449,12 +1460,24 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
 
             //            }
 
-            m_strSQL = @" SELECT DISTINCT      P.idProtocolo
+
+            if (txtLoteDesde.Value != "")
+            {
+                s_condicion += " and L.idLoteDerivacion>=" + (txtLoteDesde.Value);
+            }
+
+            if(txtLoteHasta.Value != "")
+            {
+                s_condicion += " and L.idLoteDerivacion<=" + (txtLoteHasta.Value);
+            }
+
+                m_strSQL = @" SELECT DISTINCT      P.idProtocolo
         FROM         dbo.LAB_Protocolo AS P with (nolock)        
         INNER JOIN     dbo.LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo 
         INNER JOIN    LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo
         inner join   dbo.LAB_Item AS I with (nolock) ON DP.idItem = I.idItem  
         inner join        dbo.LAB_Area AS A with (nolock) ON I.idArea = A.idArea 
+        inner join      LAB_LoteDerivacion L with (nolock) ON De.idLote = L.idLoteDerivacion
         where P.baja=0   " + s_condicion;
 
             //      m_strSQL += " ORDER BY area";

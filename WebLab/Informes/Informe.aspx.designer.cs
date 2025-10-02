@@ -148,6 +148,42 @@ namespace WebLab.Informes {
         protected global::System.Web.UI.WebControls.CustomValidator cvNumeroDesde;
         
         /// <summary>
+        /// lblLoteDesde control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblLoteDesde;
+        
+        /// <summary>
+        /// txtLoteDesde control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtLoteDesde;
+        
+        /// <summary>
+        /// lblLoteHasta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblLoteHasta;
+        
+        /// <summary>
+        /// txtLoteHasta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtLoteHasta;
+        
+        /// <summary>
         /// chkDesdeUltimoListado control.
         /// </summary>
         /// <remarks>
