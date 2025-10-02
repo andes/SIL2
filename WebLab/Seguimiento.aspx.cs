@@ -93,7 +93,11 @@ namespace WebLab
             //            ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
 
             //m_ssql = "SELECT idItem, nombre   FROM LAB_Item where codigo in ('9001', '9002','9122') ";
-            m_ssql = "SELECT idItem, nombre   FROM LAB_Item with (nolock) where codigo in ('6728', '6769','9122') and baja=0";//Codigosd psra Sil2- en un futuro poner en alguna guia
+            m_ssql = @" SELECT idItem, nombre   FROM LAB_Item with (nolock)
+                        INNER JOIN LAB_Param ON PARSTR = CODIGO 
+                        where idParam = 2
+                        AND BAJA = 0 
+                        order by nombre ";//LAB_Param contiene los codidos para el seguimiento diario
             oUtil.CargarCheckBox (chkItem, m_ssql, "idItem", "nombre", connReady);
             for (int i = 0; i < chkItem.Items.Count; i++)
             {

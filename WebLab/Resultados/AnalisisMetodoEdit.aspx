@@ -21,18 +21,17 @@
          <div align="left" style="width:790px">
 
               
-                      <h5>   <asp:Label  ID="lblPaciente" runat="server" Text="Label"></asp:Label></h5>
+                      <h6> <strong> <asp:Label  ID="lblPaciente" runat="server" Text="Label"></asp:Label></strong> </h6>
              
-                <h5><asp:Label  ID="lblItem" runat="server" Text="Label"></asp:Label></h5>
-                      
-         <br />
-             Presentación:               <asp:DropDownList ID="ddlPresentacion" runat="server"></asp:DropDownList>
-                         <asp:RangeValidator ID="rvddlPresentacion" runat="server" ControlToValidate="ddlPresentacion" 
-                                ErrorMessage="Presentacion" MaximumValue="999999" MinimumValue="1" Type="Integer" 
-                                ValidationGroup="0">*</asp:RangeValidator>
-                                        
+                <h6> <asp:Label  ID="lblItem" runat="server" Text="Label"></asp:Label>   </h6>
+               
+              <h6> Presentación:               <asp:DropDownList ID="ddlPresentacion" Width="250px" runat="server"></asp:DropDownList>
+                      </h6>
+                                       
               <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0"  Width="100px" CssClass ="btn btn-primary"
-                                                onclick="btnGuardar_Click"    TabIndex="24" />
+                                                onclick="btnGuardar_Click"    TabIndex="24" />   <asp:RangeValidator ID="rvddlPresentacion" runat="server" ControlToValidate="ddlPresentacion" 
+                                ErrorMessage="Presentacion" MaximumValue="999999" MinimumValue="1" Type="Integer" 
+                                ValidationGroup="0">Debe seleccionar una presentación</asp:RangeValidator>
 
     </div>
                                                

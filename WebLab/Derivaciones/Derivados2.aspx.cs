@@ -113,7 +113,7 @@ namespace WebLab.Derivaciones
         private void CargarEstadoInforme()
         {
             Utility oUtil = new Utility();
-            string query_string = "SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (0,2,4)";
+            string query_string = "SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (0,1,2,4)";
             oUtil.CargarRadioButton(rdbEstado, query_string, "idEstado", "descripcion");
             rdbEstado.SelectedIndex = 0;
         }
@@ -240,10 +240,11 @@ namespace WebLab.Derivaciones
             if (dt.Rows.Count > 0)
             {
                 if (Request["tipo"] == "informe")
-                    Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
+                    Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta" , false);
                 else
-                    if (Request["tipo"] == "resultado")
-                        Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+                if (Request["tipo"] == "resultado")
+                    Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+               
             }
             else
             {
