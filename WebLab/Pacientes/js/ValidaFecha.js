@@ -169,3 +169,7 @@ function IsNumeric(sText)
    return IsNumber;   
 }
 
+// busca todas las ocurrencias de caracteres no numéricos y los borra, deja solo numeros
+function soloNumeros(input) {
+    input.value = input.value.replace(/\D/g, '');
+}
