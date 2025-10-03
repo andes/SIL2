@@ -7,12 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab {
-    
-    
+namespace WebLab
+{
+
+
     public partial class loginSIL
     {
-        
+
         /// <summary>
         /// Login1 control.
         /// </summary>
@@ -21,5 +22,23 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Login Login1;
+
+        /// <summary>
+        /// cb_aceptaTerminos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cb_aceptaTerminos;
+
+        /// <summary>
+        /// btn_aceptarTerminosCondiciones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_aceptarTerminosCondiciones;
     }
 }
