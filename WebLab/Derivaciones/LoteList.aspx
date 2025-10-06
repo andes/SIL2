@@ -31,6 +31,8 @@
                 buttonImageOnly: true
             });
         });
+
+       
     </script>
 </asp:Content>
 
@@ -81,7 +83,7 @@
                                 <tr>
                                     <td class="myLabelIzquierda">Efector Origen:</td>
                                     <td>
-                                        <asp:DropDownList ID="ddlEfectorOrigen" runat="server" ToolTip="Seleccione el efector" TabIndex="6" Width="250px" class="form-control input-sm"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlEfectorOrigen" runat="server" ToolTip="Seleccione el efector" TabIndex="6" Width="250px" class="form-control input-sm" OnSelectedIndexChanged="ddlEfectorOrigen_SelectedIndexChanged"  AutoPostBack="true"></asp:DropDownList>
                                     </td>
 
                                     <td class="myLabelIzquierda">Efector Destino:</td>
@@ -98,7 +100,7 @@
                                 <table style="width: 100%;">
                                     <tr>
                                         <td align="left">
-                                            <asp:CustomValidator ID="cvFechas" runat="server" ErrorMessage="Fechas de inicio y de fin" OnServerValidate="cvFechas_ServerValidate" ValidationGroup="0">Debe ingresar fechas de inicio y fin</asp:CustomValidator>
+                                            <asp:CustomValidator ID="cvFechas" runat="server" OnServerValidate="cvFechas_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                                         </td>
                                     </tr>
                                 </table>
@@ -108,11 +110,7 @@
                                 <table style="width: 100%;">
                                     <tr>
                                         <td align="right">
-                                            <label>Orden:</label><asp:DropDownList ID="ddlOrden" runat="server">
-                                                <asp:ListItem Selected="True" Value="Asc">Ascendente</asp:ListItem>
-                                                <asp:ListItem Value="Desc">Descendente</asp:ListItem>
-                                            </asp:DropDownList>
-                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
+                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary"  OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -125,26 +123,30 @@
                                         <td colspan="2">
 
                                             <asp:GridView ID="gvLista" runat="server" AllowPaging="True" CssClass="table table-bordered bs-table"
-                                                AutoGenerateColumns="False" CellPadding="2" DataKeyNames="idLote"
+                                                AutoGenerateColumns="False" CellPadding="2" DataKeyNames="numero"
                                                 EmptyDataText="No se encontraron lotes para los parametros de busqueda ingresados"
                                                 GridLines="Horizontal"
                                                 OnPageIndexChanging="gvLista_PageIndexChanging"
-                                                PageSize="20" Width="100%" BackColor="White">
+                                                PageSize="20" Width="100%" BackColor="White"
+                                                AllowSorting="True"
+                                                OnSorting="gvLista_Sorting">
                                                 <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
                                                 <Columns>
-                                                    <asp:BoundField DataField="idLote" HeaderText="Nro.">
+                                                    <asp:BoundField DataField="numero" HeaderText="Nro." SortExpression="numero">
                                                         <ItemStyle Width="5%" />
                                                     </asp:BoundField>
-                                                    <asp:BoundField DataField="fechaRegistro" HeaderText="Fecha Generaci&oacute;n">
+                                                    <asp:BoundField DataField="fechaRegistro" HeaderText="Fecha Generaci&oacute;n" SortExpression="fechaRegistro">
                                                         <ItemStyle HorizontalAlign="Center" Width="10%" />
                                                     </asp:BoundField>
-                                                    <asp:BoundField DataField="efectorOrigen" HeaderText="Efector Origen" />
-                                                    <asp:BoundField DataField="efectorDestino" HeaderText="Efector Destino" />
-                                                    <asp:BoundField DataField="estado" HeaderText="Estado" />
-                                                    <asp:BoundField DataField="username" HeaderText="Usuario Generaci&oacute;n" />
+                                                    <asp:BoundField DataField="efectorOrigen" HeaderText="Efector Origen" SortExpression="efectorOrigen" />
+                                                    <asp:BoundField DataField="idEfectorOrigen" Visible="false" />
+                                                    <asp:BoundField DataField="efectorDestino" HeaderText="Efector Destino" SortExpression="efectorDestino" />
+                                                    <asp:BoundField DataField="estado" HeaderText="Estado" SortExpression="estado" />
+                                                    <asp:BoundField DataField="username" HeaderText="Usuario Generaci&oacute;n" SortExpression="username" />
                                                     <asp:TemplateField HeaderText="Auditoria">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFAuditoria" OnCommand="lnkPDFAuditoria_Command" CommandArgument='<%# Eval("idLote") %>'>
+                                                            <asp:LinkButton runat="server" ID="lnkPDFAuditoria" OnCommand="lnkPDFAuditoria_Command" CommandArgument='<%# Eval("numero") %>'
+                                                                CommandName= '<%# Eval("idEfectorOrigen") %>'>
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
@@ -152,7 +154,8 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Reimprimir">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" OnCommand="lnkPDFImprimir_Command" CommandArgument='<%# Eval("idLote") %>'>
+                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" OnCommand="lnkPDFImprimir_Command" CommandArgument='<%# Eval("idEfectorOrigen") %>'
+                                                                CommandName= '<%# Eval("efectorOrigen") %>'>
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
@@ -186,7 +189,7 @@
             <tr>
                 <td colspan="5">
 
-                    <asp:Panel ID="pnlImpresion" runat="server" >
+                    <asp:Panel ID="pnlImpresion" runat="server">
                         <table style="width: 100%; vertical-align: top;">
                             <tr>
                                 <td align="left" style="vertical-align: top" colspan="2">

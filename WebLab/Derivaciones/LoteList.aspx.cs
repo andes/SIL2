@@ -23,33 +23,65 @@ namespace WebLab.Derivaciones
         public Configuracion oC = new Configuracion();
         public Usuario oUser = new Usuario();
         public CrystalReportSource oCr = new CrystalReportSource();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                oCr.Report.FileName = "";
+                oCr.CacheDuration = 0;
+                oCr.EnableCaching = false;
+                oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oC = (Configuracion) oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+
+        }
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
             {
                 if (!IsPostBack)
                 {
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                    oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
                     lblTitulo.Text = "LISTA DE LOTES";
+                    habilitaOrdenarEfector();
                     CargarFiltros();
                 }
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
+            
+        }
+        private void habilitaOrdenarEfector()
+        {
+            //solo ordeno por efector origen si es subsecretaria
+            string expresion = "";
+            if (oUser.IdEfector.IdEfector == 227) 
+                expresion = "efectorOrigen";
+
+            gvLista.Columns[2].SortExpression = expresion;
+        }
+        protected void Page_Unload(object sender, EventArgs e)
+        {
+            if (this.oCr.ReportDocument != null)
+            {
+                this.oCr.ReportDocument.Close();
+                this.oCr.ReportDocument.Dispose();
             }
         }
-       
         #region Validaciones
         protected void cvFechas_ServerValidate(object source, ServerValidateEventArgs args)
         {
             if (Session["idUsuario"] != null)
             {
+                DateTime fecha1 = new DateTime(), fecha2 = new DateTime();
+
                 try
                 {
-                    DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
-                    DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
+                    fecha1 = DateTime.Parse(txtFechaDesde.Value);
+                    fecha2 = DateTime.Parse(txtFechaHasta.Value);
                 }
                 catch
                 {
@@ -58,25 +90,74 @@ namespace WebLab.Derivaciones
                 }
 
                 if (txtFechaDesde.Value == "")
+                {
                     args.IsValid = false;
+                    cvFechas.ErrorMessage = "Fechas de inicio y de fin";
+                }
                 else
                 {
                     if (txtFechaHasta.Value == "")
+                    { 
                         args.IsValid = false;
+                        cvFechas.ErrorMessage = "Fechas de inicio y de fin";
+                    }
                     else
-                        args.IsValid = true;
+                    {
+                        if (fecha1.CompareTo(fecha2) <= 0)
+                            args.IsValid = true;
+                        else
+                        {
+                            cvFechas.ErrorMessage = "Fechas Desde no puede ser mayor a Fecha Hasta";
+                            args.IsValid = false;
+                        }
+                    }
                 }
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
+            
         }
 
         #endregion
 
         #region Inicializar
-      
+        private string consultaEfectorDestino(int efectorOrigen = 0)
+        {
+            string consulta = @"select distinct E.idEfector, E.nombre  
+                    from sys_efector E (nolock) 
+                    INNER JOIN LAB_LoteDerivacion l (nolock) on l.idEfectorDestino = E.idEfector 
+                    where l.baja=0 ";
+
+            if(efectorOrigen == 0)
+                return consulta + " order by E.nombre";
+            else
+                return consulta +"  and L.idEfectorOrigen= " + efectorOrigen + " ORDER BY E.nombre";
+        }
+
+        private string consultaGrilla(string str_condicion, string accion)
+        {
+            string str_sql, from;
+
+            if (accion == "excel")
+            {
+                str_sql = @"select idLoteDerivacion as [Nro.], fechaRegistro as [Fecha Registro],  efOrigen.nombre as [Efector Origen], 
+                            efDestino.nombre  as [Efector Destino], E.nombre AS Estado, isnull(U.apellido, 'Automatico') as Usuario";
+            }
+            else
+            {
+                str_sql = @"select idLoteDerivacion as numero, fechaRegistro,  efOrigen.nombre as efectorOrigen, efOrigen.idEfector as idEfectorOrigen,
+                            efDestino.nombre as efectorDestino, E.nombre AS estado, isnull(U.apellido, 'Automatico') as username";
+            }
+            from = @"  from LAB_LoteDerivacion L (nolock)
+                        INNER JOIN LAB_LoteDerivacionEstado E(nolock) ON E.idEstado = L.estado
+                        INNER JOIN Sys_Efector efOrigen (nolock) ON efOrigen.idEfector = L.idEfectorOrigen
+                        INNER JOIN Sys_Efector efDestino (nolock) ON efDestino.idEfector = L.idEfectorDestino
+                        INNER JOIN Sys_Usuario U (nolock) ON U.idUsuario = L.idUsuarioRegistro
+                        where " + str_condicion;
+
+           return str_sql + from;
+        }
+        
         private void CargarFiltros()
         {
             if (Session["idUsuario"] != null)
@@ -95,15 +176,18 @@ namespace WebLab.Derivaciones
                 ddlEstado.Items.Insert(0, new ListItem("--TODOS--", "0"));
 
                 //Efector origen y destino
-                if (oC.IdEfector.IdEfector == 227) //SUBSECRETARIA DE SALUD
+                if (oUser.IdEfector.IdEfector == 227) //SUBSECRETARIA DE SALUD
                 {  //Opción todos solo para nivel de subsecretaria de salud
-                    msql = "select distinct E.idEfector, E.nombre  from sys_efector E (nolock) " +
-                         " INNER JOIN lab_Configuracion C (nolock) on C.idEfector = E.idEfector " +
-                         " order by E.nombre";
+                    msql = @"select distinct E.idEfector, E.nombre  
+                              from sys_efector E (nolock) 
+                              INNER JOIN LAB_LoteDerivacion l (nolock) on l.idEfectorOrigen = E.idEfector  
+                              where l.baja=0
+                            order by E.nombre";
 
                     oUtil.CargarCombo(ddlEfectorOrigen, msql, "idEfector", "nombre", connReady);
                     ddlEfectorOrigen.Items.Insert(0, new ListItem("--TODOS--", "0"));
 
+                    msql = consultaEfectorDestino();
                     oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
                     ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
                 }
@@ -113,37 +197,29 @@ namespace WebLab.Derivaciones
                     oUtil.CargarCombo(ddlEfectorOrigen, msql, "idEfector", "nombre", connReady);
                     //DESTINO: Si es efector no subsecretaria de salud solo los efectores a los que el efector origen puede derivar
 
-                    msql = "SELECT  E.idEfector, E.nombre " +
-                           " FROM  Sys_Efector AS E " +
-                           " where E.idEfector IN  (SELECT DISTINCT idEfectorDerivacion " +
-                           " FROM   lab_itemEfector AS IE  WHERE Ie.disponible=1 and IE.idEfector<>Ie.idEfectorDerivacion and  IE.idEfector=" + oUser.IdEfector.IdEfector.ToString() + ")" +
-                           "    ORDER BY E.nombre";
+                    msql = consultaEfectorDestino(oUser.IdEfector.IdEfector);
+                  
                     oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
                     ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
                 }
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
         }
         private void CargarGrilla()
         {
             if (Session["idUsuario"] != null)
             {
-                gvLista.DataSource = GenerarGrilla();
+                gvLista.DataSource = GenerarGrilla("cargar");
                 gvLista.DataBind();
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
-
         }
 
-        private DataTable GenerarGrilla()
+        private DataTable GenerarGrilla(string accion)
         {
-            string str_condicion = " L.baja = 0 " , str_orden = " ORDER BY L.idLoteDerivacion " + ddlOrden.SelectedValue;
+            string str_condicion = " L.baja = 0 ";
 
             if (txtFechaDesde.Value != "")
             {
@@ -171,14 +247,7 @@ namespace WebLab.Derivaciones
             if (ddlEstado.SelectedValue != "0")
                 str_condicion += " AND L.estado = " + ddlEstado.SelectedValue;
 
-
-            string str_sql = @"select idLoteDerivacion as idLote, fechaRegistro,  efOrigen.nombre as efectorOrigen, efDestino.nombre as efectorDestino, E.nombre AS estado, u.username
-                                from LAB_LoteDerivacion L (nolock)
-                                INNER JOIN LAB_LoteDerivacionEstado E(nolock) ON E.idEstado = L.estado
-                                INNER JOIN Sys_Efector efOrigen (nolock) ON efOrigen.idEfector = L.idEfectorOrigen
-                                INNER JOIN Sys_Efector efDestino (nolock) ON efDestino.idEfector = L.idEfectorDestino
-                                INNER JOIN Sys_Usuario U (nolock) ON U.idUsuario = L.idUsuarioRegistro
-                                where " + str_condicion + str_orden;
+            string str_sql = consultaGrilla(str_condicion, accion);
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -187,9 +256,31 @@ namespace WebLab.Derivaciones
             adapter.Fill(Ds);
 
             CantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+            ViewState["Datos"] = Ds.Tables[0];
             return Ds.Tables[0];
         }
 
+        protected void ddlEfectorOrigen_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ddlEfectorDestino.Items.Clear();
+            int efectorOrigen = Convert.ToInt32(ddlEfectorOrigen.SelectedValue);
+            string msql;
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
+            Utility oUtil = new Utility();
+            if (efectorOrigen != 0)
+            {
+                msql = consultaEfectorDestino(efectorOrigen);
+                oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
+                ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
+            }
+            else
+            {
+                msql = consultaEfectorDestino();
+                oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
+                ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
+            }
+                
+        }
         #endregion
 
         #region Buscar
@@ -198,15 +289,10 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 if (Page.IsValid)
-                {
                     CargarGrilla();
-                }
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
-
         }
 
         #endregion
@@ -217,7 +303,7 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 int idLote = Convert.ToInt32(((System.Web.UI.WebControls.LinkButton)sender).CommandArgument);
-                string m_strSQL,  m_strCondicion;
+                string m_strSQL, m_strCondicion = "";
 
                 if (!oUser.Administrador)
                 {
@@ -228,7 +314,7 @@ namespace WebLab.Derivaciones
                             FROM LAB_AuditoriaLote AS A with (nolock)
                             left JOIN Sys_Usuario AS U with (nolock) ON A.idUsuario = U.idUsuario
                             inner join  LAB_LoteDerivacion L  with (nolock) on L.idLoteDerivacion= A.idLote
-                            where  L.idLoteDerivacion = " + idLote + " ORDER BY A.idAuditoriaLote";
+                            where  L.idLoteDerivacion = " + idLote + m_strCondicion + " ORDER BY A.idAuditoriaLote";
 
                 SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
                 SqlDataAdapter adapter = new SqlDataAdapter();
@@ -241,6 +327,15 @@ namespace WebLab.Derivaciones
                 {
                     ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                     ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+
+                    if (oUser.IdEfector.IdEfector == 227)
+                    {
+                        //tengo que cargar la configuracion del efector Origen
+                        int efectorOrigen = Convert.ToInt32(((LinkButton)sender).CommandName);
+                        oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", efectorOrigen);
+                    }
+
+                  
                     if (oC != null)
                     {
                         encabezado1.Value = oC.EncabezadoLinea1;
@@ -256,7 +351,7 @@ namespace WebLab.Derivaciones
                         Value = "Auditoria de Lote"
                     };
 
-                    oCr.Report.FileName = "AuditoriaLote.rpt";
+                    oCr.Report.FileName = "../Informes/AuditoriaLote.rpt";
                     oCr.ReportDocument.SetDataSource(data);
                     oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
                     oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
@@ -270,13 +365,11 @@ namespace WebLab.Derivaciones
                 else
                 {
                     string popupScript = "<script language='JavaScript'> alert('No se encontraron datos para el numero de lote ingresado.'); </script>";
-                    Page.RegisterStartupScript("PopupScript", popupScript);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "PopupScript", popupScript, true);
                 }
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
         }
 
         protected void lnkPDFImprimir_Command(object sender, CommandEventArgs e)
@@ -295,17 +388,20 @@ namespace WebLab.Derivaciones
                 if (Ds.Tables[0].Rows.Count > 0)
                 {
                     string informe = "../Informes/DerivacionLote.rpt";
-                    Configuracion oCon = new Configuracion();
-                    oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+                    
+                    if (oUser.IdEfector.IdEfector == 227)
+                    {
+                        //tengo que cargar la configuracion del efector Origen
+                        int efectorOrigen = Convert.ToInt32(((LinkButton)sender).CommandName);
+                        oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", efectorOrigen);
+                    }
 
                     ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
-                    encabezado1.Value = oCon.EncabezadoLinea1;
-
+                    encabezado1.Value = oC.EncabezadoLinea1;
                     ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
-                    encabezado2.Value = oCon.EncabezadoLinea2;
-
+                    encabezado2.Value = oC.EncabezadoLinea2;
                     ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
-                    encabezado3.Value = oCon.EncabezadoLinea3;
+                    encabezado3.Value = oC.EncabezadoLinea3;
 
                     oCr.Report.FileName = informe;
                     oCr.ReportDocument.SetDataSource(Ds.Tables[0]);
@@ -319,52 +415,60 @@ namespace WebLab.Derivaciones
                     oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
                 }
                 else
-                {
                     Response.Redirect("../FinSesion.aspx", false);
-                }
             }
         }
-       
+
         protected void lnkExcel_Click(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
             {
                 if (Page.IsValid)
                 {
-                    DataTable tabla = GenerarGrilla();
-                    if (tabla.Rows.Count > 0)
+                    if (gvLista.Rows.Count != 0)
                     {
-                        StringBuilder sb = new StringBuilder();
-                        StringWriter sw = new StringWriter(sb);
-                        HtmlTextWriter htw = new HtmlTextWriter(sw);
-                        Page pagina = new Page();
-                        HtmlForm form = new HtmlForm();
-                        GridView dg = new GridView();
-
-                        dg.EnableViewState = false;
-                        dg.DataSource = tabla;
-                        dg.DataBind();
-                        pagina.EnableEventValidation = false;
-                        pagina.DesignerInitialize();
-                        pagina.Controls.Add(form);
-                        form.Controls.Add(dg);
-                        pagina.RenderControl(htw);
-                        Response.Clear();
-                        Response.Buffer = true;
-                        Response.ContentType = "application/vnd.ms-excel";
-                        Response.AddHeader("Content-Disposition", "attachment;filename=Lotes.xls");
-                        Response.Charset = "UTF-8";
-                        Response.ContentEncoding = Encoding.Default;
-                        Response.Write(sb.ToString());
-                        Response.End();
+                        DataTable tabla = GenerarGrilla("excel");
+                        if (tabla.Rows.Count > 0)
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            StringWriter sw = new StringWriter(sb);
+                            HtmlTextWriter htw = new HtmlTextWriter(sw);
+                            HtmlForm form = new HtmlForm();
+                            GridView dg = new GridView();
+                            dg.EnableViewState = false;
+                            dg.DataSource = tabla;
+                            dg.DataBind();
+                            Page pagina = new Page();
+                            pagina.EnableEventValidation = false;
+                            pagina.DesignerInitialize();
+                            pagina.Controls.Add(form);
+                            form.Controls.Add(dg);
+                            pagina.RenderControl(htw);
+                            Utility oUtil = new Utility();
+                            string nombrXLS = oUtil.CompletarNombrePDF("Lotes");
+                            Response.Clear();
+                            Response.Buffer = true;
+                            Response.ContentType = "application/vnd.ms-excel";
+                            Response.AddHeader("Content-Disposition", "attachment;filename="+nombrXLS+".xls");
+                            Response.Charset = "UTF-8";
+                            Response.ContentEncoding = Encoding.Default;
+                            Response.Write(sb.ToString());
+                            Response.End();
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterStartupScript(this, GetType(), "PopupScript3", "alert('No hay datos para exportar.');", true);
+                        }
                     }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "PopupScript2", "alert('No hay datos para exportar.');", true);
+                    }
+
                 }
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
-
         }
 
         #endregion
@@ -380,10 +484,45 @@ namespace WebLab.Derivaciones
                 CargarGrilla();
             }
             else
-            {
                 Response.Redirect("../FinSesion.aspx", false);
-            }
         }
+
+        protected void gvLista_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                    DataTable dt = ViewState["Datos"] as DataTable;
+                    string sortDirection = GetSortDirection(e.SortExpression);
+                    dt.DefaultView.Sort = e.SortExpression + " " + sortDirection;
+                    gvLista.DataSource = dt;
+                    gvLista.DataBind();
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+        private string GetSortDirection(string column)
+        {
+            string sortDirection = "ASC";
+            string sortExpression = ViewState["SortExpression"] as string;
+
+            if (sortExpression != null)
+            {
+                if (sortExpression == column)
+                {
+                    string lastDirection = ViewState["SortDirection"] as string;
+                    if ((lastDirection != null) && (lastDirection == "ASC"))
+                        sortDirection = "DESC";
+                }
+            }
+
+            ViewState["SortDirection"] = sortDirection;
+            ViewState["SortExpression"] = column;
+            return sortDirection;
+        }
+
+
         #endregion
+
+       
     }
 }
