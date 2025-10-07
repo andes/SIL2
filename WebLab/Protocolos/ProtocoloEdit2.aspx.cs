@@ -141,7 +141,8 @@ namespace WebLab.Protocolos
         {
 
             if (!Page.IsPostBack)
-            {           
+            {
+                Session["matricula"] = ""; //para que lo borre de la sesion al entrar a un nuevo protocolo
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
                 if (Session["idUsuario"] != null)
@@ -3658,32 +3659,32 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         }
 
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        { 
-           
-
-            TxtDatosCargados.Value = TxtDatos.Value;
-
-            string sDatos = "";
-
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
-            
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
-
-            }
-
-          
+        {
 
 
-            TxtDatosCargados.Value = sDatos;
+            /* TxtDatosCargados.Value = TxtDatos.Value; // => Esta pisando los valores de la grilla TxtDatosCargados y TxtDatos no tiene guardada correctamente s/muestra
+
+             string sDatos = "";
+
+               string[] tabla = TxtDatos.Value.Split('@');
+
+             for (int i = 0; i < tabla.Length - 1; i++)
+             {
+                 string[] fila = tabla[i].Split('#');
+                 string codigo = fila[1].ToString();
+                 string muestra= fila[2].ToString();                
+
+                     if (sDatos == "")
+                         sDatos = codigo + "#" + muestra;
+                     else
+                         sDatos += ";" +  codigo + "#" + muestra;                                                        
+
+             }
+
+
+
+
+             TxtDatosCargados.Value = sDatos;*/
             //saco restriccion de forma temporal
             //if (Request["Operacion"].ToString()!="Modifica")
             //    if (!VerificarFechaPacienteMuestra())
@@ -3786,7 +3787,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
 
-                if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
+                if ((VerificaRequiereCaracter(TxtDatosCargados.Value)) && (ddlCaracter.SelectedValue == "0"))
                 //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
                 {
                     TxtDatos.Value = "";
@@ -3969,6 +3970,15 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             args.IsValid = true;
                     }
                 }//fin control
+
+                if(txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
+
+              
 
             }
         }
@@ -4426,9 +4436,43 @@ ORDER BY cantidad desc";
                                 //documento = pro[i].documento.ToString();
                                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula+ '#' + espe));
                             }
+
                             if (pro.Count > 1)
+                            {
                                 if (Request["idProtocolo"] == null)
                                 { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
+
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion + 1).Trim();
+
+
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+
 
                             lblErrorMedico.Visible = false;
 
@@ -4464,13 +4508,15 @@ ORDER BY cantidad desc";
         {
             public List<Matricula> matriculacion { get; set; }
             public string titulo { get; set; }
+            public string codigo { get; set; }
         }
 
         public class Matricula
 
         {
             public string  matriculaNumero { get; set; }
-           
+            public DateTime fin { get; set; }
+
         }
 
        
@@ -4480,6 +4526,8 @@ ORDER BY cantidad desc";
             public string nombre { get; set; }
             public string apellido { get; set; }
            public List<Profesiones> profesiones { get; set; }
+            public string cuit { get; set; }
+            public string id { get; set; } //id que trae de ANDES
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
             //public string FechaNac { get; set; }
@@ -4539,7 +4587,10 @@ ORDER BY cantidad desc";
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "") 
+                //Agregue que sea distinto de vacio porque al Cancelar sin traer matricula,
+                //deja un string vacio, que hacia que entrara al if y buscara nuevamente un medico
+                //haciendo que la ejecucion se extendiera innecesariamente
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
