@@ -30,6 +30,14 @@ namespace WebLab.Derivaciones
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
         }
+        protected void Page_Unload(object sender, EventArgs e)
+        {
+            if (this.oCr.ReportDocument != null)
+            {
+                this.oCr.ReportDocument.Close();
+                this.oCr.ReportDocument.Dispose();
+            }
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
