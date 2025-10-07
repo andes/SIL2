@@ -239,16 +239,25 @@ namespace WebLab.Derivaciones
 
             if (dt.Rows.Count > 0)
             {
-                if (Request["tipo"] == "informe")
-                    Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta" , false);
+                if(dt.Rows.Count <= 5000)
+                {
+                    if (Request["tipo"] == "informe")
+                        Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
+                    else
+                        if (Request["tipo"] == "resultado")
+                            Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+                }
                 else
-                if (Request["tipo"] == "resultado")
-                    Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
+                {
+                    cvBotonBuscar.IsValid = false;
+                    cvBotonBuscar.ErrorMessage = "La búsqueda ha superado el límite de procesamiento para la operación que desea realizar. Acote los filtros de búsqueda. Si cree que este mensaje es un error, póngase en contacto con el soporte del SIL.";
+                }
                
             }
             else
             {
-                cv_botonBuscar.IsValid = false; //que de error sin enviar alert
+                cvBotonBuscar.IsValid = false; //que de error sin enviar alert
+                cvBotonBuscar.ErrorMessage = "No hay coincidencias con los criterios ingresados.";
             }
 
 
@@ -277,6 +286,35 @@ namespace WebLab.Derivaciones
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             return Ds.Tables[0];
+        }
+
+        protected void cvBotonBuscar_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (Page.IsValid)
+            {
+                if (diferenciamayorunanio(DateTime.Parse(txtFechaDesde.Value), DateTime.Parse(txtFechaHasta.Value)) > 1)
+                {
+                    cvBotonBuscar.ErrorMessage = "No es posible generar información para mas de 1 año. Verifique.";
+                    args.IsValid = false;
+                }
+            }
+            else
+            {
+
+                cvBotonBuscar.ErrorMessage = "No hay coincidencias con los criterios ingresados.";
+                args.IsValid = false;
+            }
+        }
+
+
+        private double diferenciamayorunanio(DateTime desde, DateTime hasta)
+        {
+            double dif = 0;
+            TimeSpan diferencia = hasta - desde;
+
+            // 365.2425 días es la duración media de un año gregoriano (considerando años bisiestos)
+            dif = diferencia.TotalDays / 365.2425;
+            return dif;
         }
 
     }
