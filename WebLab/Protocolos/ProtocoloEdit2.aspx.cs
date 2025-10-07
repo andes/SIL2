@@ -4004,29 +4004,29 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         { 
            
 
-            TxtDatosCargados.Value = TxtDatos.Value;
+            /* TxtDatosCargados.Value = TxtDatos.Value; // => Esta pisando los valores de la grilla TxtDatosCargados y TxtDatos no tiene guardada correctamente s/muestra
 
-            string sDatos = "";
+             string sDatos = "";
 
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
-            
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
+               string[] tabla = TxtDatos.Value.Split('@');
 
-            }
+             for (int i = 0; i < tabla.Length - 1; i++)
+             {
+                 string[] fila = tabla[i].Split('#');
+                 string codigo = fila[1].ToString();
+                 string muestra= fila[2].ToString();                
 
-          
+                     if (sDatos == "")
+                         sDatos = codigo + "#" + muestra;
+                     else
+                         sDatos += ";" +  codigo + "#" + muestra;                                                        
+
+             }
 
 
-            TxtDatosCargados.Value = sDatos;
+
+
+             TxtDatosCargados.Value = sDatos;*/
             //saco restriccion de forma temporal
             //if (Request["Operacion"].ToString()!="Modifica")
             //    if (!VerificarFechaPacienteMuestra())

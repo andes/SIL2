@@ -883,9 +883,6 @@
             const validatorSpan = esPostBackValidacion();
             const txtDatosCargados = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
 
-            //console.log("postBack", postBack);
-            //console.log("validatorSpan", validatorSpan);
-            console.log("INICIO txtDatosCargados", txtDatosCargados);
             if (EsNuevoProtocolo()) {
                 if (txtDatosCargados === "") {
                     CrearFila(!validatorSpan && !postBack); // true si NO hay error de validación
@@ -1037,22 +1034,24 @@
         }
 
         function CargarDatos() {
-            var str = '';
-            for (var i = 0; i < contadorfilas; i++) {
-                var nroFila = document.getElementById('NroFila_' + i);
-                var cod = document.getElementById('Codigo_' + i);
-                var tarea = document.getElementById('Tarea_' + i);
-                var desde = document.getElementById('Desde_' + i);
-                console.log("cod.value", cod.value, "desde.checked", desde.checked);
-                if (cod != null && cod.value != '')
-                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
-            }
-            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
-            console.log("str TxtDatos", str);
+            setTimeout(() => { //Tuve que agregar esto, ya que tomaba valores desactualizados del DOM para el valor checked
+                var str = '';
+                for (var i = 0; i < contadorfilas; i++) {
+                    var nroFila = document.getElementById('NroFila_' + i);
+                    var cod = document.getElementById('Codigo_' + i);
+                    var tarea = document.getElementById('Tarea_' + i);
+                    var desde = document.getElementById('Desde_' + i);
+                   /* console.log("cod.value", cod.value, "desde.checked", desde.checked);*/
+                    if (cod != null && cod.value != '')
+                        str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+                }
+            
+             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
+          
 
             //Mantengo actualizado TxtDatosCargados por si se produce un postback al abrir el pop up de seleccionar medico
             CargarDatosTxtDatosCargados();
-
+            }, 0);
         }
 
         function PasarFoco(Fila) {
@@ -1267,6 +1266,7 @@
         function AgregarCargados() {
             CrearFila(true);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
+            /*console.log("Agrega Cargados ", elvalor);*/
             if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 for (var i = 0; i < (sTabla.length); i++) {
@@ -1441,7 +1441,7 @@
 
             CrearFilaInicial(0);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            console.log("el valor desde recargo es ", elvalor);
+            //console.log("el valor desde recargo es ", elvalor);
              if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 var largoTabla = (sTabla.length);
@@ -1503,9 +1503,7 @@
                 }
                 CargarDatos();
              }
-            console.log("Valores en memoria 'TxtDatosCargados' ", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value);
-            console.log("Valores en memoria 'TxtDatos'", document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value)
-
+          
         }
 
         function EsNuevoProtocolo() {
@@ -1546,6 +1544,7 @@
                   
                 }
             }
+          /*  console.log("str", str);*/
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = str;
         }
 
@@ -1553,6 +1552,7 @@
             var validatorSpan = document.getElementById('<%= cvValidacionInput.ClientID %>');
             var mensaje = validatorSpan.innerText;
             if (mensaje != '') {
+             /*   console.log("esPostBackValidacion! ");*/
                 return true;
             } else {
                 return false;
