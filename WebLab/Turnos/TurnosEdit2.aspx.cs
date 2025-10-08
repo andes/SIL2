@@ -994,7 +994,15 @@ ORDER BY cantidad desc";
                         return;
                     }
                     else
-                        args.IsValid = true;
+                    {
+                        if(ddlEspecialista.SelectedValue == "0" && txtEspecialista.Text != "0") //Trajo varios medicos pero elijio "--Seleccionar--"
+                        {
+                            args.IsValid = false;
+                            this.cvValidaPracticas.ErrorMessage = "Debe seleccionar médico solicitante del listado";
+                        }
+                        else
+                            args.IsValid = true;
+                    }
                 }
             }
             else
