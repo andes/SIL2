@@ -105,13 +105,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Panel pnlControl;
 
         /// <summary>
-        /// cvFechas control.
+        /// cvValidar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvFechas;
+        protected global::System.Web.UI.WebControls.CustomValidator cvValidar;
 
         /// <summary>
         /// pnlLista control.

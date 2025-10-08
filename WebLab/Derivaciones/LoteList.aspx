@@ -100,7 +100,7 @@
                                 <table style="width: 100%;">
                                     <tr>
                                         <td align="left">
-                                            <asp:CustomValidator ID="cvFechas" runat="server" OnServerValidate="cvFechas_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                                            <asp:CustomValidator ID="cvValidar" runat="server" OnServerValidate="cvValidar_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                                         </td>
                                     </tr>
                                 </table>
