@@ -51,40 +51,40 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.Label txtNumeroLote;
 
         /// <summary>
-        /// lb_efector control.
+        /// lbEfector control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lb_efector;
+        protected global::System.Web.UI.WebControls.Label lbEfector;
 
         /// <summary>
-        /// lbl_fechaPermitida control.
+        /// lblFechaPermitida control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_fechaPermitida;
+        protected global::System.Web.UI.WebControls.Label lblFechaPermitida;
 
         /// <summary>
-        /// hid_fechaEnvio control.
+        /// hidFechaEnvio control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hid_fechaEnvio;
+        protected global::System.Web.UI.WebControls.HiddenField hidFechaEnvio;
 
         /// <summary>
-        /// lbl_transportista control.
+        /// lblTransportista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_transportista;
+        protected global::System.Web.UI.WebControls.Label lblTransportista;
 
         /// <summary>
         /// txtFecha control.
@@ -96,13 +96,13 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.TextBox txtFecha;
 
         /// <summary>
-        /// txt_Hora control.
+        /// txtHora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl txt_Hora;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl txtHora;
 
         /// <summary>
         /// rfvFecha control.
@@ -114,48 +114,48 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFecha;
 
         /// <summary>
-        /// rfv_Hora control.
+        /// rfvHora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfv_Hora;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHora;
 
         /// <summary>
-        /// rv_Fecha control.
+        /// rvFecha control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rv_Fecha;
+        protected global::System.Web.UI.WebControls.RangeValidator rvFecha;
 
         /// <summary>
-        /// txt_obs control.
+        /// txtObs control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTextArea txt_obs;
+        protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObs;
 
         /// <summary>
-        /// btn_recibirLote control.
+        /// btnRecibirLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_recibirLote;
+        protected global::System.Web.UI.WebControls.Button btnRecibirLote;
 
         /// <summary>
-        /// btn_volver control.
+        /// btnVolver control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btn_volver;
+        protected global::System.Web.UI.WebControls.Button btnVolver;
     }
 }

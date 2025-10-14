@@ -128,11 +128,11 @@ namespace WebLab.Derivaciones
             txtObservacion.Enabled = valor;
             ddlEstados.Enabled = valor;
             //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-            ddl_Transporte.Enabled = valor;
+            ddlTransporte.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
-            txt_Fecha.Enabled = valor;
-            txt_Hora.Enabled = valor;
+            txtFecha.Enabled = valor;
+            txtHora.Enabled = valor;
         }
 
         private void CargarControles()
@@ -154,10 +154,10 @@ namespace WebLab.Derivaciones
 
         private void CargarTransportistas()
         {
-            ddl_Transporte.Items.Add("-- SELECCIONE --");
+            ddlTransporte.Items.Add("-- SELECCIONE --");
             //Vanesa: por ahora esta hardcodeado los transportitas, hacer mejora que lea de la base de datos
-            ddl_Transporte.Items.Add("Público");
-            ddl_Transporte.Items.Add("Privado");
+            ddlTransporte.Items.Add("Público");
+            ddlTransporte.Items.Add("Privado");
 
 
             //Utility oUtil = new Utility();
@@ -168,8 +168,8 @@ namespace WebLab.Derivaciones
         private void CargarFechaHoraActual()
         {
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
-            txt_Fecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
-            txt_Hora.Text = miFecha.ToString("HH:mm");
+            txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
+            txtHora.Text = miFecha.ToString("HH:mm");
             //Date1.Text = miFecha.Date.ToString("yyyy-MM-dd");
             //Time1.Text = miFecha.ToString("HH:mm");
         }
@@ -336,7 +336,7 @@ namespace WebLab.Derivaciones
                     int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
                     string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
                     //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddl_Transporte.SelectedValue : "");
+                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
                     LoteDerivacion lote = new LoteDerivacion();
                     lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
@@ -345,7 +345,7 @@ namespace WebLab.Derivaciones
                     lote.Observacion = observacion;
                     lote.IdUsuarioEnvio = idUsuario;
                     //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
-                    string fecha_hora = txt_Fecha.Text + " " + txt_Hora.Text;
+                    string fecha_hora = txtFecha.Text + " " + txtHora.Text;
                     lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                     lote.Save();
                    
@@ -405,10 +405,10 @@ namespace WebLab.Derivaciones
 
                     if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
                     {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
-                        DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Text.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Text.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Text.Substring(8, 2)));
+                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddlTransporte.SelectedValue);
+                        DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
                         lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
-                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txt_Hora.Text);
+                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
                     }
                     
                   

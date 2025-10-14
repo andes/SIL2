@@ -83,12 +83,12 @@ namespace WebLab.Protocolos
             gvProtocolosDerivados.DataSource = null;
             gvProtocolosDerivados.EmptyDataText = "";
             gvProtocolosDerivados.DataBind();
-            div_controlLote.Attributes["class"] = "form-group";
-            lbl_errorEfectorOrigen.Visible = false;
-            lbl_cantidadRegistros.Text = "";
-            lbl_estadoLote.Text = "";
-            btn_recibirLote.Enabled = false;
-            lbl_efectorOrigen.Text = "";
+            divControlLote.Attributes["class"] = "form-group";
+            lblErrorEfectorOrigen.Visible = false;
+            lblCantidadRegistros.Text = "";
+            lblEstadoLote.Text = "";
+            btnRecibirLote.Enabled = false;
+            lblEfectorOrigen.Text = "";
         }
         protected bool NoIngresado(int estado)
         {
@@ -135,23 +135,23 @@ namespace WebLab.Protocolos
             //Si el lote es Derivado se habilita el botón para recibirlo
             if (lote.Estado == 2)
             {
-                btn_recibirLote.Enabled = true;
+                btnRecibirLote.Enabled = true;
             }
 
             //Cargo el estado 
-            lbl_estadoLote.Text = lote.descripcionEstadoLote();
+            lblEstadoLote.Text = lote.descripcionEstadoLote();
 
             //Cargo el efector de Origen
             Efector efectorOrigen = new Efector();
             efectorOrigen = (Efector)efectorOrigen.Get(typeof(Efector), "IdEfector", lote.IdEfectorOrigen.IdEfector);
-            lbl_efectorOrigen.Text = efectorOrigen.Nombre;
+            lblEfectorOrigen.Text = efectorOrigen.Nombre;
 
             //Cargo grilla de protocolos para ingresar
             DataTable dt = LeerDatosProtocolosDerivados();
             if (dt.Rows.Count > 0)
             {
                 gvProtocolosDerivados.DataSource = dt;
-                lbl_cantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
+                lblCantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
             }
             else
             {
@@ -194,9 +194,9 @@ namespace WebLab.Protocolos
                 {
                     Efector e = new Efector();
                     e = (Efector)e.Get(typeof(Efector), lote.IdEfectorDestino.IdEfector);
-                    lbl_errorEfectorOrigen.Visible = true;
-                    lbl_errorEfectorOrigen.Text = "El lote no corresponde al efector del usuario '" + oC.IdEfector.Nombre + "'";
-                    div_controlLote.Attributes["class"] = "form-group has-error";
+                    lblErrorEfectorOrigen.Visible = true;
+                    lblErrorEfectorOrigen.Text = "El lote no corresponde al efector del usuario '" + oC.IdEfector.Nombre + "'";
+                    divControlLote.Attributes["class"] = "form-group has-error";
                     gvProtocolosDerivados.Visible = false; //para que no salga el cartel de grilla vacia
                     return false;
                 }
