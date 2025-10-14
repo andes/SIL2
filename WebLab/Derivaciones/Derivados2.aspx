@@ -146,7 +146,7 @@
 						<tr>
 						<td   colspan="2">
                             <hr />
-                            <asp:CustomValidator ID="cv_botonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
+                            <asp:CustomValidator ID="cvBotonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
 
 
 						</td> 

@@ -100,9 +100,9 @@ namespace WebLab.Derivaciones
                     if (ddlEfector.SelectedValue != "0") str_condicion += " AND l.idEfectorDestino = " + ddlEfector.SelectedValue;
                     str_condicion += " AND idEfectorOrigen = " + oUser.IdEfector.IdEfector.ToString();
 
-                    if (!string.IsNullOrWhiteSpace(tb_nrolote.Text))
+                    if (!string.IsNullOrWhiteSpace(tbNrolote.Text))
                     {
-                        str_condicion += " AND idLoteDerivacion = " + tb_nrolote.Text;
+                        str_condicion += " AND idLoteDerivacion = " + tbNrolote.Text;
                     }
 
                     verificaResultados(Convert.ToInt32(rdbEstado.SelectedValue), str_condicion);
@@ -152,7 +152,7 @@ namespace WebLab.Derivaciones
             }
             else
             {
-                cv_botonBuscar.IsValid = false; //que de error sin enviar alert
+                cvBotonBuscar.IsValid = false; //que de error sin enviar alert
             }
 
             
