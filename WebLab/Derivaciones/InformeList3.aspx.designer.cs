@@ -51,40 +51,40 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.DropDownList ddlEstado;
 
         /// <summary>
-        /// rv_estado control.
+        /// rvEstado control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rv_estado;
+        protected global::System.Web.UI.WebControls.RangeValidator rvEstado;
 
         /// <summary>
-        /// ddl_motivoCancelacion control.
+        /// ddlMotivoCancelacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_motivoCancelacion;
+        protected global::System.Web.UI.WebControls.DropDownList ddlMotivoCancelacion;
 
         /// <summary>
-        /// lbl_ErrorMotivo control.
+        /// lblErrorMotivo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_ErrorMotivo;
+        protected global::System.Web.UI.WebControls.Label lblErrorMotivo;
 
         /// <summary>
-        /// txt_observacion control.
+        /// txtObservacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_observacion;
+        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
 
         /// <summary>
         /// btnGuardar control.
@@ -105,13 +105,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.LinkButton lnkPDF;
 
         /// <summary>
-        /// lbl_errorLista control.
+        /// lblErrorLista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_errorLista;
+        protected global::System.Web.UI.WebControls.Label lblErrorLista;
 
         /// <summary>
         /// lnkMarcar control.

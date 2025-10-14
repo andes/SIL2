@@ -80,9 +80,9 @@ namespace WebLab.Derivaciones
         #region carga
         private void CargarParaModificacion()
         {
-            ddl_motivoCancelacion.SelectedValue = "0";
+            ddlMotivoCancelacion.SelectedValue = "0";
             ddlEstado.SelectedIndex = 2;
-            ddl_motivoCancelacion.Enabled = false;
+            ddlMotivoCancelacion.Enabled = false;
 
             //Observación
             Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
@@ -92,7 +92,7 @@ namespace WebLab.Derivaciones
             crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
             IList lista = crit.List();
             if (lista.Count > 0)
-                txt_observacion.Text = ((Business.Data.Laboratorio.Derivacion)lista[0]).Observacion;
+                txtObservacion.Text = ((Business.Data.Laboratorio.Derivacion)lista[0]).Observacion;
 
         }
         private void CargarListas()
@@ -108,8 +108,8 @@ namespace WebLab.Derivaciones
             oUtil = new Utility();
             //Motivos de cancelacion LAB-75
             m_ssql = "SELECT idMotivo, descripcion FROM LAB_DerivacionMotivoCancelacion WHERE baja = 0";
-            oUtil.CargarCombo(ddl_motivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
-            ddl_motivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+            oUtil.CargarCombo(ddlMotivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
+            ddlMotivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
             
             
@@ -120,7 +120,7 @@ namespace WebLab.Derivaciones
             {
                 gvLista.Columns[11].Visible = true;
                 lnkPDF.Visible = true;
-                ddl_motivoCancelacion.Enabled = false;
+                ddlMotivoCancelacion.Enabled = false;
             }
             else
             {
@@ -130,15 +130,15 @@ namespace WebLab.Derivaciones
         }
         private void limpiarForm()
         {
-            txt_observacion.Text = string.Empty;
-            ddl_motivoCancelacion.SelectedIndex = 0;
+            txtObservacion.Text = string.Empty;
+            ddlMotivoCancelacion.SelectedIndex = 0;
             ddlEstado.SelectedIndex = 0;
         }
 
         private void activarControles(bool valor)
         {
             btnGuardar.Enabled = valor;
-            txt_observacion.Enabled = valor;
+            txtObservacion.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
             //ddl_motivoCancelacion.Enabled = valor;
@@ -406,18 +406,18 @@ namespace WebLab.Derivaciones
             {
                 int estadoSeleccionado;
                 string resultadoDerivacion;
-                string observacion = txt_observacion.Text;
+                string observacion = txtObservacion.Text;
                 int idUsuarioRegistro = oUser.IdUsuario;  //Convert.ToInt32(Session["idUsuario"]);
                 int idUsuarioResultado = oUser.IdUsuario;
                 DateTime fechaDeHoy = DateTime.Now;
                 DateTime fechaDeHoyDetalle = DateTime.Now;
-                int MotivoCancelacion = int.Parse(ddl_motivoCancelacion.SelectedItem.Value);
+                int MotivoCancelacion = int.Parse(ddlMotivoCancelacion.SelectedItem.Value);
                 bool conResultado = true;
 
                 if (desasociaLote == 0)
                 {
                     estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);//Estado seleccionado => 2	No Enviado - 4  Pendiente para enviar
-                    resultadoDerivacion = (estadoSeleccionado == 2) ? "No Derivado: " + ddl_motivoCancelacion.SelectedItem.Text : "Pendiente para enviar ";
+                    resultadoDerivacion = (estadoSeleccionado == 2) ? "No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text : "Pendiente para enviar ";
                 }
                 else
                 {

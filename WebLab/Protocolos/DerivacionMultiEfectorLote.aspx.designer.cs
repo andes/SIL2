@@ -42,13 +42,13 @@ namespace WebLab.Protocolos
         protected global::WebLab.Protocolos.ProtocoloList1 ProtocoloList1;
 
         /// <summary>
-        /// div_controlLote control.
+        /// divControlLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_controlLote;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divControlLote;
 
         /// <summary>
         /// txtNumeroLote control.
@@ -78,40 +78,40 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.LinkButton lnkBuscar;
 
         /// <summary>
-        /// div_controlLote2 control.
+        /// divControlLote2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_controlLote2;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divControlLote2;
 
         /// <summary>
-        /// lbl_errorEfectorOrigen control.
+        /// lblErrorEfectorOrigen control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_errorEfectorOrigen;
+        protected global::System.Web.UI.WebControls.Label lblErrorEfectorOrigen;
 
         /// <summary>
-        /// lbl_efectorOrigen control.
+        /// lblEfectorOrigen control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_efectorOrigen;
+        protected global::System.Web.UI.WebControls.Label lblEfectorOrigen;
 
         /// <summary>
-        /// lbl_estadoLote control.
+        /// lblEstadoLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_estadoLote;
+        protected global::System.Web.UI.WebControls.Label lblEstadoLote;
 
         /// <summary>
         /// gvProtocolosDerivados control.
@@ -123,13 +123,13 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.GridView gvProtocolosDerivados;
 
         /// <summary>
-        /// lbl_cantidadRegistros control.
+        /// lblCantidadRegistros control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_cantidadRegistros;
+        protected global::System.Web.UI.WebControls.Label lblCantidadRegistros;
 
         /// <summary>
         /// ValidationSummary1 control.
@@ -141,12 +141,12 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
 
         /// <summary>
-        /// btn_recibirLote control.
+        /// btnRecibirLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btn_recibirLote;
+        protected global::System.Web.UI.WebControls.LinkButton btnRecibirLote;
     }
 }
