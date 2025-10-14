@@ -42,22 +42,22 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RangeValidator Range1;
 
         /// <summary>
-        /// ddl_Transporte control.
+        /// ddlTransporte control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Transporte;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTransporte;
 
         /// <summary>
-        /// lbl_ErrorTransporte control.
+        /// lblErrorTransporte control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_ErrorTransporte;
+        protected global::System.Web.UI.WebControls.Label lblErrorTransporte;
 
         /// <summary>
         /// txtObservacion control.
@@ -69,22 +69,22 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.TextBox txtObservacion;
 
         /// <summary>
-        /// lbl_ErrorMotivo control.
+        /// lblErrorMotivo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_ErrorMotivo;
+        protected global::System.Web.UI.WebControls.Label lblErrorMotivo;
 
         /// <summary>
-        /// txt_Fecha control.
+        /// txtFecha control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_Fecha;
+        protected global::System.Web.UI.WebControls.TextBox txtFecha;
 
         /// <summary>
         /// RequiredFieldValidator1 control.
@@ -96,13 +96,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
 
         /// <summary>
-        /// txt_Hora control.
+        /// txtHora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_Hora;
+        protected global::System.Web.UI.WebControls.TextBox txtHora;
 
         /// <summary>
         /// RequiredFieldValidator2 control.
@@ -123,13 +123,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Button btnGuardar;
 
         /// <summary>
-        /// lbl_errorLista control.
+        /// lblErrorLista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_errorLista;
+        protected global::System.Web.UI.WebControls.Label lblErrorLista;
 
         /// <summary>
         /// lnkMarcar control.

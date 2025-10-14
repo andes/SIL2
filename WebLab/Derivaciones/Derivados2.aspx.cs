@@ -248,7 +248,7 @@ namespace WebLab.Derivaciones
             }
             else
             {
-                cv_botonBuscar.IsValid = false; //que de error sin enviar alert
+                cvBotonBuscar.IsValid = false; //que de error sin enviar alert
             }
 
 

@@ -60,22 +60,22 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
 
         /// <summary>
-        /// tb_nrolote control.
+        /// tbNrolote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tb_nrolote;
+        protected global::System.Web.UI.WebControls.TextBox tbNrolote;
 
         /// <summary>
-        /// cv_nroLote control.
+        /// cvNroLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cv_nroLote;
+        protected global::System.Web.UI.WebControls.CustomValidator cvNroLote;
 
         /// <summary>
         /// ddlEfector control.
@@ -96,13 +96,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RadioButtonList rdbEstado;
 
         /// <summary>
-        /// cv_botonBuscar control.
+        /// cvBotonBuscar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cv_botonBuscar;
+        protected global::System.Web.UI.WebControls.CustomValidator cvBotonBuscar;
 
         /// <summary>
         /// btnBuscar control.
