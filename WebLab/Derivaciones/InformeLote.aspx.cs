@@ -73,14 +73,14 @@ namespace WebLab.Derivaciones
             }
         }
 
-        protected void Page_Unload(object sender, EventArgs e)
-        {
-            if (this.oCr.ReportDocument != null)
-            {
-                this.oCr.ReportDocument.Close();
-                this.oCr.ReportDocument.Dispose();
-            }
-        }
+        //protected void Page_Unload(object sender, EventArgs e)
+        //{
+        //    if (this.oCr.ReportDocument != null)
+        //    {
+        //        this.oCr.ReportDocument.Close();
+        //        this.oCr.ReportDocument.Dispose();
+        //    }
+        //}
 
 
         #region Carga
