@@ -73,7 +73,7 @@ namespace WebLab.Derivaciones
                             pnlNroLote.Visible = true;
                             HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
                             ddlEstado.SelectedIndex = 2;
-                            ddl_motivoCancelacion.Enabled = false;
+                            ddlMotivoCancelacion.Enabled = false;
                         }
 
                     }
@@ -424,7 +424,7 @@ namespace WebLab.Derivaciones
                     oDeriva.IdMotivoCancelacion = MotivoCancelacion;
 
                     //La observacion se cambia solo si es Alta, si se desasocia el lote, o si al modificar agrego una observacion
-                    if (Request["Tipo"] == "Alta" || desasociaLote == 1 ||(Request["Tipo"] == "Modifica" && !string.IsNullOrEmpty(txt_observacion.Text)))
+                    if (Request["Tipo"] == "Alta" || desasociaLote == 1 ||(Request["Tipo"] == "Modifica" && !string.IsNullOrEmpty(txtObservacion.Text)))
                     {
                             oDeriva.Observacion = observacion;
                     }
