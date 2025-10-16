@@ -802,7 +802,7 @@ namespace WebLab.Protocolos
                     {
                         ActualizarEstadoDerivacion(oRegistro);
                         VerificacionEstadoLote(oRegistro);
-                        Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&idLote=" + Request["idLote"]);
+                        Response.Redirect("ProtocoloMensaje.aspx?id=" + oRegistro.IdProtocolo + "&idLote=" + Request["idLote"] + "&idEfectorSolicitante=" + Request["idEfectorSolicitante"], false);
                     }
                 }
                 else
@@ -1601,7 +1601,7 @@ namespace WebLab.Protocolos
             {
                 case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=ListaProducto"); break;
                 case "Control": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control"); break;
-                case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&idLote=" + Request["idLote"]); break;
+                case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
             }
         }
       
@@ -2072,9 +2072,7 @@ namespace WebLab.Protocolos
                 btnCancelar.Text = "Cancelar";
                 btnCancelar.Width = Unit.Pixel(80);
                 ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
-                Muestra oMuestra = new Muestra();
-                oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "IdMuestra", oRegistro.IdMuestra, "Baja", false);
-                txtCodigoMuestra.Text = oMuestra.Codigo;
+                
 
 
                 #region CargaDeterminaciones
