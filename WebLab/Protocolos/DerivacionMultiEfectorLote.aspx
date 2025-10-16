@@ -97,7 +97,7 @@
                                                 <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
                                                 <%--<asp:BoundField DataField="EstadoDerivacion" HeaderText="Estado Derivacion" />--%>
                                                 <asp:BoundField DataField="idPaciente" Visible="false" />
-                                                <asp:BoundField DataField="paciente" HeaderText="Paciente" />
+                                                <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" />
                                                 <asp:BoundField DataField="idProtocolo" Visible="false" />
                                                 <asp:TemplateField>
                                                     <ItemTemplate>

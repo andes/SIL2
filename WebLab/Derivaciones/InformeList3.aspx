@@ -326,7 +326,7 @@
                                     <asp:BoundField DataField="dni" HeaderText="DNI" >
                                         <ItemStyle Width="10%" HorizontalAlign="Center" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="paciente" HeaderText="Paciente">
+                                    <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto">
                                         <ItemStyle Width="20%" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="determinacion" HeaderText="Practica a derivar">
