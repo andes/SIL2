@@ -2176,9 +2176,7 @@ namespace WebLab.Protocolos
                 btnCancelar.Text = "Cancelar";
                 btnCancelar.Width = Unit.Pixel(80);
                 ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
-                Muestra oMuestra = new Muestra();
-                oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "IdMuestra", oRegistro.IdMuestra, "Baja", false);
-                txtCodigoMuestra.Text = oMuestra.Codigo;
+                
 
 
                 #region CargaDeterminaciones
