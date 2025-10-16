@@ -33,6 +33,9 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCr.Report.FileName = "";
+                oCr.CacheDuration = 0;
+                oCr.EnableCaching = false;
             }
             else Response.Redirect("../FinSesion.aspx", false);
 
@@ -66,15 +69,16 @@ namespace WebLab.Derivaciones
                         if (Request["Tipo"] == "Modifica")
                         {
                             activarControles(true);
-                            CargarParaModificacion();
                             lblNroLote.Text = "NUMERO DE LOTE " + Convert.ToInt32(Request["idLote"]);
                             pnlNroLote.Visible = true;
                             HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
+                            ddlEstado.SelectedIndex = 2;
+                            ddl_motivoCancelacion.Enabled = false;
                         }
 
                     }
                     CargarGrilla();
-                    habilitarImprresion(); //solo para derivaciones anteriores a lote
+                    habilitarImpresion(); //solo para derivaciones anteriores a lote
                 }
                 else
                 {
@@ -86,23 +90,7 @@ namespace WebLab.Derivaciones
 
 
         #region carga
-        private void CargarParaModificacion()
-        {
-            ddl_motivoCancelacion.SelectedValue = "0";
-            ddlEstado.SelectedIndex = 2;
-            ddl_motivoCancelacion.Enabled = false;
-
-            //Observación
-            Business.Data.Laboratorio.LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
-            crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
-            IList lista = crit.List();
-            if (lista.Count > 0)
-                txt_observacion.Text = ((Business.Data.Laboratorio.Derivacion)lista[0]).Observacion;
-
-        }
+       
         private void CargarListas()
         {
             Utility oUtil = new Utility();
@@ -122,7 +110,7 @@ namespace WebLab.Derivaciones
             
             
         }
-        private void habilitarImprresion()
+        private void habilitarImpresion()
         {
             if (Convert.ToInt32(Request["Estado"]) == 1)
             {
@@ -157,6 +145,7 @@ namespace WebLab.Derivaciones
         {
             gvLista.DataSource = GetDataSet();
             gvLista.DataBind();
+
 
             if (gvLista.Rows.Count <= 0)
             {
@@ -279,26 +268,7 @@ namespace WebLab.Derivaciones
 
 
         #endregion
-
-        #region marcar
-        //protected void lnkMarcar_Click(object sender, EventArgs e) {
-        //    MarcarSeleccionados(true);
-        //}
-
-        //private void MarcarSeleccionados(bool p) {
-        //    foreach (GridViewRow row in gvLista.Rows) {
-        //        CheckBox a = ((CheckBox) (row.Cells[0].FindControl("CheckBox1")));
-        //        if (a.Checked == !p)
-        //            ((CheckBox) (row.Cells[0].FindControl("CheckBox1"))).Checked = p;
-        //    }
-        //    //PonerImagenes();
-        //}
-        //protected void lnkDesMarcar_Click(object sender, EventArgs e) {
-        //    MarcarSeleccionados(false);
-        //    //  PonerImagenes();
-        //}
-
-        #endregion
+        
 
         #region Guardar
         protected void btnGuardar_Click(object sender, EventArgs e)
@@ -422,6 +392,8 @@ namespace WebLab.Derivaciones
                 int MotivoCancelacion = int.Parse(ddl_motivoCancelacion.SelectedItem.Value);
                 bool conResultado = true;
 
+                
+
                 if (desasociaLote == 0)
                 {
                     estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);//Estado seleccionado => 2	No Enviado - 4  Pendiente para enviar
@@ -445,12 +417,18 @@ namespace WebLab.Derivaciones
                     //Cambia valores de la derivacion
                     #region Derivacion
                     oDeriva.Estado = estadoSeleccionado;
-                    oDeriva.Observacion = observacion;
                     oDeriva.IdUsuarioRegistro = idUsuarioRegistro;
                     oDeriva.FechaRegistro = fechaDeHoy;
                     oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                     oDeriva.Idlote = idLote;
                     oDeriva.IdMotivoCancelacion = MotivoCancelacion;
+
+                    //La observacion se cambia solo si es Alta, si se desasocia el lote, o si al modificar agrego una observacion
+                    if (Request["Tipo"] == "Alta" || desasociaLote == 1 ||(Request["Tipo"] == "Modifica" && !string.IsNullOrEmpty(txt_observacion.Text)))
+                    {
+                            oDeriva.Observacion = observacion;
+                    }
+
                     oDeriva.Save();
                     #endregion
 
