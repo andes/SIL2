@@ -43,7 +43,10 @@ namespace WebLab.Protocolos
             {
 
                 VerificaPermisos("Derivacion");
-                ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
+                if (Request["idServicio"].ToString() != "5")
+                    ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
+                else
+                    pnlTitulo.Visible = false;
 
                 if (Request["idLote"] != null)
                 {
@@ -218,7 +221,10 @@ namespace WebLab.Protocolos
 
             string m_strSQL =
                 @"select convert(varchar(10),P.fecha,103) as fecha, P.numero, P.idPaciente  as idPaciente, DE.descripcion as EstadoDerivacion , 
-                P.idProtocolo , L.idEfectorDestino , ef.nombre , Pa.nombre + ' ' + Pa.apellido as paciente
+                P.idProtocolo , L.idEfectorDestino , ef.nombre ,
+                case when P.idPaciente > 0 then
+				 Pa.nombre + ' ' + Pa.apellido 
+				 else P.descripcionProducto end as paciente
                 from LAB_Derivacion D
                 inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
                 inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
@@ -231,7 +237,7 @@ namespace WebLab.Protocolos
                 and D.estado=1
                 and D.idLote = " + txtNumeroLote.Text + @" 
                 group by P.fecha, P.numero, P.idPaciente, DE.descripcion,  P.idProtocolo ,
-                L.idEfectorDestino , ef.nombre ,  Pa.nombre + ' ' + Pa.apellido ";
+                L.idEfectorDestino , ef.nombre ,  Pa.nombre + ' ' + Pa.apellido ,P.descripcionProducto";
 
 
             DataSet Ds = new DataSet();
@@ -308,7 +314,7 @@ namespace WebLab.Protocolos
         private void GenerarNuevoProtocolo(int idProtocoloOrigen, int idPaciente)
         {
 
-            string pivot, m_numero, s_idServicio, idLote;
+            string m_numero, s_idServicio, idLote;
 
             Protocolo p = new Protocolo();
             p = (Protocolo)p.Get(typeof(Protocolo), idProtocoloOrigen);
@@ -316,15 +322,28 @@ namespace WebLab.Protocolos
             s_idServicio = p.IdTipoServicio.IdTipoServicio.ToString();
             m_numero = p.Numero.ToString();
             idLote = txtNumeroLote.Text;
-            // DataTable dt = TraerItemsDerivadosProtocolo(); //-> ahora lo voy a cargar desde ProtocoloEdit2
-
-            Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
-                     "&numeroProtocolo=" + m_numero +
-                     "&idServicio=" + s_idServicio +
-                     "&idLote=" + idLote +
-                     "&idPaciente=" + idPaciente +
-                      //"&Operacion=AltaDerivacionMultiEfectorLote&analisis=" + pivot, false); // No enviar los analisis por request
-                      "&Operacion=AltaDerivacionMultiEfectorLote", false);
+           
+            if(idPaciente > 0)
+            {
+                Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
+                    "&numeroProtocolo=" + m_numero +
+                    "&idServicio=" + s_idServicio +
+                    "&idLote=" + idLote +
+                    "&idPaciente=" + idPaciente +
+                     "&Operacion=AltaDerivacionMultiEfectorLote", false);
+            }
+            else
+            {
+                //Es Muestra No Pacientes
+                Response.Redirect("ProtocoloProductoEdit.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
+                   "&numeroProtocolo=" + m_numero +
+                   "&idServicio=" + s_idServicio +
+                   "&idLote=" + idLote +
+                   "&Desde=AltaDerivacionMultiEfectorLote" +
+                   "&Operacion=AltaDerivacionMultiEfectorLote" , false);
+                //idprotocolo
+            }
+           
         }
 
         #endregion
