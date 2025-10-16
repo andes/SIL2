@@ -1604,6 +1604,11 @@ namespace WebLab.Protocolos
                 case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
             }
         }
+                    }
+                    
+        
+           
+                   }
       
 
     
@@ -2044,11 +2049,6 @@ namespace WebLab.Protocolos
 
         }
 
-        protected void btnArchivos_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("ProtocoloAdjuntar.aspx?idProtocolo=" + Request["idProtocolo"].ToString() +"&desde=protocolo");
-        }
-
         private void CargarProtocoloDerivadoLote()
         {
             string numeroProtocolo = Request["numeroProtocolo"].ToString();
@@ -2146,6 +2146,11 @@ namespace WebLab.Protocolos
                 lote.ActualizaEstadoLote(oUser.IdUsuario, oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
                 // ActualizaEstadoLote(idLote, oRegistro);
             }
+        }
+    }
+        protected void btnArchivos_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ProtocoloAdjuntar.aspx?idProtocolo=" + Request["idProtocolo"].ToString() +"&desde=protocolo");
         }
     }
 }
