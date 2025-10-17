@@ -213,6 +213,7 @@ namespace WebLab.Derivaciones
             if (txtFechaHasta.Value != "")
             {
                 DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
+                fecha2 = fecha2.AddDays(1);
                 str_condicion += " AND l.fechaRegistro<= '" + fecha2.ToString("yyyyMMdd") + "'";
             }
 
@@ -323,7 +324,10 @@ namespace WebLab.Derivaciones
                     {
                         //tengo que cargar la configuracion del efector Origen
                         int efectorOrigen = Convert.ToInt32(((LinkButton)sender).CommandName);
-                        oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", efectorOrigen);
+                        Efector ef = new Efector();
+                        ef = (Efector) ef.Get(typeof(Efector), "IdEfector", efectorOrigen);
+                        oC = new Configuracion();
+                        oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", ef);
                     }
 
 
@@ -384,7 +388,10 @@ namespace WebLab.Derivaciones
                     {
                         //tengo que cargar la configuracion del efector Origen
                         int efectorOrigen = Convert.ToInt32(((LinkButton)sender).CommandName);
-                        oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", efectorOrigen);
+                        Efector ef = new Efector();
+                        ef = (Efector)ef.Get(typeof(Efector), "IdEfector", efectorOrigen);
+                        oC = new Configuracion();
+                        oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", ef);
                     }
 
                     ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();

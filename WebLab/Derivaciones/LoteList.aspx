@@ -32,7 +32,9 @@
             });
         });
 
-       
+        function soloNumeros(input) {
+            input.value = input.value.replace(/\D/g, '');
+        }
     </script>
 </asp:Content>
 
@@ -135,7 +137,7 @@
                                                     <asp:BoundField DataField="numero" HeaderText="Nro." SortExpression="numero">
                                                         <ItemStyle Width="5%" />
                                                     </asp:BoundField>
-                                                    <asp:BoundField DataField="fechaRegistro" HeaderText="Fecha Generaci&oacute;n" SortExpression="fechaRegistro">
+                                                    <asp:BoundField DataField="fechaRegistro" HeaderText="Fecha" SortExpression="fechaRegistro">
                                                         <ItemStyle HorizontalAlign="Center" Width="10%" />
                                                     </asp:BoundField>
                                                     <asp:BoundField DataField="efectorOrigen" HeaderText="Efector Origen" SortExpression="efectorOrigen" />
@@ -154,8 +156,8 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Reimprimir">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" OnCommand="lnkPDFImprimir_Command" CommandArgument='<%# Eval("idEfectorOrigen") %>'
-                                                                CommandName= '<%# Eval("efectorOrigen") %>'>
+                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" OnCommand="lnkPDFImprimir_Command" CommandArgument='<%# Eval("numero") %>'
+                                                                CommandName= '<%# Eval("idEfectorOrigen") %>'>
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
