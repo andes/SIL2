@@ -719,7 +719,7 @@
               <table width="100%">
                   <tr>
                       <td align="left">    <asp:Button ID="btnCancelar" runat="server" Text="Regresar" 
-                                                onclick="btnCancelar_Click" class="btn btn-default" TabIndex="99" 
+                                                onclick="btnCancelar_Click" class="btn btn-primary" TabIndex="99" 
                                                 CausesValidation="False" Width="80px" />                                                                                          </td>
                       <td>
                              <div class="checkbox"> <asp:CheckBox ID="chkRecordarPractica" runat="server"  CssClass="myLabelRojo"  Text="Recordar Datos" /></div>
@@ -778,7 +778,8 @@ function VerificaLargo (source, arguments)
         
         
         function InicioPagina()
-        {    
+        {
+
             if (document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value == "")
             {///protocolo nuevo
                 CrearFila(true);         
@@ -1231,7 +1232,7 @@ function VerificaLargo (source, arguments)
      }
 
 
-    </script>
+</script>
    
  
  </asp:Content>

@@ -7,10 +7,10 @@
            var validatorEstado = document.getElementById('<%= Range1.ClientID %>');
            var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');
            var estado = document.getElementById('<%= ddlEstados.ClientID %>');
-           var label = document.getElementById('<%= lbl_ErrorMotivo.ClientID %>');
-           var labelGrilla = document.getElementById('<%= lbl_errorLista.ClientID %>');
-           var lista_transporte = document.getElementById('<%= ddl_Transporte.ClientID %>');
-           var labelErrorTransporte = document.getElementById('<%= lbl_ErrorTransporte.ClientID %>');
+           var label = document.getElementById('<%= lblErrorMotivo.ClientID %>');
+           var labelGrilla = document.getElementById('<%= lblErrorLista.ClientID %>');
+           var lista_transporte = document.getElementById('<%= ddlTransporte.ClientID %>');
+           var labelErrorTransporte = document.getElementById('<%= lblErrorTransporte.ClientID %>');
 
            //Limpio los labels de error 
            label.className = 'hidden';
@@ -62,7 +62,7 @@
                    return true; // Detiene la validación con al menos un check
                }
            }
-           var label = document.getElementById('<%= lbl_errorLista.ClientID %>');
+           var label = document.getElementById('<%= lblErrorLista.ClientID %>');
            label.className = 'exposed';
            return todoOk; 
        }
@@ -71,8 +71,8 @@
         //Habilita la seleccion del listado desplegable donde estan los transportes
 
            var ddl = document.getElementById('<%= ddlEstados.ClientID %>');
-           var labelErrorTransporte = document.getElementById('<%= lbl_ErrorTransporte.ClientID%>');
-           var lista_transporte = document.getElementById('<%= ddl_Transporte.ClientID%>');
+           var labelErrorTransporte = document.getElementById('<%= lblErrorTransporte.ClientID%>');
+           var lista_transporte = document.getElementById('<%= ddlTransporte.ClientID%>');
            var estado = ddl.value;
            //console.log("--");
            //console.log(lista_transporte);
@@ -88,7 +88,7 @@
 
        function reseteaLabelErrorLote() {
         //Esconde el label que tiene el error
-           var labelGrilla = document.getElementById('<%= lbl_errorLista.ClientID %>');
+           var labelGrilla = document.getElementById('<%= lblErrorLista.ClientID %>');
            labelGrilla.className = 'hidden';
        }
 
@@ -104,8 +104,8 @@
 
        function verificaSeleccion() {
             //Esta funcion revisa que se haya selecionado un transporte
-           var lista_transporte = document.getElementById('<%= ddl_Transporte.ClientID %>');
-           var labelErrorTransporte = document.getElementById('<%= lbl_ErrorTransporte.ClientID %>');
+           var lista_transporte = document.getElementById('<%= ddlTransporte.ClientID %>');
+           var labelErrorTransporte = document.getElementById('<%= lblErrorTransporte.ClientID %>');
            //console.log("transporte");
            //console.log(lista_transporte.value);
            if (lista_transporte.selectedIndex == 0) {
@@ -116,8 +116,8 @@
        }
 
        document.addEventListener("DOMContentLoaded", function () {
-           var txtFecha = document.getElementById('<%= txt_Fecha.ClientID %>');
-           var txtHora = document.getElementById('<%= txt_Hora.ClientID %>');
+           var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
+           var txtHora = document.getElementById('<%= txtHora.ClientID %>');
 
            function cambioFechaHorario() {
                var fechaSeleccionada = new Date(txtFecha.value);
@@ -187,20 +187,20 @@
                                      </td>
                                     
                                      <td >Retira transporte:</td>
-                                     <td > <asp:DropDownList ID="ddl_Transporte" runat="server" class="form-control input-sm" onchange="verificaSeleccion()"></asp:DropDownList>    
+                                     <td > <asp:DropDownList ID="ddlTransporte" runat="server" class="form-control input-sm" onchange="verificaSeleccion()"></asp:DropDownList>    
                                          <%-- <asp:RadioButtonList runat="server" ID="rb_transportista" CssClass="radio-inline" Visible="false"> 
                                             <asp:ListItem Text="Transportista Tramitar" Selected="True" />   
                                             <asp:ListItem Text="Otro" />
                                          </asp:RadioButtonList>--%>
 
                                      </td>
-                                     <td> <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lbl_ErrorTransporte" CssClass="hidden"></asp:Label></td>
+                                     <td> <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lblErrorTransporte" CssClass="hidden"></asp:Label></td>
                                     
                                  </tr>
                                  <tr style="vertical-align: sub">
                                       <td>Observaciones:</td>
                                       <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
-                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lblErrorMotivo" CssClass="hidden"></asp:Label>
                                      </td>
                                      <%-- <td>
                                         
@@ -209,15 +209,15 @@
                                      <td>Fecha y Hora de retiro:</td>
                                     
                                       <td >
-                                            <asp:TextBox id="txt_Fecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
+                                            <asp:TextBox id="txtFecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
                                             
-                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txt_Fecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
                                     </td>
 
                                      <td>
-                                         <asp:TextBox id="txt_Hora"  runat="server"  class="form-control input-sm"  TextMode="Time"> </asp:TextBox>
+                                         <asp:TextBox id="txtHora"  runat="server"  class="form-control input-sm"  TextMode="Time"> </asp:TextBox>
                                          
-                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txt_Hora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
+                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
                                         
                                      </td>
 
@@ -247,7 +247,7 @@
 					<tr>
 
 						<td colspan="2">
-                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
+                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
                             <br />
                             <div class="mylabelizquierda" >Seleccionar:                                           
                                 <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
