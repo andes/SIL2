@@ -2088,6 +2088,7 @@
     <Content Include="Consulta\Procesa.aspx" />
     <Content Include="Consulta\ResultadoView.aspx" />
     <Content Include="controldecambios.html" />
+    <Content Include="Derivaciones\LoteList.aspx" />
     <Content Include="Derivaciones\NuevoLote.aspx" />
     <Content Include="Derivaciones\InformeLote.aspx" />
     <Content Include="Derivaciones\GestionarLote.aspx" />
@@ -4617,6 +4618,13 @@
     </Compile>
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\LoteList.aspx.cs">
+      <DependentUpon>LoteList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\LoteList.aspx.designer.cs">
+      <DependentUpon>LoteList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Derivaciones\NuevoLote.aspx.cs">
       <DependentUpon>NuevoLote.aspx</DependentUpon>
