@@ -301,17 +301,26 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
-                if (Guardar())
+                int idLote = verificarDeterminaciones();
+                if (idLote == 0) //No trajo ningun id Lote con error
                 {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                    if (Guardar())
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
+
+                    }
+                    CargarGrilla();
+                    limpiarForm();
                 }
                 else
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos\nRevisá los campos e intentá nuevamente');", true);
-
+                { //Es el idLote con error
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: El lote Nro:"+idLote+" no se puede derivar, no tiene determinaciones asociadas.\\nDescarte el lote por falta de determinaciones o modifique el lote agregando determinaciones');", true);
                 }
-                CargarGrilla();
-                limpiarForm();
+               
             }
             else
             {
@@ -320,25 +329,53 @@ namespace WebLab.Derivaciones
 
         }
         
+        private int verificarDeterminaciones()
+        {
+            int tieneDeterminaciones = 0;
+            //Verificamos que en lote no se hayan descartados todas sus determinaciones asi no se Deriva vacio
+            if (Convert.ToInt32(ddlEstados.SelectedValue) == 2)
+            {
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked)
+                    {
+                        int idLote = Convert.ToInt32(row.Cells[2].Text);
+                        string consultaSql = @"select top 1 1 from LAB_LoteDerivacion L with (nolock)
+                                                inner join LAB_Derivacion D with (nolock) ON D.idLote = L.idLoteDerivacion
+                                                where idLote =" + idLote;
+                        DataTable dt =  GetData(consultaSql);
+                        if(dt.Rows.Count ==  0)
+                            return  idLote;
+                        
+                    }
+
+                }
+
+            }
+
+            return tieneDeterminaciones;
+        }
 
         private bool Guardar()
         {
             bool seGuardoEnBd = false;
-
-            foreach (GridViewRow row in gvLista.Rows)
+            if(verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
             {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked)
+                foreach (GridViewRow row in gvLista.Rows)
                 {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked)
+                    {
 
-                    int idLote = Convert.ToInt32(row.Cells[2].Text);
-                    int idUsuario = oUser.IdUsuario;
-                    int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
-                    string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-                    //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
-                    LoteDerivacion lote = new LoteDerivacion();
-                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                        int idLote = Convert.ToInt32(row.Cells[2].Text);
+                        int idUsuario = oUser.IdUsuario;
+                        int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
+                        string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
+                        //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+                        string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
+                        LoteDerivacion lote = new LoteDerivacion();
+                        lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
                     //Se cambia el estado del lote LAB_LoteDerivacion
                     lote.Estado = estadoLote;
@@ -360,27 +397,27 @@ namespace WebLab.Derivaciones
 
                      
 
-                        foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
-                        {
-                            #region Derivacion 
-                            //Cambia el estado de las derivaciones LAB_Derivacion 
+                            foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
+                            {
+                                #region Derivacion 
+                                //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                            /*
-                             Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                             1 : Creado
-                             2 : Derivado
-                             3 : Cancelado
+                                /*
+                                 Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                                 1 : Creado
+                                 2 : Derivado
+                                 3 : Cancelado
 
-                             Estado de la derivacion LAB_DerivacionEstado
-                             0 : Pendiente de derivar
-                             1 : Enviado
-                             2 : No Enviado
-                             3 : Recibido
-                             4 : Pendiente para enviar
-                           */
-                            oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
-                            oDeriva.Save();
-                            #endregion
+                                 Estado de la derivacion LAB_DerivacionEstado
+                                 0 : Pendiente de derivar
+                                 1 : Enviado
+                                 2 : No Enviado
+                                 3 : Recibido
+                                 4 : Pendiente para enviar
+                               */
+                                oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
+                                oDeriva.Save();
+                                #endregion
 
 
                             #region cambio_codificacion_a_derivacion
@@ -403,17 +440,22 @@ namespace WebLab.Derivaciones
                     lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
                     lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
 
-                    if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
-                    {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddlTransporte.SelectedValue);
-                        DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
-                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
-                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
+                        if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
+                        {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+                            lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddlTransporte.SelectedValue);
+                            DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
+                            lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
+                            lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
+                        }
+
+
+                        seGuardoEnBd = true;
                     }
-                    
-                  
-                    seGuardoEnBd = true;
                 }
+            }
+            else
+            {
+
             }
 
             return seGuardoEnBd;
