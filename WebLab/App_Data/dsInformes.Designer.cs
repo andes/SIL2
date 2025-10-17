@@ -1535,6 +1535,8 @@ namespace WebLab.App_Data {
             
             private global::System.Data.DataColumn columnidLoteString;
             
+            private global::System.Data.DataColumn columnidTipoServicio;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public protocoloDataTable() {
@@ -1722,6 +1724,14 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn idTipoServicioColumn {
+                get {
+                    return this.columnidTipoServicio;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1776,7 +1786,8 @@ namespace WebLab.App_Data {
                         string efectorDerivacion, 
                         string unidadEdad, 
                         string idLote, 
-                        string idLoteString) {
+                        string idLoteString, 
+                        int idTipoServicio) {
                 protocoloRow rowprotocoloRow = ((protocoloRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         observacion,
@@ -1797,7 +1808,8 @@ namespace WebLab.App_Data {
                         efectorDerivacion,
                         unidadEdad,
                         idLote,
-                        idLoteString};
+                        idLoteString,
+                        idTipoServicio};
                 rowprotocoloRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowprotocoloRow);
                 return rowprotocoloRow;
@@ -1839,6 +1851,7 @@ namespace WebLab.App_Data {
                 this.columnunidadEdad = base.Columns["unidadEdad"];
                 this.columnidLote = base.Columns["idLote"];
                 this.columnidLoteString = base.Columns["idLoteString"];
+                this.columnidTipoServicio = base.Columns["idTipoServicio"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1882,6 +1895,8 @@ namespace WebLab.App_Data {
                 base.Columns.Add(this.columnidLote);
                 this.columnidLoteString = new global::System.Data.DataColumn("idLoteString", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnidLoteString);
+                this.columnidTipoServicio = new global::System.Data.DataColumn("idTipoServicio", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnidTipoServicio);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9682,6 +9697,22 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int idTipoServicio {
+                get {
+                    try {
+                        return ((int)(this[this.tableprotocolo.idTipoServicioColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'idTipoServicio\' in table \'protocolo\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableprotocolo.idTipoServicioColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsobservacionNull() {
                 return this.IsNull(this.tableprotocolo.observacionColumn);
             }
@@ -9906,6 +9937,18 @@ namespace WebLab.App_Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetidLoteStringNull() {
                 this[this.tableprotocolo.idLoteStringColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsidTipoServicioNull() {
+                return this.IsNull(this.tableprotocolo.idTipoServicioColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetidTipoServicioNull() {
+                this[this.tableprotocolo.idTipoServicioColumn] = global::System.Convert.DBNull;
             }
         }
         

@@ -96,14 +96,15 @@ namespace Business.Data.Laboratorio  {
 
         public static string derivacionPDF(int idLote)
         {
-            string m_strSQL = " SELECT  numero, convert(varchar(10), fecha,103) as fecha, dni, determinacion, " +
-            " apellido + ' '+ nombre as paciente,  efectorderivacion,  fechaNacimiento as edad, unidadEdad, sexo,  " +
-            " solicitante as especialista, idLote ," +
-            "   CASE  WHEN(len(idLote) < 9) " +
-            "   THEN  '00000' + CONVERT(VARCHAR, idLote) " +
-            " ELSE CONVERT(VARCHAR, idLote ) " +
-            "  END as idLoteString " +
-            " FROM vta_LAB_Derivaciones WHERE  idLote=" + idLote + " ORDER BY efectorDerivacion,numero ";
+            string m_strSQL = @"SELECT  numero, convert(varchar(10), fecha,103) as fecha, dni, determinacion,  
+             apellido + ' '+ nombre as paciente,  efectorderivacion,  fechaNacimiento as edad, unidadEdad, sexo,   
+             solicitante as especialista, idLote , 
+               CASE  WHEN(len(idLote) < 9)  
+               THEN  '00000' + CONVERT(VARCHAR, idLote)  
+             ELSE CONVERT(VARCHAR, idLote )  
+              END as idLoteString ,  
+              idTipoServicio 
+             FROM vta_LAB_Derivaciones WHERE  idLote= "+ idLote + " ORDER BY efectorDerivacion,numero ";
 
             return m_strSQL;     
         }
