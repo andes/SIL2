@@ -159,9 +159,9 @@
                             </td>
                             <td>
                                 
-                                <asp:TextBox class="form-control input-sm" ID="txt_lote" runat="server" MaxLength="9" Width="200px"></asp:TextBox>
+                                <asp:TextBox class="form-control input-sm" ID="txtLote" runat="server" MaxLength="9" Width="200px"></asp:TextBox>
                                 <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server"
-                                    ControlToValidate="txt_lote" ErrorMessage="*" ValidationGroup="0"></asp:RequiredFieldValidator>
+                                    ControlToValidate="txtLote" ErrorMessage="*" ValidationGroup="0"></asp:RequiredFieldValidator>
                             </td>
                             <td>&nbsp;</td>
                         </tr>

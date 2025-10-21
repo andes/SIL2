@@ -67,7 +67,7 @@ namespace WebLab.Informes
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CompareValidator cvDni;
-        
+
         /// <summary>
         /// ddlUsuario control.
         /// </summary>
@@ -168,13 +168,13 @@ namespace WebLab.Informes
         protected global::System.Web.UI.WebControls.Panel pnControlLote;
 
         /// <summary>
-        /// txt_lote control.
+        /// txtLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txt_lote;
+        protected global::System.Web.UI.WebControls.TextBox txtLote;
 
         /// <summary>
         /// RequiredFieldValidator2 control.
