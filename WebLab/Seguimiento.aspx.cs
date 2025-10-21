@@ -198,7 +198,9 @@ inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitan
 inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
     
 where  DP.idsubitem in ( " + GetDeterminaciones() +") "+ m_strSQLCondicion + @"
-and  ir.baja=0  ";
+and  ir.baja=0  
+order by ir.numero
+";
 
 
                 if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes

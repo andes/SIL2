@@ -135,6 +135,10 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                      <input id="HdidResultadoSISA" type="hidden" runat="server" />
                            <input id="HdidEventoSISA" type="hidden" runat="server" />
                        <input id="HidItemSIL" type="hidden" runat="server" />
+                      <input id="HidCaracter" type="hidden" runat="server" />
+
+                      <input id="HidGrupoEvento" type="hidden" runat="server" />
+                    <input id="HidClasificacionManual" type="hidden" runat="server" />
 
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
    
@@ -229,7 +233,10 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                   <asp:BoundField DataField="idcasosisa" HeaderText="idCasoSisa" />
                 <asp:BoundField DataField="iditem" HeaderText="idDetSIL" />                 
          
-                        
+                    <asp:BoundField DataField="idCaracter" HeaderText="idCaracter" />                 
+                  <asp:BoundField DataField="idgrupoevento" HeaderText="idgrupoevento" />                 
+                <asp:BoundField DataField="idclasificacionmanual" HeaderText="idclasificacionmanual" />                 
+               
             </Columns>
                 <HeaderStyle BackColor="#CCCCCC" ForeColor="Black" Font-Bold="True" />
              <EmptyDataRowStyle Font-Bold="True" ForeColor="#FF3300" />

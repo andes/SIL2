@@ -21,8 +21,9 @@
     <property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
 
     <property column="fechaSintoma" type="DateTime" name="FechaSintoma" not-null="true" />
-
+    <property column="fechaToma" type="DateTime" name="FechaToma" not-null="true" />
     <property column="idTipoMuestra" type="Int32" name="IdTipoMuestra" not-null="true" />
+    <property column="idOrigen" type="Int32" name="IdOrigen" not-null="true" />
 
     <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
 		 

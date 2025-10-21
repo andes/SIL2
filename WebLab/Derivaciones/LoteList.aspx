@@ -97,17 +97,9 @@
                         </div>
 
                         <div class="panel-footer">
-                            <asp:Panel ID="pnlControl" runat="server">
-
-                                <table style="width: 100%;">
-                                    <tr>
-                                        <td align="left">
+                           
                                             <asp:CustomValidator ID="cvValidar" runat="server" OnServerValidate="cvValidar_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                                        </td>
-                                    </tr>
-                                </table>
-
-                            </asp:Panel>
+                                       
                             <asp:Panel ID="pnlLista" runat="server">
                                 <table style="width: 100%;">
                                     <tr>
@@ -215,8 +207,7 @@
 
             </tr>
         </table>
-
-        <br />
+     
     </div>
 
 </asp:Content>

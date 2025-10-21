@@ -418,6 +418,8 @@ select * from areas order by nombre ";
 
                 chkProtocolo2.Items[3].Selected = oRegistro.ProtocoloSector;
                 chkProtocolo2.Items[4].Selected = oRegistro.ProtocoloNumeroOrigen;
+                chkProtocolo2.Items[5].Selected = oRegistro.ProtocoloTipoMuestra;
+
 
                 chkPaciente2.Items[0].Selected = oRegistro.PacienteApellido;
                 chkPaciente2.Items[1].Selected = oRegistro.PacienteSexo;
@@ -1351,6 +1353,7 @@ select * from areas order by nombre ";
             oRegistro.ProtocoloOrigen = chkProtocolo2.Items[2].Selected;
             oRegistro.ProtocoloSector = chkProtocolo2.Items[3].Selected;
             oRegistro.ProtocoloNumeroOrigen = chkProtocolo2.Items[4].Selected;
+            oRegistro.ProtocoloTipoMuestra = chkProtocolo2.Items[5].Selected;
 
             oRegistro.PacienteApellido = chkPaciente2.Items[0].Selected;
             oRegistro.PacienteSexo = chkPaciente2.Items[1].Selected;
