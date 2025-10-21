@@ -96,6 +96,9 @@ namespace Business.Data.Laboratorio  {
 
         public static string derivacionPDF(int idLote)
         {
+
+            //agregar el tipo de muestra para NO PACIENTES  idMuestra de LAB_Muestra con el idmuestra de protocolo
+            
             string m_strSQL = @"SELECT  numero, convert(varchar(10), fecha,103) as fecha, dni, determinacion,  
              apellido + ' '+ nombre as paciente,  efectorderivacion,  fechaNacimiento as edad, unidadEdad, sexo,   
              solicitante as especialista, idLote , 
@@ -103,8 +106,9 @@ namespace Business.Data.Laboratorio  {
                THEN  '00000' + CONVERT(VARCHAR, idLote)  
              ELSE CONVERT(VARCHAR, idLote )  
               END as idLoteString ,  
-              idTipoServicio 
-             FROM vta_LAB_Derivaciones WHERE  idLote= "+ idLote + " ORDER BY efectorDerivacion,numero ";
+              idTipoServicio ,
+              TipoProducto
+             FROM vta_LAB_Derivaciones WHERE  idLote= " + idLote + " ORDER BY efectorDerivacion,numero ";
 
             return m_strSQL;     
         }
