@@ -97,8 +97,8 @@ namespace Business.Data.Laboratorio  {
         public static string derivacionPDF(int idLote)
         {
 
-            //agregar el tipo de muestra para NO PACIENTES  idMuestra de LAB_Muestra con el idmuestra de protocolo
-            
+            //agrego el tipo de muestra para NO PACIENTES  (Cambios en la vista vta_LAB_Derivaciones)
+
             string m_strSQL = @"SELECT  numero, convert(varchar(10), fecha,103) as fecha, dni, determinacion,  
              apellido + ' '+ nombre as paciente,  efectorderivacion,  fechaNacimiento as edad, unidadEdad, sexo,   
              solicitante as especialista, idLote , 
@@ -154,11 +154,27 @@ namespace Business.Data.Laboratorio  {
             
         }
 
-        
-        //public bool IngresoProtocolo() {
-        //    List<Derivacion> derivaciones = Derivacion.DerivacionesByLote(this.IdLoteDerivacion);
-            
-        //    derivaciones.co
-        //}
+        public void ActualizaEstadoLote(int idUsuario, string ProtocoloNuevo, string ProtocoloAnterior)
+        {
+            if (Estado == 4) //Pasa de Recibido a Ingresado
+            {
+                Estado = 5;
+                GrabarAuditoriaLoteDerivacion(descripcionEstadoLote(), idUsuario);
+                FechaIngreso = DateTime.Now;
+            }
+
+            //Graba el ingreso del protocolo en el lote
+            GrabarAuditoriaLoteDerivacion("Ingresa protocolo", idUsuario, "Número Protocolo", ProtocoloNuevo, ProtocoloAnterior);
+
+            //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
+            if (!HayDerivacionesPendientes())
+            {
+                Estado = 6; //Pasa a Completado si no tiene más derivaciones pendientes
+                GrabarAuditoriaLoteDerivacion(descripcionEstadoLote(), idUsuario);
+            }
+
+            Save();
+        }
+
     }
 }
