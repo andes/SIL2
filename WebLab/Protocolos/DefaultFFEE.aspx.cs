@@ -358,7 +358,7 @@ namespace WebLab.Protocolos
                     Paciente oPaciente = new Paciente();
                     oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), id);
 
-                    string tieneingreso = oPaciente.GetFechaProtocolosReciente("3",  idTipoMuestra);
+                    string tieneingreso = oPaciente.GetFechaProtocolosRecientexEfector("3",  idTipoMuestra, oUser.IdEfector.IdEfector.ToString());
                     if (tieneingreso == DateTime.Now.ToShortDateString())
                         errores += " El paciente ya tiene ingresada la misma muestra en el día de la fecha. Verifique";
                      

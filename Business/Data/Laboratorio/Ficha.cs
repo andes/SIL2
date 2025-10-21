@@ -33,10 +33,12 @@ namespace Business.Data.Laboratorio
 
         private DateTime m_fecha ;
         private DateTime m_fechasintoma;
+        private DateTime m_fechatoma;
         private int m_idusuarioregistro;
         private DateTime m_fecharegistro;
         private string m_analisis;
         private int m_idTipoMuestra;
+        private int m_idorigen;
 
 
         #region Default ( Empty ) Class Constuctor
@@ -52,12 +54,14 @@ namespace Business.Data.Laboratorio
             m_tipoFicha = String.Empty;
             m_identificadorlabo = String.Empty;
             m_fechasintoma = DateTime.MinValue;
+            m_fechatoma = DateTime.MinValue;
             m_idusuarioregistro = 0;
             m_fecharegistro = DateTime.MinValue;
             m_clasificacion = String.Empty;
             m_idCasoSnvs = String.Empty;
             m_fecha = DateTime.MinValue;
             m_idTipoMuestra = 0;
+            m_idorigen = 0;
         }
 
       
@@ -82,8 +86,10 @@ namespace Business.Data.Laboratorio
             DateTime fecharegistro,
             DateTime    fecha,
             DateTime fechasintoma,
+            DateTime fechatoma,
             int idTipoMuestra,
-            string idCasoSnvs
+            string idCasoSnvs,
+            int idorigen 
              )
 			: this()
 		{
@@ -93,9 +99,11 @@ namespace Business.Data.Laboratorio
         m_fecharegistro = DateTime.MinValue;
             m_fecha = DateTime.MinValue;
             m_fechasintoma = DateTime.MinValue;
+            m_fechatoma = DateTime.MinValue;
             m_analisis = analisis;
             m_idCasoSnvs = idCasoSnvs;
             m_idTipoMuestra = idTipoMuestra;
+            m_idorigen = idorigen;
 
         }
 		#endregion // End Required Fields Only Constructor
@@ -115,6 +123,17 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
+
+        public int IdOrigen
+        {
+            get { return m_idorigen; }
+            set
+            {
+                m_isChanged |= (m_idorigen != value);
+                m_idorigen = value;
+            }
+
+        }
 
         public int IdTipoMuestra
         {
@@ -280,6 +299,17 @@ namespace Business.Data.Laboratorio
             {
                 m_isChanged |= (m_fechasintoma != value);
                 m_fechasintoma = value;
+            }
+
+        }
+
+        public DateTime FechaToma
+        {
+            get { return m_fechatoma; }
+            set
+            {
+                m_isChanged |= (m_fechatoma != value);
+                m_fechatoma = value;
             }
 
         }

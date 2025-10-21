@@ -204,78 +204,17 @@ namespace WebLab.Resultados
 
 
 
-        private void ProcesarLinea(string linea)
-        {
-            try
-            {
-                string[] arr = linea.Split((";").ToCharArray());
-              
-
-                if (arr.Length >= 1)
-                {
-                   
-
-                    string idevento= arr[0].ToString();
-                    string documento = arr[1].ToString().Substring(0, 3); // Replace ("DNI","").Replace("IND","").Trim();
-                    if (documento == "DNI")
-                    {
-                        string nombre = arr[2].ToString();
-                        string idDerivacion = arr[9].ToString();
-                        string idEventoMuestra = arr[15].ToString();
-                        documento= arr[1].ToString().Replace ("DNI","").Trim();
-                        documento = documento.Replace("F", "").Replace("M", "").Trim();
-                        DateTime fechatoma = DateTime.Parse(arr[14].ToString().Trim());
-
-                      string ftoma=  fechatoma.ToString("yyyy-MM-dd");
-                        SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-
-                        string query = @"
-INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
-           ([idevento]
-           ,[dni]
-           ,[nombre]
-           ,[idDerivacion]
-           ,[idEventoMuestra]
-           ,idUsuario
-            ,fechatoma
-            )
-     VALUES
-           ( " + idevento + ",'" + documento + "','" + nombre + "'," + idDerivacion + "," + idEventoMuestra + "," + Session["idUsuario"].ToString() +",'" + ftoma + "' )";
-                        SqlCommand cmd = new SqlCommand(query, conn);
-
-
-                        int idres = Convert.ToInt32(cmd.ExecuteScalar());
-
-                    }
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                string exception = "";
-
-                exception = ex.Message + "<br>";
-
-               // estatus.Text = "hay lineas del archivo que han sido ignoradas por no tener el formato esperado por el sistema." + exception;
-            }
-        }
+       
 
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            //if (ddlItem.SelectedValue == "1") //derivaciones sin responder
-
-            //{
-            //    SubirSISA();
-
-            //}
-            //if (ddlItem.SelectedValue == "2") //eventos desde sil
+           
                 SubirSISAdesdeAPI();
 
         }
 
-        private bool ProcesaSISA(DetalleProtocolo oDetalle, string res, string idcasosisa)
+        private bool ProcesaSISA(DetalleProtocolo oDetalle,  string idcasosisa)
         {
             bool generacaso = false;
 
@@ -284,7 +223,7 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
                 if (int.Parse(idcasosisa)==0)
                 {
                     // generacaso = GenerarCasoSISA(oDetalle, res);
-                    generacaso = GenerarCasoSISA_V2(oDetalle, res);
+                    generacaso = GenerarCasoSISA_V2(oDetalle);
                 }
 
 
@@ -301,7 +240,7 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
                     GenerarMuestraSISA(oDetalle.IdProtocolo, oDetalle.IdProtocolo.IdCasoSISA);
 
                 if (oDetalle.IdeventomuestraSISA > 0)
-                    GenerarResultadoSISA(oDetalle, res);
+                    GenerarResultadoSISA(oDetalle);
 
 
                 /****/
@@ -561,73 +500,105 @@ INSERT INTO [dbo].[LAB_Temp_ResultadoSISA]
         }
 
 
-        private bool GenerarCasoSISA_V2(DetalleProtocolo oDetalle, string res)
+        private bool GenerarCasoSISA_V2(DetalleProtocolo oDetalle)
         {
             /*Version 2*/
+            /*Cambio para que vuelva a buscar los datos en la base y tome los datos desde la grilla*/
             System.Net.ServicePointManager.SecurityProtocol =
              System.Net.SecurityProtocolType.Tls12;
 
             bool generacaso = false;
-            string caracter = "";
-            string idevento = "";
-            string nombreevento = "";
-            string idclasificacionmanual = "";
-            string nombreclasificacionmanual = "";
-            string idgrupoevento = "";
-            string nombregrupoevento = "";
+            //string caracter = "";
+            //string idevento = "";
+            //string nombreevento = "";
+            //string idclasificacionmanual = "";
+            //string nombreclasificacionmanual = "";
+            //string idgrupoevento = "";
+            //string nombregrupoevento = "";
             bool seguir = false;
-            string m_strSQL = "";
+            //string m_strSQL = "";
             JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
             try
             {
-                // query levanta todos los que se generan segun el caracter
-                m_strSQL = @" select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
-                // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
-                if ((res == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid == oDetalle.IdSubItem.Codigo))
-                {
-                    m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
-                }
+                //                // query levanta todos los que se generan segun el caracter
+                //                m_strSQL = @" select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString() + " and idEvento=" + ddlItem.SelectedValue;
+                //                // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
+                //                if ((res == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid == oDetalle.IdSubItem.Codigo))
+                //                {
+                //                    m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString()+ " and idEvento=" + ddlItem.SelectedValue;
+                //                }
 
 
-                m_strSQL += @"  and fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
-and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, fechavigenciahasta, 103) = '01/01/1900')
-                                and (idorigen=0 or idOrigen=" +oDetalle.IdProtocolo.IdOrigen.IdOrigen.ToString() +")";
+                //                m_strSQL += @"  and fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
+                //and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, fechavigenciahasta, 103) = '01/01/1900')
+                //                                and (idorigen=0 or idOrigen=" +oDetalle.IdProtocolo.IdOrigen.IdOrigen.ToString() +")";
 
-                //Control de efector solicitante
-                //Monitoreo de SARS COV - 2 y OVR en ambulatorios ==> solo aplica para Hospital Heller
-                //Demas eventos para todos los efectores solicitantes.
-                m_strSQL += @" and (idefectorsolicitante=0 or 
-                                idefectorsolicitante in (" + oDetalle.IdProtocolo.IdEfectorSolicitante.IdEfector.ToString() + "))";
+                //                //Control de efector solicitante
+                //                //Monitoreo de SARS COV - 2 y OVR en ambulatorios ==> solo aplica para Hospital Heller
+                //                //Demas eventos para todos los efectores solicitantes.
+                //                m_strSQL += @" and (idefectorsolicitante=0 or 
+                //                                idefectorsolicitante in (" + oDetalle.IdProtocolo.IdEfectorSolicitante.IdEfector.ToString() + "))";
 
-                //control de embarzada=s /N
-                m_strSQL += @"  and soloEmbarazada='" + oDetalle.IdProtocolo.Embarazada.ToString()+"'";
-                ///control de edades
-                m_strSQL += @" and ("+oDetalle.IdProtocolo.Edad+" between edadDesde and edadHasta and "+oDetalle.IdProtocolo.UnidadEdad +" = 0) ";
+                //                //control de embarzada=s /N
+                //                m_strSQL += @"  and soloEmbarazada='" + oDetalle.IdProtocolo.Embarazada.ToString()+"'";
+                //                ///control de edades
+                //                m_strSQL += @" and ("+oDetalle.IdProtocolo.Edad+" between edadDesde and edadHasta and "+oDetalle.IdProtocolo.UnidadEdad +" = 0) ";
 
 
-                DataSet Ds = new DataSet();
-                //      SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
+                //                DataSet Ds = new DataSet();
+                //                //      SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                //                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                //                SqlDataAdapter adapter = new SqlDataAdapter();
+                //                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                //                adapter.Fill(Ds);
 
-                DataTable dt = Ds.Tables[0];
+                //                DataTable dt = Ds.Tables[0];
 
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    caracter = dt.Rows[i][1].ToString();
-                    idevento = dt.Rows[i][2].ToString();
-                    HdidEventoSISA.Value = idevento;
-                    nombreevento = dt.Rows[i][3].ToString();
-                    idclasificacionmanual = dt.Rows[i][4].ToString();
-                    nombreclasificacionmanual = dt.Rows[i][5].ToString();
-                    idgrupoevento = dt.Rows[i][6].ToString();
-                    nombregrupoevento = dt.Rows[i][7].ToString();
-                    seguir = true;
-                    break;
-                }
+                //                for (int i = 0; i < dt.Rows.Count; i++)
+                //                {
+                //                    caracter = dt.Rows[i][1].ToString();
+                //                    idevento = dt.Rows[i][2].ToString();
+                //                    HdidEventoSISA.Value = idevento;
+                //                    nombreevento = dt.Rows[i][3].ToString();
+                //                    idclasificacionmanual = dt.Rows[i][4].ToString();
+                //                    nombreclasificacionmanual = dt.Rows[i][5].ToString();
+                //                    idgrupoevento = dt.Rows[i][6].ToString();
+                //                    nombregrupoevento = dt.Rows[i][7].ToString();
+                //                    seguir = true;
+                //                    break;
+                //                }
 
+              
+
+              //caracter = dt.Rows[i][1].ToString();
+              //  idevento = dt.Rows[i][2].ToString();
+              //  HdidEventoSISA.Value = idevento;
+              //  nombreevento = dt.Rows[i][3].ToString();
+              //  idclasificacionmanual = dt.Rows[i][4].ToString();
+              //  nombreclasificacionmanual = dt.Rows[i][5].ToString();
+              //  idgrupoevento = dt.Rows[i][6].ToString();
+              //  nombregrupoevento = dt.Rows[i][7].ToString();
+
+              //  string idmuestra = gvLista.Rows[row.RowIndex].Cells[8].Text;
+              //  string idtipomuestra = gvLista.Rows[row.RowIndex].Cells[9].Text;
+              //  HdIdMuestra.Value = idmuestra;
+              //  HdIdTipoMuestra.Value = idtipomuestra;
+
+              //  HdIdPrueba.Value = gvLista.Rows[row.RowIndex].Cells[10].Text;
+              //  HdIdTipoPrueba.Value = gvLista.Rows[row.RowIndex].Cells[11].Text;
+
+              //  HdidResultadoSISA.Value = gvLista.Rows[row.RowIndex].Cells[12].Text;
+              //  HidItemSIL.Value = gvLista.Rows[row.RowIndex].Cells[15].Text;
+
+
+              //  /*nuevos campos recuperados desde la grilla*/
+              //  HidCaracter.Value = gvLista.Rows[row.RowIndex].Cells[16].Text;
+              //  //idevento = dt.Rows[i][2].ToString();
+              //  HdidEventoSISA.Value = gvLista.Rows[row.RowIndex].Cells[13].Text;
+
+
+                seguir = true;
+                //break;
                 if (seguir)
                 {
                     string conexionServicio = oC.UrlServicioSISA;
@@ -734,10 +705,11 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
                         eventoCasoNominal newevento = new eventoCasoNominal
                         {
+
                             fechaPapel = fnpapel, // "10-12-2019",                        
-                            idGrupoEvento = idgrupoevento,
-                            idEvento = idevento, // "77",                      
-                            idClasificacionManualCaso = idclasificacionmanual, // "22"
+                            idGrupoEvento = HidGrupoEvento.Value,//idgrupoevento,
+                            idEvento = HdidEventoSISA.Value ,///idevento, // "77",                      
+                            idClasificacionManualCaso = HidClasificacionManual.Value,/// idclasificacionmanual, // "22"
                             idEstablecimientoCarga = s_idestablecimiento, //prod: "51580352167442",
                         };
 
@@ -954,7 +926,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
         }
 
 
-        private void GenerarResultadoSISA(DetalleProtocolo oDetalle, string resul )
+        private void GenerarResultadoSISA(DetalleProtocolo oDetalle )
 
         {
             System.Net.ServicePointManager.SecurityProtocol =
@@ -979,27 +951,27 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                 {
 
 
-                    // query levanta todos los que se generan segun el caracter
-                    string m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+//                    // query levanta todos los que se generan segun el caracter
+//                    string m_strSQL = " select * from LAB_ConfiguracionSISA with (nolock) where  idCaracter=" + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
 
 
-                    // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
-                    if ((resul == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid == oDetalle.IdSubItem.Codigo))
-                    {
-                        m_strSQL = " select * from LAB_ConfiguracionSISA  with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
-                    }
-                    m_strSQL += @"  and fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
-and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, fechavigenciahasta, 103) = '01/01/1900')
-                                and (idorigen=0 or idOrigen=" + oDetalle.IdProtocolo.IdOrigen.IdOrigen.ToString() + ")";
+//                    // si es contacto se sube==>si es negativo como contacto y si es positivo como sospechoso.
+//                    if ((resul == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter == 4) && (oC.CodigoCovid == oDetalle.IdSubItem.Codigo))
+//                    {
+//                        m_strSQL = " select * from LAB_ConfiguracionSISA  with (nolock) where idCaracter=1 and idItem= " + oDetalle.IdSubItem.IdItem.ToString();
+//                    }
+//                    m_strSQL += @"  and fechavigenciadesde<=convert(date,convert(varchar,getdate(),112)) 
+//and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or convert(varchar, fechavigenciahasta, 103) = '01/01/1900')
+//                                and (idorigen=0 or idOrigen=" + oDetalle.IdProtocolo.IdOrigen.IdOrigen.ToString() + ")";
 
-                    //Control de efector solicitante
-                    //Monitoreo de SARS COV - 2 y OVR en ambulatorios ==> solo aplica para Hospital Heller
-                    //Demas eventos para todos los efectores solicitantes.
-                    m_strSQL += @" and (idefectorsolicitante=0 or idefectorsolicitante in (" + oDetalle.IdProtocolo.IdEfectorSolicitante.IdEfector.ToString() + "))";
-                    //control de embarzada=s /N
-                    m_strSQL += @"  and soloEmbarazada='" + oDetalle.IdProtocolo.Embarazada.ToString() + "'";
-                    ///control de edades
-                    m_strSQL += @" and (" + oDetalle.IdProtocolo.Edad + " between edadDesde and edadHasta and " + oDetalle.IdProtocolo.UnidadEdad + " = 0) ";
+//                    //Control de efector solicitante
+//                    //Monitoreo de SARS COV - 2 y OVR en ambulatorios ==> solo aplica para Hospital Heller
+//                    //Demas eventos para todos los efectores solicitantes.
+//                    m_strSQL += @" and (idefectorsolicitante=0 or idefectorsolicitante in (" + oDetalle.IdProtocolo.IdEfectorSolicitante.IdEfector.ToString() + "))";
+//                    //control de embarzada=s /N
+//                    m_strSQL += @"  and soloEmbarazada='" + oDetalle.IdProtocolo.Embarazada.ToString() + "'";
+//                    ///control de edades
+//                    m_strSQL += @" and (" + oDetalle.IdProtocolo.Edad + " between edadDesde and edadHasta and " + oDetalle.IdProtocolo.UnidadEdad + " = 0) ";
 
 
                     string idestablecimientodiagnostico = oDetalle.IdProtocolo.IdEfector.CodigoSISA;///.IdEfectorSolicitante.CodigoSISA;
@@ -1008,23 +980,23 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                     ////idestablecimientodiagnostico = "107093";
 
 
-                    DataSet Ds = new DataSet();
-                    //      SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-                    SqlDataAdapter adapter = new SqlDataAdapter();
-                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                    adapter.Fill(Ds);
+                    //DataSet Ds = new DataSet();
+                    ////      SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                    //SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                    //SqlDataAdapter adapter = new SqlDataAdapter();
+                    //adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                    //adapter.Fill(Ds);
 
-                    DataTable dt = Ds.Tables[0];
+                    //DataTable dt = Ds.Tables[0];
 
-                    for (int i = 0; i < dt.Rows.Count; i++)
-                    {
+                    //for (int i = 0; i < dt.Rows.Count; i++)
+                    //{
 
 
-                        HdidEventoSISA.Value = dt.Rows[i][2].ToString();
+                    //    HdidEventoSISA.Value = dt.Rows[i][2].ToString();
 
-                        break;
-                    }
+                    //    break;
+                    //}
 
                     int id_resultado_a_informar = int.Parse(HdidResultadoSISA.Value);
                     int idevento = int.Parse(HdidEventoSISA.Value);
@@ -1119,7 +1091,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
             int i = 0;
             foreach (GridViewRow row in gvLista.Rows)
             {
-                string idItem = ddlItem.SelectedValue.ToString();
+                string idItem = ddlItem.SelectedValue.ToString();// idevento
 
                 //   string res = gvLista.Rows[row.RowIndex].Cells[6].Text;
                 ////string idderivacion = gvLista.Rows[row.RowIndex].Cells[4].Text;
@@ -1134,6 +1106,20 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                 HdidResultadoSISA.Value = gvLista.Rows[row.RowIndex].Cells[12].Text;
                 HidItemSIL.Value= gvLista.Rows[row.RowIndex].Cells[15].Text;
 
+
+                /*nuevos campos recuperados desde la grilla*/
+                HidCaracter.Value = gvLista.Rows[row.RowIndex].Cells[16].Text;// por ahora no se usa para interoperar---vER!!
+                //idevento = dt.Rows[i][2].ToString();
+                HdidEventoSISA.Value = gvLista.Rows[row.RowIndex].Cells[13].Text;
+                HidGrupoEvento.Value = gvLista.Rows[row.RowIndex].Cells[17].Text;
+                HidClasificacionManual.Value = gvLista.Rows[row.RowIndex].Cells[18].Text;
+                //nombreevento = dt.Rows[i][3].ToString();
+                //idclasificacionmanual = dt.Rows[i][4].ToString();
+                //nombreclasificacionmanual = dt.Rows[i][5].ToString();
+                //idgrupoevento = dt.Rows[i][6].ToString();
+                //nombregrupoevento = dt.Rows[i][7].ToString();
+
+
                 string idcasosisa= gvLista.Rows[row.RowIndex].Cells[14].Text;
                 CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
                 if (a.Checked == true)
@@ -1144,33 +1130,33 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
                     if (oDetalleProtocolo != null)
                     {
-                        string res = oDetalleProtocolo.ResultadoCar;
+                        //string res = oDetalleProtocolo.ResultadoCar;
 
 
 
-                        if (oDetalleProtocolo.IdSubItem.Codigo == oC.CodigoCovid)
-                        {
-                            if (res.Length > 10)
-                            {
-                                if (res.Substring(0, 10) == "SE DETECTA")
-                                { if (ProcesaSISA(oDetalleProtocolo, "SE DETECTA", idcasosisa)) i = i + 1; }
+                        //if (oDetalleProtocolo.IdSubItem.Codigo == oC.CodigoCovid)
+                        //{
+                        //    if (res.Length > 10)
+                        //    {
+                        //        if (res.Substring(0, 10) == "SE DETECTA")
+                        //        { if (ProcesaSISA(oDetalleProtocolo, "SE DETECTA", idcasosisa)) i = i + 1; }
 
-                                if (res.Substring(0, 13) == "NO SE DETECTA")
-                                { if (ProcesaSISA(oDetalleProtocolo, "NO SE DETECTA", idcasosisa)) i = i + 1; }
+                        //        if (res.Substring(0, 13) == "NO SE DETECTA")
+                        //        { if (ProcesaSISA(oDetalleProtocolo, "NO SE DETECTA", idcasosisa)) i = i + 1; }
 
 
-                            }
-                        }
-                        else
+                        //    }
+                        //}
+                        //else
 
-                        {
-                            if (ProcesaSISA(oDetalleProtocolo, res, idcasosisa))
+                        //{
+                            if (ProcesaSISA(oDetalleProtocolo, idcasosisa))
                             {
                                 i = i + 1;
                                 
                             }
 
-                        }
+                        //}
 
                         // BorrarLineaTemporalesdesdeAPI(ideventomuestra);
                     }

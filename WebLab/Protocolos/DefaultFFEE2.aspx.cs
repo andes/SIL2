@@ -400,7 +400,7 @@ namespace WebLab.Protocolos
                                 Paciente oPaciente = new Paciente();
                                 oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), id);
 
-                                string tieneingreso = oPaciente.GetFechaProtocolosReciente("3", idTipoMuestra);
+                                string tieneingreso = oPaciente.GetFechaProtocolosRecientexEfector("3", idTipoMuestra, oUser.IdEfector.IdEfector.ToString());
                                 if (tieneingreso == DateTime.Now.ToShortDateString())
                                     errores += " El paciente ya tiene ingresada la misma muestra en el día de la fecha. Verifique";
 
@@ -612,7 +612,8 @@ namespace WebLab.Protocolos
             try
             {
                 ///guarda ficha para recuperar en protocoloedit2
-                string det= BuscarDeterminaciones(respuesta_d.Tipo_ficha);
+                int ID_ORIGEN = 0;
+                string det = BuscarDeterminaciones(respuesta_d.Tipo_ficha);
            /* if (det == "")
                 return false;
             else
@@ -652,6 +653,25 @@ namespace WebLab.Protocolos
                         oRegistro.IdTipoMuestra = int.Parse(idTipoMuestra);
                     }
                 }
+
+                if (respuesta_d.requerimientocuidado != null)
+                {
+                    if (respuesta_d.requerimientocuidado.ToUpper() == "AMBULATORIO")
+                        ID_ORIGEN = 1;
+
+                    if (respuesta_d.requerimientocuidado.ToUpper().Contains("INTERNA"))
+                        ID_ORIGEN = 2;
+                }
+                else
+                    ID_ORIGEN = 1;
+                if (respuesta_d.Tipo_ficha == "UMA") ID_ORIGEN = 1; //AMBULATORIO
+
+                oRegistro.IdOrigen = ID_ORIGEN;
+                if (respuesta_d.fechamuestra == null)
+                    oRegistro.FechaToma = DateTime.Parse(respuesta_d.Fecha);
+                else
+                    oRegistro.FechaToma = DateTime.Parse(respuesta_d.fechamuestra);
+                 
                 oRegistro.Analisis = det;// BuscarDeterminaciones(respuesta_d.Tipo_ficha);
                 oRegistro.Save();
                 return true;
@@ -674,22 +694,22 @@ namespace WebLab.Protocolos
                 oFicha.Delete();
         }
 
-        private void GuardarDiagnosticos(Business.Data.Laboratorio.Protocolo oRegistro)
-        {
-            ///Caro: poner diagnsotico por defecto segun tipo de ficha
+        //private void GuardarDiagnosticos(Business.Data.Laboratorio.Protocolo oRegistro)
+        //{
+        //    ///Caro: poner diagnsotico por defecto segun tipo de ficha
 
-                    ProtocoloDiagnostico oDetalle = new ProtocoloDiagnostico();
-                    oDetalle.IdProtocolo = oRegistro;
-                    oDetalle.IdEfector = oRegistro.IdEfector;
-                    if ((oRegistro.IdCaracter==1) || (oRegistro.IdCaracter == 26))
-                        oDetalle.IdDiagnostico = 3562;
-                    else
-                        oDetalle.IdDiagnostico = 12458; // 999.7 sin registro
-            oDetalle.Save();
+        //            ProtocoloDiagnostico oDetalle = new ProtocoloDiagnostico();
+        //            oDetalle.IdProtocolo = oRegistro;
+        //            oDetalle.IdEfector = oRegistro.IdEfector;
+        //            if ((oRegistro.IdCaracter==1) || (oRegistro.IdCaracter == 26))
+        //                oDetalle.IdDiagnostico = 3562;
+        //            else
+        //                oDetalle.IdDiagnostico = 12458; // 999.7 sin registro
+        //    oDetalle.Save();
                     
                 
 
-        }
+        //}
 
 
         private int  GuardarProtocolo(Paciente oPaciente, FFEE respuesta_d)
@@ -897,7 +917,7 @@ namespace WebLab.Protocolos
             //if (grabarincidenciafuc)
             //    oRegistro.GeneraIncidenciaAutomatica(47, int.Parse(Session["idUsuario"].ToString()));
             //else
-            GuardarDiagnosticos(oRegistro);
+         //   GuardarDiagnosticos(oRegistro);
 
 
             //if ((!grabarincidenciafis) && (!grabarincidenciafuc))
@@ -941,81 +961,93 @@ namespace WebLab.Protocolos
 
         private void CargarTipoFichas()
         {
+
+            Utility oUtil = new Utility();
+            //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura            
+            ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos
+            string m_ssql = "SELECT  nombre   as nombre, codigo FROM LAB_TipoFicha  with (nolock) WHERE (baja = 0) order by nombre";
+
+            oUtil.CargarCombo(ddlTipoFicha, m_ssql, "codigo", "nombre", connReady);            
+            ddlTipoFicha.Items.Insert(0, new ListItem("Seleccione", "0"));
+
+
             //  Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-      /*      System.Net.ServicePointManager.SecurityProtocol =
-      System.Net.SecurityProtocolType.Tls12;
-            string URL = "";// ConfigurationManager.AppSettings["urlffeeandes"].ToString();
-            URL = URL + "https://app.andes.gob.ar/api/bi/queries/listado-tiposFichas/json";
+            /*      System.Net.ServicePointManager.SecurityProtocol =
+            System.Net.SecurityProtocolType.Tls12;
+                  string URL = "";// ConfigurationManager.AppSettings["urlffeeandes"].ToString();
+                  URL = URL + "https://app.andes.gob.ar/api/bi/queries/listado-tiposFichas/json";
 
-            string s_token = ConfigurationManager.AppSettings["tokenffeeandes"].ToString();
-
-
-            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
-            HttpWebRequest request;
-            request = WebRequest.Create(URL) as HttpWebRequest;
-            request.Timeout = 10 * 1000;
-            request.Method = "GET";
-
-            request.ContentType = "application/json";
-            request.Headers.Add("Authorization", s_token);
+                  string s_token = ConfigurationManager.AppSettings["tokenffeeandes"].ToString();
 
 
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            string body = reader.ReadToEnd();
-            body = body.Replace("[", "").Replace("]", "");
-            if (body != "")
-            {
-                //string fileName = "WeatherForecast.json";
-                //string jsonString = jsonSerializer.Serialize(body);
-                //File.WriteAllText(fileName, jsonString);
+                  JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                  HttpWebRequest request;
+                  request = WebRequest.Create(URL) as HttpWebRequest;
+                  request.Timeout = 10 * 1000;
+                  request.Method = "GET";
+
+                  request.ContentType = "application/json";
+                  request.Headers.Add("Authorization", s_token);
 
 
-                //string json = JsonConvert.SerializeObject(body);
-                //List<TipoFFEE>  respuesta_d = jsonSerializer.Deserialize<TipoFFEE>(body); ;
-                //foreach (var f in respuesta_d.ficha)
-                //{
-                //    ddlTipoFicha.Items.Add(f.ficha.nombre);
-                //}
-                //    // Recorremos el array de datos del JSON 
+                  HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                  StreamReader reader = new StreamReader(response.GetResponseStream());
+                  string body = reader.ReadToEnd();
+                  body = body.Replace("[", "").Replace("]", "");
+                  if (body != "")
+                  {
+                      //string fileName = "WeatherForecast.json";
+                      //string jsonString = jsonSerializer.Serialize(body);
+                      //File.WriteAllText(fileName, jsonString);
 
-               
-                [
-    {
-        "id": "600ceaf8220da69a4bbe7223",
-        "nombre": "covid19"
-    },
-    {
-        "id": "6257096489e70952a20eadc3",
-        "nombre": "UMA"
-    },
-    {
-        "id": "648ca796698f662a8932649e",
-        "nombre": "Intento de Suicidio"
-    },
-    {
-        "id": "6643a1abb428bb3f28064b30",
-        "nombre": "Hantavirus"
-    },
-    {
-        "id": "66eebc26eea39c3da812ba4e",
-        "nombre": "Dengue"
-    },
-    {
-        "id": "66df637dd1a25e5b8d7eb8b8",
-        "nombre": "Sifilis"
-    }
-]
-                */
-                ddlTipoFicha.Items.Insert(0, new ListItem("Seleccione", "0"));
+
+                      //string json = JsonConvert.SerializeObject(body);
+                      //List<TipoFFEE>  respuesta_d = jsonSerializer.Deserialize<TipoFFEE>(body); ;
+                      //foreach (var f in respuesta_d.ficha)
+                      //{
+                      //    ddlTipoFicha.Items.Add(f.ficha.nombre);
+                      //}
+                      //    // Recorremos el array de datos del JSON 
+
+
+                      [
+          {
+              "id": "600ceaf8220da69a4bbe7223",
+              "nombre": "covid19"
+          },
+          {
+              "id": "6257096489e70952a20eadc3",
+              "nombre": "UMA"
+          },
+          {
+              "id": "648ca796698f662a8932649e",
+              "nombre": "Intento de Suicidio"
+          },
+          {
+              "id": "6643a1abb428bb3f28064b30",
+              "nombre": "Hantavirus"
+          },
+          {
+              "id": "66eebc26eea39c3da812ba4e",
+              "nombre": "Dengue"
+          },
+          {
+              "id": "66df637dd1a25e5b8d7eb8b8",
+              "nombre": "Sifilis"
+          }
+      ]
+                     
+            ddlTipoFicha.Items.Insert(0, new ListItem("Seleccione", "0"));
                 ddlTipoFicha.Items.Insert(1, new ListItem("covid19", "600ceaf8220da69a4bbe7223"));// es micro y para labo central y genera automaticamente ficha
                 ddlTipoFicha.Items.Insert(2, new ListItem("UMA", "6257096489e70952a20eadc3"));// es micro y para labo central y genera automaticamente ficha
                 ddlTipoFicha.Items.Insert(3, new ListItem("Intento de Suicidio", "648ca796698f662a8932649e"));
                 ddlTipoFicha.Items.Insert(4, new ListItem("Hantavirus", "6643a1abb428bb3f28064b30"));// es micro y para labo central y genera automaticamente ficha
                 ddlTipoFicha.Items.Insert(5, new ListItem("Dengue", "66eebc26eea39c3da812ba4e"));// es Labo y micro y para todos y NO genera automaticamente ficha
                 ddlTipoFicha.Items.Insert(6, new ListItem("Sifilis", "66df637dd1a25e5b8d7eb8b8"));// es Labo y micro y para todos y NO genera automaticamente ficha
-            //}
+            //} */
         }
       
         private void CargarEfectores()

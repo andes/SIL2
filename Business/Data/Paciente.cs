@@ -1312,13 +1312,15 @@ namespace Business.Data
         }
 
 
-        public string GetFechaProtocolosReciente(string idServicio, string idmuestra)
+        public string GetFechaProtocolosRecientexEfector(string idServicio, string idmuestra, string idEfector)
         {
             string result = "";
             ICriteria critProtocolo = m_session.CreateCriteria(typeof(Protocolo));
 
             string ssql_Protocolo = " IdProtocolo in (Select top 1 LAb_Protocolo.IdProtocolo From LAb_Protocolo where Lab_Protocolo.idTipoServicio=" + idServicio +
-                " and LAb_Protocolo.baja=0  and Lab_Protocolo.idMuestra="+idmuestra+"  and LAb_Protocolo.idPaciente=" + this.IdPaciente.ToString() +
+                " and LAb_Protocolo.baja=0  " +
+                " and Lab_Protocolo.IdEfector = "+ idEfector +  
+                " and Lab_Protocolo.idMuestra="+idmuestra+"  and LAb_Protocolo.idPaciente=" + this.IdPaciente.ToString() +
                 " and LAb_Protocolo.Fecha>='" + DateTime.Now.AddDays(-7).ToString("yyyyMMdd") + "' order by LAb_Protocolo.IdProtocolo desc )";
             if (idServicio == "6")  // si es forense no importa la fecha                                
                 ssql_Protocolo = " IdProtocolo in (Select top 1 LAb_Protocolo.IdProtocolo From LAb_Protocolo where Lab_Protocolo.idTipoServicio=" + idServicio +

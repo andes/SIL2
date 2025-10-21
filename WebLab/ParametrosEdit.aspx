@@ -1335,6 +1335,7 @@ $("#tabContainer").tabs({ selected: currTab });
                                 <asp:ListItem>Origen</asp:ListItem>
                                 <asp:ListItem>Sector</asp:ListItem>
                                 <asp:ListItem>Nro. Origen</asp:ListItem>
+                                <asp:ListItem>Tipo de Muestra</asp:ListItem>
                             </asp:CheckBoxList>
                         </td>
                     </tr>

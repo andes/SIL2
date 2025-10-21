@@ -24,6 +24,7 @@ namespace Business.Data.Laboratorio
 		private bool m_protocoloorigen; 
 		private bool m_protocolosector; 
 		private bool m_protocolonumeroorigen;
+        private bool m_protocolotipomuestra;
         private bool m_pacientenumerodocumento; 
 		private bool m_pacienteapellido; 
 		private bool m_pacientesexo; 
@@ -46,6 +47,7 @@ namespace Business.Data.Laboratorio
 			m_protocoloorigen = false; 
 			m_protocolosector = false; 
 			m_protocolonumeroorigen = false;
+            m_protocolotipomuestra = false;
             m_pacientenumerodocumento = false;
 			m_pacienteapellido = false; 
 			m_pacientesexo = false; 
@@ -66,6 +68,7 @@ namespace Business.Data.Laboratorio
 			bool protocoloorigen, 
 			bool protocolosector, 
 			bool protocolonumeroorigen, 
+            bool protocolotipomuestra,
             bool pacientenumerodocumento,
 			bool pacienteapellido, 
 			bool pacientesexo, 
@@ -80,6 +83,7 @@ namespace Business.Data.Laboratorio
 			m_protocoloorigen = protocoloorigen;
 			m_protocolosector = protocolosector;
 			m_protocolonumeroorigen = protocolonumeroorigen;
+            m_protocolotipomuestra = protocolotipomuestra;
             pacientenumerodocumento = m_pacientenumerodocumento;
 			m_pacienteapellido = pacienteapellido;
 			m_pacientesexo = pacientesexo;
@@ -175,11 +179,22 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
-			
-		/// <summary>
-		/// 
-		/// </summary>
-		public bool ProtocoloOrigen
+
+
+        public bool ProtocoloTipoMuestra
+        {
+            get { return m_protocolotipomuestra; }
+            set
+            {
+                m_isChanged |= (m_protocolotipomuestra != value);
+                m_protocolotipomuestra = value;
+            }
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ProtocoloOrigen
 		{
 			get { return m_protocoloorigen; }
 			set

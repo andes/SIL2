@@ -455,7 +455,7 @@
 					                
     </td>
                                        <td colspan="1" class="myLabelIzquierda"><anthem:DropDownList Visible="false" ID="ddlCaracter" runat="server" 
-                                ToolTip="Seleccione el caracter" TabIndex="14" class="form-control input-sm">
+                                ToolTip="Seleccione el caracter" TabIndex="14" Width="150px" class="form-control input-sm">
                             </anthem:DropDownList></td>
                                         <td colspan="1" align="right" >
                                       <label class = "label label-danger" id="lblNroHisopado" visible="false" runat="server">     Nro. Hisopado</label></td>
@@ -544,7 +544,7 @@
 
                                          <tr><td  >  <anthem:DropDownList ID="ddlRutina" runat="server" AutoCallBack="True"                                                
                                                 
-                               class="form-control input-sm" TabIndex="20" 
+                               class="form-control input-sm" TabIndex="20"  Width="250px"
                                 onselectedindexchanged="ddlRutina_SelectedIndexChanged">
                                           </anthem:DropDownList>
                                                  <anthem:LinkButton ID="lnkAgregarRutina" runat="server" ToolTip="Agregar Rutina" OnClientClick="javascript:AgregarDeLaListaRutina();"  Width="40px" >

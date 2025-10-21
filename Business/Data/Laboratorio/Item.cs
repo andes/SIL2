@@ -750,7 +750,7 @@ namespace Business.Data.Laboratorio
                 foreach (ResultadoItem oDet in lista)
                 {
                     if (oDet.Resultado.Length >= i)
-                        if (oDet.Resultado.Substring(0, i) == valorItem)
+                        if (oDet.Resultado.ToUpper().Substring(0, i) == valorItem.ToUpper())
                         {
                             res = oDet.Resultado; break;
                         }
@@ -907,6 +907,24 @@ namespace Business.Data.Laboratorio
 
             return dev;
         }
+
+        public string GetRecomendacion()
+        {
+            string rec="";
+            //ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria critRec = m_session.CreateCriteria(typeof(ItemRecomendacion));
+            critRec.Add(Expression.Eq("IdItem", this));
+            IList listaRecomendacion = critRec.List();
+           
+                foreach (ItemRecomendacion oRec in listaRecomendacion)
+                {
+                    if (rec == "")
+                        rec = oRec.IdRecomendacion.Descripcion;
+                else
+                        rec = rec + " " + oRec.IdRecomendacion.Descripcion;
+                }
+            return rec;
+         }
 
 
         //public string GetValorFormula(Protocolo oProtocolo)

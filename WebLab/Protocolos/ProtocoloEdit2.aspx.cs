@@ -349,15 +349,15 @@ namespace WebLab.Protocolos
                 lblTitulo.Visible = false;
                 txtFecha.Value = DateTime.Now.ToShortDateString();
                 txtFechaOrden.Value = oRegistro.Fecha.ToShortDateString();///fecha en la ficha
-                txtFechaTomaMuestra.Value = DateTime.Now.ToShortDateString();
+                txtFechaTomaMuestra.Value = oRegistro.FechaToma.ToShortDateString();///fecha toma muestra
 
                 pnlNavegacion.Visible = false;
                 btnCancelar.Text = "Cancelar";
                 btnCancelar.Width = Unit.Pixel(80);
 
-                txtNumeroOrigen.Text = oRegistro.Identificadorlabo;
+                txtNumeroOrigen2.Text = oRegistro.Identificadorlabo;//numero de pcr va en hispado o numero de origen 2
                 ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); SelectedEfector();
-                ddlOrigen.SelectedValue = "1";// oRegistro.IdOrigen.IdOrigen.ToString();//ver el origen 
+                ddlOrigen.SelectedValue =  oRegistro.IdOrigen.ToString();
                 ddlSectorServicio.SelectedValue =  oSector.IdSectorServicio.ToString();// oRegistro.IdSector.IdSectorServicio.ToString(); //ver el servicio 
                 ddlPrioridad.SelectedValue = "1";// oRegistro.IdPrioridad.IdPrioridad.ToString();
                                                  //if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
@@ -373,7 +373,7 @@ namespace WebLab.Protocolos
                 ddlEspecialista.UpdateAfterCallBack = true;
 
                 ddlMuestra.SelectedValue = oRegistro.IdTipoMuestra.ToString();
-
+                ddlOrigen.SelectedValue = oRegistro.IdOrigen.ToString();
                 txtFechaFIS.Value= oRegistro.FechaSintoma.ToShortDateString();
 
                 if (oRegistro.Analisis != "")
@@ -383,18 +383,43 @@ namespace WebLab.Protocolos
 
                 CargarDiagnosticoFicha(oRegistro.TipoFicha);
 
+                ////caracteres segun laborotorio central
+                string idCar = BuscarCaracter(oRegistro.Clasificacion);
+                if (oRegistro.TipoFicha == "UMA") idCar = "26";
+
+                ddlCaracter.SelectedValue =  idCar;
 
 
             }
 
         }
 
+        private string BuscarCaracter(string clasificacion)
+        {
+            Utility oUtil = new Utility();
+            ///Carga del combo de determinaciones
+            string m_ssql = "select top 1  idsil from Rel_andes with (nolock) where tipo='Caracter' and nombreandes='"+ clasificacion+"'";
+            NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
+            String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            SqlDataAdapter da = new SqlDataAdapter(m_ssql, strconn);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "T");
+
+
+            string sTareas = "";
+            for (int i = 0; i < ds.Tables["T"].Rows.Count; i++)
+            {
+                sTareas = ds.Tables["T"].Rows[i][0].ToString();
+            }
+            return  sTareas;
+
+        }
 
         private void CargarDiagnosticoFicha(string Tipo_ficha)
         {///CARO poner en la tabla las determinaciones por ficha dengue /sifilis
          //   Utility oUtil = new Utility();
             ///Carga del combo de determinaciones
-            string m_ssql = @"select nombresil from    Rel_andes where tipo='Diagnostico' and nombreAndes='Dengue' ";
+            string m_ssql = @"select nombresil from    Rel_andes where tipo='Diagnostico' and nombreAndes='"+ Tipo_ficha + "' ";
             
             NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
             String strconn = oConf.GetProperty("hibernate.connection.connection_string");
@@ -704,6 +729,7 @@ namespace WebLab.Protocolos
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(TurnoItem));
                 crit.Add(Expression.Eq("IdTurno", oTurno));
+                crit.AddOrder(Order.Asc("IdTurnoItem"));// correccion para ingreso ordenado
 
                 IList items = crit.List();
                 string pivot = "";
@@ -731,7 +757,8 @@ namespace WebLab.Protocolos
                 //ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit2 = m_session.CreateCriteria(typeof(TurnoDiagnostico));
                 crit2.Add(Expression.Eq("IdTurno", oTurno));
-
+                crit2.AddOrder(Order.Asc("IdTurnoDiagnostico"));// correccion para ingreso ordenado
+                 
                 IList diagnosticos = crit2.List();
 
                 foreach (TurnoDiagnostico oDiag in diagnosticos)
@@ -1704,7 +1731,9 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     (Request["Operacion"].ToString() == "AltaDerivacion") ||
                     (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
                     (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ||
-                    (Request["Operacion"].ToString() == "AltaPeticion"))
+                    (Request["Operacion"].ToString() == "AltaPeticion") ||
+                    (Request["Operacion"].ToString() == "AltaFFEE")  ///desde ficha electronica
+                    )
                     {
 
 
