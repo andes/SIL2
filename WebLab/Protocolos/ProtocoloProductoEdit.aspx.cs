@@ -2211,44 +2211,7 @@ namespace WebLab.Protocolos
             }
         }
        
-        private void VerificacionEstadoLote(Protocolo oRegistro) 
-        {
-
-            if (Request["idLote"] != null) //Si no tiene Lote, no actualiza estado de Lote
-            {
-                int idLote = Convert.ToInt32(Request["idLote"]);
-                try
-                {
-                    if (idLote != 0)
-                    {
-                        LoteDerivacion lote = new LoteDerivacion();
-                        lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
-
-
-                        if (lote.Estado == 4) //Pasa de Recibido a Ingresado
-                        {
-                            lote.Estado = 5;
-                            lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);
-                        }
-
-                        //Graba el ingreso del protocolo en el lote
-                        lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
-
-                        //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
-                        if (!lote.HayDerivacionesPendientes())
-                        {
-                            lote.Estado = 6; //Pasa a Completado si no tiene más derivaciones pendientes
-                            lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);
-                        }
-
-                        lote.Save();
-                    }
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
+       
         private void ActualizarEstadoDerivacion(Protocolo oRegistro)
         {
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -2277,6 +2240,17 @@ namespace WebLab.Protocolos
 
         }
 
+        private void VerificacionEstadoLote(Protocolo oRegistro)
+        {
+            if (Request["idLote"] != null) //Si no tiene Lote, no actualiza estado de Lote
+            {
+                int idLote = Convert.ToInt32(Request["idLote"]);
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                lote.ActualizaEstadoLote(oUser.IdUsuario, oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
+                // ActualizaEstadoLote(idLote, oRegistro);
+            }
+        }
     }
 }
 
