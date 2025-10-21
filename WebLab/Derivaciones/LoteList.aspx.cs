@@ -164,7 +164,7 @@ namespace WebLab.Derivaciones
             else
                 return consulta + "  and L.idEfectorOrigen= " + efectorOrigen + " ORDER BY E.nombre";
         }
-      
+
 
         private void CargarFiltros()
         {
@@ -256,18 +256,20 @@ namespace WebLab.Derivaciones
             if (ddlEstado.SelectedValue != "0")
                 str_condicion += " AND L.estado = " + ddlEstado.SelectedValue;
 
-            string str_sql =  @"select idLoteDerivacion as numero, fechaRegistro,  efOrigen.nombre as efectorOrigen, efOrigen.idEfector as idEfectorOrigen,
-                                 efDestino.nombre as efectorDestino, E.nombre AS estado, isnull(U.apellido, 'Automatico') as username
-                                 from LAB_LoteDerivacion L (nolock)
-                                                INNER JOIN LAB_LoteDerivacionEstado E(nolock) ON E.idEstado = L.estado
-                                                INNER JOIN Sys_Efector efOrigen (nolock) ON efOrigen.idEfector = L.idEfectorOrigen
-                                                INNER JOIN Sys_Efector efDestino (nolock) ON efDestino.idEfector = L.idEfectorDestino
-                                                INNER JOIN Sys_Usuario U (nolock) ON U.idUsuario = L.idUsuarioRegistro
-                                                where " + str_condicion;
+            
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(str_sql, conn);
+            SqlDataAdapter adapter;
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "[LAB_ListaLotes]";
+            cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
+            cmd.Parameters["@FiltroBusqueda"].Value = str_condicion;
+            cmd.Connection = conn;
+
+
+            adapter = new SqlDataAdapter(cmd);
             adapter.Fill(Ds);
 
             CantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
@@ -350,7 +352,7 @@ namespace WebLab.Derivaciones
                         //tengo que cargar la configuracion del efector Origen
                         int efectorOrigen = Convert.ToInt32(((LinkButton)sender).CommandName);
                         Efector ef = new Efector();
-                        ef = (Efector) ef.Get(typeof(Efector), "IdEfector", efectorOrigen);
+                        ef = (Efector)ef.Get(typeof(Efector), "IdEfector", efectorOrigen);
                         oC = new Configuracion();
                         oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", ef);
                     }
@@ -450,17 +452,20 @@ namespace WebLab.Derivaciones
                 {
                     if (gvLista.Rows.Count != 0)
                     {
-                        DataTable tabla = ViewState["Datos"] as DataTable; 
-                       
+                        DataTable tabla = ViewState["Datos"] as DataTable;
+
                         if (tabla.Rows.Count > 0)
                         {
                             tabla.Columns.Remove("idEfectorOrigen");
                             tabla.Columns["numero"].ColumnName = "Nro.";
-                            tabla.Columns["fechaRegistro"].ColumnName = "Fecha Generación";
+                            tabla.Columns["fechaRegistro"].ColumnName = "Fecha";
                             tabla.Columns["efectorOrigen"].ColumnName = "Efector Origen";
                             tabla.Columns["efectorDestino"].ColumnName = "Efector Destino";
                             tabla.Columns["estado"].ColumnName = "Estado";
-                            tabla.Columns["username"].ColumnName = "Usuario Generación";
+                            tabla.Columns["username"].ColumnName = "Usuario Gen.";
+                            tabla.Columns["fechaGeneracion"].ColumnName = "Fecha Gen.";
+                            tabla.Columns["fechaIngreso"].ColumnName = "Fecha Ing.";
+                            tabla.Columns["fechaEnvio"].ColumnName = "Fecha Envio";
 
                             StringBuilder sb = new StringBuilder();
                             StringWriter sw = new StringWriter(sb);
