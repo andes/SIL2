@@ -13,6 +13,7 @@
 		<property column="protocoloOrigen" type="Boolean" name="ProtocoloOrigen" not-null="true" />
 		<property column="protocoloSector" type="Boolean" name="ProtocoloSector" not-null="true" />
 		<property column="protocoloNumeroOrigen" type="Boolean" name="ProtocoloNumeroOrigen" not-null="true" />
+    <property column="protocoloTipoMuestra" type="Boolean" name="ProtocoloTipoMuestra" not-null="true" />
     <property column="pacienteNumeroDocumento" type="Boolean" name="PacienteNumeroDocumento" not-null="true" />
 		<property column="pacienteApellido" type="Boolean" name="PacienteApellido" not-null="true" />
 		<property column="pacienteSexo" type="Boolean" name="PacienteSexo" not-null="true" />

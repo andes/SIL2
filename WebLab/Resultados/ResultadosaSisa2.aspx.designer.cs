@@ -184,6 +184,33 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidItemSIL;
         
         /// <summary>
+        /// HidCaracter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidCaracter;
+        
+        /// <summary>
+        /// HidGrupoEvento control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidGrupoEvento;
+        
+        /// <summary>
+        /// HidClasificacionManual control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidClasificacionManual;
+        
+        /// <summary>
         /// btnSISA control.
         /// </summary>
         /// <remarks>

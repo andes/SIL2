@@ -4,6 +4,7 @@ using Business.Data.Laboratorio;
 using CrystalDecisions.Shared;
 using CrystalDecisions.Web;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -45,6 +46,7 @@ namespace WebLab.Derivaciones
             {
                 if (!IsPostBack)
                 {
+                    VerificaPermisos("Lista de Lotes");
                     lblTitulo.Text = "LISTA DE LOTES";
                     habilitaOrdenarEfector();
                     CargarFiltros();
@@ -53,6 +55,29 @@ namespace WebLab.Derivaciones
             else
                 Response.Redirect("../FinSesion.aspx", false);
 
+        }
+        private void VerificaPermisos(string sObjeto)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                if (Session["s_permiso"] != null)
+                {
+                    Utility oUtil = new Utility();
+                    Permiso = oUtil.VerificaPermisos((ArrayList)Session["s_permiso"], sObjeto);
+                    switch (Permiso)
+                    {
+                        case 0: Response.Redirect("../AccesoDenegado.aspx", false); break;
+
+                    }
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+        }
+        private int Permiso /*el permiso */
+        {
+            get { return ViewState["Permiso"] == null ? 0 : int.Parse(ViewState["Permiso"].ToString()); }
+            set { ViewState["Permiso"] = value; }
         }
         private void habilitaOrdenarEfector()
         {

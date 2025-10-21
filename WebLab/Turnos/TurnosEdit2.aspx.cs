@@ -200,6 +200,7 @@ namespace WebLab.Turnos
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(TurnoItem));
                 crit.Add(Expression.Eq("IdTurno", oRegistro));
+                crit.AddOrder(Order.Asc("IdTurnoItem"));// correccion para visualizacion ordenada
 
                 IList items = crit.List();
                 string pivot = "";
@@ -220,6 +221,7 @@ namespace WebLab.Turnos
                 TurnoDiagnostico oDiagnostico = new TurnoDiagnostico();
                 ICriteria crit2 = m_session.CreateCriteria(typeof(TurnoDiagnostico));
                 crit2.Add(Expression.Eq("IdTurno", oRegistro));
+                crit2.AddOrder(Order.Asc("IdTurnoDiagnostico"));// correccion para visualizacion ordenada
 
                 IList diagnosticos = crit2.List();
 
@@ -507,7 +509,8 @@ ORDER BY cantidad desc";
             {
                 Item oItem = new Item();
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-                txtCodigo.Text = oItem.Codigo;
+                if (oItem!=null)
+                    txtCodigo.Text = oItem.Codigo;
                 txtCodigo.UpdateAfterCallBack = true;
             }
         }
@@ -637,14 +640,14 @@ ORDER BY cantidad desc";
             ICriteria crit = m_session.CreateCriteria(typeof(TurnoDiagnostico));
             crit.Add(Expression.Eq("IdTurno", oRegistro));
             IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
+            //if (detalle.Count > 0)
+            //{
                 foreach (TurnoDiagnostico oDetalle in detalle)
                 {
                     oDetalle.Delete();
                 }
 
-            }
+            //}
 
             /////Crea nuevamente los detalles.
             for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
@@ -808,13 +811,13 @@ ORDER BY cantidad desc";
             ICriteria crit = m_session.CreateCriteria(typeof(TurnoItem));
             crit.Add(Expression.Eq("IdTurno", oRegistro));
             IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
+            //if (detalle.Count > 0)
+            //{
                 foreach (TurnoItem oDetalle in detalle)
                 {
                     oDetalle.Delete();
                 }
-            }
+            //}
 
 
             string[] tabla = TxtDatos.Value.Split('@');
@@ -829,36 +832,47 @@ ORDER BY cantidad desc";
                 {  
                     Item oItem = new Item();
                     oItem= (Item)oItem.Get(typeof(Item), "Codigo", codigo,"Baja",false);
-                   
-                    //ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria critRec = m_session.CreateCriteria(typeof(ItemRecomendacion));
-                    critRec.Add(Expression.Eq("IdItem", oItem));
-                    IList listaRecomendacion = critRec.List();
-                    if (listaRecomendacion.Count > 0)
-                    {
-                        foreach (ItemRecomendacion oRec in listaRecomendacion)
-                        {  
-                            TurnoItem oDetalle = new TurnoItem();                  
-                            oDetalle.IdTurno = oRegistro;
-                            oDetalle.IdEfector = oRegistro.IdEfector;
-                            oDetalle.IdItem = oItem;
-                            ///buscar recomdaciones asociadas al item                    
-                            oDetalle.Recomendacion = oRec.IdRecomendacion.Descripcion;
-                            oDetalle.Save();
-                            
-                        }
-                    }
-                    else /// si no hay ninguna recomendacion se guarda vacia
-                    {
 
-                         TurnoItem oDetalle = new TurnoItem();                  
-                            oDetalle.IdTurno = oRegistro;
-                            oDetalle.IdEfector = oRegistro.IdEfector;
-                            oDetalle.IdItem = oItem;
-                            ///buscar recomdaciones asociadas al item                    
-                            oDetalle.Recomendacion ="";
-                            oDetalle.Save();
+                    if (oItem != null)
+                    {
+                       string rec= oItem.GetRecomendacion();
+                        TurnoItem oDetalle = new TurnoItem();
+                        oDetalle.IdTurno = oRegistro;
+                        oDetalle.IdEfector = oRegistro.IdEfector;
+                        oDetalle.IdItem = oItem;
+                        ///buscar recomdaciones asociadas al item                    
+                        oDetalle.Recomendacion = rec;  
+                        oDetalle.Save();
                     }
+                    ////ISession m_session = NHibernateHttpModule.CurrentSession;
+                    //ICriteria critRec = m_session.CreateCriteria(typeof(ItemRecomendacion));
+                    //critRec.Add(Expression.Eq("IdItem", oItem));
+                    //IList listaRecomendacion = critRec.List();
+                    //if (listaRecomendacion.Count > 0)
+                    //{
+                    //    foreach (ItemRecomendacion oRec in listaRecomendacion)
+                    //    {  
+                    //        TurnoItem oDetalle = new TurnoItem();                  
+                    //        oDetalle.IdTurno = oRegistro;
+                    //        oDetalle.IdEfector = oRegistro.IdEfector;
+                    //        oDetalle.IdItem = oItem;
+                    //        ///buscar recomdaciones asociadas al item                    
+                    //        oDetalle.Recomendacion = oRec.IdRecomendacion.Descripcion;
+                    //        oDetalle.Save();
+                            
+                    //    }
+                    //}
+                    //else /// si no hay ninguna recomendacion se guarda vacia
+                    //{
+
+                    //     TurnoItem oDetalle = new TurnoItem();                  
+                    //        oDetalle.IdTurno = oRegistro;
+                    //        oDetalle.IdEfector = oRegistro.IdEfector;
+                    //        oDetalle.IdItem = oItem;
+                    //        ///buscar recomdaciones asociadas al item                    
+                    //        oDetalle.Recomendacion ="";
+                    //        oDetalle.Save();
+                    //}
 
 
                 }

@@ -1573,7 +1573,7 @@ namespace WebLab.Placas {
                                     lblFIS.ForeColor = Color.Red;
                                 lblFIS.Visible = true;
 
-                                string res = arr[5].ToString();
+                                string res = arr[5].ToString().ToUpper();//compatible para resultado informado en minusculas
 
                               
  
@@ -1806,7 +1806,7 @@ namespace WebLab.Placas {
 
 
 
-                            string res = arr[5].ToString();
+                            string res = arr[5].ToString().ToUpper();///compatible mayuscula y miniscula
                             Control control5 = Master.FindControl("ContentPlaceHolder1").FindControl("pnlAlplex").FindControl(lblresultado);
                             Label lblResultado = (Label)control5;
                             lblResultado.Text = lblResultado.Text.Replace("Label", "");
@@ -1903,7 +1903,7 @@ namespace WebLab.Placas {
                                 lblCt1.Text = arrct[0].ToString();
 
 
-                                res  = arr[5].ToString().ToUpper();
+                                res  = arr[5].ToString().ToUpper();///compatibla may y min
 
 
                                  
@@ -2251,7 +2251,7 @@ where   DPP.idDetalleProtocolo= " + idDetalleProtocolo.ToString() + "  and DPP.i
             return ct;
         }
 
-        private string getDeterminacion(string tipoct)
+     private string getDeterminacion(string tipoct)
         {
             string m_strSQL = "";
             //string ct = "";
@@ -2277,7 +2277,7 @@ select 1 from lab_item b (nolock) where b.idItemReferencia=a.iditem and codigo='
             }
             return codigo;
         }
-
+       
         private string getNumeroProtocolo(int idDetalleProtocolo)
         {
             try
@@ -3029,9 +3029,9 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                         default:                            
                             if (valorItem != "")
                             {
-                                if (valorItem == "SE DETEC")
+                                if (valorItem.ToUpper() == "SE DETEC")
                                     oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
-                                if (valorItem == "NO SE DET")
+                                if (valorItem.ToUpper() == "NO SE DET")
                                     oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
                                 oDetalle.ConResultado = true;
                             }
@@ -3094,7 +3094,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                             if (valorItem.Length > 10)
                                 res = valorItem.Substring(0, 10);
 
-                            if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DET"))// GENOMA DE COVID-19"))
+                            if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res.ToUpper() == "SE DET"))// GENOMA DE COVID-19"))
                             {
                                 if (oCon.PreValida)
                                 {
@@ -3708,7 +3708,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                 if (valorItem.Length > 10)
                                     res = valorItem.Substring(0, 10);
 
-                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))// GENOMA DE COVID-19"))
+                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res.ToUpper() == "SE DETECTA"))// GENOMA DE COVID-19"))
                                 {
 
                                     if (oCon.PreValida)

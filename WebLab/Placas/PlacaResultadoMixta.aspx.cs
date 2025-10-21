@@ -575,7 +575,7 @@ namespace WebLab.Placas {
                                 lblFIS.ForeColor = Color.Red;
                             lblFIS.Visible = true;
 
-                            string res = arr[5].ToString();
+                            string res = arr[5].ToString().ToUpper();
 
                           
 
@@ -1527,12 +1527,12 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                             default:
                                 if (valorItem != "")
                                 {
-                                    if (valorItem == "SE DETECTA")
+                                    if (valorItem.ToUpper() == "SE DETECTA")
                                     {
                                         valorItem = "SE DETECT";
                                         oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
                                     }
-                                    if (valorItem == "NO SE DETECTA")
+                                    if (valorItem.ToUpper() == "NO SE DETECTA")
                                     {
                                       valorItem = "NO SE DETECT";
                                         oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
@@ -1598,7 +1598,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                 if (valorItem.Length > 10)
                                     res = valorItem.Substring(0, 10);
 
-                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))// GENOMA DE COVID-19"))
+                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res.ToUpper() == "SE DETECTA"))// GENOMA DE COVID-19"))
                                 {
 
                                     if (oCon.PreValida)
