@@ -440,8 +440,10 @@ namespace WebLab.Derivaciones
                     oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
                 }
                 else
-                    Response.Redirect("../FinSesion.aspx", false);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('No se encontraron datos para el numero de lote ingresado');", true);
+
             }
+            else  Response.Redirect("../FinSesion.aspx", false);
         }
 
         protected void lnkExcel_Click(object sender, EventArgs e)
