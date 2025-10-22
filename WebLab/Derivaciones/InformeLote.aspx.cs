@@ -291,6 +291,8 @@ namespace WebLab.Derivaciones
                 string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+idLote);
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
             }
+            else
+                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('No se encontraron datos para el numero de lote ingresado');", true);
         }
 
 
@@ -318,9 +320,9 @@ namespace WebLab.Derivaciones
                 }
                 else
                 { //Es el idLote con error
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: El lote Nro:"+idLote+" no se puede derivar, no tiene determinaciones asociadas.\\nDescarte el lote por falta de determinaciones o modifique el lote agregando determinaciones');", true);
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
                 }
-               
+
             }
             else
             {
@@ -341,19 +343,12 @@ namespace WebLab.Derivaciones
                     if (a.Checked)
                     {
                         int idLote = Convert.ToInt32(row.Cells[2].Text);
-                        string consultaSql = @"select top 1 1 from LAB_LoteDerivacion L with (nolock)
-                                                inner join LAB_Derivacion D with (nolock) ON D.idLote = L.idLoteDerivacion
-                                                where idLote =" + idLote;
-                        DataTable dt =  GetData(consultaSql);
-                        if(dt.Rows.Count ==  0)
+                        DataTable dt =  GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
+                        if(dt.Rows.Count ==  0)  
                             return  idLote;
-                        
                     }
-
                 }
-
             }
-
             return tieneDeterminaciones;
         }
 
@@ -372,7 +367,6 @@ namespace WebLab.Derivaciones
                         int idUsuario = oUser.IdUsuario;
                         int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
                         string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-                        //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
                         string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
                         LoteDerivacion lote = new LoteDerivacion();
                         lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
@@ -380,9 +374,9 @@ namespace WebLab.Derivaciones
                     //Se cambia el estado del lote LAB_LoteDerivacion
                     lote.Estado = estadoLote;
                     lote.Observacion = observacion;
-                    lote.IdUsuarioEnvio = idUsuario;
-                    //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
-                    string fecha_hora = txtFecha.Text + " " + txtHora.Text;
+                    lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
+                        //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
+                        string fecha_hora = txtFecha.Text + " " + txtHora.Text;
                     lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                     lote.Save();
                    
