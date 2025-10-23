@@ -68,8 +68,8 @@
                           <asp:Label Text="Nro. Lote:" runat="server"/>
                       </td>
                       <td class="" >
-                          <asp:TextBox runat="server" ID="tb_nrolote" CssClass="form-control input-sm" Width="200px"  />
-                          <asp:CustomValidator id="cv_nroLote" runat="server" ErrorMessage="Nro de Lote inexistente" OnServerValidate="cv_nroLote_ServerValidate" ControlToValidate="tb_nrolote" Display="Static" ValidationGroup="0"/>
+                          <asp:TextBox runat="server" ID="tbNrolote" CssClass="form-control input-sm" Width="200px"  />
+                          <asp:CustomValidator id="cvNroLote" runat="server" ErrorMessage="Nro de Lote inexistente" OnServerValidate="cv_nroLote_ServerValidate" ControlToValidate="tbNrolote" Display="Static" ValidationGroup="0"/>
                       </td>
                   </tr>
 						
@@ -95,7 +95,7 @@
 
 					<tr> 	<td colspan="2">
                         <hr />
-                            <asp:CustomValidator ID="cv_botonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
+                            <asp:CustomValidator ID="cvBotonBuscar"  runat="server" ValidationGroup="0"  ErrorMessage="No hay coincidencias con los criterios ingresados." Display="Dynamic" />
 
 
 					     	</td> </tr>

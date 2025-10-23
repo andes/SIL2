@@ -85,7 +85,7 @@
                                 <tr>
                                     <td class="myLabelIzquierda">Efector Origen:</td>
                                     <td>
-                                        <asp:DropDownList ID="ddlEfectorOrigen" runat="server" ToolTip="Seleccione el efector" TabIndex="6" Width="250px" class="form-control input-sm" OnSelectedIndexChanged="ddlEfectorOrigen_SelectedIndexChanged"  AutoPostBack="true"></asp:DropDownList>
+                                        <asp:DropDownList ID="ddlEfectorOrigen" runat="server" ToolTip="Seleccione el efector" TabIndex="6" Width="250px" class="form-control input-sm" OnSelectedIndexChanged="ddlEfectorOrigen_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                     </td>
 
                                     <td class="myLabelIzquierda">Efector Destino:</td>
@@ -104,7 +104,7 @@
                                 <table style="width: 100%;">
                                     <tr>
                                         <td align="right">
-                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary"  OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
+                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -136,11 +136,14 @@
                                                     <asp:BoundField DataField="idEfectorOrigen" Visible="false" />
                                                     <asp:BoundField DataField="efectorDestino" HeaderText="Efector Destino" SortExpression="efectorDestino" />
                                                     <asp:BoundField DataField="estado" HeaderText="Estado" SortExpression="estado" />
-                                                    <asp:BoundField DataField="username" HeaderText="Usuario Generaci&oacute;n" SortExpression="username" />
+                                                    <asp:BoundField DataField="username" HeaderText="Usuario Gen." SortExpression="username" />
+                                                    <asp:BoundField DataField="fechaGeneracion" HeaderText="Fecha Gen." SortExpression="fechaGeneracion"/>
+                                                    <asp:BoundField DataField="fechaEnvio" HeaderText="Fecha Envio" SortExpression="fechaEnvio"/>
+                                                    <asp:BoundField DataField="fechaIngreso" HeaderText="Fecha Ing." SortExpression="fechaIngreso" />
                                                     <asp:TemplateField HeaderText="Auditoria">
                                                         <ItemTemplate>
                                                             <asp:LinkButton runat="server" ID="lnkPDFAuditoria" OnCommand="lnkPDFAuditoria_Command" CommandArgument='<%# Eval("numero") %>'
-                                                                CommandName= '<%# Eval("idEfectorOrigen") %>'>
+                                                                CommandName='<%# Eval("idEfectorOrigen") %>'>
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
@@ -149,7 +152,7 @@
                                                     <asp:TemplateField HeaderText="Reimprimir">
                                                         <ItemTemplate>
                                                             <asp:LinkButton runat="server" ID="lnkPDFImprimir" OnCommand="lnkPDFImprimir_Command" CommandArgument='<%# Eval("numero") %>'
-                                                                CommandName= '<%# Eval("idEfectorOrigen") %>'>
+                                                                CommandName='<%# Eval("idEfectorOrigen") %>'>
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>

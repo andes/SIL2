@@ -52,18 +52,18 @@ namespace WebLab.Protocolos
             lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
             //lbl_FechaRegistro.Text = lote.FechaRegistro.Substring(0, 10);
             //fechaEnvio.Text = DateTime.Parse(lote.FechaEnvio.Substring(0, 10)).ToString("yyyy-MM-dd");
-            hid_fechaEnvio.Value = lote.FechaEnvio.ToString("yyyy-MM-dd");
-            lbl_fechaPermitida.Text = "Fecha envio: " + lote.FechaEnvio;
+            hidFechaEnvio.Value = lote.FechaEnvio.ToString("yyyy-MM-dd");
+            lblFechaPermitida.Text = "Fecha envio: " + lote.FechaEnvio;
             Efector origen = new Efector();
             origen = (Efector)origen.Get(typeof(Efector), lote.IdEfectorOrigen.IdEfector);
-            lb_efector.Text = origen.Nombre;
+            lbEfector.Text = origen.Nombre;
 
             CargarFechaHoraActual();
 
             //LAB-56 Cargo el transportista 
             List<AuditoriaLoteDerivacion> auditorias = AuditoriaLoteDerivacion.AuditoriasPorLote(Convert.ToInt32(Request["idLote"]));
             AuditoriaLoteDerivacion transporte = auditorias.FindLast(a => a.Analisis == "Transportista");
-            lbl_transportista.Text = transporte.Valor;
+            lblTransportista.Text = transporte.Valor;
 
 
         }
@@ -71,13 +71,13 @@ namespace WebLab.Protocolos
         {
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
             //txt_Fecha.Value = miFecha.Date.ToString("yyyy-MM-dd");
-            txt_Hora.Value = miFecha.ToString("HH:mm");
+            txtHora.Value = miFecha.ToString("HH:mm");
             txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
 
             //LAB-74 Control de fecha: La fecha de ingreso del lote no puede ser anterior a la fecha de envio del lote
-            rv_Fecha.MinimumValue = hid_fechaEnvio.Value;
-            rv_Fecha.MaximumValue = txtFecha.Text; //Fecha Date today
-            rv_Fecha.Text = "La fecha de recepcion no puede ser menor a la fecha de envio " + hid_fechaEnvio.Value;
+            rvFecha.MinimumValue = hidFechaEnvio.Value;
+            rvFecha.MaximumValue = txtFecha.Text; //Fecha Date today
+            rvFecha.Text = "La fecha de recepcion no puede ser menor a la fecha de envio " + hidFechaEnvio.Value;
 
 
         }
@@ -142,14 +142,14 @@ namespace WebLab.Protocolos
             //    lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Fecha Recibido", f.ToString("yyyy-MM-dd")); //Cambio formato de fecha asi tiene el mismo cuando se retira el lote
             //}
 
-            if (!string.IsNullOrEmpty(txt_Hora.Value))
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Hora Recibido", txt_Hora.Value);
+            if (!string.IsNullOrEmpty(txtHora.Value))
+                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Hora Recibido", txtHora.Value);
 
             //if (!string.IsNullOrEmpty(txt_transportista.Text))
             //    lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Transportista", txt_transportista.Text);
 
-            if (!string.IsNullOrEmpty(txt_obs.Value))
-                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Observacion", txt_obs.Value);
+            if (!string.IsNullOrEmpty(txtObs.Value))
+                lote.GrabarAuditoriaLoteDerivacion(estado, oUser.IdUsuario, "Observacion", txtObs.Value);
         }
         #endregion
 

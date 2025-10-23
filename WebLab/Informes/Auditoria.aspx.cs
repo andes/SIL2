@@ -97,7 +97,7 @@ namespace WebLab.Informes
                     pnlControlProtocolo.Visible = true;
                     pnlControlAcceso.Visible = false;
                     pnControlLote.Visible = false;
-
+                    txtProtocolo.Focus();
 
                 }
                 break;
@@ -110,6 +110,7 @@ namespace WebLab.Informes
                     pnlControlProtocolo.Visible = false;
                     pnlControlAcceso.Visible = false;
                     pnControlLote.Visible = true;
+                    txtLote.Focus();
                 }
                 break;
             }
@@ -476,7 +477,7 @@ namespace WebLab.Informes
                             FROM LAB_AuditoriaLote AS A with (nolock)
                             left JOIN Sys_Usuario AS U with (nolock) ON A.idUsuario = U.idUsuario
                             inner join  LAB_LoteDerivacion L  with (nolock) on L.idLoteDerivacion= A.idLote
-                            where  L.idLoteDerivacion = " + txt_lote.Text.Trim() + m_strCondicion + " ORDER BY A.idAuditoriaLote";
+                            where  L.idLoteDerivacion = " + txtLote.Text.Trim() + m_strCondicion + " ORDER BY A.idAuditoriaLote";
 
             DataSet Ds1 = new DataSet();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
@@ -525,7 +526,7 @@ namespace WebLab.Informes
                 oCr.DataBind();
 
                 Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Auditoria_Lote_" + txt_lote.Text);
+                string nombrePDF = oUtil.CompletarNombrePDF("Auditoria_Lote_" + txtLote.Text);
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
 
 
