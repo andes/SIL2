@@ -133,28 +133,31 @@ namespace WebLab.Resultados
 
         protected void txtCodigoMuestra_TextChanged(object sender, EventArgs e)
         {
-            try
+            if (Session["idUsuario"] != null)
             {
-                Muestra oMuestra = new Muestra();
-                oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "Codigo", txtCodigoMuestra.Text, "Baja", false);
-                if (oMuestra != null) ddlMuestra.SelectedValue = oMuestra.IdMuestra.ToString();
-                ddlMuestra.UpdateAfterCallBack = true;
-            }
-            catch (Exception ex)
-            {
-                string exception = "";
-                while (ex != null)
+                try
                 {
-                    exception = ex.Message + "<br>";
+                    Muestra oMuestra = new Muestra();
+                    oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "Codigo", txtCodigoMuestra.Text, "Baja", false);
+                    if (oMuestra != null) ddlMuestra.SelectedValue = oMuestra.IdMuestra.ToString();
+                    ddlMuestra.UpdateAfterCallBack = true;
+                }
+                catch (Exception ex)
+                {
+                    string exception = "";
+                    while (ex != null)
+                    {
+                        exception = ex.Message + "<br>";
 
+                    }
                 }
             }
         }
 
         protected void ddlMuestra_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            mostrarCodigoMuestra();
+            if (Session["idUsuario"] != null)
+                mostrarCodigoMuestra();
 
         }
 
@@ -268,17 +271,19 @@ namespace WebLab.Resultados
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            { ///Verifica si se trata de un alta o modificacion de protocolo               
-                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-                if (oRegistro != null)
-                {
-                    Guardar(oRegistro);
+            if (Session["idUsuario"] != null)
+            {
+                if (Page.IsValid)
+                { ///Verifica si se trata de un alta o modificacion de protocolo               
+                    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                    if (oRegistro != null)
+                    {
+                        Guardar(oRegistro);
+                    }
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
                 }
-                Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
             }
-               
 
         }
 
@@ -458,86 +463,86 @@ namespace WebLab.Resultados
 
 
         }
-        private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
-        {
-            ///Eliminar los detalles para volverlos a crear            
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-            IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
-                foreach (DetalleProtocolo oDetalle in detalle)
-                {
-                    oDetalle.Delete();
-                }
-            }
+        //private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
+        //{
+        //    ///Eliminar los detalles para volverlos a crear            
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //    crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+        //    IList detalle = crit.List();
+        //    if (detalle.Count > 0)
+        //    {
+        //        foreach (DetalleProtocolo oDetalle in detalle)
+        //        {
+        //            oDetalle.Delete();
+        //        }
+        //    }
 
 
-            int dias_espera = 0;
-            string[] tabla = TxtDatos.Value.Split('@');
+        //    int dias_espera = 0;
+        //    string[] tabla = TxtDatos.Value.Split('@');
 
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-
-
-                string codigo = fila[1].ToString();
-                if (codigo != "")
-                {
-                    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                    Item oItem = new Item();
-                    oDetalle.IdProtocolo = oRegistro;
-                    oDetalle.IdEfector = oRegistro.IdEfector;
-
-                    string trajomuestra = fila[3].ToString();
-
-                    oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
-
-                    if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
-
-                    /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                    if (a.Checked)
-                        oDetalle.TrajoMuestra = "Si";
-                    else*/
-
-                    if (trajomuestra == "true")
-                        oDetalle.TrajoMuestra = "No";
-                    else
-                        oDetalle.TrajoMuestra = "Si";
+        //    for (int i = 0; i < tabla.Length - 1; i++)
+        //    {
+        //        string[] fila = tabla[i].Split('#');
 
 
-                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaControl = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
-                    GuardarDetallePractica(oDetalle);
-                }
-            }
+        //        string codigo = fila[1].ToString();
+        //        if (codigo != "")
+        //        {
+        //            DetalleProtocolo oDetalle = new DetalleProtocolo();
+        //            Item oItem = new Item();
+        //            oDetalle.IdProtocolo = oRegistro;
+        //            oDetalle.IdEfector = oRegistro.IdEfector;
+
+        //            string trajomuestra = fila[3].ToString();
+
+        //            oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
+
+        //            if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
+
+        //            /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //            if (a.Checked)
+        //                oDetalle.TrajoMuestra = "Si";
+        //            else*/
+
+        //            if (trajomuestra == "true")
+        //                oDetalle.TrajoMuestra = "No";
+        //            else
+        //                oDetalle.TrajoMuestra = "Si";
 
 
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
-          //  DateTime fechaentrega;
-            //if (oCon.TipoCalculoDiasRetiro == 0)
-
-            if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
-                if (oCon.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
-                else   // calcula con los días predeterminados de espera
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oCon.DiasRetiro));
-            else
-                oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
-
+        //            oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaControl = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
+        //            GuardarDetallePractica(oDetalle);
+        //        }
+        //    }
 
 
+        //    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
+        //  //  DateTime fechaentrega;
+        //    //if (oCon.TipoCalculoDiasRetiro == 0)
 
-            oRegistro.Save();
+        //    if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
+        //        if (oCon.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
+        //            oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
+        //        else   // calcula con los días predeterminados de espera
+        //            oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oCon.DiasRetiro));
+        //    else
+        //        oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
 
 
-        }
+
+
+        //    oRegistro.Save();
+
+
+        //}
 
 
 
@@ -645,47 +650,23 @@ namespace WebLab.Resultados
 
 
 
-        protected void txtCodigo_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ///////Con la selección del item se muestra el codigo
-            if (ddlItem.SelectedValue != "0")
+            if (Session["idUsuario"] != null)
             {
-                Item oItem = new Item();
-                oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-                txtCodigo.Text = oItem.Codigo;
+                ///////Con la selección del item se muestra el codigo
+                if (ddlItem.SelectedValue != "0")
+                {
+                    Item oItem = new Item();
+                    oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
+                    txtCodigo.Text = oItem.Codigo;
 
+                }
+                else
+                    txtCodigo.Text = "";
+
+                txtCodigo.UpdateAfterCallBack = true;
             }
-            else
-                txtCodigo.Text = "";
-
-            txtCodigo.UpdateAfterCallBack = true;
-
-
-        }
-
-
-
-        
-
-        protected void txtCodigo_TextChanged1(object sender, EventArgs e)
-        {
-
-        }
-
-        
-
-
-
-        protected void btnAgregarRutina_Click(object sender, EventArgs e)
-        {
-            // if (ddlRutina.SelectedValue != "0")
-            // AgregarRutina();           
-
         }
 
         private void AgregarRutina()
@@ -721,63 +702,58 @@ namespace WebLab.Resultados
 
         protected void ddlRutina_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddlRutina.SelectedValue != "0")
-                AgregarRutina();
+
+            if (Session["idUsuario"] != null)
+                if (ddlRutina.SelectedValue != "0")
+                     AgregarRutina();
         }
 
-
-
-
-
-       
-       
-        protected void cvAnalisis_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-
-
-        }
 
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            TxtDatosCargados.Value = TxtDatos.Value;
-
-            string sDatos = "";
-
-            string[] tabla = TxtDatos.Value.Split('@');
-
-            for (int i = 0; i < tabla.Length - 1; i++)
+            if (Session["idUsuario"] != null) 
             {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra = fila[2].ToString();
+                TxtDatosCargados.Value = TxtDatos.Value;
 
-                if (sDatos == "")
-                    sDatos = codigo + "#" + muestra;
-                else
-                    sDatos += ";" + codigo + "#" + muestra;
+                string sDatos = "";
 
-            }
+                string[] tabla = TxtDatos.Value.Split('@');
 
-            TxtDatosCargados.Value = sDatos;
-
-            if (!VerificarAnalisisContenidos())
-            {
-                TxtDatos.Value = "";
-                args.IsValid = false;
-
-                return;
-            }
-            else
-            {
-                if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
+                for (int i = 0; i < tabla.Length - 1; i++)
                 {
+                    string[] fila = tabla[i].Split('#');
+                    string codigo = fila[1].ToString();
+                    string muestra = fila[2].ToString();
 
+                    if (sDatos == "")
+                        sDatos = codigo + "#" + muestra;
+                    else
+                        sDatos += ";" + codigo + "#" + muestra;
+
+                }
+
+                TxtDatosCargados.Value = sDatos;
+
+                if (!VerificarAnalisisContenidos())
+                {
+                    TxtDatos.Value = "";
                     args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
+
                     return;
                 }
-                else args.IsValid = true;            
+                else
+                {
+                    if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
+                    {
+
+                        args.IsValid = false;
+                        this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
+                        return;
+                    }
+                    else args.IsValid = true;
+                }
             }
+               
         }
 
         private bool VerificarAnalisisContenidos()
@@ -894,9 +870,6 @@ namespace WebLab.Resultados
 
 
          
-
-      
-
 
     }
 }
