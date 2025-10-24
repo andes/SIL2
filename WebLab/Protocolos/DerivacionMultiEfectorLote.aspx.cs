@@ -320,13 +320,12 @@ namespace WebLab.Protocolos
             p = (Protocolo)p.Get(typeof(Protocolo), idProtocoloOrigen);
 
             s_idServicio = p.IdTipoServicio.IdTipoServicio.ToString();
-            m_numero = p.Numero.ToString();
             idLote = txtNumeroLote.Text;
            
             if(idPaciente > 0)
             {
                 Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
-                    "&numeroProtocolo=" + m_numero +
+                    "&idProtocolo=" + idProtocoloOrigen +
                     "&idServicio=" + s_idServicio +
                     "&idLote=" + idLote +
                     "&idPaciente=" + idPaciente +
@@ -336,12 +335,11 @@ namespace WebLab.Protocolos
             {
                 //Es Muestra No Pacientes
                 Response.Redirect("ProtocoloProductoEdit.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
-                   "&numeroProtocolo=" + m_numero +
+                   "&idProtocolo=" + idProtocoloOrigen +
                    "&idServicio=" + s_idServicio +
                    "&idLote=" + idLote +
                    "&Desde=AltaDerivacionMultiEfectorLote" +
                    "&Operacion=AltaDerivacionMultiEfectorLote" , false);
-                //idprotocolo
             }
            
         }
