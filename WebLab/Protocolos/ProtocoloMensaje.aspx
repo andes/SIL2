@@ -38,11 +38,6 @@
             <div class="panel-footer">
                 <table width="100%">
                     <tr>
-                        <td align="left">
-                            <asp:LinkButton ID="lnkRegresar" runat="server" Text="Regresar" Visible="false"
-                                OnClick="lnkRegresar_Click" class="btn btn-primary" TabIndex="99"
-                                CausesValidation="False" Width="80px" />
-                        </td>
                         <td>
                             <asp:LinkButton Width="140px"
                                 ID="lnkNuevo" runat="server" CssClass="btn btn-info"

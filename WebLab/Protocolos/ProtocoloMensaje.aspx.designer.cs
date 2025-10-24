@@ -69,15 +69,6 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.Label lblDescripcion;
 
         /// <summary>
-        /// lnkRegresar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkRegresar;
-
-        /// <summary>
         /// lnkNuevo control.
         /// </summary>
         /// <remarks>

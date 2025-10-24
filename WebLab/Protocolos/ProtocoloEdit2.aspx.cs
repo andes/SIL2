@@ -249,10 +249,11 @@ namespace WebLab.Protocolos
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" )
                             {
-
-                               string numeroProtocolo= Request["numeroProtocolo"].ToString();
-                                string analisis= Request["analisis"].ToString();
-                                CargarProtocoloDerivado(numeroProtocolo, analisis);
+                                int numeroProtocolo = int.Parse(Session["numeroProtocolo"].ToString()); 
+                                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", numeroProtocolo);
+                                string analisis = Request["analisis"].ToString();
+                                CargarProtocoloDerivado(oRegistro, analisis);
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                             {
@@ -471,16 +472,12 @@ namespace WebLab.Protocolos
 
         }
 
-        private void CargarProtocoloDerivado(string numeroProtocolo, string analisis)
+        private void CargarProtocoloDerivado(Protocolo oRegistro, string analisis)
         {
 
-            Utility oUtil = new Utility();
             //Actualiza los datos de los objetos : alta o modificacion .
-    
-            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(numeroProtocolo));
             //oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));
-            if (oRegistro != null)
+            if (oRegistro != null && !oRegistro.Baja)
             {
                 hplActualizarPaciente.Visible = false;
                 hplModificarPaciente.Visible = false;
@@ -1829,11 +1826,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     else
                     {
                         //if (Request["Operacion"].ToString() == "AltaDerivacion") 
-                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" ||
-                            Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
+                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" || Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                         {
-                            ActualizarEstadoDerivacion(oRegistro);
-                            VerificacionEstadoLote(oRegistro);
+                            Business.Data.Laboratorio.Protocolo oRegistroAnterior = new Business.Data.Laboratorio.Protocolo();
+                            oRegistroAnterior = (Business.Data.Laboratorio.Protocolo)oRegistroAnterior.Get(typeof(Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                            ActualizarEstadoDerivacion(oRegistro, oRegistroAnterior);
+                            VerificacionEstadoLote(oRegistro, oRegistroAnterior);
+
                             if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                             else
@@ -1884,40 +1883,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
-        private void ActualizarEstadoDerivacion(Protocolo oRegistro)
+        private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oRegistroAnterior)
         {
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            int idLote = 0;
-            if (Request["idLote"] != null) //Si es nulo es un protocolo anterior a la gestion por lotes
-                idLote =  Convert.ToInt32(Request["idLote"]);
-            
-            string query =
-            @"update LAB_Derivacion
-            set estado=3---recibido
-            ,idProtocoloDerivacion="+oRegistro.IdProtocolo.ToString()+@"
-            from LAB_Derivacion D
-                inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
-                inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
-            where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idLote=" + idLote;
-           
-            SqlCommand cmd = new SqlCommand(query, conn);
-
-            ///grabar auditoria de 
-
-           int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
-
-            //Se indica en el protocolo de Origen que fue recibido en el destino
-            Business.Data.Laboratorio.Protocolo oPOrigen = new Business.Data.Laboratorio.Protocolo();
-            oPOrigen = (Business.Data.Laboratorio.Protocolo)oPOrigen.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(Request["numeroProtocolo"].ToString()));
-            if (oPOrigen != null)
-            {
-                if(idLote != 0 )
-                    oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " +idLote  , "Protocolo "+ oRegistro.Numero.ToString());
-                else
-                    oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Protocolo", oRegistro.Numero.ToString());
-            }
-
-
+            Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+            oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
         }
 
         private string getListaAreasCodigoBarras()
@@ -5007,42 +4976,7 @@ System.Net.ServicePointManager.SecurityProtocol =
         }
 
 
-        //private void ActualizaEstadoLote(int idLote, Protocolo oRegistro) //SE PISO CON EL PR MantenimientoVarios (#15)
-        //{
-        //    try
-        //    {
-        //        if (idLote != 0)
-        //        {
-        //            LoteDerivacion lote = new LoteDerivacion();
-        //            lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
-                    
-
-        //            if (lote.Estado == 4) //Pasa de Recibido a Ingresado
-        //            {
-        //                lote.Estado = 5;
-        //                lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);
-        //                lote.FechaIngreso = DateTime.Now;
-        //            }
-
-        //            //Graba el ingreso del protocolo en el lote
-        //            lote.GrabarAuditoriaLoteDerivacion("Ingresa protocolo", oUser.IdUsuario, "Número Protocolo", oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
-
-        //            //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
-        //            if (!lote.HayDerivacionesPendientes())
-        //            {
-        //                lote.Estado = 6; //Pasa a Completado si no tiene más derivaciones pendientes
-        //                lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), oUser.IdUsuario);
-        //            }
-
-        //            lote.Save();
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //    }
-        //}
-
-        private void VerificacionEstadoLote(Protocolo oRegistro) 
+        private void VerificacionEstadoLote(Protocolo oRegistro, Protocolo oRegistroAnterior) 
         {
 
             if (Request["idLote"] != null) //Si no tiene Lote, no actualiza estado de Lote
@@ -5050,49 +4984,24 @@ System.Net.ServicePointManager.SecurityProtocol =
                 int idLote = Convert.ToInt32(Request["idLote"]);
                 LoteDerivacion lote = new LoteDerivacion();
                 lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
-                lote.ActualizaEstadoLote(oUser.IdUsuario, oRegistro.Numero.ToString(), Request["numeroProtocolo"] );
-               // ActualizaEstadoLote(idLote, oRegistro);
+                lote.ActualizaEstadoLote(oUser.IdUsuario, oRegistro.Numero.ToString(), oRegistroAnterior.Numero.ToString());
             }
         }
 
         private void CargarProtocoloDerivadoLote()
         {
-            string numeroProtocolo = Request["numeroProtocolo"].ToString();
-            int idLote = Convert.ToInt32(Request["idLote"]);
-            string analisis;
-
-            ////// ---------------------->Buscar las derivaciones que no han sido ingresadas
-            //el protocolo me da los protocolos detalles
-            //los protocolos detalles me dan las derivaciones
-            //la derivacion debe estar enviada
-            //la derivacion debe tener el mismo lote que el ingresado (no todos los analisis pueden haber sido enviados con el mismo lote)
-
-            string m_strSQL =
-                //select distinct STRING_AGG(Det.idItem ,' | ')  as Item ---> (No esta disponible en SQL 2014)
-                @" SELECT  STUFF(( SELECT ' | ' + CAST(Det.idItem AS VARCHAR(20))
-                    from LAB_Derivacion D
-                        inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
-                        inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
-                        inner join LAB_DerivacionEstado as LE on LE.idEstado = D.estado
-                        inner join LAB_LoteDerivacion L on L.idLoteDerivacion = D.idLote
-                    where P.baja = 0
-                        and D.estado in (1) ---------------------- Buscar las derivaciones que no han sido ingresadas
-                        and L.idLoteDerivacion = " + idLote +  " and p.numero = " + numeroProtocolo + 
-                "       FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 3, '') AS Item; ";
-
-            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlDataAdapter adapter = new SqlDataAdapter
+            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+            if (oRegistro != null && !oRegistro.Baja)
             {
-                SelectCommand = new SqlCommand(m_strSQL, conn)
-            };
-            adapter.Fill(Ds);
-            analisis = Convert.ToString(Ds.Tables[0].Rows[0][0]);
 
-            CargarProtocoloDerivado(numeroProtocolo, analisis);
+                Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+                //Obtengo analisis
+                string analisis = oDerivacion.ObtenerItemsPendientes(Request["idLote"].ToString(), oRegistro.IdProtocolo.ToString());
 
+                CargarProtocoloDerivado(oRegistro, analisis);
+            }
         }
-
     }
 
 }
