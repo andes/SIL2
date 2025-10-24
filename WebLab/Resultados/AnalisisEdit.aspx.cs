@@ -13,7 +13,7 @@ using NHibernate;
 using NHibernate.Expression;
 using System.Collections;
 using System.Configuration;
-
+using Business.Data;
 namespace WebLab.Resultados
 {
     public partial class AnalisisEdit : System.Web.UI.Page
@@ -23,7 +23,7 @@ namespace WebLab.Resultados
 
         private static int
             TEST = 0;
-
+      
         private bool IsTokenValid()
         {
             bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
@@ -41,24 +41,39 @@ namespace WebLab.Resultados
         Protocolo oProtocolo = new Protocolo();
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            if (Session["idUsuario"] != null)
             {
-                SetToken();
-                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
-                if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
+                if (Session["idUsuarioValida"] == null)
+                    Session["idUsuarioValida"] = Session["idUsuario"];
 
-                    lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.getMuestra();
-                else
+                if (!Page.IsPostBack)
+                {
+                    SetToken();
+                    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
-                    lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
+                    if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
+
+                        lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.getMuestra();
+                    else
+
+                        lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
 
                     CargarListas(oRegistro);
                     MuestraDatos();
 
-                
-                
+
+
+                }
+
+            }
+            else
+            {
+                //Si se perdio la sesion le pida a la pagina padre que se redirija al login
+                string script = "window.top.location.href = '../FinSesion.aspx';"; 
+                ScriptManager.RegisterStartupScript(this, GetType(), "redirigirLogin", script, true);
+                return;
             }
         }
 
@@ -111,28 +126,31 @@ namespace WebLab.Resultados
 
         protected void txtCodigoMuestra_TextChanged(object sender, EventArgs e)
         {
-            try
+            if (Session["idUsuario"] != null)
             {
-                Muestra oMuestra = new Muestra();
-                oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "Codigo", txtCodigoMuestra.Text, "Baja", false);
-                if (oMuestra != null) ddlMuestra.SelectedValue = oMuestra.IdMuestra.ToString();
-                ddlMuestra.UpdateAfterCallBack = true;
-            }
-            catch (Exception ex)
-            {
-                string exception = "";
-                while (ex != null)
+                try
                 {
-                    exception = ex.Message + "<br>";
+                    Muestra oMuestra = new Muestra();
+                    oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), "Codigo", txtCodigoMuestra.Text, "Baja", false);
+                    if (oMuestra != null) ddlMuestra.SelectedValue = oMuestra.IdMuestra.ToString();
+                    ddlMuestra.UpdateAfterCallBack = true;
+                }
+                catch (Exception ex)
+                {
+                    string exception = "";
+                    while (ex != null)
+                    {
+                        exception = ex.Message + "<br>";
 
+                    }
                 }
             }
         }
 
         protected void ddlMuestra_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            mostrarCodigoMuestra();
+            if (Session["idUsuario"] != null)
+                mostrarCodigoMuestra();
 
         }
 
@@ -169,7 +187,7 @@ namespace WebLab.Resultados
                 m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +
                   " FROM Lab_item I  with (nolock)  " +
                   " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-                  " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio (1,3) AND (I.tipo= 'P') order by I.nombre ";
+                  " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio IN (1,3) AND (I.tipo= 'P') order by I.nombre ";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
 
@@ -257,17 +275,19 @@ namespace WebLab.Resultados
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-            { ///Verifica si se trata de un alta o modificacion de protocolo               
-                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-                if (oRegistro != null)
-                {
-                    Guardar(oRegistro);
+            if (Session["idUsuario"] != null)
+            {
+                if (Page.IsValid)
+                { ///Verifica si se trata de un alta o modificacion de protocolo               
+                    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                    if (oRegistro != null)
+                    {
+                        Guardar(oRegistro);
+                    }
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
                 }
-                Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
             }
-               
 
         }
 
@@ -430,104 +450,109 @@ namespace WebLab.Resultados
             else
                 oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
 
-
-            if( oRegistro.IdTipoServicio.IdTipoServicio==3) oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
+            //Para casos de modificacion, si cambio el tipo de Muestra que tambien contemple el Servicio 5
+            if( oRegistro.IdTipoServicio.IdTipoServicio==3 || oRegistro.IdTipoServicio.IdTipoServicio == 5) oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
             oRegistro.Save();
 
 
         }
-        private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
-        {
-            ///Eliminar los detalles para volverlos a crear            
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-            IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
-                foreach (DetalleProtocolo oDetalle in detalle)
-                {
-                    oDetalle.Delete();
-                }
-            }
+        //private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
+        //{
+        //    ///Eliminar los detalles para volverlos a crear            
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //    crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+        //    IList detalle = crit.List();
+        //    if (detalle.Count > 0)
+        //    {
+        //        foreach (DetalleProtocolo oDetalle in detalle)
+        //        {
+        //            oDetalle.Delete();
+        //        }
+        //    }
 
 
-            int dias_espera = 0;
-            string[] tabla = TxtDatos.Value.Split('@');
+        //    int dias_espera = 0;
+        //    string[] tabla = TxtDatos.Value.Split('@');
 
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-
-
-                string codigo = fila[1].ToString();
-                if (codigo != "")
-                {
-                    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                    Item oItem = new Item();
-                    oDetalle.IdProtocolo = oRegistro;
-                    oDetalle.IdEfector = oRegistro.IdEfector;
-
-                    string trajomuestra = fila[3].ToString();
-
-                    oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
-
-                    if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
-
-                    /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                    if (a.Checked)
-                        oDetalle.TrajoMuestra = "Si";
-                    else*/
-
-                    if (trajomuestra == "true")
-                        oDetalle.TrajoMuestra = "No";
-                    else
-                        oDetalle.TrajoMuestra = "Si";
+        //    for (int i = 0; i < tabla.Length - 1; i++)
+        //    {
+        //        string[] fila = tabla[i].Split('#');
 
 
-                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaControl = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
-                    GuardarDetallePractica(oDetalle);
-                }
-            }
+        //        string codigo = fila[1].ToString();
+        //        if (codigo != "")
+        //        {
+        //            DetalleProtocolo oDetalle = new DetalleProtocolo();
+        //            Item oItem = new Item();
+        //            oDetalle.IdProtocolo = oRegistro;
+        //            oDetalle.IdEfector = oRegistro.IdEfector;
+
+        //            string trajomuestra = fila[3].ToString();
+
+        //            oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
+
+        //            if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
+
+        //            /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //            if (a.Checked)
+        //                oDetalle.TrajoMuestra = "Si";
+        //            else*/
+
+        //            if (trajomuestra == "true")
+        //                oDetalle.TrajoMuestra = "No";
+        //            else
+        //                oDetalle.TrajoMuestra = "Si";
 
 
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
-          //  DateTime fechaentrega;
-            //if (oCon.TipoCalculoDiasRetiro == 0)
-
-            if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
-                if (oCon.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
-                else   // calcula con los días predeterminados de espera
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oCon.DiasRetiro));
-            else
-                oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
-
+        //            oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaControl = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
+        //            GuardarDetallePractica(oDetalle);
+        //        }
+        //    }
 
 
+        //    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
+        //  //  DateTime fechaentrega;
+        //    //if (oCon.TipoCalculoDiasRetiro == 0)
 
-            oRegistro.Save();
+        //    if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
+        //        if (oCon.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
+        //            oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
+        //        else   // calcula con los días predeterminados de espera
+        //            oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oCon.DiasRetiro));
+        //    else
+        //        oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
 
 
-        }
+
+
+        //    oRegistro.Save();
+
+
+        //}
 
 
 
         private void GuardarDetallePractica(DetalleProtocolo oDet)
         {
 
-            if (oDet.VerificarSiEsDerivable(oDet.IdItem.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            if (oDet.VerificarSiEsDerivable(oDet.IdProtocolo.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
                 oDet.GuardarValorReferencia();
-
+                //Guarda Derivacion
+                Usuario oUser = new Usuario();
+                //Cargo la auditoria con el usuario que valida = Session["idUsuarioValida"] 
+                oUser = (Usuario) oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
+                oDet.GuardarDerivacion(oUser);
+       
             }
             else
             {
@@ -667,47 +692,23 @@ namespace WebLab.Resultados
 
 
 
-        protected void txtCodigo_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ///////Con la selección del item se muestra el codigo
-            if (ddlItem.SelectedValue != "0")
+            if (Session["idUsuario"] != null)
             {
-                Item oItem = new Item();
-                oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
-                txtCodigo.Text = oItem.Codigo;
+                ///////Con la selección del item se muestra el codigo
+                if (ddlItem.SelectedValue != "0")
+                {
+                    Item oItem = new Item();
+                    oItem = (Item)oItem.Get(typeof(Item), int.Parse(ddlItem.SelectedValue));
+                    txtCodigo.Text = oItem.Codigo;
 
+                }
+                else
+                    txtCodigo.Text = "";
+
+                txtCodigo.UpdateAfterCallBack = true;
             }
-            else
-                txtCodigo.Text = "";
-
-            txtCodigo.UpdateAfterCallBack = true;
-
-
-        }
-
-
-
-        
-
-        protected void txtCodigo_TextChanged1(object sender, EventArgs e)
-        {
-
-        }
-
-        
-
-
-
-        protected void btnAgregarRutina_Click(object sender, EventArgs e)
-        {
-            // if (ddlRutina.SelectedValue != "0")
-            // AgregarRutina();           
-
         }
 
         private void AgregarRutina()
@@ -748,63 +749,58 @@ namespace WebLab.Resultados
 
         protected void ddlRutina_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddlRutina.SelectedValue != "0")
-                AgregarRutina();
+
+            if (Session["idUsuario"] != null)
+                if (ddlRutina.SelectedValue != "0")
+                     AgregarRutina();
         }
 
-
-
-
-
-       
-       
-        protected void cvAnalisis_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-
-
-        }
 
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            TxtDatosCargados.Value = TxtDatos.Value;
-
-            string sDatos = "";
-
-            string[] tabla = TxtDatos.Value.Split('@');
-
-            for (int i = 0; i < tabla.Length - 1; i++)
+            if (Session["idUsuario"] != null) 
             {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra = fila[2].ToString();
+                TxtDatosCargados.Value = TxtDatos.Value;
 
-                if (sDatos == "")
-                    sDatos = codigo + "#" + muestra;
-                else
-                    sDatos += ";" + codigo + "#" + muestra;
+                string sDatos = "";
 
-            }
+                string[] tabla = TxtDatos.Value.Split('@');
 
-            TxtDatosCargados.Value = sDatos;
-
-            if (!VerificarAnalisisContenidos())
-            {
-                TxtDatos.Value = "";
-                args.IsValid = false;
-
-                return;
-            }
-            else
-            {
-                if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
+                for (int i = 0; i < tabla.Length - 1; i++)
                 {
+                    string[] fila = tabla[i].Split('#');
+                    string codigo = fila[1].ToString();
+                    string muestra = fila[2].ToString();
 
+                    if (sDatos == "")
+                        sDatos = codigo + "#" + muestra;
+                    else
+                        sDatos += ";" + codigo + "#" + muestra;
+
+                }
+
+                TxtDatosCargados.Value = sDatos;
+
+                if (!VerificarAnalisisContenidos())
+                {
+                    TxtDatos.Value = "";
                     args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
+
                     return;
                 }
-                else args.IsValid = true;            
+                else
+                {
+                    if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
+                    {
+
+                        args.IsValid = false;
+                        this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
+                        return;
+                    }
+                    else args.IsValid = true;
+                }
             }
+               
         }
 
         private bool VerificarAnalisisContenidos()
@@ -914,94 +910,6 @@ namespace WebLab.Resultados
             return devolver;
 
         }
-        
-
-        protected void lnkSiguiente_Click(object sender, EventArgs e)
-        {
-            Avanzar(1);
-        }
-
-        protected void lnkAnterior_Click(object sender, EventArgs e)
-        {
-            Avanzar(-1);
-        }
-
-        private void Avanzar(int avance)
-        {
-
-            int ProtocoloActual = int.Parse(Request["idProtocolo"].ToString());
-            //Protocolo oProtocoloActual = new Protocolo();
-            //oProtocoloActual = (Protocolo)oProtocoloActual.Get(typeof(Protocolo), ProtocoloActual);
-            int ProtocoloNuevo = ProtocoloActual;
-
-            if (Session["ListaProtocolo"] != null)
-            {
-                string[] lista = Session["ListaProtocolo"].ToString().Split(',');
-                for (int i = 0; i < lista.Length; i++)
-                {
-                    if (ProtocoloActual == int.Parse(lista[i].ToString()))
-                    {
-                        if (avance == 1)
-                        {
-                            if (i < lista.Length - 1)
-                            {
-                                ProtocoloNuevo = int.Parse(lista[i + 1].ToString()); break;
-                            }
-                        }
-                        else  //retrocede                        
-                        {
-                            if (i > 0)
-                            {
-                                ProtocoloNuevo = int.Parse(lista[i - 1].ToString()); break;
-                            }
-                        }
-
-
-                    }
-                }
-            }
-            //if (avance == 1)
-            //{
-            //    ProtocoloNuevo = ProtocoloActual+1;
-            //}
-            //else  //retrocede                        
-            //    ProtocoloNuevo = ProtocoloActual - 1;
-
-
-
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));
-            crit.Add(Expression.Eq("IdProtocolo", ProtocoloNuevo));
-            //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            Protocolo oProtocolo = (Protocolo)crit.UniqueResult();
-
-            string m_parametro = "";
-            if (Request["DesdeUrgencia"] != null) m_parametro = "&DesdeUrgencia=1";
-
-            if (oProtocolo != null)
-            {
-                //if (Request["Desde"].ToString() == "Control")
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
-                //else
-                //    Response.Redirect("ProtocoloEdit2.aspx?Desde="+Request["Desde"].ToString()+"&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
-            }
-            else
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloActual + m_parametro);
-
-        }
-
-
-
-        protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Modificar")
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + e.CommandArgument.ToString());
-
-
-        }
-
-      
-
 
     }
 }
