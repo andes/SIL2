@@ -990,6 +990,17 @@ ORDER BY cantidad desc";
                     else
                         args.IsValid = true;
                 }
+                if (VerificarAnalisisContenidos())
+                {
+                    cvValidaPracticas.Text = "";
+                    args.IsValid = true;
+                }
+                else
+                {
+                    args.IsValid = false;
+                    return;
+               
+                }
             }
             else
                 cvValidaPracticas.Text = "Ha superado el límite de turnos diarios para " + practicallagalimiteTurnos+ " o no se ha habilitado la dación de turnos para esta práctica. Verifique con el Administrador." ;
@@ -1169,5 +1180,108 @@ ORDER BY cantidad desc";
 
 
         }
+
+        private bool VerificarAnalisisContenidos()
+        {
+            bool devolver = true;
+            try
+            {
+                string[] tabla = TxtDatos.Value.Split('@');
+                string listaCodigo = "";
+
+                for (int i = 0; i < tabla.Length - 1; i++)
+                {
+                    string[] fila = tabla[i].Split('#');
+                    string codigo = fila[1].ToString();
+                    if (listaCodigo == "")
+                        listaCodigo = "'" + codigo + "'";
+                    else
+                        listaCodigo += ",'" + codigo + "'";
+
+                    int i_idItemPractica = 0;
+                    if (codigo != "")
+                    {
+
+                        Item oItem = new Item();
+                        oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+
+
+                        i_idItemPractica = oItem.IdItem;
+                        for (int j = 0; j < tabla.Length - 1; j++)
+                        {
+                            string[] fila2 = tabla[j].Split('#');
+                            string codigo2 = fila2[1].ToString();
+                            if ((codigo2 != "") && (codigo != codigo2))
+                            {
+                                Item oItem2 = new Item();
+                                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+
+                                ISession m_session = NHibernateHttpModule.CurrentSession;
+                                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                                crit.Add(Expression.Eq("IdItemPractica", oItem));
+                                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+                                if (oGrupo != null)
+                                {
+
+                                    this.cvValidaPracticas.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+                                    devolver = false; break;
+
+                                }
+
+                            }
+                        }////for           
+                    }/// if codigo
+                    if (!devolver) break;
+                }
+
+                if ((devolver) && (listaCodigo != ""))
+                { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
+
+            }
+            catch (Exception)
+            {
+                this.cvValidaPracticas.ErrorMessage = "Ha ocurrido un error. Verifique con el administrador del sistema";
+                devolver = false;
+            }
+            return devolver;
+
+        }
+
+        private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
+        { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
+            bool devolver = true;
+            string m_ssql = "SELECT  distinct PD.idItemDeterminacion, I.codigo" +
+                            " FROM         LAB_PracticaDeterminacion AS PD " +
+                            " INNER JOIN   LAB_Item AS I ON PD.idItemPractica = I.idItem " +
+                            " WHERE     I.codigo IN (" + listaCodigo + ") AND (I.baja = 0)" +
+                            " and PD.idEfector= " + oUser.IdEfector.IdEfector.ToString() + " ORDER BY PD.idItemDeterminacion ";
+
+            //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
+            //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlDataAdapter da = new SqlDataAdapter(m_ssql, conn);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+
+            string itempivot = "";
+            string codigopivot = "";
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            {
+                if (ds.Tables[0].Rows[i][0].ToString() == itempivot)
+                {
+                    devolver = false;
+                    cvValidaPracticas.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigopivot + " y " + ds.Tables[0].Rows[i][1].ToString() + "!";
+                    break;
+                }
+                codigopivot = ds.Tables[0].Rows[i][1].ToString();
+                itempivot = ds.Tables[0].Rows[i][0].ToString();
+            }
+            return devolver;
+
+        }
+
     }
 }
