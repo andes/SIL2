@@ -371,29 +371,26 @@ namespace WebLab.Derivaciones
                         LoteDerivacion lote = new LoteDerivacion();
                         lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
-                    //Se cambia el estado del lote LAB_LoteDerivacion
-                    lote.Estado = estadoLote;
-                    lote.Observacion = observacion;
-                    lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
+                        //Se cambia el estado del lote LAB_LoteDerivacion
+                        lote.Estado = estadoLote;
+                        lote.Observacion = observacion;
+                        lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
                         //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
                         string fecha_hora = txtFecha.Text + " " + txtHora.Text;
-                    lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
-                    lote.Save();
+                        lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
+                        lote.Save();
                    
-                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
-                    crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
-                    IList lista = crit.List();
-
-
-                    
-                     
-
-                     
-
-                            foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
-                            {
-                                #region Derivacion 
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
+                        //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
+                        // Use '{alias}' instead of 'LAB_Derivacion' NHibernate will replace this placeholder with the actual alias it generates for the Derivacion entity.
+                        string ssql_Protocolo = " IdLote=" + lote.IdLoteDerivacion + " and {alias}.IdDetalleProtocolo in (Select IdDetalleProtocolo From LAB_DetalleProtocolo  where IdEfector=" + oUser.IdEfector.IdEfector + ")";
+                        crit.Add(Expression.Sql(ssql_Protocolo));
+                        IList lista = crit.List();
+                        
+                        foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
+                        {
+                            #region Derivacion 
                                 //Cambia el estado de las derivaciones LAB_Derivacion 
 
                                 /*
