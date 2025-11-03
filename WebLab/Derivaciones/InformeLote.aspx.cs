@@ -360,48 +360,47 @@ namespace WebLab.Derivaciones
                     lote.Save();
                    
                     ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
-                    crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
+                    ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
+                    // Use '{alias}' instead of 'LAB_Derivacion' NHibernate will replace this placeholder with the actual alias it generates for the Derivacion entity.
+                    string ssql_Protocolo = " IdLote=" + lote.IdLoteDerivacion + " and {alias}.IdDetalleProtocolo in (Select IdDetalleProtocolo From LAB_DetalleProtocolo  where IdEfector=" + oUser.IdEfector.IdEfector + ")";
+                    crit.Add(Expression.Sql(ssql_Protocolo));
                     IList lista = crit.List();
-                    if (lista.Count > 0)
+                    foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                     {
+                        #region Derivacion 
+                        //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                        foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
-                        {
-                            #region Derivacion 
-                            //Cambia el estado de las derivaciones LAB_Derivacion 
+                        /*
+                            Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                            1 : Creado
+                            2 : Derivado
+                            3 : Cancelado
 
-                            /*
-                             Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                             1 : Creado
-                             2 : Derivado
-                             3 : Cancelado
-
-                             Estado de la derivacion LAB_DerivacionEstado
-                             0 : Pendiente de derivar
-                             1 : Enviado
-                             2 : No Enviado
-                             3 : Recibido
-                             4 : Pendiente para enviar
-                           */
-                            oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
-                            oDeriva.Save();
-                            #endregion
+                            Estado de la derivacion LAB_DerivacionEstado
+                            0 : Pendiente de derivar
+                            1 : Enviado
+                            2 : No Enviado
+                            3 : Recibido
+                            4 : Pendiente para enviar
+                        */
+                        oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
+                        oDeriva.Save();
+                        #endregion
 
 
-                            #region cambio_codificacion_a_derivacion
-                            //Cambia el resultado de LAB_DetalleProtocolo
-                            DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
-                            oDet.ResultadoCar = resultadoDerivacion + " "+observacion;
-                            oDet.ConResultado = true;
-                            oDet.IdUsuarioResultado = idUsuario;
-                            oDet.FechaResultado = Convert.ToDateTime(fecha_hora);
-                            oDet.Save();
-                            //Inserta auditoria del detalle del protocolo
-                            oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
-                            #endregion
-                        }
+                        #region cambio_codificacion_a_derivacion
+                        //Cambia el resultado de LAB_DetalleProtocolo
+                        DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
+                        oDet.ResultadoCar = resultadoDerivacion + " "+observacion;
+                        oDet.ConResultado = true;
+                        oDet.IdUsuarioResultado = idUsuario;
+                        oDet.FechaResultado = Convert.ToDateTime(fecha_hora);
+                        oDet.Save();
+                        //Inserta auditoria del detalle del protocolo
+                        oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
+                        #endregion
                     }
+                    
 
                    
                     
