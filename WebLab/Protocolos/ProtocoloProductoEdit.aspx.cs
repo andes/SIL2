@@ -40,7 +40,7 @@ namespace WebLab.Protocolos
 
         }
 
-       
+
 
         private void CargarGrilla()
         {
@@ -56,7 +56,7 @@ namespace WebLab.Protocolos
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             gvLista.DataSource = Ds.Tables[0];
-            gvLista.DataBind();     
+            gvLista.DataBind();
         }
 
         private void PreventingDoubleSubmit(Button button)
@@ -463,7 +463,7 @@ namespace WebLab.Protocolos
             lblServicio1.Text = "PROTOCOLO DE " + oServicio.Nombre.ToUpper();
             
             
-            ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos
+            ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos => obsoleto con sil2
             string m_ssql = "SELECT  idSectorServicio,  prefijo + ' - ' + nombre   as nombre FROM LAB_SectorServicio with (nolock) WHERE (baja = 0) order by nombre";
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
@@ -588,7 +588,15 @@ namespace WebLab.Protocolos
           ///Carga de determinaciones y rutinas dependen de la selección del tipo de servicio
              CargarItems();
 
-            
+
+            //Carga de combo de rutinas
+            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and idTipoServicio in ( 1,3) and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre ";
+            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre", connReady);
+            ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
+
+            ddlItem.UpdateAfterCallBack = true;
+            ddlRutina.UpdateAfterCallBack = true;
+
 
             m_ssql = null;
             oUtil = null;
@@ -702,18 +710,19 @@ namespace WebLab.Protocolos
         {
             Utility oUtil = new Utility();
             ///Carga del combo de determinaciones
-            //string m_ssql = @" SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, I.disponible 
-            //                 FROM Lab_item I with (nolock) 
-            //                 INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea
-            //                 where A.baja=0 and I.baja=0  and A.idtipoServicio in (1, 3) AND (I.tipo= 'P') order by I.nombre ";
+            string str_condicion = "";
+            ///Caro: agrego que cargue las determinaciones que estan en el protocolo
+            if ((Request["Operacion"].ToString() == "Modifica") && (Request["idProtocolo"] != null))
+                str_condicion = "  or exists(select 1 from LAB_DetalleProtocolo p WHERE p.iditem = I.iditem and idProtocolo = " + Request["idProtocolo"].ToString() + ") ";
+
 
             string m_ssql = @"SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, IE.disponible 
                          FROM Lab_item I  with (nolock) 
                          inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oC.IdEfector.IdEfector.ToString() + //MultiEfector 
-                         @"INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea                          
-                          where A.baja=0 and I.baja=0  and A.idtipoServicio in (1, 3) AND (I.tipo= 'P') order by I.nombre ";
-            //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
-            //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+                         @" INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea                          
+                          where (A.baja=0 and I.baja=0  and A.idtipoServicio in (1, 3) AND (I.tipo= 'P')) " +
+                             str_condicion + @"order by I.nombre ";
+
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter da = new SqlDataAdapter(m_ssql, conn);
             DataSet ds = new DataSet();
@@ -722,8 +731,8 @@ namespace WebLab.Protocolos
             //gvLista.DataSource = ds.Tables["T"];
             //gvLista.DataBind();
 
-           
-            ddlItem.Items.Insert(0, new ListItem("", "0"));
+           //Caro: no es necesario cargar ddlitem ya se carga en CargarListas()
+           /// ddlItem.Items.Insert(0, new ListItem("", "0"));
 
             string sTareas = "";            
             for (int i = 0; i < ds.Tables["T"].Rows.Count; i++)
@@ -732,14 +741,6 @@ namespace WebLab.Protocolos
             }
             txtTareas.Value = sTareas;            
             
-            //Carga de combo de rutinas
-            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and idTipoServicio in ( 1,3) and idEfector=" + oUser.IdEfector.IdEfector.ToString() +" order by nombre ";
-            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre");
-            ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
-            
-            ddlItem.UpdateAfterCallBack = true;
-            ddlRutina.UpdateAfterCallBack = true;                                    
-
             m_ssql = null;
             oUtil = null;
         }
@@ -1614,6 +1615,7 @@ namespace WebLab.Protocolos
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleRutina));
             crit.Add(Expression.Eq("IdRutina", oRutina));
             IList detalle = crit.List();
+            crit.AddOrder(Order.Asc("IdDetalleRutina"));
             if (detalle.Count > 0)
             {
                 string codigos="";

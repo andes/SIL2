@@ -385,8 +385,8 @@ LAB_ValorReferencia as Vr
                 CmdModificar.CommandName = "Modificar";
                 CmdModificar.ToolTip = "Modificar";
 
-           
 
+                ///Caro: inahbilitado por el momento
                 ImageButton CmdEliminar = (ImageButton)e.Row.Cells[7].Controls[1];
                 CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdEliminar.CommandName = "Eliminar";
@@ -397,7 +397,10 @@ LAB_ValorReferencia as Vr
                     CmdEliminar.Visible = false;
                     CmdModificar.ToolTip = "Consultar";
                 }
-                CmdEliminar.Visible = oUser.Administrador;
+
+                ///Caro: inahbilitado por el momento
+                //CmdEliminar.Visible = oUser.Administrador;
+                CmdEliminar.Visible = false;
 
 
 
