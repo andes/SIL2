@@ -625,14 +625,14 @@ namespace WebLab.Resultados
                                                 break;
                                             case 4: //Lista predefinida con seleccion multiple (sin seleccion multiple...jiji)
                                                 {
-                                                /*Antes
-                                                //Verifica si la determinacion tiene una lista predeterminada de resultados
+                                                //Antes
+                                                ////Verifica si la determinacion tiene una lista predeterminada de resultados
                                                 ISession m_session = NHibernateHttpModule.CurrentSession;
                                                 ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
                                                 crit.Add(Expression.Eq("IdItem", oItem));
                                             crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); //Multiefector
                                             crit.Add(Expression.Eq("Baja", false));
-                                         ///   crit.AddOrder(Order.Asc("Resultado")); // el orden lo define el usuario
+                                            crit.AddOrder(Order.Asc("Resultado")); // el orden lo define el usuario
 
                                             ///Si tiene resultados predeterminados muestra un combo
                                             IList resultados = crit.List();
@@ -702,64 +702,76 @@ namespace WebLab.Resultados
                                                             ddl1.Enabled = false;
                                                         }
                                                     }
+                                                    ///agrega boton para seleccionar las opciones
+                                                    ImageButton btnAddDetalle = new ImageButton();
+                                                    btnAddDetalle.TabIndex = short.Parse("500");
+                                                    //btnAddDetalle.AutoUpdateAfterCallBack = true;
+                                                    btnAddDetalle.ID = "b" + m_idControl;
+                                                    btnAddDetalle.ToolTip = "Desplegar opciones";
+                                                    btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";
+                                                    //btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    //btnAddDetalle.Click += new ImageClickEventHandler(btnAddDetalle_Click);
+
 
                                                     ddl1.Width= Unit.Pixel(150);
                                                     objCell.Controls.Add(ddl1);
+                                                    objCell.Controls.Add(btnAddDetalle);
                                                     objCell.Width = Unit.Pixel(150);
-                                                }*/
+                                                }
 
 
                                                 ///ahora
-                                                string m_resultadoDefecto = "";
-                                                if (oDet.ConResultado == false) // sin resultado
-                                                {
-                                                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                                                    ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
-                                                    crit.Add(Expression.Eq("IdItem", oItem));
-                                                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                                    crit.Add(Expression.Eq("Baja", false));
-                                                    ///      crit.AddOrder(Order.Asc("Resultado")); /// el orden lo define el usuario
-                                                    ///Si tiene resultados predeterminados muestra un combo
-                                                    IList resultados = crit.List();
-                                                    foreach (ResultadoItem oResultado in resultados)
-                                                    {
-                                                        ListItem Item = new ListItem();
-                                                        Item.Value = oResultado.IdResultadoItem.ToString();
-                                                        Item.Text = oResultado.Resultado;
+                                             //   string m_resultadoDefecto = "";
+                                             //   if (oDet.ConResultado == false) // sin resultado
+                                             //   {
+                                             //       ISession m_session = NHibernateHttpModule.CurrentSession;
+                                             //       ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                                             //       crit.Add(Expression.Eq("IdItem", oItem));
+                                             //       crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                             //       crit.Add(Expression.Eq("Baja", false));
+                                             //       ///      crit.AddOrder(Order.Asc("Resultado")); /// el orden lo define el usuario
+                                             //       ///Si tiene resultados predeterminados muestra un combo
+                                             //       IList resultados = crit.List();
+                                             //       foreach (ResultadoItem oResultado in resultados)
+                                             //       {
+                                             //           ListItem Item = new ListItem();
+                                             //           Item.Value = oResultado.IdResultadoItem.ToString();
+                                             //           Item.Text = oResultado.Resultado;
 
-                                                        if (oResultado.ResultadoDefecto)
-                                                            m_resultadoDefecto = oResultado.Resultado;
-                                                    }
+                                             //           if (oResultado.ResultadoDefecto)
+                                             //               m_resultadoDefecto = oResultado.Resultado;
+                                             //       }
 
-                                                }
-                                                TextBox txt1 = new TextBox();
-                                                txt1.ID = m_idControl;
-                                                txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones
-                                                txt1.TabIndex = short.Parse(i + 1.ToString());
-                                                txt1.Text = oDet.ResultadoCar;
-                                                txt1.TextMode = TextBoxMode.SingleLine;
-                                             txt1.Width = Unit.Percentage(95);
-                                              //  txt1.Rows = 1;
-                                                txt1.MaxLength = 200;
-                                                txt1.ToolTip = oDet.ResultadoCar;
-                                                //txt1.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
-                                                //txt1.CssClass = "myTexto";
-                                                if (oDet.ConResultado == false) // sin resultado
-                                                    txt1.Text = m_resultadoDefecto;
+                                             //   }
+                                             //   TextBox txt1 = new TextBox();
+                                             //   txt1.ID = m_idControl;
+                                             //   txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones
+                                             //   txt1.TabIndex = short.Parse(i + 1.ToString());
+                                             //   txt1.Text = oDet.ResultadoCar;
+                                             //   txt1.TextMode = TextBoxMode.SingleLine;
+                                             //txt1.Width = Unit.Percentage(95);
+                                             // //  txt1.Rows = 1;
+                                             //   txt1.MaxLength = 200;
+                                             //   txt1.ToolTip = oDet.ResultadoCar;
+                                             //   //txt1.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                             //   //txt1.CssClass = "myTexto";
+                                                //if (oDet.ConResultado == false) // sin resultado
+                                                //    txt1.Text = m_resultadoDefecto;
 
-                                                ///agrega boton para seleccionar las opciones
-                                             /*   ImageButton btnAddDetalle = new ImageButton();
-                                                btnAddDetalle.TabIndex = short.Parse("500");
-                                                //btnAddDetalle.AutoUpdateAfterCallBack = true;
-                                                btnAddDetalle.ID = "b" + m_idControl;
-                                                btnAddDetalle.ToolTip = "Desplegar opciones";
-                                                btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";
-                                                //btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
-                                                btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
-                                                //btnAddDetalle.Click += new ImageClickEventHandler(btnAddDetalle_Click);
+                                                /////agrega boton para seleccionar las opciones
+                                                //ImageButton btnAddDetalle = new ImageButton();
+                                                //btnAddDetalle.TabIndex = short.Parse("500");
+                                                ////btnAddDetalle.AutoUpdateAfterCallBack = true;
+                                                //btnAddDetalle.ID = "b" + m_idControl;
+                                                //btnAddDetalle.ToolTip = "Desplegar opciones";
+                                                //btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";
+                                                ////btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                //btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                ////btnAddDetalle.Click += new ImageClickEventHandler(btnAddDetalle_Click);
 
-                                                */
-                                                bool agregarSeleccion = true;
+                                               
+                                             /*   bool agregarSeleccion = true;
                                                 if (oDet.IdUsuarioValida > 0) // validado
                                                     txt1.BackColor = Color.LightBlue;
                                                 else
@@ -807,6 +819,7 @@ namespace WebLab.Resultados
                                                 objCell.Controls.Add(txt1);
                                               //  objCell.Controls.Add(btnAddDetalle);
                                                 objCell.Width = Unit.Pixel(150);
+                                                */
                                             }
                                             break;
                                            

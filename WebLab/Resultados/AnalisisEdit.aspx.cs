@@ -13,6 +13,7 @@ using NHibernate;
 using NHibernate.Expression;
 using System.Collections;
 using System.Configuration;
+using Business.Data;
 
 namespace WebLab.Resultados
 {
@@ -24,53 +25,74 @@ namespace WebLab.Resultados
         private static int
             TEST = 0;
 
-        private bool IsTokenValid()
-        {
-            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
-            SetToken();
-            return result;
-        }
+        //private bool IsTokenValid()
+        //{
+        //    bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+        //    SetToken();
+        //    return result;
+        //}
 
-        private void SetToken()
-        {
-            double next = random.Next();
-            hidToken.Value = next + "";
-            Session["NextToken"] = next;
-        }
+        //private void SetToken()
+        //{
+        //    double next = random.Next();
+        //    hidToken.Value = next + "";
+        //    Session["NextToken"] = next;
+        //}
+        Usuario oUser = new Usuario();
 
         Protocolo oProtocolo = new Protocolo();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuarioValida"] != null)
+            {
+               
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
+                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            if (Session["idUsuarioValida"] != null)
             {
-                SetToken();
-                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                if (!Page.IsPostBack)
+                {
+                    //SetToken();
+                    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
-                if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
+                    if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
 
-                    lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.getMuestra();
-                else
+                        lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.getMuestra();
+                    else
 
-                    lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
+                        lblProtocolo.Text = oRegistro.Numero.ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
 
                     CargarListas(oRegistro);
                     MuestraDatos();
 
+                }  
                 
-                
+            }
+            else
+            {
+                //Si se perdio la sesion le pida a la pagina padre que se redirija al login
+                string script = "window.top.location.href = '../FinSesion.aspx';"; 
+                ScriptManager.RegisterStartupScript(this, GetType(), "redirigirLogin", script, true);
+                return;
             }
         }
 
         private void MuestraDatos()
         {
             //Actualiza los datos de los objetos : alta o modificacion .
-        //    Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-
+        
             Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
             oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-          //  oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));
-
+          
             ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
          
             CargarItems(oRegistro);
@@ -150,42 +172,55 @@ namespace WebLab.Resultados
         private void CargarListas(Protocolo oRegistro)
         {
             Utility oUtil = new Utility();
-            //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+            ////Solo cargar las listas deplegables con las determinaciones disponibles en este momento.
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
+            string str_condicion = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
+            if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
+                str_condicion = "1,3";
 
-
-            //string   m_ssql = @"SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre 
-            //            FROM Lab_item I  with (nolock)
-            //            INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea 
-            //            where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
-
+            ////Caro mejorar el tiposervicio=5
             string m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +                       
                         " FROM Lab_item I with (nolock) " +
                         " inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oRegistro.IdEfector.IdEfector.ToString() + //MultiEfector 
                         " INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea " +
                         " where A.baja=0 and I.baja=0 and IE.disponible=1 " +
-                        " and  A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
-            if (oRegistro.IdTipoServicio.IdTipoServicio==5)
-                m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +
-                  " FROM Lab_item I  with (nolock)  " +
-                  " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-                  " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio (1,3) AND (I.tipo= 'P') order by I.nombre ";
+                        " and  A.idtipoServicio in ("+str_condicion+") AND (I.tipo= 'P') order by I.nombre ";
+            //if (oRegistro.IdTipoServicio.IdTipoServicio==5)
+            //    m_ssql = "SELECT I.idItem as idItem, I.nombre + ' - ' + I.codigo as nombre " +
+            //      " FROM Lab_item I  with (nolock)  " +
+            //      " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
+            //      " where A.baja=0 and I.baja=0 and  I.disponible=1 and A.idtipoServicio (1,3) AND (I.tipo= 'P') order by I.nombre ";
 
-            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
+            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
 
+            //////Caro, ver por que hay un cargarlistas para llenarddlitem
 
-          
-            ///Carga de determinaciones y rutinas dependen de la selección del tipo de servicio
-            CargarItems(oRegistro);
+            /////Carga de determinaciones para la 
+            //CargarItems(oRegistro);
 
             //CargarDiagnosticosFrecuentes();
+
+            //Carga de combo de rutinas
+            ///Correccion multiEfector
+            m_ssql = @"SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and IdEfector= " + oRegistro.IdEfector.IdEfector.ToString() +
+                @" and idTipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " order by nombre ";
+            if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
+                m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and IdEfector= " + oRegistro.IdEfector.IdEfector.ToString() + " and idTipoServicio in (1, 3) order by nombre ";
+
+            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre", connReady);
+            ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
+
+            //ddlItem.UpdateAfterCallBack = true;
+            //ddlRutina.UpdateAfterCallBack = true;
+
 
             if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) || (oRegistro.IdTipoServicio.IdTipoServicio == 5))
             {
                 ////////////Carga de combos de Muestras
                 pnlMuestra.Visible = true;
                 m_ssql = "SELECT idMuestra, nombre + ' - ' + codigo as nombre FROM LAB_Muestra with (nolock)   order by nombre ";
-                oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre");
+                oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
                 ////////////////7
             }
             m_ssql = null;
@@ -196,59 +231,35 @@ namespace WebLab.Resultados
 
         private void CargarItems(Protocolo oRegistro)
         {
+
             Utility oUtil = new Utility();
-            ///Carga del combo de determinaciones
-            //string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
-            //               " I.disponible " +
-            //                " FROM Lab_item I with (nolock) " +
-            //                " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-            //                " where A.baja=0 and I.baja=0  and A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
-
-            /////Correccion MultiEfector 
-            string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
-                          " IE.disponible " +
-                           " FROM Lab_item I with (nolock) " +
-                           " inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oRegistro.IdEfector.IdEfector.ToString() + //MultiEfector 
-                           " INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea " +
-                           " where A.baja=0 and I.baja=0 and IE.disponible=1 " +
-                           " and  A.idtipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " AND (I.tipo= 'P') order by I.nombre ";
-            if (oRegistro.IdTipoServicio.IdTipoServicio==5)
-                m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
-                          " I.disponible " +
-                           " FROM Lab_item I with (nolock) " +
-                           " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-                           " where A.baja=0 and I.baja=0  and A.idtipoServicio in (1, 3) AND (I.tipo= 'P') order by I.nombre ";
+            string str_condicion = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
+            if (oRegistro.IdTipoServicio.IdTipoServicio == 5)
+                str_condicion = "1,3";
 
 
-            //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
-            //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            /////Cargar las determinaciones disponibles ahora y las que estan en el protocolo
+            string m_ssql = @"SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, IE.disponible 
+                            FROM Lab_item I with (nolock) 
+                            inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oRegistro.IdEfector.IdEfector.ToString() + 
+                            @"INNER JOIN Lab_area A  (nolock) ON A.idArea= I.idArea 
+                            where (A.baja=0 and I.baja=0 and IE.disponible=1  and  A.idtipoServicio in (" + str_condicion + @") AND (I.tipo= 'P') )
+                            or exists(select 1 from LAB_DetalleProtocolo p WHERE p.iditem = I.iditem and idProtocolo = "+oRegistro.IdProtocolo.ToString()+")  order by I.nombre ";            
+            
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter da = new SqlDataAdapter(m_ssql,  conn);
             DataSet ds = new DataSet();
             da.Fill(ds, "T");
 
-
-            ddlItem.Items.Insert(0, new ListItem("", "0"));
+            ///Caro: no hace falta cargar ddlitem; ya se cargó en CargarLists()
+            ///ddlItem.Items.Insert(0, new ListItem("", "0"));
 
             string sTareas = "";
             for (int i = 0; i < ds.Tables["T"].Rows.Count; i++)
             {
                 sTareas += "#" + ds.Tables["T"].Rows[i][1].ToString() + "#" + ds.Tables["T"].Rows[i][2].ToString() + "#" + ds.Tables["T"].Rows[i][4].ToString() + "@";
             }
-            txtTareas.Value = sTareas;
-
-            //Carga de combo de rutinas
-            ///Correccion multiEfector
-            m_ssql = @"SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and IdEfector= " + oRegistro.IdEfector.IdEfector.ToString() +
-                @" and idTipoServicio= " + oRegistro.IdTipoServicio.IdTipoServicio.ToString() + " order by nombre ";
-            if (oRegistro.IdTipoServicio.IdTipoServicio==5)
-                m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina with (nolock) where baja=0 and IdEfector= " + oRegistro.IdEfector.IdEfector.ToString() + " and idTipoServicio in (1, 3) order by nombre ";
-                
-            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre");
-            ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
-
-            ddlItem.UpdateAfterCallBack = true;
-            ddlRutina.UpdateAfterCallBack = true;
+            txtTareas.Value = sTareas;         
 
             m_ssql = null;
             oUtil = null;
@@ -282,12 +293,12 @@ namespace WebLab.Resultados
 
         private void Guardar(Business.Data.Laboratorio.Protocolo oRegistro)
         {
-            if (IsTokenValid())
-            {
-                TEST++;
+            //if (IsTokenValid())
+            //{
+            //    TEST++;
 
                 GuardarDetalle(oRegistro);
-            }
+            //}
            // oRegistro.GrabarAuditoriaProtocolo(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
         }
 
@@ -350,9 +361,17 @@ namespace WebLab.Resultados
                         else*/
 
                         if (trajomuestra == "true")
+                        {
                             oDetalle.TrajoMuestra = "No";
+                            oDetalle.FechaResultado = DateTime.Now;
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
+                        }
                         else
+                        {
                             oDetalle.TrajoMuestra = "Si";
+                            oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+                        }
+                    
 
 
                         oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
@@ -363,9 +382,12 @@ namespace WebLab.Resultados
                         oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-                        oDetalle.Informable = oItem.Informable;
+                        oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
 
                         GuardarDetallePractica(oDetalle);
+                        
+                        // GuardarDerivacion(oDetalle);
+                        //oDetalle.GuardarDerivacion(oUser);
                     }
                     else  //si ya esta actualizo si trajo muestra o no
                     {
@@ -430,8 +452,8 @@ namespace WebLab.Resultados
             else
                 oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
 
-
-            if( oRegistro.IdTipoServicio.IdTipoServicio==3) oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
+            //Para casos de modificacion, si cambio el tipo de Muestra que tambien contemple el Servicio 5
+            if( oRegistro.IdTipoServicio.IdTipoServicio==3 || oRegistro.IdTipoServicio.IdTipoServicio == 5) oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
             oRegistro.Save();
 
 
@@ -522,11 +544,13 @@ namespace WebLab.Resultados
         private void GuardarDetallePractica(DetalleProtocolo oDet)
         {
 
-            if (oDet.VerificarSiEsDerivable(oDet.IdItem.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            if (oDet.VerificarSiEsDerivable(oDet.IdProtocolo.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
                 oDet.GuardarValorReferencia();
+                //Guarda Derivacion              
+                oDet.GuardarDerivacion(oUser);
 
             }
             else
@@ -547,31 +571,50 @@ namespace WebLab.Resultados
                             oSItem=(Item)oSItem.Get(typeof(Item), oSubitem.IdItemDeterminacion);
                             if (i == 1)
                             {
-                                oDet.IdSubItem = oSItem;
-                                oDet.Save();                                                   
+                                //oDet.IdSubItem = oSItem;
+                                //oDet.Save();      
+                                if (oDet.TrajoMuestra == "Si")
+                                {
+                                    oDet.IdSubItem = oSItem;
+                                    oDet.FechaResultado = DateTime.Parse("01/01/1900");
+                                }
+                                else
+                                {
+                                    oDet.IdSubItem = oDet.IdItem;  //no trajo muestra le pone el mismo id
+                                    oDet.FechaResultado = DateTime.Now;
+                                }
+
+                                oDet.Save();
+                                oDet.GuardarSinInsumo();
+                                oDet.GuardarValorReferencia();
+                                if (oDet.TrajoMuestra == "No")
+                                    oDet.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
                             }
                             else
                             {
-                                 DetalleProtocolo oDetalle = new DetalleProtocolo();                           
-                                 oDetalle.IdProtocolo =oDet.IdProtocolo;
-                                 oDetalle.IdEfector = oDet.IdEfector;
-                                 oDetalle.IdItem = oDet.IdItem;
-                                oDetalle.IdSubItem = oSItem;
-                                 oDetalle.TrajoMuestra = oDet.TrajoMuestra;
-                                oDetalle.Informable = oSItem.Informable;
+                                if (oDet.TrajoMuestra == "Si")  // sino trajo muestra no guardo el detalle
+                                {
+                                    DetalleProtocolo oDetalle = new DetalleProtocolo();
+                                    oDetalle.IdProtocolo = oDet.IdProtocolo;
+                                    oDetalle.IdEfector = oDet.IdEfector;
+                                    oDetalle.IdItem = oDet.IdItem;
+                                    oDetalle.IdSubItem = oSItem;
+                                    oDetalle.TrajoMuestra = oDet.TrajoMuestra;
+                                    oDetalle.Informable = oSItem.Informable;
 
-                                oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaControl = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
-                                oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-
-                                oDetalle.Save();
-
-                                GuardarValorReferencia(oDetalle);
+                                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaControl = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
+                                    oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
+                                     
+                                    oDetalle.Save();
+                                    oDetalle.GuardarSinInsumo();
+                                    oDetalle.GuardarValorReferencia();
+                                }
                             }
                             i = i + 1;
                         }//fin if
@@ -580,84 +623,19 @@ namespace WebLab.Resultados
                 else
                 {
                     oDet.IdSubItem = oDet.IdItem;
-                    oDet.Informable = oDet.IdSubItem.Informable;
+                    oDet.Informable = oDet.IdSubItem.GetInformableEfector(oUser.IdEfector);
                     oDet.Save();
-
-                    GuardarValorReferencia(oDet);
+                    oDet.GuardarSinInsumo();
+                    oDet.GuardarValorReferencia();
+                    if (oDet.TrajoMuestra == "No")
+                        oDet.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
+                    
                 }//fin   if (detalle.Count > 0)  
             }
 
         }
 
-        private void GuardarValorReferencia(DetalleProtocolo oDetalle)
-        {
-
-            string s_unidadMedida = ""; //string s_metodo = "";
-            //Item oItem = new Item();
-            //oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
-            if (oDetalle.IdSubItem.IdUnidadMedida > 0)
-            {
-                UnidadMedida oUnidad = new UnidadMedida();
-                oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), oDetalle.IdSubItem.IdUnidadMedida);
-                if (oUnidad != null) s_unidadMedida = oUnidad.Nombre;
-
-            }
-
-            ///Calculo de valor de referencia al momento de generar el registro
-            /// 
-            int pres = oDetalle.IdSubItem.GetPresentacionEfector(oDetalle.IdEfector);
-
-            string m_metodo = "";
-            string m_valorReferencia = "";
-            string valorRef = oDetalle.CalcularValoresReferencia(pres);
-            if (valorRef != "")
-            {
-                string[] arr = valorRef.Split(("|").ToCharArray());
-                switch (arr.Length)
-                {
-                    case 1: m_valorReferencia = arr[0].ToString(); break;
-                    case 2:
-                        {
-                            m_valorReferencia = arr[0].ToString();
-                            m_metodo = arr[1].ToString();
-                        }
-                        break;
-                }
-
-            }
-            oDetalle.UnidadMedida = s_unidadMedida;
-            oDetalle.Metodo = m_metodo;
-            oDetalle.ValorReferencia = m_valorReferencia;
-            oDetalle.Save();
-            //Fin calculo de valor de refrencia y metodo
-        }
-
-
-        //private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
-        //{
-        //    bool ok=false;
-        //    /// buscar idefectorderivacion desde lab_itemefector
-        //    ISession m_session = NHibernateHttpModule.CurrentSession;
-        //    ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
-        //    critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
-        //    critItemEfector.Add(Expression.Eq("IdEfector", oDet.IdProtocolo.IdEfector));
-        //    IList detalle1 = critItemEfector.List();
-        //    if (detalle1.Count > 0)
-        //    {
-        //        foreach (ItemEfector oitemEfector in detalle1)
-        //        {
-        //            if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
-        //            {
-        //                ok = true; break;
-        //            }
-        //        }
-        //    }
-        //    else
-        //        ok = false;
-
-        //    return ok;
-
-        //}
+        
 
         protected void ddlSexo_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -718,9 +696,11 @@ namespace WebLab.Resultados
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleRutina));
             crit.Add(Expression.Eq("IdRutina", oRutina));
+            crit.AddOrder(Order.Asc("IdDetalleRutina"));
+
+
             IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
+           
                 string codigos = "";
                 foreach (DetalleRutina oDetalle in detalle)
                 {
@@ -728,19 +708,12 @@ namespace WebLab.Resultados
                     if (codigos == "")
                         codigos = oDetalle.IdItem.Codigo;
                     else
-                        codigos += ";" + oDetalle.IdItem.Codigo;
-
-
-
-                    //ddlRutina.SelectedValue = "0";
-                    //ddlRutina.UpdateAfterCallBack = true;
-
-
+                        codigos += ";" + oDetalle.IdItem.Codigo;                    
                 }
                 txtCodigosRutina.Text = codigos;
                 txtCodigosRutina.UpdateAfterCallBack = true;
 
-            }
+            
 
         }
 
@@ -916,89 +889,11 @@ namespace WebLab.Resultados
         }
         
 
-        protected void lnkSiguiente_Click(object sender, EventArgs e)
-        {
-            Avanzar(1);
-        }
-
-        protected void lnkAnterior_Click(object sender, EventArgs e)
-        {
-            Avanzar(-1);
-        }
-
-        private void Avanzar(int avance)
-        {
-
-            int ProtocoloActual = int.Parse(Request["idProtocolo"].ToString());
-            //Protocolo oProtocoloActual = new Protocolo();
-            //oProtocoloActual = (Protocolo)oProtocoloActual.Get(typeof(Protocolo), ProtocoloActual);
-            int ProtocoloNuevo = ProtocoloActual;
-
-            if (Session["ListaProtocolo"] != null)
-            {
-                string[] lista = Session["ListaProtocolo"].ToString().Split(',');
-                for (int i = 0; i < lista.Length; i++)
-                {
-                    if (ProtocoloActual == int.Parse(lista[i].ToString()))
-                    {
-                        if (avance == 1)
-                        {
-                            if (i < lista.Length - 1)
-                            {
-                                ProtocoloNuevo = int.Parse(lista[i + 1].ToString()); break;
-                            }
-                        }
-                        else  //retrocede                        
-                        {
-                            if (i > 0)
-                            {
-                                ProtocoloNuevo = int.Parse(lista[i - 1].ToString()); break;
-                            }
-                        }
+    
+         
 
 
-                    }
-                }
-            }
-            //if (avance == 1)
-            //{
-            //    ProtocoloNuevo = ProtocoloActual+1;
-            //}
-            //else  //retrocede                        
-            //    ProtocoloNuevo = ProtocoloActual - 1;
-
-
-
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));
-            crit.Add(Expression.Eq("IdProtocolo", ProtocoloNuevo));
-            //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            Protocolo oProtocolo = (Protocolo)crit.UniqueResult();
-
-            string m_parametro = "";
-            if (Request["DesdeUrgencia"] != null) m_parametro = "&DesdeUrgencia=1";
-
-            if (oProtocolo != null)
-            {
-                //if (Request["Desde"].ToString() == "Control")
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
-                //else
-                //    Response.Redirect("ProtocoloEdit2.aspx?Desde="+Request["Desde"].ToString()+"&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloNuevo + m_parametro);
-            }
-            else
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Session["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + ProtocoloActual + m_parametro);
-
-        }
-
-
-
-        protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "Modificar")
-                Response.Redirect("ProtocoloEdit2.aspx?Desde=" + Request["Desde"].ToString() + "&idServicio=" + Request["idServicio"].ToString() + "&Operacion=Modifica&idProtocolo=" + e.CommandArgument.ToString());
-
-
-        }
+         
 
       
 

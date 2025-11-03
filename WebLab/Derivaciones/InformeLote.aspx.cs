@@ -73,17 +73,9 @@ namespace WebLab.Derivaciones
             }
         }
 
-        //protected void Page_Unload(object sender, EventArgs e)
-        //{
-        //    if (this.oCr.ReportDocument != null)
-        //    {
-        //        this.oCr.ReportDocument.Close();
-        //        this.oCr.ReportDocument.Dispose();
-        //    }
-        //}
 
 
-        #region Carga
+
 
 
         private DataTable GetData(string m_strSQL)
@@ -221,9 +213,7 @@ namespace WebLab.Derivaciones
                 return "";
 
         }
-
-
-        #endregion
+         
 
         #region Marca
         protected void lnkMarcar_Click(object sender, EventArgs e)
@@ -363,8 +353,12 @@ namespace WebLab.Derivaciones
                     ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                     crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
                     IList lista = crit.List();
-                    if (lista.Count > 0)
-                    {
+
+
+                    
+                     
+
+                     
 
                         foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                         {
@@ -401,7 +395,7 @@ namespace WebLab.Derivaciones
                             oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
                             #endregion
                         }
-                    }
+                   
 
                    
                     

@@ -736,7 +736,7 @@ namespace Business.Data.Laboratorio
             return devolver;
         }
 
-        public string GetResultado(string valorItem)
+        public string GetResultado(string valorItem, Efector oEfector)
         {
 
             int i = valorItem.Length;
@@ -744,6 +744,7 @@ namespace Business.Data.Laboratorio
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
             crit.Add(Expression.Eq("IdItem", this));
+            crit.Add(Expression.Eq("IdEfector", oEfector));
             IList lista = crit.List();
             if (lista.Count > 0)
             {

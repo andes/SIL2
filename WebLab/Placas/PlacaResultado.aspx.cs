@@ -3030,9 +3030,9 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                             if (valorItem != "")
                             {
                                 if (valorItem.ToUpper() == "SE DETEC")
-                                    oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
+                                    oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem, oDetalle.IdEfector);
                                 if (valorItem.ToUpper() == "NO SE DET")
-                                    oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
+                                    oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem, oDetalle.IdEfector);
                                 oDetalle.ConResultado = true;
                             }
                             else
@@ -3377,7 +3377,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                     oDetalle1.IdItem = oItem;
                     oDetalle1.IdSubItem = oItem;
                     oDetalle1.TrajoMuestra = "Si";
-                    oDetalle1.Informable = oItem.Informable;
+                    oDetalle1.Informable = oItem.GetInformableEfector(oUser.IdEfector);
                     oDetalle1.ResultadoCar = valor;
                     oDetalle1.ConResultado = true;
 
@@ -3414,7 +3414,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                 oDetalle.IdItem = oItem;
                 oDetalle.IdSubItem = oItem;
                 oDetalle.TrajoMuestra = "Si";
-                oDetalle.Informable = oItem.Informable;
+                oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
                 oDetalle.ResultadoCar = valor;
                 oDetalle.ConResultado = true;
 
@@ -3482,7 +3482,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                     oDetalle1.IdItem = oItem;
                     oDetalle1.IdSubItem = oItem;
                     oDetalle1.TrajoMuestra = "Si";
-                    oDetalle1.Informable = oItem.Informable;
+                    oDetalle1.Informable = oItem.GetInformableEfector(oUser.IdEfector);
                     oDetalle1.ResultadoCar = valor;
                     oDetalle1.ConResultado = true;
 
@@ -3523,7 +3523,7 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                 oDetalle.IdItem = oItem;
                 oDetalle.IdSubItem = oItem;
                 oDetalle.TrajoMuestra = "Si";
-                oDetalle.Informable = oItem.Informable;
+                oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
                 oDetalle.ResultadoCar = valor;
                 oDetalle.ConResultado = true;
 
