@@ -1530,12 +1530,12 @@ INSERT INTO [dbo].[LAB_ResultadoTEmp]
                                     if (valorItem.ToUpper() == "SE DETECTA")
                                     {
                                         valorItem = "SE DETECT";
-                                        oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
+                                        oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem, oDetalle.IdEfector);
                                     }
                                     if (valorItem.ToUpper() == "NO SE DETECTA")
                                     {
                                       valorItem = "NO SE DETECT";
-                                        oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem);
+                                        oDetalle.ResultadoCar = oDetalle.IdSubItem.GetResultado(valorItem, oDetalle.IdEfector);
                                     }
                                     oDetalle.ConResultado = true;
                                 }

@@ -1385,7 +1385,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                         where dp.idProtocolo = " + Request["idProtocolo"].ToString() + @"
                                         and dp.trajoMuestra = 'Si'
                                         and p.idarea = A.idArea) order by nombre";
-                        oUtil.CargarCheckBox(chkAreaCodigoBarra, m_ssql, "idArea", "nombre");
+                        oUtil.CargarCheckBox(chkAreaCodigoBarra, m_ssql, "idArea", "nombre", connReady);
                         chkAreaCodigoBarra.Items.Insert(0, new ListItem("General", "-1"));
                     }
                 }
@@ -1505,6 +1505,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
 
+            //Carga de combo de rutinas
+            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina (nolock) where baja=0 and IdEfector= " + oUser.IdEfector.IdEfector.ToString() + " and idTipoServicio= " + Session["idServicio"].ToString() + " order by nombre ";//Ver MultiEfector 
+            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre", connReady);
+            ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
+
+            ddlItem.UpdateAfterCallBack = true;
+            ddlRutina.UpdateAfterCallBack = true;
 
             if (Request["Operacion"].ToString() != "Modifica")
             {
@@ -1671,25 +1678,32 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         {
             Utility oUtil = new Utility();
             ///Carga del combo de determinaciones
-            string m_ssql = "SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo, " +
-                           " IE.disponible " +
-                            " FROM Lab_item I with (nolock) " +
-                            " inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oC.IdEfector.IdEfector.ToString() + //MultiEfector 
-                            " INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea " +
-                            " where A.baja=0 and I.baja=0 and IE.disponible=1 "+  
-                            " and  A.idtipoServicio= " + Session["idServicio"].ToString() + " AND (I.tipo= 'P') order by I.nombre ";
-            SqlConnection strconn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
-            //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            /// 
+            string str_condicion = "";
+            ///Caro: en el caso de modificacion agrego que cargue las determinaciones que estan en el protocolo independientemente si estan activas o no
+            if ((Request["Operacion"].ToString() == "Modifica") && (Request["idProtocolo"]!=null))
+                str_condicion = "  or exists(select 1 from LAB_DetalleProtocolo p WHERE p.iditem = I.iditem and idProtocolo = " + Request["idProtocolo"].ToString() + ") ";
+
+            
+
+            string m_ssql = @"SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo,  IE.disponible 
+                             FROM Lab_item I with (nolock) 
+                             inner join lab_itemEfector IE  with (nolock) on I.idItem= IE.idItem and Ie.idefector=" + oC.IdEfector.IdEfector.ToString() + //MultiEfector 
+                             @" INNER JOIN Lab_area A with (nolock) ON A.idArea= I.idArea 
+                             where (A.baja=0 and I.baja=0 and IE.disponible=1  and  A.idtipoServicio= " + Session["idServicio"].ToString() + @" AND (I.tipo= 'P')) "+
+                             str_condicion + @"order by I.nombre ";
+
+
+             
+
+            SqlConnection strconn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura            
             SqlDataAdapter da = new SqlDataAdapter(m_ssql, strconn);
             DataSet ds = new DataSet();
             da.Fill(ds, "T");
 
-            //gvLista.DataSource = ds.Tables["T"];
-            //gvLista.DataBind();
-
-
-            ddlItem.Items.Insert(0, new ListItem("", "0"));
+            
+            //Caro: Nomenclador es necesario cargar ddlitem porque ya se carga en CargarListas()
+   ///         ddlItem.Items.Insert(0, new ListItem("", "0"));
 
             string sTareas = "";
             for (int i = 0; i < ds.Tables["T"].Rows.Count; i++)
@@ -1698,14 +1712,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             }
             txtTareas.Value = sTareas;
 
-            //Carga de combo de rutinas
-            m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina (nolock) where baja=0 and IdEfector= "+ oUser.IdEfector.IdEfector.ToString() +" and idTipoServicio= " + Session["idServicio"].ToString() + " order by nombre ";//Ver MultiEfector 
-            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre");
-            ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
-
-            ddlItem.UpdateAfterCallBack = true;
-            ddlRutina.UpdateAfterCallBack = true;
-
+          
             m_ssql = null;
             oUtil = null;
         }
@@ -3224,9 +3231,9 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleRutina));
             crit.Add(Expression.Eq("IdRutina", oRutina));
+            crit.AddOrder(Order.Asc("IdDetalleRutina"));
             IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
+            
                 string codigos="";
                 foreach (DetalleRutina oDetalle in detalle)
                 {
@@ -3246,7 +3253,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 txtCodigosRutina.Text = codigos;
                 txtCodigosRutina.UpdateAfterCallBack = true;
 
-            }
+            
 
         }
 
