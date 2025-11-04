@@ -1606,12 +1606,7 @@ namespace WebLab.Protocolos
                 case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
             }
         }
-                    }
-                    
-        
-           
-                   }
-      
+                   
 
     
 
@@ -2051,63 +2046,7 @@ namespace WebLab.Protocolos
 
         }
 
-        private void CargarProtocoloDerivadoLote()
-        {
-            string numeroProtocolo = Request["numeroProtocolo"].ToString();
-            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(numeroProtocolo));
-            if (oRegistro != null)
-            {
-                lblTitulo.Visible = false;
-                lblServicio1.Visible = true;
-                lblServicio.Visible = true;
-                txtFecha.Value = DateTime.Now.ToShortDateString();
-                txtFechaOrden.Value = oRegistro.FechaOrden.ToShortDateString();
-                txtCodigoMuestra.Text = "";
-                txtDescripcionProducto.Text = oRegistro.DescripcionProducto;
-                ddlConservacion.SelectedValue = oRegistro.IdConservacion.ToString();
-                txtNumeroOrigen.Text = oRegistro.Numero.ToString();
-                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
-                ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
-                txtObservacion.Text = oRegistro.Observacion;
-                pnlNavegacion.Visible = false;
-                btnCancelar.Text = "Cancelar";
-                btnCancelar.Width = Unit.Pixel(80);
-                ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
-                
-
-
-                #region CargaDeterminaciones
-                ////// ---------------------->Buscar las derivaciones que no han sido ingresadas
-                //el protocolo me da los protocolos detalles
-                //los protocolos detalles me dan las derivaciones
-                //la derivacion debe estar enviada
-                //la derivacion debe tener el mismo lote que el ingresado (no todos los analisis pueden haber sido enviados con el mismo lote)
-
-                string m_strSQL =
-                    //select distinct STRING_AGG(Det.idItem ,' | ')  as Item ---> (No esta disponible en SQL 2014)
-                    @" SELECT  STUFF(( SELECT ' | ' + CAST(Det.idItem AS VARCHAR(20))
-                    from LAB_Derivacion D
-                        inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
-                        inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
-                        inner join LAB_DerivacionEstado as LE on LE.idEstado = D.estado
-                        inner join LAB_LoteDerivacion L on L.idLoteDerivacion = D.idLote
-                    where P.baja = 0
-                        and D.estado in (1) ---------------------- Buscar las derivaciones que no han sido ingresadas
-                        and L.idLoteDerivacion = " + Request["idLote"].ToString() + " and p.numero = " + numeroProtocolo +
-                    "       FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 3, '') AS Item; ";
-
-                DataSet Ds = new DataSet();
-                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
-
-                string analisis = Convert.ToString(Ds.Tables[0].Rows[0][0]);
-                CargarDeterminacionesDerivacion(analisis);
-                #endregion
-            }
-        }
+     
        
        
         private void ActualizarEstadoDerivacion(Protocolo oRegistro)
@@ -2149,7 +2088,7 @@ namespace WebLab.Protocolos
                 // ActualizaEstadoLote(idLote, oRegistro);
             }
         }
-    }
+    
         protected void btnArchivos_Click(object sender, EventArgs e)
         {
             Response.Redirect("ProtocoloAdjuntar.aspx?idProtocolo=" + Request["idProtocolo"].ToString() +"&desde=protocolo");
