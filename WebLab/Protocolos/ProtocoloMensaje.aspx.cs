@@ -20,9 +20,6 @@ namespace WebLab.Protocolos
 {
     public partial class ProtocoloMensaje : System.Web.UI.Page
     {
-        
-
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -44,25 +41,32 @@ namespace WebLab.Protocolos
                     Business.Data.Laboratorio.Muestra oM = new Business.Data.Laboratorio.Muestra();
                     oM = (Business.Data.Laboratorio.Muestra)oM.Get(typeof(Business.Data.Laboratorio.Muestra), oP.IdMuestra);
                     lblDescripcion.Text = oM.Nombre.ToUpper() + " " + oP.DescripcionProducto;
+
+                    if (Request["idLote"] != null)
+                    {
+                        lnkNuevo.Text = "Continuar recepción ";
+                    }
                 }
 
             }
-            
+
         }
-
-        
-
-
-
-        protected void lnkRegresar_Click(object sender, EventArgs e)
+        protected void lnkNuevo_Click(object sender, EventArgs e)
         {
-            Business.Data.Laboratorio.Protocolo oP = new Business.Data.Laboratorio.Protocolo();
-            oP = (Business.Data.Laboratorio.Protocolo)oP.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["id"].ToString()));
-            if ((oP.IdTipoServicio.IdTipoServicio==3) || (oP.IdTipoServicio.IdTipoServicio == 5))
-            Response.Redirect("ProtocoloProductoEdit.aspx?Operacion=Alta", false);
-            if (oP.IdTipoServicio.IdTipoServicio == 6)
-                Response.Redirect("Default2.aspx?idServicio=6&idUrgencia=0&idCaso=0", false);
-
+            if (Request["idLote"] != null) //Regreso a la recepcion de lotes de derivaciones
+            {
+                Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=1&idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idLote=" + Request["idLote"]);
+            }
+            else
+            {
+                Business.Data.Laboratorio.Protocolo oP = new Business.Data.Laboratorio.Protocolo();
+                oP = (Business.Data.Laboratorio.Protocolo)oP.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["id"].ToString()));
+                if (oP.IdTipoServicio.IdTipoServicio == 5)
+                    Response.Redirect("ProtocoloProductoEdit.aspx?Operacion=Alta", false);
+                if (oP.IdTipoServicio.IdTipoServicio == 6)
+                    Response.Redirect("Default2.aspx?idServicio=6&idUrgencia=0&idCaso=0", false);
+            }
+            
         }
     }
 }

@@ -49,7 +49,7 @@
 
                                 <tr>
                                     <td>
-                                        <div class="form-group" id="div_controlLote" runat="server">
+                                        <div class="form-group" id="divControlLote" runat="server">
                                             <label class="control-label" for="txtNumeroLote">Nro. Lote:</label>
                                             <asp:TextBox ID="txtNumeroLote" runat="server" class="form-control input-sm" Width="100px" OnTextChanged="txtNumeroLote_TextChanged" Onkeyup="validaInput();" AutoPostBack="true"></asp:TextBox>
 
@@ -69,20 +69,20 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <div class="form-group has-error" id="div_controlLote2" runat="server">
-                                            <asp:Label ID="lbl_errorEfectorOrigen" runat="server" Visible="false" CssClass="help-block"></asp:Label>
+                                        <div class="form-group has-error" id="divControlLote2" runat="server">
+                                            <asp:Label ID="lblErrorEfectorOrigen" runat="server" Visible="false" CssClass="help-block"></asp:Label>
                                         </div>
                                     </td>
 
                                 </tr>
                                 <tr>
                                     <td>Efector origen:
-                                        <strong> <asp:Label runat="server" ID="lbl_efectorOrigen" Text=""></asp:Label></strong>
+                                        <strong> <asp:Label runat="server" ID="lblEfectorOrigen" Text=""></asp:Label></strong>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Estado Lote: <strong>
-                                        <asp:Label ID="lbl_estadoLote" runat="server" Text=""></asp:Label></strong> </td>
+                                        <asp:Label ID="lblEstadoLote" runat="server" Text=""></asp:Label></strong> </td>
 
                                 </tr>
                                 <tr>
@@ -97,7 +97,7 @@
                                                 <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
                                                 <%--<asp:BoundField DataField="EstadoDerivacion" HeaderText="Estado Derivacion" />--%>
                                                 <asp:BoundField DataField="idPaciente" Visible="false" />
-                                                <asp:BoundField DataField="paciente" HeaderText="Paciente" />
+                                                <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" />
                                                 <asp:BoundField DataField="idProtocolo" Visible="false" />
                                                 <asp:TemplateField>
                                                     <ItemTemplate>
@@ -125,7 +125,7 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <asp:Label ID="lbl_cantidadRegistros" runat="server"></asp:Label></td>
+                                        <asp:Label ID="lblCantidadRegistros" runat="server"></asp:Label></td>
 
                                 </tr>
                                 <tr>
@@ -144,7 +144,7 @@
 
                         </div>
                         <div class="panel-footer">
-                            <asp:LinkButton ID="btn_recibirLote" runat="server"
+                            <asp:LinkButton ID="btnRecibirLote" runat="server"
                                 OnClick="btn_recibirLote_Click" Text="Recibir Lote"
                                 CssClass="btn btn-primary" Width="150px"
                                 Enabled="false" />

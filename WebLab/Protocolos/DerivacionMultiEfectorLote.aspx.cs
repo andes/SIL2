@@ -43,7 +43,10 @@ namespace WebLab.Protocolos
             {
 
                 VerificaPermisos("Derivacion");
-                ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
+                if (Request["idServicio"].ToString() != "5")
+                    ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
+                else
+                    pnlTitulo.Visible = false;
 
                 if (Request["idLote"] != null)
                 {
@@ -83,12 +86,12 @@ namespace WebLab.Protocolos
             gvProtocolosDerivados.DataSource = null;
             gvProtocolosDerivados.EmptyDataText = "";
             gvProtocolosDerivados.DataBind();
-            div_controlLote.Attributes["class"] = "form-group";
-            lbl_errorEfectorOrigen.Visible = false;
-            lbl_cantidadRegistros.Text = "";
-            lbl_estadoLote.Text = "";
-            btn_recibirLote.Enabled = false;
-            lbl_efectorOrigen.Text = "";
+            divControlLote.Attributes["class"] = "form-group";
+            lblErrorEfectorOrigen.Visible = false;
+            lblCantidadRegistros.Text = "";
+            lblEstadoLote.Text = "";
+            btnRecibirLote.Enabled = false;
+            lblEfectorOrigen.Text = "";
         }
         protected bool NoIngresado(int estado)
         {
@@ -135,23 +138,23 @@ namespace WebLab.Protocolos
             //Si el lote es Derivado se habilita el botón para recibirlo
             if (lote.Estado == 2)
             {
-                btn_recibirLote.Enabled = true;
+                btnRecibirLote.Enabled = true;
             }
 
             //Cargo el estado 
-            lbl_estadoLote.Text = lote.descripcionEstadoLote();
+            lblEstadoLote.Text = lote.descripcionEstadoLote();
 
             //Cargo el efector de Origen
             Efector efectorOrigen = new Efector();
             efectorOrigen = (Efector)efectorOrigen.Get(typeof(Efector), "IdEfector", lote.IdEfectorOrigen.IdEfector);
-            lbl_efectorOrigen.Text = efectorOrigen.Nombre;
+            lblEfectorOrigen.Text = efectorOrigen.Nombre;
 
             //Cargo grilla de protocolos para ingresar
             DataTable dt = LeerDatosProtocolosDerivados();
             if (dt.Rows.Count > 0)
             {
                 gvProtocolosDerivados.DataSource = dt;
-                lbl_cantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
+                lblCantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
             }
             else
             {
@@ -194,9 +197,9 @@ namespace WebLab.Protocolos
                 {
                     Efector e = new Efector();
                     e = (Efector)e.Get(typeof(Efector), lote.IdEfectorDestino.IdEfector);
-                    lbl_errorEfectorOrigen.Visible = true;
-                    lbl_errorEfectorOrigen.Text = "El lote no corresponde al efector del usuario '" + oC.IdEfector.Nombre + "'";
-                    div_controlLote.Attributes["class"] = "form-group has-error";
+                    lblErrorEfectorOrigen.Visible = true;
+                    lblErrorEfectorOrigen.Text = "El lote no corresponde al efector del usuario '" + oC.IdEfector.Nombre + "'";
+                    divControlLote.Attributes["class"] = "form-group has-error";
                     gvProtocolosDerivados.Visible = false; //para que no salga el cartel de grilla vacia
                     return false;
                 }
@@ -218,7 +221,10 @@ namespace WebLab.Protocolos
 
             string m_strSQL =
                 @"select convert(varchar(10),P.fecha,103) as fecha, P.numero, P.idPaciente  as idPaciente, DE.descripcion as EstadoDerivacion , 
-                P.idProtocolo , L.idEfectorDestino , ef.nombre , Pa.nombre + ' ' + Pa.apellido as paciente
+                P.idProtocolo , L.idEfectorDestino , ef.nombre ,
+                case when P.idPaciente > 0 then
+				 Pa.nombre + ' ' + Pa.apellido 
+				 else P.descripcionProducto end as paciente
                 from LAB_Derivacion D
                 inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
                 inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
@@ -231,7 +237,7 @@ namespace WebLab.Protocolos
                 and D.estado=1
                 and D.idLote = " + txtNumeroLote.Text + @" 
                 group by P.fecha, P.numero, P.idPaciente, DE.descripcion,  P.idProtocolo ,
-                L.idEfectorDestino , ef.nombre ,  Pa.nombre + ' ' + Pa.apellido ";
+                L.idEfectorDestino , ef.nombre ,  Pa.nombre + ' ' + Pa.apellido ,P.descripcionProducto";
 
 
             DataSet Ds = new DataSet();
@@ -308,23 +314,34 @@ namespace WebLab.Protocolos
         private void GenerarNuevoProtocolo(int idProtocoloOrigen, int idPaciente)
         {
 
-            string pivot, m_numero, s_idServicio, idLote;
+            string m_numero, s_idServicio, idLote;
 
             Protocolo p = new Protocolo();
             p = (Protocolo)p.Get(typeof(Protocolo), idProtocoloOrigen);
 
             s_idServicio = p.IdTipoServicio.IdTipoServicio.ToString();
-            m_numero = p.Numero.ToString();
             idLote = txtNumeroLote.Text;
-            // DataTable dt = TraerItemsDerivadosProtocolo(); //-> ahora lo voy a cargar desde ProtocoloEdit2
-
-            Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
-                     "&numeroProtocolo=" + m_numero +
-                     "&idServicio=" + s_idServicio +
-                     "&idLote=" + idLote +
-                     "&idPaciente=" + idPaciente +
-                      //"&Operacion=AltaDerivacionMultiEfectorLote&analisis=" + pivot, false); // No enviar los analisis por request
-                      "&Operacion=AltaDerivacionMultiEfectorLote", false);
+           
+            if(idPaciente > 0)
+            {
+                Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
+                    "&idProtocolo=" + idProtocoloOrigen +
+                    "&idServicio=" + s_idServicio +
+                    "&idLote=" + idLote +
+                    "&idPaciente=" + idPaciente +
+                     "&Operacion=AltaDerivacionMultiEfectorLote", false);
+            }
+            else
+            {
+                //Es Muestra No Pacientes
+                Response.Redirect("ProtocoloProductoEdit.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
+                   "&idProtocolo=" + idProtocoloOrigen +
+                   "&idServicio=" + s_idServicio +
+                   "&idLote=" + idLote +
+                   "&Desde=AltaDerivacionMultiEfectorLote" +
+                   "&Operacion=AltaDerivacionMultiEfectorLote" , false);
+            }
+           
         }
 
         #endregion

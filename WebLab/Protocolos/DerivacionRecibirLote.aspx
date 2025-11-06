@@ -13,8 +13,8 @@
 
         document.addEventListener("DOMContentLoaded", function () {
             var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
-            var txtHora = document.getElementById('<%= txt_Hora.ClientID %>');
-            var txtEnvio = document.getElementById('<%= hid_fechaEnvio.ClientID %>');
+            var txtHora = document.getElementById('<%= txtHora.ClientID %>');
+            var txtEnvio = document.getElementById('<%= hidFechaEnvio.ClientID %>');
 
             function cambioHorario() {
             var fechaSeleccionada = new Date(txtFecha.value);
@@ -86,13 +86,13 @@
                                     <td>
                                         <label for="lb_efector">Efector Origen:</label>
                                         <strong>
-                                            <asp:Label ID="lb_efector" runat="server" Width="300px"></asp:Label></strong>
+                                            <asp:Label ID="lbEfector" runat="server" Width="300px"></asp:Label></strong>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                       <strong> <asp:Label runat="server" ID="lbl_fechaPermitida"> </asp:Label></strong>
-                                        <asp:HiddenField ID="hid_fechaEnvio"  runat="server"  />
+                                       <strong> <asp:Label runat="server" ID="lblFechaPermitida"> </asp:Label></strong>
+                                        <asp:HiddenField ID="hidFechaEnvio"  runat="server"  />
                                     </td>
                                 </tr>
                                
@@ -100,7 +100,7 @@
                                  <tr>
                                     <td>
                                         <strong>Transportista:
-                                        <asp:Label ID="lbl_transportista" runat="server"  ></asp:Label> </strong>
+                                        <asp:Label ID="lblTransportista" runat="server"  ></asp:Label> </strong>
                                         <%--<asp:TextBox ID="txt_transportista" runat="server" class="form-control input-sm" Style="width: 600px"></asp:TextBox>--%></td>
                                 </tr>
                                 <tr>
@@ -111,11 +111,11 @@
                                     <td class="">Fecha y Hora:
                                         <%--<input id="txt_Fecha" runat="server" type="date" class="form-control input-sm" title="Ingrese la fecha de ingreso" />--%>
                                         <asp:TextBox runat="server" ID="txtFecha" TextMode="Date" class="form-control input-sm"  />
-                                        <input id="txt_Hora"  runat="server" type="time" class="form-control input-sm" name="txt_Hora" />
+                                        <input id="txtHora"  runat="server" type="time" class="form-control input-sm" name="txtHora" />
 
                                         <asp:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
-                                        <asp:RequiredFieldValidator ID="rfv_Hora" runat="server" ControlToValidate="txt_Hora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
-                                        <asp:RangeValidator runat="server" ID="rv_Fecha" ControlToValidate="txtFecha" />
+                                        <asp:RequiredFieldValidator ID="rfvHora" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
+                                        <asp:RangeValidator runat="server" ID="rvFecha" ControlToValidate="txtFecha" />
                                         </td>
                                 </tr>
                                 <tr>
@@ -125,7 +125,7 @@
                                
                                 <tr>
                                     <td>Observaciones:
-                                        <textarea id="txt_obs" runat="server" rows="3" cols="2" class="form-control input-sm" style="width: 600px"></textarea>
+                                        <textarea id="txtObs" runat="server" rows="3" cols="2" class="form-control input-sm" style="width: 600px"></textarea>
                                     </td>
                                 </tr>
 
@@ -133,9 +133,9 @@
                         </div>
 
                         <div class="panel-footer">
-                            <asp:Button ID="btn_recibirLote" runat="server" OnClick="btn_recibirLote_Click" Text="Guardar" CssClass="btn btn-success" Width="150px" Enabled="true" />
+                            <asp:Button ID="btnRecibirLote" runat="server" OnClick="btn_recibirLote_Click" Text="Guardar" CssClass="btn btn-success" Width="150px" Enabled="true" />
 
-                            <asp:Button ID="btn_volver" runat="server" OnClick="btn_volver_Click" Text="Volver" CssClass="btn btn-primary" Width="150px" Enabled="true" />
+                            <asp:Button ID="btnVolver" runat="server" OnClick="btn_volver_Click" Text="Volver" CssClass="btn btn-primary" Width="150px" Enabled="true" />
                         </div>
                     </div>
                 </td>
