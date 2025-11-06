@@ -96,14 +96,19 @@ namespace Business.Data.Laboratorio  {
 
         public static string derivacionPDF(int idLote)
         {
-            string m_strSQL = " SELECT  numero, convert(varchar(10), fecha,103) as fecha, dni, determinacion, " +
-            " apellido + ' '+ nombre as paciente,  efectorderivacion,  fechaNacimiento as edad, unidadEdad, sexo,  " +
-            " solicitante as especialista, idLote ," +
-            "   CASE  WHEN(len(idLote) < 9) " +
-            "   THEN  '00000' + CONVERT(VARCHAR, idLote) " +
-            " ELSE CONVERT(VARCHAR, idLote ) " +
-            "  END as idLoteString " +
-            " FROM vta_LAB_Derivaciones WHERE  idLote=" + idLote + " ORDER BY efectorDerivacion,numero ";
+
+            //agrego el tipo de muestra para NO PACIENTES  (Cambios en la vista vta_LAB_Derivaciones)
+
+            string m_strSQL = @"SELECT  numero, convert(varchar(10), fecha,103) as fecha, dni, determinacion,  
+             apellido + ' '+ nombre as paciente,  efectorderivacion,  fechaNacimiento as edad, unidadEdad, sexo,   
+             solicitante as especialista, idLote , 
+               CASE  WHEN(len(idLote) < 9)  
+               THEN  '00000' + CONVERT(VARCHAR, idLote)  
+             ELSE CONVERT(VARCHAR, idLote )  
+              END as idLoteString ,  
+              idTipoServicio ,
+              TipoProducto
+             FROM vta_LAB_Derivaciones WHERE  idLote= " + idLote + " ORDER BY efectorDerivacion,numero ";
 
             return m_strSQL;     
         }
@@ -149,11 +154,27 @@ namespace Business.Data.Laboratorio  {
             
         }
 
-        
-        //public bool IngresoProtocolo() {
-        //    List<Derivacion> derivaciones = Derivacion.DerivacionesByLote(this.IdLoteDerivacion);
-            
-        //    derivaciones.co
-        //}
+        public void ActualizaEstadoLote(int idUsuario, string ProtocoloNuevo, string ProtocoloAnterior)
+        {
+            if (Estado == 4) //Pasa de Recibido a Ingresado
+            {
+                Estado = 5;
+                GrabarAuditoriaLoteDerivacion(descripcionEstadoLote(), idUsuario);
+                FechaIngreso = DateTime.Now;
+            }
+
+            //Graba el ingreso del protocolo en el lote
+            GrabarAuditoriaLoteDerivacion("Ingresa protocolo", idUsuario, "Número Protocolo", ProtocoloNuevo, ProtocoloAnterior);
+
+            //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
+            if (!HayDerivacionesPendientes())
+            {
+                Estado = 6; //Pasa a Completado si no tiene más derivaciones pendientes
+                GrabarAuditoriaLoteDerivacion(descripcionEstadoLote(), idUsuario);
+            }
+
+            Save();
+        }
+
     }
 }

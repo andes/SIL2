@@ -4,6 +4,8 @@ insert license info here
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using NHibernate;
 
 namespace Business.Data.Laboratorio
@@ -280,6 +282,56 @@ namespace Business.Data.Laboratorio
             return derivaciones;
         }
 
-       
+        public void MarcarComoRecibidas(Protocolo oAnterior, Protocolo oNuevo,  Usuario oUser, int idLoteDerivacion)
+        {
+			string query =
+			 @"update LAB_Derivacion
+            set estado=3---recibido
+            ,idProtocoloDerivacion=" + oNuevo.IdProtocolo.ToString() + @"
+            from LAB_Derivacion D
+                inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
+            where Det.idProtocolo=" + oAnterior.IdProtocolo.ToString() + " and idLote=" + idLoteDerivacion;
+			
+			SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+			SqlCommand cmd = new SqlCommand(query, conn);
+			int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
+
+			//Se indica en el protocolo de Origen que fue recibido en el destino
+			if (oAnterior != null)
+			{
+				if (idLoteDerivacion != 0)
+					oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLoteDerivacion, "Protocolo " + oNuevo.Numero.ToString());
+				else
+					oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Protocolo", oNuevo.Numero.ToString());
+			}
+		}
+
+        public string ObtenerItemsPendientes(string idLoteDerivacion, string idProtocolo)
+        {
+			////// ---------------------->Buscar las derivaciones que no han sido ingresadas
+			//los protocolos detalles me dan las derivaciones
+			//la derivacion debe estar enviada
+			//la derivacion debe tener el mismo lote que el ingresado (no todos los analisis pueden haber sido enviados con el mismo lote)
+
+			string m_strSQL =
+			  //select distinct STRING_AGG(Det.idItem ,' | ')  as Item ---> (No esta disponible en SQL 2014)
+			  @" SELECT  STUFF(( SELECT ' | ' + CAST(Det.idItem AS VARCHAR(20))
+                    from LAB_Derivacion D
+                        inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
+                    where 
+                        D.estado in (1) ---------------------- Buscar las derivaciones que no han sido ingresadas
+                        and D.idLote = " + idLoteDerivacion + @"
+                        and Det.idprotocolo = " + idProtocolo +
+			  "       FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 3, '') AS Item; ";
+
+			DataSet Ds = new DataSet();
+			SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+			SqlDataAdapter adapter = new SqlDataAdapter
+			{
+				SelectCommand = new SqlCommand(m_strSQL, conn)
+			};
+			adapter.Fill(Ds);
+			return Convert.ToString(Ds.Tables[0].Rows[0][0]);
+		}
     }
 }

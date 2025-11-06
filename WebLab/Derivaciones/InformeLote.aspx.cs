@@ -128,11 +128,11 @@ namespace WebLab.Derivaciones
             txtObservacion.Enabled = valor;
             ddlEstados.Enabled = valor;
             //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-            ddl_Transporte.Enabled = valor;
+            ddlTransporte.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
-            txt_Fecha.Enabled = valor;
-            txt_Hora.Enabled = valor;
+            txtFecha.Enabled = valor;
+            txtHora.Enabled = valor;
         }
 
         private void CargarControles()
@@ -154,10 +154,10 @@ namespace WebLab.Derivaciones
 
         private void CargarTransportistas()
         {
-            ddl_Transporte.Items.Add("-- SELECCIONE --");
+            ddlTransporte.Items.Add("-- SELECCIONE --");
             //Vanesa: por ahora esta hardcodeado los transportitas, hacer mejora que lea de la base de datos
-            ddl_Transporte.Items.Add("Público");
-            ddl_Transporte.Items.Add("Privado");
+            ddlTransporte.Items.Add("Público");
+            ddlTransporte.Items.Add("Privado");
 
 
             //Utility oUtil = new Utility();
@@ -168,8 +168,8 @@ namespace WebLab.Derivaciones
         private void CargarFechaHoraActual()
         {
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
-            txt_Fecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
-            txt_Hora.Text = miFecha.ToString("HH:mm");
+            txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
+            txtHora.Text = miFecha.ToString("HH:mm");
             //Date1.Text = miFecha.Date.ToString("yyyy-MM-dd");
             //Time1.Text = miFecha.ToString("HH:mm");
         }
@@ -291,6 +291,8 @@ namespace WebLab.Derivaciones
                 string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+idLote);
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
             }
+            else
+                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('No se encontraron datos para el numero de lote ingresado');", true);
         }
 
 
@@ -301,17 +303,26 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
-                if (Guardar())
+                int idLote = verificarDeterminaciones();
+                if (idLote == 0) //No trajo ningun id Lote con error
                 {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                    if (Guardar())
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
+
+                    }
+                    CargarGrilla();
+                    limpiarForm();
                 }
                 else
-                {
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos\nRevisá los campos e intentá nuevamente');", true);
-
+                { //Es el idLote con error
+                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
                 }
-                CargarGrilla();
-                limpiarForm();
+
             }
             else
             {
@@ -320,67 +331,84 @@ namespace WebLab.Derivaciones
 
         }
         
+        private int verificarDeterminaciones()
+        {
+            int tieneDeterminaciones = 0;
+            //Verificamos que en lote no se hayan descartados todas sus determinaciones asi no se Deriva vacio
+            if (Convert.ToInt32(ddlEstados.SelectedValue) == 2)
+            {
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked)
+                    {
+                        int idLote = Convert.ToInt32(row.Cells[2].Text);
+                        DataTable dt =  GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
+                        if(dt.Rows.Count ==  0)  
+                            return  idLote;
+                    }
+                }
+            }
+            return tieneDeterminaciones;
+        }
 
         private bool Guardar()
         {
             bool seGuardoEnBd = false;
-
-            foreach (GridViewRow row in gvLista.Rows)
+            if(verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
             {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked)
+                foreach (GridViewRow row in gvLista.Rows)
                 {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked)
+                    {
 
-                    int idLote = Convert.ToInt32(row.Cells[2].Text);
-                    int idUsuario = oUser.IdUsuario;
-                    int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
-                    string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
-                    //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? rb_transportista.SelectedValue : ""); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                    string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddl_Transporte.SelectedValue : "");
-                    LoteDerivacion lote = new LoteDerivacion();
-                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                        int idLote = Convert.ToInt32(row.Cells[2].Text);
+                        int idUsuario = oUser.IdUsuario;
+                        int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
+                        string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
+                        string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
+                        LoteDerivacion lote = new LoteDerivacion();
+                        lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
-                    //Se cambia el estado del lote LAB_LoteDerivacion
-                    lote.Estado = estadoLote;
-                    lote.Observacion = observacion;
-                    lote.IdUsuarioEnvio = idUsuario;
-                    //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
-                    string fecha_hora = txt_Fecha.Text + " " + txt_Hora.Text;
-                    lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
-                    lote.Save();
+                        //Se cambia el estado del lote LAB_LoteDerivacion
+                        lote.Estado = estadoLote;
+                        lote.Observacion = observacion;
+                        lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
+                        //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
+                        string fecha_hora = txtFecha.Text + " " + txtHora.Text;
+                        lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
+                        lote.Save();
                    
-                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
-                    crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
-                    IList lista = crit.List();
-
-
-                    
-                     
-
-                     
-
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
+                        //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
+                        // Use '{alias}' instead of 'LAB_Derivacion' NHibernate will replace this placeholder with the actual alias it generates for the Derivacion entity.
+                        string ssql_Protocolo = " IdLote=" + lote.IdLoteDerivacion + " and {alias}.IdDetalleProtocolo in (Select IdDetalleProtocolo From LAB_DetalleProtocolo  where IdEfector=" + oUser.IdEfector.IdEfector + ")";
+                        crit.Add(Expression.Sql(ssql_Protocolo));
+                        IList lista = crit.List();
+                        
                         foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                         {
                             #region Derivacion 
-                            //Cambia el estado de las derivaciones LAB_Derivacion 
+                                //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                            /*
-                             Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                             1 : Creado
-                             2 : Derivado
-                             3 : Cancelado
+                                /*
+                                 Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                                 1 : Creado
+                                 2 : Derivado
+                                 3 : Cancelado
 
-                             Estado de la derivacion LAB_DerivacionEstado
-                             0 : Pendiente de derivar
-                             1 : Enviado
-                             2 : No Enviado
-                             3 : Recibido
-                             4 : Pendiente para enviar
-                           */
-                            oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
-                            oDeriva.Save();
-                            #endregion
+                                 Estado de la derivacion LAB_DerivacionEstado
+                                 0 : Pendiente de derivar
+                                 1 : Enviado
+                                 2 : No Enviado
+                                 3 : Recibido
+                                 4 : Pendiente para enviar
+                               */
+                                oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
+                                oDeriva.Save();
+                                #endregion
 
 
                             #region cambio_codificacion_a_derivacion
@@ -403,17 +431,22 @@ namespace WebLab.Derivaciones
                     lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
                     lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
 
-                    if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
-                    {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                        lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddl_Transporte.SelectedValue);
-                        DateTime f = new DateTime(Convert.ToInt16(txt_Fecha.Text.Substring(0, 4)), Convert.ToInt16(txt_Fecha.Text.Substring(5, 2)), Convert.ToInt16(txt_Fecha.Text.Substring(8, 2)));
-                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
-                        lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txt_Hora.Text);
+                        if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
+                        {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+                            lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddlTransporte.SelectedValue);
+                            DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
+                            lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
+                            lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
+                        }
+
+
+                        seGuardoEnBd = true;
                     }
-                    
-                  
-                    seGuardoEnBd = true;
                 }
+            }
+            else
+            {
+
             }
 
             return seGuardoEnBd;

@@ -6,11 +6,11 @@
 
         function validarFormulario() {
             var todoOk = false;
-            var validatorEstado = document.getElementById('<%= rv_estado.ClientID %>');
+            var validatorEstado = document.getElementById('<%= rvEstado.ClientID %>');
             <%--var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');--%> //--> Cambio TextBox por DropDownList
-            var motivoCancelacion = document.getElementById('<%= ddl_motivoCancelacion.ClientID%>');
+            var motivoCancelacion = document.getElementById('<%= ddlMotivoCancelacion.ClientID%>');
             var estado = document.getElementById('<%= ddlEstado.ClientID %>');
-            var label = document.getElementById('<%= lbl_ErrorMotivo.ClientID %>');
+            var label = document.getElementById('<%= lblErrorMotivo.ClientID %>');
 
             //Limpio los labels de error 
             label.className = 'hidden';
@@ -59,18 +59,18 @@
                     return true; // Detiene la validación con al menos un check
                 }
             }
-            var label = document.getElementById('<%= lbl_errorLista.ClientID %>');
+            var label = document.getElementById('<%= lblErrorLista.ClientID %>');
             label.className = 'exposed';
             return todoOk;
         }
 
         function reseteaLabelErrorGrilla() {
-            var labelGrilla = document.getElementById('<%= lbl_errorLista.ClientID %>');
+            var labelGrilla = document.getElementById('<%= lblErrorLista.ClientID %>');
             labelGrilla.className = 'hidden';
         }
 
         function reseteaLabelErrorMotivo() {
-            var labelMotivo = document.getElementById('<%= lbl_ErrorMotivo.ClientID %>');
+            var labelMotivo = document.getElementById('<%= lblErrorMotivo.ClientID %>');
             labelMotivo.className = 'hidden';
         }
 
@@ -103,7 +103,7 @@
         }
 
         function activaMotivos(estado) {
-            var motivos = document.getElementById('<%= ddl_motivoCancelacion.ClientID %>');
+            var motivos = document.getElementById('<%= ddlMotivoCancelacion.ClientID %>');
             console.log(motivos);
             console.log(estado.value);
             if (estado.value == 2) {
@@ -125,7 +125,7 @@
                 }
             });
             //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
-            if (seleccionar && document.getElementById('<%= lbl_errorLista.ClientID %>').className == 'exposed') {
+            if (seleccionar && document.getElementById('<%= lblErrorLista.ClientID %>').className == 'exposed') {
                 reseteaLabelErrorGrilla();
             }
         }
@@ -224,7 +224,7 @@
                                         <td>Marcar como:</td>
                                         <td >
                                              <asp:DropDownList ID="ddlEstado" runat="server"  class="form-control input-sm" onchange="activaMotivos(this);"> </asp:DropDownList> 
-                                             <asp:RangeValidator id="rv_estado"
+                                             <asp:RangeValidator id="rvEstado"
                                                ControlToValidate="ddlEstado"
                                                MinimumValue="1"
                                                MaximumValue="4"
@@ -236,17 +236,17 @@
                                         <td>
                                             Motivo Cancelaci&oacute;n: </td>
                                         <td>
-                                            <asp:DropDownList ID="ddl_motivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" />
+                                            <asp:DropDownList ID="ddlMotivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" />
 
                                         </td>
                                         <td>
-                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
+                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lblErrorMotivo" CssClass="hidden"></asp:Label>
                                         </td>
                                         <td>
                                             Observaci&oacute;n:
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="txt_observacion" runat="server" CssClass="form-control input-sm" ></asp:TextBox>
+                                            <asp:TextBox ID="txtObservacion" runat="server" CssClass="form-control input-sm" ></asp:TextBox>
                                         </td>
                                         <td>
                                             <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary"  Width="100" Text="Guardar" 
@@ -275,7 +275,7 @@
                     </tr>
 				    <tr>
 					    <td colspan="2">
-                             <asp:Label Text="* Seleccione una fila" runat="server" ID="lbl_errorLista" CssClass="hidden"></asp:Label>
+                             <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
                             <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
                             <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
@@ -326,7 +326,7 @@
                                     <asp:BoundField DataField="dni" HeaderText="DNI" >
                                         <ItemStyle Width="10%" HorizontalAlign="Center" />
                                     </asp:BoundField>
-                                    <asp:BoundField DataField="paciente" HeaderText="Paciente">
+                                    <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto">
                                         <ItemStyle Width="20%" />
                                     </asp:BoundField>
                                     <asp:BoundField DataField="determinacion" HeaderText="Practica a derivar">

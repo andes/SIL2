@@ -157,8 +157,12 @@ namespace WebLab.Protocolos
 
                         btnCancelar.Text = "Cancelar";
                         btnCancelar.Width = Unit.Pixel(80);
+                        btnCancelar.Visible = true;
+                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
+                        {
+                            CargarProtocoloDerivadoLote(); 
+                        }
 
-                             
                     }
                 }
                 else
@@ -193,29 +197,31 @@ namespace WebLab.Protocolos
 
         }
 
-        private void CargarDeterminacionesDerivacion(string s_analisis, string s_diagnostico)
+        private void CargarDeterminacionesDerivacion(string s_analisis)
         {
-
-
             string[] tabla = s_analisis.Split('|');
+            string pivot = "";
             string sDatos = "";
+
             /////Crea nuevamente los detalles.
             for (int i = 0; i <= tabla.Length - 1; i++)
             {
-                if (sDatos == "")
-                    sDatos = tabla[i].ToString() + "#Si";
-                else
-                    sDatos += ";" + tabla[i].ToString() + "#Si";
-               
-            }       
-
-         
-
+                Item oItem = new Item();
+                oItem = (Item)oItem.Get(typeof(Item), int.Parse(tabla[i].ToString()));
+                if (oItem != null)
+                    if (pivot != oItem.Nombre)
+                    {
+                        if (sDatos == "")
+                            sDatos = oItem.Codigo + "#Si#False";
+                        else
+                            sDatos += ";" + oItem.Codigo + "#Si#False";
+                          pivot = oItem.Nombre;
+                    }
+            }
             TxtDatosCargados.Value = sDatos;
-            
         }
 
-      
+
 
         protected void txtCodigoMuestra_TextChanged(object sender, EventArgs e)
         {
@@ -499,6 +505,7 @@ namespace WebLab.Protocolos
                   (Request["Operacion"].ToString() == "AltaTurno") ||
                   (Request["Operacion"].ToString() == "AltaDerivacion") ||
                   (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector") ||
+                  (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") ||
                   (Request["Operacion"].ToString() == "AltaPeticion") ||
                   (Request["Operacion"].ToString() == "AltaFFEE")
                   )
@@ -789,7 +796,16 @@ namespace WebLab.Protocolos
                             case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=ListaProducto"); break;
                             case "Control": Avanzar(1); break;
                         }
-                    }                    
+                    }
+
+                    if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
+                    {
+                        Business.Data.Laboratorio.Protocolo oRegistroAnterior = new Business.Data.Laboratorio.Protocolo();
+                        oRegistroAnterior = (Business.Data.Laboratorio.Protocolo) oRegistroAnterior.Get(typeof(Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                        ActualizarEstadoDerivacion(oRegistro,oRegistroAnterior);
+                        VerificacionEstadoLote(oRegistro, oRegistroAnterior);
+                        Response.Redirect("ProtocoloMensaje.aspx?id=" + oRegistro.IdProtocolo + "&idLote=" + Request["idLote"] + "&idEfectorSolicitante=" + Request["idEfectorSolicitante"], false);
+                    }
                 }
                 else
                 {
@@ -1392,7 +1408,7 @@ namespace WebLab.Protocolos
 
         private void GuardarDetallePractica(DetalleProtocolo oDet)
         {
-            if (VerificarSiEsDerivable(oDet)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            if (oDet.VerificarSiEsDerivable(oUser.IdEfector)) //Cambio para que quede como ProtocoloEdit2
             {
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
@@ -1498,31 +1514,31 @@ namespace WebLab.Protocolos
             //Fin calculo de valor de refrencia y metodo
         }
 
-        private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
-        {
-            bool ok = false;
-            /// buscar idefectorderivacion desde lab_itemefector
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
-            critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
-            critItemEfector.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-            IList detalle1 = critItemEfector.List();
-            if (detalle1.Count > 0)
-            {
-                foreach (ItemEfector oitemEfector in detalle1)
-                {
-                    if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
-                    {
-                        ok = true; break;
-                    }
-                }
-            }
-            else
-                ok = false;
+        //private bool VerificarSiEsDerivable(DetalleProtocolo oDet)
+        //{
+        //    bool ok = false;
+        //    /// buscar idefectorderivacion desde lab_itemefector
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria critItemEfector = m_session.CreateCriteria(typeof(ItemEfector));
+        //    critItemEfector.Add(Expression.Eq("IdItem", oDet.IdItem));
+        //    critItemEfector.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+        //    IList detalle1 = critItemEfector.List();
+        //    if (detalle1.Count > 0)
+        //    {
+        //        foreach (ItemEfector oitemEfector in detalle1)
+        //        {
+        //            if (oDet.IdEfector.IdEfector != oitemEfector.IdEfectorDerivacion.IdEfector)
+        //            {
+        //                ok = true; break;
+        //            }
+        //        }
+        //    }
+        //    else
+        //        ok = false;
 
-            return ok;
+        //    return ok;
 
-        }
+        //}
 
 
         protected void ddlSexo_SelectedIndexChanged(object sender, EventArgs e)
@@ -1583,19 +1599,14 @@ namespace WebLab.Protocolos
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-                    switch (Request["Desde"].ToString())
-                    {
-                        //case "Default": Response.Redirect("Default.aspx?idServicio=" + Session["idServicio"].ToString(), false); break;
-                        case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=ListaProducto"); break;
-                        case "Control": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control"); break;
-                      //  case "Urgencia": Response.Redirect("../Urgencia/UrgenciaList.aspx",false); break;
-                       // case "Derivacion": Response.Redirect("Derivacion.aspx?idServicio="+Session["idServicio"].ToString(), false); break;
-                    }
-                    
-        
-           
-                   }
-      
+            switch (Request["Desde"].ToString())
+            {
+                case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=ListaProducto"); break;
+                case "Control": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control"); break;
+                case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
+            }
+        }
+                   
 
     
 
@@ -2035,9 +2046,106 @@ namespace WebLab.Protocolos
 
         }
 
+     
+       
+       
+        private void ActualizarEstadoDerivacion(Protocolo oRegistro)
+        {
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            int idLote =  Convert.ToInt32(Request["idLote"]);
+
+            string query =
+            @"update LAB_Derivacion
+            set estado=3---recibido
+            ,idProtocoloDerivacion=" + oRegistro.IdProtocolo.ToString() + @"
+            from LAB_Derivacion D
+                inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
+                inner join LAB_Protocolo P on P.idProtocolo= Det.idProtocolo
+            where P.numero=" + Request["numeroProtocolo"].ToString() + @" and idLote=" + idLote;
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+            int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
+
+            //Se indica en el protocolo de Origen que fue recibido en el destino
+            Business.Data.Laboratorio.Protocolo oPOrigen = new Business.Data.Laboratorio.Protocolo();
+            oPOrigen = (Business.Data.Laboratorio.Protocolo)oPOrigen.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", int.Parse(Request["numeroProtocolo"].ToString()));
+            if (oPOrigen != null)
+            {
+               oPOrigen.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLote, "Protocolo " + oRegistro.Numero.ToString());
+            }
+
+        }
+
+        private void VerificacionEstadoLote(Protocolo oRegistro)
+        {
+            if (Request["idLote"] != null) //Si no tiene Lote, no actualiza estado de Lote
+            {
+                int idLote = Convert.ToInt32(Request["idLote"]);
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                lote.ActualizaEstadoLote(oUser.IdUsuario, oRegistro.Numero.ToString(), Request["numeroProtocolo"]);
+                // ActualizaEstadoLote(idLote, oRegistro);
+            }
+        }
+    
         protected void btnArchivos_Click(object sender, EventArgs e)
         {
             Response.Redirect("ProtocoloAdjuntar.aspx?idProtocolo=" + Request["idProtocolo"].ToString() +"&desde=protocolo");
+        }
+
+        private void CargarProtocoloDerivadoLote()
+        {
+            string idProtocolo = Request["idProtocolo"].ToString();
+            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+            oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo),  int.Parse(idProtocolo));
+            if (oRegistro != null)
+            {
+                lblTitulo.Visible = false;
+                lblServicio1.Visible = true;
+                lblServicio.Visible = true;
+                txtFecha.Value = DateTime.Now.ToShortDateString();
+                txtFechaOrden.Value = oRegistro.FechaOrden.ToShortDateString();
+                txtCodigoMuestra.Text = "";
+                txtDescripcionProducto.Text = oRegistro.DescripcionProducto;
+                ddlConservacion.SelectedValue = oRegistro.IdConservacion.ToString();
+                txtNumeroOrigen.Text = oRegistro.Numero.ToString();
+                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
+                ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
+                txtObservacion.Text = oRegistro.Observacion;
+                pnlNavegacion.Visible = false;
+                btnCancelar.Text = "Cancelar";
+                btnCancelar.Width = Unit.Pixel(80);
+                ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
+               
+
+                if(!oRegistro.Baja)
+                {
+                    Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+                    //Obtengo analisis
+                    string analisis = oDerivacion.ObtenerItemsPendientes(Request["idLote"].ToString(), oRegistro.IdProtocolo.ToString());
+                    CargarDeterminacionesDerivacion(analisis);
+                }
+               
+            }
+        }
+
+
+        private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oAnterior)
+        {
+            Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+            oDerivacion.MarcarComoRecibidas(oAnterior, oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+        }
+
+        private void VerificacionEstadoLote(Protocolo oRegistro, Protocolo oAnterior)
+        {
+            if (Request["idLote"] != null) //Si no tiene Lote, no actualiza estado de Lote
+            {
+                int idLote = Convert.ToInt32(Request["idLote"]);
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                lote.ActualizaEstadoLote(oUser.IdUsuario, oRegistro.Numero.ToString(), oAnterior.Numero.ToString());
+            }
         }
     }
 }

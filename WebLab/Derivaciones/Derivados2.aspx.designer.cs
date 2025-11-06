@@ -132,13 +132,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RadioButtonList rdbEstado;
 
         /// <summary>
-        /// cv_botonBuscar control.
+        /// cvBotonBuscar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cv_botonBuscar;
+        protected global::System.Web.UI.WebControls.CustomValidator cvBotonBuscar;
 
         /// <summary>
         /// btnBuscar control.
