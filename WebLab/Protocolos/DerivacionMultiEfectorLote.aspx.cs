@@ -224,20 +224,22 @@ namespace WebLab.Protocolos
                 P.idProtocolo , L.idEfectorDestino , ef.nombre ,
                 case when P.idPaciente > 0 then
 				 Pa.nombre + ' ' + Pa.apellido 
-				 else P.descripcionProducto end as paciente
+				 else M.nombre+' - '+ P.descripcionProducto end as paciente
                 from LAB_Derivacion D
-                inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
-                inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
-                inner join LAB_DerivacionEstado as DE on DE.idEstado = D.estado
-                inner join LAB_LoteDerivacion L on L.idLoteDerivacion = D.idLote
-                inner join Sys_Efector ef on ef.idEfector = l.idEfectorDestino
-                inner join Sys_Paciente Pa on Pa.idPaciente = P.idPaciente
+                    inner join LAB_DetalleProtocolo as Det with (nolock) on Det.idDetalleProtocolo = D.idDetalleProtocolo
+                    inner join LAB_Protocolo as P with (nolock) on P.idProtocolo = det.idProtocolo
+                    inner join LAB_DerivacionEstado as DE with (nolock) on DE.idEstado = D.estado
+                    inner join LAB_LoteDerivacion L with (nolock) on L.idLoteDerivacion = D.idLote
+                    inner join Sys_Efector ef with (nolock) on ef.idEfector = l.idEfectorDestino
+                    inner join Sys_Paciente Pa with (nolock) on Pa.idPaciente = P.idPaciente
+                    left join LAB_Muestra AS M with (nolock) ON P.idMuestra = M.idMuestra AND M.baja = 0
                 where P.baja = 0
-                and L.estado in (2, 4, 5)
-                and D.estado=1
-                and D.idLote = " + txtNumeroLote.Text + @" 
+                    and L.estado in (2, 4, 5)
+                    and D.estado=1
+                    and D.idLote = " + txtNumeroLote.Text + @" 
                 group by P.fecha, P.numero, P.idPaciente, DE.descripcion,  P.idProtocolo ,
-                L.idEfectorDestino , ef.nombre ,  Pa.nombre + ' ' + Pa.apellido ,P.descripcionProducto";
+                L.idEfectorDestino , ef.nombre ,  Pa.nombre + ' ' + Pa.apellido ,P.descripcionProducto,M.nombre
+                ORDER BY numero";
 
 
             DataSet Ds = new DataSet();
@@ -249,35 +251,7 @@ namespace WebLab.Protocolos
             adapter.Fill(Ds);
             return Ds.Tables[0];
         }
-        //private DataTable TraerItemsDerivadosProtocolo()
-        //{
-        //    ////// ---------------------->Buscar las derivaciones que no han sido ingresadas
-        //    //el protocolo me da los protocolos detalles
-        //    //los protocolos detalles me dan las derivaciones
-        //    //la derivacion debe estar enviada
-        //    //la derivacion debe tener el mismo lote que el ingresado (no todos los analisis pueden haber sido enviados con el mismo lote)
-
-        //    string m_strSQL =
-        //        @" select  STRING_AGG(Det.idSubItem ,' | ') as pivote , count(*) as cantidad
-        //            from LAB_Derivacion D
-        //            inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
-        //            inner join LAB_Protocolo as P on P.idProtocolo = det.idProtocolo
-        //            inner join LAB_DerivacionEstado as LE on LE.idEstado = D.estado
-        //            inner join LAB_LoteDerivacion L on L.idLoteDerivacion = D.idLote
-        //            where P.baja = 0
-        //            and D.estado in (1) ---------------------- Buscar las derivaciones que no han sido ingresadas
-        //            and L.idLoteDerivacion = " + txtNumeroLote.Text;
-
-
-        //    DataSet Ds = new DataSet();
-        //    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-        //    SqlDataAdapter adapter = new SqlDataAdapter
-        //    {
-        //        SelectCommand = new SqlCommand(m_strSQL, conn)
-        //    };
-        //    adapter.Fill(Ds);
-        //    return Ds.Tables[0];
-        //}
+       
 
         protected bool HabilitarIngreso()
         {
@@ -314,7 +288,7 @@ namespace WebLab.Protocolos
         private void GenerarNuevoProtocolo(int idProtocoloOrigen, int idPaciente)
         {
 
-            string m_numero, s_idServicio, idLote;
+            string  s_idServicio, idLote;
 
             Protocolo p = new Protocolo();
             p = (Protocolo)p.Get(typeof(Protocolo), idProtocoloOrigen);
