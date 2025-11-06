@@ -26,7 +26,7 @@
     <div align="left" style="width: 800px;" class="form-inline">
         <table width="800px" align="center">
             <tr>
-                <td rowspan="6">
+                <td rowspan="6" style="vertical-align: top">
                     <div id="pnlTitulo" runat="server" class="panel panel-default">
                         <div class="panel-heading">
                             <asp:Label Text="Ultimos 10 Protocolos" runat="server" ID="lblTituloLista"></asp:Label>
