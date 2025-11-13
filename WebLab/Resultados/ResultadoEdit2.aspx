@@ -309,6 +309,8 @@
                                     <asp:Label ID="lblPlaca" runat="server" CssClass="myLabel" Text=""></asp:Label>
                                 </td>
                             </tr>
+
+                             
                             
 					</table>
       </div>
@@ -487,7 +489,9 @@
                             <asp:Label ID="lblSinResultados" runat="server" Text="" Visible="false" ForeColor="Red"></asp:Label>
                               <a runat="server" id="tieneInci" href="#tab6">Tiene Incidencia<img alt="tiene incidencias" runat="server" id="inci" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a>   
                             <asp:HyperLink ID="hplPesquisa" Visible="false" CssClass="myLink2" runat="server">Ver Tarjeta</asp:HyperLink>
-                            
+                                   <br />
+                                    <asp:Label ID="lblAlertaMicrobiologia" runat="server" CssClass="myLabelRojo" Text=""></asp:Label>
+                                  <br />
                             <asp:Image ID="imgPesquisa" Visible="false" runat="server" ImageUrl="~/App_Themes/default/images/pendiente.png" />                                       				
                             <asp:Label CssClass="myLabelIzquierdaGde" ID="lblMuestra" runat="server" ></asp:Label>            
                             <asp:CustomValidator ID="cvValidaControles" runat="server"  ErrorMessage="CustomValidator" Font-Size="9pt" onservervalidate="cvValidaControles_ServerValidate"   ValidationGroup="0" Font-Bold="True"></asp:CustomValidator> &nbsp; &nbsp;
@@ -786,9 +790,8 @@
        <div id="tab4" > 
                 <asp:Panel ID="pnlAntibiograma" Height="650px" runat="server" >   
                
-                &nbsp;&nbsp;<asp:DropDownList class="form-control input-sm" ID="ddlPracticaAtb" Width="250px" runat="server" AutoPostBack="true"  onselectedindexchanged="ddlPracticaAtb_SelectedIndexChanged"> </asp:DropDownList>  
-          
-               <br />
+                <asp:DropDownList class="form-control input-sm" ID="ddlPracticaAtb" Width="250px" runat="server" AutoPostBack="true"  onselectedindexchanged="ddlPracticaAtb_SelectedIndexChanged"> </asp:DropDownList>  
+           <br />
            <table width="850px">           
                 <tr>
                 <td style="vertical-align: top" height="100%"  rowspan="2" width="400px">
@@ -801,7 +804,7 @@
                         </div>
 
 				<div class="panel-body">	
-                     <asp:DropDownList class="form-control input-sm"  ID="ddlGermen" runat="server" Width="250px">  </asp:DropDownList>
+                     <asp:DropDownList class="form-control input-sm"  ID="ddlGermen" runat="server" Width="280px">  </asp:DropDownList>
                &nbsp;<asp:RangeValidator ID="rvGermen" runat="server" ControlToValidate="ddlGermen" 
                         ErrorMessage="*" MaximumValue="9999999" MinimumValue="1" Type="Integer" 
                         ValidationGroup="A"></asp:RangeValidator>
@@ -812,11 +815,17 @@
                                 <asp:ListItem Value="2">Etest</asp:ListItem>
                     </asp:RadioButtonList>
            
+                    <asp:DropDownList class="form-control input-sm"  ID="ddlMecanismoResistencia" runat="server" Width="280px">  </asp:DropDownList>
+               &nbsp;  <%--<asp:RangeValidator ID="rvMecanismoResistencia" runat="server" ControlToValidate="ddlMecanismoResistencia" 
+                        ErrorMessage="*" MaximumValue="9999999" MinimumValue="1" Type="Integer" 
+                        ValidationGroup="A"></asp:RangeValidator>
+                     <br />--%>
+
                    <asp:DropDownList class="form-control input-sm"  onselectedindexchanged="ddlPerfilAntibiotico_SelectedIndexChanged" AutoPostBack="true"   ID="ddlPerfilAntibiotico" runat="server" Width="250px">  </asp:DropDownList>
-                   <hr />
+                   <br />
 <div  style="width:330px;height:250pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC;"> 
                     <asp:GridView ID="gvAntiobiograma" runat="server" AutoGenerateColumns="False" 
-                        DataKeyNames="idAntibiotico"            CssClass="table table-bordered bs-table"               CellPadding="1"  Width="310px"                          >
+                        DataKeyNames="idAntibiotico"                  CellPadding="1"  Width="310px"                          >
                     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                     <RowStyle BackColor="White" ForeColor="#333333" Font-Bold="False" Font-Names="Verdana" Font-Size="8pt" />
         <Columns>
@@ -914,7 +923,7 @@
                    
                    
                   <hr />                                                   
-                  <div  style="width:500px;height:255pt;overflow:scroll;border:1px solid #CCCCCC;"> 
+                  <div  style="width:400px;height:255pt;overflow:scroll;border:1px solid #CCCCCC;"> 
                     <asp:GridView ID="gvAntiBiograma2" runat="server" CellPadding="2"    CssClass="table table-bordered bs-table"    
                         EmptyDataText="No se encontraron antibiogramas para el protocolo" 
                         ForeColor="#333333"  

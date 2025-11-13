@@ -1208,7 +1208,7 @@ namespace WebLab.Placas {
 
 
                             }
-
+                           
                             if (oDet.EstaValidado())
                                 chkValida.Visible = false;
 
@@ -2288,8 +2288,8 @@ select 1 from lab_item b (nolock) where b.idItemReferencia=a.iditem and codigo='
                 Business.Data.Laboratorio.DetalleProtocolo oP = new Business.Data.Laboratorio.DetalleProtocolo();
                 oP = (Business.Data.Laboratorio.DetalleProtocolo)oP.Get(typeof(Business.Data.Laboratorio.DetalleProtocolo), idDetalleProtocolo);
                 if (oP != null)
-                {
-                    string efector = oP.IdProtocolo.IdEfectorSolicitante.Nombre.ToUpper().Replace("HOSPITAL", "").Replace("H.", "").Replace("El ", "").Replace("LA ", "").Replace("C.S.","");
+                {   //cambio por sigla del efector
+                    string efector = oP.IdProtocolo.IdEfectorSolicitante.IdEfector2.ToUpper().Replace("HOSPITAL", "").Replace("H.", "").Replace("El ", "").Replace("LA ", "").Replace("C.S.","");
                     if (efector.Length > 12)
                         efector = efector.Substring(0, 12);
                     
@@ -2318,7 +2318,7 @@ select 1 from lab_item b (nolock) where b.idItemReferencia=a.iditem and codigo='
                         datosProtocolo = datosProtocolo + ";FUC:SD";
 
                     datosProtocolo += ";" + oP.IdProtocolo.IdProtocolo.ToString();
-                    datosProtocolo += "; " + oP.ResultadoCar;
+                    datosProtocolo += "; " + oP.IdSubItem.Nombre+ "="+ oP.ResultadoCar;
 
                 }
                 return datosProtocolo;

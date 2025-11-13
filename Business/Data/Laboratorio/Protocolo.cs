@@ -3081,9 +3081,39 @@ where a.idprotocolo=" + this.IdProtocolo.ToString()+
                 ////OpcionBusqueda = dr["OpcionBusqueda"].ToString();
             }
 
-       
+        public string BuscarMecanismoAnterior()
+        {
+            string s_resultadoAnterior = "";
+            string s_idPaciente = this.IdPaciente.IdPaciente.ToString();
+            //     int s_idSubItem = this.IdSubItem.IdItem;
+            string s_idProtocoloActual = this.IdProtocolo.ToString();
+            ////muestra el ultimo resultado anterior con mecanismo de ressistecia para el paciente
+            string m_strSQL = @"select top 1   M.nombre , a.fechaValida, P.numero
+from LAB_Antibiograma  a
+inner join LAB_MecanismoResistencia as M on a.idMecanismoResistencia= m.idMecanismoResistencia
+inner join LAB_Protocolo as P on P.idprotocolo= A.idprotocolo
+where a.IdMecanismoResistencia>0 and  a.IdUsuarioValida>0  
+and   P.Baja = 0 and P.Estado > 0  and P.IdPaciente = " + s_idPaciente + "   and P.IdProtocolo < " + s_idProtocoloActual + " order by a.fechaValida desc";
 
 
-     
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds, "resultado");
+
+
+            DataTable dt = Ds.Tables[0];
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                s_resultadoAnterior = dt.Rows[i][0].ToString() +" "+ dt.Rows[i][1].ToString()+" - Protocolo: " + dt.Rows[i][2].ToString();
+                break;
+
+            }
+            return s_resultadoAnterior;
+
+        }
+    
     }
 }

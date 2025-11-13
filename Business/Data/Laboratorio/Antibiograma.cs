@@ -31,13 +31,14 @@ namespace Business.Data.Laboratorio
         private int m_idusuariovalida;
         private DateTime m_fechavalida;
         private bool m_validavalor;
-		#endregion
+        private int m_idmecanismoresistencia;
+        #endregion
 
-		#region Default ( Empty ) Class Constuctor
-		/// <summary>
-		/// default constructor
-		/// </summary>
-		public Antibiograma()
+        #region Default ( Empty ) Class Constuctor
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public Antibiograma()
 		{
 			m_idantibiograma = 0; 
 			m_idefector = new Efector(); 
@@ -55,7 +56,8 @@ namespace Business.Data.Laboratorio
             m_idusuariovalida = 0;
             m_fechavalida = DateTime.MinValue;
             m_validavalor = false;
-		}
+            m_idmecanismoresistencia = 0;
+        }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -74,7 +76,8 @@ namespace Business.Data.Laboratorio
 			int idusuarioregistro, 
 			DateTime fecharegistro,int idusuariovalida, 
 			DateTime fechavalida,
-            bool validaValor
+            bool validaValor,
+            int  idmecanismoresistencia
         )
 			: this()
 		{
@@ -91,7 +94,8 @@ namespace Business.Data.Laboratorio
             m_idusuariovalida = idusuariovalida;
             m_fechavalida = fechavalida;
             m_validavalor = validaValor;
-		}
+            m_idmecanismoresistencia = idmecanismoresistencia;
+        }
 		#endregion // End Required Fields Only Constructor
 
 		#region Public Properties
@@ -109,6 +113,17 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
+
+        public int IdMecanismoResistencia
+        {
+            get { return m_idmecanismoresistencia; }
+            set
+            {
+                m_isChanged |= (m_idmecanismoresistencia != value);
+                m_idmecanismoresistencia = value;
+            }
+
+        }
         public int IdItem
         {
             get { return m_iditem; }

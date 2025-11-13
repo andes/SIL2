@@ -188,14 +188,22 @@ namespace WebLab.Estadisticas
             lblFiltroMicroorganismo.Text = "Tipo de Muestra: " + ddlTipoMuestra.SelectedItem.Text + " - ATB: " + ddlATB.SelectedValue;
 
     
-            
+            ///llena los tipo de muestra de la grilla principal
                 ddlTipoMuestraAntibioticos.DataTextField = "Tipo Muestra";
                 ddlTipoMuestraAntibioticos.DataValueField = "idMuestra";
                 ddlTipoMuestraAntibioticos.DataSource =dtTipoMuestra;
                 ddlTipoMuestraAntibioticos.DataBind();
                 ddlTipoMuestraAntibioticos.Items.Insert(0, new ListItem("--Todas--", "0"));
 
-                ddlMicroorganismosAntibioticos.DataTextField = "Microorganismo";
+           
+                ddlTipoMuestraMecanismo.DataTextField = "Tipo Muestra";
+            ddlTipoMuestraMecanismo.DataValueField = "idMuestra";
+            ddlTipoMuestraMecanismo.DataSource = dtTipoMuestra;
+            ddlTipoMuestraMecanismo.DataBind();
+            ddlTipoMuestraMecanismo.Items.Insert(0, new ListItem("--Todas--", "0"));
+
+
+            ddlMicroorganismosAntibioticos.DataTextField = "Microorganismo";
                 ddlMicroorganismosAntibioticos.DataValueField = "idGermen";
                 ddlMicroorganismosAntibioticos.DataSource =dtMicroorganismo;
                 ddlMicroorganismosAntibioticos.DataBind();
@@ -294,6 +302,12 @@ namespace WebLab.Estadisticas
                     else conATB = 2;//no
                 }
             }
+
+            if (s_tipo == "Mecanismo")
+                
+            { if (ddlTipoMuestraMecanismo.SelectedValue != "") tipoM = int.Parse(ddlTipoMuestraMecanismo.SelectedValue); }
+
+
             if (s_tipo == "Antibiotico")
             { if (ddlTipoMuestraAntibioticos.SelectedValue != "") tipoM = int.Parse(ddlTipoMuestraAntibioticos.SelectedValue); }
 
@@ -1004,8 +1018,10 @@ namespace WebLab.Estadisticas
 
             if (tipo == "General")
             {      m_strSQL = @"SELECT distinct
-P.numero as [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha,M.nombre as muestra, case when Pa.idestado=2 then 0 else Pa.numeroDocumento end as [Nro. Documento], 
-Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento,  103) AS FECHANACIMIENTO, Pa.referencia AS domicilio, P.edad  , case P.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end tipoEdad ,P.sexo ,
+P.numero as [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha,M.nombre AS [Tipo de Muestra], 
+case when Pa.idestado=2 then 0 else Pa.numeroDocumento end as [Nro. Documento], 
+Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento,  103) AS FECHANACIMIENTO, Pa.referencia AS domicilio, 
+P.edad  , case P.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end tipoEdad ,P.sexo ,
 case when PD.iddiagnostico is null then 'No' else 'Si' end as embarazada
 
 FROM LAB_DetalleProtocolo AS DP  
@@ -1017,8 +1033,10 @@ WHERE dp.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.To
         }
             if (tipo == "Resultado")
             {
-                m_strSQL = @" SELECT  P.numero as [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, case when Pa.idestado=2 then 0 else Pa.numeroDocumento end as [Nro. Documento], 
-Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento,  103) AS FECHANACIMIENTO, Pa.referencia AS domicilio, P.edad  , case P.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end tipoEdad,P.sexo ,
+                m_strSQL = @" SELECT  P.numero as [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, 
+case when Pa.idestado=2 then 0 else Pa.numeroDocumento end as [Nro. Documento], 
+Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento,  103) AS FECHANACIMIENTO, 
+Pa.referencia AS domicilio, P.edad  , case P.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end tipoEdad,P.sexo ,
 case when PD.iddiagnostico is null then 'No' else 'Si' end as embarazada, I1.nombre AS ANALISIS, DP.resultadoCar AS RESULTADO  
 
 FROM LAB_DetalleProtocolo AS DP  
@@ -1036,7 +1054,7 @@ WHERE dp.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.To
             if (tipo == "Aislamiento")
             {
                 m_strSQL = @"SELECT DISTINCT 
-                     P.numero AS [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, M.nombre AS muestra, 
+                     P.numero AS [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, M.nombre AS [Tipo de Muestra], 
                       Pa.numeroDocumento AS [Nro. Documento], Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS FECHANACIMIENTO, 
                       Pa.referencia AS domicilio, P.edad,
  case P.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end tipoEdad, P.sexo, case when PD.iddiagnostico is null then 'No' else 'Si' end as embarazada,
@@ -1054,7 +1072,7 @@ WHERE ais.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
             if (tipo == "ATB")
             {
                 m_strSQL = @"SELECT DISTINCT 
-                     P.numero AS [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, M.nombre AS muestra, 
+                     P.numero AS [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, M.nombre AS [Tipo de Muestra], 
                       Pa.numeroDocumento AS [Nro. Documento], Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS FECHANACIMIENTO, 
                       Pa.referencia AS domicilio, P.edad, CASE P.unidadEdad WHEN 0 THEN 'años' WHEN 1 THEN 'meses' WHEN 2 THEN 'días' END AS tipoEdad, P.sexo,
                       CASE WHEN PD.iddiagnostico IS NULL THEN 'No' ELSE 'Si' END AS embarazada, ATB.germen AS [Mricroorganismo], ATB.antibiotico , ATB.resultado as [Resistencia]
@@ -1066,9 +1084,24 @@ FROM         LAB_Protocolo AS P INNER JOIN
 WHERE ATB.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "')  and P.idtiposervicio=3 " + m_strCondicion;// +" order by P.idprotocolo ,P.fecha  ";
 
             }
-          
 
 
+            if (tipo == "Mecanismo")
+            {
+                m_strSQL = @"SELECT DISTINCT 
+                     P.numero AS [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, M.nombre AS [Tipo de Muestra], 
+                      Pa.numeroDocumento AS [Nro. Documento], Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS FECHANACIMIENTO, 
+                      Pa.referencia AS domicilio, P.edad, CASE P.unidadEdad WHEN 0 THEN 'años' WHEN 1 THEN 'meses' WHEN 2 THEN 'días' END AS tipoEdad, P.sexo,
+                      CASE WHEN PD.iddiagnostico IS NULL THEN 'No' ELSE 'Si' END AS embarazada, A.nombre AS Mecanismo 
+FROM         LAB_Protocolo AS P INNER JOIN
+                           Sys_Paciente AS Pa ON P.idPaciente = Pa.idPaciente INNER JOIN
+                      LAB_Muestra AS M ON M.idMuestra = P.idMuestra INNER JOIN
+                    LAB_Antibiograma ANT     ON P.idProtocolo = ANT.idProtocolo			inner JOIN 
+					LAB_MecanismoResistencia AS A     ON ANT.idMecanismoResistencia = A.idMecanismoResistencia LEFT OUTER JOIN
+                      vta_LAB_Embarazadas AS PD ON PD.idProtocolo = P.idProtocolo
+WHERE ANT.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "')  and P.idtiposervicio=3 " + m_strCondicion;// +" order by P.idprotocolo ,P.fecha  ";
+
+            }
 
             DataSet Ds = new DataSet();
             //     SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -1323,8 +1356,81 @@ where A.resultado<>'' and  A.germen like '%" + s_germen +"%' and A.idItem=" + dd
             }
             
         }
-     
- 
 
+        protected void btnBuscarMecanismo_Click(object sender, EventArgs e)
+        {
+            DataTable dt = MostrarDatos("Mecanismo");
+            gvTipoMecanismo.DataSource = dt;
+            gvTipoMecanismo.DataBind();            
+            gvTipoMecanismo.Visible = true;
+            SetSelectedTab(TabIndex.QUINTO);
+        }
+
+        protected void imgExcelMecanismo_Click(object sender, ImageClickEventArgs e)
+        {
+            ExportarExcelMecanismo();
+        }
+
+        private void ExportarExcelMecanismo()
+        {
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            Page page = new Page();
+            HtmlForm form = new HtmlForm();
+
+            gvTipoMecanismo.EnableViewState = false;
+
+            // Deshabilitar la validación de eventos, sólo asp.net 2
+            page.EnableEventValidation = false;
+
+            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            page.DesignerInitialize();
+            page.Controls.Add(form);
+            form.Controls.Add(gvTipoMecanismo);
+            page.RenderControl(htw);
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + ddlAnalisis.SelectedItem.Text + "_Mecanismo.xls");
+            Response.Charset = "UTF-8";
+            Response.ContentEncoding = Encoding.Default;
+            Response.Write(sb.ToString());
+            Response.End();
+        }
+
+        protected void imgPacientesMecanismo_Click(object sender, ImageClickEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            Page page = new Page();
+            HtmlForm form = new HtmlForm();
+            GridView dg = new GridView();
+            dg.EnableViewState = false;
+            dg.DataSource = GetDataPacientes("Mecanismo");
+            dg.DataBind();
+
+            // Deshabilitar la validación de eventos, sólo asp.net 2
+            page.EnableEventValidation = false;
+
+            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            page.DesignerInitialize();
+            page.Controls.Add(form);
+            form.Controls.Add(dg);
+            page.RenderControl(htw);
+
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + ddlAnalisis.SelectedItem.Text + "_Mecanismo.xls");
+            Response.Charset = "UTF-8";
+            Response.ContentEncoding = Encoding.Default;
+            Response.Write(sb.ToString());
+            Response.End();
+        }
     }
 }
