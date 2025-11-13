@@ -214,6 +214,7 @@ $(function () {
     <li><a href="#tab4"><b>Resultados</b></a></li>                              
     <li><a href="#tab2"><b>Aislamientos</b></a></li>  
     <li><a href="#tab3"><b>Antibióticos</b></a></li>  
+                                 <li><a href="#tab5"><b>Mecanismos Resistencia</b></a></li>  
     
 </ul>                          
 
@@ -926,6 +927,194 @@ $(function () {
                          </table>
                     </div> 
 
+
+
+                       <div  id="tab5" >   
+                        <table style="width:100%;">
+              
+              <tr>
+              
+                  <td align="left" colspan="2">
+                      <table style="width:100%;" align="left">
+                          <tr>
+                              <td class="myLabelIzquierda">
+                                  Tipo de muestra:</td>
+                              <td class="myLabelIzquierda">
+                                  <asp:DropDownList ID="ddlTipoMuestraMecanismo" class="form-control input-sm"  runat="server">
+                                  </asp:DropDownList>
+                              </td>
+                              <td class="myLabelIzquierda">
+                                  &nbsp;</td>
+                              <td class="myLabelIzquierda">
+                                  <asp:Button ID="btnBuscarMecanismo" runat="server" 
+                                      Text="Buscar" OnClick="btnBuscarMecanismo_Click" />
+                              </td>
+                          </tr>
+                      </table>
+                    
+                  </td>
+                  </tr>
+                  <tr>
+                  <td colspan="2">  <hr /></td>
+
+                  </tr>
+                        
+                            <tr>
+                                <td align="left">
+                                   
+                                    <anthem:Label ID="Label1" runat="server" ForeColor="#3366CC"></anthem:Label>
+                                </td>
+
+                                <td align="right">
+                                <asp:ImageButton ID="ImageButton1" runat="server" ToolTip="Ver grafico de tortas"
+                                        OnClientClick="verGraficoMicroorganismo('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
+                                        &nbsp;&nbsp;
+                                        <asp:ImageButton ID="ImageButton2" runat="server" ToolTip="Ver grafico de barras"
+                                        OnClientClick="verGraficoMicroorganismo('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
+                                
+                                    <%--<asp:Button ID="btnGraficoMicroorganismos" runat="server" CssClass="myButtonGris" Width="100px"  
+
+                                        OnClientClick="verGraficoMicroorganismo(); return false;" Text="Ver Gráfico" />--%>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td align="left" colspan="2">
+                                    <div align="left" 
+                                        style="border: 1px solid #999999; overflow: scroll; overflow-x:hidden; height: 300px;">
+                                        <asp:GridView ID="gvTipoMecanismo" runat="server" 
+                                            AutoGenerateColumns="False" BorderColor="#666666" BorderStyle="Double" 
+                                            BorderWidth="1px" CellPadding="2" 
+                                            EmptyDataText="No se encontraron datos" Font-Bold="True" Font-Size="9pt" 
+                                          
+                                            Visible="False" Width="100%">
+                                            <Columns>
+                                                <asp:BoundField DataField="TipoMuestra" HeaderText="Tipo Muestra" />
+                                                <asp:BoundField DataField="Mecanismo" HeaderText="Mecanismo" />
+                                                <asp:BoundField DataField="cantidad" HeaderText="Cantidad de Casos">
+                                                <ItemStyle BackColor="#EEEEEE" />
+                                                </asp:BoundField>
+                                                 <asp:BoundField DataField="< 6 meses" HeaderText="< 6 mes." >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="6 a 11 meses" HeaderText="6 a 11 mes." >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="2 a 4" HeaderText="2 a 4" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                             
+                              <asp:BoundField DataField="5 a 9" HeaderText="5 a 9" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="10 a 14" HeaderText="10 a 14" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="15 a 19" HeaderText="15 a 19" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="20 a 24" HeaderText="20 a 24" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="25 a 34" HeaderText="25 a 34 " >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="35 a 44" HeaderText="35 a 44" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="45 a 64" HeaderText="45 a 64" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                               
+
+                                  <asp:BoundField DataField="65 a 74" HeaderText="65 a 74" >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                              <asp:BoundField DataField="75 y +" HeaderText="75 y + " >
+                                  <FooterStyle BackColor="#CC3300" />
+                                  <HeaderStyle BackColor="#CC3300" />
+                                  <ItemStyle Width="5%" />
+                              </asp:BoundField>
+                                                <asp:BoundField DataField="M" HeaderText="Masc.">
+                                                <ItemStyle BackColor="#E6E6E6" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="F" HeaderText="Fem.">
+                                                <ItemStyle BackColor="#E6E6E6" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="E" HeaderText="Embar.">
+                                                <ItemStyle BackColor="#E6E6E6" />
+                                                </asp:BoundField>
+                                                <asp:BoundField DataField="I" HeaderText="S/D">
+                                                <ItemStyle BackColor="#E6E6E6" />
+                                                </asp:BoundField>
+                                              
+                                            </Columns>
+                                            <FooterStyle BackColor="#CCCCCC" Font-Bold="True" ForeColor="#333333" />
+                                            <HeaderStyle BackColor="#CCCCCC" Font-Bold="True" ForeColor="#333333" />
+                                            <RowStyle BorderColor="#333333" BorderStyle="Solid" BorderWidth="1px" 
+                                                ForeColor="#333333" />
+                                            <SelectedRowStyle BackColor="#CC9900" />
+                                        </asp:GridView>
+                                    </div>
+                                </td>
+                            </tr>
+                          
+                            <tr>
+                                <td align="right" class="myLabelIzquierda" colspan="2">
+                                    Exportar a Excel
+                                    <asp:ImageButton ID="imgExcelMecanismo" runat="server" 
+                                        ImageUrl="~/App_Themes/default/images/excelPeq.gif"  
+                                        ToolTip="Exportar a Excel Lista de Microorganismos" OnClick="imgExcelMecanismo_Click" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right" class="myLabelIzquierda" colspan="2">
+                                    Exportar Detalle de Pacientes
+                                    <asp:ImageButton ID="imgPacientesMecanismo" runat="server" 
+                                        ImageUrl="~/App_Themes/default/images/excelPeq.gif" 
+                                        onclick="imgPacientesMecanismo_Click" 
+                                        ToolTip="Exportar a Excel Lista de Pacientes" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left" class="myLabelIzquierda" colspan="2">
+                                    &nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="left" colspan="2">
+                                       <div style="border: 1px solid #C0C0C0">
+                                    </div>
+                                </td>
+                            </tr>
+                         </table>
+                    </div>   
                     </div>  <%----tabContainer--%>
                      
       </asp:Panel>

@@ -27,5 +27,7 @@
     <property column="fechaValida" type="DateTime" name="FechaValida" not-null="true" />
 
     <property column="validaValor" type="Boolean" name="ValidaValor" not-null="true" />
-	</class>
+    <property column="idMecanismoResistencia" type="Int32" name="IdMecanismoResistencia" not-null="true" />
+
+  </class>
 </hibernate-mapping>

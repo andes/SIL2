@@ -765,8 +765,10 @@ namespace WebLab.Protocolos
 
                 if (guardo)
                 {
-                    if (Request["Operacion"].ToString() == "Alta")
-                    {
+                      if ((Request["Operacion"].ToString() == "Alta") ||
+                    (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")  
+                    )
+					{
 
                         
 

@@ -364,6 +364,13 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
 
             oUtil.CargarCombo(ddlGermen, m_ssql, "idProtocoloGermen", "nombre");
             ddlGermen.Items.Insert(0, new ListItem("--SELECCIONE AISLAMIENTO--", "0"));
+
+
+            m_ssql = @"SELECT idMecanismoResistencia, nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
+            oUtil.CargarCombo(ddlMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
+            ddlMecanismoResistencia.Items.Insert(0, new ListItem("--SELECCIONE MECANISMO--", "0"));
+            
+
         }
 
 
@@ -1567,11 +1574,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
                         if (oDeriva != null)  /// esta pendiente
                         {
-                            //    estadoDerivacion = "Pendiente de Derivacion";
-                            //    lblDerivacion.ForeColor = Color.Red;
-                            //}
-                            //else
-                            //{
+                        //    estadoDerivacion = "Pendiente de Derivacion";
+                        //    lblDerivacion.ForeColor = Color.Red;
+                        //}
+                        //else
+                        //{
                             /*if (oDeriva.Estado == 0) /// pendiente                            
                             {
                                 estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
@@ -1593,10 +1600,10 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado; 
                        
 
-                            lblDerivacion.Text = estadoDerivacion;
-                            objCellResultado.ColumnSpan = 1;
-                            objCellResultado.Controls.Add(lblDerivacion);
-                        }
+                        lblDerivacion.Text = estadoDerivacion;
+                        objCellResultado.ColumnSpan = 1;
+                        objCellResultado.Controls.Add(lblDerivacion);
+                    }
                     //}
                     else
                     {//No es derivado                     
@@ -5949,7 +5956,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
 
                         oRegistro.IdMetodologia = int.Parse(rdbMetodologiaAntibiograma.SelectedValue);
                         oRegistro.Resultado = ddl.SelectedValue;
-
+                        oRegistro.IdMecanismoResistencia = int.Parse(ddlMecanismoResistencia.SelectedValue);
                         //TextBox txth = (TextBox)gvAntiobiograma.Rows[i].FindControl("txtHalo");
                         //if (txth != null)
                         //{ 
@@ -5993,6 +6000,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
             crit.Add(Expression.Eq("IdItem", int.Parse(ddlPracticaAtb.SelectedValue)));
             crit.Add(Expression.Eq("IdMetodologia", int.Parse(rdbMetodologiaAntibiograma.SelectedValue)));
             crit.Add(Expression.Eq("NumeroAislamiento", oGermen.NumeroAislamiento));
+            crit.Add(Expression.Eq("IdMecanismoResistencia", int.Parse(ddlMecanismoResistencia.SelectedValue)));
 
             IList lista = crit.List();
             if (lista.Count == 0)
@@ -6329,7 +6337,19 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
             Protocolo oProtocolo = new Protocolo();
             oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
             if (oProtocolo!= null)
-            MostrarResAnterior(oProtocolo);
+            {
+                MostrarResAnterior(oProtocolo);
+                if (oProtocolo.IdTipoServicio.IdTipoServicio == 3)  ///microbiologia
+                {
+                    lblAlertaMicrobiologia.Text = oProtocolo.BuscarMecanismoAnterior();
+                    lblAlertaMicrobiologia.Visible = true;
+                }
+                else
+                {
+                    ///lblAlertaMicrobiologia.Text = "";
+                    lblAlertaMicrobiologia.Visible = false;
+                }
+            }
             //chkFormula.Checked = false;
 
             
