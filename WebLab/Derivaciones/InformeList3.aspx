@@ -71,6 +71,7 @@
             var itemCheck = checkbox.getElementsByTagName('input');
             if (itemCheck[0].checked) {
                 reseteaLabelErrorGrilla();
+                Page_ClientValidate('SeleccionCheck');
             }// agrego que si la determinacion ya esta en un Lote mande un alerta
             else {
 
@@ -274,9 +275,10 @@
                     <tr>
                         <td>
                         <!-- PDF de Control de determinaciones --> 
-                            <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" ValidationGroup="SeleccionCheck" onclick="lnkPDF_Click">Generar PDF de Control</asp:LinkButton>       
+                            <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" ValidationGroup="SeleccionCheck" onclick="lnkPDF_Click"> <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />Generar PDF de Control</asp:LinkButton>       
                         </td>
                     </tr>
+                    <tr><td> <br /></td></tr>
 				    <tr>
 					    <td colspan="2">
                             <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
