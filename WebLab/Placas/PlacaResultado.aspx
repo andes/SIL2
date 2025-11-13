@@ -226,7 +226,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B01" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                  
                                                   <br /> <asp:CheckBox ID="chkValida_B01" runat="server" Text="Valida" />
                                                            </asp:Panel>
                                                </td>
@@ -246,7 +246,7 @@
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
                                                     <br />
-                                                  <br /> <asp:CheckBox ID="chkValida_C01" runat="server" Text="Valida" />
+                                                <asp:CheckBox ID="chkValida_C01" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
                                            </tr>
@@ -264,7 +264,7 @@
                                                    <br />
 
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_D01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                  
                                                   <br /> <asp:CheckBox ID="chkValida_D01" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -282,7 +282,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_E01" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_E01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                  
                                                   <br /> <asp:CheckBox ID="chkValida_E01" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -300,7 +300,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_F01" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_F01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                  
                                                   <br /> <asp:CheckBox ID="chkValida_F01" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -318,7 +318,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_G01" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_G01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   
                                                   <br /> <asp:CheckBox ID="chkValida_G01" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -336,7 +336,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_H01" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_H01" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   
                                                   <br /> <asp:CheckBox ID="chkValida_H01" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                       </td>
@@ -364,7 +364,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A02" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                
                                                   <br /> <asp:CheckBox ID="chkValida_A02" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -382,7 +382,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B02" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B02" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   
                                                   <br /> <asp:CheckBox ID="chkValida_B02" runat="server" Text="Valida" />
                                                          </asp:Panel>
                                                </td>
@@ -400,7 +400,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C02" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C02" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   
                                                   <br /> <asp:CheckBox ID="chkValida_C02" runat="server" Text="Valida" />
                                                        </asp:Panel>
                                                </td>
@@ -418,7 +418,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_D02" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D02" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                     
                                                       <br /> <asp:CheckBox ID="chkValida_D02" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -435,7 +435,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_E02" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E02" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                      
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_E02" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -454,7 +454,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F02" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                     
                                                        <asp:CheckBox ID="chkValida_F02" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -471,7 +471,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_G02" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G02" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                      
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_G02" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -489,7 +489,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H02" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H02" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                     
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H02" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -518,7 +518,7 @@
                                                    <br />
                                                   
                                                    <asp:Label Font-Size="8.5px"  ID="lblResultado_A03"   runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   
                                                   <br /> <asp:CheckBox ID="chkValida_A03" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -536,7 +536,7 @@
                                                    <asp:Label Font-Size="8px"  ID="lblCt1_B03" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px"  ID="lblResultado_B03" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   
                                                   <br /> <asp:CheckBox ID="chkValida_B03" runat="server" Text="Valida" />
                                                          </asp:Panel>
                                                </td>
@@ -555,7 +555,7 @@
 
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px"   ID="lblResultado_C03" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                  
                                                   <br /> <asp:CheckBox ID="chkValida_C03" runat="server" Text="Valida" />
                                                       </asp:Panel>
                                                </td>
@@ -576,7 +576,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px"   ID="lblResultado_D03" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                  
                                                   <br /> <asp:CheckBox ID="chkValida_D03" runat="server" Text="Valida" />
                                                           </asp:Panel></td>
                                            </tr>
@@ -592,7 +592,7 @@
                                                        <asp:Label Font-Size="8px"  ID="lblCt1_E03" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px"  ID="lblResultado_E03" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                     
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_E03" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -610,8 +610,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_F03" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px"   ID="lblResultado_F03" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
-                                                       <br />
+                                                       <br />                                                  
                                                        <asp:CheckBox ID="chkValida_F03" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -628,8 +627,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_G03" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px"  ID="lblResultado_G03" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
-                                                       <br />
+                                                       <br />                                                       
                                                        <asp:CheckBox ID="chkValida_G03" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -646,7 +644,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H03" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H03" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H03" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -676,7 +674,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A04" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A04" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -729,7 +727,7 @@
                                                         <asp:Label Font-Size="8px" ID="lblCt1_D04" runat="server" Text="Label"></asp:Label>
                                                         <br />
                                                         <asp:Label  Font-Size="8.5px" ID="lblResultado_D04" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                        <br />
+                                                        
                                                         <br />
                                                         <asp:CheckBox ID="chkValida_D04" runat="server" Text="Valida" />
                                                     </asp:Panel>
@@ -747,7 +745,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_E04" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_E04" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                          <br />
                                                          <asp:CheckBox ID="chkValida_E04" runat="server" Text="Valida" />
                                                      </asp:Panel>
@@ -765,7 +763,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_F04" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F04" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_F04" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -783,7 +781,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_G04" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_G04" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                          <br />
                                                          <asp:CheckBox ID="chkValida_G04" runat="server" Text="Valida" />
                                                      </asp:Panel>
@@ -801,7 +799,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_H04" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_H04" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                          <br />
                                                          <asp:CheckBox ID="chkValida_H04" runat="server" Text="Valida" />
                                                      </asp:Panel>
@@ -831,7 +829,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A05" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A05" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -849,7 +847,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B05" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B05" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B05" runat="server" Text="Valida" />
                                                          </asp:Panel>
                                                </td>
@@ -867,7 +865,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C05" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C05" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C05" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -884,7 +882,7 @@
                                                         <asp:Label Font-Size="8px" ID="lblCt1_D05" runat="server" Text="Label"></asp:Label>
                                                         <br />
                                                         <asp:Label  Font-Size="8.5px" ID="lblResultado_D05" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                        <br />
+                                                        
                                                         <br />
                                                         <asp:CheckBox ID="chkValida_D05" runat="server" Text="Valida" />
                                                     </asp:Panel>
@@ -902,7 +900,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_E05" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_E05" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                          <br />
                                                          <asp:CheckBox ID="chkValida_E05" runat="server" Text="Valida" />
                                                      </asp:Panel>
@@ -920,7 +918,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_F05" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_F05" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                          <br />
                                                          <asp:CheckBox ID="chkValida_F05" runat="server" Text="Valida" />
                                                      </asp:Panel>
@@ -938,8 +936,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_G05" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_G05" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
-                                                         <br />
+                                                         <br />                                                         
                                                          <asp:CheckBox ID="chkValida_G05" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                  </td>
@@ -955,8 +952,7 @@
                                                         <br />
                                                         <asp:Label Font-Size="8px" ID="lblCt1_H05" runat="server" Text="Label"></asp:Label>
                                                         <br />
-                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H05" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                        <br />
+                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H05" runat="server" Font-Bold="True" Text="Label"></asp:Label>                                                        
                                                         <br />
                                                         <asp:CheckBox ID="chkValida_H05" runat="server" Text="Valida" />
                                                     </asp:Panel>
@@ -985,7 +981,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A06" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A06" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -1003,7 +999,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B06" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B06" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B06" runat="server" Text="Valida" />
                                                          </asp:Panel>
                                                </td>
@@ -1022,7 +1018,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C06" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C06" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C06" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -1039,7 +1035,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_D06" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_D06" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                          <br />
                                                          <asp:CheckBox ID="chkValida_D06" runat="server" Text="Valida" />
                                                      </asp:Panel>
@@ -1058,7 +1054,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E06" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_E06" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1076,7 +1072,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F06" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_F06" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1094,7 +1090,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G06" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_G06" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1111,7 +1107,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H06" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H06" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H06" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1140,7 +1136,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A07" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A07" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -1158,7 +1154,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B07" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B07" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B07" runat="server" Text="Valida" />
                                                          </asp:Panel>
                                                </td>
@@ -1176,7 +1172,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_C07" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_C07" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                       <br /> <asp:CheckBox ID="chkValida_C07" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1194,7 +1190,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D07" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_D07" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1211,7 +1207,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_E07" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E07" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_E07" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1229,7 +1225,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_F07" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F07" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_F07" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1248,7 +1244,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G07" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_G07" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1265,7 +1261,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H07" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H07" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H07" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1294,7 +1290,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A08" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A08" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -1312,7 +1308,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B08" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B08" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B08" runat="server" Text="Valida" />
                                                           </asp:Panel>
                                                </td>
@@ -1331,7 +1327,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C08" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C08" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C08" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td> 
@@ -1348,7 +1344,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_D08" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D08" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_D08" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1366,7 +1362,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_E08" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E08" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_E08" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1385,7 +1381,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F08" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_F08" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1402,7 +1398,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_G08" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G08" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_G08" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1420,7 +1416,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H08" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H08" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H08" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1449,7 +1445,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A09" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A09" runat="server" Text="Valida" />
                                                                    </asp:Panel>
                                                </td>
@@ -1467,7 +1463,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B09" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B09" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B09" runat="server" Text="Valida" />
                                                          </asp:Panel>
                                                </td>
@@ -1485,7 +1481,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C09" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C09" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C09" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -1502,7 +1498,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_D09" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D09" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_D09" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1520,7 +1516,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_E09" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E09" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_E09" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1538,7 +1534,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_F09" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F09" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_F09" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1556,7 +1552,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_G09" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G09" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_G09" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1574,7 +1570,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H09" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H09" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H09" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1603,7 +1599,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A10" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                
                                                   <br /> <asp:CheckBox ID="chkValida_A10" runat="server" Text="Valida" />
 </asp:Panel>
                                                </td>
@@ -1621,7 +1617,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_B10" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B10" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B10" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -1639,7 +1635,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C10" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C10" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C10" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -1656,7 +1652,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_D10" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D10" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_D10" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1674,7 +1670,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_E10" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E10" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_E10" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1692,7 +1688,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_F10" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F10" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_F10" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1710,7 +1706,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_G10" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G10" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_G10" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1728,7 +1724,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H10" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H10" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H10" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1754,10 +1750,8 @@
                                                 <br />
                                                   
                                                    <asp:Label Font-Size="8px" ID="lblCt1_A11" runat="server" Text="Label"></asp:Label>
-                                                   <br />
-                                                  
-                                                   <asp:Label  Font-Size="8.5px" ID="lblResultado_A11" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                   <br />                                                  
+                                                   <asp:Label  Font-Size="8.5px" ID="lblResultado_A11" runat="server" Text="Label" Font-Bold="True"></asp:Label>                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A11" runat="server" Text="Valida" />
 </asp:Panel>
                                                </td>
@@ -1776,7 +1770,7 @@
                                                          <asp:Label Font-Size="8px" ID="lblCt1_B11" runat="server" Text="Label"></asp:Label>
                                                          <br />
                                                          <asp:Label  Font-Size="8.5px" ID="lblResultado_B11" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                         <br />
+                                                         
                                                         <br /> <asp:CheckBox ID="chkValida_B11" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -1794,7 +1788,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C11" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C11" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C11" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -1812,7 +1806,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D11" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_D11" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1830,7 +1824,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E11" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_E11" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1848,7 +1842,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F11" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_F11" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1866,7 +1860,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G11" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_G11" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1883,7 +1877,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_H11" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H11" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_H11" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -1912,7 +1906,7 @@
                                                    <br />
                                                   
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_A12" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_A12" runat="server" Text="Valida" />
                                                         </asp:Panel>
                                                </td>
@@ -1930,7 +1924,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_B12" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_B12" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_B12" runat="server" Text="Valida" />
                                                        </asp:Panel>
                                                </td>
@@ -1948,7 +1942,7 @@
                                                    <asp:Label Font-Size="8px" ID="lblCt1_C12" runat="server" Text="Label"></asp:Label>
                                                    <br />
                                                    <asp:Label  Font-Size="8.5px" ID="lblResultado_C12" runat="server" Text="Label" Font-Bold="True"></asp:Label>
-                                                    <br />
+                                                    
                                                   <br /> <asp:CheckBox ID="chkValida_C12" runat="server" Text="Valida" />
                                                      </asp:Panel>
                                                </td>
@@ -1966,7 +1960,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_D12" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_D12" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -1984,7 +1978,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_E12" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_E12" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -2002,7 +1996,7 @@
                                                        <asp:Label Font-Size="8px" ID="lblCt1_F12" runat="server" Text="Label"></asp:Label>
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_F12" runat="server" Font-Bold="True" Text="Label"></asp:Label>
-                                                       <br />
+                                                       
                                                        <br />
                                                        <asp:CheckBox ID="chkValida_F12" runat="server" Text="Valida" />
                                                    </asp:Panel>
@@ -2022,7 +2016,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_G12" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_G12" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>
@@ -2040,7 +2034,7 @@
                                                        <br />
                                                        <asp:Label  Font-Size="8.5px" ID="lblResultado_H12" runat="server" Font-Bold="True" Text="Label"></asp:Label>
                                                        <br />
-                                                       <br />
+                                                       
                                                        <asp:CheckBox ID="chkValida_H12" runat="server" Text="Valida" />
                                                    </asp:Panel>
                                                </td>

@@ -670,6 +670,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.HyperLink hplPesquisa;
         
         /// <summary>
+        /// lblAlertaMicrobiologia control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAlertaMicrobiologia;
+        
+        /// <summary>
         /// imgPesquisa control.
         /// </summary>
         /// <remarks>
@@ -1082,6 +1091,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbMetodologiaAntibiograma;
+        
+        /// <summary>
+        /// ddlMecanismoResistencia control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMecanismoResistencia;
         
         /// <summary>
         /// ddlPerfilAntibiotico control.

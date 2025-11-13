@@ -1169,63 +1169,7 @@ namespace WebLab.Resultados
             int tablas = Ds.Tables.Count;
             if (tablas > 0)
             {
-
-
-                //Label lblAnalisis = new Label();
-                //lblAnalisis.Text = "ANALISIS";
-                //objCellAnalisis_TITULO.Controls.Add(lblAnalisis);
-
-
-                //Label lblResultado = new Label();
-                //lblResultado.Text = "RESULTADO";
-                //objCellResultado_TITULO.Controls.Add(lblResultado);
-
-
-                //Label lblResultadoAnterior = new Label();
-                //lblResultadoAnterior.Text = "R.ANTER.";
-
-                //objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
-
-
-                /*    if (Request["Operacion"].ToString() != "HC")
-                    {
-                        Label lblUM = new Label();
-                        lblUM.Text = "U.M";
-                        objCellUnMedida_TITULO.Controls.Add(lblUM);
-                    }
-
-                    Label lblVR = new Label();
-                    lblVR.Text = "VR-METODO";
-                    objCellValoresReferencia_TITULO.Controls.Add(lblVR);
-                    */
-
-
-
-                /*    Label lblValida = new Label();
-                    if ((Request["Operacion"].ToString() == "Carga") || (Request["Operacion"].ToString() == "HC")) lblValida.Text = "";
-                    else
-                    {
-                        if (Request["Operacion"].ToString() == "Valida") lblValida.Text = "VAL";
-                        if (Request["Operacion"].ToString() == "Control") lblValida.Text = "CTRL";
-                    }
-                    objCellValida_TITULO.Controls.Add(lblValida);
-
-                    Label lblCargadoPor = new Label();
-                    if ((Request["Operacion"].ToString() == "HC") && (Session["validado"].ToString() == "1"))
-                    {
-                        lblCargadoPor.Text = "VALIDADO POR";
-                        //                Panel1.ScrollBars = ScrollBars.None;
-                    }
-                    else
-                        lblCargadoPor.Text = "ESTADO";
-
-                    objCellPersona_TITULO.Controls.Add(lblCargadoPor);*/
-
-
-                /////observaciones
-                //if (Request["Operacion"].ToString() == "Valida")
-                //{
-
+                 
 
                 objFila_TITULO.Cells.Add(objCellAnalisis_TITULO);
             objFila_TITULO.Cells.Add(objCellResultado_TITULO);
@@ -1254,43 +1198,44 @@ namespace WebLab.Resultados
                 {
                     //decimal m_minimoReferencia=-1;
                     //decimal m_maximoReferencia=-1;
-                    string valorReferencia = Ds.Tables[0].Rows[i].ItemArray[11].ToString();
-                    int m_idItem = int.Parse(Ds.Tables[0].Rows[i].ItemArray[2].ToString());
-                    string unMedida = Ds.Tables[0].Rows[i].ItemArray[8].ToString();
-                    string Observaciones = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
-                    int tiporesultado = (int.Parse(Ds.Tables[0].Rows[i].ItemArray[7].ToString()));
-                    int tipodeterminacion = int.Parse(Ds.Tables[0].Rows[i].ItemArray[6].ToString());
-                    int estado = int.Parse(Ds.Tables[0].Rows[i].ItemArray[9].ToString());
-                    string m_metodo = Ds.Tables[0].Rows[i].ItemArray[10].ToString();
+                  //  string valorReferencia = Ds.Tables[0].Rows[i].ItemArray[11].ToString();
+                 //   int m_idItem = int.Parse(Ds.Tables[0].Rows[i].ItemArray[2].ToString());
+               //     int m_idMecanismo = int.Parse(Ds.Tables[0].Rows[i].ItemArray[3].ToString());
+                    //   string unMedida = Ds.Tables[0].Rows[i].ItemArray[8].ToString();
+                    //    string Observaciones = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
+                    int tiporesultado = (int.Parse(Ds.Tables[0].Rows[i].ItemArray[4].ToString()));
+              //      int tipodeterminacion = int.Parse(Ds.Tables[0].Rows[i].ItemArray[6].ToString());
+                //    int estado = int.Parse(Ds.Tables[0].Rows[i].ItemArray[9].ToString());
+                 //   string m_metodo = Ds.Tables[0].Rows[i].ItemArray[10].ToString();
 
-                    string m_observacionReferencia = Ds.Tables[0].Rows[i].ItemArray[13].ToString();
-                    string m_usuarioCarga = Ds.Tables[0].Rows[i].ItemArray[14].ToString();
-                    string m_trajoMuestra = Ds.Tables[0].Rows[i].ItemArray[15].ToString();
-                    string m_tipoValorReferencia = Ds.Tables[0].Rows[i].ItemArray[16].ToString();
-                    string m_conResultado = Ds.Tables[0].Rows[i].ItemArray[17].ToString();
-                    string m_formatoDecimal = Ds.Tables[0].Rows[i].ItemArray[18].ToString();
-                    string m_formato0 = Ds.Tables[0].Rows[i].ItemArray[19].ToString();
-                    string m_formato1 = Ds.Tables[0].Rows[i].ItemArray[20].ToString();
-                    string m_formato2 = Ds.Tables[0].Rows[i].ItemArray[21].ToString();
-                    string m_formato3 = Ds.Tables[0].Rows[i].ItemArray[22].ToString();
-                    string m_formato4 = Ds.Tables[0].Rows[i].ItemArray[23].ToString();
-                    string m_resultadoDefecto = Ds.Tables[0].Rows[i].ItemArray[24].ToString();
-                    string m_usuariocontrol = Ds.Tables[0].Rows[i].ItemArray[25].ToString();
-                    string m_usuariovalida = Ds.Tables[0].Rows[i].ItemArray[28].ToString();
-                    int i_iddetalleProtocolo = int.Parse(Ds.Tables[0].Rows[i].ItemArray[26].ToString());
-                    string m_codificaPaciente = Ds.Tables[0].Rows[i].ItemArray[27].ToString();
+                //    string m_observacionReferencia = Ds.Tables[0].Rows[i].ItemArray[13].ToString();
+                //    string m_usuarioCarga = Ds.Tables[0].Rows[i].ItemArray[14].ToString();
+                //    string m_trajoMuestra = Ds.Tables[0].Rows[i].ItemArray[15].ToString();
+                 //   string m_tipoValorReferencia = Ds.Tables[0].Rows[i].ItemArray[16].ToString();
+                //    string m_conResultado = Ds.Tables[0].Rows[i].ItemArray[17].ToString();
+                 //   string m_formatoDecimal = Ds.Tables[0].Rows[i].ItemArray[18].ToString();
+                    //string m_formato0 = Ds.Tables[0].Rows[i].ItemArray[19].ToString();
+                    //string m_formato1 = Ds.Tables[0].Rows[i].ItemArray[20].ToString();
+                    //string m_formato2 = Ds.Tables[0].Rows[i].ItemArray[21].ToString();
+                    //string m_formato3 = Ds.Tables[0].Rows[i].ItemArray[22].ToString();
+                    //string m_formato4 = Ds.Tables[0].Rows[i].ItemArray[23].ToString();
+                    //string m_resultadoDefecto = Ds.Tables[0].Rows[i].ItemArray[24].ToString();
+              //      string m_usuariocontrol = Ds.Tables[0].Rows[i].ItemArray[25].ToString();
+                    string m_usuariovalida = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
+                  //  int i_iddetalleProtocolo = int.Parse(Ds.Tables[0].Rows[i].ItemArray[26].ToString());
+                    //string m_codificaPaciente = Ds.Tables[0].Rows[i].ItemArray[27].ToString();
 
-                    string m_estadoObservacion = Ds.Tables[0].Rows[i].ItemArray[29].ToString();
+               //     string m_estadoObservacion = Ds.Tables[0].Rows[i].ItemArray[29].ToString();
                     string m_area = "ATB";//Ds.Tables[0].Rows[i].ItemArray[30].ToString();
 
-                    if (m_codificaPaciente == "True")
-                    {
-                        lblPaciente.Visible = false;
-                        lblCodigoPaciente.Visible = true;
-                    }
+                    //if (m_codificaPaciente == "True")
+                    //{
+                    //    lblPaciente.Visible = false;
+                    //    lblCodigoPaciente.Visible = true;
+                    //}
 
 
-                    m_hijo = Ds.Tables[0].Rows[i].ItemArray[1].ToString();
+                    m_hijo = Ds.Tables[0].Rows[i].ItemArray[2].ToString();
                     m_titulo = Ds.Tables[0].Rows[i].ItemArray[0].ToString();
 
                     TableRow objFila = new TableRow();
@@ -1341,7 +1286,7 @@ namespace WebLab.Resultados
                         TableCell objCell = new TableCell();
                         Label lbl0 = new Label();
 
-                        lbl0.Text = Ds.Tables[0].Rows[i].ItemArray[0].ToString();
+                        lbl0.Text = Ds.Tables[0].Rows[i].ItemArray[1].ToString();
                         lbl0.TabIndex = short.Parse("500");
                         lbl0.Font.Bold = true;
 
@@ -1357,6 +1302,8 @@ namespace WebLab.Resultados
                         tContenido.Controls.Add(objRow);
 
                         m_nombre = m_titulo;
+
+                       
                     }
 
 
@@ -1370,36 +1317,36 @@ namespace WebLab.Resultados
                     lbl1.TabIndex = short.Parse("500");
                     lbl1.ForeColor = Color.Black;
                     lbl1.Font.Size = FontUnit.Point(9);
-                    if (tipodeterminacion != 0)
-                    {
+                    //if (tipodeterminacion != 0)
+                    //{
                         lbl1.Font.Bold = true;
                         lbl1.Font.Italic = true;
                         objCellAnalisis.ColumnSpan = 1;
-                    }
+                    //}
 
                     objCellAnalisis.Controls.Add(lbl1);
 
               
-                            if (tipodeterminacion == 0) // si es una determinacion simple
-                            {
+                            //if (tipodeterminacion == 0) // si es una determinacion simple
+                            //{
                               
 
                                             Label olbl = new Label();
                                             olbl.Font.Bold = true;
                                             olbl.Font.Size = FontUnit.Point(9);
-                                            if (m_conResultado == "0")
-                                                olbl.Text = "";
-                                            else
-                                                olbl.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
+                                            //if (m_conResultado == "0")
+                                            //    olbl.Text = "";
+                                            //else
+                                                olbl.Text = Ds.Tables[0].Rows[i].ItemArray[3].ToString();
 
-                                            if (Observaciones != "")
-                                            {
-                                                if (olbl.Text == "")
-                                                    olbl.Text += Observaciones;
-                                                else
-                                                    olbl.Text += Environment.NewLine + " " + Observaciones;
+                                            //if (Observaciones != "")
+                                            //{
+                                            //    if (olbl.Text == "")
+                                            //        olbl.Text += Observaciones;
+                                            //    else
+                                            //        olbl.Text += Environment.NewLine + " " + Observaciones;
 
-                                            }
+                                            //}
 
                                           
 
@@ -1433,24 +1380,24 @@ namespace WebLab.Resultados
 
                           
 
+                        ///no se usa valor referencia con los ATB
+                            //Label lblValoresReferencia = new Label();
 
-                            Label lblValoresReferencia = new Label();
+                            ////     lblValoresReferencia.ID = "VR" + m_idItem.ToString();
+                            //lblValoresReferencia.Font.Italic = true;
+                            //lblValoresReferencia.Font.Size = FontUnit.Point(8);
+                            //if (valorReferencia != "")
+                            //{// muestra el valor guardado 
+                            //    lblValoresReferencia.Text = valorReferencia;
+                            //    if (m_metodo != "")
+                            //        // lblValoresReferencia.Text += " |Método:" + m_metodo;
+                            //        lblValoresReferencia.Text += Environment.NewLine + m_metodo;
+                            //}
+                            ////else
+                            ////    lblValoresReferencia.Text = oDetalle.CalcularValoresReferencia();                                                                                      
 
-                            //     lblValoresReferencia.ID = "VR" + m_idItem.ToString();
-                            lblValoresReferencia.Font.Italic = true;
-                            lblValoresReferencia.Font.Size = FontUnit.Point(8);
-                            if (valorReferencia != "")
-                            {// muestra el valor guardado 
-                                lblValoresReferencia.Text = valorReferencia;
-                                if (m_metodo != "")
-                                    // lblValoresReferencia.Text += " |Método:" + m_metodo;
-                                    lblValoresReferencia.Text += Environment.NewLine + m_metodo;
-                            }
-                            //else
-                            //    lblValoresReferencia.Text = oDetalle.CalcularValoresReferencia();                                                                                      
-
-                            objCellValoresReferencia.Controls.Add(lblValoresReferencia);
-                        }
+                            //objCellValoresReferencia.Controls.Add(lblValoresReferencia);
+                        //}
                     
 
 

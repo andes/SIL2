@@ -611,9 +611,8 @@ namespace WebLab.Resultados
                                 if (oDeriva.Resultado != "")
                                     estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado;
 
-
                             }
-                            
+
                         }
                         lblDerivacion.Text = estadoDerivacion;
                         
