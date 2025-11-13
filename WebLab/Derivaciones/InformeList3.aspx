@@ -47,20 +47,12 @@
 
 
         function validarGrilla() {
-            var todoOk = false;
-            var gridView = document.getElementById('<%= gvLista.ClientID %>');
-            var rows = gridView.getElementsByTagName('tr');
+            var todoOk = hayCheckSeleccionado();
 
-            for (var i = 1; i < rows.length; i++) { // Empieza en 1 para omitir el encabezado
-                var row = rows[i];
-                var CheckBox1 = row.querySelector('[id$="CheckBox1"]');
-
-                if (CheckBox1.checked) {
-                    return true; // Detiene la validación con al menos un check
-                }
+            if (!todoOk) {
+                var label = document.getElementById('<%= lblErrorLista.ClientID %>');
+                label.className = 'exposed';
             }
-            var label = document.getElementById('<%= lblErrorLista.ClientID %>');
-            label.className = 'exposed';
             return todoOk;
         }
 
@@ -84,9 +76,9 @@
 
                 //console.log(estado);
                 const params = new URLSearchParams(window.location.search);
-                console.log(params);
+               // console.log(params);
                 const tipo = params.get("Tipo");
-                console.log(tipo);
+               // console.log(tipo);
                 if (estado == '4' && tipo == 'Modifica') { //Estado 4 es Pendiente de envio
                     console.log(window.location.search);
                     alert("Cuidado! Al desmarcar la determinacion no se enviara en el lote.");
@@ -129,7 +121,20 @@
                 reseteaLabelErrorGrilla();
             }
         }
+        function validarSeleccionPDF(sender, args) {
+            args.IsValid = hayCheckSeleccionado();
+        }
 
+        function hayCheckSeleccionado() {
+            var gridView = document.getElementById('<%= gvLista.ClientID %>');
+            var rows = gridView.getElementsByTagName('tr');
+            for (var i = 1; i < rows.length; i++) {
+                var row = rows[i];
+                var chk = row.querySelector('[id$="CheckBox1"]');
+                if (chk && chk.checked) return true;
+            }
+            return false;
+        }
     </script>
 
   <script type="text/javascript">
@@ -268,14 +273,16 @@
 				    </tr>
                     <tr>
                         <td>
-                        <!-- (Casos anteriores) -->
-                         <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink"  onclick="lnkPDF_Click">Generar PDF Derivacion (Sin Lote)</asp:LinkButton>
-                                
+                        <!-- PDF de Control de determinaciones --> 
+                            <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" ValidationGroup="SeleccionCheck" onclick="lnkPDF_Click">Generar PDF de Control</asp:LinkButton>       
                         </td>
                     </tr>
 				    <tr>
 					    <td colspan="2">
-                             <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
+                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
+                            <asp:CustomValidator ID="cvSeleccionCheck" runat="server"
+                                ClientValidationFunction="validarSeleccionPDF" 
+                                ErrorMessage="* Seleccione una fila" Display="Dynamic" CssClass="error" ValidationGroup="SeleccionCheck"> </asp:CustomValidator>
                             <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
                             <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
@@ -345,9 +352,7 @@
                                           <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("motivo") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
 
-                                    <asp:TemplateField HeaderText="Lote">
-                                          <ItemTemplate> <asp:Label ID="lbl_nroLote" runat="server" Text='<%# Eval("idLote") %>'/> </ItemTemplate>
-                                    </asp:TemplateField>
+                                  
 
                                     <asp:TemplateField Visible="false">
                                         <ItemTemplate> <asp:Label ID="lbl_estado" runat="server" Text='<%# Eval("estado") %>'/> </ItemTemplate>

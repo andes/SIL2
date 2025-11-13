@@ -78,7 +78,7 @@ namespace WebLab.Derivaciones
 
                     }
                     CargarGrilla();
-                    habilitarImpresion(); //solo para derivaciones anteriores a lote
+                    //habilitarImpresion(); //solo para derivaciones anteriores a lote
                 }
                 else
                 {
@@ -143,7 +143,7 @@ namespace WebLab.Derivaciones
 
         private void CargarGrilla()
         {
-            gvLista.DataSource = GetDataSet();
+            gvLista.DataSource = GetDataSet("","");
             gvLista.DataBind();
 
 
@@ -156,45 +156,65 @@ namespace WebLab.Derivaciones
 
         }
 
-        public DataTable GetDataSet()
+        public DataTable GetDataSet(string s_lista, string s_donde)
         {
-            string s_vta_LAB = "vta_LAB_Derivaciones vta";
-            string join = " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+            
             int estado = Convert.ToInt16(Request["Estado"]);
+            string motivoCancelacion = "";
+            string tiposProducto = "";
+            if (s_donde == "")
+                motivoCancelacion = " , isnull(mot.descripcion,'') as motivo ";
+            else
+                tiposProducto = " , idTipoServicio , TipoProducto ";
 
             string m_strSQL = " SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
             " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , " +
-            " solicitante as especialista , isnull(idlote,0) as idLote , isnull(mot.descripcion,'') as motivo" +
-            " FROM  " + s_vta_LAB +
-            join +
-            " WHERE ";
+            " solicitante as especialista , isnull(idlote,0) as idLote " + motivoCancelacion + tiposProducto +
+            " FROM  vta_LAB_Derivaciones vta ";
 
-            if (Request["Tipo"] == "Alta")
+            if (s_donde == "")
+                 m_strSQL+= " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+
+            m_strSQL +=  " WHERE ";
+
+            if (s_donde == "")
             {
-                m_strSQL += Request["Parametros"].ToString() + "  and estado = " + Request["Estado"].ToString();
-                if (estado == 0 )//Pendiente de derivar , no tiene que tener lote asociado 
+                if (Request["Tipo"] == "Alta")
                 {
-                    m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
+                    m_strSQL += Request["Parametros"].ToString() + "  and estado = "+ estado;
+                    if (estado == 0)//Pendiente de derivar , no tiene que tener lote asociado 
+                    {
+                        m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
+                    }
+                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
+
+
                 }
-                m_strSQL += " ORDER BY efectorDerivacion,numero ";
+                else
+                {
+                    if (Request["Tipo"] == "Modifica")
+                    {
 
+                        m_strSQL +=
+                           "    (" +
+                               "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
+                               "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
+                               "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
+                                  ")" +
+                         " ORDER BY estado desc, efectorDerivacion,numero desc";
+                    }
 
+                }
             }
             else
             {
-                if (Request["Tipo"] == "Modifica")
-                {
-
-                    m_strSQL +=
-                       "    (" +
-                           "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
-                           "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
-                           "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
-                              ")" +
-                     " ORDER BY estado desc, efectorDerivacion,numero desc";
-                }
-
+                //es PDF de Control
+                m_strSQL += Request["Parametros"].ToString() +
+                "  and estado= " + estado +
+                "  and idDetalleProtocolo in (" + s_lista + ") "+
+                " ORDER BY efectorDerivacion,numero ";
             }
+               
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
@@ -228,15 +248,15 @@ namespace WebLab.Derivaciones
                 case 0: //Pendiente de derivar
                     return true;
                 case 1: //Enviado
-                    if(idLote == 0) //Son enviados sin lote, corresponde a version anterior
-                    {
-                        return true; //se habilita el check para que puedan seleccionar al imprimir
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                   
+                        //if(idLote == 0) //Son enviados sin lote, corresponde a version anterior
+                        //{
+                        //    return true; //se habilita el check para que puedan seleccionar al imprimir
+                        //}
+                        //else
+                        //{
+                        //    return false;
+                        //}
+                    return true; //Para que puedan imprimir el pdf de control
                 case 2: //No Enviado
                     return true;
                 case 3: //Recibido
@@ -268,57 +288,61 @@ namespace WebLab.Derivaciones
 
 
         #endregion
-        
+
 
         #region Guardar
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (Session["idUsuario"] != null)
+            if (Page.IsValid)
             {
-                //Se verifica que se hayan realizados cambios
-                if (hdnDatosModificados.Value == "false")
+                if (Session["idUsuario"] != null)
                 {
-                    ScriptManager.RegisterStartupScript(this, GetType(),"noHuboCambios", "alert('No hay cambios para guardar');", true) ;
-                }
-                else
-                {
-                    int idUsuario = int.Parse(Session["idUsuario"].ToString());
-                    Usuario oUser = new Usuario();
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
-                    Business.Data.Laboratorio.LoteDerivacion lote = new Business.Data.Laboratorio.LoteDerivacion();
-
-                    if (int.Parse(ddlEstado.SelectedValue) == 2)
-                    { 
-                        GuardarDerivaciones(lote, oUser.IdUsuario); //con idLote=0
-
-                        if (Request["Tipo"] == "Modifica")
-                            lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
-                        
-                        CargarGrilla();
-                        limpiarForm();
+                    //Se verifica que se hayan realizados cambios
+                    if (hdnDatosModificados.Value == "false")
+                    {
+                        ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
                     }
                     else
                     {
-                        if (Request["Tipo"] == "Alta")
-                        {    //Genera Lote y cambia determinaciones
-                            lote = GenerarLote(oUser.IdUsuario);
+                        int idUsuario = int.Parse(Session["idUsuario"].ToString());
+                        Usuario oUser = new Usuario();
+                        oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
+                        Business.Data.Laboratorio.LoteDerivacion lote = new Business.Data.Laboratorio.LoteDerivacion();
+
+                        if (int.Parse(ddlEstado.SelectedValue) == 2)
+                        {
+                            GuardarDerivaciones(lote, oUser.IdUsuario); //con idLote=0
+
+                            if (Request["Tipo"] == "Modifica")
+                                lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
+
+                            CargarGrilla();
+                            limpiarForm();
                         }
                         else
                         {
-                            if (Request["Tipo"] == "Modifica")
-                            {
-                                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), "IdLoteDerivacion", Request["idLote"]);
-                                lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
+                            if (Request["Tipo"] == "Alta")
+                            {    //Genera Lote y cambia determinaciones
+                                lote = GenerarLote(oUser.IdUsuario);
                             }
+                            else
+                            {
+                                if (Request["Tipo"] == "Modifica")
+                                {
+                                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), "IdLoteDerivacion", Request["idLote"]);
+                                    lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
+                                }
+                            }
+                            GuardarDerivaciones(lote, oUser.IdUsuario);
+                            Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
                         }
-                        GuardarDerivaciones(lote, oUser.IdUsuario);
-                        Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
                     }
+
                 }
-                
+                else
+                    Response.Redirect("../FinSesion.aspx", false);
             }
-            else
-                Response.Redirect("../FinSesion.aspx", false);
+            
         }
 
         private Business.Data.Laboratorio.LoteDerivacion GenerarLote(int idUsuario)
@@ -504,12 +528,8 @@ namespace WebLab.Derivaciones
         }
         #endregion
 
-        protected void lnkPDF_Command(object sender, CommandEventArgs e)
-        {
-            //Para imprimir los PDF de las derivaciones anteriores a Lotes
-            MostrarInforme("pdf");
-        }
-        private void MostrarInforme(string tipo)
+        #region PDF
+        private void MostrarInforme()
         {
             if (Session["idUsuario"] != null)
             {
@@ -518,11 +538,11 @@ namespace WebLab.Derivaciones
                 oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
 
 
-                DataTable dt = GetDataSet(GenerarListaProtocolos(), tipo);
+                DataTable dt = GetDataSet(GenerarListaProtocolos(), "pdf");
 
                 if (dt.Rows.Count > 0)
                 {
-                    string informe = "../Informes/Derivacion.rpt";
+                    string informe = "../Informes/ControlDerivacion.rpt";
 
                     ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                     encabezado1.Value = oCon.EncabezadoLinea1;
@@ -549,39 +569,11 @@ namespace WebLab.Derivaciones
 
         protected void lnkPDF_Click(object sender, EventArgs e)
         {
-            MostrarInforme("pdf");
-        }
-        private DataTable GetDataSet(string s_lista, string s_donde)
-        {
-            string s_vta_LAB = "vta_LAB_Derivaciones";
-            string s_iddetalle = "";
-            if (s_donde != "pdf")
-                s_iddetalle = "idDetalleProtocolo,";
-
-            string m_strSQL = " SELECT " + s_iddetalle + " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
-            " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , solicitante as especialista " +
-            " FROM  " + s_vta_LAB + " WHERE " + Request["Parametros"].ToString();
-           
-            if (s_donde != "pdf")
+            if (Page.IsValid)
             {
-                m_strSQL += "  and estado= " + Request["Estado"].ToString();
+                MostrarInforme();
             }
-            else
-                m_strSQL += "  and estado= 1";
-
-
-            if (s_lista != "")
-                m_strSQL += "  and idDetalleProtocolo in (" + s_lista + ")";
-
-            m_strSQL += " ORDER BY efectorDerivacion,numero ";
-
-
-            DataSet Ds = new DataSet();
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
-            return Ds.Tables[0];
+           
         }
         private string GenerarListaProtocolos()
         {
@@ -600,5 +592,7 @@ namespace WebLab.Derivaciones
             }
             return m_lista;
         }
+        #endregion
+
     }
 }
