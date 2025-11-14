@@ -122,9 +122,9 @@
                 reseteaLabelErrorGrilla();
             }
         }
-        function validarSeleccionPDF(sender, args) {
-            args.IsValid = hayCheckSeleccionado();
-        }
+        //function validarSeleccionPDF(sender, args) {
+        //    args.IsValid = hayCheckSeleccionado();
+        //}
 
         function hayCheckSeleccionado() {
             var gridView = document.getElementById('<%= gvLista.ClientID %>');
