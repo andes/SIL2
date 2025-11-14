@@ -151,10 +151,17 @@ namespace WebLab.Protocolos
 
             //Cargo grilla de protocolos para ingresar
             DataTable dt = LeerDatosProtocolosDerivados();
-            if (dt.Rows.Count > 0)
+            int cantidad = dt.Rows.Count;
+            if (cantidad > 0)
             {
                 gvProtocolosDerivados.DataSource = dt;
-                lblCantidadRegistros.Text = "Cantidad de registros encontrados " + dt.Rows.Count;
+                lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
+
+                if (cantidad <= 10)
+                    divScroll.Style["height"] = "auto";  // altura mínima 
+                else
+                    divScroll.Style["height"] = "500px";  // altura grande con scroll
+               
             }
             else
             {
@@ -179,8 +186,10 @@ namespace WebLab.Protocolos
                         gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Black;
                         break;
                 }
+                divScroll.Style["height"] = "auto";
             }
             gvProtocolosDerivados.DataBind();
+            
         }
 
         private bool efectorCorrecto(LoteDerivacion lote)

@@ -88,46 +88,49 @@
                                 <tr>
                                     <td>&nbsp;</td>
                                 </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <asp:GridView ID="gvProtocolosDerivados" runat="server" CssClass="table table-bordered bs-table" AutoGenerateColumns="False"
-                                            DataKeyNames="idProtocolo">
-                                            <Columns>
-                                                <asp:BoundField DataField="fecha" HeaderText="Fecha" />
-                                                <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
-                                                <%--<asp:BoundField DataField="EstadoDerivacion" HeaderText="Estado Derivacion" />--%>
-                                                <asp:BoundField DataField="idPaciente" Visible="false" />
-                                                <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" />
-                                                <asp:BoundField DataField="idProtocolo" Visible="false" />
-                                                <asp:TemplateField>
-                                                    <ItemTemplate>
-                                                        <asp:LinkButton runat="server" ID="lnkIngresoProtocolo" OnCommand="lnkIngresoProtocolo_Command"
-                                                            CommandArgument='<%# Eval("idProtocolo") %>'
-                                                            CommandName='<%# Eval("idPaciente") %>'
-                                                            enabled=' <%# HabilitarIngreso() %>'
-                                                            Text="Ingresar Protocolo" CssClass="btn btn-success" Width="150px"></asp:LinkButton>
-                                                    </ItemTemplate>
-                                                    <ItemStyle Width="5%" HorizontalAlign="Center" />
-                                                </asp:TemplateField>
-                                            </Columns>
-                                            <EditRowStyle BackColor="#ffffcc" />
-                                            <EmptyDataRowStyle ForeColor="Red" CssClass="table table-bordered" />
+                                  
+                                    <tr>
+                                        <td colspan="2">
+                                     <div id="divScroll" runat="server" style="height:auto; overflow-y:auto; overflow-x:hidden;">
+                                            <asp:GridView ID="gvProtocolosDerivados" runat="server" CssClass="table table-bordered bs-table" AutoGenerateColumns="False"
+                                                DataKeyNames="idProtocolo">
+                                                <Columns>
+                                                    <asp:BoundField DataField="fecha" HeaderText="Fecha" />
+                                                    <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
+                                                    <%--<asp:BoundField DataField="EstadoDerivacion" HeaderText="Estado Derivacion" />--%>
+                                                    <asp:BoundField DataField="idPaciente" Visible="false" />
+                                                    <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" />
+                                                    <asp:BoundField DataField="idProtocolo" Visible="false" />
+                                                    <asp:TemplateField>
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton runat="server" ID="lnkIngresoProtocolo" OnCommand="lnkIngresoProtocolo_Command"
+                                                                CommandArgument='<%# Eval("idProtocolo") %>'
+                                                                CommandName='<%# Eval("idPaciente") %>'
+                                                                enabled=' <%# HabilitarIngreso() %>'
+                                                                Text="Ingresar Protocolo" CssClass="btn btn-success" Width="150px"></asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Width="5%" HorizontalAlign="Center" />
+                                                    </asp:TemplateField>
+                                                </Columns>
+                                                <EditRowStyle BackColor="#ffffcc" />
+                                                <EmptyDataRowStyle ForeColor="Red" CssClass="table table-bordered" />
 
-                                            <SortedAscendingCellStyle BackColor="#FDF5AC" />
-                                            <SortedAscendingHeaderStyle BackColor="#4D0000" />
-                                            <SortedDescendingCellStyle BackColor="#FCF6C0" />
-                                            <SortedDescendingHeaderStyle BackColor="#820000" />
-                                            <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
-                                            <SelectedRowStyle BackColor="White" Font-Bold="True" ForeColor="#333333" />
+                                                <SortedAscendingCellStyle BackColor="#FDF5AC" />
+                                                <SortedAscendingHeaderStyle BackColor="#4D0000" />
+                                                <SortedDescendingCellStyle BackColor="#FCF6C0" />
+                                                <SortedDescendingHeaderStyle BackColor="#820000" />
+                                                <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
+                                                <SelectedRowStyle BackColor="White" Font-Bold="True" ForeColor="#333333" />
 
-                                        </asp:GridView>
-                                    </td>
-                                </tr>
-                                <tr>
+                                            </asp:GridView> 
+                                     </div>   </td>
+                                    </tr>
+                                    <tr>
                                     <td>
                                         <asp:Label ID="lblCantidadRegistros" runat="server"></asp:Label></td>
 
-                                </tr>
+                                    </tr>
+                                    
                                 <tr>
                                     <td>&nbsp;</td>
                                     <td class="style7">
