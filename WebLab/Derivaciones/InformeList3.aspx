@@ -274,18 +274,15 @@
 				    </tr>
                     <tr>
                         <td>
-                        <!-- PDF de Control de determinaciones --> 
-                            <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" ValidationGroup="SeleccionCheck" onclick="lnkPDF_Click"> <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />Generar PDF de Control</asp:LinkButton>       
+                        <!-- PDF de Control de determinaciones -->
+                            <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" OnClientClick="return validarGrilla();"  onclick="lnkPDF_Click"> <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />Generar PDF de Control</asp:LinkButton>       
                         </td>
                     </tr>
                     <tr><td> <br /></td></tr>
 				    <tr>
 					    <td colspan="2">
                             <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
-                            <asp:CustomValidator ID="cvSeleccionCheck" runat="server"
-                                ClientValidationFunction="validarSeleccionPDF" 
-                                ErrorMessage="* Seleccione una fila" Display="Dynamic" CssClass="error" ValidationGroup="SeleccionCheck"> </asp:CustomValidator>
-                            <div class="mylabelizquierda" >Seleccionar:                                           
+                             <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
                             <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
                                 &nbsp;&nbsp;
