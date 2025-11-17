@@ -65,6 +65,10 @@ namespace WebLab.Derivaciones
                     CargarGrilla();
                     CargarControles();
                 }
+                else
+                {
+                    CargarFechaHoraActual(); //Despues de guardar, si no tenia fecha seleccionada lo trae ahora sin datos
+                }
 
             }
             else
@@ -377,7 +381,8 @@ namespace WebLab.Derivaciones
                         lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
                         //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
                         string fecha_hora = txtFecha.Text + " " + txtHora.Text;
-                        lote.FechaEnvio = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
+                        DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
+                        lote.FechaEnvio = fechaResultado;
                         lote.Save();
                    
                         ISession m_session = NHibernateHttpModule.CurrentSession;
@@ -417,7 +422,7 @@ namespace WebLab.Derivaciones
                             oDet.ResultadoCar = resultadoDerivacion + " "+observacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
-                            oDet.FechaResultado = Convert.ToDateTime(fecha_hora);
+                            oDet.FechaResultado = fechaResultado;
                             oDet.Save();
                             //Inserta auditoria del detalle del protocolo
                             oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);

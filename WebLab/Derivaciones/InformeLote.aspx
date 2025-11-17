@@ -115,6 +115,26 @@
            }
        }
 
+       function habilitaFechaRetiro() {
+           //Deshabilita la Fecha de retiro si descarta lote
+           var estado = document.getElementById('<%= ddlEstados.ClientID %>');
+           var estadoElegido = estado.value;
+           var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
+           var txtHora = document.getElementById('<%= txtHora.ClientID %>');
+
+           if (estadoElegido == 2) { //Estado: Derivado  --> Se habilita
+               txtFecha.disabled = false;
+               txtHora.disabled = false;
+           } else { //estado Cancelado --> Se deshabilita
+               txtFecha.disabled = true;
+               txtHora.disabled = true;
+           }
+       }
+
+       function ejecutarHabilitaciones() {
+           habilitaTransporte();
+           habilitaFechaRetiro();
+       }
        document.addEventListener("DOMContentLoaded", function () {
            var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
            var txtHora = document.getElementById('<%= txtHora.ClientID %>');
@@ -146,6 +166,8 @@
            cambioFechaHorario(); //Llamar a la función al cargar la página
            txtFecha.addEventListener("change", cambioFechaHorario); //llamar la funcion el usuario cambia la fecha
        });
+
+      
    </script>
 
    
@@ -176,7 +198,7 @@
                              <table style="border-spacing:1em 0; border-collapse: separate">
                                  <tr style="vertical-align: sub">
                                      <td >Marcar como: </td>
-                                     <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  onchange="habilitaTransporte()" /> 
+                                     <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  onchange="ejecutarHabilitaciones()" /> 
                                          <asp:RangeValidator id="Range1"
                                                ControlToValidate="ddlEstados"
                                                MinimumValue="2"
