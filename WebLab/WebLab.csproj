@@ -4904,6 +4904,12 @@
     <Compile Include="Informes\Consulta.aspx.designer.cs">
       <DependentUpon>Consulta.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\ControlDerivacion.cs">
+      <DependentUpon>ControlDerivacion.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Informes\DerivacionLote.cs">
       <DependentUpon>DerivacionLote.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -6828,6 +6834,10 @@
     <EmbeddedResource Include="Informes\CrystalReport1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>CrystalReport1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\ControlDerivacion.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ControlDerivacion.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\DerivacionLote.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
