@@ -8,7 +8,7 @@
   <Shapes>
     <Shape ID="DesignTable:t" ZOrder="9" X="162" Y="60" Height="163" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="159" />
     <Shape ID="DesignTable:ht" ZOrder="8" X="777" Y="50" Height="351" Width="157" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="347" />
-    <Shape ID="DesignTable:protocolo" ZOrder="5" X="446" Y="32" Height="315" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="311" />
+    <Shape ID="DesignTable:protocolo" ZOrder="5" X="446" Y="32" Height="353" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="349" />
     <Shape ID="DesignTable:resultado" ZOrder="2" X="14" Y="181" Height="659" Width="356" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="655" />
     <Shape ID="DesignTable:item" ZOrder="11" X="1012" Y="188" Height="258" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="254" />
     <Shape ID="DesignTable:turno" ZOrder="10" X="619" Y="45" Height="257" Width="159" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="253" />
