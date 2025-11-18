@@ -1539,6 +1539,8 @@ namespace WebLab.App_Data {
             
             private global::System.Data.DataColumn columntipoProducto;
             
+            private global::System.Data.DataColumn columnestadoDerivacion;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public protocoloDataTable() {
@@ -1742,6 +1744,14 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn estadoDerivacionColumn {
+                get {
+                    return this.columnestadoDerivacion;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1798,7 +1808,8 @@ namespace WebLab.App_Data {
                         string idLote, 
                         string idLoteString, 
                         int idTipoServicio, 
-                        string tipoProducto) {
+                        string tipoProducto, 
+                        string estadoDerivacion) {
                 protocoloRow rowprotocoloRow = ((protocoloRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         observacion,
@@ -1821,7 +1832,8 @@ namespace WebLab.App_Data {
                         idLote,
                         idLoteString,
                         idTipoServicio,
-                        tipoProducto};
+                        tipoProducto,
+                        estadoDerivacion};
                 rowprotocoloRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowprotocoloRow);
                 return rowprotocoloRow;
@@ -1865,6 +1877,7 @@ namespace WebLab.App_Data {
                 this.columnidLoteString = base.Columns["idLoteString"];
                 this.columnidTipoServicio = base.Columns["idTipoServicio"];
                 this.columntipoProducto = base.Columns["tipoProducto"];
+                this.columnestadoDerivacion = base.Columns["estadoDerivacion"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1912,6 +1925,8 @@ namespace WebLab.App_Data {
                 base.Columns.Add(this.columnidTipoServicio);
                 this.columntipoProducto = new global::System.Data.DataColumn("tipoProducto", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columntipoProducto);
+                this.columnestadoDerivacion = new global::System.Data.DataColumn("estadoDerivacion", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnestadoDerivacion);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -9744,6 +9759,22 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string estadoDerivacion {
+                get {
+                    try {
+                        return ((string)(this[this.tableprotocolo.estadoDerivacionColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'estadoDerivacion\' in table \'protocolo\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableprotocolo.estadoDerivacionColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsobservacionNull() {
                 return this.IsNull(this.tableprotocolo.observacionColumn);
             }
@@ -9992,6 +10023,18 @@ namespace WebLab.App_Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SettipoProductoNull() {
                 this[this.tableprotocolo.tipoProductoColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsestadoDerivacionNull() {
+                return this.IsNull(this.tableprotocolo.estadoDerivacionColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetestadoDerivacionNull() {
+                this[this.tableprotocolo.estadoDerivacionColumn] = global::System.Convert.DBNull;
             }
         }
         
