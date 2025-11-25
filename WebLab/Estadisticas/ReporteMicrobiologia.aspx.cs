@@ -169,7 +169,7 @@ namespace WebLab.Estadisticas
             
             gvTipoMuestra.DataSource =dtTipoMuestra;
             gvTipoMuestra.DataBind();
-
+          
             HFTipoMuestra.Value = getValoresTipoMuestra();
 
             //////////////////////Solapa microorganismos
@@ -237,19 +237,19 @@ namespace WebLab.Estadisticas
         private string getValoresMicroorganismos()
         {
             string s_valores = "";
-
+           
             for (int i = 0; i < gvMicroorganismos.Rows.Count; i++)
             {
                 string s_nombre = gvMicroorganismos.Rows[i].Cells[0].Text.Replace(";", "");
                 s_nombre = s_nombre.Replace("&#", "");
-                    
+               
                 if (s_valores == "")
 
-                    s_valores = "name='" + s_nombre + "' value='" + gvMicroorganismos.Rows[i].Cells[1].Text + "'";
+                    s_valores =  s_nombre + "|" + gvMicroorganismos.Rows[i].Cells[1].Text ;
                 else
-                    s_valores += ";" + "name='" + s_nombre + "' value='" + gvMicroorganismos.Rows[i].Cells[1].Text + "'";
+                    s_valores += ";" +  s_nombre + "|" + gvMicroorganismos.Rows[i].Cells[1].Text ;
             }
-            
+
             return s_valores;
         }
 
@@ -257,15 +257,17 @@ namespace WebLab.Estadisticas
         {
             string s_valores = "";
            
-                for (int i = 0; i < gvTipoMuestra.Rows.Count; i++)
-                {
-                    string s_nombre = gvTipoMuestra.Rows[i].Cells[0].Text.Replace(";", "");
-                    s_nombre = s_nombre.Replace("&#", "");
-                    if (s_valores=="")
-                        s_valores = "name='" + s_nombre + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "'";
-                    else
-                        s_valores += ";" + "name='" + s_nombre + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "'";
-                }
+            for (int i = 0; i < gvTipoMuestra.Rows.Count; i++)
+            {
+                string s_nombre = gvTipoMuestra.Rows[i].Cells[0].Text.Replace(";", "");
+                s_nombre = s_nombre.Replace("&#", "");
+
+                if (s_valores == "")
+                    s_valores =  s_nombre + "|" + gvTipoMuestra.Rows[i].Cells[1].Text;
+                else
+                    s_valores += ";" +  s_nombre + "|" + gvTipoMuestra.Rows[i].Cells[1].Text;
+
+            }
                 
             return  s_valores;
         }
@@ -561,7 +563,7 @@ namespace WebLab.Estadisticas
             Response.Write(sb.ToString());
             Response.End();
         }
-
+        
         protected void ddlAnalisis_SelectedIndexChanged(object sender, EventArgs e)
         {
         //    gvTipoMuestra.DataSource = GetDatosEstadistica("GV");
