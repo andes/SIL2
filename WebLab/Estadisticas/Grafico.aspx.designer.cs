@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Estadisticas {
-    
-    
-    public partial class Grafico {
-        
+namespace WebLab.Estadisticas
+{
+
+
+    public partial class Grafico
+    {
+
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// FCLiteral control.
         /// </summary>
@@ -29,5 +31,14 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal FCLiteral;
+
+        /// <summary>
+        /// miGrafico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl miGrafico;
     }
 }
