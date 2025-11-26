@@ -905,6 +905,22 @@ namespace Business
                 // Cargar la DataTable en la hoja de trabajo. 'true' incluye los encabezados.
                 worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
 
+                // --- FORMATEAR COLUMNAS FECHA ---
+                for (int col = 0; col < dataTable.Columns.Count; col++)
+                {
+                    if (dataTable.Columns[col].DataType == typeof(DateTime))
+                    {
+                        // EPPlus usa 1-based index → sumar 1
+                        int excelCol = col + 1;
+
+                        // aplicar formato "dd/MM/yyyy"
+                        worksheet.Column(excelCol).Style.Numberformat.Format = "dd/MM/yyyy";
+
+                        // opcional: si querés fecha+hora
+                        // worksheet.Column(excelCol).Style.Numberformat.Format = "dd/MM/yyyy HH:mm";
+                    }
+                }
+
                 // --- APLICAR ESTILO AL ENCABEZADO ---
                 int rowCount = dataTable.Rows.Count;
                 int colCount = dataTable.Columns.Count;
