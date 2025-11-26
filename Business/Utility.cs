@@ -905,25 +905,68 @@ namespace Business
                 // Cargar la DataTable en la hoja de trabajo. 'true' incluye los encabezados.
                 worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
 
-                // --- FORMATEAR COLUMNAS FECHA ---
-                for (int col = 0; col < dataTable.Columns.Count; col++)
+                int colCount = dataTable.Columns.Count;
+
+                // --- ENCABEZADOS ---
+                for (int c = 0; c < colCount; c++)
                 {
-                    if (dataTable.Columns[col].DataType == typeof(DateTime))
-                    {
-                        // EPPlus usa 1-based index → sumar 1
-                        int excelCol = col + 1;
-
-                        // aplicar formato "dd/MM/yyyy"
-                        worksheet.Column(excelCol).Style.Numberformat.Format = "dd/MM/yyyy";
-
-                        // opcional: si querés fecha+hora
-                        // worksheet.Column(excelCol).Style.Numberformat.Format = "dd/MM/yyyy HH:mm";
-                    }
+                    worksheet.Cells[1, c + 1].Value = dataTable.Columns[c].ColumnName;
                 }
+
+                // --- DATOS ---
+                int filaExcel = 2;
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    for (int c = 0; c < colCount; c++)
+                    {
+                        object valor = row[c];
+                        int colExcel = c + 1;
+
+                        // Null o DBNull
+                        if (valor == null || valor == DBNull.Value)
+                        {
+                            worksheet.Cells[filaExcel, colExcel].Value = "";
+                            continue;
+                        }
+
+                        // Detectar fechas
+                        if (valor is DateTime dt)
+                        {
+                            worksheet.Cells[filaExcel, colExcel].Value = dt;
+                            worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "dd/MM/yyyy";
+                            continue;
+                        }
+
+                        // Detectar números por TryParse
+                        double numero;
+                        string texto = valor.ToString().Trim();
+
+                        bool esNumero = double.TryParse(
+                            texto,
+                            System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            out numero
+                        );
+
+                        if (esNumero)
+                        {
+                            worksheet.Cells[filaExcel, colExcel].Value = numero;
+                           // worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "0.00"; // O "0"
+                        }
+                        else
+                        {
+                            worksheet.Cells[filaExcel, colExcel].Value = texto;
+                        }
+                    }
+
+                    filaExcel++;
+                }
+
 
                 // --- APLICAR ESTILO AL ENCABEZADO ---
                 int rowCount = dataTable.Rows.Count;
-                int colCount = dataTable.Columns.Count;
+                //int colCount = dataTable.Columns.Count;
 
                 // Rango del encabezado: Desde A1 hasta el final de la primera fila
                 using (var range = worksheet.Cells[1, 1, 1, colCount])
