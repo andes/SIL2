@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Security.Cryptography;
 using System.Configuration;
 using System.Xml.Serialization;
@@ -14,6 +14,9 @@ using System.Text.RegularExpressions;
 //using Sql.Data
 
 using System.Security.Cryptography;
+using OfficeOpenXml;
+using System.Drawing;
+using OfficeOpenXml.Style;
 
 namespace Business
 {
@@ -599,7 +602,7 @@ namespace Business
             }
             return ds2.Tables[0];
         }
-        #region " Otros MÈtodos "
+        #region " Otros M√©todos "
 
         public bool EsNumerico(string val)
         {
@@ -681,12 +684,12 @@ namespace Business
         }
 
 
-        /// con Ò
-        //private const string ConSignos = "·‡‰ÈËÎÌÏÔÛÚˆ˙˘uÒ¡¿ƒ…»ÀÕÃœ”“÷⁄Ÿ‹Á«";
+        /// con √±
+        //private const string ConSignos = "√°√†√§√©√®√´√≠√¨√Ø√≥√≤√∂√∫√πu√±√Å√Ä√Ñ√â√à√ã√ç√å√è√ì√í√ñ√ö√ô√ú√ß√á";
         //private const string SinSignos = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUcC";
 
-        /// sin Ò
-        private const string ConSignos = "·‡‰ÈËÎÌÏÔÛÚˆ˙˘u¡¿ƒ…»ÀÕÃœ”“÷⁄Ÿ‹Á«±";
+        /// sin √±
+        private const string ConSignos = "√°√†√§√©√®√´√≠√¨√Ø√≥√≤√∂√∫√πu√Å√Ä√Ñ√â√à√ã√ç√å√è√ì√í√ñ√ö√ô√ú√ß√á¬±";
         private const string SinSignos = "aaaeeeiiiooouuuAAAEEEIIIOOOUUUcCn";
 
 
@@ -712,11 +715,11 @@ namespace Business
       bool resultado;
       //Comprobamos la regla general.
       //Si anno es divisible por 4, es decir, si el
-      //resto de la divisiÛn entre 4 es 0...
+      //resto de la divisi√≥n entre 4 es 0...
       if (anno % 4 == 0)
       {
           //Si es divisible por 4, ahora toca comprobar
-          //la excepciÛn
+          //la excepci√≥n
           if (
                (anno % 100 == 0) &&  //Si es divisible por 100
                (anno % 400 != 0)     //y no por 400
@@ -726,7 +729,7 @@ namespace Business
           }
           else
           {
-              resultado = true; //No cumple la excepciÛn.
+              resultado = true; //No cumple la excepci√≥n.
               //Lo dejamos como bisiesto por ser divisible por 4
           }
       }
@@ -792,11 +795,11 @@ namespace Business
         { ///calculo de fechas teniendo el cuenta los dias de los meses            
 
             DateTime da = fechaProtocolo; // DateTime.Now;
-            int  anos =  da.Year - dn.Year; // calculamos aÒos 
+            int  anos =  da.Year - dn.Year; // calculamos a√±os 
             int meses = da.Month - dn.Month; // calculamos meses 
-            int dias =  da.Day - dn.Day; // calculamos dÌas 
+            int dias =  da.Day - dn.Day; // calculamos d√≠as 
 
-            //ajuste de posible negativo en $dÌas 
+            //ajuste de posible negativo en $d√≠as 
             if (dias < 0) 
             { 
                 //--$meses; 
@@ -872,6 +875,175 @@ namespace Business
 
 
 
+        #endregion
+
+        #region Excel
+
+        public static void ExportDataTableToXlsx(DataTable dataTable, string filename)
+        {
+            // ‚ö†Ô∏è Si usas EPPlus v5.x o superior, descomenta esta l√≠nea:
+            // OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+
+            if (dataTable == null || dataTable.Rows.Count == 0)
+            {
+                HttpContext.Current.Response.Write("No hay datos para exportar.");
+                HttpContext.Current.Response.End();
+                return;
+            }
+
+            HttpResponse response = HttpContext.Current.Response;
+
+            // Define el color de fondo por defecto si no se proporciona
+            //    --azul-neuquen: #2b3e4c;
+            Color finalBackColor = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
+
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                // Crear una nueva hoja de trabajo
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(filename);
+
+                // Cargar la DataTable en la hoja de trabajo. 'true' incluye los encabezados.
+                worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
+
+                // --- APLICAR ESTILO AL ENCABEZADO ---
+                int rowCount = dataTable.Rows.Count;
+                int colCount = dataTable.Columns.Count;
+
+                // Rango del encabezado: Desde A1 hasta el final de la primera fila
+                using (var range = worksheet.Cells[1, 1, 1, colCount])
+                {
+                    ApplyHeaderStyle(range, finalBackColor);
+                }
+
+                // Autoajusta las columnas
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                // --- CONFIGURAR RESPUESTA HTTP ---
+                response.Clear();
+                response.Buffer = true;
+                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                string fullFilename = filename.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ? filename : filename + ".xlsx";
+                response.AddHeader("Content-Disposition", $"attachment; filename=\"{fullFilename}\"");
+
+                // Escribe el paquete de Excel directamente al flujo de salida
+                package.SaveAs(response.OutputStream);
+
+                response.Flush();
+                response.End();
+            }
+        }
+       
+        private static void ApplyHeaderStyle(ExcelRange range, Color backColor)
+        {
+            range.Style.Font.Bold = true;
+            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            range.Style.Fill.BackgroundColor.SetColor(backColor);
+            range.Style.Font.Color.SetColor(Color.White); // Color de fuente blanco (opcional)
+        }
+
+        public static void ExportGridViewToExcel(GridView grid, string nombreArchivo)
+        {
+            using (var package = new ExcelPackage())
+            {
+                var ws = package.Workbook.Worksheets.Add(nombreArchivo);
+
+                int fila = 1;
+                int col = 1;
+
+                // ================================
+                // 1) Escribir encabezados
+                // ================================
+
+               
+                foreach (DataControlField column in grid.Columns)
+                {
+
+                    Color encabezado = grid.HeaderStyle.BackColor;
+                    Color fontColor = grid.HeaderStyle.ForeColor;
+
+                    ws.Cells[fila, col].Value = column.HeaderText;
+
+                    // Formato encabezado
+                    //Color backgroundColor =  ColorTranslator.FromHtml("#2b3e4c"); //Azul Neuquen
+                    ws.Cells[fila, col].Style.Font.Size = 9;
+                    ws.Cells[fila, col].Style.Font.Bold = true;
+                    ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(encabezado);
+                    ws.Cells[fila, col].Style.Font.Color.SetColor(fontColor);
+                    ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
+                    col++;
+                }
+
+                fila++;
+
+                // ================================
+                // 2) Escribir filas + colores del GridView
+                // ================================
+                foreach (GridViewRow row in grid.Rows)
+                {
+                    col = 1;
+
+                    foreach (TableCell cell in row.Cells)
+                    {
+                        // (2) Decodificar texto HTML
+                        var texto = HttpUtility.HtmlDecode(cell.Text);
+                        
+                        // (1) Detectar si es n√∫mero
+                        double numero;
+                        bool esNumero = double.TryParse(
+                            texto,
+                            System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            out numero
+                        );
+
+                        if (esNumero)
+                        {
+                            ws.Cells[fila, col].Value = numero;
+                        }
+                        else
+                        {
+                            ws.Cells[fila, col].Value = texto;
+                        }
+
+                        // Aplicar colores si existen
+                        if (cell.BackColor != Color.Empty)
+                        {
+                            ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(cell.BackColor);
+                        }
+
+                        if (cell.ForeColor != Color.Empty)
+                        {
+                            ws.Cells[fila, col].Style.Font.Color.SetColor(cell.ForeColor);
+                        }
+
+                        ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        ws.Cells[fila, col].Style.Font.Size = 9;
+                        col++;
+                    }
+
+                    fila++;
+                }
+
+                // Autoajustar columnas
+                ws.Cells[1, 1, fila - 1, grid.Columns.Count].AutoFitColumns();
+
+                // ================================
+                // 3) Descargar archivo
+                // ================================
+                var response = HttpContext.Current.Response;
+
+                response.Clear();
+                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                response.AddHeader("content-disposition", $"attachment; filename={nombreArchivo}.xlsx");
+
+                response.BinaryWrite(package.GetAsByteArray());
+                response.End();
+            }
+        }
         #endregion
     }
 }
