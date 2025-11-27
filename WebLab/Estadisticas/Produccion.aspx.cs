@@ -164,7 +164,8 @@ namespace WebLab.Estadisticas
               gvEstadistica.DataSource = dt;
                 gvEstadistica.DataBind();
 
-                StringBuilder sb = new StringBuilder();
+            Utility.ExportGridViewToExcel(gvEstadistica, "estadisticaProduccionTotal");
+               /* StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
                 HtmlTextWriter htw = new HtmlTextWriter(sw);
 
@@ -188,7 +189,7 @@ namespace WebLab.Estadisticas
                 Response.Charset = "UTF-8";
                 Response.ContentEncoding = Encoding.Default;
                 Response.Write(sb.ToString());
-                Response.End(); 
+                Response.End(); */
             //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             //using (var package = new ExcelPackage())
             //{
@@ -452,28 +453,29 @@ namespace WebLab.Estadisticas
         {
             if (tabla.Rows.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
-                Page pagina = new Page();
-                HtmlForm form = new HtmlForm();
-                GridView dg = new GridView();
-                dg.EnableViewState = false;
-                dg.DataSource = tabla;
-                dg.DataBind();
-                pagina.EnableEventValidation = false;
-                pagina.DesignerInitialize();
-                pagina.Controls.Add(form);
-                form.Controls.Add(dg);
-                pagina.RenderControl(htw);
-                Response.Clear();
-                Response.Buffer = true;
-                Response.ContentType = "application/vnd.ms-excel";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + "_" + oUser.IdEfector.IdEfector2 + ".xls");
-                Response.Charset = "UTF-8";
-                Response.ContentEncoding = Encoding.Default;
-                Response.Write(sb.ToString());
-                Response.End();
+                Utility.ExportDataTableToXlsx(tabla, nombreArchivo + "_" + oUser.IdEfector.IdEfector2);
+                //StringBuilder sb = new StringBuilder();
+                //StringWriter sw = new StringWriter(sb);
+                //HtmlTextWriter htw = new HtmlTextWriter(sw);
+                //Page pagina = new Page();
+                //HtmlForm form = new HtmlForm();
+                //GridView dg = new GridView();
+                //dg.EnableViewState = false;
+                //dg.DataSource = tabla;
+                //dg.DataBind();
+                //pagina.EnableEventValidation = false;
+                //pagina.DesignerInitialize();
+                //pagina.Controls.Add(form);
+                //form.Controls.Add(dg);
+                //pagina.RenderControl(htw);
+                //Response.Clear();
+                //Response.Buffer = true;
+                //Response.ContentType = "application/vnd.ms-excel";
+                //Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + "_" + oUser.IdEfector.IdEfector2 + ".xls");
+                //Response.Charset = "UTF-8";
+                //Response.ContentEncoding = Encoding.Default;
+                //Response.Write(sb.ToString());
+                //Response.End();
             }
         }
         //private void dataTableAExcel(DataTable tabla, string nombreArchivo)

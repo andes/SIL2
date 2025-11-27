@@ -19,6 +19,7 @@ using System.IO;
 using CrystalDecisions.Web;
 using System.Text;
 using Business.Data;
+using System.Collections.Generic;
 
 namespace WebLab.Estadisticas
 {
@@ -51,7 +52,6 @@ namespace WebLab.Estadisticas
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             }
 
-
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -70,9 +70,11 @@ namespace WebLab.Estadisticas
                     //    MostrarReporteGeneral();
                     if (Session["informe"].ToString() == "PorResultado")
                         MostrarInformePorResultado("Pantalla");
+
                 }
-               
+
             }
+          
         }
         protected void Page_Unload(object sender, EventArgs e)
         {
@@ -541,10 +543,10 @@ namespace WebLab.Estadisticas
 
             
             
-              
 
-                if (lblTipo.Text == "5") Ds.Tables[0].Rows.Add();
-            
+
+            if (lblTipo.Text == "5") Ds.Tables[0].Rows.Add();
+          
             return Ds.Tables[0];
         }
 
@@ -774,33 +776,34 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel()
         {
+            Utility.GenerarColumnasGrid(gvEstadistica, gvEstadistica.DataSource as DataTable);
+            Utility.ExportGridViewToExcel(gvEstadistica, "estadistica");
 
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //|.EnableViewState = false;
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            gvEstadistica.EnableViewState = false;
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false; 
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false; 
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize(); 
+            //page.Controls.Add(form);
+            //form.Controls.Add(gvEstadistica);
+            //page.RenderControl(htw);
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize(); 
-            page.Controls.Add(form);
-            form.Controls.Add(gvEstadistica);
-            page.RenderControl(htw);
-
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=estadistica.xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename=estadistica.xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
 
         protected void lnkDetallePorDet_Click(object sender, EventArgs e)
@@ -849,29 +852,33 @@ namespace WebLab.Estadisticas
         {
             if (tabla.Rows.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
-                Page pagina = new Page();
-                HtmlForm form = new HtmlForm();
-                GridView dg = new GridView();
-                dg.EnableViewState = false;
-                dg.DataSource = tabla;
-                dg.DataBind();
-                pagina.EnableEventValidation = false;
-                pagina.DesignerInitialize();
-                pagina.Controls.Add(form);
-                form.Controls.Add(dg);
-                pagina.RenderControl(htw);
-                Response.Clear();
-                Response.Buffer = true;
-                Response.ContentType = "application/vnd.ms-excel";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + "_" + oUser.IdEfector.IdEfector2 + ".xls");
-                Response.Charset = "UTF-8";
-                Response.ContentEncoding = Encoding.Default;
-                Response.Write(sb.ToString());
-                Response.End();
+                Utility.ExportDataTableToXlsx(tabla, nombreArchivo + "_" + oUser.IdEfector.IdEfector2);
+                //StringBuilder sb = new StringBuilder();
+                //StringWriter sw = new StringWriter(sb);
+                //HtmlTextWriter htw = new HtmlTextWriter(sw);
+                //Page pagina = new Page();
+                //HtmlForm form = new HtmlForm();
+                //GridView dg = new GridView();
+                //dg.EnableViewState = false;
+                //dg.DataSource = tabla;
+                //dg.DataBind();
+                //pagina.EnableEventValidation = false;
+                //pagina.DesignerInitialize();
+                //pagina.Controls.Add(form);
+                //form.Controls.Add(dg);
+                //pagina.RenderControl(htw);
+                //Response.Clear();
+                //Response.Buffer = true;
+                //Response.ContentType = "application/vnd.ms-excel";
+                //Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + "_" + oUser.IdEfector.IdEfector2 + ".xls");
+                //Response.Charset = "UTF-8";
+                //Response.ContentEncoding = Encoding.Default;
+                //Response.Write(sb.ToString());
+                //Response.End();
             }
+            
         }
+
+       
     }
 }
