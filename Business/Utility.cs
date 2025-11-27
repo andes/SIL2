@@ -941,14 +941,13 @@ namespace Business
                             bool esNumero = double.TryParse(
                                 texto,
                                 System.Globalization.NumberStyles.Any,
-                                System.Globalization.CultureInfo.InvariantCulture,
+                                System.Globalization.CultureInfo.GetCultureInfo("es-ES"), // Usar una cultura que use la coma como separador decimal
                                 out numero
                             );
 
                             if (esNumero)
                             {
                                 worksheet.Cells[filaExcel, colExcel].Value = numero;
-                                // worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "0.00"; // O "0"
                             }
                             else
                             {
