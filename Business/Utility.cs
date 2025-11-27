@@ -884,113 +884,111 @@ namespace Business
             // ⚠️ Si usas EPPlus v5.x o superior, descomenta esta línea:
             // OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
-            if (dataTable == null || dataTable.Rows.Count == 0)
+            if (dataTable.Rows.Count > 0)
             {
-                HttpContext.Current.Response.Write("No hay datos para exportar.");
-                HttpContext.Current.Response.End();
-                return;
-            }
 
-            HttpResponse response = HttpContext.Current.Response;
+                HttpResponse response = HttpContext.Current.Response;
 
-            // Define el color de fondo por defecto si no se proporciona
-            //    --azul-neuquen: #2b3e4c;
-            Color finalBackColor = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
+                // Define el color de fondo por defecto si no se proporciona
+                //    --azul-neuquen: #2b3e4c;
+                Color finalBackColor = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
 
-            using (ExcelPackage package = new ExcelPackage())
-            {
-                // Crear una nueva hoja de trabajo
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(filename);
-
-                // Cargar la DataTable en la hoja de trabajo. 'true' incluye los encabezados.
-                worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
-
-                int colCount = dataTable.Columns.Count;
-
-                // --- ENCABEZADOS ---
-                for (int c = 0; c < colCount; c++)
+                using (ExcelPackage package = new ExcelPackage())
                 {
-                    worksheet.Cells[1, c + 1].Value = dataTable.Columns[c].ColumnName;
-                }
+                    // Crear una nueva hoja de trabajo
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(filename);
 
-                // --- DATOS ---
-                int filaExcel = 2;
+                    // Cargar la DataTable en la hoja de trabajo. 'true' incluye los encabezados.
+                    worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
 
-                foreach (DataRow row in dataTable.Rows)
-                {
+                    int colCount = dataTable.Columns.Count;
+
+                    // --- ENCABEZADOS ---
                     for (int c = 0; c < colCount; c++)
                     {
-                        object valor = row[c];
-                        int colExcel = c + 1;
-
-                        // Null o DBNull
-                        if (valor == null || valor == DBNull.Value)
-                        {
-                            worksheet.Cells[filaExcel, colExcel].Value = "";
-                            continue;
-                        }
-
-                        // Detectar fechas
-                        if (valor is DateTime dt)
-                        {
-                            worksheet.Cells[filaExcel, colExcel].Value = dt;
-                            worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "dd/MM/yyyy";
-                            continue;
-                        }
-
-                        // Detectar números por TryParse
-                        double numero;
-                        string texto = valor.ToString().Trim();
-
-                        bool esNumero = double.TryParse(
-                            texto,
-                            System.Globalization.NumberStyles.Any,
-                            System.Globalization.CultureInfo.InvariantCulture,
-                            out numero
-                        );
-
-                        if (esNumero)
-                        {
-                            worksheet.Cells[filaExcel, colExcel].Value = numero;
-                           // worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "0.00"; // O "0"
-                        }
-                        else
-                        {
-                            worksheet.Cells[filaExcel, colExcel].Value = texto;
-                        }
+                        worksheet.Cells[1, c + 1].Value = dataTable.Columns[c].ColumnName;
                     }
 
-                    filaExcel++;
+                    // --- DATOS ---
+                    int filaExcel = 2;
+
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        for (int c = 0; c < colCount; c++)
+                        {
+                            object valor = row[c];
+                            int colExcel = c + 1;
+
+                            // Null o DBNull
+                            if (valor == null || valor == DBNull.Value)
+                            {
+                                worksheet.Cells[filaExcel, colExcel].Value = "";
+                                continue;
+                            }
+
+                            // Detectar fechas
+                            if (valor is DateTime dt)
+                            {
+                                worksheet.Cells[filaExcel, colExcel].Value = dt;
+                                worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "dd/MM/yyyy";
+                                continue;
+                            }
+
+                            // Detectar números por TryParse
+                            double numero;
+                            string texto = valor.ToString().Trim();
+
+                            bool esNumero = double.TryParse(
+                                texto,
+                                System.Globalization.NumberStyles.Any,
+                                System.Globalization.CultureInfo.InvariantCulture,
+                                out numero
+                            );
+
+                            if (esNumero)
+                            {
+                                worksheet.Cells[filaExcel, colExcel].Value = numero;
+                                // worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "0.00"; // O "0"
+                            }
+                            else
+                            {
+                                worksheet.Cells[filaExcel, colExcel].Value = texto;
+                            }
+                        }
+
+                        filaExcel++;
+                    }
+
+
+                    // --- APLICAR ESTILO AL ENCABEZADO ---
+                    int rowCount = dataTable.Rows.Count;
+                    //int colCount = dataTable.Columns.Count;
+
+                    // Rango del encabezado: Desde A1 hasta el final de la primera fila
+                    using (var range = worksheet.Cells[1, 1, 1, colCount])
+                    {
+                        ApplyHeaderStyle(range, finalBackColor);
+                    }
+
+                    // Autoajusta las columnas
+                    worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+
+                    // --- CONFIGURAR RESPUESTA HTTP ---
+                    response.Clear();
+                    response.Buffer = true;
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+                    string fullFilename = filename.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ? filename : filename + ".xlsx";
+                    response.AddHeader("Content-Disposition", $"attachment; filename=\"{fullFilename}\"");
+
+                    // Escribe el paquete de Excel directamente al flujo de salida
+                    package.SaveAs(response.OutputStream);
+
+                    response.Flush();
+                    response.End();
                 }
-
-
-                // --- APLICAR ESTILO AL ENCABEZADO ---
-                int rowCount = dataTable.Rows.Count;
-                //int colCount = dataTable.Columns.Count;
-
-                // Rango del encabezado: Desde A1 hasta el final de la primera fila
-                using (var range = worksheet.Cells[1, 1, 1, colCount])
-                {
-                    ApplyHeaderStyle(range, finalBackColor);
-                }
-
-                // Autoajusta las columnas
-                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
-
-                // --- CONFIGURAR RESPUESTA HTTP ---
-                response.Clear();
-                response.Buffer = true;
-                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-                string fullFilename = filename.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) ? filename : filename + ".xlsx";
-                response.AddHeader("Content-Disposition", $"attachment; filename=\"{fullFilename}\"");
-
-                // Escribe el paquete de Excel directamente al flujo de salida
-                package.SaveAs(response.OutputStream);
-
-                response.Flush();
-                response.End();
             }
+
         }
        
         private static void ApplyHeaderStyle(ExcelRange range, Color backColor)
@@ -1003,104 +1001,127 @@ namespace Business
 
         public static void ExportGridViewToExcel(GridView grid, string nombreArchivo)
         {
-            using (var package = new ExcelPackage())
+            if(grid.Rows.Count > 0)
             {
-                var ws = package.Workbook.Worksheets.Add(nombreArchivo);
-
-                int fila = 1;
-                int col = 1;
-
-                // ================================
-                // 1) Escribir encabezados
-                // ================================
-
-               
-                foreach (DataControlField column in grid.Columns)
+                using (var package = new ExcelPackage())
                 {
+                    var ws = package.Workbook.Worksheets.Add(nombreArchivo);
 
-                    Color encabezado = grid.HeaderStyle.BackColor;
+                    int fila = 1;
+                    int col = 1;
+
+                    // ================================
+                    // 1) Escribir encabezados
+                    // ================================
+
+                    Color encabezadoColor = grid.HeaderStyle.BackColor;
                     Color fontColor = grid.HeaderStyle.ForeColor;
 
-                    ws.Cells[fila, col].Value = column.HeaderText;
-
-                    // Formato encabezado
-                    //Color backgroundColor =  ColorTranslator.FromHtml("#2b3e4c"); //Azul Neuquen
-                    ws.Cells[fila, col].Style.Font.Size = 9;
-                    ws.Cells[fila, col].Style.Font.Bold = true;
-                    ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(encabezado);
-                    ws.Cells[fila, col].Style.Font.Color.SetColor(fontColor);
-                    ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-
-                    col++;
-                }
-
-                fila++;
-
-                // ================================
-                // 2) Escribir filas + colores del GridView
-                // ================================
-                foreach (GridViewRow row in grid.Rows)
-                {
-                    col = 1;
-
-                    foreach (TableCell cell in row.Cells)
+                    if (encabezadoColor == fontColor)
                     {
-                        // (2) Decodificar texto HTML
-                        var texto = HttpUtility.HtmlDecode(cell.Text);
-                        
-                        // (1) Detectar si es número
-                        double numero;
-                        bool esNumero = double.TryParse(
-                            texto,
-                            System.Globalization.NumberStyles.Any,
-                            System.Globalization.CultureInfo.InvariantCulture,
-                            out numero
-                        );
-
-                        if (esNumero)
-                        {
-                            ws.Cells[fila, col].Value = numero;
-                        }
-                        else
-                        {
-                            ws.Cells[fila, col].Value = texto;
-                        }
-
-                        // Aplicar colores si existen
-                        if (cell.BackColor != Color.Empty)
-                        {
-                            ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                            ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(cell.BackColor);
-                        }
-
-                        if (cell.ForeColor != Color.Empty)
-                        {
-                            ws.Cells[fila, col].Style.Font.Color.SetColor(cell.ForeColor);
-                        }
-
-                        ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                        encabezadoColor = Color.White;
+                        fontColor = Color.Black;
+                    }
+                    foreach (DataControlField column in grid.Columns)
+                    {
+                        ws.Cells[fila, col].Value = column.HeaderText;
                         ws.Cells[fila, col].Style.Font.Size = 9;
+                        ws.Cells[fila, col].Style.Font.Bold = true;
+                        ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(encabezadoColor);
+                        ws.Cells[fila, col].Style.Font.Color.SetColor(fontColor);
+                        ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+
                         col++;
                     }
 
                     fila++;
+
+                    // ================================
+                    // 2) Escribir filas + colores del GridView
+                    // ================================
+                    foreach (GridViewRow row in grid.Rows)
+                    {
+                        col = 1;
+
+                        foreach (TableCell cell in row.Cells)
+                        {
+                            // (2) Decodificar texto HTML
+                            var texto = HttpUtility.HtmlDecode(cell.Text);
+
+                            // (1) Detectar si es número
+                            double numero;
+                            bool esNumero = double.TryParse(
+                                texto,
+                                System.Globalization.NumberStyles.Any,
+                                System.Globalization.CultureInfo.GetCultureInfo("es-ES"), // Usar una cultura que use la coma como separador decimal
+                                out numero
+                            );
+
+                            if (esNumero)
+                            {
+                                ws.Cells[fila, col].Value = numero;
+                            }
+                            else
+                            {
+                                ws.Cells[fila, col].Value = texto;
+                            }
+
+                            // Aplicar colores si existen
+                           
+                            
+                            if (cell.BackColor != Color.Empty)
+                            {
+                                ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                                ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(cell.BackColor);
+                            }
+
+                            if (cell.ForeColor != Color.Empty)
+                            {
+                                ws.Cells[fila, col].Style.Font.Color.SetColor(cell.ForeColor);
+                            }
+                            
+                            
+
+                            ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                            ws.Cells[fila, col].Style.Font.Size = 9;
+                            //ws.Cells[fila, col].Style.WrapText = true; //Ajusta texto largo en la celda
+                            col++;
+                        }
+
+                        fila++;
+                    }
+
+                    // Autoajustar columnas
+                    ws.Cells[1, 1, fila - 1, grid.Columns.Count].AutoFitColumns();
+
+                    // ================================
+                    // 3) Descargar archivo
+                    // ================================
+                    var response = HttpContext.Current.Response;
+
+                    response.Clear();
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", $"attachment; filename={nombreArchivo}.xlsx");
+
+                    response.BinaryWrite(package.GetAsByteArray());
+                    response.End();
                 }
+            }
+            
+        }
 
-                // Autoajustar columnas
-                ws.Cells[1, 1, fila - 1, grid.Columns.Count].AutoFitColumns();
-
-                // ================================
-                // 3) Descargar archivo
-                // ================================
-                var response = HttpContext.Current.Response;
-
-                response.Clear();
-                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                response.AddHeader("content-disposition", $"attachment; filename={nombreArchivo}.xlsx");
-
-                response.BinaryWrite(package.GetAsByteArray());
-                response.End();
+        public static void GenerarColumnasGrid(GridView grid, DataTable dt)
+        {
+            if(dt.Columns.Count > 0)
+            {
+                DataColumnCollection dc = dt.Columns;
+                foreach(DataColumn column in dc)
+                {
+                    BoundField columna = new BoundField();
+                    columna.HeaderText = column.ColumnName;
+                    grid.Columns.Add(columna);
+                }
             }
         }
         #endregion
