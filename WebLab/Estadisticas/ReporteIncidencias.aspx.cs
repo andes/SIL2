@@ -197,31 +197,33 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel(string nombreArchivo)
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            Utility.ExportGridViewToExcel(GridView1, nombreArchivo);
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            GridView1.EnableViewState = false;
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false;
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //GridView1.EnableViewState = false;
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize();
-            page.Controls.Add(form);
-            form.Controls.Add(GridView1);
-            page.RenderControl(htw);
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false;
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize();
+            //page.Controls.Add(form);
+            //form.Controls.Add(GridView1);
+            //page.RenderControl(htw);
+
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
 
         protected void imgExcel0_Click(object sender, ImageClickEventArgs e)
@@ -231,31 +233,32 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel2(string p)
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            Utility.ExportGridViewToExcel(gvProtocolos, p);
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            gvProtocolos.EnableViewState = false;
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //gvProtocolos.EnableViewState = false;
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false;
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false;
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize();
-            page.Controls.Add(form);
-            form.Controls.Add(gvProtocolos);
-            page.RenderControl(htw);
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize();
+            //page.Controls.Add(form);
+            //form.Controls.Add(gvProtocolos);
+            //page.RenderControl(htw);
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=" + p + ".xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename=" + p + ".xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -318,34 +321,35 @@ namespace WebLab.Estadisticas
 
         protected void btnDetalleProtocolos_Click(object sender, EventArgs e)
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+           Utility.ExportDataTableToXlsx(LeerIncidencias("2"), "ProtocolosIncidencias");
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            GridView dg = new GridView();
-            dg.EnableViewState = false;
-            dg.DataSource = LeerIncidencias("2");
-            dg.DataBind();
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //GridView dg = new GridView();
+            //dg.EnableViewState = false;
+            //dg.DataSource = LeerIncidencias("2");
+            //dg.DataBind();
+           
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false;
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false;
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize();
+            //page.Controls.Add(form);
+            //form.Controls.Add(dg);
+            //page.RenderControl(htw);
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize();
-            page.Controls.Add(form);
-            form.Controls.Add(dg);
-            page.RenderControl(htw);
-
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=ProtocolosIncidencias.xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename=ProtocolosIncidencias.xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
     }
 }
