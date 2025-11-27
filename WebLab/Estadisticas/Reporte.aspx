@@ -39,7 +39,7 @@
       
        <asp:LinkButton 
                             ID="lnkDetallePorDet" runat="server" CssClass="myLink" OnClick="lnkDetallePorDet_Click"  
-            >Descargar Detalle Por Deteterminacion</asp:LinkButton>
+            >Descargar Detalle Por Determinacion</asp:LinkButton>
   
    &nbsp;<asp:Panel ID="pnlGrafico" runat="server">
    <div style="border: 1px solid #C0C0C0">
