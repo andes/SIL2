@@ -467,7 +467,7 @@ namespace WebLab.Estadisticas
                 case "8": cmd.CommandText = "LAB_EstadisticaPorSector"; break;
                 case "9": cmd.CommandText = "LAB_EstadisticaRankingDia"; break;
                 case "10": cmd.CommandText = "LAB_EstadisticaPorHorario"; break;
-
+               // menu falta case 11!!!!!
             }
 
 
@@ -776,8 +776,23 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel()
         {
-            Utility.GenerarColumnasGrid(gvEstadistica, gvEstadistica.DataSource as DataTable);
-            Utility.ExportGridViewToExcel(gvEstadistica, "estadistica");
+            DataTable tabla = new DataTable();
+
+            if (Session["informe"].ToString() == "General")
+                tabla = GetDatosEstadistica("GV");
+            else 
+            {
+                if (Session["informe"].ToString() == "PorResultado")
+                    tabla = GetDatosPorResultado();
+            }
+
+            GridView dg = new GridView();
+            dg.EnableViewState = false;
+            dg.DataSource = tabla;
+            dg.RowDataBound += new GridViewRowEventHandler(gvEstadistica_RowDataBound);
+            dg.DataBind();
+            Utility.GenerarColumnasGrid(dg, tabla);
+            Utility.ExportGridViewToExcel(dg, "estadistica");
 
             //StringBuilder sb = new StringBuilder();
             //StringWriter sw = new StringWriter(sb);

@@ -197,7 +197,7 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel(string nombreArchivo)
         {
-            Utility.ExportGridViewToExcel(GridView1, nombreArchivo);
+           Utility.ExportGridViewToExcel(GridView1, nombreArchivo);
 
             //StringBuilder sb = new StringBuilder();
             //StringWriter sw = new StringWriter(sb);
@@ -233,6 +233,9 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel2(string p)
         {
+           // gvProtocolos.EnableViewState = false;
+            //gvProtocolos.RowDataBound += new GridViewRowEventHandler(GridView2_RowDataBound); //Para que ponga el pie de "Totales"
+            //gvProtocolos.DataBind();
             Utility.ExportGridViewToExcel(gvProtocolos, p);
             //StringBuilder sb = new StringBuilder();
             //StringWriter sw = new StringWriter(sb);
