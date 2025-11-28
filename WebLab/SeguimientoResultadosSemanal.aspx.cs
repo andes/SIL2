@@ -223,7 +223,7 @@ and  ir.baja=0
                     //Response.End();
                 }
             }
-            catch(Exception e)
+            catch
             {
 
                 lblError.Text = "Ha superado el límite para exportar datos. Comuniquese con el administrador.";
