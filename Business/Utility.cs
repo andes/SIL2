@@ -889,10 +889,8 @@ namespace Business
 
                 HttpResponse response = HttpContext.Current.Response;
 
-                // Define el color de fondo por defecto si no se proporciona
-                //    --azul-neuquen: #2b3e4c;
-                Color finalBackColor = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
-
+               //  Color finalBackColor  = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
+               // Color fontColor = Color.White
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Crear una nueva hoja de trabajo
@@ -966,12 +964,15 @@ namespace Business
                     // Rango del encabezado: Desde A1 hasta el final de la primera fila
                     using (var range = worksheet.Cells[1, 1, 1, colCount])
                     {
-                        ApplyHeaderStyle(range, finalBackColor);
+                        ExcelEstilo(range);
                     }
 
                     // Autoajusta las columnas
                     worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
+                    //Todas las celdas
+                    var range2 = worksheet.Cells[1, 1, rowCount+1, colCount]; //row+1 asi cuenta la fila del encabezado.
+                    ExcelBordes(range2);
                     // --- CONFIGURAR RESPUESTA HTTP ---
                     response.Clear();
                     response.Buffer = true;
@@ -990,12 +991,24 @@ namespace Business
 
         }
        
-        private static void ApplyHeaderStyle(ExcelRange range, Color backColor)
+        private static void ExcelEstilo(ExcelRange range, Color? backColor = null, Color? fontColor = null)
         {
+            Color finalBackColor = backColor ?? Color.Transparent;
+            Color finalFontColor = fontColor ?? Color.Black;
+
             range.Style.Font.Bold = true;
             range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-            range.Style.Fill.BackgroundColor.SetColor(backColor);
-            range.Style.Font.Color.SetColor(Color.White); // Color de fuente blanco (opcional)
+            range.Style.Fill.BackgroundColor.SetColor(finalBackColor);
+            range.Style.Font.Color.SetColor(finalFontColor);
+            range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+        }
+
+        private static void ExcelBordes(ExcelRange rango)
+        {
+            rango.Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            rango.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+            rango.Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            rango.Style.Border.Right.Style = ExcelBorderStyle.Thin;
         }
 
         public static void ExportGridViewToExcel(GridView grid, string nombreArchivo)
@@ -1018,7 +1031,7 @@ namespace Business
 
                     if (encabezadoColor == fontColor)
                     {
-                        encabezadoColor = Color.White;
+                        encabezadoColor = Color.Transparent;
                         fontColor = Color.Black;
                     }
                     foreach (DataControlField column in grid.Columns)
