@@ -229,32 +229,34 @@ order by cantidad  desc ";
                     DataTable tabla = MostrarDatos(oItem);
                     if (tabla.Rows.Count > 0)
                     {
-                        StringBuilder sb = new StringBuilder();
-                        StringWriter sw = new StringWriter(sb);
-                        HtmlTextWriter htw = new HtmlTextWriter(sw);
-                        Page pagina = new Page();
-                        HtmlForm form = new HtmlForm();
-                        GridView dg = new GridView();
-                        dg.EnableViewState = false;
-                        dg.DataSource = tabla;
+                        Utility.ExportDataTableToXlsx(tabla, "VigilanciaGenomica_" + DateTime.Now.ToShortDateString());
+                        //StringBuilder sb = new StringBuilder();
+                        //StringWriter sw = new StringWriter(sb);
+                        //HtmlTextWriter htw = new HtmlTextWriter(sw);
+                        //Page pagina = new Page();
+                        //HtmlForm form = new HtmlForm();
+                        //GridView dg = new GridView();
+                        //dg.EnableViewState = false;
+                        //dg.DataSource = tabla;
 
-                        dg.RowDataBound += new GridViewRowEventHandler(GridView1_RowDataBound);
+                        //dg.RowDataBound += new GridViewRowEventHandler(GridView1_RowDataBound1);
 
 
-                        dg.DataBind();
-                        pagina.EnableEventValidation = false;
-                        pagina.DesignerInitialize();
-                        pagina.Controls.Add(form);
-                        form.Controls.Add(dg);
-                        pagina.RenderControl(htw);
-                        Response.Clear();
-                        Response.Buffer = true;
-                        Response.ContentType = "application/vnd.ms-excel";
-                        Response.AddHeader("Content-Disposition", "attachment;filename=VigilanciaGenomica_" + DateTime.Now.ToShortDateString() + ".xls");
-                        Response.Charset = "UTF-8";
-                        Response.ContentEncoding = Encoding.Default;
-                        Response.Write(sb.ToString());
-                        Response.End();
+                        //dg.DataBind();
+
+                        //pagina.EnableEventValidation = false;
+                        //pagina.DesignerInitialize();
+                        //pagina.Controls.Add(form);
+                        //form.Controls.Add(dg);
+                        //pagina.RenderControl(htw);
+                        //Response.Clear();
+                        //Response.Buffer = true;
+                        //Response.ContentType = "application/vnd.ms-excel";
+                        //Response.AddHeader("Content-Disposition", "attachment;filename=VigilanciaGenomica_" + DateTime.Now.ToShortDateString() + ".xls");
+                        //Response.Charset = "UTF-8";
+                        //Response.ContentEncoding = Encoding.Default;
+                        //Response.Write(sb.ToString());
+                        //Response.End();
                     }
                 }
             }

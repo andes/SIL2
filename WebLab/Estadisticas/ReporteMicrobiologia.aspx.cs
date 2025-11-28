@@ -1455,23 +1455,21 @@ where A.resultado<>'' and  A.germen like '%" + s_germen +"%' and A.idItem=" + dd
 
         protected void imgPacientesMecanismo_Click(object sender, ImageClickEventArgs e)
         {
-            GridView dg = new GridView();
-            dg.EnableViewState = false;
-            dg.DataSource = GetDataPacientes("Mecanismo");
-            dg.DataBind();
-            Utility.GenerarColumnasGrid(dg, dg.DataSource as DataTable);
-            Utility.ExportGridViewToExcel(dg, ddlAnalisis.SelectedItem.Text + "_Mecanismo");
+           Utility.ExportDataTableToXlsx(GetDataPacientes("Mecanismo"), ddlAnalisis.SelectedItem.Text + "_Mecanismo");
             //    StringBuilder sb = new StringBuilder();
             //    StringWriter sw = new StringWriter(sb);
             //    HtmlTextWriter htw = new HtmlTextWriter(sw);
 
             //    Page page = new Page();
             //    HtmlForm form = new HtmlForm();
-         
+
 
             //    // Deshabilitar la validación de eventos, sólo asp.net 2
             //    page.EnableEventValidation = false;
-
+            //GridView dg = new GridView();
+            //dg.EnableViewState = false;
+            //dg.DataSource = GetDataPacientes("Mecanismo");
+            //dg.DataBind();
             //    // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
             //    page.DesignerInitialize();
             //    page.Controls.Add(form);
