@@ -195,18 +195,19 @@ and  ir.baja=0
                 DataTable tabla = MostrarDatos();
                 if (tabla.Rows.Count > 0)
                 {
+                    Utility.ExportDataTableToXlsx(tabla, "CodVid_Resumen_" + DateTime.Now.ToShortDateString());
                     //StringBuilder sb = new StringBuilder();
                     //StringWriter sw = new StringWriter(sb);
                     //HtmlTextWriter htw = new HtmlTextWriter(sw);
                     //Page pagina = new Page();
                     //HtmlForm form = new HtmlForm();
-                    GridView dg = new GridView();
-                    dg.EnableViewState = false;
-                    dg.DataSource = tabla;
-                    dg.RowDataBound += new GridViewRowEventHandler(GridView1_RowDataBound1);
-                    dg.DataBind();
-                    Utility.GenerarColumnasGrid(dg, dg.DataSource as DataTable);
-                    Utility.ExportGridViewToExcel(dg, "CodVid_Resumen_" + DateTime.Now.ToShortDateString() );
+                    //GridView dg = new GridView();
+                    //dg.EnableViewState = false;
+                    //dg.DataSource = tabla;
+                    //dg.RowDataBound += new GridViewRowEventHandler(GridView1_RowDataBound1);
+                    //dg.DataBind();
+                    //Utility.GenerarColumnasGrid(dg, dg.DataSource as DataTable);
+
                     //pagina.EnableEventValidation = false;
                     //pagina.DesignerInitialize();
                     //pagina.Controls.Add(form);
@@ -222,7 +223,7 @@ and  ir.baja=0
                     //Response.End();
                 }
             }
-            catch(Exception e)
+            catch
             {
 
                 lblError.Text = "Ha superado el límite para exportar datos. Comuniquese con el administrador.";
