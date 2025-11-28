@@ -996,6 +996,12 @@ namespace Business
             Color finalBackColor = backColor ?? Color.Transparent;
             Color finalFontColor = fontColor ?? Color.Black;
 
+            if (backColor == fontColor)
+            {
+                finalBackColor = Color.Transparent;
+                finalFontColor = Color.Black;
+            }
+            range.Style.Border.BorderAround(ExcelBorderStyle.Thin);
             range.Style.Font.Bold = true;
             range.Style.Fill.PatternType = ExcelFillStyle.Solid;
             range.Style.Fill.BackgroundColor.SetColor(finalBackColor);
@@ -1050,7 +1056,7 @@ namespace Business
                     fila++;
 
                     // ================================
-                    // 2) Escribir filas + colores del GridView
+                    // 2) Escribir filas 
                     // ================================
                     foreach (GridViewRow row in grid.Rows)
                     {
@@ -1058,54 +1064,38 @@ namespace Business
 
                         foreach (TableCell cell in row.Cells)
                         {
-                            // (2) Decodificar texto HTML
-                            var texto = HttpUtility.HtmlDecode(cell.Text);
-
-                            // (1) Detectar si es número
-                            double numero;
-                            bool esNumero = double.TryParse(
-                                texto,
-                                System.Globalization.NumberStyles.Any,
-                                System.Globalization.CultureInfo.GetCultureInfo("es-ES"), // Usar una cultura que use la coma como separador decimal
-                                out numero
-                            );
-
-                            if (esNumero)
-                            {
-                                ws.Cells[fila, col].Value = numero;
-                            }
-                            else
-                            {
-                                ws.Cells[fila, col].Value = texto;
-                            }
-
-                            // Aplicar colores si existen
-                           
-                            
-                            if (cell.BackColor != Color.Empty)
-                            {
-                                ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                                ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(cell.BackColor);
-                            }
-
-                            if (cell.ForeColor != Color.Empty)
-                            {
-                                ws.Cells[fila, col].Style.Font.Color.SetColor(cell.ForeColor);
-                            }
-                            
-                            
-
-                            ws.Cells[fila, col].Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                            ws.Cells[fila, col].Style.Font.Size = 9;
-                            //ws.Cells[fila, col].Style.WrapText = true; //Ajusta texto largo en la celda
+                            ExcelCompletarFilas(ws, cell, fila, col);
                             col++;
                         }
 
                         fila++;
                     }
-
+                    //Todas las celdas
+                    var range2 = ws.Cells[1, 1, grid.Rows.Count + 1, grid.Columns.Count]; 
+                    ExcelBordes(range2);
                     // Autoajustar columnas
                     ws.Cells[1, 1, fila - 1, grid.Columns.Count].AutoFitColumns();
+
+                    // ================================
+                    // 2.2) Escribir filas del footer
+                    // ================================
+
+                    GridViewRow filaFooter =  grid.FooterRow;
+                    col = 1;
+
+                    if (tieneValores(filaFooter.Cells))
+                    {
+                        foreach (TableCell cell in filaFooter.Cells)
+                        {
+                            ExcelCompletarFilas(ws, cell, fila, col, encabezadoColor, fontColor);
+                            ws.Cells[fila, col].Style.Font.Bold = true;
+                            ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                            ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(encabezadoColor);
+                            ws.Cells[fila, col].Style.Font.Color.SetColor(fontColor);
+                            col++;
+                        }
+                        ExcelBordes(ws.Cells[grid.Rows.Count + 2,1, grid.Rows.Count + 2,col-1 ]);
+                    }
 
                     // ================================
                     // 3) Descargar archivo
@@ -1121,6 +1111,58 @@ namespace Business
                 }
             }
             
+        }
+        private static bool tieneValores(TableCellCollection footer) 
+        {
+
+            foreach (TableCell cell in footer)
+            {
+                var texto = HttpUtility.HtmlDecode(cell.Text);
+                if (!string.IsNullOrEmpty(texto.Trim()))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static void ExcelCompletarFilas(ExcelWorksheet ws, TableCell cell, int fila, int col, Color? encabezadoColor = null, Color? fontColor = null)
+        {
+            // (2) Decodificar texto HTML
+            var texto = HttpUtility.HtmlDecode(cell.Text);
+            // (1) Detectar si es número
+            double numero;
+            bool esNumero = double.TryParse(
+                texto,
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.GetCultureInfo("es-ES"), // Usar una cultura que use la coma como separador decimal
+                out numero
+            );
+
+            if (esNumero)
+            {
+                ws.Cells[fila, col].Value = numero;
+            }
+            else
+            {
+                ws.Cells[fila, col].Value = texto;
+            }
+
+            // Aplicar colores si existen
+
+
+            if (cell.BackColor != Color.Empty)
+            {
+                ws.Cells[fila, col].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ws.Cells[fila, col].Style.Fill.BackgroundColor.SetColor(cell.BackColor);
+            }
+
+            if (cell.ForeColor != Color.Empty)
+            {
+                ws.Cells[fila, col].Style.Font.Color.SetColor(cell.ForeColor);
+            }
+              
+            ws.Cells[fila, col].Style.Font.Size = 9;
+         
         }
 
         public static void GenerarColumnasGrid(GridView grid, DataTable dt)
