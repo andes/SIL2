@@ -4036,7 +4036,16 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             string[] tabla = TxtDatos.Value.Split('@');
             string listaCodigo = "";
 
-             for (int i = 0; i < tabla.Length - 1; i++)
+            var subItemsEnBD = new Dictionary<int, int>();
+            List<Item> subItemsEnDB = new List<Item>();
+            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+            if(Request["idProtocolo"] != null)
+            {
+                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+            }
+
+
+            for (int i = 0; i < tabla.Length - 1; i++)
             
             {
                 string[] fila = tabla[i].Split('#');
@@ -4046,57 +4055,51 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 else
                     listaCodigo += ",'" + codigo + "'";
 
-                int i_idItemPractica = 0;
+                // int i_idItemPractica = 0;
                 if (codigo != "")
                 {
+                    //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
 
                     Item oItem = new Item();
-                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);                 
-                    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
-                    { 
+                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
 
-                    i_idItemPractica = oItem.IdItem;
-                        for (int j = 0; j < tabla.Length - 1; j++)
-
+                    if (Request["Operacion"].ToString() == "Modifica")
+                    {
+                        try
                         {
-                            string[] fila2 = tabla[j].Split('#');
-                            string codigo2 = fila2[1].ToString();
-                            if ((codigo2 != "") && (codigo != codigo2))
+                            ISession m_session = NHibernateHttpModule.CurrentSession;
+                            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+                            crit.Add(Expression.Eq("IdItem", oItem));
+                            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+                            IList lista = crit.List();
+
+                            if(lista.Count ==  0)//no esta en la base
                             {
-                                Item oItem2 = new Item();
-                                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
-
-                                //MultiEfector: filtro por efector
-
-
-                                ISession m_session = NHibernateHttpModule.CurrentSession;
-                                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
-                                crit.Add(Expression.Eq("IdItemPractica", oItem));
-                                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
-                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
-
-
-
-                                if (oGrupo != null)
+                                devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, subItemsEnBD);
+                               
+                            }
+                            else
+                            {
+                                foreach (Business.Data.Laboratorio.DetalleProtocolo oDetalle in lista)
                                 {
-
-                                    this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
-                                    devolver = false; break;
-
+                                    subItemsEnBD[oDetalle.IdSubItem.IdItem] = oDetalle.IdItem.IdItem;
                                 }
 
                             }
-                        
-                    }////for           
+                        }
+                        catch(Exception e) 
+                        {
+                            this.cvValidacionInput.ErrorMessage = e.Message;
+                            devolver = false; break;
+                        }
+                       
                     }
                     else
                     {
-                        this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
-                        devolver = false; break;
-
+                        devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla);
                     }
 
+                   
                 }/// if codigo
                 if (!devolver) break;
             }
@@ -4108,6 +4111,105 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
          
         }
 
+        private bool VerificaMuestrasAsociadas(string codigo, Item oItem, string[] tabla, Dictionary<int,int> itemsEnBD = null)
+        {
+            bool devolver = true;
+
+
+            if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
+            {
+
+                
+                for (int j = 0; j < tabla.Length - 1; j++)
+
+                {
+                    string[] fila2 = tabla[j].Split('#');
+                    string codigo2 = fila2[1].ToString();
+                    if ((codigo2 != "") && (codigo != codigo2))
+                    {
+                        Item oItem2 = new Item();
+                        oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+
+                        //MultiEfector: filtro por efector
+
+
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                        crit.Add(Expression.Eq("IdItemPractica", oItem));
+                        crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+                        crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                        PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+
+
+                        if (oGrupo != null)
+                        {
+
+                            this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+                            devolver = false; break;
+
+                        }
+
+                        // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+                        //Verifico que el codigo cargado tampoco este en mi lista de subItems de la base de datos!
+
+                        if (itemsEnBD != null)
+                        { 
+                            Item oItemExistente = new Item();
+                            bool hayConflicto = false;
+                            int itemExistente=0;
+
+                            m_session = NHibernateHttpModule.CurrentSession;
+                            crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                            crit.Add(Expression.Eq("IdItemPractica", oItem));
+                            crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                            IList detalle = crit.List();
+
+                            if (detalle.Count > 0) //Es practica
+                            {
+                                foreach (PracticaDeterminacion item in detalle)
+                                {
+                                    if (itemsEnBD.ContainsKey(item.IdItemDeterminacion))
+                                    {
+                                        itemExistente = itemsEnBD[item.IdItemDeterminacion];
+                                         hayConflicto = true; break;
+                                    }
+                                }
+                            }
+                            else //es determinacion simple idItem=idSubitem
+                            {
+                                if (itemsEnBD.ContainsKey(oItem.IdItem))
+                                {
+                                    itemExistente = itemsEnBD[oItem.IdItem];
+                                    hayConflicto = true; 
+                                }
+                            }
+
+                            if (hayConflicto)
+                            {
+                                oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente, "Baja", false);
+
+                                this.cvValidacionInput.ErrorMessage =
+                                    "Ha cargado análisis contenidos en otros. Verifique los códigos " +
+                                    codigo + " y " + oItemExistente.Codigo + "!";
+
+                                devolver = false;
+                            }
+
+                        }
+                    }
+
+                }////for           
+            }
+            else
+            {
+                this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+                devolver = false; //break;
+
+            }
+
+            return devolver;
+        }
         private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
         { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
             bool devolver = true;
