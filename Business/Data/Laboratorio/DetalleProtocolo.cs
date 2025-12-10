@@ -7,6 +7,7 @@ using NHibernate;
 using NHibernate.Expression;
 using System.Data;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 
 namespace Business.Data.Laboratorio
 {
@@ -654,15 +655,113 @@ namespace Business.Data.Laboratorio
 		{
 			get { return m_isChanged; }
 		}
-				
-		#endregion 
+
+        #endregion
 
 
         ///Metodos
         ///
+        public string CalcularValoresReferencia(int pres)
+        {
+          
+            int edadPaciente = IdProtocolo.Edad;
+
+            switch (IdProtocolo.UnidadEdad)//Calcular edad del paciente en días
+            {
+                case 0: // años
+                    edadPaciente *= 365;
+                    break;
+                case 1: // meses
+                    edadPaciente *= 30;
+                    break;
+            }
+                                    
+            string sexoProtocolo = IdProtocolo.Sexo; //sexo del paciente
+
+            if (IdProtocolo.Embarazada == "S")
+                sexoProtocolo = "E";
+
+            
+            List<string> prioridadesSexo = new List<string>();  //prioridad de sexo
+
+            if (sexoProtocolo == "E")
+                prioridadesSexo.AddRange(new[] { "E", "F", "I" });
+            else if (sexoProtocolo == "F")
+                prioridadesSexo.AddRange(new[] { "F", "I" });
+            else if (sexoProtocolo == "M")
+                prioridadesSexo.AddRange(new[] { "M", "I" });
+            else
+                prioridadesSexo.AddRange(new[] { sexoProtocolo, "I" });
+
+                       
+            ISession session = NHibernateHttpModule.CurrentSession;
+            IList  items = null;
+
+            foreach (string sexo in prioridadesSexo) ///Buscar primer grupo válido de sexo en la base
+            {
+                ICriteria crit = session.CreateCriteria(typeof(ValorReferencia));
+                crit.Add(Expression.Eq("IdItem", IdSubItem));
+                crit.Add(Expression.Eq("IdEfector", IdProtocolo.IdEfector));
+                crit.Add(Expression.Eq("IdPresentacion", pres));
+                crit.Add(Expression.Eq("Sexo", sexo));
+
+                 items = crit.List();
+
+                if (items != null && items.Count > 0)
+                    break; // encontramos registros válidos, usamos este grupo
+            }
+
+            if (items == null || items.Count == 0)
+                return "";
+
+            
+            string valorReferencia = "";
+            string metodo = "";
+
+            foreach (ValorReferencia vr in items) ///Procesa valores de referencia
+            {
+                int desde = vr.EdadDesde;
+                int hasta = vr.EdadHasta;
+
+                switch (vr.UnidadEdad)
+                {
+                    case 0: desde *= 365; hasta *= 365; break;
+                    case 1: desde *= 30; hasta *= 30; break;
+                }
+
+                if (edadPaciente < desde || edadPaciente > hasta)
+                    continue;
+
+                string vMin = Math.Round(vr.ValorMinimo, vr.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                string vMax = Math.Round(vr.ValorMaximo, vr.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                if (!string.IsNullOrEmpty(valorReferencia))
+                    valorReferencia += Environment.NewLine;
+
+                switch (vr.TipoValor)
+                {
+                    case 0: valorReferencia += $"{vMin} a {vMax} {vr.Observacion}"; break;
+                    case 1: valorReferencia += $"Mayor de: {vMin} {vr.Observacion}"; break;
+                    case 2: valorReferencia += $"Hasta: {vMax} {vr.Observacion}"; break;
+                    case 3: valorReferencia += vr.Observacion; break;
+                }
+
+                if (vr.IdMetodo != 0 && string.IsNullOrEmpty(metodo))
+                {
+                    Metodo m = (Metodo)new Metodo().Get(typeof(Metodo), vr.IdMetodo);
+                    if (m != null)
+                        metodo = m.Nombre;
+                }
+            }
+             
+            if (!string.IsNullOrEmpty(metodo))
+                valorReferencia += Environment.NewLine + " |Método: " + metodo;
+
+            return valorReferencia;
+        }
 
 
-        public string CalcularValoresReferencia(int pres )
+        public string CalcularValoresReferencia_old(int pres )
         {
             int edadPaciente= IdProtocolo.Edad;
             string valorReferencia = "";

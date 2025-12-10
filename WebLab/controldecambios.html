@@ -34,6 +34,56 @@
 
            
             <h2>Lista de cambios en SIL2</h2>
+            <div class="fecha">2025.12.10</div>
+            <ul>                
+                <li class="cambio">
+                    <strong>Mecanismos de Resistencia en Microbiologia:</strong> Se agrega posibilidad de modificar los mecanismos de resistencia de ATB cargados previamente.<strong>Nueva Funcionalidad</strong>
+                </li>
+                <li class="cambio">
+                    <strong>Usuarios:</strong> Se agrega posibilidad de cambiar estado (Activo/Inactivo) de los usuarios, desde el perfil Bioquimico, de cada Laboratorio.<strong>Nueva Funcionalidad</strong>
+                </li>
+            </ul>
+
+			  <div class="fecha">2025.12.04</div>
+            <ul>
+                <li class="cambio">  <strong>Derivaciones:</strong>Se realizan mejoras en el PDF de Control de Derivaciones; agregando el estado de la derivacion entre otras mejoras.<strong>Nueva Funcionalidad</strong>
+                 </li>
+                <li class="cambio">
+                    <strong>Mecanismos de Resistencia en Microbiologia:</strong> API Resultados para ANDES. Se corrige visualizacion en casos de mas un ATB con mas de un mecanismo de resistencia.
+                </li>
+                    </ul>
+            <div class="fecha">2025.12.02</div>
+            <ul>
+                <li class="cambio">
+                    <strong>Mecanismos de Resistencia en Microbiologia:</strong>Se corrige error en boton "Mostrar Resultados anteriores" reportado por JNA
+                 </li>
+                <li class="cambio">
+                    <strong>Valor de Referencia:</strong> Ajuste en forma de determinar el valor de referencia por paciente:
+                    <ul>
+                        <li class="cambio2">Si el diagnóstico indica embarazo (código Z32.1), se asigna el VR específico para Embarazada (E).</li>
+                        <li class="cambio2">Si no existe un VR definido para embarazadas en la configuración, se utiliza en primera instancia el VR correspondiente a Femenino (F).</li>
+                        <li class="cambio2">Si tampoco existe un VR definido para Femenino, se utiliza el VR de Indistinto (I), que aplica a cualquier sexo.</li>
+                    </ul>
+                </li>
+                    </ul>
+                
+            <div class="fecha">2025.11.18</div>
+            <ul>
+                <li class="cambio">
+                    <strong>Mecanismos de Resistencia en Microbiologia:</strong>
+                    <ul>
+                        <li class="cambio2">Se agrega la posibilidad de registrar en los ATB multiples mecanismos de resistencia. <strong>Nueva Funcionalidad</strong></li>
+                        <li class="cambio2">Se corrige edicion de ATB con mecanismos de resistencia, entre otras mejoras relacionadas</li>
+                    </ul>
+                <li class="cambio">
+                    <strong>Derivaciones: </strong>Se agrega posibilidad de descargar PDF de derivaciones en cualquier estado de la derivacion.<strong>Nueva Funcionalidad</strong>
+                </li>
+                <li class="cambio">
+                    <strong>Interoperabilidad SNVS: </strong>Se inhabilita servicio para Eventos Sifilis.
+                </li>
+
+            </ul>
+
 			  <div class="fecha">2025.11.11</div>
             <ul>
                 <li class="cambio">

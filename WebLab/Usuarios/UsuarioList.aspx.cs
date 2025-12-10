@@ -36,8 +36,10 @@ namespace WebLab.Usuarios
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+          
             if (!Page.IsPostBack)
             {
+                RegistrarScriptConfirmacion();
                 VerificaPermisos("Usuarios");
                 CargarListas();
                 CargarGrilla();
@@ -47,7 +49,20 @@ namespace WebLab.Usuarios
                 }
             }
         }
+        private void RegistrarScriptConfirmacion()
+        {
+            string script = @"function PreguntoCambiarEstado() { 
+                        return confirm('¿Está seguro de cambiar estado?'); 
+                      }";
 
+            ScriptManager.RegisterClientScriptBlock(
+                this,
+                this.GetType(),
+                "PreguntoCambiarEstado",
+                script,
+                true
+            );
+        }
         private int Permiso /*el permiso */
         {
             get { return ViewState["Permiso"] == null ? 0 : int.Parse(ViewState["Permiso"].ToString()); }
@@ -99,7 +114,7 @@ namespace WebLab.Usuarios
         private object LeerDatos()
         {
             string m_strSQL = @"SELECT     U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
-case when U.activo=1 then 'Si' else 'No' end  as habilitado
+case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo
 FROM         Sys_Usuario AS U (nolock) INNER JOIN
                       Sys_Perfil AS P (nolock)  ON U.idPerfil = P.idPerfil inner join
 					  Sys_UsuarioEfector UE (nolock)  on Ue.idusuario= U.idUsuario inner join
@@ -169,6 +184,12 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
                 CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdModificar.CommandName = "Modificar";
 
+                CheckBox chk = (CheckBox)e.Row.FindControl("chkStatus");
+                if (chk != null)
+                {
+                    chk.InputAttributes["onchange"] =
+                "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
+                }
 
                 if (Permiso == 1)
                 {
@@ -180,7 +201,34 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
                 }
             }
         }
+        protected void chkStatus_OnCheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chkStatus = (CheckBox)sender;
+            GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
 
+            int i_id = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
+
+            string accion = "";
+            if (chkStatus.Checked) accion = "Habilita"; else accion = "Dehabilita";
+
+
+
+            Usuario oRegistro = new Usuario();
+                oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), i_id);
+
+
+
+            if (oRegistro != null)
+            {
+                oRegistro.Activo = chkStatus.Checked;
+
+                oRegistro.Save();
+
+                oUser.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
+            }
+            CargarGrilla();
+
+        }
         protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarGrilla();
