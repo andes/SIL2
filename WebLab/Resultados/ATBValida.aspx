@@ -70,18 +70,22 @@
                                 &nbsp;(<asp:Label ID="lblPractica" runat="server" Text="Label"></asp:Label>
                                 )</td>
                         </tr>
-                        <%--      <tr>
-                            <td class="style2" style="vertical-align: top">
-                                Mecanismos R:</td>
+                           <tr>
+                            <td class="auto-style4">
+                                Mecanismo:</td>
                             <td colspan="2">
-                                <asp:Label ID="lblMecanismoResistencia" runat="server" Text="Label"></asp:Label>
-                            </td>
-                        </tr>--%>
+                                 <asp:CheckBoxList ID="chkMecanismoResistencia" runat="server" RepeatDirection="Horizontal" ></asp:CheckBoxList></td>
+                        </tr>
                         <tr>
                             <td class="auto-style4">
                                 &nbsp;</td>
                             <td colspan="3">
-                                &nbsp;</td>
+                          <asp:Button ID="btnValidarMecanismo" runat="server" AccessKey="D" CssClass="myButtonGris"  
+                                                      TabIndex="600" Text="Guardar y Validar Mecanismos" Width="180px" OnClick="btnValidarMecanismo_Click"    />
+                                   
+                                <asp:Label ID="lblMensajeMecanismo" Visible="false" runat="server" Font-Bold="True" ForeColor="#CC3300"></asp:Label>
+                                   
+                            </td>
                         </tr>
                         <tr>
                             <td class="style2" colspan="4">
@@ -134,6 +138,8 @@
                             </td>
                         </tr>
                                               
+                      
+                                              
                         <tr>
                             <td class="style2" colspan="4">
                               <hr /></td>
@@ -154,6 +160,18 @@
                                         onservervalidate="CustomValidator1_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                                    
                     </td>
+                </tr>
+                <tr>
+                      <td  style="vertical-align: top" >
+                                   
+                                                 
+                                                 </td>
+                      <td  style="vertical-align: top" align="right" >
+                          <asp:Button ID="btnDesValidar" runat="server" AccessKey="D" CssClass="myButtonGris" onclick="btnDesValidar_Click" 
+                                                      TabIndex="600" Text="Desvalidar" ToolTip="Alt+Shift+D:Desvalida lo validado por el usuario actual"   />
+                                   
+                          <asp:Button ID="btnValidarATB" runat="server" CssClass="myButtonGris" Text="Validar ATB" OnClick="btnValidarATB_Click" />
+                                                 </td>
                 </tr>
                   <tr>
                       <td  style="vertical-align: top" colspan="2" >
@@ -211,17 +229,7 @@
                 </tr>
                
                
-                  <tr>
-                      <td  style="vertical-align: top" >
-                                   
-                                                 <asp:Button ID="btnDesValidar" runat="server" AccessKey="D" CssClass="myButtonGris" onclick="btnDesValidar_Click" 
-                                                      TabIndex="600" Text="Desvalidar" ToolTip="Alt+Shift+D:Desvalida lo validado por el usuario actual"   />
-                                   
-                                                 </td>
-                      <td  style="vertical-align: top" align="right" >
-                          <asp:Button ID="btnValidarATB" runat="server" CssClass="myButtonGris" Text="Validar ATB" OnClick="btnValidarATB_Click" />
-                                                 </td>
-                </tr>
+                 
                
                
                   <tr>

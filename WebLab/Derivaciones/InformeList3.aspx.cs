@@ -162,18 +162,24 @@ namespace WebLab.Derivaciones
             int estado = Convert.ToInt16(Request["Estado"]);
             string motivoCancelacion = "";
             string tiposProducto = "";
+            string strDer = "";
             if (s_donde == "")
                 motivoCancelacion = " , isnull(mot.descripcion,'') as motivo ";
             else
+            { 
                 tiposProducto = " , idTipoServicio , TipoProducto ";
+                strDer = ", de.descripcion as estadoDerivacion";
+            }
 
             string m_strSQL = " SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
             " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , " +
-            " solicitante as especialista , isnull(idlote,0) as idLote " + motivoCancelacion + tiposProducto +
+            " solicitante as especialista , isnull(idlote,0) as idLote " + motivoCancelacion + tiposProducto + strDer +
             " FROM  vta_LAB_Derivaciones vta ";
 
             if (s_donde == "")
-                 m_strSQL+= " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+                m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+            else
+                m_strSQL += " inner join LAB_DerivacionEstado de on de.idEstado = vta.estado ";
 
             m_strSQL +=  " WHERE ";
 

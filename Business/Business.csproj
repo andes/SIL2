@@ -151,6 +151,7 @@
     <Compile Include="Data\Laboratorio\LoteDerivacionEstado.cs" />
     <Compile Include="Data\Laboratorio\LoteDerivacion.cs" />
     <Compile Include="Data\Laboratorio\Marca.cs" />
+    <Compile Include="Data\Laboratorio\MecanismoResistencia.cs" />
     <Compile Include="Data\Laboratorio\MuestraEfector.cs" />
     <Compile Include="Data\Laboratorio\Area.cs">
       <SubType>Code</SubType>
@@ -174,6 +175,7 @@
     <Compile Include="Data\Laboratorio\Caracter.cs" />
     <Compile Include="Data\Laboratorio\ItemEfector.cs" />
     <Compile Include="Data\Laboratorio\Placa.cs" />
+    <Compile Include="Data\Laboratorio\ProtocoloAtbMecanismo.cs" />
     <Compile Include="Data\Laboratorio\Repositorio.cs" />
     <Compile Include="Data\Laboratorio\RepositorioProtocolo.cs" />
     <Compile Include="Data\Laboratorio\TipoMarcador.cs" />
@@ -319,6 +321,8 @@
     <Content Include="bin\Debug\Iesi.Collections.dll" />
     <Content Include="bin\Debug\log4net.dll" />
     <Content Include="bin\Debug\NHibernate.dll" />
+    <EmbeddedResource Include="Data\Laboratorio\MecanismoResistencia.hbm.xml" />
+    <EmbeddedResource Include="Data\Laboratorio\ProtocoloAtbMecanismo.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\Ficha.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\LoteDerivacionEstado.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\AuditoriaLoteDerivacion.hbm.xml" />

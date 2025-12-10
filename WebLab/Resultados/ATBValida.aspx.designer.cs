@@ -76,6 +76,33 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Label lblPractica;
         
         /// <summary>
+        /// chkMecanismoResistencia control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList chkMecanismoResistencia;
+        
+        /// <summary>
+        /// btnValidarMecanismo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnValidarMecanismo;
+        
+        /// <summary>
+        /// lblMensajeMecanismo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeMecanismo;
+        
+        /// <summary>
         /// ddlPerfilAntibiotico control.
         /// </summary>
         /// <remarks>
@@ -166,15 +193,6 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.CustomValidator CustomValidator1;
         
         /// <summary>
-        /// gvAntiobiograma control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvAntiobiograma;
-        
-        /// <summary>
         /// btnDesValidar control.
         /// </summary>
         /// <remarks>
@@ -191,6 +209,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarATB;
+        
+        /// <summary>
+        /// gvAntiobiograma control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvAntiobiograma;
         
         /// <summary>
         /// ValidationSummary1 control.
