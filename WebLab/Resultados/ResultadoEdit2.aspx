@@ -814,12 +814,10 @@
                                 <asp:ListItem Value="1">CIM</asp:ListItem>
                                 <asp:ListItem Value="2">Etest</asp:ListItem>
                     </asp:RadioButtonList>
-           
-                    <asp:DropDownList class="form-control input-sm"  ID="ddlMecanismoResistencia" runat="server" Width="280px">  </asp:DropDownList>
-               &nbsp;  <%--<asp:RangeValidator ID="rvMecanismoResistencia" runat="server" ControlToValidate="ddlMecanismoResistencia" 
-                        ErrorMessage="*" MaximumValue="9999999" MinimumValue="1" Type="Integer" 
-                        ValidationGroup="A"></asp:RangeValidator>
-                     <br />--%>
+                    <asp:CheckBoxList ID="chkMecanismoResistencia" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
+                   <%-- <asp:DropDownList class="form-control input-sm"  ID="ddlMecanismoResistencia" runat="server" Width="280px">  </asp:DropDownList>--%>
+               &nbsp;  
+                     <br /> 
 
                    <asp:DropDownList class="form-control input-sm"  onselectedindexchanged="ddlPerfilAntibiotico_SelectedIndexChanged" AutoPostBack="true"   ID="ddlPerfilAntibiotico" runat="server" Width="250px">  </asp:DropDownList>
                    <br />
@@ -911,10 +909,10 @@
                
 
                                                     <asp:Button ID="btnEliminarAntibiograma" runat="server" CssClass="btn btn-danger" Enabled="false" onclick="btnEliminarAntibiograma_Click" OnClientClick="return PreguntoEliminar();" Text="Eliminar" ToolTip="Eliminar ATB" ValidationGroup="EA" Width="80px" />
-                                                    <asp:Button ID="btnEditarAntibiograma" runat="server" CssClass="btn btn-success" Enabled="false" onclick="btnEditarAntibiograma_Click" OnClientClick="editarATB(); return false;" Text="Modificar" ToolTip="Modificar ATB" Width="120px" />
+                                                    <asp:Button ID="btnEditarAntibiograma" runat="server" CssClass="btn btn-success" Enabled="false" onclick="btnEditarAntibiograma_Click" OnClientClick="editarATB(); return false;" Text="Modificar" ToolTip="Modificar ATB" Width="150px" />
                                                     <%--<asp:ImageButton ID="ImageButton1" ToolTip="Actualizar vista de antibiogramas" runat="server" ImageUrl="~/App_Themes/default/images/actualizar.gif"  onclick="btnActualizarATB_Click"/>--%><%-- <asp:Button ID="btnActualizarATB" runat="server" Visible="true"  onclick="btnActualizarATB_Click" Text="Actualizar" CssClass="myButtonGris" Width="120px"/>--%>
-                                                    <asp:Button ID="btnValidarAntibiograma" runat="server" CssClass="btn btn-success" onclick="btnEditarAntibiograma_Click" OnClientClick="validarATB(); return false;" Text="Modificar/Validar" ToolTip="Validar ATB" Visible="false" Width="120px" />
-                                                    <asp:Button ID="btnActualizarAntibiograma" runat="server" CssClass="btn btn-success" onclick="btnActualizarAntibiograma_Click" Text="Actualizar" ToolTip="Actualizar ATB" Width="80px" />
+                                                    <asp:Button ID="btnValidarAntibiograma" runat="server" CssClass="btn btn-success" onclick="btnEditarAntibiograma_Click" OnClientClick="validarATB(); return false;" Text="Modificar/Validar" ToolTip="Validar ATB" Visible="false" Width="150px" />
+                                                    <asp:Button ID="btnActualizarAntibiograma" runat="server" CssClass="btn btn-success" onclick="btnActualizarAntibiograma_Click" Text="Actualizar" ToolTip="Actualizar ATB" Width="120px" />
                                               
 
                             

@@ -54,11 +54,58 @@ namespace WebLab.Resultados
 
                 CargarPerfilAntibiotico();
                 CargarListaAntibiotico();
+                CargarMecanismos(oProtocolo, oGermen, oItem, int.Parse(s_idMetodo));
                 ActualizarVistaAntibiograma();
 
             }
           
         }
+
+        private void CargarMecanismos(Protocolo oProtocolo, Germen oGermen, Item oItem, int v)
+        {
+            Utility oUtil = new Utility();
+            string m_ssql = @"SELECT idMecanismoResistencia, sigla as nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
+            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
+
+            for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
+            {
+
+                chkMecanismoResistencia.Items[i].Selected = false;
+               
+                }
+                
+
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloAtbMecanismo));
+            crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+            crit.Add(Expression.Eq("IdMetodologia", v));
+            crit.Add(Expression.Eq("IdGermen", oGermen));
+            crit.Add(Expression.Eq("IdItem", oItem.IdItem));
+             
+            IList lista = crit.List();
+            foreach (ProtocoloAtbMecanismo oRegistro in lista)
+            {
+                int mec1 = oRegistro.IdMecanismoResistencia.IdMecanismoResistencia;
+                for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
+                {
+                   
+                    int mec2 = int.Parse(chkMecanismoResistencia.Items[i].Value);
+                    if (mec1 == mec2)
+                    {
+                        chkMecanismoResistencia.Items[i].Selected = true;
+                        break;
+                    }
+
+                
+
+                }
+
+            }
+        }
+
+
+
         private void CargarPerfilAntibiotico()
         {
             Utility oUtil = new Utility();
@@ -426,6 +473,102 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             ValidarATB(false);
             ActualizarVistaAntibiograma();
         }
-       
+
+        protected void btnValidarMecanismo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //int mecSel = 0;
+                //for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
+                //{
+                //    if (chkMecanismoResistencia.Items[i].Selected)
+                //        mecSel += 1;
+                //}
+                //if (mecSel > 0)//si hay al menos uno seleccionado hago algo sino no.
+                //{
+                string s_iditem = Request["idItem"].ToString();
+                string s_idProtocolo = Request["idProtocolo"].ToString();
+                string s_idGermen = Request["idGermen"].ToString();
+                string s_idMetodo = Request["idMetodo"].ToString();
+                string s_numeroAislamiento = Request["numeroAislamiento"].ToString();
+
+                Protocolo oProtocolo = new Protocolo();
+                oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
+
+                Germen oGermen = new Germen();
+                oGermen = (Germen)oGermen.Get(typeof(Germen), int.Parse(s_idGermen));
+                if ((oProtocolo!=null) && (oGermen!= null))
+                    GuardarMecanismo(oProtocolo, oGermen, int.Parse(s_idMetodo), int.Parse(s_iditem));
+
+                lblMensajeMecanismo.Visible = true;
+                lblMensajeMecanismo.Text = "Mecanismos actualizados";
+               }
+            catch (Exception ex)
+            {                
+                lblMensajeMecanismo.Visible = true;
+                lblMensajeMecanismo.Text = "Ha ocurrido un error. Avise al administrador";
+            }
+        }
+
+        private void GuardarMecanismo(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem)
+        {
+            try
+            { 
+            Usuario oUser = new Usuario();
+            // if (Session["idUsuarioValida"]!=null)
+            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
+            if (oUser != null)
+            {             
+
+                for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
+                {
+                   
+
+                        MecanismoResistencia oM = new MecanismoResistencia();
+                        oM = (MecanismoResistencia)oM.Get(typeof(MecanismoResistencia), int.Parse(chkMecanismoResistencia.Items[i].Value));
+                        ///elimina mecanismos para el atb 
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit2 = m_session.CreateCriteria(typeof(ProtocoloAtbMecanismo));
+                        crit2.Add(Expression.Eq("IdProtocolo", oProtocolo));
+                        crit2.Add(Expression.Eq("IdGermen", oGermen));
+                        crit2.Add(Expression.Eq("IdItem", iditem));
+                        crit2.Add(Expression.Eq("IdMetodologia", idmetodologia));
+                        crit2.Add(Expression.Eq("IdMecanismoResistencia", oM));
+
+                        IList lista2 = crit2.List();
+
+                        if ((chkMecanismoResistencia.Items[i].Selected) && (lista2.Count == 0))//esta seleccionado y no no existe lo agrego                                                
+                        {
+                            ProtocoloAtbMecanismo oRegistro = new ProtocoloAtbMecanismo();
+                            oRegistro.IdProtocolo = oProtocolo;
+                            oRegistro.IdGermen = oGermen;
+                            oRegistro.IdMetodologia = idmetodologia;
+                            oRegistro.IdItem = iditem;
+                            oRegistro.IdMecanismoResistencia = oM;
+                            oRegistro.Save();
+                            oProtocolo.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario, "ATB: " + oGermen.Nombre + "- Mecanismo", oM.Nombre);
+                        }
+                            if ((!chkMecanismoResistencia.Items[i].Selected) && (lista2.Count > 0))//no esta seleccionado y no no existe no hago nada, pero si existe lo borro ya que no esta seleccionado                                             
+                            {
+                                foreach (ProtocoloAtbMecanismo oRegistro2 in lista2)
+                                {
+                                    oRegistro2.Delete();
+                                    oRegistro2.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(oUser.IdUsuario.ToString()), "ATB: " + oRegistro2.IdGermen.Nombre + "- Mecanismo", oM.Nombre);
+
+                                }
+                            }
+                     
+                    }
+
+                
+            }
+            }
+            catch (Exception ex)
+            {
+                lblMensajeMecanismo.Visible = true;
+                lblMensajeMecanismo.Text = "Ha ocurrido un error. Avise al administrador";
+            }
+        }
+
     }
 }

@@ -31,7 +31,7 @@ namespace Business.Data.Laboratorio
         private int m_idusuariovalida;
         private DateTime m_fechavalida;
         private bool m_validavalor;
-        private int m_idmecanismoresistencia;
+        //private int m_idmecanismoresistencia;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -56,7 +56,7 @@ namespace Business.Data.Laboratorio
             m_idusuariovalida = 0;
             m_fechavalida = DateTime.MinValue;
             m_validavalor = false;
-            m_idmecanismoresistencia = 0;
+            //m_idmecanismoresistencia = 0;
         }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
@@ -94,7 +94,7 @@ namespace Business.Data.Laboratorio
             m_idusuariovalida = idusuariovalida;
             m_fechavalida = fechavalida;
             m_validavalor = validaValor;
-            m_idmecanismoresistencia = idmecanismoresistencia;
+            //m_idmecanismoresistencia = idmecanismoresistencia;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -114,16 +114,16 @@ namespace Business.Data.Laboratorio
 
 		}
 
-        public int IdMecanismoResistencia
-        {
-            get { return m_idmecanismoresistencia; }
-            set
-            {
-                m_isChanged |= (m_idmecanismoresistencia != value);
-                m_idmecanismoresistencia = value;
-            }
+        //public int IdMecanismoResistencia
+        //{
+        //    get { return m_idmecanismoresistencia; }
+        //    set
+        //    {
+        //        m_isChanged |= (m_idmecanismoresistencia != value);
+        //        m_idmecanismoresistencia = value;
+        //    }
 
-        }
+        //}
         public int IdItem
         {
             get { return m_iditem; }

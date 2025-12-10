@@ -3088,12 +3088,27 @@ where a.idprotocolo=" + this.IdProtocolo.ToString()+
             //     int s_idSubItem = this.IdSubItem.IdItem;
             string s_idProtocoloActual = this.IdProtocolo.ToString();
             ////muestra el ultimo resultado anterior con mecanismo de ressistecia para el paciente
-            string m_strSQL = @"select top 1   M.nombre , a.fechaValida, P.numero
-from LAB_Antibiograma  a
-inner join LAB_MecanismoResistencia as M on a.idMecanismoResistencia= m.idMecanismoResistencia
-inner join LAB_Protocolo as P on P.idprotocolo= A.idprotocolo
-where a.IdMecanismoResistencia>0 and  a.IdUsuarioValida>0  
+
+            string m_strSQL = @"SELECT TOP 1  
+    STUFF((
+        SELECT DISTINCT '+' + LTRIM(RTRIM(M2.sigla))
+        FROM lab_ProtocoloAtbMecanismo aM2
+        INNER JOIN LAB_MecanismoResistencia M2
+            ON aM2.idMecanismoResistencia = M2.idMecanismoResistencia
+        WHERE aM2.idGermen = A.idGermen
+          AND aM2.idProtocolo = A.idProtocolo
+          AND aM2.idItem = A.idItem
+          AND aM2.idMetodologia = A.idMetodologia
+        FOR XML PATH(''), TYPE
+    ).value('.', 'NVARCHAR(MAX)'), 1, 1, '') AS mecanismos,
+    A.fechaValida,
+    P.numero
+FROM LAB_Antibiograma A WITH (NOLOCK)
+INNER JOIN LAB_Protocolo P WITH (NOLOCK)
+    ON P.idprotocolo = A.idprotocolo
+where   a.IdUsuarioValida>0  
 and   P.Baja = 0 and P.Estado > 0  and P.IdPaciente = " + s_idPaciente + "   and P.IdProtocolo < " + s_idProtocoloActual + " order by a.fechaValida desc";
+         
 
 
             DataSet Ds = new DataSet();

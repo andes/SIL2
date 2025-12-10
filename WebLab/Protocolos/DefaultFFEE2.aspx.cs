@@ -755,10 +755,17 @@ namespace WebLab.Protocolos
 
             oRegistro.FechaInicioSintomas = DateTime.Parse("01/01/1900");
             oRegistro.FechaUltimoContacto = DateTime.Parse("01/01/1900");
-          
-            string idCar = BuscarCaracter(respuesta_d.clasificacion);
+
+            //string idCar = BuscarCaracter(respuesta_d.clasificacion);
+            //if (respuesta_d.Tipo_ficha == "UMA") idCar = "26";
+
+            string idCar = "0";
             if (respuesta_d.Tipo_ficha == "UMA") idCar = "26";
-            
+            else
+            { if (respuesta_d.clasificacion!= null)
+                    idCar = BuscarCaracter(respuesta_d.clasificacion);
+            }
+
 
             oRegistro.IdCaracter = int.Parse(idCar);
 

@@ -77,6 +77,15 @@
                             <ItemStyle HorizontalAlign="Center" Width="5%" />
                           
                         </asp:TemplateField>
+                  <asp:TemplateField   HeaderText="Habilitar">
+                    <ItemTemplate>
+                        <asp:CheckBox ID="chkStatus" runat="server"  
+                            AutoPostBack="true" OnCheckedChanged="chkStatus_OnCheckedChanged"  UseSubmitBehavior="false"
+                            Checked='<%# Convert.ToBoolean(Eval("activo")) %>'
+                            />
+                    </ItemTemplate>                    
+                       <ItemStyle HorizontalAlign="Center" Width="10%" />
+                </asp:TemplateField>
              <%--    <asp:TemplateField HeaderText="">
                             <ItemTemplate>
                             <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg"
@@ -106,12 +115,12 @@
         
     <script type="text/javascript" language="javascript">
     
-    function PreguntoEliminar()
-    {
-    if (confirm('¿Está seguro de eliminar el registro?'))
-    return true;
-    else
-    return false;
+   
+    function PreguntoCambiarEstado() {
+        if (confirm('¿Está seguro de cambiar estado?'))
+            return true;
+        else
+            return false;
     }
     </script>
 </asp:Content>
