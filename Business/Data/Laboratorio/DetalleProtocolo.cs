@@ -1449,9 +1449,9 @@ namespace Business.Data.Laboratorio
 
                 oRegistro.Save();
 
-                // graba el resultado en ResultadCar   "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
-                //oDetalle.ResultadoCar = "Pendiente de Derivacion";//"se podria poner a que efector....         
-                //oDetalle.Save();
+                // graba el resultado en ResultadCar  "Pendiente de derivar"
+                this.ResultadoCar = "Pendiente de derivar";   
+                this.Save();
                 this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
             }
         }
