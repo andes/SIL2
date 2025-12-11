@@ -2136,8 +2136,10 @@ namespace WebLab.Protocolos
 
         private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oAnterior)
         {
-            Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
-            oDerivacion.MarcarComoRecibidas(oAnterior, oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+            //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+            //oDerivacion.MarcarComoRecibidas(oAnterior, oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+            DetalleProtocolo dp = new DetalleProtocolo();
+            dp.ActualizarItemsDerivados(oRegistro, oAnterior, Convert.ToInt32(Request["idLote"]));
         }
 
         private void VerificacionEstadoLote(Protocolo oRegistro, Protocolo oAnterior)
