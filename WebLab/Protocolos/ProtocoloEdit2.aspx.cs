@@ -3663,8 +3663,9 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         }
 
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        { 
-           
+        {
+
+            string[] bk = TxtDatosCargados.Value.Split(';');
 
             TxtDatosCargados.Value = TxtDatos.Value;
 
@@ -3676,12 +3677,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
-            
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
+                string muestra= fila[2].ToString();
+                string conResultado = "false";
+
+                //Cargo el valor del resultado para no perderlo si da error la validacion
+                if (i < bk.Length)
+                {
+                    string[] filaBk = bk[i].Split('#');
+                    conResultado = filaBk[2].ToString();
+                }
+                if (sDatos == "")
+                        sDatos = codigo + "#" + muestra + "#" + conResultado;
+                else
+                        sDatos += ";" +  codigo + "#" + muestra + "#" + conResultado;
 
             }
 
@@ -4037,7 +4045,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             string listaCodigo = "";
 
             var subItemsEnBD = new Dictionary<int, int>();
-            List<Item> subItemsEnDB = new List<Item>();
+            //List<Item> subItemsEnDB = new List<Item>();
             
 
 
@@ -4214,6 +4222,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             return devolver;
         }
+      
         private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
         { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
             bool devolver = true;
