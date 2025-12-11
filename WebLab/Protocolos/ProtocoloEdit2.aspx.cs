@@ -4038,11 +4038,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             var subItemsEnBD = new Dictionary<int, int>();
             List<Item> subItemsEnDB = new List<Item>();
-            Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            if(Request["idProtocolo"] != null)
-            {
-                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-            }
+            
 
 
             for (int i = 0; i < tabla.Length - 1; i++)
@@ -4055,17 +4051,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 else
                     listaCodigo += ",'" + codigo + "'";
 
-                // int i_idItemPractica = 0;
                 if (codigo != "")
                 {
-                    //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
-
                     Item oItem = new Item();
                     oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
-
-                    if (Request["Operacion"].ToString() == "Modifica")
+                    //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
+                    // if (Request["Operacion"].ToString() == "Modifica")
+                    if (Request["idProtocolo"] != null)//Caro: unifco instanciacion de protocolo cuando es modificacion 
                     {
-                        try
+                        Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                        oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                        //try  //Caro: saco try cath por errores silenciosos 
+                        //{
+                        if ((oRegistro != null) && (oItem != null))
                         {
                             ISession m_session = NHibernateHttpModule.CurrentSession;
                             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
@@ -4073,28 +4071,29 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             crit.Add(Expression.Eq("IdProtocolo", oRegistro));
                             IList lista = crit.List();
 
-                            if(lista.Count ==  0)//no esta en la base
+                            if (lista.Count == 0)//no esta en la base
                             {
                                 devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, subItemsEnBD);
                                
                             }
                             else
                             {
-                                foreach (Business.Data.Laboratorio.DetalleProtocolo oDetalle in lista)
+                                foreach (DetalleProtocolo oDetalle in lista)
                                 {
                                     subItemsEnBD[oDetalle.IdSubItem.IdItem] = oDetalle.IdItem.IdItem;
                                 }
 
                             }
                         }
-                        catch(Exception e) 
-                        {
-                            this.cvValidacionInput.ErrorMessage = e.Message;
-                            devolver = false; break;
-                        }
-                       
+                        //}
+                        //catch(Exception e) 
+                        //{
+                        //    this.cvValidacionInput.ErrorMessage = e.Message;
+                        //    devolver = false; break;
+                        //}
+
                     }
-                    else
+                    else  // no es modificacion
                     {
                         devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla);
                     }
@@ -4131,8 +4130,6 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
 
                         //MultiEfector: filtro por efector
-
-
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
                         crit.Add(Expression.Eq("IdItemPractica", oItem));
@@ -4187,12 +4184,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                             if (hayConflicto)
                             {
-                                oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente, "Baja", false);
-
-                                this.cvValidacionInput.ErrorMessage =
+                                string mensajeerror = "";
+                                oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente);//, "Baja", false); //Caro: le saco la condicion de baja porque si fue grabado en la base y despues lo pusieron de baja no lo va a encontrar
+                                if (oItemExistente != null)///Caro agrego control de que exista si no va a dar error al usarlo
+                                {
+                                    mensajeerror =
                                     "Ha cargado análisis contenidos en otros. Verifique los códigos " +
                                     codigo + " y " + oItemExistente.Codigo + "!";
 
+                                }
+                                else
+                                    mensajeerror = "Ha cargado análisis contenidos en otros. Verifique los códigos ";
+
+                                this.cvValidacionInput.ErrorMessage = mensajeerror;
                                 devolver = false;
                             }
 
