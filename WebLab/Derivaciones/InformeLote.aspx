@@ -3,6 +3,12 @@
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">  
    <script type="text/javascript">
        function validarFormulario(s, args) {
+           if (typeof (Page_ClientValidate) == 'function') {
+               var esValido = Page_ClientValidate('0');
+               if (!esValido) {
+                   return false; // Detiene todo si algun RequiredFieldValidator falla
+               }
+           }
            var todoOk = false;
            var validatorEstado = document.getElementById('<%= Range1.ClientID %>');
            var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');
@@ -11,7 +17,7 @@
            var labelGrilla = document.getElementById('<%= lblErrorLista.ClientID %>');
            var lista_transporte = document.getElementById('<%= ddlTransporte.ClientID %>');
            var labelErrorTransporte = document.getElementById('<%= lblErrorTransporte.ClientID %>');
-
+         
            //Limpio los labels de error 
            label.className = 'hidden';
            validatorEstado.style.visibility = 'hidden'; 
@@ -135,7 +141,7 @@
            habilitaTransporte();
            habilitaFechaRetiro();
        }
-       document.addEventListener("DOMContentLoaded", function () {
+       <%--document.addEventListener("DOMContentLoaded", function () {
            var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
            var txtHora = document.getElementById('<%= txtHora.ClientID %>');
 
@@ -165,7 +171,7 @@
 
            cambioFechaHorario(); //Llamar a la función al cargar la página
            txtFecha.addEventListener("change", cambioFechaHorario); //llamar la funcion el usuario cambia la fecha
-       });
+       });--%>
 
       
    </script>
