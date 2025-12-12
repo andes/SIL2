@@ -1485,7 +1485,7 @@ namespace Business.Data.Laboratorio
             string query =
              @" SELECT dp_origen.idDetalleProtocolo
                 FROM LAB_DetalleProtocolo dp_origen
-                INNER JOIN LAB_Derivacion d on d.
+                INNER JOIN LAB_Derivacion d on d.idDetalleProtocolo = dp_origen.idDetalleProtocolo
                 WHERE dp_origen.idProtocolo = " + oAnterior.IdProtocolo + " and idLote = " + idLoteDerivacion + @"
                     AND EXISTS (
                         SELECT 1
