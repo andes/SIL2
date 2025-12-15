@@ -3681,7 +3681,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 string conResultado = "false";
 
                 //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length)
+                if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
                 {
                     string[] filaBk = bk[i].Split('#');
                     conResultado = filaBk[2].ToString();

@@ -755,7 +755,7 @@ namespace WebLab.Resultados
                 string conResultado = "false";
 
                 //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length)
+                if (i < bk.Length && bk.Length > 1)
                 {
                     string[] filaBk= bk[i].Split('#');
                     conResultado = filaBk[2].ToString();
@@ -795,8 +795,8 @@ namespace WebLab.Resultados
             bool devolver = true;
             try
             {
-                Business.Data.Laboratorio.Protocolo oProtocolo = new Business.Data.Laboratorio.Protocolo();
-                oProtocolo = (Business.Data.Laboratorio.Protocolo)oProtocolo.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                //Business.Data.Laboratorio.Protocolo oProtocolo = new Business.Data.Laboratorio.Protocolo();
+                //oProtocolo = (Business.Data.Laboratorio.Protocolo)oProtocolo.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
                 string[] tabla = TxtDatos.Value.Split('@');
                 string listaCodigo = "";
@@ -894,7 +894,7 @@ namespace WebLab.Resultados
                         ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
                         crit.Add(Expression.Eq("IdItemPractica", oItem));
                         crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
-                        crit.Add(Expression.Eq("IdEfector", oProtocolo.IdEfector));
+                        crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
                         PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
 
 
