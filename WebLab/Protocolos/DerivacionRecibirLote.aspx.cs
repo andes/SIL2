@@ -70,15 +70,12 @@ namespace WebLab.Protocolos
         private void CargarFechaHoraActual()
         {
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
-            //txt_Fecha.Value = miFecha.Date.ToString("yyyy-MM-dd");
             txtHora.Value = miFecha.ToString("HH:mm");
             txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
-
             //LAB-74 Control de fecha: La fecha de ingreso del lote no puede ser anterior a la fecha de envio del lote
-            rvFecha.MinimumValue = hidFechaEnvio.Value;
-            rvFecha.MaximumValue = txtFecha.Text; //Fecha Date today
-            rvFecha.Text = "La fecha de recepcion no puede ser menor a la fecha de envio " + hidFechaEnvio.Value;
-
+            //rvFecha.MinimumValue = hidFechaEnvio.Value;
+            //rvFecha.MaximumValue = txtFecha.Text; //Fecha Date today
+            //rvFecha.Text = "La fecha de recepcion no puede ser menor a la fecha de envio " + hidFechaEnvio.Value;
 
         }
         private void VerificaPermisos(string sObjeto)
@@ -112,16 +109,20 @@ namespace WebLab.Protocolos
 
         protected void btn_recibirLote_Click(object sender, EventArgs e)
         {
-            //Cambiar estado al lote
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
-            lote.Estado = 4;
-            lote.IdUsuarioRecepcion = oUser.IdUsuario;
-            lote.Save();
+            if (Page.IsValid)
+            {
+                //Cambiar estado al lote
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(Request["idLote"]));
+                lote.Estado = 4;
+                lote.IdUsuarioRecepcion = oUser.IdUsuario;
+                lote.Save();
 
-            //Generar Auditorias
-            GenerarAuditorias(lote);
-            btn_volver_Click(null, null);
+                //Generar Auditorias
+                GenerarAuditorias(lote);
+                btn_volver_Click(null, null);
+            }
+            
         }
 
         private void GenerarAuditorias(LoteDerivacion lote)
@@ -156,6 +157,33 @@ namespace WebLab.Protocolos
         protected void btn_volver_Click(object sender, EventArgs e)
         {
             Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Request["idServicio"] + "&idLote=" + Request["idLote"], false);
+        }
+
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            string error = "";
+            
+            if (string.IsNullOrEmpty(txtFecha.Text ))
+            {
+                args.IsValid = false;
+                error = "*Error en Fecha";
+            }
+
+            if (string.IsNullOrEmpty(txtHora.Value))
+            {
+                args.IsValid = false;
+                error = "*Error en Hora";
+            }
+
+            if (DateTime.Parse(txtFecha.Text) < DateTime.Parse(hidFechaEnvio.Value))
+            {
+                error = "La fecha de recepcion no puede ser menor a la fecha de envio " + DateTime.Parse(hidFechaEnvio.Value).ToString("dd/MM/yyyy");
+                args.IsValid = false;
+            }
+
+            
+
+            this.cvValidacionInput.ErrorMessage = error ;
         }
     }
 }
