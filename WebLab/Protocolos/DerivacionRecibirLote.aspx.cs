@@ -175,11 +175,12 @@ namespace WebLab.Protocolos
                 error = "*Error en Hora";
             }
 
-            if (DateTime.Parse(txtFecha.Text) < DateTime.Parse(hidFechaEnvio.Value))
-            {
-                error = "La fecha de recepcion no puede ser menor a la fecha de envio " + DateTime.Parse(hidFechaEnvio.Value).ToString("dd/MM/yyyy");
-                args.IsValid = false;
-            }
+            /* Por ahora no restringimos la fecha porque ellos si se equivocan no pueden editar la derivacion enviada*/
+            //if (DateTime.Parse(txtFecha.Text) < DateTime.Parse(hidFechaEnvio.Value))
+            //{
+            //    error = "La fecha de recepcion no puede ser menor a la fecha de envio " + DateTime.Parse(hidFechaEnvio.Value).ToString("dd/MM/yyyy");
+            //    args.IsValid = false;
+            //}
 
             
 
