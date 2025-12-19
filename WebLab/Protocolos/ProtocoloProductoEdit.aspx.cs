@@ -2139,7 +2139,7 @@ namespace WebLab.Protocolos
             //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
             //oDerivacion.MarcarComoRecibidas(oAnterior, oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
             DetalleProtocolo dp = new DetalleProtocolo();
-            dp.ActualizarItemsDerivados(oRegistro, oAnterior, Convert.ToInt32(Request["idLote"]));
+            dp.ActualizarItemsDerivados(oRegistro, oAnterior, Convert.ToInt32(Request["idLote"]), oUser);
         }
 
         private void VerificacionEstadoLote(Protocolo oRegistro, Protocolo oAnterior)

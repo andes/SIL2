@@ -1479,7 +1479,7 @@ namespace Business.Data.Laboratorio
 
         //}
 
-        public void ActualizarItemsDerivados(Protocolo oRegistro, Protocolo oAnterior, int idLoteDerivacion)
+        public void ActualizarItemsDerivados(Protocolo oRegistro, Protocolo oAnterior, int idLoteDerivacion, Usuario oUser)
         {
             //  PREMISA: Cuales son los idDetalle del protocolo emisor que si se grabaron en el protocolo nuevo
             string query =
@@ -1515,6 +1515,13 @@ namespace Business.Data.Laboratorio
                 de.Estado = 3;
                 de.IdProtocoloDerivacion = oAnterior.IdProtocolo;
                 de.Save();
+            }
+
+            //Se indica en el protocolo de Origen que fue recibido en el destino
+            if (oAnterior != null)
+            {
+                 oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLoteDerivacion, "Protocolo " + oRegistro.Numero.ToString());
+                
             }
         }
     }

@@ -1887,7 +1887,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         {
            
             DetalleProtocolo dp = new DetalleProtocolo();
-            dp.ActualizarItemsDerivados(oRegistro, oRegistroAnterior, Convert.ToInt32(Request["idLote"]));
+            dp.ActualizarItemsDerivados(oRegistro, oRegistroAnterior, Convert.ToInt32(Request["idLote"]), oUser);
            
             //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
             //oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
