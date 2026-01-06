@@ -3684,7 +3684,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
                 {
                     string[] filaBk = bk[i].Split('#');
-                    conResultado = filaBk[2].ToString();
+                    if(filaBk.Length > 2) //TxtDatosCargados en alta de turnos si tiene datos pero no resultados
+                        conResultado = filaBk[2].ToString();
                 }
                 if (sDatos == "")
                         sDatos = codigo + "#" + muestra + "#" + conResultado;
