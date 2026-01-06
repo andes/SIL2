@@ -66,6 +66,10 @@
     
   </div>
                     <div class="panel-body">
+                         <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                                ErrorMessage="Debe completar al menos un analisis" 
+                                    ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
+                                             ></asp:CustomValidator>
 <asp:Panel  runat="server" ID="pnlMuestra" Width="100%" Visible="false">
 					 
                           Muestra: &nbsp; &nbsp; 
@@ -123,10 +127,10 @@
                                              
                             
 						
-                                            <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                           <%-- <asp:CustomValidator ID="cvValidacionInput" runat="server" 
                                                 ErrorMessage="Debe completar al menos un analisis" 
                                     ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
-                                             ></asp:CustomValidator>
+                                             ></asp:CustomValidator>--%>
                                                  
                                 </div>                 
                                       </td>
@@ -611,7 +615,7 @@
         //    alert('entra');
         CrearFila(true);
         var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-
+        console.table(elvalor);
         if (elvalor != '') {
             var sTabla = elvalor.split(';');
             for (var i = 0; i < (sTabla.length); i++) {
