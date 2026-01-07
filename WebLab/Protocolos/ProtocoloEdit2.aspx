@@ -235,8 +235,11 @@
                                                         <asp:HiddenField runat="server" ID="HFIdPaciente" />     
                                                          <asp:HiddenField runat="server" ID="HFNumeroDocumento" />
                                                         <asp:HiddenField runat="server" ID="HFSexo" />
+                                                        <asp:HiddenField runat="server" ID="HFSelMedico" Value="" />
+                                                        <asp:HiddenField runat="server" ID="HFSelRenaper" Value="" />
+                                                        <asp:HiddenField runat="server" ID="HFModificarPaciente" Value="" />
                                                     
-                                                           <asp:HyperLink ID="hplModificarPaciente" runat="server" Visible="true" CssClass="myLittleLink" ToolTip="Cambiar el paciente asociado al protocolo">Cambiar Paciente</asp:HyperLink>
+                                                           <asp:HyperLink ID="hplModificarPaciente" runat="server" Visible="true" CssClass="myLittleLink" ToolTip="Cambiar el paciente asociado al protocolo" >Cambiar Paciente</asp:HyperLink>
                                                         &nbsp;<asp:HyperLink ID="hplActualizarPaciente" runat="server" CssClass="myLittleLink" ToolTip="Actualizar datos del paciente actual.">Datos del Paciente</asp:HyperLink>
                                                         <asp:Label ID="lblAlertaProtocolo" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="false"></asp:Label>
                                                 </td>
@@ -397,7 +400,7 @@
                                         
                          
                                         <asp:LinkButton ID="LinkButton1"  Width="60px" CssClass="btn btn-primary" runat="server" OnClientClick="SelMedico(); return false;" OnClick="Button1_Click"> <span class="glyphicon glyphicon-zoom-in"></span></asp:LinkButton>
-                                         <asp:HiddenField ID="hf_selMedico" runat="server" Value="" />
+                                        
 
                                         
                           
@@ -860,6 +863,7 @@
 			  <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
                      HeaderText="Debe completar los datos requeridos:" ShowMessageBox="True" 
                      ValidationGroup="0" ShowSummary="False" />			
+         
 
     <script language="javascript" type="text/javascript">
         var contadorfilas = parseInt(document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value);
@@ -879,18 +883,18 @@
 
 
         function InicioPagina() {
-            const postBack = esPostBackSelMedico();
-            const validatorSpan = esPostBackValidacion();
+            const postBack = esPostBack();
+
             const txtDatosCargados = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
 
             if (EsNuevoProtocolo()) {
                 if (txtDatosCargados === "") {
-                    CrearFila(!validatorSpan && !postBack); // true si NO hay error de validación
+                    CrearFila(!postBack); // true si NO hay error de validación
                 } else {
-                    decidirComoCarga(postBack, validatorSpan);
+                    decidirComoCarga(postBack);
                 }
             } else {
-                decidirComoCarga(postBack, validatorSpan);
+                decidirComoCarga(postBack);
             }
 
             //mantengo actualizado el contadorfilas por si se agregan más filas, para que estas sean tomadas en cuenta al actualizar los hidden TxtDatosCargados y TxtDatos
@@ -1340,6 +1344,7 @@
         var numeroDocumento = $("#<%= HFNumeroDocumento.ClientID %>").val();
 
         function SelRenaper() {
+            document.getElementById("<%= HFSelRenaper.ClientID %>").value = 'Si';
             var dom = document.domain;
             var domArray = dom.split('.');
             for (var i = domArray.length - 1; i >= 0; i--) {
@@ -1376,10 +1381,12 @@
          }).width(600);
         }
 
-
+        function ModificarPaciente() {
+            document.getElementById("<%= HFModificarPaciente.ClientID %>").value = 'Si';
+        }
 
         function SelMedico() {
-            var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value = 'Si';
+            var abrioPopUp = document.getElementById("<%= HFSelMedico.ClientID %>").value = 'Si';
              var dom = document.domain;
              var domArray = dom.split('.');
              for (var i = domArray.length - 1; i >= 0; i--) {
@@ -1416,17 +1423,40 @@
              }).width(600);
         }
 
-        function esPostBackSelMedico() {
-            var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value;
-            // console.log('Verifico si es un PostBack del SelMed():', abrioPopUp);
+        function esPostBack() {
+            //Pop up Seleccionar Medico
+            var abrioPopUp = document.getElementById("<%= HFSelMedico.ClientID %>").value;
+            //Pop up Actualizar Renaper
+            var abrioSelRenaper = document.getElementById("<%= HFSelRenaper.ClientID %>").value;
+            //Pop up Modificar Paciente
+            var abrioModificarPaciente = document.getElementById("<%= HFModificarPaciente.ClientID %>").value;
+            //Validacion de Formulario
+            var validatorSpan = document.getElementById('<%= cvValidacionInput.ClientID %>');
+            var mensaje = validatorSpan.innerText;
+
+
+            if (mensaje != '') {
+               return true;
+            }
+
             if (abrioPopUp == 'Si') {
                 // despues de verificar que ingreso lo vuelvo a un estado vacio
                 abrioPopUp = "";
                 return true;
             }
-            else {
-                return false;
+
+            if (abrioModificarPaciente == "Si") {
+                abrioModificarPaciente = "";
+                return true;
             }
+
+            if (abrioSelRenaper == "Si") {
+                abrioSelRenaper = "";
+                return true;
+            }
+
+            //llegue al final de los if y no devolvieron true
+            return false;
         }
 
         function AgregarCargadoSinVerificar() {
@@ -1525,19 +1555,10 @@
           /*  console.log("str", str);*/
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = str;
         }
-        function esPostBackValidacion(){
-            var validatorSpan = document.getElementById('<%= cvValidacionInput.ClientID %>');
-            var mensaje = validatorSpan.innerText;
-            if (mensaje != '') {
-                /*   console.log("esPostBackValidacion! ");*/
-                return true;
-            } else {
-                return false;
-            }
-        }
+      
 
-        function decidirComoCarga(postBack, validatorSpan) {
-            if (postBack || validatorSpan) { //Si es un postback no quiero verificar si los analisis estan repetidos
+        function decidirComoCarga(postBack) {
+            if (postBack) { //Si es un postback no quiero verificar si los analisis estan repetidos
                 AgregarCargadoSinVerificar();
             } else {
                 AgregarCargados();

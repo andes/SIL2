@@ -141,6 +141,33 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.HiddenField HFSexo;
 
         /// <summary>
+        /// HFSelMedico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFSelMedico;
+
+        /// <summary>
+        /// HFSelRenaper control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFSelRenaper;
+
+        /// <summary>
+        /// HFModificarPaciente control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFModificarPaciente;
+
+        /// <summary>
         /// hplModificarPaciente control.
         /// </summary>
         /// <remarks>
@@ -400,15 +427,6 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
-
-        /// <summary>
-        /// hf_selMedico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hf_selMedico;
 
         /// <summary>
         /// ddlOrigen control.
