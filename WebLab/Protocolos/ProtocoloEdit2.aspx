@@ -904,6 +904,22 @@
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
         }
 
+        function EsNuevoProtocolo() {
+            var numero = document.getElementById("<%= lblTitulo.ClientID %>");
+            if (numero == null) {
+                return true;
+            } else
+                return false;
+        }
+
+        function decidirComoCarga(postBack) {
+            if (postBack) { //Si es un postback no quiero verificar si los analisis estan repetidos
+                AgregarCargadoSinVerificar();
+            } else {
+                AgregarCargados();
+            }
+        }
+
         // NuevaFila: Genera la fila que ve el usuario, en 'Datos'. Y define para cada fila los metodos CargarTarea, CargarDatos y borrarfila para onchange y onclick respectivamente
         function NuevaFila(indice) {
             Grilla = document.getElementById('Datos');
@@ -995,7 +1011,7 @@
             document.getElementById('Codigo_' + valFila).focus();
         }
 
-        //CrearFila: Si es valido aumenta el contador de filas, y pasa el foco a la fila siguiente.
+        //CrearFila: SI ES VALIDO aumenta el contador de filas, y pasa el foco a la fila siguiente.
         function CrearFila(validar) {
            
             var valFila = contadorfilas - 1;
@@ -1042,31 +1058,18 @@
         function CargarDatos() {
             setTimeout(() => { //Tuve que agregar esto, ya que tomaba valores desactualizados del DOM para el valor checked
                 var str = '';
-                var strCargados = '';
                 for (var i = 0; i < contadorfilas; i++) {
                     var nroFila = document.getElementById('NroFila_' + i);
                     var cod = document.getElementById('Codigo_' + i);
                     var tarea = document.getElementById('Tarea_' + i);
                     var desde = document.getElementById('Desde_' + i);
-                    //var desdeCargado = (desde.checked == true) ? "No" : "Si"; // desde.checked = sinMuestra;
-                    //var estado = 0;
 
                     if (cod != null) { //si no es la ultima fila
-                        //estado = cod.className;
-                        //switch (estado) {
-                        //    case "codigo": estado = 0; break;
-                        //    case "codigoConResultado": estado = 1; break;
-                        //    case "codigoConResultadoValidado": estado = 2; break;
-                        //}
-
                         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
-                       // strCargados = strCargados + cod.value + '#' + desdeCargado + '#' + estado + ';';
                     }
                 }
             
-             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
-          
-            <%-- document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = strCargados;--%>
+               document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
             }, 0);
         }
 
@@ -1194,7 +1197,7 @@
             return devolver;
         }
 
-
+        //borrarfila: Borra de la grilla que ve el usuario y actualiza el hidden TxtCargados
         function borrarfila(obj) {
             if (contadorfilas > 1) {
                 var delRow = obj.parentNode.parentNode;
@@ -1458,7 +1461,7 @@
                 abrioPopUp = "";
                 return true;
             }
-           // console.log("abrioModificarPaciente", abrioModificarPaciente);
+          
             if (abrioModificarPaciente == "Si") {
                 abrioModificarPaciente = "";
                 return true;
@@ -1473,7 +1476,8 @@
             return false;
         }
 
-        //AgregarCargadoSinVerificar:Carga los valores del hidden TxtDatos a la grilla que ve el usuario SIN VALIDACIONES, ya que se evaluo al inicio y esta funcion se usa para cuando se vuelve de un postback
+        //AgregarCargadoSinVerificar:Carga los valores del hidden TxtDatos a la grilla que ve el usuario SIN VALIDACIONES
+        // ya que se evaluo al inicio y esta funcion se usa SOLO para cuando se vuelve de un postback y no quiero perder lo cargado
         function AgregarCargadoSinVerificar() {
             CrearFilaInicial(0);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
@@ -1492,7 +1496,7 @@
                     
                     document.getElementById('Codigo_' + con).value = valorCodigo;
 
-                    //Aca se carga la tarea que reemplaza al metodo CargarTarea(document.getElementById('Codigo_' + con));
+                    // Carga la tarea que reemplaza al metodo CargarTarea(document.getElementById('Codigo_' + con));
                     var codigo = document.getElementById('Codigo_' + con);
                     var nroFila = codigo.name.replace('Codigo_', '');
                     var tarea = document.getElementById('Tarea_' + nroFila);
@@ -1530,23 +1534,7 @@
             }
         }
 
-        function EsNuevoProtocolo() {
-            var numero = document.getElementById("<%= lblTitulo.ClientID %>");
-            if (numero == null) {
-                return true;
-            } else
-                return false;
-        }
-
-       
-      
-        function decidirComoCarga(postBack) {
-            if (postBack) { //Si es un postback no quiero verificar si los analisis estan repetidos
-                AgregarCargadoSinVerificar();
-            } else {
-                AgregarCargados();
-            }
-        }
+     
     </script>
 
 
