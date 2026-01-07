@@ -143,6 +143,7 @@ namespace WebLab.Protocolos
             if (!Page.IsPostBack)
             {
                 Session["matricula"] = ""; //para que lo borre de la sesion al entrar a un nuevo protocolo
+                Session["apellidoNombre"] = null;
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
                 if (Session["idUsuario"] != null)
