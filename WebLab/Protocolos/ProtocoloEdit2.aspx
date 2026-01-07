@@ -988,8 +988,7 @@
 
 
         function CrearFila(validar) {
-            //console.log("validar", validar);
-            //console.log("CREAR FILA contadorfilas", contadorfilas);
+           
             var valFila = contadorfilas - 1;
 
             if (validar) {
@@ -1007,16 +1006,13 @@
 
                     document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
                     document.getElementById('Codigo_' + valFila).focus();
-                    // console.log("fila nueva");
                 }
-                else {
-                    //  console.log("fila nueva: no valido");
-                }
+                   
             }
             else {
                 CrearFilaInicial(0); // Para casos que la grilla esta vacia y viene de un postback
             }
-           
+            
         }
 
 
@@ -1383,41 +1379,43 @@
 
 
         function SelMedico() {
-         var dom = document.domain;
-         var domArray = dom.split('.');
-         for (var i = domArray.length - 1; i >= 0; i--) {
-             try {
-                 var dom = '';
-                 for (var j = domArray.length - 1; j >= i; j--) {
-                     dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+            var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value = 'Si';
+             var dom = document.domain;
+             var domArray = dom.split('.');
+             for (var i = domArray.length - 1; i >= 0; i--) {
+                 try {
+                     var dom = '';
+                     for (var j = domArray.length - 1; j >= i; j--) {
+                         dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                     }
+                     document.domain = dom;
+                     break;
+                 } catch (E) {
                  }
-                 document.domain = dom;
-                 break;
-             } catch (E) {
              }
-         }
       
           
-         var $this = $(this);
-         $('<iframe src="MedicoSel.aspx?id='+idPaciente+'" />').dialog({
-             title: 'Buscar Médico',
-             autoOpen: true,
-             width: 620,
-             height: 400,
-             modal: true,
-             resizable: false,
-             autoResize: true,
-           open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+             var $this = $(this);
+             $('<iframe src="MedicoSel.aspx?id='+idPaciente+'" />').dialog({
+                 title: 'Buscar Médico',
+                 autoOpen: true,
+                 width: 620,
+                 height: 400,
+                 modal: true,
+                 resizable: false,
+                 autoResize: true,
+               open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
                  
-          buttons: {
-             'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.LinkButton1))%>; }               
-            },
-             overlay: {
-                 opacity: 0.5,
-                 background: "black"
-             }
-         }).width(600);
-     }
+              buttons: {
+                 'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.LinkButton1))%>; }               
+                },
+                 overlay: {
+                     opacity: 0.5,
+                     background: "black"
+                 }
+             }).width(600);
+        }
+
         function esPostBackSelMedico() {
             var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value;
             // console.log('Verifico si es un PostBack del SelMed():', abrioPopUp);

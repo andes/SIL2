@@ -3677,7 +3677,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
          
         }
 
-        protected void cvValidacionInput_ServerValidate_vane(object source, ServerValidateEventArgs args)
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         { 
            
             string[] bk = TxtDatosCargados.Value.Split(';');
@@ -3699,7 +3699,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
                 {
                     string[] filaBk = bk[i].Split('#');
-                    conResultado = filaBk[2].ToString();
+                    if(filaBk.Length > 2)
+                     conResultado = filaBk[2].ToString();
                 }
                 if (sDatos == "")
                         sDatos = codigo + "#" + muestra + "#" + conResultado;
@@ -3998,14 +3999,20 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     }
                 }//fin control
 
+                if (txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
             }
         }
 		 
-		 protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
+		 protected void cvValidacionInput_ServerValidate_old(object source, ServerValidateEventArgs args)
         { 
            
 
-            /* TxtDatosCargados.Value = TxtDatos.Value; // => Esta pisando los valores de la grilla TxtDatosCargados y TxtDatos no tiene guardada correctamente s/muestra
+             TxtDatosCargados.Value = TxtDatos.Value; 
 
              string sDatos = "";
 
@@ -4027,7 +4034,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
 
-             TxtDatosCargados.Value = sDatos;*/
+             TxtDatosCargados.Value = sDatos;
             //saco restriccion de forma temporal
             //if (Request["Operacion"].ToString()!="Modifica")
             //    if (!VerificarFechaPacienteMuestra())
@@ -4867,7 +4874,6 @@ ORDER BY cantidad desc";
             public string apellido { get; set; }
             public string cuit { get; set; }
            public List<Profesiones> profesiones { get; set; }
-            public string cuit { get; set; }
             public string id { get; set; } //id que trae de ANDES
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }

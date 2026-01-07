@@ -612,8 +612,8 @@
                 const validatorSpan = esPostBackValidacion();
 
                 //  console.log("TxtDatos", TxtDatos);
-                console.log("esPostBack", esPostBack);
-                console.log("validatorSpan", validatorSpan);
+                //console.log("esPostBack", esPostBack);
+               // console.log("validatorSpan", validatorSpan);
 
                 if (!esPostBack && !validatorSpan) {
                     if (TxtDatos == "") {
@@ -732,18 +732,18 @@
                 var str = '';
 
                 for (var i = 0; i < contadorfilas; i++) {
-                    console.log("-------------");
-                    console.log("Nueva fila, i", i);
-                    console.log("Nueva fila, contador filas", contadorfilas);
+                    //console.log("-------------");
+                    //console.log("Nueva fila, i", i);
+                    //console.log("Nueva fila, contador filas", contadorfilas);
 
 
                     var nroFila = document.getElementById('NroFila_' + i);
-                    console.log("nroFila", nroFila);
+                    //console.log("nroFila", nroFila);
                     var cod = document.getElementById('Codigo_' + i);
-                    console.log("cod", cod);
+                    //console.log("cod", cod);
                     var tarea = document.getElementById('Tarea_' + i);
-                    console.log("tarea", tarea);
-                    console.log("-------------");
+                    //console.log("tarea", tarea);
+                    //console.log("-------------");
 
                     if (cod.value != '')
                         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '@';
@@ -763,7 +763,7 @@
 
             function CargarTarea(codigo) {
 
-                console.log("CargarTarea : codigo", codigo)
+                //console.log("CargarTarea : codigo", codigo)
                 var nroFila = codigo.name.replace('Codigo_', '');
                 var tarea = document.getElementById('Tarea_' + nroFila);
 
