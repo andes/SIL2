@@ -1188,54 +1188,23 @@ ORDER BY cantidad desc";
                                 }
                                 #endregion
                             }
+                        }
 
-
-                                //LAB-119  Seleccion de profesionales solicitantes en dación de turnos filtro por matricula y apellido
-                                #region SelecionProfesional
-                                if (Session["apellidoNombre"] != null)
-                                {
-                                    foreach (ListItem item in ddlEspecialista.Items)
-                                    {
-
-                                        //EJEMPLO DE item.Value:
-                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
-                                        int positionFinal = item.Value.IndexOf("-");
-                                        if (positionFinal < 0)
-                                            continue; //Es el caso de "--Seleccione--", "0"
-
-                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
-                                        int posicion = apellidoNombre.IndexOf("#");
-
-                                        if (posicion < 0)
-                                            continue;
-
-                                        apellidoNombre = apellidoNombre.Substring(posicion + 1).Trim();
-
-
-                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
-                                        {
-                                            ddlEspecialista.SelectedValue = item.Value;
-                                            break;
-                                        }
-                                    }
-                                }
-                                #endregion
-                            }
                             lblErrorMedico.Visible = false;
 
-                        }
-                        else
-                        { //error no encontrado}
+                    }
+                    else
+                    { //error no encontrado}
 
 
-                            lblErrorMedico.Text = "Médico no encontrado!!";
-                            lblErrorMedico.Visible = true;
-                            ddlEspecialista.Items.Clear();
-                            ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
+                        lblErrorMedico.Text = "Médico no encontrado!!";
+                        lblErrorMedico.Visible = true;
+                        ddlEspecialista.Items.Clear();
+                        ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
 
-                        }
+                    }
                     } // s!=0
-                }// matricula
+                // matricula
             }// try
             catch (Exception ex)
             {
