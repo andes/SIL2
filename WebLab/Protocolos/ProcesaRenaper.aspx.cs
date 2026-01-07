@@ -273,17 +273,30 @@ string mensaje = ex.ToString();
                 }
                 else
                 {
-                   
-                    if ( oCon.ConectaRenaper  )                   
-     //  conOK= SolicitarServicio();
-        conOK =ConectarRenaperXRoad();
-                    
-                        if ((oCon.ConectaMPI) && (!conOK))
+
+                    if (oCon.ConectaRenaper)
+                    {
+                        conOK = ConectarRenaperXRoad();
+                        if (!conOK)// si no funcionó la conexion con renaper se fija se está activado MPI
+                            if (oCon.ConectaMPI)
+                            {
+                                conOK = SolicitarServicioMPI();
+                                if (!conOK)
+                                    HabilitaCargaManual();
+                            }
+                    }
+                    else
+                    {
+                        if (oCon.ConectaMPI)
+                        {
                             conOK = SolicitarServicioMPI();
-                         
-                        if (!conOK)
-                            HabilitaCargaManual();
-                     
+                            if (!conOK)
+                                HabilitaCargaManual();
+                        }
+                        else
+                           HabilitaCargaManual();
+                    }
+
 
                 }
 

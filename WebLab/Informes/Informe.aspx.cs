@@ -1371,7 +1371,8 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
             s_condicion = " and A.idTipoServicio=" + ddlServicio.SelectedValue;
             s_condicion += " and P.idEfector=" + oUser.IdEfector.IdEfector.ToString();
             s_condicion += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.Fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
-            s_condicion += " and ((De.estado=4 and L.estado=1) or (De.estado =1 and L.estado =2))"; //Si esta Pendiente de Enviar la determinacion el lote esta creado, Si se derivo el lote la determinacion pasa a Enviada
+            ///Caro: saco esta condicion par que no limite la generacion de etiquetas 
+         //   s_condicion += " and ((De.estado=4 and L.estado=1) or (De.estado =1 and L.estado =2))"; //Si esta Pendiente de Enviar la determinacion el lote esta creado, Si se derivo el lote la determinacion pasa a Enviada 
 
 
             //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
@@ -1477,7 +1478,7 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
         INNER JOIN    LAB_Derivacion De with (nolock) on  De.idDetalleProtocolo= DP.idDetalleProtocolo
         inner join   dbo.LAB_Item AS I with (nolock) ON DP.idItem = I.idItem  
         inner join        dbo.LAB_Area AS A with (nolock) ON I.idArea = A.idArea 
-        inner join      LAB_LoteDerivacion L with (nolock) ON De.idLote = L.idLoteDerivacion
+        left join      LAB_LoteDerivacion L with (nolock) ON De.idLote = L.idLoteDerivacion  
         where P.baja=0   " + s_condicion;
 
             //      m_strSQL += " ORDER BY area";

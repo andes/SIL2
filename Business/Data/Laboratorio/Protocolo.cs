@@ -1448,6 +1448,34 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             return numerito;
         }
 
+        //public bool getTieneAislamientosValidados()
+        //{
+        //    ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloGermen));
+
+        //    crit.Add(Expression.Eq("IdProtocolo", this));
+        //    crit.Add(Expression.Not(Expression.Eq("IdUsuarioValida", 0)));
+        //    IList lista = crit.List();
+        //    if (lista.Count > 0)
+        //        return true;
+        //    else
+
+        //        return false;
+
+        //}
+        public bool getTieneAtbValidados()
+        {
+            ICriteria crit = m_session.CreateCriteria(typeof(Antibiograma));
+
+            crit.Add(Expression.Eq("IdProtocolo", this));
+            crit.Add(Expression.Not(Expression.Eq("IdUsuarioValida", 0)));
+            IList lista = crit.List();
+            if (lista.Count > 0)
+                return true;
+            else
+
+                return false;
+
+        }
 
         public int GetPendientesValidar()
         {

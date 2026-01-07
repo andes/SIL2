@@ -265,7 +265,7 @@ $(function () {
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
                               </asp:BoundField>
-                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                              <asp:BoundField DataField="12 a 23 meses" HeaderText="12 a 23 meses" >
                                   <FooterStyle BackColor="#CC3300" />
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
@@ -457,7 +457,7 @@ $(function () {
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
                               </asp:BoundField>
-                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                              <asp:BoundField DataField="12 a 23 meses" HeaderText="12 a 23 meses" >
                                   <FooterStyle BackColor="#CC3300" />
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
@@ -679,7 +679,7 @@ $(function () {
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
                               </asp:BoundField>
-                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                              <asp:BoundField DataField="12 a 23 meses" HeaderText="12 a 23 meses" >
                                   <FooterStyle BackColor="#CC3300" />
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
@@ -829,7 +829,7 @@ $(function () {
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
                               </asp:BoundField>
-                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                              <asp:BoundField DataField="12 a 23 meses" HeaderText="12 a 23 meses" >
                                   <FooterStyle BackColor="#CC3300" />
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
@@ -1004,7 +1004,7 @@ $(function () {
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
                               </asp:BoundField>
-                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                              <asp:BoundField DataField="12 a 23 meses" HeaderText="12 a 23 meses" >
                                   <FooterStyle BackColor="#CC3300" />
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />

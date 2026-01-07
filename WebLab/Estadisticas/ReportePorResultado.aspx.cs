@@ -729,7 +729,8 @@ dP.fechavalida as [F.Resultado],
                         case when p.idpaciente=-1 then 0 else case when pa.idEstado = 2 then 0 ELSE pa.numeroDocumento END end as [numeroDocumento],
   Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento, " +
                             " 103) AS FECHANACIMIENTO,"+
-                            " d.calle + ' Barrio:' +  d.barrio + ' Ciudad: '+ d.ciudad   AS domicilio, CONVERT(varchar(10), P.fecha, 103) AS fecha,convert(varchar,P.edad) + case  P.unidadedad when 0 then 'A' when 1 then 'M' when 2 then 'D' end as edad, dbo.NumeroProtocolo(P.idProtocolo) as numero, Pa.informacionContacto as campo1,  "
+                            " d.calle + ' Barrio:' +  d.barrio + ' Ciudad: '+ d.ciudad   AS domicilio, CONVERT(varchar(10), P.fecha, 103) AS fecha,convert(varchar,P.edad) + case  P.unidadedad when 0 then 'A' when 1 then 'M' when 2 then 'D' end as edad, "+
+                            " P.numero as numero, Pa.informacionContacto as campo1,  "
                             + m_codigopaciente +   
                             " FROM LAB_DetalleProtocolo AS DP " +
                             " INNER JOIN LAB_Protocolo AS P ON DP.idProtocolo = P.idProtocolo " +

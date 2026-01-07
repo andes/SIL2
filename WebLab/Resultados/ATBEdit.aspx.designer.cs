@@ -76,6 +76,33 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Label lblPractica;
         
         /// <summary>
+        /// chkMecanismoResistencia control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList chkMecanismoResistencia;
+        
+        /// <summary>
+        /// btnGuardarMecanismo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardarMecanismo;
+        
+        /// <summary>
+        /// lblMensajeMecanismo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeMecanismo;
+        
+        /// <summary>
         /// ddlPerfilAntibiotico control.
         /// </summary>
         /// <remarks>

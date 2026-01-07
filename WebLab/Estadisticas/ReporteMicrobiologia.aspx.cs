@@ -1088,17 +1088,54 @@ WHERE ATB.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
 
             if (tipo == "Mecanismo")
             {
-                m_strSQL = @"SELECT DISTINCT 
-                     P.numero AS [Numero Protocolo], CONVERT(varchar(10), P.fecha, 103) AS fecha, M.nombre AS [Tipo de Muestra], 
-                      Pa.numeroDocumento AS [Nro. Documento], Pa.apellido, Pa.nombre, CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS FECHANACIMIENTO, 
-                      Pa.referencia AS domicilio, P.edad, CASE P.unidadEdad WHEN 0 THEN 'años' WHEN 1 THEN 'meses' WHEN 2 THEN 'días' END AS tipoEdad, P.sexo,
-                      CASE WHEN PD.iddiagnostico IS NULL THEN 'No' ELSE 'Si' END AS embarazada, A.nombre AS Mecanismo 
-FROM         LAB_Protocolo AS P INNER JOIN
-                           Sys_Paciente AS Pa ON P.idPaciente = Pa.idPaciente INNER JOIN
-                      LAB_Muestra AS M ON M.idMuestra = P.idMuestra INNER JOIN
-                    LAB_Antibiograma ANT     ON P.idProtocolo = ANT.idProtocolo			inner JOIN 
-					LAB_MecanismoResistencia AS A     ON ANT.idMecanismoResistencia = A.idMecanismoResistencia LEFT OUTER JOIN
-                      vta_LAB_Embarazadas AS PD ON PD.idProtocolo = P.idProtocolo
+                m_strSQL = @"	;WITH Mecanismos AS (
+    SELECT 
+        aM.idProtocolo,
+        aM.idItem,
+        aM.idGermen,
+        aM.idMetodologia,
+        Mecanismo = STUFF((
+            SELECT DISTINCT ' + ' + M2.nombre
+            FROM lab_ProtocoloAtbMecanismo aM2
+            INNER JOIN LAB_MecanismoResistencia M2 
+                ON M2.idMecanismoResistencia = aM2.idMecanismoResistencia
+            WHERE aM2.idProtocolo = aM.idProtocolo
+              AND aM2.idItem = aM.idItem
+              AND aM2.idGermen = aM.idGermen
+              AND aM2.idMetodologia = aM.idMetodologia
+            FOR XML PATH(''), TYPE
+        ).value('.', 'NVARCHAR(MAX)'), 1, 2, '')
+    FROM lab_ProtocoloAtbMecanismo aM
+)
+SELECT DISTINCT 
+    P.numero AS [Numero Protocolo],
+    CONVERT(varchar(10), P.fecha, 103) AS fecha,
+    M.nombre AS [Tipo de Muestra],
+    Pa.numeroDocumento AS [Nro. Documento],
+    Pa.apellido,
+    Pa.nombre,
+    CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS FECHANACIMIENTO,
+    Pa.referencia AS domicilio,
+    P.edad,
+    CASE P.unidadEdad WHEN 0 THEN 'años' WHEN 1 THEN 'meses' WHEN 2 THEN 'días' END AS tipoEdad,
+    P.sexo,
+    CASE WHEN PD.iddiagnostico IS NULL THEN 'No' ELSE 'Si' END AS embarazada,
+    Mec.Mecanismo
+FROM LAB_Protocolo P
+INNER JOIN Sys_Paciente Pa ON P.idPaciente = Pa.idPaciente
+INNER JOIN LAB_Muestra M ON M.idMuestra = P.idMuestra
+INNER JOIN LAB_Antibiograma ANT ON P.idProtocolo = ANT.idProtocolo
+INNER JOIN lab_ProtocoloAtbMecanismo aM 
+    ON aM.idProtocolo = ANT.idProtocolo
+    AND aM.idItem = ANT.idItem
+    AND aM.idGermen = ANT.idGermen
+    AND aM.idMetodologia = ANT.idMetodologia
+INNER JOIN Mecanismos Mec
+    ON Mec.idProtocolo = aM.idProtocolo
+    AND Mec.idItem = aM.idItem
+    AND Mec.idGermen = aM.idGermen
+    AND Mec.idMetodologia = aM.idMetodologia
+LEFT JOIN vta_LAB_Embarazadas PD ON PD.idProtocolo = P.idProtocolo
 WHERE ANT.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "')  and P.idtiposervicio=3 " + m_strCondicion;// +" order by P.idprotocolo ,P.fecha  ";
 
             }

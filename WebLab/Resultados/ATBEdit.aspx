@@ -34,6 +34,9 @@
          .auto-style7 {
              width: 329px;
          }
+         .auto-style8 {
+             height: 31px;
+         }
      </style>
  
    
@@ -61,8 +64,21 @@
                         </tr>
               
                         <tr>
-                            <td class="style2" colspan="2">
+                            <td class="auto-style8">
+                                Mecanismo:</td>
+                            <td colspan="2" class="auto-style8">
+                                 <asp:CheckBoxList ID="chkMecanismoResistencia" runat="server" RepeatDirection="Horizontal" ></asp:CheckBoxList></td>
+                        </tr>
+                        <tr>
+                            <td class="auto-style4">
                                 &nbsp;</td>
+                            <td colspan="3">
+                          <asp:Button ID="btnGuardarMecanismo" runat="server" AccessKey="D" CssClass="myButtonGris"  
+                                                      TabIndex="600" Text="Guardar Mecanismos" Width="150px" OnClick="btnGuardarMecanismo_Click"    />
+                                   
+                                <asp:Label ID="lblMensajeMecanismo" Visible="false" runat="server" Font-Bold="True" ForeColor="#CC3300"></asp:Label>
+                                   
+                            </td>
                         </tr>
                         <tr>
                             <td class="style2" colspan="2">
