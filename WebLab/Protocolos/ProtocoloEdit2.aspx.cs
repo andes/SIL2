@@ -180,6 +180,11 @@ namespace WebLab.Protocolos
                             pnlNavegacion.Visible = false;
 
                         }
+
+                        if(Request["idPaciente"] != null) //Cambio de paciente
+                        {
+                            HFModificarPaciente.Value = "Si";
+                        }
                     }
                     else
 
