@@ -178,37 +178,7 @@ namespace WebLab.Protocolos
           
         }
 
-        private static DataTable GetDataTableMatriculaciones(string json)
-        {
-            //Pasa de JSON al tipo de objeto ProfesionalMatriculado
-            List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>  personas = JsonConvert.DeserializeObject<List<Protocolos.ProtocoloEdit2.ProfesionalMatriculado>>(json);
-            DataTable dt = new DataTable();
-           
-            if (personas.Count > 0)
-            {
-                //Guardo solo en la tabla aquellos datos que necesito
-                dt.Columns.Add("nombre");
-                dt.Columns.Add("apellido");
-                dt.Columns.Add("titulo");
-                dt.Columns.Add("matriculaNumero");
-
-                foreach (Protocolos.ProtocoloEdit2.ProfesionalMatriculado persona in personas)
-                {
-                    foreach (Protocolos.ProtocoloEdit2.Profesiones prof in persona.profesiones)
-                    {
-                        foreach (Protocolos.ProtocoloEdit2.Matricula mat in prof.matriculacion)
-                        {
-                            if (DateTime.Compare(mat.fin, DateTime.Now) > 0) //Solo agrega las matriculas no vencidas
-                            {
-                                dt.Rows.Add(persona.nombre, persona.apellido, prof.titulo, mat.matriculaNumero);
-                            }
-                        }
-                    }
-                }
-            }
-            return dt;
-        }
-
+        
 
     }
 }
