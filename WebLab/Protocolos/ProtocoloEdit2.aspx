@@ -1383,50 +1383,44 @@
 
 
         function SelMedico() {
-            var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value = 'Si';
-            //console.log('abrioPopUp!!!', abrioPopUp);
-            var dom = document.domain;
-            var domArray = dom.split('.');
-            for (var i = domArray.length - 1; i >= 0; i--) {
-                try {
-                    var dom = '';
-                    for (var j = domArray.length - 1; j >= i; j--) {
-                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
-                    }
-                    document.domain = dom;
-                    break;
-                } catch (E) {
-                    console.warn("document.domain no se pudo modificar:", E);
-                }
-            }
-
-
-            var $this = $(this);
-            $('<iframe src="MedicoSel.aspx?id=' + idPaciente + '" />').dialog({
-                title: 'Buscar Médico',
-                autoOpen: true,
-                width: 620,
-                height: 400,
-                modal: true,
-                resizable: false,
-                autoResize: true,
-                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
-
-                buttons: {
-                    'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.LinkButton1))%>; }
-                },
-                 overlay: {
-                     opacity: 0.5,
-                     background: "black"
+         var dom = document.domain;
+         var domArray = dom.split('.');
+         for (var i = domArray.length - 1; i >= 0; i--) {
+             try {
+                 var dom = '';
+                 for (var j = domArray.length - 1; j >= i; j--) {
+                     dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
                  }
-             }).width(600);
-        }
-
+                 document.domain = dom;
+                 break;
+             } catch (E) {
+             }
+         }
+      
+          
+         var $this = $(this);
+         $('<iframe src="MedicoSel.aspx?id='+idPaciente+'" />').dialog({
+             title: 'Buscar Médico',
+             autoOpen: true,
+             width: 620,
+             height: 400,
+             modal: true,
+             resizable: false,
+             autoResize: true,
+           open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+                 
+          buttons: {
+             'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.LinkButton1))%>; }               
+            },
+             overlay: {
+                 opacity: 0.5,
+                 background: "black"
+             }
+         }).width(600);
+     }
         function esPostBackSelMedico() {
-
             var abrioPopUp = document.getElementById("<%= hf_selMedico.ClientID %>").value;
             // console.log('Verifico si es un PostBack del SelMed():', abrioPopUp);
-
             if (abrioPopUp == 'Si') {
                 // despues de verificar que ingreso lo vuelvo a un estado vacio
                 abrioPopUp = "";
@@ -1438,30 +1432,25 @@
         }
 
         function AgregarCargadoSinVerificar() {
-
             CrearFilaInicial(0);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
             //console.log("el valor desde recargo es ", elvalor);
-             if (elvalor != '') {
+            if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 var largoTabla = (sTabla.length);
                 var con = 0;
-
                 for (var i = 0; i < largoTabla; i++) {
                     var sItem = sTabla[i].split('#');
-                   // console.log("sItem", sItem);
+                    // console.log("sItem", sItem);
                     var valorCodigo = sItem[0];
                     //var sinMuestra = true;
                     //sinMuestra =  (sItem[1] == 'No') ? true : sinMuestra = false;
                     var sinMuestra = true;
-                   
+
                     if (sItem[1] == 'No') sinMuestra = true;
                     else sinMuestra = false;
-
-                   // console.log("Con", 'Codigo_' + con);
+                    // console.log("Con", 'Codigo_' + con);
                     document.getElementById('Codigo_' + con).value = valorCodigo;
-
-
                     //Aca se carga la tarea que reemplaza al metodo CargarTarea(document.getElementById('Codigo_' + con));
                     var codigo = document.getElementById('Codigo_' + con);
                     var nroFila = codigo.name.replace('Codigo_', '');
@@ -1485,46 +1474,37 @@
                             tarea.value = lista.substring(k, j).replace('#True', '').replace('#False', '');
                             CrearFilaInicial(con + 1);
                         }
-
                     }
+                    // ---> fin de cargar tarea
 
-                        // ---> fin de cargar tarea
-                
                     var desde = document.getElementById('Desde_' + con);
-                   // console.log("desde input", desde);
-
+                    // console.log("desde input", desde);
                     if (sItem[2] == '1') ///resultado cargado
                         document.getElementById('Codigo_' + con).className = 'codigoConResultado';
                     if (sItem[2] == '2')///resultado validado
                         document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
                     desde.checked = sinMuestra;
-                   // console.log("desde checked", desde.checked);
+                    // console.log("desde checked", desde.checked);
                     con = con + 1;
                 }
                 CargarDatos();
-             }
-          
+            }
         }
 
         function EsNuevoProtocolo() {
             var numero = document.getElementById("<%= lblTitulo.ClientID %>");
-
             if (numero == null) {
                 return true;
             } else
                 return false;
         }
-
-
-        function CrearFilaInicial( indice) {
+        function CrearFilaInicial(indice) {
             var valFila = indice;
             NuevaFila(valFila);
             document.getElementById('NroFila_' + valFila).value = valFila + 1;
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = valFila + 1;
             document.getElementById('Codigo_' + valFila).focus();
-
         }
-
         function CargarDatosTxtDatosCargados() {
             var str = '';
             for (var i = 0; i < contadorfilas; i++) {
@@ -1547,12 +1527,11 @@
           /*  console.log("str", str);*/
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = str;
         }
-
         function esPostBackValidacion(){
             var validatorSpan = document.getElementById('<%= cvValidacionInput.ClientID %>');
             var mensaje = validatorSpan.innerText;
             if (mensaje != '') {
-             /*   console.log("esPostBackValidacion! ");*/
+                /*   console.log("esPostBackValidacion! ");*/
                 return true;
             } else {
                 return false;

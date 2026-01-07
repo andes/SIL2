@@ -40,6 +40,7 @@ namespace WebLab.Protocolos
                 string nombre = txtNombre.Text;
                 string s_urlWFC = oCon.UrlMatriculacion;
                 string s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido;// + "&codigoProfesion=1 ";
+                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
                 HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
