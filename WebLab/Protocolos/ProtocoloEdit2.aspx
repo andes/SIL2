@@ -239,7 +239,7 @@
                                                         <asp:HiddenField runat="server" ID="HFSelRenaper" Value="" />
                                                         <asp:HiddenField runat="server" ID="HFModificarPaciente" Value="" />
                                                     
-                                                           <asp:HyperLink ID="hplModificarPaciente" runat="server" Visible="true" CssClass="myLittleLink" ToolTip="Cambiar el paciente asociado al protocolo" >Cambiar Paciente</asp:HyperLink>
+                                                           <asp:HyperLink ID="hplModificarPaciente" runat="server" Visible="true" CssClass="myLittleLink" ToolTip="Cambiar el paciente asociado al protocolo">Cambiar Paciente</asp:HyperLink>
                                                         &nbsp;<asp:HyperLink ID="hplActualizarPaciente" runat="server" CssClass="myLittleLink" ToolTip="Actualizar datos del paciente actual.">Datos del Paciente</asp:HyperLink>
                                                         <asp:Label ID="lblAlertaProtocolo" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="false"></asp:Label>
                                                 </td>
@@ -897,19 +897,21 @@
                 decidirComoCarga(postBack);
             }
 
-            //mantengo actualizado el contadorfilas por si se agregan más filas, para que estas sean tomadas en cuenta al actualizar los hidden TxtDatosCargados y TxtDatos
+            //mantengo actualizado el contadorfilas 
+
+            //TxtDatosCargados → estado original / persistido / histórico
+            // TxtDatos        → estado actual / editable / a guardar
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
-            //console.log("FINAL contadorfilas", contadorfilas);
         }
 
-
+        // NuevaFila: Genera la fila que ve el usuario, en 'Datos'. Y define para cada fila los metodos CargarTarea, CargarDatos y borrarfila para onchange y onclick respectivamente
         function NuevaFila(indice) {
             Grilla = document.getElementById('Datos');
             fila = document.createElement('tr');
             fila.id = 'cod_' + indice;
             fila.name = 'cod_' + indice;
 
-            //#region Celda 1 Nro de fila
+            //Celda 1 Nro de fila
             celda1 = document.createElement('td');
             oNroFila = document.createElement('input');
             oNroFila.type = 'text';
@@ -917,34 +919,29 @@
             oNroFila.runat = 'server';
             oNroFila.name = 'NroFila_' + indice;
             oNroFila.id = 'NroFila_' + indice;
-            //oNroFila.onfocus= function() {PasarFoco(this)}
             oNroFila.className = 'fila';
             celda1.appendChild(oNroFila);
             fila.appendChild(celda1);
-            //#endregion
+          
 
-            //#region Celda 2 Codigo
+            // Celda 2 Codigo
             celda2 = document.createElement('td');
             oCodigo = document.createElement('input');
             oCodigo.type = 'text';
             oCodigo.runat = 'server';
             oCodigo.name = 'Codigo_' + indice;
             oCodigo.id = 'Codigo_' + indice;
-            //console.log("(Desde: Nueva Fila) Codigo_", oCodigo.id);
             oCodigo.className = 'codigo';
             oCodigo.onblur = function () {
                 CargarTarea(this);
             };
 
             oCodigo.setAttribute("onkeypress", "javascript:return Enter(this, event)");
-            //oCodigo onkeypress = function(){ return Enter(this, event) };
-            //oCodigo.setAttribute( = function () { alert('hola'); if (event.keyCode == 13) event.keyCode = 9; };
-            //oCodigo.onchange = function () {CargarDatos()};
             celda2.appendChild(oCodigo);
             fila.appendChild(celda2);
-            //#endregion
+           
 
-            //#region Celda 3 Descripcion de la tarea
+            //Celda 3 Descripcion de la tarea
             celda3 = document.createElement('td');
             oTarea = document.createElement('input');
             oTarea.type = 'text';
@@ -956,9 +953,9 @@
             oTarea.onchange = function () { CargarDatos() };
             celda3.appendChild(oTarea);
             fila.appendChild(celda3);
-            //#endregion
+            
 
-            //#region Celda 4 Muestra
+            //Celda 4 Muestra
             celda4 = document.createElement('td');
             oDesde = document.createElement('input');
             oDesde.type = 'checkbox';
@@ -971,9 +968,9 @@
             oDesde.onchange  = function () { CargarDatos(); };
             celda4.appendChild(oDesde);
             fila.appendChild(celda4);
-            //#endregion
+            
 
-            //#region Celda 6 Boton de borrar
+            //Celda 6 Boton de borrar
             celda6 = document.createElement('td');
             oBoton = document.createElement('input');
             oBoton.className = 'boton';
@@ -983,14 +980,22 @@
             oBoton.onclick = function () { borrarfila(this) };
             celda6.appendChild(oBoton);
             fila.appendChild(celda6);
-            //#endregion
 
             Grilla.appendChild(fila);
             indice = indice + 1;
             return indice;
         }
 
+        //CrearFilaInicial: Aumenta el contador de filas, y pasa el foco a la fila siguiente.
+        function CrearFilaInicial(indice) {
+            var valFila = indice;
+            NuevaFila(valFila);
+            document.getElementById('NroFila_' + valFila).value = valFila + 1;
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = valFila + 1;
+            document.getElementById('Codigo_' + valFila).focus();
+        }
 
+        //CrearFila: Si es valido aumenta el contador de filas, y pasa el foco a la fila siguiente.
         function CrearFila(validar) {
            
             var valFila = contadorfilas - 1;
@@ -1033,24 +1038,35 @@
             return true;
         }
 
+        //CargarDatos: Carga lo que esta en la grilla que ve el usuario en el hidden TxtDatos 
         function CargarDatos() {
             setTimeout(() => { //Tuve que agregar esto, ya que tomaba valores desactualizados del DOM para el valor checked
                 var str = '';
+                var strCargados = '';
                 for (var i = 0; i < contadorfilas; i++) {
                     var nroFila = document.getElementById('NroFila_' + i);
                     var cod = document.getElementById('Codigo_' + i);
                     var tarea = document.getElementById('Tarea_' + i);
                     var desde = document.getElementById('Desde_' + i);
-                   /* console.log("cod.value", cod.value, "desde.checked", desde.checked);*/
-                    if (cod != null && cod.value != '')
+                    //var desdeCargado = (desde.checked == true) ? "No" : "Si"; // desde.checked = sinMuestra;
+                    //var estado = 0;
+
+                    if (cod != null) { //si no es la ultima fila
+                        //estado = cod.className;
+                        //switch (estado) {
+                        //    case "codigo": estado = 0; break;
+                        //    case "codigoConResultado": estado = 1; break;
+                        //    case "codigoConResultadoValidado": estado = 2; break;
+                        //}
+
                         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+                       // strCargados = strCargados + cod.value + '#' + desdeCargado + '#' + estado + ';';
+                    }
                 }
             
              document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
           
-
-            //Mantengo actualizado TxtDatosCargados por si se produce un postback al abrir el pop up de seleccionar medico
-            CargarDatosTxtDatosCargados();
+            <%-- document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = strCargados;--%>
             }, 0);
         }
 
@@ -1059,6 +1075,7 @@
             document.getElementById('Codigo_' + fila).focus();
         }
 
+        //CargaTarea: Dado un codigo, verifica que esta en TxtTareas o repetido, luego agrega la descripcion de la determinacion
         function CargarTarea(codigo) {
             var nroFila = codigo.name.replace('Codigo_', '');
             var tarea = document.getElementById('Tarea_' + nroFila);
@@ -1108,7 +1125,7 @@
             }
         }
 
-
+        //verificaDisponible: Verifica si ya fue cargado en el TxtDatosCargados
         function verificaDisponible(objCodigo) {
             var devolver = true;
             var esnuevo = true;
@@ -1143,7 +1160,7 @@
              return devolver;
         }
 
-
+        //verificarRepetidos: Verifica si ya fue cargado en el txtDatos
         function verificarRepetidos(objCodigo, objTarea) {
             ///Verifica si ya fue cargado en el txtDatos
             var devolver = true;
@@ -1230,6 +1247,7 @@
 
         }
 
+        //AgregarDeLaLista:  Agregar Determinacion
         function AgregarDeLaLista() {
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtCodigo").ClientID %>').value;
             if (elvalor != '') {
@@ -1244,7 +1262,7 @@
             }
         }
 
-
+        //AgregarDeLaListaRutina: Agrega las determinaciones de la rutina
         function AgregarDeLaListaRutina() {
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtCodigosRutina").ClientID %>').value;
             if (elvalor != '') {
@@ -1262,16 +1280,15 @@
             }
         }
 
-
+        //AgregarCargados: Carga los valores del hidden TxtDatosCargados a la grilla que ve el usuario
         function AgregarCargados() {
             CrearFila(true);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            /*console.log("Agrega Cargados ", elvalor);*/
+            
             if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 for (var i = 0; i < (sTabla.length); i++) {
                     var sItem = sTabla[i].split('#');
-                   //console.log("sItem", sItem);
                     var valorCodigo = sItem[0];
                     var sinMuestra = true;
                     if (sItem[1] == 'No') sinMuestra = true;
@@ -1381,10 +1398,7 @@
          }).width(600);
         }
 
-        function ModificarPaciente() {
-            document.getElementById("<%= HFModificarPaciente.ClientID %>").value = 'Si';
-        }
-
+       
         function SelMedico() {
             var abrioPopUp = document.getElementById("<%= HFSelMedico.ClientID %>").value = 'Si';
              var dom = document.domain;
@@ -1444,7 +1458,7 @@
                 abrioPopUp = "";
                 return true;
             }
-
+           // console.log("abrioModificarPaciente", abrioModificarPaciente);
             if (abrioModificarPaciente == "Si") {
                 abrioModificarPaciente = "";
                 return true;
@@ -1459,26 +1473,25 @@
             return false;
         }
 
+        //AgregarCargadoSinVerificar:Carga los valores del hidden TxtDatos a la grilla que ve el usuario SIN VALIDACIONES, ya que se evaluo al inicio y esta funcion se usa para cuando se vuelve de un postback
         function AgregarCargadoSinVerificar() {
             CrearFilaInicial(0);
-            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            //console.log("el valor desde recargo es ", elvalor);
+            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
+            
             if (elvalor != '') {
                 var sTabla = elvalor.split(';');
                 var largoTabla = (sTabla.length);
                 var con = 0;
                 for (var i = 0; i < largoTabla; i++) {
                     var sItem = sTabla[i].split('#');
-                    // console.log("sItem", sItem);
                     var valorCodigo = sItem[0];
-                    //var sinMuestra = true;
-                    //sinMuestra =  (sItem[1] == 'No') ? true : sinMuestra = false;
                     var sinMuestra = true;
 
                     if (sItem[1] == 'No') sinMuestra = true;
                     else sinMuestra = false;
-                    // console.log("Con", 'Codigo_' + con);
+                    
                     document.getElementById('Codigo_' + con).value = valorCodigo;
+
                     //Aca se carga la tarea que reemplaza al metodo CargarTarea(document.getElementById('Codigo_' + con));
                     var codigo = document.getElementById('Codigo_' + con);
                     var nroFila = codigo.name.replace('Codigo_', '');
@@ -1506,13 +1519,11 @@
                     // ---> fin de cargar tarea
 
                     var desde = document.getElementById('Desde_' + con);
-                    // console.log("desde input", desde);
                     if (sItem[2] == '1') ///resultado cargado
                         document.getElementById('Codigo_' + con).className = 'codigoConResultado';
                     if (sItem[2] == '2')///resultado validado
                         document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
                     desde.checked = sinMuestra;
-                    // console.log("desde checked", desde.checked);
                     con = con + 1;
                 }
                 CargarDatos();
@@ -1526,37 +1537,9 @@
             } else
                 return false;
         }
-        function CrearFilaInicial(indice) {
-            var valFila = indice;
-            NuevaFila(valFila);
-            document.getElementById('NroFila_' + valFila).value = valFila + 1;
-            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = valFila + 1;
-            document.getElementById('Codigo_' + valFila).focus();
-        }
-        function CargarDatosTxtDatosCargados() {
-            var str = '';
-            for (var i = 0; i < contadorfilas; i++) {
-                var cod = document.getElementById('Codigo_' + i);
-               
-                if (cod != null) { //si no es la ultima fila
-                    var estado = cod.className;
-                    switch (estado) {
-                        case "codigo": estado = 0; break;
-                        case "codigoConResultado": estado = 1; break;
-                        case "codigoConResultadoValidado": estado = 2; break;
-                    }
-                    var desde = (document.getElementById('Desde_' + i).checked == true) ? "No" : "Si"; // desde.checked = sinMuestra;
-                    
-                    if (cod != null && cod.value != '')
-                        str = str + cod.value + '#' + desde + '#' + estado + ';';
-                  
-                }
-            }
-          /*  console.log("str", str);*/
-            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value = str;
-        }
-      
 
+       
+      
         function decidirComoCarga(postBack) {
             if (postBack) { //Si es un postback no quiero verificar si los analisis estan repetidos
                 AgregarCargadoSinVerificar();
