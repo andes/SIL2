@@ -546,7 +546,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             oRegistro.IdItem = iditem;
                             oRegistro.IdMecanismoResistencia = oM;
                             oRegistro.Save();
-                            oProtocolo.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario, "ATB: " + oGermen.Nombre + "- Mecanismo", oM.Nombre);
+                            oProtocolo.GrabarAuditoriaDetalleProtocolo("Valida", oUser.IdUsuario, "ATB: " + oGermen.Nombre + "- Mecanismo", oM.Nombre);
                         }
                             if ((!chkMecanismoResistencia.Items[i].Selected) && (lista2.Count > 0))//no esta seleccionado y no no existe no hago nada, pero si existe lo borro ya que no esta seleccionado                                             
                             {

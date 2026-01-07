@@ -1411,7 +1411,7 @@ namespace WebLab.Placas {
 
             string m_strSQL =   @"select distinct iddetalleprotocolo from LAB_DetalleProtocoloPlaca with (nolock) where idPlaca ="+ oRegistro.IdPlaca.ToString();
 
-  int cantidadPos = 0; string res1 = "";
+  int cantidadPos = 0;  
                 int cantidadNega = 0;
                 int cantidadInd = 0;
             string celdapivot = "";
@@ -1813,8 +1813,9 @@ namespace WebLab.Placas {
 
                             if (res.Length > 10)
                             {
-                                if (res.TrimStart().Substring(0, 10) == "SE DETECTA")
-                                {
+                                //if (res.TrimStart().Substring(0, 10) == "SE DETECTA")
+                                if (res.Contains("=SE DET"))//se mejora para que se visualice en rojo si es positivo (mail Juan Dic. 2025 placa R1)
+                                    {
                                     lblResultado.ForeColor = Color.Red;
                                     cantidadPos = cantidadPos + 1;
                                 }
@@ -1917,22 +1918,34 @@ namespace WebLab.Placas {
                                     }
 
                                   celdapivot = celda;
-                           
+                          
 
-                                if (res.Length > 10)
-                                {
-
-                                    if (res.TrimStart().Substring(0, 10) == "SE DETECTA")
+                            if (res.Length > 10)
+                             {//Caro: Placa R2 srgun mail de Juan Dic 2025: se arregla visualizacion para que se vean todos los resultados y si hay uno detectado se ve en rojo
+                                if (res.Contains("=SE DET"))
+                                
+                                   // if (res.TrimStart().Substring(0, 10) == "SE DETECTA")
                                     {
                                         lblResultado.ForeColor = Color.Red;
                                         cantidadPos = cantidadPos + 1;
-                                        if (lblResultado.Text == "")
-                                            lblResultado.Text = res;
-                                        else
-                                            lblResultado.Text += "-" + res;
-                                    }
+                                    if (lblResultado.Text == "")
+                                        lblResultado.Text = res;
                                     else
-                                    { cantidadNega = cantidadNega + 1; }
+                                        lblResultado.Text += "-" + res;
+                                }
+                                    else
+                                 
+                            if (res.Contains("=NO SE DET"))
+                                {
+                                    if (lblResultado.ForeColor != Color.Red)
+                                    lblResultado.ForeColor = Color.Black;
+                                    if (lblResultado.Text == "")
+                                        lblResultado.Text = res;
+                                    else
+                                        lblResultado.Text += "-" + res;
+                                    cantidadNega = cantidadNega + 1;
+
+                                }
                                     /// si alguna es positivo: SE detecta- se muestra solo lo que se detecta.
                                     /// si es negativo todo: se muestra "no se detecta ningun virus"
 
@@ -2149,7 +2162,6 @@ from LAB_DetalleProtocolo d (nolock)
 select distinct DTP.tipoCT, T.valorCT , DP.iditem
 from LAB_DetalleProtocoloPlaca as DPP with (nolock)
 inner join lab_detalleprotocolo as DP with (nolock) on DP.idDetalleProtocolo= DPP.idDetalleProtocolo
-
 inner join LAB_ResultadoTEmp as T with (nolock) on T.idPlaca= DPP.idPlaca 
 inner join lab_detalletipoplaca as DTP with (nolock) on DTP.iditem= DP.iditem and DTP.tipoCT=t.tipoct
 where   DPP.idDetalleProtocolo= " + idDetalleProtocolo.ToString() + "  and DPP.idplaca=" + idplaca.ToString() + " and T.celda= '" + celda + "' order by DP.iditem ";
@@ -2319,6 +2331,7 @@ select 1 from lab_item b (nolock) where b.idItemReferencia=a.iditem and codigo='
 
                     datosProtocolo += ";" + oP.IdProtocolo.IdProtocolo.ToString();
                     datosProtocolo += "; " + oP.IdSubItem.Nombre+ "="+ oP.ResultadoCar;
+                  //  datosProtocolo += "; " + oP.ResultadoCar;
 
                 }
                 return datosProtocolo;

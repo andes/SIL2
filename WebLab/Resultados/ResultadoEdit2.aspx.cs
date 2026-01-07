@@ -951,6 +951,22 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             ///si tiene aislamientos o antibiogramas no se puede editar practicas
             if ((aisl.Visible) || (anti.Visible)) btnActualizarPracticasCarga.Visible = false;
             ///////////////////////////
+            /////Caro: si es carga solo puede cargar aislamientos si no tiene ningun aislamiento/atb validado
+            if ((Request["Operacion"].ToString() == "Carga")) // si es carga y tiene algo validado
+            {
+                //bool aislamientosVal = oRegistro.getTieneAislamientosValidados();
+                //if (!aislamientosVal)
+                //    pnlMicroOrganismo.Enabled = true;
+                //else
+                //    pnlMicroOrganismo.Enabled = false;
+
+                bool atbVal = oRegistro.getTieneAtbValidados();
+                if (!atbVal)
+                    pnlAntibiograma.Enabled = true;
+                else
+                    pnlAntibiograma.Enabled = false;
+
+            }
 
             lblUsuario.Text =  oRegistro.IdUsuarioRegistro.Apellido;
             lblUsuario1.Text =   oRegistro.IdUsuarioRegistro.Apellido;
@@ -1161,12 +1177,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             //bool hayAntecedente = false;
             string m_strSQL = " 1=1 ";
                 
-                //" SELECT grupo,item, iditem, resultadoNum, ResultadoCar, observaciones,idCategoria," +
-                //              " idTipoResultado, UnidadMedida, Estado, Metodo, valorReferencia, '' as MaximoReferencia, '' as observacionReferencia ," +
-                //              " userCarga, trajoMuestra ,'' as tipoValorReferencia, conresultado, " +
-                //              " formatoDecimal,  formato0,  formato1, formato2, formato3,  formato4 , resultadoDefecto, userControl, iddetalleProtocolo, codificaHiv, userValida,estadoObservacion " +                              
-                //              " FROM vta_LAB_Resultados " +
-                //              " WHERE   idProtocolo = " + p;
+         
                               
 
             if (Request["idArea"].ToString() != "0")   m_strSQL += " and idArea in (" + Request["idArea"].ToString()+")";
@@ -1197,14 +1208,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 
             }
 
-
-
-            //DataSet Ds = new DataSet();
-            //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            //SqlDataAdapter adapter = new SqlDataAdapter();
-            //adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            //adapter.Fill(Ds);
-
+             
 
             /*nuevo con SP*/
 
@@ -1222,10 +1226,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
             cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
             cmd.Parameters["@FiltroBusqueda"].Value = m_strSQL;
-
-            //cmd.Parameters.Add("@desde", SqlDbType.Int);
-            //cmd.Parameters["@desde"].Value = 0;
-
+             
             cmd.Connection = conn;
 
 
@@ -2573,12 +2574,22 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 }
 
 
-                if ((Request["Operacion"].ToString() == "Carga") && (algovalidado==true)) // si es carga y tiene algo validado
+          /*      if ((Request["Operacion"].ToString() == "Carga") && (algovalidado==true)) // si es carga y tiene algo validado
                 {
-                    pnlMicroOrganismo.Enabled = false;
-                    pnlAntibiograma.Enabled = false;
+                    int cantidadAislamientos = gvAislamientos.Rows.Count;
+                    int cantidadAtb= gvAntiBiograma2.Rows.Count;
+                    if ((cantidadAislamientos == 0) && (cantidadAtb == 0))
+                    {
+                        pnlMicroOrganismo.Enabled = true;
+                        pnlAntibiograma.Enabled = true;
+                    }
+                    else
+                    {
+                        pnlMicroOrganismo.Enabled = false;
+                        pnlAntibiograma.Enabled = false;
+                    }
 
-                }
+                }*/
 
                 if (Request["idServicio"].ToString()!="6")
                     { 
@@ -5536,41 +5547,42 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                         ProtocoloGermen oRegistro = new ProtocoloGermen();
                         oRegistro = (ProtocoloGermen)oRegistro.Get(typeof(ProtocoloGermen), int.Parse(gvAislamientos.DataKeys[i].Value.ToString()));
 
-                        CheckBox chkAtb = (CheckBox)gvAislamientos.Rows[i].FindControl("chkAtb");
-                        if (chkAtb != null) oRegistro.Atb = chkAtb.Checked;
 
-                        TextBox txtObservaciones= (TextBox)gvAislamientos.Rows[i].FindControl("txtObservacionesAislamiento");
-                        if (txtObservaciones != null)
+                        if (oRegistro != null)
                         {
-                            oRegistro.Observaciones = txtObservaciones.Text;
-                        }
-                        oRegistro.IdUsuarioRegistro = int.Parse(oUser.IdUsuario.ToString());
-                        oRegistro.FechaRegistro = DateTime.Now;
-                        if (Request["Operacion"].ToString() != "Valida") oRegistro.FechaValida = DateTime.Parse("01/01/1900");
-                        if (Request["Operacion"].ToString() == "Valida")
-                        {
-                            CheckBox chkValida = (CheckBox)gvAislamientos.Rows[i].FindControl("chkValida");
-                            if (chkValida != null)
+                            CheckBox chkAtb = (CheckBox)gvAislamientos.Rows[i].FindControl("chkAtb");
+                            if (chkAtb != null) oRegistro.Atb = chkAtb.Checked;
+
+                            TextBox txtObservaciones = (TextBox)gvAislamientos.Rows[i].FindControl("txtObservacionesAislamiento");
+                            if (txtObservaciones != null)
                             {
-                                if (chkValida.Checked)
+                                oRegistro.Observaciones = txtObservaciones.Text;
+                            }
+                            oRegistro.IdUsuarioRegistro = int.Parse(oUser.IdUsuario.ToString());
+                            oRegistro.FechaRegistro = DateTime.Now;
+                            if (Request["Operacion"].ToString() != "Valida") oRegistro.FechaValida = DateTime.Parse("01/01/1900");
+                            if (Request["Operacion"].ToString() == "Valida")
+                            {
+                                CheckBox chkValida = (CheckBox)gvAislamientos.Rows[i].FindControl("chkValida");
+                                if (chkValida != null)
                                 {
-                                    oRegistro.FechaValida = DateTime.Now;
-                                    oRegistro.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
-                                  oRegistro.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Valida", int.Parse(oUser.IdUsuario.ToString()), "Aislamiento", oRegistro.IdGermen.Nombre);
+                                    if (chkValida.Checked)
+                                    {
+                                        oRegistro.FechaValida = DateTime.Now;
+                                        oRegistro.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+                                        oRegistro.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Valida", int.Parse(oUser.IdUsuario.ToString()), "Aislamiento", oRegistro.IdGermen.Nombre);
+                                    }
                                 }
+
+                            }
+                            oRegistro.Save();
+                            if ((oRegistro.IdProtocolo.Estado == 0) && (oRegistro.IdProtocolo.Estado != 2))
+                            {
+                                oRegistro.IdProtocolo.Estado = 1;
+                                oRegistro.IdProtocolo.Save();
                             }
 
-                        }
-                        oRegistro.Save();
-                        if ((oRegistro.IdProtocolo.Estado == 0) && (oRegistro.IdProtocolo.Estado !=2))
-                        {
-                            oRegistro.IdProtocolo.Estado = 1;
-                            oRegistro.IdProtocolo.Save();
-                        }
-
-
-                     
-
+                        }                
                     }
                     CargarGrillaAislamientos();
                     CargarListasAntibiogramas();
@@ -5881,10 +5893,20 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                 CmdEliminar.CommandName = "Eliminar";
                 CmdEliminar.ToolTip = "Eliminar";
 
-              
 
-                ProtocoloGermen oGermen = new ProtocoloGermen();
+
+                    ProtocoloGermen oGermen = new ProtocoloGermen();
                 oGermen = (ProtocoloGermen)oGermen.Get(typeof(ProtocoloGermen), int.Parse(gvAislamientos.DataKeys[e.Row.RowIndex].Value.ToString()));
+
+                ///Caro: si fue validado no es posible eliminar ni cambiar la marca de atb ni modificar las observaciones
+                if ((Request["Operacion"].ToString() == "Carga") && (oGermen.IdUsuarioValida > 0))
+                {
+                    CmdEliminar.Visible = false;
+                    CheckBox chkAtb = (CheckBox)e.Row.Cells[3].Controls[1];
+                    chkAtb.Enabled = false;
+                    TextBox txtObservacionesAislamiento = (TextBox)e.Row.Cells[4].Controls[1];
+                    txtObservacionesAislamiento.Enabled = false;
+                }
 
                 Usuario oUser = new Usuario();
                 // if (Request["Operacion"].ToString() == "Valida")

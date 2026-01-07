@@ -119,19 +119,19 @@
 						<td>
                     <input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
                          onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="3" class="form-control input-sm"
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="2" class="form-control input-sm"
                                 style="width: 100px"  /></td>
 						<td class="myLabelIzquierda" >
                             Fecha Hasta:</td>
 						<td>
                     <input id="txtFechaHasta" runat="server" type="text" maxlength="10" 
                         style="width: 100px"  onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="4" class="form-control input-sm"  /></td>
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="3" class="form-control input-sm"  /></td>
 					</tr>
 					<tr>
 						<td class="myLabelIzquierda" >Sector/Servicio:</td>
 						<td colspan="3">
-                                        <asp:DropDownList ID="ddlSectorServicio" runat="server" TabIndex="2" Width="250px" class="form-control input-sm"
+                                        <asp:DropDownList ID="ddlSectorServicio" runat="server" TabIndex="4" Width="250px" class="form-control input-sm"
                                             ToolTip="Seleccione el sector">
                                         </asp:DropDownList>
                                         
@@ -140,21 +140,21 @@
                                             Efector Solicitante:</td>
 						<td>
                             <asp:DropDownList ID="ddlEfectorSolicitante" runat="server" 
-                                ToolTip="Seleccione el efector" TabIndex="9" Width="250px" class="form-control input-sm">
+                                ToolTip="Seleccione el efector" TabIndex="5" Width="250px" class="form-control input-sm">
                             </asp:DropDownList>
                                         
                         </td>
 						<td class="myLabelIzquierda" >
                                             Nro. de Origen:</td>
 						<td>
-                            <asp:TextBox ID="txtNroOrigen" runat="server" class="form-control input-sm" style="width: 100px" ></asp:TextBox>
+                            <asp:TextBox ID="txtNroOrigen" runat="server" class="form-control input-sm" style="width: 100px" TabIndex="6" ></asp:TextBox>
                             </td>
 					</tr>
 					<tr>
 						<td class="myLabelIzquierda" >Protocolo Desde:</td>
 						<td>
                     <input id="txtProtocoloDesde" runat="server" type="text" maxlength="9" 
-                          tabindex="5" class="form-control input-sm"  onblur="valNumero(this)"
+                          tabindex="7" class="form-control input-sm"  onblur="valNumero(this)"
                                 style="width: 100px"  /><asp:CustomValidator ID="cvNumeroDesde" runat="server" 
                                 ErrorMessage="Numero de Protocolo- Sólo numeros (sin puntos ni espacios)" 
                                 onservervalidate="cvNumeros_ServerValidate" ValidationGroup="0" 
@@ -165,7 +165,7 @@
                                             Protocolo Hasta:</td>
 						<td>
                     <input id="txtProtocoloHasta" runat="server" type="text" maxlength="9" 
-                        tabindex="6" class="form-control input-sm"  onblur="valNumero(this)"
+                        tabindex="8" class="form-control input-sm"  onblur="valNumero(this)"
                                 style="width: 100px"  /><asp:CustomValidator ID="cvNumeroHasta" runat="server" 
                                 ErrorMessage="Numero de Protocolo - Sólo numeros (sin puntos ni espacios)" 
                                 onservervalidate="cvNumeroHasta_ServerValidate" ValidationGroup="0">*</asp:CustomValidator>
@@ -175,7 +175,7 @@
                                             Estado:</td>
 						<td>
                     <asp:DropDownList ID="ddlEstado" runat="server" 
-                                class="form-control input-sm" TabIndex="12">
+                                class="form-control input-sm" TabIndex="9">
                                                 <asp:ListItem Selected="True" Value="-1">Todos los activos</asp:ListItem>
                                                 <asp:ListItem Value="0">No Procesado</asp:ListItem>
                                                 <asp:ListItem Value="1">En Proceso</asp:ListItem>
@@ -190,7 +190,7 @@
                             </td>
 						<td>
                     &nbsp;<input id="txtNumeroTarjeta" runat="server" type="text" maxlength="9" 
-                        tabindex="6" class="form-control input-sm"  onblur="valNumero(this)"
+                        tabindex="10" class="form-control input-sm"  onblur="valNumero(this)"
                                 style="width: 70px"  /><asp:CustomValidator ID="cvNumeroTarjeta" runat="server" 
                                 ErrorMessage="Numero de Tarjeta- Sólo numeros (sin puntos ni espacios)" 
                                 onservervalidate="cvNumeroTarjeta_ServerValidate" ValidationGroup="0">*</asp:CustomValidator>
@@ -216,7 +216,7 @@
 						<td class="myLabelIzquierda" >Origen:</td>
 						<td>
                             <asp:DropDownList ID="ddlOrigen" runat="server" 
-                                ToolTip="Seleccione el origen" TabIndex="7" class="form-control input-sm" >
+                                ToolTip="Seleccione el origen" TabIndex="11" class="form-control input-sm" >
                             </asp:DropDownList>
                            </td>             
 					
@@ -224,7 +224,7 @@
                             <asp:Label ID="lblPrioridad" runat="server">               Prioridad:</asp:Label> </td>                                            
 						<td colspan="2">
                             <asp:DropDownList ID="ddlPrioridad" runat="server" 
-                                ToolTip="Seleccione la prioridad" TabIndex="8" class="form-control input-sm" >
+                                ToolTip="Seleccione la prioridad" TabIndex="12" class="form-control input-sm" >
                             </asp:DropDownList></td>
                                         
 					    </tr>
@@ -233,7 +233,7 @@
                                 <td class="myLabelIzquierda">DNI Paciente: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 						<td  align="left">
                              <input id="txtDni" type="text" runat="server"  class="form-control input-sm" style="width: 100px" 
-                                onblur="valNumero(this)" tabindex="11"/><asp:CompareValidator ID="cvDni" 
+                                onblur="valNumero(this)" tabindex="13"/><asp:CompareValidator ID="cvDni" 
                                  runat="server" ControlToValidate="txtDni" 
                                 ErrorMessage="Debe ingresar solo numeros" Operator="DataTypeCheck" 
                                 Type="Integer" ValidationGroup="0">Debe ingresar solo numeros</asp:CompareValidator>
@@ -243,7 +243,7 @@
                             	<tr>
 					<td class="myLabelIzquierda">Apellido/s:</td>
 						<td  align="left">
-                                            <asp:TextBox ID="txtApellido" runat="server" class="form-control input-sm"  TabIndex="13" 
+                                            <asp:TextBox ID="txtApellido" runat="server" class="form-control input-sm"  TabIndex="14" 
                                                 Width="200px"></asp:TextBox>
                             </td>
 						<td class="myLabelIzquierda" >
@@ -255,14 +255,14 @@
                                             Médico Solicitante:</td>
 						
 						<td>
-                             <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="5" class="form-control input-sm" runat="server"   AutoCallBack="true"  ></anthem:TextBox> 
+                             <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"   AutoCallBack="true"  ></anthem:TextBox> 
                                         </td>
 						
 					</tr>
                             	<tr>
 					<td class="myLabelIzquierda">Nombres/s:</td>
 						<td  align="left">
-                                            <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm"  TabIndex="14" 
+                                            <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm"  TabIndex="15" 
                                                 Width="200px"></asp:TextBox>
                             </td>
 						<td class="myLabelIzquierda" >
@@ -275,7 +275,7 @@
 						
 						<td>
                                            <asp:DropDownList ID="ddlObraSocial" runat="server" class="form-control input-sm" 
-                                                TabIndex="15" Width="400px" >
+                                                TabIndex="17" Width="400px" >
                                                
                                             </asp:DropDownList>
                                                 <br />
@@ -318,7 +318,7 @@
                                                              
                                                                  &nbsp;&nbsp;&nbsp;
                                                                  <asp:Button ID="btnBuscarControl" runat="server" CssClass="btn btn-primary"
-                                                                     onclick="btnBuscarControl_Click" TabIndex="15" Text="Buscar" 
+                                                                     onclick="btnBuscarControl_Click" TabIndex="18" Text="Buscar" 
                                                                      ValidationGroup="0" Width="100px"   />
                                                                  </td>
                                                         </tr>
@@ -341,7 +341,7 @@
                                                                    <asp:ListItem Value="Desc">Descendente</asp:ListItem>
                                                                </asp:DropDownList>
                                                             <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary"
-                                                                onclick="btnBuscar_Click" TabIndex="15" Text="Buscar" ValidationGroup="0" 
+                                                                onclick="btnBuscar_Click" TabIndex="18" Text="Buscar" ValidationGroup="0" 
                                                                 Width="77px" />
                                                         </td>
                                                     </tr>

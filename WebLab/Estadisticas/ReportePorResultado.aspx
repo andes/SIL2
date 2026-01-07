@@ -286,7 +286,7 @@ una determinación</asp:RangeValidator>
                                 <asp:ListItem Selected="True" Value="0">Todos</asp:ListItem>
                                 <asp:ListItem Value="1"><6 meses</asp:ListItem>
          <asp:ListItem Value="2">6 y 11 meses</asp:ListItem>
-                                <asp:ListItem Value="3">1 a 2 años</asp:ListItem>
+                                <asp:ListItem Value="3">12 a 23 meses</asp:ListItem>
                                 <asp:ListItem Value="4">2 a 4 años</asp:ListItem>
                                 <asp:ListItem Value="5">5-9 años</asp:ListItem>
                                 <asp:ListItem Value="6">10-14 años</asp:ListItem>
@@ -394,7 +394,7 @@ una determinación</asp:RangeValidator>
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
                               </asp:BoundField>
-                              <asp:BoundField DataField="1 a 2" HeaderText="1 a 2" >
+                              <asp:BoundField DataField="12 a 23 meses" HeaderText="12 a 23 meses" >
                                   <FooterStyle BackColor="#CC3300" />
                                   <HeaderStyle BackColor="#CC3300" />
                                   <ItemStyle Width="5%" />
