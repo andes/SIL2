@@ -141,7 +141,9 @@ namespace WebLab.Protocolos
         {
 
             if (!Page.IsPostBack)
-            {           
+            {
+                Session["matricula"] = ""; //para que lo borre de la sesion al entrar a un nuevo protocolo
+                Session["apellidoNombre"] = null;
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
                 if (Session["idUsuario"] != null)
@@ -177,6 +179,11 @@ namespace WebLab.Protocolos
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
 
+                        }
+
+                        if(Request["idPaciente"] != null) //Cambio de paciente
+                        {
+                            HFModificarPaciente.Value = "Si";
                         }
                     }
                     else
@@ -3669,10 +3676,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
          
         }
 
-        protected void cvValidacionInput_ServerValidate_vane(object source, ServerValidateEventArgs args)
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         { 
            
-            string[] bk = TxtDatosCargados.Value.Split(';');
+            
 
             TxtDatosCargados.Value = TxtDatos.Value;
 
@@ -3683,20 +3690,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             for (int i = 0; i < tabla.Length - 1; i++)
             {
                 string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();
-                string conResultado = "false";
 
-                //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
-                {
-                    string[] filaBk = bk[i].Split('#');
-                    conResultado = filaBk[2].ToString();
-                }
+                string codigo = fila[1].ToString();
+                string tarea = fila[2].ToString();
+                string muestra= fila[3].ToString();
+                string estado = "false";
+             
+                if (tabla.Length > 1) //TxtDatosCargados en Alta no tiene valores!
+                    estado = fila[4].ToString();
+                
                 if (sDatos == "")
-                        sDatos = codigo + "#" + muestra + "#" + conResultado;
+                        sDatos = codigo + "#" + muestra + "#" + estado;
                 else
-                        sDatos += ";" +  codigo + "#" + muestra + "#" + conResultado;
+                        sDatos += ";" +  codigo + "#" + muestra + "#" + estado;
 
             }
 
@@ -3715,7 +3721,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //    }
 
             if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
+            {  //TxtDatos.Value = "";
                 args.IsValid = false;
              
                 return;
@@ -3741,7 +3747,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if (oC.DiagObligatorio)
                 {if (lstDiagnosticosFinal.Items.Count == 0)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
                         return;
@@ -3751,7 +3757,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 ///Validacion de la fecha de protocolo
                 if (txtFecha.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
                     return;
@@ -3761,7 +3767,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
                         return;
@@ -3773,7 +3779,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlSectorServicio.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar sector";
                     return;
@@ -3781,7 +3787,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlOrigen.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Origen";
                     return;
@@ -3789,7 +3795,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlPrioridad.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Prioridad";
                     return;
@@ -3797,7 +3803,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlMuestra.SelectedValue == "0") && (pnlMuestra.Visible))
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Tipo de Muestra";
                     return;
@@ -3809,7 +3815,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
                 //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe seleccionar el caracter del protocolo";
                     return;
@@ -3821,7 +3827,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
                         return;
@@ -3831,7 +3837,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
                 {
                     
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
                         return;
@@ -3839,21 +3845,21 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 }
                 if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
                     return;
                 }
                 if (ddlOrigen.SelectedValue == "0")
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
                     return;
                 }
                 if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
                         return;
@@ -3862,7 +3868,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
                     return;
@@ -3872,7 +3878,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (txtFechaOrden.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
                     return;
@@ -3881,7 +3887,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
                         return;
@@ -3890,7 +3896,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
                             return;
@@ -3990,36 +3996,42 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     }
                 }//fin control
 
+                if (txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
             }
         }
 		 
-		 protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
+		 protected void cvValidacionInput_ServerValidate_old(object source, ServerValidateEventArgs args)
         { 
            
 
-            TxtDatosCargados.Value = TxtDatos.Value;
+             TxtDatosCargados.Value = TxtDatos.Value; 
 
-            string sDatos = "";
+             string sDatos = "";
 
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
-            
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
+               string[] tabla = TxtDatos.Value.Split('@');
 
-            }
+             for (int i = 0; i < tabla.Length - 1; i++)
+             {
+                 string[] fila = tabla[i].Split('#');
+                 string codigo = fila[1].ToString();
+                 string muestra= fila[2].ToString();                
 
-          
+                     if (sDatos == "")
+                         sDatos = codigo + "#" + muestra;
+                     else
+                         sDatos += ";" +  codigo + "#" + muestra;                                                        
+
+             }
 
 
-            TxtDatosCargados.Value = sDatos;
+
+
+             TxtDatosCargados.Value = sDatos;
             //saco restriccion de forma temporal
             //if (Request["Operacion"].ToString()!="Modifica")
             //    if (!VerificarFechaPacienteMuestra())
@@ -4305,6 +4317,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             args.IsValid = true;
                     }
                 }//fin control
+
+                if(txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
 
             }
         }
@@ -4763,9 +4782,43 @@ ORDER BY cantidad desc";
                                 //documento = pro[i].documento.ToString();
                                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula+ '#' + espe));
                             }
+
                             if (pro.Count > 1)
+                            {
                                 if (Request["idProtocolo"] == null)
                                 { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
+
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion + 1).Trim();
+
+
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+
 
                             lblErrorMedico.Visible = false;
 
@@ -4796,7 +4849,7 @@ ORDER BY cantidad desc";
 
 
         }
-
+       
         public class Profesiones
         {
             public List<Matricula> matriculacion { get; set; }
@@ -4804,19 +4857,21 @@ ORDER BY cantidad desc";
         }
 
         public class Matricula
-
         {
             public string  matriculaNumero { get; set; }
-           
+            public DateTime fin { get; set; }
+
         }
 
        
-            public class ProfesionalMatriculado
+        public class ProfesionalMatriculado
         {
         //    public int documento { get; set; }
             public string nombre { get; set; }
             public string apellido { get; set; }
+            public string cuit { get; set; }
            public List<Profesiones> profesiones { get; set; }
+            public string id { get; set; } //id que trae de ANDES
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
             //public string FechaNac { get; set; }
@@ -4876,13 +4931,16 @@ ORDER BY cantidad desc";
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "") 
+                //Agregue que sea distinto de vacio porque al Cancelar sin traer matricula,
+                //deja un string vacio, que hacia que entrara al if y buscara nuevamente un medico
+                //haciendo que la ejecucion se extendiera innecesariamente
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
                
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //No quiero pisar los datos cargados
             }
         }
 
