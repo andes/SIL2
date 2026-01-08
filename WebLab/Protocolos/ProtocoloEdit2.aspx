@@ -886,16 +886,29 @@
             const postBack = esPostBack();
 
             const txtDatosCargados = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
+            const txtDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
 
-            if (EsNuevoProtocolo()) {
-                if (txtDatosCargados === "") {
-                    CrearFila(!postBack); // true si NO hay error de validación
+
+            if (txtDatos != "") {
+                AgregarCargadoSinVerificar();
+            } else {
+                if (EsNuevoProtocolo()) {
+                    CrearFila(!postBack);
                 } else {
                     decidirComoCarga(postBack);
                 }
-            } else {
-                decidirComoCarga(postBack);
             }
+
+
+            //if (EsNuevoProtocolo()) {
+            //    if (txtDatosCargados === "" && txtDatos === "") {
+            //        CrearFila(!postBack); // true si NO hay error de validación
+            //    } else {
+            //        decidirComoCarga(postBack);
+            //    }
+            //} else {
+            //    decidirComoCarga(postBack);
+            //}
 
             //mantengo actualizado el contadorfilas 
 
@@ -1063,9 +1076,17 @@
                     var cod = document.getElementById('Codigo_' + i);
                     var tarea = document.getElementById('Tarea_' + i);
                     var desde = document.getElementById('Desde_' + i);
+                    var estado = 0;
+                                      
 
                     if (cod != null) { //si no es la ultima fila
-                        str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+                        switch (cod.className) {
+                            case 'codigo': estado = 0; break;
+                            case 'codigoConResultado': estado = 1; break;
+                            case 'codigoConResultadoValidado': estado = 2; break;
+                        }
+
+                        str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '#' + estado +'@';
                     }
                 }
             
@@ -1214,7 +1235,7 @@
                 var cod = document.getElementById('Codigo_0').value = '';
                 var tarea = document.getElementById('Tarea_0').value = '';
                 var desde = document.getElementById('Desde_0').value = '';
-
+                var estado = cod.className = 'codigo';
                 CargarDatos();
             }
         }
@@ -1241,9 +1262,18 @@
                     var desde = document.getElementById('Desde_' + i);
                     desde.name = 'Desde_' + pos;
                     desde.id = 'Desde_' + pos;
+                    var estado = 0;
+
+                    if (cod != null) { //si no es la ultima fila
+                        switch (cod.className) {
+                            case 'codigo': estado = 0; break;
+                            case 'codigoConResultado': estado = 1; break;
+                            case 'codigoConResultadoValidado': estado = 2; break;
+                        }
+                    }
 
                     pos = pos + 1;
-                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '@';
+                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '#' + estado + '@';
                 }
             }
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
@@ -1287,9 +1317,10 @@
         function AgregarCargados() {
             CrearFila(true);
             var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-            
+          
             if (elvalor != '') {
                 var sTabla = elvalor.split(';');
+                
                 for (var i = 0; i < (sTabla.length); i++) {
                     var sItem = sTabla[i].split('#');
                     var valorCodigo = sItem[0];
@@ -1309,6 +1340,8 @@
                         document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
 
                     desde.checked = sinMuestra;
+
+                    
                 }
             }
         }
@@ -1480,61 +1513,70 @@
         // ya que se evaluo al inicio y esta funcion se usa SOLO para cuando se vuelve de un postback y no quiero perder lo cargado
         function AgregarCargadoSinVerificar() {
             CrearFilaInicial(0);
-            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
-            
+           var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
+               
             if (elvalor != '') {
-                var sTabla = elvalor.split(';');
-                var largoTabla = (sTabla.length);
-                var con = 0;
+                var sTabla = elvalor.split('@');
+                var largoTabla = (sTabla.length) ;
+              
                 for (var i = 0; i < largoTabla; i++) {
+                   
                     var sItem = sTabla[i].split('#');
-                    var valorCodigo = sItem[0];
+                    var valorCodigo = sItem[1];
                     var sinMuestra = true;
 
-                    if (sItem[1] == 'No') sinMuestra = true;
-                    else sinMuestra = false;
+                    if (sItem[3] == 'false')  sinMuestra = false;
+
+                    if (valorCodigo != '' && document.getElementById('Codigo_' + i) != null) {
+
+                        document.getElementById('Codigo_' + i).value = valorCodigo;
+                        CargarTareaSinVerificar(document.getElementById('Codigo_' + i));
+                        
+                        document.getElementById('Desde_' + i).checked = sinMuestra;
+
+                        if (sItem[4] == '1') ///resultado cargado
+                            document.getElementById('Codigo_' + i).className = 'codigoConResultado';
+                        if (sItem[4] == '2')///resultado validado
+                            document.getElementById('Codigo_' + i).className = 'codigoConResultadoValidado';
+                        CrearFilaInicial(i + 1);
+                    }
                     
-                    document.getElementById('Codigo_' + con).value = valorCodigo;
-
-                    // Carga la tarea que reemplaza al metodo CargarTarea(document.getElementById('Codigo_' + con));
-                    var codigo = document.getElementById('Codigo_' + con);
-                    var nroFila = codigo.name.replace('Codigo_', '');
-                    var tarea = document.getElementById('Tarea_' + nroFila);
-                    var lista = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value;
-                    if (codigo.value == '') {
-                        tarea.value = '';
-                    }
-                    else {
-                        //No verifico repetidos porque estoy recargando del original sin cambios, solo vengo del postback
-                        var k = lista.indexOf('#' + codigo.value + '#', 0);
-                        if (k < 0) {
-                            codigo.value = '';
-                            tarea.value = '';
-                            alert('El codigo de analisis no existe o no es válido.');
-                            document.getElementById('Codigo_' + nroFila).focus();
-                        }
-                        else {
-                            var j = lista.indexOf('@', k);
-                            k = lista.indexOf('#', k + 1) + 1;
-                            tarea.value = lista.substring(k, j).replace('#True', '').replace('#False', '');
-                            CrearFilaInicial(con + 1);
-                        }
-                    }
-                    // ---> fin de cargar tarea
-
-                    var desde = document.getElementById('Desde_' + con);
-                    if (sItem[2] == '1') ///resultado cargado
-                        document.getElementById('Codigo_' + con).className = 'codigoConResultado';
-                    if (sItem[2] == '2')///resultado validado
-                        document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
-                    desde.checked = sinMuestra;
-                    con = con + 1;
                 }
-                CargarDatos();
             }
         }
 
-     
+        function CargarTareaSinVerificar(codigo) {
+            var nroFila = codigo.name.replace('Codigo_', '');
+            var tarea = document.getElementById('Tarea_' + nroFila);
+            var sinMu = document.getElementById('Desde_' + nroFila);
+
+
+            var lista = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value;
+
+            if (codigo.value == '') {
+                tarea.value = '';
+            }
+            else {
+               
+                var i = lista.indexOf('#' + codigo.value + '#', 0);
+                if (i < 0) {
+                    codigo.value = '';
+                    tarea.value = '';
+                    alert('El codigo de analisis no existe o no es válido.');
+                    document.getElementById('Codigo_' + nroFila).focus();
+
+                }
+                else {
+                    var j = lista.indexOf('@', i);
+                    i = lista.indexOf('#', i + 1) + 1;
+                    tarea.value = lista.substring(i, j).replace('#True', '').replace('#False', '');
+                    CargarDatos();
+                    CrearFila(true);
+                }
+                
+            }
+        }
+       
     </script>
 
 
