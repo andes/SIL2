@@ -884,36 +884,32 @@
 
         function InicioPagina() {
             const postBack = esPostBack();
-
+            const redirect = esReDirect();
+            //TxtDatosCargados → estado original / persistido / histórico
+            // TxtDatos        → estado actual / editable / a guardar
             const txtDatosCargados = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
             const txtDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
 
-
-            if (txtDatos != "") {
-                AgregarCargadoSinVerificar();
+            if (redirect) {
+                AgregarCargados(); //Recarga todo desde cero
             } else {
-                if (EsNuevoProtocolo()) {
-                    CrearFila(!postBack);
+                if (txtDatos != "") {
+                    AgregarCargadoSinVerificar();
                 } else {
-                    decidirComoCarga(postBack);
+                    if (EsNuevoProtocolo()) {
+                        if (txtDatosCargados != "")
+                            decidirComoCarga(postBack);
+                        else
+                            CrearFila(!postBack);
+                    } else {
+                        decidirComoCarga(postBack);
+                    }
                 }
             }
 
-
-            //if (EsNuevoProtocolo()) {
-            //    if (txtDatosCargados === "" && txtDatos === "") {
-            //        CrearFila(!postBack); // true si NO hay error de validación
-            //    } else {
-            //        decidirComoCarga(postBack);
-            //    }
-            //} else {
-            //    decidirComoCarga(postBack);
-            //}
+            
 
             //mantengo actualizado el contadorfilas 
-
-            //TxtDatosCargados → estado original / persistido / histórico
-            // TxtDatos        → estado actual / editable / a guardar
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
         }
 
@@ -1473,13 +1469,25 @@
              }).width(600);
         }
 
+        function esReDirect() {
+            //Modificar Paciente
+            var abrioModificarPaciente = document.getElementById("<%= HFModificarPaciente.ClientID %>").value;
+
+
+            if (abrioModificarPaciente == "Si") {
+                abrioModificarPaciente = "";
+                return true;
+            }
+
+            //llegue al final de los if y no devolvieron true
+            return false;
+        }
         function esPostBack() {
             //Pop up Seleccionar Medico
             var abrioPopUp = document.getElementById("<%= HFSelMedico.ClientID %>").value;
             //Pop up Actualizar Renaper
             var abrioSelRenaper = document.getElementById("<%= HFSelRenaper.ClientID %>").value;
-            //Pop up Modificar Paciente
-            var abrioModificarPaciente = document.getElementById("<%= HFModificarPaciente.ClientID %>").value;
+           
             //Validacion de Formulario
             var validatorSpan = document.getElementById('<%= cvValidacionInput.ClientID %>');
             var mensaje = validatorSpan.innerText;
@@ -1495,10 +1503,6 @@
                 return true;
             }
           
-            if (abrioModificarPaciente == "Si") {
-                abrioModificarPaciente = "";
-                return true;
-            }
 
             if (abrioSelRenaper == "Si") {
                 abrioSelRenaper = "";

@@ -3685,7 +3685,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         { 
            
-            string[] bk = TxtDatosCargados.Value.Split(';');
+            
 
             TxtDatosCargados.Value = TxtDatos.Value;
 
@@ -3696,21 +3696,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             for (int i = 0; i < tabla.Length - 1; i++)
             {
                 string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();
-                string conResultado = "false";
 
-                //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
-                {
-                    string[] filaBk = bk[i].Split('#');
-                    if(filaBk.Length > 2)
-                     conResultado = filaBk[2].ToString();
-                }
+                string codigo = fila[1].ToString();
+                string tarea = fila[2].ToString();
+                string muestra= fila[3].ToString();
+                string estado = "false";
+             
+                if (tabla.Length > 1) //TxtDatosCargados en Alta no tiene valores!
+                    estado = fila[4].ToString();
+                
                 if (sDatos == "")
-                        sDatos = codigo + "#" + muestra + "#" + conResultado;
+                        sDatos = codigo + "#" + muestra + "#" + estado;
                 else
-                        sDatos += ";" +  codigo + "#" + muestra + "#" + conResultado;
+                        sDatos += ";" +  codigo + "#" + muestra + "#" + estado;
 
             }
 
@@ -3729,7 +3727,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //    }
 
             if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
+            {  //TxtDatos.Value = "";
                 args.IsValid = false;
              
                 return;
@@ -3755,7 +3753,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if (oC.DiagObligatorio)
                 {if (lstDiagnosticosFinal.Items.Count == 0)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
                         return;
@@ -3765,7 +3763,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 ///Validacion de la fecha de protocolo
                 if (txtFecha.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
                     return;
@@ -3775,7 +3773,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
                         return;
@@ -3787,7 +3785,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlSectorServicio.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar sector";
                     return;
@@ -3795,7 +3793,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlOrigen.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Origen";
                     return;
@@ -3803,7 +3801,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlPrioridad.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Prioridad";
                     return;
@@ -3811,7 +3809,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlMuestra.SelectedValue == "0") && (pnlMuestra.Visible))
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Tipo de Muestra";
                     return;
@@ -3823,7 +3821,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
                 //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe seleccionar el caracter del protocolo";
                     return;
@@ -3835,7 +3833,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
                         return;
@@ -3845,7 +3843,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
                 {
                     
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
                         return;
@@ -3853,21 +3851,21 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 }
                 if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
                     return;
                 }
                 if (ddlOrigen.SelectedValue == "0")
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
                     return;
                 }
                 if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
                         return;
@@ -3876,7 +3874,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
                     return;
@@ -3886,7 +3884,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (txtFechaOrden.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
                     return;
@@ -3895,7 +3893,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
                         return;
@@ -3904,7 +3902,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
                             return;

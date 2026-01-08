@@ -611,9 +611,6 @@
                 const TxtDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
                 const validatorSpan = esPostBackValidacion();
 
-                //  console.log("TxtDatos", TxtDatos);
-                //console.log("esPostBack", esPostBack);
-               // console.log("validatorSpan", validatorSpan);
 
                 if (!esPostBack && !validatorSpan) {
                     if (TxtDatos == "") {
@@ -732,22 +729,13 @@
                 var str = '';
 
                 for (var i = 0; i < contadorfilas; i++) {
-                    //console.log("-------------");
-                    //console.log("Nueva fila, i", i);
-                    //console.log("Nueva fila, contador filas", contadorfilas);
-
 
                     var nroFila = document.getElementById('NroFila_' + i);
-                    //console.log("nroFila", nroFila);
                     var cod = document.getElementById('Codigo_' + i);
-                    //console.log("cod", cod);
                     var tarea = document.getElementById('Tarea_' + i);
-                    //console.log("tarea", tarea);
-                    //console.log("-------------");
 
                     if (cod.value != '')
                         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '@';
-                    //		        
                 }
 
                 document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
@@ -763,7 +751,6 @@
 
             function CargarTarea(codigo) {
 
-                //console.log("CargarTarea : codigo", codigo)
                 var nroFila = codigo.name.replace('Codigo_', '');
                 var tarea = document.getElementById('Tarea_' + nroFila);
 
@@ -928,7 +915,6 @@
                     if (sFila[1] != "") {
                         CrearFila(false, esPostBack, i);
                         var nroFila = document.getElementById('NroFila_' + i);
-                        console.log("nrofila", nroFila);
                         nroFila.value = sFila[0];
                         var cod = document.getElementById('Codigo_' + i);
                         cod.value = sFila[1];
@@ -938,9 +924,7 @@
                         str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '@';
                     }
                 }
-                //if (esPostBack && i == (sTabla.length - 1)) {
-                //    CrearFila(false, esPostBack, i-1);
-                //}
+               
                 CrearFila(false, esPostBack, contadorfilas - 1);
 
                 document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
