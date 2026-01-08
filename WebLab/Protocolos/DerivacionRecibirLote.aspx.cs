@@ -161,6 +161,7 @@ namespace WebLab.Protocolos
 
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         {
+
             string error = "";
             
             if (string.IsNullOrEmpty(txtFecha.Text ))
