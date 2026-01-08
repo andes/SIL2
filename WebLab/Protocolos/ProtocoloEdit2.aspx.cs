@@ -4942,7 +4942,7 @@ ORDER BY cantidad desc";
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
                
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //No quiero pisar los datos cargados
             }
         }
 
