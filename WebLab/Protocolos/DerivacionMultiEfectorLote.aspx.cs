@@ -119,15 +119,8 @@ namespace WebLab.Protocolos
            
             resetearForm();
             LoteDerivacion lote = new LoteDerivacion();
-            try
-            {
-                lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
-            }
-            catch { 
-                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true); 
-                return;
-            }
-
+            lote = (LoteDerivacion)lote.GetById(int.Parse(txtNumeroLote.Text));
+            
 
             if (lote != null)
             {
@@ -137,6 +130,7 @@ namespace WebLab.Protocolos
                 }
                 
             }
+            else ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
         }
         private void CargarControladores(LoteDerivacion lote)
         {
@@ -197,7 +191,14 @@ namespace WebLab.Protocolos
                 gvProtocolosDerivados.DataBind();
 
             }
-            
+            else
+            {
+                gvProtocolosDerivados.DataSource = null;
+                gvProtocolosDerivados.Visible = true;
+                gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
+                lblCantidadRegistros.Text = "No se encontraron registros.";
+            }
+
         }
 
         private bool efectorCorrecto(LoteDerivacion lote)

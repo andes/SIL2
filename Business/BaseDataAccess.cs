@@ -297,9 +297,14 @@ namespace Business
 			}
 		}
 
-		public object Get(object id)
+        public object Get(object id)
+        {
+            return this.Get(this.GetType(), id);
+        }
+
+        public object GetById(object id)
 		{
-			return this.Get(this.GetType(),id);
+			return m_session.Get(this.GetType(),id);
 		}
 
 		public IList GetListByPropertyValue(Type type, string propertyName, object propertyValue)
