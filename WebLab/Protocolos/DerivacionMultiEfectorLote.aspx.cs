@@ -116,21 +116,26 @@ namespace WebLab.Protocolos
         #region Buscar
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
+           
+            resetearForm();
+            LoteDerivacion lote = new LoteDerivacion();
             try
             {
-                resetearForm();
-                LoteDerivacion lote = new LoteDerivacion();
                 lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
+            }
+            catch { }
 
+            if (lote != null && lote.IdLoteDerivacion != 0) //con idlote <>0 porque por mas que no encuentra el numero de lote el objeto "lote" no es null
+            {
                 if (efectorCorrecto(lote))
                 { //El efector destino es el efector logueado
                     CargarControladores(lote);
                 }
+
             }
-            catch (Exception)
-            {
+            else
                 ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
-            }
+            
 
         }
         private void CargarControladores(LoteDerivacion lote)
@@ -145,9 +150,15 @@ namespace WebLab.Protocolos
             lblEstadoLote.Text = lote.descripcionEstadoLote();
 
             //Cargo el efector de Origen
-            Efector efectorOrigen = new Efector();
-            efectorOrigen = (Efector)efectorOrigen.Get(typeof(Efector), "IdEfector", lote.IdEfectorOrigen.IdEfector);
-            lblEfectorOrigen.Text = efectorOrigen.Nombre;
+            int IdEfectorOrigen = lote.IdEfectorOrigen.IdEfector;
+
+            if (IdEfectorOrigen != 0) {
+                Efector efectorOrigen = new Efector();
+                efectorOrigen = (Efector)efectorOrigen.Get(typeof(Efector), "IdEfector", IdEfectorOrigen );
+
+                if (efectorOrigen != null)
+                    lblEfectorOrigen.Text = efectorOrigen.Nombre;
+            }
 
             //Cargo grilla de protocolos para ingresar
             DataTable dt = LeerDatosProtocolosDerivados();
@@ -156,6 +167,16 @@ namespace WebLab.Protocolos
             {
                 gvProtocolosDerivados.DataSource = dt;
                 lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
+
+                if (divScroll == null)
+                {
+                    throw new Exception("divScroll es null. Verificar que exista en el aspx.");
+                }
+
+                if (divScroll.Style == null)
+                {
+                    throw new Exception("divScroll.Style es null. Verificar que exista en el aspx.");
+                }
 
                 if (cantidad <= 10)
                     divScroll.Style["height"] = "auto";  // altura mínima 
