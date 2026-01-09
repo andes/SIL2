@@ -1231,7 +1231,8 @@ namespace WebLab.Protocolos
 
 
                         GuardarDetallePractica(oDetalle);
-                        GuardarDerivacion(oDetalle);
+                        //GuardarDerivacion(oDetalle);
+                        oDetalle.GuardarDerivacion(oUser);
                     }
                     else  //si ya esta actualizo si trajo muestra o no
                     {
@@ -2136,8 +2137,10 @@ namespace WebLab.Protocolos
 
         private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oAnterior)
         {
-            Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
-            oDerivacion.MarcarComoRecibidas(oAnterior, oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+            //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+            //oDerivacion.MarcarComoRecibidas(oAnterior, oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+            DetalleProtocolo dp = new DetalleProtocolo();
+            dp.ActualizarItemsDerivados(oRegistro, oAnterior, Convert.ToInt32(Request["idLote"]), oUser);
         }
 
         private void VerificacionEstadoLote(Protocolo oRegistro, Protocolo oAnterior)

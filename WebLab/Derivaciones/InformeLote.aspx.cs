@@ -65,10 +65,10 @@ namespace WebLab.Derivaciones
                     CargarGrilla();
                     CargarControles();
                 }
-                else
-                {
-                    CargarFechaHoraActual(); //Despues de guardar, si no tenia fecha seleccionada lo trae ahora sin datos
-                }
+                //else
+                //{
+                //    CargarFechaHoraActual(); //Despues de guardar, si no tenia fecha seleccionada lo trae ahora sin datos --> NO recuerdo cuando sucedia, pero si ahora lo dejo, pone la fecha actual en envio y no la del formulario.
+                //}
 
             }
             else
