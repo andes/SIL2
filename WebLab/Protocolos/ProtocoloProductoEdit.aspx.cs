@@ -1231,7 +1231,8 @@ namespace WebLab.Protocolos
 
 
                         GuardarDetallePractica(oDetalle);
-                        GuardarDerivacion(oDetalle);
+                        //GuardarDerivacion(oDetalle);
+                        oDetalle.GuardarDerivacion(oUser);
                     }
                     else  //si ya esta actualizo si trajo muestra o no
                     {
