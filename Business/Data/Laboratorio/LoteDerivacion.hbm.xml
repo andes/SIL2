@@ -3,7 +3,7 @@
    <class name="Business.Data.Laboratorio.LoteDerivacion,Business" table="LAB_LoteDerivacion"  >
 
     
-     <id name="IdLoteDerivacion" column="IdLoteDerivacion" type="Int32" unsaved-value="0">
+     <id name="IdLoteDerivacion" column="idLoteDerivacion" type="Int32" unsaved-value="0">
        <generator class="native"/>
      </id>
     <many-to-one name="IdEfectorOrigen" column="idEfectorOrigen" class="Business.Data.Efector,Business" />

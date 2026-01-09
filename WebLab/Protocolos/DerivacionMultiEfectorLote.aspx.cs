@@ -123,20 +123,20 @@ namespace WebLab.Protocolos
             {
                 lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
             }
-            catch { }
+            catch { 
+                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true); 
+                return;
+            }
 
-            if (lote != null && lote.IdLoteDerivacion != 0) //con idlote <>0 porque por mas que no encuentra el numero de lote el objeto "lote" no es null
+
+            if (lote != null)
             {
                 if (efectorCorrecto(lote))
                 { //El efector destino es el efector logueado
                     CargarControladores(lote);
                 }
-
+                
             }
-            else
-                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
-            
-
         }
         private void CargarControladores(LoteDerivacion lote)
         {
@@ -150,73 +150,59 @@ namespace WebLab.Protocolos
             lblEstadoLote.Text = lote.descripcionEstadoLote();
 
             //Cargo el efector de Origen
-            int IdEfectorOrigen = lote.IdEfectorOrigen.IdEfector;
-
-            if (IdEfectorOrigen != 0) {
-                Efector efectorOrigen = new Efector();
-                efectorOrigen = (Efector)efectorOrigen.Get(typeof(Efector), "IdEfector", IdEfectorOrigen );
-
-                if (efectorOrigen != null)
-                    lblEfectorOrigen.Text = efectorOrigen.Nombre;
-            }
+            if (lote.IdEfectorOrigen != null)
+                lblEfectorOrigen.Text = lote.IdEfectorOrigen.Nombre;
 
             //Cargo grilla de protocolos para ingresar
             DataTable dt = LeerDatosProtocolosDerivados();
-            int cantidad = dt.Rows.Count;
-            if (cantidad > 0)
+            if(dt != null)
             {
-                gvProtocolosDerivados.DataSource = dt;
-                lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
-
-                if (divScroll == null)
+                int cantidad = dt.Rows.Count;
+                if (cantidad > 0)
                 {
-                    throw new Exception("divScroll es null. Verificar que exista en el aspx.");
-                }
+                    gvProtocolosDerivados.DataSource = dt;
+                    lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
 
-                if (divScroll.Style == null)
-                {
-                    throw new Exception("divScroll.Style es null. Verificar que exista en el aspx.");
-                }
-
-                if (cantidad <= 10)
-                    divScroll.Style["height"] = "auto";  // altura mínima 
-                else
-                    divScroll.Style["height"] = "500px";  // altura grande con scroll
+                    if (cantidad <= 10)
+                        divScroll.Style["height"] = "auto";  // altura mínima 
+                    else
+                        divScroll.Style["height"] = "500px";  // altura grande con scroll
                
-            }
-            else
-            {
-                gvProtocolosDerivados.DataSource = null;
-                gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
-
-                //Si no trajo datos verifico el estado del lote
-                gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Red;
-                switch (lote.Estado)
-                {
-                    case 1:
-                        gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                        gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
-
-                        break;
-                    case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
-                        gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
-                        gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Black;
-                        break;
                 }
-                divScroll.Style["height"] = "auto";
+                else
+                {
+                    gvProtocolosDerivados.DataSource = null;
+                    gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
+
+                    //Si no trajo datos verifico el estado del lote
+                    gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Red;
+                    switch (lote.Estado)
+                    {
+                        case 1:
+                            gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                            gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
+
+                            break;
+                        case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
+                            gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
+                            gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Black;
+                            break;
+                    }
+                    divScroll.Style["height"] = "auto";
+                }
+                gvProtocolosDerivados.DataBind();
+
             }
-            gvProtocolosDerivados.DataBind();
             
         }
 
         private bool efectorCorrecto(LoteDerivacion lote)
         {
-            try
-            {
+            
                 //Verifico que el efector de Destino sea el que se tenga que ingresar
                 if (lote.IdEfectorDestino.IdEfector == oUser.IdEfector.IdEfector)
                 {
@@ -225,8 +211,9 @@ namespace WebLab.Protocolos
                 }
                 else
                 {
-                    Efector e = new Efector();
-                    e = (Efector)e.Get(typeof(Efector), lote.IdEfectorDestino.IdEfector);
+                    //Efector e = new Efector();
+                    //e = (Efector)e.Get(typeof(Efector), lote.IdEfectorDestino.IdEfector);
+
                     lblErrorEfectorOrigen.Visible = true;
                     lblErrorEfectorOrigen.Text = "El lote no corresponde al efector del usuario '" + oC.IdEfector.Nombre + "'";
                     divControlLote.Attributes["class"] = "form-group has-error";
@@ -235,13 +222,6 @@ namespace WebLab.Protocolos
                 }
 
 
-            }
-            catch (Exception excep)
-            {
-
-                // if(excep.Message.Contains(""))
-                return false; //Cuando da error idlote inexistente que devuelva falso
-            }
         }
 
 
