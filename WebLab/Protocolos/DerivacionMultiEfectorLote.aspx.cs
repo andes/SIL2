@@ -121,8 +121,7 @@ namespace WebLab.Protocolos
            
             resetearForm();
             LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.GetIfExists(int.Parse(txtNumeroLote.Text));
-            
+            lote = (LoteDerivacion)lote.GetIfExists(typeof(LoteDerivacion),int.Parse(txtNumeroLote.Text));
 
             if (lote != null)
             {
