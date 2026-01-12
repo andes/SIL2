@@ -302,7 +302,7 @@ namespace Business
             return this.Get(this.GetType(), id);
         }
 
-        public object GetById(object id)
+        public object GetIfExists(object id)
 		{
 			return m_session.Get(this.GetType(),id);
 		}

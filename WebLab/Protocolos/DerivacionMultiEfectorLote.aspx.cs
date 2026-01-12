@@ -38,23 +38,25 @@ namespace WebLab.Protocolos
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            if (!Page.IsPostBack)
+            if (Session["idUsuario"] != null)
             {
-
-                VerificaPermisos("Derivacion");
-                if (Request["idServicio"].ToString() != "5")
-                    ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
-                else
-                    pnlTitulo.Visible = false;
-
-                if (Request["idLote"] != null)
+                if (!Page.IsPostBack)
                 {
-                    txtNumeroLote.Text = Convert.ToString(Request["idLote"]);
-                    btnBuscar_Click(null, null);
-                }
-                txtNumeroLote.Focus();
 
+                    VerificaPermisos("Derivacion");
+                    if (Request["idServicio"].ToString() != "5")
+                        ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
+                    else
+                        pnlTitulo.Visible = false;
+
+                    if (Request["idLote"] != null)
+                    {
+                        txtNumeroLote.Text = Convert.ToString(Request["idLote"]);
+                        btnBuscar_Click(null, null);
+                    }
+                    txtNumeroLote.Focus();
+
+                }
             }
         }
         private void VerificaPermisos(string sObjeto)
@@ -119,7 +121,7 @@ namespace WebLab.Protocolos
            
             resetearForm();
             LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.GetById(int.Parse(txtNumeroLote.Text));
+            lote = (LoteDerivacion)lote.GetIfExists(int.Parse(txtNumeroLote.Text));
             
 
             if (lote != null)
@@ -135,70 +137,64 @@ namespace WebLab.Protocolos
         private void CargarControladores(LoteDerivacion lote)
         {
             //Si el lote es Derivado se habilita el botón para recibirlo
-            if (lote.Estado == 2)
-            {
-                btnRecibirLote.Enabled = true;
-            }
-
-            //Cargo el estado 
-            lblEstadoLote.Text = lote.descripcionEstadoLote();
-
-            //Cargo el efector de Origen
-            if (lote.IdEfectorOrigen != null)
-                lblEfectorOrigen.Text = lote.IdEfectorOrigen.Nombre;
-
-            //Cargo grilla de protocolos para ingresar
-            DataTable dt = LeerDatosProtocolosDerivados();
-            if(dt != null)
-            {
-                int cantidad = dt.Rows.Count;
-                if (cantidad > 0)
+                if (lote.Estado == 2)
                 {
-                    gvProtocolosDerivados.DataSource = dt;
-                    lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
+                    btnRecibirLote.Enabled = true;
+                }
 
-                    if (cantidad <= 10)
-                        divScroll.Style["height"] = "auto";  // altura mínima 
-                    else
-                        divScroll.Style["height"] = "500px";  // altura grande con scroll
+                //Cargo el estado 
+                lblEstadoLote.Text = lote.descripcionEstadoLote();
+
+                //Cargo el efector de Origen
+                if (lote.IdEfectorOrigen != null)
+                    lblEfectorOrigen.Text = lote.IdEfectorOrigen.Nombre;
                
-                }
-                else
+                //Cargo grilla de protocolos para ingresar
+                DataTable dt = LeerDatosProtocolosDerivados();
+                if(dt != null)
                 {
-                    gvProtocolosDerivados.DataSource = null;
-                    gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
-
-                    //Si no trajo datos verifico el estado del lote
-                    gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Red;
-                    switch (lote.Estado)
+                    int cantidad = dt.Rows.Count;
+                    if (cantidad > 0)
                     {
-                        case 1:
-                            gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
-                            gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
+                        gvProtocolosDerivados.DataSource = dt;
+                        lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
 
-                            break;
-                        case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
-                            gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
-                            gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Black;
-                            break;
+                        if (cantidad <= 10)
+                            divScroll.Style["height"] = "auto";  // altura mínima 
+                        else
+                            divScroll.Style["height"] = "500px";  // altura grande con scroll
+
                     }
-                    divScroll.Style["height"] = "auto";
+                    else
+                    {
+                        gvProtocolosDerivados.DataSource = null;
+                        gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
+
+                        //Si no trajo datos verifico el estado del lote
+                        gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Red;
+                        switch (lote.Estado)
+                        {
+                            case 1:
+                                gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5:
+                                gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
+
+                                break;
+                            case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
+                                gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
+                                gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Black;
+                                break;
+                        }
+                        divScroll.Style["height"] = "auto";
+                    }
+                    gvProtocolosDerivados.DataBind();
+
                 }
-                gvProtocolosDerivados.DataBind();
-
-            }
-            else
-            {
-                gvProtocolosDerivados.DataSource = null;
-                gvProtocolosDerivados.Visible = true;
-                gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
-                lblCantidadRegistros.Text = "No se encontraron registros.";
-            }
-
+               
+                
         }
 
         private bool efectorCorrecto(LoteDerivacion lote)
@@ -344,6 +340,16 @@ namespace WebLab.Protocolos
             btnBuscar_Click(null, null);
         }
 
+        private void grabarLogMensaje(string mensaje)
+        {
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            mensaje = "Error DerivacionMultiEfectorLote:" + mensaje;
+            string query = @"INSERT INTO [dbo].[Temp_Mensaje]
+           ( fecharegistro, mensaje, idEfector)           
+            VALUES  (GETDATE()  ,'" + mensaje + "'," + oUser.IdEfector.IdEfector.ToString() + ")";
+            SqlCommand cmd = new SqlCommand(query, conn);
 
+            int mensajegrabado = Convert.ToInt32(cmd.ExecuteScalar());
+        }
     }
 }
