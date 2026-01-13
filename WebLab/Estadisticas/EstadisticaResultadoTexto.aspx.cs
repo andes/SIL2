@@ -195,6 +195,8 @@ namespace WebLab.Estadisticas
         protected void btnExcel_Click(object sender, EventArgs e)
         {
             string m_listaCodigo = ""; string m_listaNombres = "";
+            HashSet<string> listaNombres = new HashSet<string>(StringComparer.OrdinalIgnoreCase); //Para que no repitan los nombres de los analisis de las practicas, que da un error en PIVOT as Child.
+
             for (int i = 0; i < lstItem.Items.Count; i++)
             {
                 if (lstItem.Items[i].Selected)
@@ -234,10 +236,12 @@ namespace WebLab.Estadisticas
                                             m_listaCodigo = "'" + oDet2.Codigo + "'";
                                         else
                                             m_listaCodigo += ",'" + oDet2.Codigo + "'";
-                                        if (m_listaNombres == "")
-                                            m_listaNombres = "[" + oDet2.Nombre.Replace("[", "").Replace("]", "") + "]";
-                                        else
-                                            m_listaNombres += ",[" + oDet2.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                        //if (m_listaNombres == "")
+                                        //    m_listaNombres = "[" + oDet2.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                        //else
+                                        //    m_listaNombres += ",[" + oDet2.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                        string nombres = "[" + oDet2.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                        listaNombres.Add(nombres);
                                     }
                                 }
                             }
@@ -248,10 +252,12 @@ namespace WebLab.Estadisticas
                                     m_listaCodigo = "'" + oitemEfector.IdItem.Codigo + "'";
                                 else
                                     m_listaCodigo += ",'" + oitemEfector.IdItem.Codigo + "'";
-                                if (m_listaNombres == "")
-                                    m_listaNombres = "[" + oitemEfector.IdItem.Nombre.Replace("[","").Replace("]", "") + "]";
-                                else
-                                    m_listaNombres += ",[" + oitemEfector.IdItem.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                //if (m_listaNombres == "")
+                                //    m_listaNombres = "[" + oitemEfector.IdItem.Nombre.Replace("[","").Replace("]", "") + "]";
+                                //else
+                                //    m_listaNombres += ",[" + oitemEfector.IdItem.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                string nombres = "[" + oitemEfector.IdItem.Nombre.Replace("[", "").Replace("]", "") + "]";
+                                listaNombres.Add(nombres);
                             }
 
                         }
@@ -261,7 +267,8 @@ namespace WebLab.Estadisticas
                 }
             }
 
-            if (m_listaNombres != "")
+            //if (m_listaNombres != "")
+            if(listaNombres.Count > 0)
             {
                 string m_strSQLCondicion = " 1=1 and b.baja=0 ";
 
@@ -290,22 +297,30 @@ namespace WebLab.Estadisticas
                     m_strSQLCondicion += " AND b.fechaRegistro  < '" + fecha2.ToString("yyyyMMdd") + "'";
                 }
 
+                foreach (string nombre in listaNombres)
+                {
+                    if (m_listaNombres == "")
+                        m_listaNombres = nombre;
+                    else
+                        m_listaNombres += "," + nombre ;
+                }
+
                 string m_strSQL = @"with vta_ResultadoPivot_car1 as (
 
-SELECT    b.numero AS numero, b.fecha, 
-case when I.idtiporesultado=1 then convert(varchar,DP.resultadoNum) else
-DP.resultadoCar end as resultadoCar, DP.idProtocolo,replace( replace(I.nombre,'[',''),']','') AS item 
-FROM            dbo.LAB_DetalleProtocolo AS DP with (nolock)  
-					  inner join LAB_Item I with (nolock) on I.iditem= DP.idsubitem
-					   inner join lab_protocolo b with (nolock) on dp.idProtocolo = b.idProtocolo
-WHERE   " + m_strSQLCondicion + @"   and codigo in (" + m_listaCodigo + @") and DP.idUsuarioValida>0 
-)
-SELECT Child.numero as Protocolo,  fecha," + m_listaNombres +
-                @"FROM (
-   SELECT    a.* FROM vta_ResultadoPivot_car1 a " + @"    
-   )
-  pvt PIVOT (max(resultadocar) FOR item IN (" + m_listaNombres + @"))  AS Child 
- ";
+                    SELECT    b.numero AS numero, b.fecha, 
+                    case when I.idtiporesultado=1 then convert(varchar,DP.resultadoNum) else
+                    DP.resultadoCar end as resultadoCar, DP.idProtocolo,replace( replace(I.nombre,'[',''),']','') AS item 
+                    FROM            dbo.LAB_DetalleProtocolo AS DP with (nolock)  
+					                      inner join LAB_Item I with (nolock) on I.iditem= DP.idsubitem
+					                       inner join lab_protocolo b with (nolock) on dp.idProtocolo = b.idProtocolo
+                    WHERE   " + m_strSQLCondicion + @"   and codigo in (" + m_listaCodigo + @") and DP.idUsuarioValida>0 
+                    )
+                    SELECT Child.numero as Protocolo,  fecha," + m_listaNombres +
+                       @"FROM (
+                       SELECT    a.* FROM vta_ResultadoPivot_car1 a " + @"    
+                       )
+                      pvt PIVOT (max(resultadocar) FOR item IN (" + m_listaNombres + @"))  AS Child 
+                     ";
 
                 DataSet Ds = new DataSet();
                 
