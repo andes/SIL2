@@ -267,46 +267,46 @@ namespace Business.Data.Laboratorio
         }
         #endregion
 
-        public static List<Derivacion> DerivacionesByLote(int idLote) {
-            List<Derivacion> derivaciones = new List<Derivacion>();
-            try {
-                ISession session = NHibernateHttpModule.CurrentSession;
-                IList lista = session.CreateQuery("from Derivacion where idLote="+idLote).List();
+        //public static List<Derivacion> DerivacionesByLote(int idLote) {
+        //    List<Derivacion> derivaciones = new List<Derivacion>();
+        //    try {
+        //        ISession session = NHibernateHttpModule.CurrentSession;
+        //        IList lista = session.CreateQuery("from Derivacion where idLote="+idLote).List();
 
-                foreach (Derivacion item in lista) {
-                    derivaciones.Add(item);
-                }
-            } catch (Exception) {
+        //        foreach (Derivacion item in lista) {
+        //            derivaciones.Add(item);
+        //        }
+        //    } catch (Exception) {
 
-            }
-            return derivaciones;
-        }
+        //    }
+        //    return derivaciones;
+        //}
 
-        public void MarcarComoRecibidas(Protocolo oAnterior, Protocolo oNuevo,  Usuario oUser, int idLoteDerivacion)
-        {
-			string query =
-			 @"update LAB_Derivacion
-            set estado=3---recibido
-            ,idProtocoloDerivacion=" + oNuevo.IdProtocolo.ToString() + @"
-            from LAB_Derivacion D
-                inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
-            where Det.idProtocolo=" + oAnterior.IdProtocolo.ToString() + " and idLote=" + idLoteDerivacion;
-			
-			SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-			SqlCommand cmd = new SqlCommand(query, conn);
-			int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
+		//public void MarcarComoRecibidas(Protocolo oAnterior, Protocolo oNuevo,  Usuario oUser, int idLoteDerivacion) //Se hace ahora en DetalleProtocolo.ActualizarItemsDerivados
+		// {
+		//	string query =
+		//	 @"update LAB_Derivacion
+		//          set estado=3---recibido
+		//          ,idProtocoloDerivacion=" + oNuevo.IdProtocolo.ToString() + @"
+		//          from LAB_Derivacion D
+		//              inner join LAB_DetalleProtocolo Det on Det.idDetalleProtocolo= d.idDetalleProtocolo
+		//          where Det.idProtocolo=" + oAnterior.IdProtocolo.ToString() + " and idLote=" + idLoteDerivacion;
 
-			//Se indica en el protocolo de Origen que fue recibido en el destino
-			if (oAnterior != null)
-			{
-				if (idLoteDerivacion != 0)
-					oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLoteDerivacion, "Protocolo " + oNuevo.Numero.ToString());
-				else
-					oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Protocolo", oNuevo.Numero.ToString());
-			}
-		}
+		//	SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+		//	SqlCommand cmd = new SqlCommand(query, conn);
+		//	int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
 
-        public string ObtenerItemsPendientes(string idLoteDerivacion, string idProtocolo)
+		//	//Se indica en el protocolo de Origen que fue recibido en el destino
+		//	if (oAnterior != null)
+		//	{
+		//		if (idLoteDerivacion != 0)
+		//			oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLoteDerivacion, "Protocolo " + oNuevo.Numero.ToString());
+		//		else
+		//			oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Protocolo", oNuevo.Numero.ToString());
+		//	}
+		//}
+
+		public string ObtenerItemsPendientes(string idLoteDerivacion, string idProtocolo)
         {
 			////// ---------------------->Buscar las derivaciones que no han sido ingresadas
 			//los protocolos detalles me dan las derivaciones

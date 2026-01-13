@@ -11,12 +11,12 @@
             var txtNumeroLote = document.getElementById('<%= txtNumeroLote.ClientID %>');
             //console.log(txtNumeroLote);
             var num = txtNumeroLote.value;
-            //console.log(num);
+              //console.log(num);
             num = num.replace(/\D/g, '');
             //console.log(num);
             $("#<%=txtNumeroLote.ClientID%>").val(num);
         }
-
+      
     </script>
 
 </asp:Content>
@@ -50,9 +50,10 @@
                                 <tr>
                                     <td>
                                         <div class="form-group" id="divControlLote" runat="server">
-                                            <label class="control-label" for="txtNumeroLote">Nro. Lote:</label>
-                                            <asp:TextBox ID="txtNumeroLote" runat="server" class="form-control input-sm" Width="100px" OnTextChanged="txtNumeroLote_TextChanged" Onkeyup="validaInput();" AutoPostBack="true"></asp:TextBox>
-
+                                            
+                                             <asp:Label runat="server" ID="lblNumeroLote" Text="">Nro. Lote:</asp:Label>
+                                            <asp:TextBox ID="txtNumeroLote" runat="server" class="form-control input-sm" Width="100px"   Onkeyup="validaInput();"></asp:TextBox>
+                                            
                                         </div>
 
 
@@ -93,20 +94,14 @@
                                         <td colspan="2">
                                      <div id="divScroll" runat="server" style="height:auto; overflow-y:auto; overflow-x:hidden;">
                                             <asp:GridView ID="gvProtocolosDerivados" runat="server" CssClass="table table-bordered bs-table" AutoGenerateColumns="False"
-                                                DataKeyNames="idProtocolo">
+                                                DataKeyNames="idProtocolo" OnRowDataBound="gvProtocolosDerivados_RowDataBound" OnRowCommand="gvProtocolosDerivados_RowCommand">
                                                 <Columns>
                                                     <asp:BoundField DataField="fecha" HeaderText="Fecha" />
-                                                    <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />
-                                                    <%--<asp:BoundField DataField="EstadoDerivacion" HeaderText="Estado Derivacion" />--%>
-                                                    <asp:BoundField DataField="idPaciente" Visible="false" />
-                                                    <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" />
-                                                    <asp:BoundField DataField="idProtocolo" Visible="false" />
+                                                    <asp:BoundField DataField="numero" HeaderText="Numero Protocolo" />                                                    
+                                                    <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" />                                                    
                                                     <asp:TemplateField>
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkIngresoProtocolo" OnCommand="lnkIngresoProtocolo_Command"
-                                                                CommandArgument='<%# Eval("idProtocolo") %>'
-                                                                CommandName='<%# Eval("idPaciente") %>'
-                                                                enabled=' <%# HabilitarIngreso() %>'
+                                                            <asp:LinkButton runat="server" ID="lnkIngresoProtocolo"                                                                  
                                                                 Text="Ingresar Protocolo" CssClass="btn btn-success" Width="150px"></asp:LinkButton>
                                                         </ItemTemplate>
                                                         <ItemStyle Width="5%" HorizontalAlign="Center" />

@@ -1885,8 +1885,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oRegistroAnterior)
         {
-            Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
-            oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+           
+            DetalleProtocolo dp = new DetalleProtocolo();
+            dp.ActualizarItemsDerivados(oRegistro, oRegistroAnterior, Convert.ToInt32(Request["idLote"]), oUser);
+           
+            //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+            //oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+            //Business.Data.Laboratorio.DetalleProtocolo oDetalle = new Business.Data.Laboratorio.DetalleProtocolo();
+            //oDetalle.ActualizoResultado(oRegistro, oRegistroAnterior,Convert.ToInt32(Request["idLote"]));
         }
 
         private string getListaAreasCodigoBarras()
@@ -5281,6 +5287,7 @@ System.Net.ServicePointManager.SecurityProtocol =
                     request.ContentType = "application/json";
                     request.Headers.Add("app_key", "8482d41353ecd747c271f2ec869345e4");
                     request.Headers.Add("app_id", "0e4fcbbf");
+
 
 
                     Stream postStream = request.GetRequestStream();

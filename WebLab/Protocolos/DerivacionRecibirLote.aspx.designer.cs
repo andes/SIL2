@@ -105,33 +105,6 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl txtHora;
 
         /// <summary>
-        /// rfvFecha control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFecha;
-
-        /// <summary>
-        /// rfvHora control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHora;
-
-        /// <summary>
-        /// rvFecha control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvFecha;
-
-        /// <summary>
         /// txtObs control.
         /// </summary>
         /// <remarks>
@@ -139,6 +112,15 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTextArea txtObs;
+
+        /// <summary>
+        /// cvValidacionInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
 
         /// <summary>
         /// btnRecibirLote control.

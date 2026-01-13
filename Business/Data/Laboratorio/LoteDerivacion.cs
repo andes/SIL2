@@ -1,5 +1,10 @@
-using System; 
-using System.Collections.Generic; 
+using NHibernate;
+using NHibernate.Expression;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Text; 
 
 
@@ -143,34 +148,55 @@ namespace Business.Data.Laboratorio  {
             return estado.Nombre;
         }
 
-        public bool HayDerivacionesPendientes() {
-            List<Derivacion> dList = Derivacion.DerivacionesByLote(this.IdLoteDerivacion);
-            dList = dList.FindAll(x => x.IdProtocoloDerivacion == 0 && x.Estado == 1);
+        public bool HayDerivacionesPendientes()
+        {
+            //List<Derivacion> dList = Derivacion.DerivacionesByLote(this.IdLoteDerivacion);
+            //dList = dList.FindAll(x => x.IdProtocoloDerivacion == 0 && x.Estado == 1);
 
-            if (dList.Count > 0)
-                return true;
+            //Revisar que Derivacion tenga DetalleProtocolo
+            string m_strSQL = " Select idDerivacion FROM LAB_Derivacion WHERE idLote=" +this.IdLoteDerivacion+ " and idProtocoloDerivacion=0 and estado=1 and " +
+                " idDetalleProtocolo in (Select idDetalleProtocolo FROM LAB_DetalleProtocolo where IdEfector = " + this.IdEfectorOrigen.IdEfector + ")";
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            DataTable dt = Ds.Tables[0];
+
+            if(dt != null)
+            {
+                if (dt.Rows.Count > 0)
+                    return true;
+                else
+                    return false;
+            }
             else
                 return false;
-            
+
         }
+           
 
         public void ActualizaEstadoLote(int idUsuario, string ProtocoloNuevo, string ProtocoloAnterior)
         {
             if (Estado == 4) //Pasa de Recibido a Ingresado
             {
                 Estado = 5;
-                GrabarAuditoriaLoteDerivacion(descripcionEstadoLote(), idUsuario);
+                LoteDerivacionEstado oEstado = new LoteDerivacionEstado();
+                oEstado = (LoteDerivacionEstado)oEstado.Get(typeof(LoteDerivacionEstado), Estado);
+                GrabarAuditoriaLoteDerivacion(oEstado.Nombre, idUsuario);
                 FechaIngreso = DateTime.Now;
             }
 
             //Graba el ingreso del protocolo en el lote
             GrabarAuditoriaLoteDerivacion("Ingresa protocolo", idUsuario, "Número Protocolo", ProtocoloNuevo, ProtocoloAnterior);
 
-            //Si al generar este nuevo protocolo se finalizo la carga del lote, cambiar estado a Completado
+            //No hay derivaciones pendientes, cambio el estado del lote a Ingresado Total
             if (!HayDerivacionesPendientes())
             {
                 Estado = 6; //Pasa a Completado si no tiene más derivaciones pendientes
-                GrabarAuditoriaLoteDerivacion(descripcionEstadoLote(), idUsuario);
+                LoteDerivacionEstado oEstado = new LoteDerivacionEstado();
+                oEstado = (LoteDerivacionEstado)oEstado.Get(typeof(LoteDerivacionEstado), Estado);
+                GrabarAuditoriaLoteDerivacion(oEstado.Nombre, idUsuario);
             }
 
             Save();

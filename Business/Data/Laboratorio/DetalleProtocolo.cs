@@ -1449,10 +1449,79 @@ namespace Business.Data.Laboratorio
 
                 oRegistro.Save();
 
-                // graba el resultado en ResultadCar   "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
-                //oDetalle.ResultadoCar = "Pendiente de Derivacion";//"se podria poner a que efector....         
-                //oDetalle.Save();
+                // graba el resultado en ResultadCar  "Pendiente de derivar"
+                this.ResultadoCar = "Pendiente de derivar";   
+                this.Save();
                 this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
+            }
+        }
+
+        //public void ActualizoResultado(Protocolo oRegistro, Protocolo oAnterior, int idLoteDerivacion)
+        //{
+
+        //Se hace ahora en el metodo ActualizarItemsDerivados
+        //ResultadoCar: “Recibido en YYYY Protocolo Nro. XXXX”
+
+        //string query =
+        // "  update LAB_DetalleProtocolo " +
+        // "  set resultadoCar= 'Recibido en " + oRegistro.IdEfector.Nombre + " Protocolo Nro. " + oRegistro.Numero +
+        // "'   from LAB_DetalleProtocolo Det " +
+        // "    inner join LAB_Derivacion D on Det.idDetalleProtocolo = d.idDetalleProtocolo " +
+        // "  where Det.idProtocolo=" + oAnterior.IdProtocolo.ToString() + " and idLote=" + idLoteDerivacion;
+
+
+        //// Pero que pasa en los casos que en el efector destino un analisis no se ingrese? 
+        //// Tendriamos como recibido el analisis en el emisor pero en el receptor no estaria cargado
+
+        //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        //SqlCommand cmd = new SqlCommand(query, conn);
+        //int idRealizado = Convert.ToInt32(cmd.ExecuteScalar());
+
+        //}
+
+        public void ActualizarItemsDerivados(Protocolo oRegistro, Protocolo oAnterior, int idLoteDerivacion, Usuario oUser)
+        {
+            //  PREMISA: Cuales son los idDetalle del protocolo emisor que si se grabaron en el protocolo nuevo
+            string query =
+             @" SELECT dp_origen.idDetalleProtocolo
+                FROM LAB_DetalleProtocolo dp_origen
+                INNER JOIN LAB_Derivacion d on d.idDetalleProtocolo = dp_origen.idDetalleProtocolo
+                WHERE dp_origen.idProtocolo = " + oAnterior.IdProtocolo + " and idLote = " + idLoteDerivacion + @"
+                    AND EXISTS (
+                        SELECT 1
+                        FROM LAB_DetalleProtocolo dp_dest
+                        WHERE dp_dest.idProtocolo = " + oRegistro.IdProtocolo + @"
+                            AND dp_dest.idItem = dp_origen.idItem
+                    ); ";
+
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(query, conn);
+            adapter.Fill(Ds);
+            DataTable dt = Ds.Tables[0];
+
+            foreach (DataRow item in dt.Rows)
+            {
+                int idDetalleProtocolo = int.Parse(item[0].ToString());
+
+                DetalleProtocolo dp = new DetalleProtocolo();
+                dp = (DetalleProtocolo)dp.Get(typeof(DetalleProtocolo), "IdDetalleProtocolo", idDetalleProtocolo);
+                dp.ResultadoCar = "Recibido en " + oRegistro.IdEfector.Nombre + " Protocolo Nro. " + oRegistro.Numero;
+                dp.Save();
+
+                Derivacion de = new Derivacion();
+                de = (Derivacion)de.Get(typeof(Derivacion), "IdDetalleProtocolo", dp);
+                de.Estado = 3;
+                de.IdProtocoloDerivacion = oAnterior.IdProtocolo;
+                de.Save();
+            }
+
+            //Se indica en el protocolo de Origen que fue recibido en el destino
+            if (oAnterior != null)
+            {
+                 oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLoteDerivacion, "Protocolo " + oRegistro.Numero.ToString());
+                
             }
         }
     }
