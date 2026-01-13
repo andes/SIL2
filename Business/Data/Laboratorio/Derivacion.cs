@@ -267,20 +267,20 @@ namespace Business.Data.Laboratorio
         }
         #endregion
 
-        public static List<Derivacion> DerivacionesByLote(int idLote) {
-            List<Derivacion> derivaciones = new List<Derivacion>();
-            try {
-                ISession session = NHibernateHttpModule.CurrentSession;
-                IList lista = session.CreateQuery("from Derivacion where idLote="+idLote).List();
+        //public static List<Derivacion> DerivacionesByLote(int idLote) {
+        //    List<Derivacion> derivaciones = new List<Derivacion>();
+        //    try {
+        //        ISession session = NHibernateHttpModule.CurrentSession;
+        //        IList lista = session.CreateQuery("from Derivacion where idLote="+idLote).List();
 
-                foreach (Derivacion item in lista) {
-                    derivaciones.Add(item);
-                }
-            } catch (Exception) {
+        //        foreach (Derivacion item in lista) {
+        //            derivaciones.Add(item);
+        //        }
+        //    } catch (Exception) {
 
-            }
-            return derivaciones;
-        }
+        //    }
+        //    return derivaciones;
+        //}
 
 		//public void MarcarComoRecibidas(Protocolo oAnterior, Protocolo oNuevo,  Usuario oUser, int idLoteDerivacion) //Se hace ahora en DetalleProtocolo.ActualizarItemsDerivados
 		// {

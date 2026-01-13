@@ -23,7 +23,7 @@ namespace WebLab.Protocolos
         public Configuracion oC = new Configuracion();
         public Usuario oUser = new Usuario();
 
-        #region Carga
+     
         protected void Page_PreInit(object sender, EventArgs e)
         {
 
@@ -38,26 +38,25 @@ namespace WebLab.Protocolos
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["idUsuario"] != null)
+
+            if (!Page.IsPostBack)
             {
-                if (!Page.IsPostBack)
+
+                VerificaPermisos("Derivacion");
+                if (Request["idServicio"].ToString() != "5")
+                    ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
+                else
+                    pnlTitulo.Visible = false;
+
+                if (Request["idLote"] != null)
                 {
-
-                    VerificaPermisos("Derivacion");
-                    if (Request["idServicio"].ToString() != "5")
-                        ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
-                    else
-                        pnlTitulo.Visible = false;
-
-                    if (Request["idLote"] != null)
-                    {
-                        txtNumeroLote.Text = Convert.ToString(Request["idLote"]);
-                        btnBuscar_Click(null, null);
-                    }
-                    txtNumeroLote.Focus();
-
+                    txtNumeroLote.Text = Convert.ToString(Request["idLote"]);
+                    btnBuscar_Click(null, null);
                 }
+                txtNumeroLote.Focus();
+
             }
+           
         }
         private void VerificaPermisos(string sObjeto)
         {
@@ -112,10 +111,7 @@ namespace WebLab.Protocolos
                     break;
             }
             return tiene;
-        }
-        #endregion
-
-        #region Buscar
+        } 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
            
@@ -136,63 +132,66 @@ namespace WebLab.Protocolos
         private void CargarControladores(LoteDerivacion lote)
         {
             //Si el lote es Derivado se habilita el botón para recibirlo
-                if (lote.Estado == 2)
-                {
-                    btnRecibirLote.Enabled = true;
-                }
+            if (lote.Estado == 2)
+            {
+                btnRecibirLote.Enabled = true;
+            }
 
-                //Cargo el estado 
-                lblEstadoLote.Text = lote.descripcionEstadoLote();
+            //Cargo el estado 
+            //   lblEstadoLote.Text = lote.descripcionEstadoLote();
 
-                //Cargo el efector de Origen
-                if (lote.IdEfectorOrigen != null)
+            LoteDerivacionEstado estado = new LoteDerivacionEstado();
+            estado = (LoteDerivacionEstado)estado.Get(typeof(LoteDerivacionEstado), lote.Estado);
+            lblEstadoLote.Text = estado.Nombre;
+
+            //Cargo el efector de Origen
+            if (lote.IdEfectorOrigen != null)  
                     lblEfectorOrigen.Text = lote.IdEfectorOrigen.Nombre;
                
                 //Cargo grilla de protocolos para ingresar
                 DataTable dt = LeerDatosProtocolosDerivados();
-                if(dt != null)
+                if (dt != null)
                 {
-                    int cantidad = dt.Rows.Count;
-                    if (cantidad > 0)
-                    {
-                        gvProtocolosDerivados.DataSource = dt;
-                        lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
-
-                        if (cantidad <= 10)
-                            divScroll.Style["height"] = "auto";  // altura mínima 
-                        else
-                            divScroll.Style["height"] = "500px";  // altura grande con scroll
-
-                    }
-                    else
-                    {
-                        gvProtocolosDerivados.DataSource = null;
-                        gvProtocolosDerivados.Visible = true; //asi  sale el cartel de grilla vacia "EmptyDataText"
-
-                        //Si no trajo datos verifico el estado del lote
-                        gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Red;
-                        switch (lote.Estado)
-                        {
-                            case 1:
-                                gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
-                            case 2:
-                            case 3:
-                            case 4:
-                            case 5:
-                                gvProtocolosDerivados.EmptyDataText = "No se encontraron protocolos para el lote ingresado.";
-
-                                break;
-                            case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla
-                                gvProtocolosDerivados.EmptyDataText = "Ya se ingresaron todos los protocolos del lote.";
-                                gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Black;
-                                break;
-                        }
-                        divScroll.Style["height"] = "auto";
-                    }
+                    gvProtocolosDerivados.DataSource = dt;
                     gvProtocolosDerivados.DataBind();
 
                 }
-               
+
+
+            int cantidad = dt.Rows.Count;
+            if (cantidad > 0)
+            {               
+                lblCantidadRegistros.Text = "Cantidad de registros encontrados " + cantidad;
+
+                if (cantidad <= 10)
+                    divScroll.Style["height"] = "auto";  // altura mínima 
+                else
+                    divScroll.Style["height"] = "500px";  // altura grande con scroll
+
+            }
+            else
+            {                             
+
+                //Si no trajo datos verifico el estado del lote
+          //      gvProtocolosDerivados.EmptyDataRowStyle.ForeColor = System.Drawing.Color.Red;
+                switch (lote.Estado)
+                {
+                    case 1:
+                        // gvProtocolosDerivados.EmptyDataText = "No se puede recepcionar lote, todavia no se ha derivado."; break;
+                        lblCantidadRegistros.Text = "No se puede recepcionar lote, todavia no se ha derivado "; break;
+                    case 2:
+                    case 3:
+                    case 4:
+                    case 5:                        
+                        lblCantidadRegistros.Text = "No se encontraron protocolos para el lote ingresado.";  break;
+                    
+                            case 6:  //Si esta el lote esta completo muestro otro mensaje de la grilla                        
+                        lblCantidadRegistros.Text = "Ya se ingresaron todos los protocolos del lote."; break;
+                        
+                        
+                        }
+                        divScroll.Style["height"] = "auto";
+                 }                                                   
                 
         }
 
@@ -250,41 +249,42 @@ namespace WebLab.Protocolos
 
             DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter adapter = new SqlDataAdapter
-            {
-                SelectCommand = new SqlCommand(m_strSQL, conn)
-            };
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            
+
             adapter.Fill(Ds);
             return Ds.Tables[0];
         }
-       
 
-        protected bool HabilitarIngreso()
-        {
-            bool puedeIngresarProtocolo = false;
 
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
+        //protected bool HabilitarIngreso()
+        //{
+        //    bool puedeIngresarProtocolo = false;
 
-            /* Estados del Lote
-             idEstado	nombre
-                    1	Creado -> NO permitir cargar protocolo
-                    2	Derivado -> NO permitir cargar protocolo
-                    3	Cancelado -> NO permitir cargar protocolo
-                    4	Recibido ->  permitir cargar protocolo
-                    5	Ingresado ->  permitir cargar protocolo
-                    6	Completado ->  No hay más protocolos para cargar
+        //    LoteDerivacion lote = new LoteDerivacion();
+        //    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), Convert.ToInt32(txtNumeroLote.Text));
+
+        //    /* Estados del Lote
+        //     idEstado	nombre
+        //            1	Creado -> NO permitir cargar protocolo
+        //            2	Derivado -> NO permitir cargar protocolo
+        //            3	Cancelado -> NO permitir cargar protocolo
+        //            4	Recibido ->  permitir cargar protocolo
+        //            5	Ingresado ->  permitir cargar protocolo
+        //            6	Completado ->  No hay más protocolos para cargar
              
-             */
-            if (lote.Estado == 5 || lote.Estado == 4)
-            {
-                puedeIngresarProtocolo = true;
-            }
-            return puedeIngresarProtocolo;
-        }
-        #endregion
+        //     */
+        //    if (lote.Estado == 5 || lote.Estado == 4)
+        //    {
+        //        puedeIngresarProtocolo = true;
+        //    }
+        //    return puedeIngresarProtocolo;
+        //}
 
         #region NuevoLote
+
+        /*
         protected void lnkIngresoProtocolo_Command(object sender, CommandEventArgs e)
         {
             int idProtocolo = Convert.ToInt32(e.CommandArgument);
@@ -323,6 +323,42 @@ namespace WebLab.Protocolos
             }
            
         }
+        */
+
+        private void GenerarNuevoProtocolo(object idProtocoloOrigen )
+        {
+
+            string s_idServicio, idLote;
+            int i_idProtocoloOrigen = int.Parse(idProtocoloOrigen.ToString());
+
+            Protocolo p = new Protocolo();
+            p = (Protocolo)p.Get(typeof(Protocolo), i_idProtocoloOrigen);
+
+            s_idServicio = p.IdTipoServicio.IdTipoServicio.ToString();
+            idLote = txtNumeroLote.Text;
+            int idPaciente= p.IdPaciente.IdPaciente;
+
+            if (p.IdPaciente.IdPaciente > 0)
+            {
+                Response.Redirect("ProtocoloEdit2.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
+                    "&idProtocolo=" + idProtocoloOrigen +
+                    "&idServicio=" + s_idServicio +
+                    "&idLote=" + idLote +
+                    "&idPaciente=" + idPaciente +
+                     "&Operacion=AltaDerivacionMultiEfectorLote", false);
+            }
+            else
+            {
+                //Es Muestra No Pacientes
+                Response.Redirect("ProtocoloProductoEdit.aspx?idEfectorSolicitante=" + p.IdEfector.IdEfector +
+                   "&idProtocolo=" + idProtocoloOrigen +
+                   "&idServicio=" + s_idServicio +
+                   "&idLote=" + idLote +
+                   "&Desde=AltaDerivacionMultiEfectorLote" +
+                   "&Operacion=AltaDerivacionMultiEfectorLote", false);
+            }
+
+        }
 
         #endregion
 
@@ -331,24 +367,35 @@ namespace WebLab.Protocolos
         {
             Response.Redirect("DerivacionRecibirLote.aspx?idLote=" + txtNumeroLote.Text + "&idServicio=" + Request["idServicio"], false);
         }
+
+
         #endregion
 
-        protected void txtNumeroLote_TextChanged(object sender, EventArgs e)
-        {
-            //Si cambia el numero de lote, que vuelva a realizar la busqueda para que refresque los datos de busqueda
-            btnBuscar_Click(null, null);
+        protected void gvProtocolosDerivados_RowDataBound(object sender, GridViewRowEventArgs e)
+        {          
+             
+            ///Cuando se carga la grilla es porque ya verifiqué el estado del lote
+
+                if (e.Row.RowType == DataControlRowType.DataRow)
+                {
+                    LinkButton cmdProtocolo = (LinkButton)e.Row.Cells[3].Controls[1];
+                cmdProtocolo.CommandArgument = this.gvProtocolosDerivados.DataKeys[e.Row.RowIndex].Value.ToString();
+                cmdProtocolo.ToolTip = "Ingresar Protocolo";
+                    if ((lblEstadoLote.Text == "Recibido") || (lblEstadoLote.Text == "Ingresado Parcial"))
+                        cmdProtocolo.Enabled = true;
+                    else
+
+                        cmdProtocolo.Enabled = false;
+                }
+
+            
         }
 
-        private void grabarLogMensaje(string mensaje)
+        protected void gvProtocolosDerivados_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            mensaje = "Error DerivacionMultiEfectorLote:" + mensaje;
-            string query = @"INSERT INTO [dbo].[Temp_Mensaje]
-           ( fecharegistro, mensaje, idEfector)           
-            VALUES  (GETDATE()  ,'" + mensaje + "'," + oUser.IdEfector.IdEfector.ToString() + ")";
-            SqlCommand cmd = new SqlCommand(query, conn);
-
-            int mensajegrabado = Convert.ToInt32(cmd.ExecuteScalar());
+           
+                     
+            GenerarNuevoProtocolo (e.CommandArgument);
         }
     }
 }
