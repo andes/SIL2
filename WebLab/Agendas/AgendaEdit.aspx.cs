@@ -287,7 +287,7 @@ namespace WebLab.Agendas
                 crit.Add(Expression.Eq("IdItem", ddlItem.SelectedValue));
                 crit.Add(Expression.Le("FechaDesde", fHasta));
                 crit.Add(Expression.Ge("FechaHasta", fDesde));
-
+                crit.Add(Expression.Eq("Baja", false));
                 if (Request["id"] != null) //Sacar el id de la agenda si es modificacion
                     crit.Add(Expression.Not(Expression.Eq("IdAgenda", int.Parse(Request["id"]))));
 
