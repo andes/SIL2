@@ -7,11 +7,22 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Agendas {
-    
-    
-    public partial class AgendaEdit {
-        
+namespace WebLab.Agendas
+{
+
+
+    public partial class AgendaEdit
+    {
+
+        /// <summary>
+        /// customValidadorGeneral control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator customValidadorGeneral;
+
         /// <summary>
         /// rvTipoServicio control.
         /// </summary>
@@ -20,7 +31,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvTipoServicio;
-        
+
         /// <summary>
         /// cboTipoServicio control.
         /// </summary>
@@ -29,7 +40,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList cboTipoServicio;
-        
+
         /// <summary>
         /// ddlItem control.
         /// </summary>
@@ -38,7 +49,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlItem;
-        
+
         /// <summary>
         /// rvEfector control.
         /// </summary>
@@ -47,7 +58,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvEfector;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -56,7 +67,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// rfvFechaDesde control.
         /// </summary>
@@ -65,7 +76,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaDesde;
-        
+
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -74,7 +85,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-        
+
         /// <summary>
         /// rfvFechaHasta control.
         /// </summary>
@@ -83,7 +94,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaHasta;
-        
+
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -92,7 +103,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-        
+
         /// <summary>
         /// rfvLimite control.
         /// </summary>
@@ -101,7 +112,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvLimite;
-        
+
         /// <summary>
         /// txtLimite control.
         /// </summary>
@@ -110,7 +121,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtLimite;
-        
+
         /// <summary>
         /// cvDias control.
         /// </summary>
@@ -119,7 +130,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvDias;
-        
+
         /// <summary>
         /// rdbTipoDias control.
         /// </summary>
@@ -128,7 +139,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RadioButtonList rdbTipoDias;
-        
+
         /// <summary>
         /// cklDias control.
         /// </summary>
@@ -137,7 +148,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CheckBoxList cklDias;
-        
+
         /// <summary>
         /// rfvHoraDesde control.
         /// </summary>
@@ -146,7 +157,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHoraDesde;
-        
+
         /// <summary>
         /// txtHoraDesde control.
         /// </summary>
@@ -155,7 +166,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtHoraDesde;
-        
+
         /// <summary>
         /// rfvHoraHasta control.
         /// </summary>
@@ -164,7 +175,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHoraHasta;
-        
+
         /// <summary>
         /// txtHoraHasta control.
         /// </summary>
@@ -173,7 +184,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtHoraHasta;
-        
+
         /// <summary>
         /// rdbHorarioTurno control.
         /// </summary>
@@ -182,7 +193,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RadioButtonList rdbHorarioTurno;
-        
+
         /// <summary>
         /// rfvFrecuencia control.
         /// </summary>
@@ -191,7 +202,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RequiredFieldValidator rfvFrecuencia;
-        
+
         /// <summary>
         /// txtFrecuenciaTurno control.
         /// </summary>
@@ -200,7 +211,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFrecuenciaTurno;
-        
+
         /// <summary>
         /// vs control.
         /// </summary>
@@ -209,7 +220,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ValidationSummary vs;
-        
+
         /// <summary>
         /// lnkRegresar control.
         /// </summary>
@@ -218,7 +229,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkRegresar;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>
@@ -227,7 +238,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
+
         /// <summary>
         /// CompareValidator1 control.
         /// </summary>
