@@ -126,6 +126,13 @@
                 <td  colspan="2">
                     <hr /></td>
             </tr>
+             <tr>
+                <td style="width: 93px">Tipo Autenticacion:</td>
+                <td  style="width: 497px" ><asp:DropDownList ID="ddlTipoAutenticacion" runat="server" CssClass="form-control input-sm" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoAutenticacion_SelectedIndexChanged">
+                     <asp:ListItem Value="SIL" Text="SIL" ></asp:ListItem>
+                     <asp:ListItem Value="ONELOGIN" Text="ONELOGIN"></asp:ListItem>
+                    </asp:DropDownList></td>
+            </tr>
             <tr>
                 <td  style="width: 93px">
                     Usuario:</td>
@@ -136,6 +143,7 @@
                         ControlToValidate="txtUsername" ErrorMessage="Usuario" ValidationGroup="0">*</asp:RequiredFieldValidator>
                     <asp:CustomValidator ID="customValidacionGeneral" runat="server" ErrorMessage="Usuario Existente" OnServerValidate="customValidacionGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                     <asp:CustomValidator ID="customValidacionGeneral0" runat="server" ErrorMessage="Usuario debe contener al menos 6 caracteres (letras o numeros)" OnServerValidate="customValidacionGeneral0_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                     <asp:CustomValidator ID="customValidacionGeneral1" runat="server" ErrorMessage="Usuario no puede contener letras ni caracteres especiales" OnServerValidate="customValidacionGeneral1_ServerValidate1" ValidationGroup="0"></asp:CustomValidator>
                 </td>
             </tr>
             <tr>
@@ -147,6 +155,7 @@
                     <asp:RequiredFieldValidator ID="rfvPassword" runat="server" 
                         ControlToValidate="txtPassword" ErrorMessage="Contraseña" 
                         ValidationGroup="0">*</asp:RequiredFieldValidator>
+
                 </td>
             </tr>
             <tr>
@@ -198,6 +207,7 @@
                     <asp:CheckBox ID="chkActivo" runat="server" Checked="True" />
                 </td>
             </tr>
+         
             <tr>
                 <td  colspan="2">
                     <hr /></td>

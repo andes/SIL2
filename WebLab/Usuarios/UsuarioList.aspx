@@ -67,7 +67,10 @@
                     <ItemStyle Width="30%" />
                 </asp:BoundField>
                 <asp:BoundField DataField="habilitado" HeaderText="Activo" />
+               <asp:BoundField DataField="tipoAutenticacion" HeaderText="Tipo Autenticacion" >
                         
+                    <ItemStyle Width="30%" />
+                </asp:BoundField>
                 <asp:TemplateField HeaderText="">
                             <ItemTemplate>
                             <asp:ImageButton ID="Modificar" ToolTip="Modificar" runat="server" ImageUrl="~/App_Themes/default/images/editar.jpg"
