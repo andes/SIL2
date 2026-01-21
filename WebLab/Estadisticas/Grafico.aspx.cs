@@ -6,18 +6,29 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using InfoSoftGlobal;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
     public partial class Grafico : System.Web.UI.Page
     {
+        public string LabelsJson { get; set; }
+        public string DatosJson { get; set; }
+        public string TipoGrafico { get; set; }
+        public string TituloJson { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (int.Parse(Request["tipo"].ToString())!=2)
+            //src="Grafico.aspx?valores=' + valores + '&tipo=0&tipoGrafico=' + tipoGrafico + '"
+            //if (int.Parse(Request["tipo"].ToString()) != 2)
 
-            FCLiteral.Text = mostrarGrafico(int.Parse(Request["tipo"].ToString()));
-            else
-                FCLiteral.Text = mostrarGrafico2(); ;
+            //    FCLiteral.Text = mostrarGrafico(int.Parse(Request["tipo"].ToString()));
+            //else
+            //    FCLiteral.Text = mostrarGrafico2();
+
+            if (!IsPostBack)
+            {
+                mostrarGraficoNuevo(int.Parse(Request["tipo"].ToString()));
+            }
         }
 
         private string mostrarGrafico2()
@@ -121,6 +132,53 @@ namespace WebLab.Estadisticas
             return FusionCharts.RenderChart(s_tipografico, p.ToString(), strXML, p.ToString(), s_ancho, s_alto, false, false);
         }
 
-        
+        private void mostrarGraficoNuevo(int p)
+        {
+            string tipo = "";
+            string s_tipo = "";
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+          
+           
+            if (p == 0) 
+                s_tipo = "Casos por tipo de muestra";
+            else
+            { 
+                if (p == 3) 
+                    s_tipo = "Casos por Resultados Obtenidos"; 
+                else
+                    s_tipo = "Aislamientos"; 
+            }
+
+           
+            if (Request["tipoGrafico"] != null)
+            {
+                if (Request["tipoGrafico"] == "barra")
+                    tipo = "bar";
+                else
+                    tipo = "pie";
+            }
+                        
+            if (!string.IsNullOrEmpty(Request["valores"].ToString()))
+            {
+                string[] arr = Request["valores"].ToString().Split((";").ToCharArray());
+
+                foreach (string item in arr)
+                {
+                    string[] items = item.Split('|');
+                    string label = items[0];
+                    int valor = int.Parse(items[1]);
+
+                    labels.Add(label);
+                    datos.Add(valor);
+                }
+            }
+
+            var js = new JavaScriptSerializer();
+            LabelsJson = js.Serialize(labels);
+            DatosJson = js.Serialize(datos);
+            TipoGrafico = js.Serialize(tipo);
+            TituloJson = js.Serialize(s_tipo);
+        }
     }
 }
