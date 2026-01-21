@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Items {
-    
-    
-    public partial class ItemEdit2 {
-        
+namespace WebLab.Items
+{
+
+
+    public partial class ItemEdit2
+    {
+
         /// <summary>
         /// HFCurrTabIndex control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
-        
+
         /// <summary>
         /// txtEfector control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label txtEfector;
-        
+
         /// <summary>
         /// rfvCodigo control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCodigo;
-        
+
         /// <summary>
         /// txtCodigo control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigo;
-        
+
         /// <summary>
         /// lblMensajeCodigo control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensajeCodigo;
-        
+
         /// <summary>
         /// rfvNombre control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombre;
-        
+
         /// <summary>
         /// txtNombre control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtNombre;
-        
+
         /// <summary>
         /// rfvDescripcion control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDescripcion;
-        
+
         /// <summary>
         /// txtDescripcion control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtDescripcion;
-        
+
         /// <summary>
         /// rvArea control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvArea;
-        
+
         /// <summary>
         /// ddlServicio control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlServicio;
-        
+
         /// <summary>
         /// ddlArea control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlArea;
-        
+
         /// <summary>
         /// ddlUnidadMedida control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlUnidadMedida;
-        
+
         /// <summary>
         /// rdbRequiereMuestra control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbRequiereMuestra;
-        
+
         /// <summary>
         /// ddlDerivable control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlDerivable;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// rvEfector control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RangeValidator rvEfector;
-        
+
         /// <summary>
         /// txtCodigoReferencia control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigoReferencia;
-        
+
         /// <summary>
         /// ddlItemReferencia control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItemReferencia;
-        
+
         /// <summary>
         /// rfvDuracion control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDuracion;
-        
+
         /// <summary>
         /// txtDuracion control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtDuracion;
-        
+
         /// <summary>
         /// rfvItem control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvItem;
-        
+
         /// <summary>
         /// rdbTipo control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbTipo;
-        
+
         /// <summary>
         /// rfvCategoria control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RequiredFieldValidator rfvCategoria;
-        
+
         /// <summary>
         /// rdbCategoria control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RadioButtonList rdbCategoria;
-        
+
         /// <summary>
         /// ddlTipoMuestra control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlTipoMuestra;
-        
+
         /// <summary>
         /// chkImprimeMuestra control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkImprimeMuestra;
-        
+
         /// <summary>
         /// rvTipoResultado control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RangeValidator rvTipoResultado;
-        
+
         /// <summary>
         /// ddlTipoResultado control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlTipoResultado;
-        
+
         /// <summary>
         /// ddlDecimales control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlDecimales;
-        
+
         /// <summary>
         /// ddlMultiplicador control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlMultiplicador;
-        
+
         /// <summary>
         /// txtValorMinimo control.
         /// </summary>
@@ -299,7 +301,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtValorMinimo;
-        
+
         /// <summary>
         /// revValorMinimo control.
         /// </summary>
@@ -308,7 +310,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RegularExpressionValidator revValorMinimo;
-        
+
         /// <summary>
         /// txtValorMaximo control.
         /// </summary>
@@ -317,7 +319,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtValorMaximo;
-        
+
         /// <summary>
         /// revValorMaximo control.
         /// </summary>
@@ -326,7 +328,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RegularExpressionValidator revValorMaximo;
-        
+
         /// <summary>
         /// txtValorDefecto control.
         /// </summary>
@@ -335,7 +337,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtValorDefecto;
-        
+
         /// <summary>
         /// revValorDefecto control.
         /// </summary>
@@ -344,7 +346,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RegularExpressionValidator revValorDefecto;
-        
+
         /// <summary>
         /// ddlDisponible control.
         /// </summary>
@@ -353,7 +355,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlDisponible;
-        
+
         /// <summary>
         /// lblSininsumo control.
         /// </summary>
@@ -362,7 +364,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSininsumo;
-        
+
         /// <summary>
         /// ddlInformable control.
         /// </summary>
@@ -371,7 +373,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlInformable;
-        
+
         /// <summary>
         /// ddlCaracter control.
         /// </summary>
@@ -380,7 +382,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCaracter;
-        
+
         /// <summary>
         /// txtCodigoNomenclador control.
         /// </summary>
@@ -389,7 +391,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigoNomenclador;
-        
+
         /// <summary>
         /// lblMensaje control.
         /// </summary>
@@ -398,7 +400,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensaje;
-        
+
         /// <summary>
         /// ddlItemNomenclador control.
         /// </summary>
@@ -407,7 +409,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItemNomenclador;
-        
+
         /// <summary>
         /// lblValorNomenclador control.
         /// </summary>
@@ -416,7 +418,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblValorNomenclador;
-        
+
         /// <summary>
         /// btnAuditoria control.
         /// </summary>
@@ -425,7 +427,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAuditoria;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>
@@ -434,7 +436,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
+
         /// <summary>
         /// ddlMarca control.
         /// </summary>
@@ -443,7 +445,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlMarca;
-        
+
         /// <summary>
         /// rvMarca control.
         /// </summary>
@@ -452,7 +454,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvMarca;
-        
+
         /// <summary>
         /// txtCodigoPresentacion control.
         /// </summary>
@@ -461,7 +463,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigoPresentacion;
-        
+
         /// <summary>
         /// rfvCodigoPresentacion control.
         /// </summary>
@@ -470,7 +472,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCodigoPresentacion;
-        
+
         /// <summary>
         /// txtPresentacion control.
         /// </summary>
@@ -479,7 +481,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtPresentacion;
-        
+
         /// <summary>
         /// rfvPresentacion control.
         /// </summary>
@@ -488,7 +490,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPresentacion;
-        
+
         /// <summary>
         /// btnAgregarPresentacion control.
         /// </summary>
@@ -497,7 +499,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAgregarPresentacion;
-        
+
         /// <summary>
         /// lblMensagePresentacion control.
         /// </summary>
@@ -506,7 +508,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensagePresentacion;
-        
+
         /// <summary>
         /// gdPresentacion control.
         /// </summary>
@@ -515,7 +517,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gdPresentacion;
-        
+
         /// <summary>
         /// gvAutoAnalizadores control.
         /// </summary>
@@ -524,7 +526,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvAutoAnalizadores;
-        
+
         /// <summary>
         /// lblMensajeMuestra1 control.
         /// </summary>
@@ -533,7 +535,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMensajeMuestra1;
-        
+
         /// <summary>
         /// ddlMuestra1 control.
         /// </summary>
@@ -542,7 +544,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlMuestra1;
-        
+
         /// <summary>
         /// RangeValidator1 control.
         /// </summary>
@@ -551,7 +553,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator RangeValidator1;
-        
+
         /// <summary>
         /// btnAgregarMuestra control.
         /// </summary>
@@ -560,7 +562,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAgregarMuestra;
-        
+
         /// <summary>
         /// lblMensajeMuestra control.
         /// </summary>
@@ -569,7 +571,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensajeMuestra;
-        
+
         /// <summary>
         /// gvMuestraItem control.
         /// </summary>
@@ -578,7 +580,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvMuestraItem;
-        
+
         /// <summary>
         /// pnlVR control.
         /// </summary>
@@ -587,7 +589,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Panel pnlVR;
-        
+
         /// <summary>
         /// pnlNuevoVR control.
         /// </summary>
@@ -596,7 +598,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Panel pnlNuevoVR;
-        
+
         /// <summary>
         /// lblItemVR control.
         /// </summary>
@@ -605,7 +607,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblItemVR;
-        
+
         /// <summary>
         /// ddlTipoServicio control.
         /// </summary>
@@ -614,7 +616,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlTipoServicio;
-        
+
         /// <summary>
         /// ddlSexo control.
         /// </summary>
@@ -623,7 +625,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlSexo;
-        
+
         /// <summary>
         /// rfvEdadDesde control.
         /// </summary>
@@ -632,7 +634,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RequiredFieldValidator rfvEdadDesde;
-        
+
         /// <summary>
         /// txtEdadDesde control.
         /// </summary>
@@ -641,7 +643,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtEdadDesde;
-        
+
         /// <summary>
         /// rfvEdadHasta control.
         /// </summary>
@@ -650,7 +652,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RequiredFieldValidator rfvEdadHasta;
-        
+
         /// <summary>
         /// txtEdadHasta control.
         /// </summary>
@@ -659,7 +661,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtEdadHasta;
-        
+
         /// <summary>
         /// ddlUnidadEdad control.
         /// </summary>
@@ -668,7 +670,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlUnidadEdad;
-        
+
         /// <summary>
         /// ddlMetodo control.
         /// </summary>
@@ -677,7 +679,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMetodo;
-        
+
         /// <summary>
         /// lblDecimales control.
         /// </summary>
@@ -686,7 +688,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDecimales;
-        
+
         /// <summary>
         /// rdbRango control.
         /// </summary>
@@ -695,7 +697,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RadioButtonList rdbRango;
-        
+
         /// <summary>
         /// txtValorMinimoVR control.
         /// </summary>
@@ -704,7 +706,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtValorMinimoVR;
-        
+
         /// <summary>
         /// RegularExpressionValidator1 control.
         /// </summary>
@@ -713,7 +715,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RegularExpressionValidator RegularExpressionValidator1;
-        
+
         /// <summary>
         /// txtValorMaximoVR control.
         /// </summary>
@@ -722,7 +724,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtValorMaximoVR;
-        
+
         /// <summary>
         /// RegularExpressionValidator2 control.
         /// </summary>
@@ -731,7 +733,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RegularExpressionValidator RegularExpressionValidator2;
-        
+
         /// <summary>
         /// txtObservaciones control.
         /// </summary>
@@ -740,7 +742,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtObservaciones;
-        
+
         /// <summary>
         /// cvObservaciones control.
         /// </summary>
@@ -749,7 +751,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CustomValidator cvObservaciones;
-        
+
         /// <summary>
         /// cvValores control.
         /// </summary>
@@ -758,7 +760,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CustomValidator cvValores;
-        
+
         /// <summary>
         /// ddlPresentacionItem control.
         /// </summary>
@@ -767,7 +769,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlPresentacionItem;
-        
+
         /// <summary>
         /// btGuardarVR control.
         /// </summary>
@@ -776,7 +778,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btGuardarVR;
-        
+
         /// <summary>
         /// PnlVREfector control.
         /// </summary>
@@ -785,7 +787,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Panel PnlVREfector;
-        
+
         /// <summary>
         /// ddlPresentacionEfector control.
         /// </summary>
@@ -794,7 +796,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlPresentacionEfector;
-        
+
         /// <summary>
         /// btnAgregarVREfector control.
         /// </summary>
@@ -803,7 +805,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAgregarVREfector;
-        
+
         /// <summary>
         /// ddlPresentacionEfectorDefecto control.
         /// </summary>
@@ -812,7 +814,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlPresentacionEfectorDefecto;
-        
+
         /// <summary>
         /// btnPresentacionDefecto control.
         /// </summary>
@@ -821,7 +823,16 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnPresentacionDefecto;
-        
+
+        /// <summary>
+        /// lblPresentacionDefecto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblPresentacionDefecto;
+
         /// <summary>
         /// gvListaVR control.
         /// </summary>
@@ -830,7 +841,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvListaVR;
-        
+
         /// <summary>
         /// lblMensaje3 control.
         /// </summary>
@@ -839,7 +850,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensaje3;
-        
+
         /// <summary>
         /// btnAplicarEfectores control.
         /// </summary>
@@ -848,7 +859,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAplicarEfectores;
-        
+
         /// <summary>
         /// gvListaVRNP control.
         /// </summary>
@@ -857,7 +868,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvListaVRNP;
-        
+
         /// <summary>
         /// lblMensaje2 control.
         /// </summary>
@@ -866,7 +877,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensaje2;
-        
+
         /// <summary>
         /// btnAplicarEfectoresNP control.
         /// </summary>
@@ -875,7 +886,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAplicarEfectoresNP;
-        
+
         /// <summary>
         /// ValidationSummary2 control.
         /// </summary>
@@ -884,7 +895,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.ValidationSummary ValidationSummary2;
-        
+
         /// <summary>
         /// pnlDiagrama control.
         /// </summary>
@@ -893,7 +904,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Panel pnlDiagrama;
-        
+
         /// <summary>
         /// lblItemDiagrama control.
         /// </summary>
@@ -902,7 +913,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblItemDiagrama;
-        
+
         /// <summary>
         /// txtCodigoDiagrama control.
         /// </summary>
@@ -911,7 +922,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigoDiagrama;
-        
+
         /// <summary>
         /// lblMensajeDiagrama control.
         /// </summary>
@@ -920,7 +931,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensajeDiagrama;
-        
+
         /// <summary>
         /// ddlItemDiagrama control.
         /// </summary>
@@ -929,7 +940,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItemDiagrama;
-        
+
         /// <summary>
         /// rvItem control.
         /// </summary>
@@ -938,7 +949,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvItem;
-        
+
         /// <summary>
         /// txtNombreDiagrama control.
         /// </summary>
@@ -947,7 +958,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtNombreDiagrama;
-        
+
         /// <summary>
         /// RequiredFieldValidator1 control.
         /// </summary>
@@ -956,7 +967,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// TxtDatosDiagrama control.
         /// </summary>
@@ -965,7 +976,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosDiagrama;
-        
+
         /// <summary>
         /// btnGuardarDiagrama control.
         /// </summary>
@@ -974,7 +985,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardarDiagrama;
-        
+
         /// <summary>
         /// pnlPredefinidos control.
         /// </summary>
@@ -983,7 +994,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Panel pnlPredefinidos;
-        
+
         /// <summary>
         /// lblItemRP control.
         /// </summary>
@@ -992,7 +1003,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblItemRP;
-        
+
         /// <summary>
         /// txtNombreRP control.
         /// </summary>
@@ -1001,7 +1012,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNombreRP;
-        
+
         /// <summary>
         /// ddlEfectorItemDeriva control.
         /// </summary>
@@ -1010,7 +1021,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfectorItemDeriva;
-        
+
         /// <summary>
         /// btnGuardarRP control.
         /// </summary>
@@ -1019,7 +1030,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnGuardarRP;
-        
+
         /// <summary>
         /// lblMensajeRpD control.
         /// </summary>
@@ -1028,7 +1039,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensajeRpD;
-        
+
         /// <summary>
         /// TxtDatosResultados control.
         /// </summary>
@@ -1037,7 +1048,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosResultados;
-        
+
         /// <summary>
         /// ddlResultadoPorDefecto control.
         /// </summary>
@@ -1046,7 +1057,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlResultadoPorDefecto;
-        
+
         /// <summary>
         /// btnGuardarRPDefecto control.
         /// </summary>
@@ -1055,7 +1066,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnGuardarRPDefecto;
-        
+
         /// <summary>
         /// pnlRecomendacion control.
         /// </summary>
@@ -1064,7 +1075,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Panel pnlRecomendacion;
-        
+
         /// <summary>
         /// lblItemRecomendacion control.
         /// </summary>
@@ -1073,7 +1084,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblItemRecomendacion;
-        
+
         /// <summary>
         /// ddlRecomendacion control.
         /// </summary>
@@ -1082,7 +1093,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlRecomendacion;
-        
+
         /// <summary>
         /// rvRecomendacion control.
         /// </summary>
@@ -1091,7 +1102,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvRecomendacion;
-        
+
         /// <summary>
         /// btnAgregarRecomendacion control.
         /// </summary>
@@ -1100,7 +1111,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAgregarRecomendacion;
-        
+
         /// <summary>
         /// gvListaRecomendacion control.
         /// </summary>
@@ -1109,7 +1120,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvListaRecomendacion;
-        
+
         /// <summary>
         /// lblItemHiv control.
         /// </summary>
@@ -1118,7 +1129,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblItemHiv;
-        
+
         /// <summary>
         /// chkCodificaHiv control.
         /// </summary>
@@ -1127,7 +1138,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCodificaHiv;
-        
+
         /// <summary>
         /// chkEtiquetaAdicional control.
         /// </summary>
@@ -1136,7 +1147,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkEtiquetaAdicional;
-        
+
         /// <summary>
         /// btnGuardarHIV control.
         /// </summary>
@@ -1145,7 +1156,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardarHIV;
-        
+
         /// <summary>
         /// txtLimite control.
         /// </summary>
@@ -1154,7 +1165,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtLimite;
-        
+
         /// <summary>
         /// rfvLimite control.
         /// </summary>
@@ -1163,7 +1174,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvLimite;
-        
+
         /// <summary>
         /// lnkRegresar control.
         /// </summary>
@@ -1172,7 +1183,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkRegresar;
-        
+
         /// <summary>
         /// btnNuevo control.
         /// </summary>
@@ -1181,7 +1192,7 @@ namespace WebLab.Items {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnNuevo;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>
