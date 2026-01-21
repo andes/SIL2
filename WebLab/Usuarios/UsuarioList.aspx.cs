@@ -114,7 +114,7 @@ namespace WebLab.Usuarios
         private object LeerDatos()
         {
             string m_strSQL = @"SELECT     U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
-case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo
+case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion
 FROM         Sys_Usuario AS U (nolock) INNER JOIN
                       Sys_Perfil AS P (nolock)  ON U.idPerfil = P.idPerfil inner join
 					  Sys_UsuarioEfector UE (nolock)  on Ue.idusuario= U.idUsuario inner join
@@ -180,7 +180,7 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
 
-                ImageButton CmdModificar = (ImageButton)e.Row.Cells[6].Controls[1];
+                ImageButton CmdModificar = (ImageButton)e.Row.Cells[7].Controls[1];
                 CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdModificar.CommandName = "Modificar";
 

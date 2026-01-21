@@ -27,7 +27,7 @@
   <property column="externo" type="Boolean" name="Externo" not-null="true" />
     <property column="email" type="String" name="Email" length="100" />
     <property column="telefono" type="String" name="Telefono" length="50" />
-
+    <property column="tipoAutenticacion" type="String" name="TipoAutenticacion" length="10" />
     <!--<property column="matricula" type="String" name="Matricula" length="50" />-->
     <many-to-one name="IdEfectorDestino" column="idEfectorDestino" class="Business.Data.Efector,Business" />
 	</class>

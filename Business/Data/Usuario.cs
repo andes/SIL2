@@ -36,6 +36,7 @@ namespace Business.Data
    private bool m_externo;
         private string m_email;
         private string m_telefono;
+        private string m_tipoAutenticacion;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -63,7 +64,7 @@ namespace Business.Data
 			    m_externo = false;
             m_email= String.Empty;
             m_telefono = String.Empty;
-
+            m_tipoAutenticacion = String.Empty;
 
         }
 
@@ -93,7 +94,7 @@ namespace Business.Data
             m_requiereCambioPass = false;
             m_administrador = false;
 			 m_externo = false;
-
+            m_tipoAutenticacion = String.Empty;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -429,24 +430,38 @@ namespace Business.Data
 			get { return m_isChanged; }
 		}
 
-     
 
-            #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        public string TipoAutenticacion
+        {
+            get { return m_tipoAutenticacion; }
 
+            set
+            {
+                if (value != null && value.Length > 10)
+                    throw new ArgumentOutOfRangeException("Invalid value for m_tipoAutenticacion", value, value.ToString());
 
-            #region Metodos
-
-
-            #endregion
-
-            //public bool esHemoterapia()
-            //{
-            //     var index=this.IdPerfil.Nombre.ToUpper().IndexOf("HEMOTERAPIA");
-            //     if (index > -1) return true;
-            //     else return false;
-
-            //}
-
-
+                m_isChanged |= (m_tipoAutenticacion != value); m_tipoAutenticacion = value;
+            }
         }
+        #endregion
+
+
+        #region Metodos
+
+
+        #endregion
+
+        //public bool esHemoterapia()
+        //{
+        //     var index=this.IdPerfil.Nombre.ToUpper().IndexOf("HEMOTERAPIA");
+        //     if (index > -1) return true;
+        //     else return false;
+
+        //}
+
+
+    }
 }
