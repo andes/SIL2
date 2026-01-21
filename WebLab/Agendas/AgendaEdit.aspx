@@ -52,7 +52,11 @@
 				<div class="panel-body">   
 
 				 <table >
-				 
+				 <tr>
+                   <td colspan="2">
+                       <asp:CustomValidator ID="customValidadorGeneral" runat="server" OnServerValidate="customValidadorGeneral_ServerValidate" ValidationGroup="0" ></asp:CustomValidator>
+                   </td>
+               </tr>
 					<tr>
 						<td  >Tipo de Servicio:<span style="font-weight:bold"><asp:RangeValidator 
                                 ID="rvTipoServicio" runat="server" 
