@@ -209,6 +209,17 @@ namespace WebLab.Items
 
                 ddlPresentacionEfectorDefecto.SelectedValue = oItem.IdPresentacionDefecto.ToString();
 
+                if(oItem.IdPresentacionDefecto == 0)
+                {
+                    lblPresentacionDefecto.Text = "No se ha determinado una presentación por defecto";
+                }
+                else
+                {
+                    ItemPresentacion itemPres = new ItemPresentacion();
+                    itemPres = (ItemPresentacion) itemPres.Get(typeof(ItemPresentacion), oItem.IdPresentacionDefecto);
+                    lblPresentacionDefecto.Text = "Presentacion: "+ itemPres.Codigo + '-' + itemPres.Presentacion + " se aplicará por defecto.";
+                }
+
                 MostrarDatosValoresReferencia();
             }
         }
@@ -3264,6 +3275,9 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 oItem.IdPresentacionDefecto = pres;
                 oItem.Save();
 
+                ItemPresentacion itemPres = new ItemPresentacion();
+                itemPres = (ItemPresentacion)itemPres.Get(typeof(ItemPresentacion), oItem.IdPresentacionDefecto);
+                lblPresentacionDefecto.Text = "Presentacion: " + itemPres.Codigo + '-' + itemPres.Presentacion + " se aplicará por defecto.";
             }
         }
 
