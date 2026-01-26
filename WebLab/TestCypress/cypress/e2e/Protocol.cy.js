@@ -1,4 +1,4 @@
-describe("Prueba básica", () => {
+ï»¿describe("Prueba bÃ¡sica", () => {
 
     it("Alta de protocolo [Laboratorio]", () => {
 
@@ -48,6 +48,8 @@ describe("Prueba básica", () => {
 
         cy.encabezadoProtocolo();
         cy.cargarDiagnostico();
+        cy.get("input[id$='btnGuardar']").click();
+
     });
 
     it("Alta de protocolo [Microbiologia]", () => {
@@ -58,11 +60,11 @@ describe("Prueba básica", () => {
 
         //Creo un protocolo sin turno
         cy.get("[id$='mnuPrincipal']")
-            .contains("Microbiología")
+            .contains("MicrobiologÃ­a")
             .trigger("mouseover");
 
         cy.get("[id$='mnuPrincipal']")
-            .contains("Recepción de Muestras")
+            .contains("RecepciÃ³n de Muestras")
             .click();
 
         //Pongo el DNI del paciente para buscarlo y crear el protocolo
@@ -101,6 +103,7 @@ describe("Prueba básica", () => {
 
         //Tipo de Muestra
         cy.get("input[id$='txtCodigoMuestra']").type("cm").type('{enter}');
+        cy.get("input[id$='btnGuardar']").click();
     });
 });
 

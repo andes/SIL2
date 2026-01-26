@@ -36,8 +36,8 @@ Cypress.Commands.add("cargarDiagnostico", () => {
     //Le cargo el diagnostico "Z00.0 - Examen médico general"
     cy.get("input[id$='txtCodigoDiagnostico']").type("Z00.0");
     cy.get("input[id$='btnBusquedaDiagnostico']").click();
-    cy.get("[id$='lstDiagnosticos']")
-        .find("input[type='submit'][value='Protocolo']")
-        .first()
-        .click();
+    //Lo selecciono de la lista
+    cy.get("select[id$='lstDiagnosticos']").select("11829");
+    cy.get("input[id$='btnAgregarDiagnostico']").click();
+
 });
