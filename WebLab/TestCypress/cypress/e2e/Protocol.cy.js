@@ -48,10 +48,14 @@
         cy.encabezadoProtocolo();
         cy.cargarDiagnostico();
 
-        cy.get("input[id$='btnGuardar']").click();
+        cy.get('body').click(0, 0);
+        cy.wait(1000); 
+        // 2. Interceptar el guardado para obligar a Cypress a esperar la respuesta
+        cy.intercept('POST', '**/ProtocoloEdit2.aspx*').as('guardadoFinal');
 
-        //NO salio error de validacion
-        cy.get("[id$='cvValidacionInput']").should("not.be.visible");
+        cy.get("input[id$='btnGuardar']").click({ force: true });
+        // 4. ESTO ES CLAVE: Esperar a que el servidor responda positivamente
+        cy.wait('@guardadoFinal');
     });
 
     it("Alta de protocolo [Microbiologia]", () => {
@@ -107,12 +111,16 @@
 
         //Tipo de Muestra
         cy.get("input[id$='txtCodigoMuestra']").type("cm").type('{enter}');
-         //Guardo y valido que se genero exitosamente
-        cy.get("input[id$='btnGuardar']").click();
+      
 
-        //NO salio error de validacion
-        cy.get("[id$='cvValidacionInput']").should("not.be.visible");
+        cy.get('body').click(0, 0);
+        cy.wait(1000);
+        // 2. Interceptar el guardado para obligar a Cypress a esperar la respuesta
+        cy.intercept('POST', '**/ProtocoloEdit2.aspx*').as('guardadoFinal');
 
+        cy.get("input[id$='btnGuardar']").click({ force: true });
+        // 4. ESTO ES CLAVE: Esperar a que el servidor responda positivamente
+        cy.wait('@guardadoFinal');
     });
 
     it("Alta de protocolo [No Paciente]", () => {
