@@ -2731,6 +2731,9 @@
     <Content Include="SeguimientoTestAntigenos.aspx" />
     <Content Include="Seroteca\ImportaDatos.aspx" />
     <Content Include="Services\ObrasSociales.ascx" />
+    <Content Include="TestCypress\cypress.config.js" />
+    <Content Include="TestCypress\cypress\e2e\Protocol.cy.js" />
+    <Content Include="TestCypress\cypress\support\commands.js" />
     <Content Include="Turnos\FeriadoEdit.ascx" />
     <Content Include="Turnos\TurnosEdit2.aspx" />
     <Content Include="Usuarios\PasswordEdit2.aspx" />
@@ -4017,6 +4020,8 @@
     <Content Include="website\reportes\Reporte LC31-2022.pdf" />
     <Content Include="website\reportes\Reporte LC32-2022.pdf" />
     <Content Include="website\reportes\Reporte LC33-2023.pdf" />
+    <Content Include="TestCypress\cypress\fixtures\datos.json" />
+    <Content Include="TestCypress\cypress\fixtures\determinaciones.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccesoDenegado.aspx.cs">
