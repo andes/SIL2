@@ -71,17 +71,17 @@ namespace WebLab.Resultados
                     oCr.Report.FileName = ""; oCr.CacheDuration = 0; oCr.EnableCaching = false;
                     
 
-                    if (Request["idProtocolo"] != null)
-                    {
-                        if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
-                        {
+                    //if (Request["idProtocolo"] != null) //Pasado a Page_Load para que no genere el error ViewState
+                    //{
+                    //    if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
+                    //    {
                        
-                            LlenarTabla(Request["idProtocolo"].ToString());
-                        }
-                        else
-                            Response.Redirect("../FinSesion.aspx", false);
+                    //        LlenarTabla(Request["idProtocolo"].ToString());
+                    //    }
+                    //    else
+                    //        Response.Redirect("../FinSesion.aspx", false);
                            
-                    }
+                    //}
                 }
             }
             else Response.Redirect("../FinSesion.aspx", false);
@@ -91,6 +91,17 @@ namespace WebLab.Resultados
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Request["idProtocolo"] != null)
+            {
+                if ((Session["idUsuario"] != null))
+                {
+                    LlenarTabla(Request["idProtocolo"].ToString());
+                }
+                else
+                    Response.Redirect("../FinSesion.aspx", false);
+
+            }
+
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] != null)
@@ -102,6 +113,7 @@ namespace WebLab.Resultados
                 else
                     Response.Redirect("../FinSesion.aspx", false);                             
             }
+
         }
 
 
