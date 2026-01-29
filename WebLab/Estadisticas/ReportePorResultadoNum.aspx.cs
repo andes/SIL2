@@ -274,7 +274,8 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel()
         {
-            StringBuilder sb = new StringBuilder();
+            Utility.ExportGridViewToExcel(gvEstadistica, "reporteresultados");
+            /*StringBuilder sb = new StringBuilder();
             StringWriter sw = new StringWriter(sb);
             HtmlTextWriter htw = new HtmlTextWriter(sw);
 
@@ -298,7 +299,7 @@ namespace WebLab.Estadisticas
             Response.Charset = "UTF-8";
             Response.ContentEncoding = Encoding.Default;
             Response.Write(sb.ToString());
-            Response.End();
+            Response.End();*/
         }
 
         protected void ddlAnalisis_SelectedIndexChanged(object sender, EventArgs e)
@@ -410,33 +411,35 @@ namespace WebLab.Estadisticas
                 }
                 if (reporte == "EXCEL")
                 {
-                    StringBuilder sb = new StringBuilder();
-                    StringWriter sw = new StringWriter(sb);
-                    HtmlTextWriter htw = new HtmlTextWriter(sw);
+                    DataTable dt = GetDataPacientes(m_analisis, m_sexo.Substring(0, 1), txtValorDesde.Text, txtValorHasta.Text, int.Parse(ddlEfector.SelectedValue));
+                    Utility.ExportDataTableToXlsx(dt, "DetallePacientes");
+                    //StringBuilder sb = new StringBuilder();
+                    //StringWriter sw = new StringWriter(sb);
+                    //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-                    Page page = new Page();
-                    HtmlForm form = new HtmlForm();
-                    GridView dg = new GridView();
-                    dg.EnableViewState = false;
-                    dg.DataSource = GetDataPacientes(m_analisis, m_sexo.Substring(0, 1), txtValorDesde.Text, txtValorHasta.Text, int.Parse(ddlEfector.SelectedValue));
-                    dg.DataBind();
-                    // Deshabilitar la validación de eventos, sólo asp.net 2
-                    page.EnableEventValidation = false;
+                    //Page page = new Page();
+                    //HtmlForm form = new HtmlForm();
+                    //GridView dg = new GridView();
+                    //dg.EnableViewState = false;
+                    //dg.DataSource = GetDataPacientes(m_analisis, m_sexo.Substring(0, 1), txtValorDesde.Text, txtValorHasta.Text, int.Parse(ddlEfector.SelectedValue));
+                    //dg.DataBind();
+                    //// Deshabilitar la validación de eventos, sólo asp.net 2
+                    //page.EnableEventValidation = false;
 
-                    // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-                    page.DesignerInitialize();
-                    page.Controls.Add(form);
-                    form.Controls.Add(dg);
-                    page.RenderControl(htw);
+                    //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+                    //page.DesignerInitialize();
+                    //page.Controls.Add(form);
+                    //form.Controls.Add(dg);
+                    //page.RenderControl(htw);
 
-                    Response.Clear();
-                    Response.Buffer = true;
-                    Response.ContentType = "application/vnd.ms-excel";
-                    Response.AddHeader("Content-Disposition", "attachment;filename=DetallePacientes.xls");
-                    Response.Charset = "UTF-8";
-                    Response.ContentEncoding = Encoding.Default;
-                    Response.Write(sb.ToString());
-                    Response.End();
+                    //Response.Clear();
+                    //Response.Buffer = true;
+                    //Response.ContentType = "application/vnd.ms-excel";
+                    //Response.AddHeader("Content-Disposition", "attachment;filename=DetallePacientes.xls");
+                    //Response.Charset = "UTF-8";
+                    //Response.ContentEncoding = Encoding.Default;
+                    //Response.Write(sb.ToString());
+                    //Response.End();
                 }
             }
         }

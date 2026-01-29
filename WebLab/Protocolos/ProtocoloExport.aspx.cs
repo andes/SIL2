@@ -301,34 +301,35 @@ namespace WebLab.Protocolos
             if (Request["idServicio"].ToString() == "3") s_nombreArchivo = "Microbiologia_"+DateTime.Now.ToShortDateString().Replace("/","");
             else s_nombreArchivo = "Laboratorio_" + DateTime.Now.ToShortDateString().Replace("/", "");
 
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            Utility.ExportDataTableToXlsx(GenerarSetDatos(), s_nombreArchivo);
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            GridView dg = new GridView();
-            dg.EnableViewState = false;
-            dg.DataSource = GenerarSetDatos();
-            dg.DataBind();
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //GridView dg = new GridView();
+            //dg.EnableViewState = false;
+            //dg.DataSource = GenerarSetDatos();
+            //dg.DataBind();
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false;
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false;
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize();
-            page.Controls.Add(form);
-            form.Controls.Add(dg);
-            page.RenderControl(htw);
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize();
+            //page.Controls.Add(form);
+            //form.Controls.Add(dg);
+            //page.RenderControl(htw);
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename="+s_nombreArchivo+".xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename="+s_nombreArchivo+".xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
 
         protected void lnkExportar_Click(object sender, EventArgs e)

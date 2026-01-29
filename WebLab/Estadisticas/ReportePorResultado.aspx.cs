@@ -456,28 +456,30 @@ namespace WebLab.Estadisticas
          DataTable tabla=   GetDatosEstadistica("GV");
             if (tabla.Rows.Count > 0)
             {
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
-                Page pagina = new Page();
-                HtmlForm form = new HtmlForm();
-                GridView dg = new GridView();
-                dg.EnableViewState = false;
-                dg.DataSource = tabla;
-                dg.DataBind();
-                pagina.EnableEventValidation = false;
-                pagina.DesignerInitialize();
-                pagina.Controls.Add(form);
-                form.Controls.Add(dg);
-                pagina.RenderControl(htw);
-                Response.Clear();
-                Response.Buffer = true;
-                Response.ContentType = "application/vnd.ms-excel";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + lblAnalisis.Text + ".xls");
-                Response.Charset = "UTF-8";
-                Response.ContentEncoding = Encoding.Default;
-                Response.Write(sb.ToString());
-                Response.End();
+                Utility.ExportDataTableToXlsx(tabla, lblAnalisis.Text);
+
+                //StringBuilder sb = new StringBuilder();
+                //StringWriter sw = new StringWriter(sb);
+                //HtmlTextWriter htw = new HtmlTextWriter(sw);
+                //Page pagina = new Page();
+                //HtmlForm form = new HtmlForm();
+                //GridView dg = new GridView();
+                //dg.EnableViewState = false;
+                //dg.DataSource = tabla;
+                //dg.DataBind();
+                //pagina.EnableEventValidation = false;
+                //pagina.DesignerInitialize();
+                //pagina.Controls.Add(form);
+                //form.Controls.Add(dg);
+                //pagina.RenderControl(htw);
+                //Response.Clear();
+                //Response.Buffer = true;
+                //Response.ContentType = "application/vnd.ms-excel";
+                //Response.AddHeader("Content-Disposition", "attachment;filename=" + lblAnalisis.Text + ".xls");
+                //Response.Charset = "UTF-8";
+                //Response.ContentEncoding = Encoding.Default;
+                //Response.Write(sb.ToString());
+                //Response.End();
             }
         }
 
@@ -576,33 +578,35 @@ namespace WebLab.Estadisticas
             }
             if (reporte == "EXCEL")
             {
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                Utility.ExportDataTableToXlsx(GetDataPacientes(m_analisis, m_resultado, int.Parse(ddlEfector.SelectedValue), "EXCEL"), "DetallePacientes");
 
-                Page page = new Page();
-                HtmlForm form = new HtmlForm();
-                GridView dg = new GridView();
-                dg.EnableViewState = false;
-                dg.DataSource = GetDataPacientes(m_analisis, m_resultado, int.Parse(ddlEfector.SelectedValue), "EXCEL");
-                dg.DataBind();
+                // StringBuilder sb = new StringBuilder();
+                // StringWriter sw = new StringWriter(sb);
+                // HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+                // Page page = new Page();
+                // HtmlForm form = new HtmlForm();
+                //GridView dg = new GridView();
+                //dg.EnableViewState = false;
+                //dg.DataSource = GetDataPacientes(m_analisis, m_resultado, int.Parse(ddlEfector.SelectedValue), "EXCEL");
+                //dg.DataBind();
                 // Deshabilitar la validación de eventos, sólo asp.net 2
-                page.EnableEventValidation = false;
+                // page.EnableEventValidation = false;
 
                 // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-                page.DesignerInitialize();
-                page.Controls.Add(form);
-                form.Controls.Add(dg);
-                page.RenderControl(htw);
+                //page.DesignerInitialize();
+                // page.Controls.Add(form);
+                // form.Controls.Add(dg);
+                // page.RenderControl(htw);
 
-                Response.Clear();
-                Response.Buffer = true;
-                Response.ContentType = "application/vnd.ms-excel";
-                Response.AddHeader("Content-Disposition", "attachment;filename=DetallePacientes.xls");
-                Response.Charset = "UTF-8";
-                Response.ContentEncoding = Encoding.Default;
-                Response.Write(sb.ToString());
-                Response.End();
+                // Response.Clear();
+                // Response.Buffer = true;
+                // Response.ContentType = "application/vnd.ms-excel";
+                // Response.AddHeader("Content-Disposition", "attachment;filename=DetallePacientes.xls");
+                // Response.Charset = "UTF-8";
+                // Response.ContentEncoding = Encoding.Default;
+                // Response.Write(sb.ToString());
+                // Response.End();
             }
         }
 
