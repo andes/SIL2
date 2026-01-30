@@ -1,6 +1,8 @@
 {
   "usuario": "usuario_test",
   "password": "123456",
-  "efector": "H. ALUMINE",
-  "pacienteDNI": "36256589"
+  "efector": "LABORATORIO CENTRAL",
+  "pacienteDNI": "36256589",
+  "caracterSisa": "SOSPECHOSO",
+  "numeroHisopado": "373487"
 }
