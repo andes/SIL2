@@ -33,5 +33,6 @@ module.exports =
                        ...loadLocalEnv()
                    };
                }
+                return config;
            }
     } });

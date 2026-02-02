@@ -3,8 +3,8 @@
     cy.title().should("not.be.empty");
 
    
-    cy.get("input[id$='UserName']").type(Cypress.env('USER_NAME'));
-    cy.get("input[id$='Password']").type(Cypress.env('USER_PASSWORD'));
+    cy.get("input[id$='UserName']").type(Cypress.env("USER_NAME"));
+    cy.get("input[id$='Password']").type(Cypress.env("USER_PASSWORD"));
  
 
     cy.get("input[id$='LoginButton']").click();
