@@ -297,11 +297,29 @@ namespace Business
 			}
 		}
 
-		public object Get(object id)
-		{
-			return this.Get(this.GetType(),id);
-		}
+        public object Get(object id)
+        {
+            return this.Get(this.GetType(), id);
+        }
 
+        
+
+		public object GetIfExists(Type type, object id)
+		{
+			object returnValue = null;
+
+			try
+			{
+				returnValue = m_session.Get(type, id);
+
+				return returnValue;
+			}
+			catch (Exception ex)
+			{
+				//TODO: disciminar en caso q la excepcion sea del tipo id inexistente.
+				throw ex;
+			}
+		}
 		public IList GetListByPropertyValue(Type type, string propertyName, object propertyValue)
 		{
 			try
