@@ -19,7 +19,7 @@ function loadLocalEnv() {
 module.exports = 
    defineConfig({
         e2e: {
-           baseUrl: "http://localhost:8700",
+           baseUrl: process.env.CYPRESS_baseUrl || "http://localhost:8700",
            supportFile: "cypress/support/commands.js",
            viewportWidth: 1280,
            viewportHeight: 800,
