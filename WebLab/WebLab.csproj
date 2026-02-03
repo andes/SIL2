@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -26,6 +27,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <Use64BitIISExpress />
+    <TypeScriptToolsVersion>4.3</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -182,10 +184,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Referencias\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\Referencias\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MathParser, Version=1.0.2063.35716, Culture=neutral">
       <SpecificVersion>False</SpecificVersion>
@@ -2731,6 +2732,9 @@
     <Content Include="SeguimientoTestAntigenos.aspx" />
     <Content Include="Seroteca\ImportaDatos.aspx" />
     <Content Include="Services\ObrasSociales.ascx" />
+    <Content Include="Test\cypress.config.js" />
+    <Content Include="Test\cypress\e2e\Protocol.cy.js" />
+    <Content Include="Test\cypress\support\commands.js" />
     <Content Include="Turnos\FeriadoEdit.ascx" />
     <Content Include="Turnos\TurnosEdit2.aspx" />
     <Content Include="Usuarios\PasswordEdit2.aspx" />
@@ -4017,6 +4021,11 @@
     <Content Include="website\reportes\Reporte LC31-2022.pdf" />
     <Content Include="website\reportes\Reporte LC32-2022.pdf" />
     <Content Include="website\reportes\Reporte LC33-2023.pdf" />
+    <Content Include="Test\cypress\fixtures\datos.json" />
+    <Content Include="Test\cypress\fixtures\determinaciones.json" />
+    <Content Include="Test\cypress\fixtures\local.env.json" />
+    <Content Include="Test\package-lock.json" />
+    <Content Include="Test\package.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccesoDenegado.aspx.cs">
@@ -6329,6 +6338,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
     <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
@@ -7190,6 +7200,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
