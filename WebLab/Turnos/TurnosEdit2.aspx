@@ -53,6 +53,42 @@
     
     
     
+    <style type="text/css">
+        .auto-style3 {
+            width: 738px;
+        }
+        .auto-style6 {
+            font-size: 10pt;
+            font-family: Calibri;
+            background-color: #FFFFFF;
+            color: #333333;
+            font-weight: bold;
+            height: 11px;
+            width: 120px;
+        }
+        .auto-style7 {
+            width: 120px;
+        }
+        .auto-style8 {
+            width: 4px;
+        }
+        .auto-style9 {
+            font-size: 10pt;
+            font-family: Calibri;
+            background-color: #FFFFFF;
+            color: #333333;
+            font-weight: bold;
+            height: 11px;
+            width: 332px;
+        }
+        .auto-style10 {
+            height: 11px;
+            width: 264px;
+        }
+    </style>
+    
+    
+    
     </asp:Content>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
@@ -341,68 +377,61 @@
 						       <fieldset id="Fieldset2"  
                                 >
                                 <legend class="myLabelIzquierda">Diagnósticos Presuntivos - Codificación CIE 10</legend>
-                                     <table align="left" width="100%">
+                             
+                                    <table class="auto-style3">
                                          <tr>
-                                           <td class="myLabelIzquierda" colspan="3"  >
-                                               Codigo: &nbsp; &nbsp;
+                                          <td class="myLabelIzquierda" colspan="3"  >
+                                                 Codigo: &nbsp; &nbsp;
                                                  <anthem:TextBox ID="txtCodigoDiagnostico" runat="server" AutoCallBack="True" 
-                                                     CssClass="form-control input-sm" ontextchanged="txtCodigoDiagnostico_TextChanged"></anthem:TextBox>
-                                             </td>
-                                         </tr>
-                                         <tr>
-                                           <td class="myLabelIzquierda" colspan="3"  >
-                                               Nombre: &nbsp;<anthem:TextBox ID="txtNombreDiagnostico" runat="server" AutoCallBack="True" 
+                                                     CssClass="form-control input-sm" ontextchanged="txtCodigoDiagnostico_TextChanged" Height="22px"></anthem:TextBox>
+                                                 <br />
+                                                 Nombre: &nbsp;<anthem:TextBox ID="txtNombreDiagnostico" runat="server" AutoCallBack="True" 
                                                      CssClass="form-control input-sm" ontextchanged="txtNombreDiagnostico_TextChanged" 
                                                    Width="268px"></anthem:TextBox>
-                                             </td>
-                                         </tr>
-                                             <tr>
-                                           <td class="myLabelIzquierda" colspan="3"  >
-                                              <anthem:Button ID="btnBusquedaDiagnostico" CssClass="btn btn-primary" Width="90px" runat="server" Text="Buscar" 
-                                                   onclick="btnBusquedaDiagnostico_Click" />
-                              <anthem:Button ID="btnBusquedaFrecuente" CssClass="btn btn-danger" Width="120px"  runat="server" Text="Ver Frecuentes" 
-                                                   onclick="btnBusquedaFrecuente_Click" /></td>
+                                           
+                                                 <anthem:Button ID="btnBusquedaDiagnostico" runat="server" CssClass="btn btn-primary" onclick="btnBusquedaDiagnostico_Click" Text="Buscar" Width="90px" />                                                 
+                                                
+                                                  <anthem:Button ID="btnBusquedaFrecuente" runat="server" CssClass="btn btn-danger" onclick="btnBusquedaFrecuente_Click" Text="Ver Frecuentes" Width="120px" /></td>                                     
                                          </tr>
                                          <tr>
-                                           <td class="myLabelIzquierda" colspan="3"  >
-                                               <hr /></td>
-                                         </tr>
-
-                                         <tr>
-                                           <td class="myLabelIzquierda"  >
+                                           <td class="auto-style9" colspan="3" >
                                                Diagnosticos encontrados</td>
-                                             <td>
-                                                 &nbsp;</td>                                         
-                                             <td  class="myLabelIzquierda" >
-                                                 Diagnosticos del Paciente</td>                                     
+                                                                                
                                          </tr>
                                          <tr>
-                                           <td class="myLabelIzquierda"  >
+                                           <td class="myLabelIzquierda" colspan="2"  >
                                                <anthem:ListBox ID="lstDiagnosticos" runat="server" AutoCallBack="True" 
-                                                   CssClass="form-control input-sm" Height="150px" Width="400px">
+                                                   CssClass="form-control input-sm" Height="150px" Width="800px">
                                                </anthem:ListBox>
                                              </td>
-                                             <td>
+                                             <td class="auto-style7">
                                                  <anthem:ImageButton ID="btnAgregarDiagnostico" runat="server" 
                                                      ImageUrl="~/App_Themes/default/images/añadir.jpg" 
                                                      onclick="btnAgregarDiagnostico_Click1" 
                                                      ToolTip="Agregar a la lista de Diagnosticos del Paciente" /><br />
-                                                     <p></p>
+                                                    
                                                  <anthem:ImageButton ID="btnSacarDiagnostico" runat="server" 
                                                      ImageUrl="~/App_Themes/default/images/sacar.jpg" 
                                                      onclick="btnSacarDiagnostico_Click"
                                                         ToolTip="Quitar diagnóstico de la lista de Diagnosticos del Paciente"
                                                       />
                                              </td>                                         
-                                             <td class="myLabelIzquierda">
+                                                                           
+                                         </tr>
+                                         <tr>
+                                           <td class="myLabelIzquierda" colspan="3"  >
+                                                 Diagnosticos del Paciente<br />
                                                  <anthem:ListBox ID="lstDiagnosticosFinal" runat="server" CssClass="form-control input-sm" 
-                                                     Height="150px" Width="400px" SelectionMode="Multiple" 
+                                                     Height="150px" Width="800px" SelectionMode="Multiple" 
                                                      ToolTip="Sacar de la lista de Diagnosticos del Paciente">
                                                  </anthem:ListBox>
-                                             </td>                                         
+                                             </td>
+                                                                               
+                                                                              
                                          </tr>
-                                      
-                                         </table>
+                                      </table>
+
+                            
                                  </fieldset>
            
               </td>

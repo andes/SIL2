@@ -34,487 +34,525 @@
 
            
             <h2>Lista de cambios en SIL2</h2>
-            <div class="fecha">2025.12.22</div>
-            <ul>
-                
-                <li class="cambio">
-                    <strong>Protocolos:</strong> 
-                    <ul>
-                        <li class="cambio2">Se agregan mejoras al control existente de ingreso de determinaciones contenidas en otras.</li>
-                        <li class="cambio2">Se agrega mejora para evitar que protocolos de Laboratorio General se graben como de Microbiologia y viceversa.</li>
-                    </ul>  
-                </li>
-                <li class="cambio">
-                    <strong>Placas R1 y R2 (ALPLEX):</strong> Se corrige y mejora visualizacion de resultados positivos de la placas de LNC.
-                </li>
-                <li class="cambio">
-                    <strong>Estadisticas-Grupos Etareos:</strong> Se cambia el grupo etareo de "1 a 2 (años)" por "12 a 23 m (meses)" de acuerdo a lo determinado por Nacion - SNVS. 
-                </li>
-            </ul>
-            <div class="fecha">2025.12.15</div>
+            <div class="fecha">2026.02.03</div>
             <ul>
                 <li class="cambio">
-                    <strong> API Resultados para ANDES:</strong> 
-                    <ul>
-                        <li class="cambio2">Se corrige para mostrar las observaciones de los resultados numericos.</li>
-                        <li class="cambio2">Se corrige para mostrar las derivaciones de microbiologia.</li>                        
-                    </ul>                    
+                    <strong>Calculo Masivo de Formulas:</strong> Se corrige error reportado por Laboratorio Andacollo y se realizan mejoras para que no se muestre el mismo protocolo mas una vez.
                 </li>
                 <li class="cambio">
-                    <strong>Derivaciones:</strong> Se agrega posibilidad de imprimir etiquetas sin condicionamiento de que se encuentren las derivaciones en un lote.<strong>Cambio de Funcionalidad</strong>
-                </li>                
-                <li class="cambio">
-                    <strong>Carga Resultados Microbiologia:</strong>Se habilita la carga de resultados en aislamientos y antibiogramas desde la opción Carga (Perfil Administrativo) <strong>Nueva Funcionalidad</strong>:
-                    <ul>
-                        <li class="cambio2">Cuando no existen datos validados en aislamientos y antibiogramas.</li>
-                        <li class="cambio2">Pero sí existen datos validados en la solapa de análisis principal.</li>
-                        <li class="cambio2">En la edicion de Antibiograma se habilita la modificacion de Mecanismos de Resistencia (en Perfil Administrativo) </li>
-                    </ul>
+                    <strong>Turnos:</strong>Mejora en la carga de diagnósticos, incorporando una visualización ampliada del control de selección para facilitar su uso.
                 </li>
                 <li class="cambio">
-                    <strong>Listado Ordenado</strong>. Se corrige error que no mostraba todas las determinaciones de los protocolos en algunos casos.
+                    <strong>Protocolo:</strong>Mejora en la visualización y selección de la impresora durante la carga de protocolos, permitiendo elegir la impresora fuera del panel de determinaciones.
+                </li>
+                <li class="cambio">
+                    <strong>Permisos Agenda:</strong>Se habilita permisos, de carga/modificacion/eliminaciones de Agendas al perfil Administrativo.
                 </li>
 
-            </ul>
-            <div class="fecha">2025.12.11</div>
-            <ul>                
-                <li class="cambio">
-                    <strong>Mecanismos de Resistencia en Microbiologia:</strong> Se agrega posibilidad de modificar los mecanismos de resistencia de ATB cargados previamente (desde Validacion).<strong>Nueva Funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    <strong>Usuarios:</strong> Se agrega posibilidad de cambiar estado (Activo/Inactivo) de los usuarios, desde el perfil Bioquimico, de cada Laboratorio.<strong>Nueva Funcionalidad</strong>
-                </li>
-            </ul>
+                </ul>
+                <div class="fecha">2026.02.02</div>
+                <ul>
 
-			  <div class="fecha">2025.12.04</div>
-            <ul>
-                <li class="cambio">  <strong>Derivaciones:</strong>Se realizan mejoras en el PDF de Control de Derivaciones; agregando el estado de la derivacion entre otras mejoras.<strong>Nueva Funcionalidad</strong>
-                 </li>
-                <li class="cambio">
-                    <strong>Mecanismos de Resistencia en Microbiologia:</strong> API Resultados para ANDES. Se corrige visualizacion en casos de mas un ATB con mas de un mecanismo de resistencia.
-                </li>
-                    </ul>
-            <div class="fecha">2025.12.02</div>
+                    <li class="cambio">
+                        <strong>Lote:</strong> Se modifica para que permita el ingreso de fecha y hora a futuro del retiro del lote.
+                    </li>
+                    <li class="cambio">
+                        <strong>Estado Derivaciones:</strong> Se agrega mas trazabilidad en el estado de la derivacion desde la visualizacion de resultados (sil y Andes); desde que se genera la derivacion hasta que es recibida en Destino.
+                    </li>
+
+
+                </ul>
+            <div class="fecha">2026.01.29</div>
             <ul>
                 <li class="cambio">
-                    <strong>Mecanismos de Resistencia en Microbiologia:</strong>Se corrige error en boton "Mostrar Resultados anteriores" reportado por JNA
-                 </li>
-                <li class="cambio">
-                    <strong>Valor de Referencia:</strong> Ajuste en forma de determinar el valor de referencia por paciente:
-                    <ul>
-                        <li class="cambio2">Si el diagnóstico indica embarazo (código Z32.1), se asigna el VR específico para Embarazada (E).</li>
-                        <li class="cambio2">Si no existe un VR definido para embarazadas en la configuración, se utiliza en primera instancia el VR correspondiente a Femenino (F).</li>
-                        <li class="cambio2">Si tampoco existe un VR definido para Femenino, se utiliza el VR de Indistinto (I), que aplica a cualquier sexo.</li>
-                    </ul>
+                    <strong>Resultados a SISA:</strong> Se agrega nuevo parametro de interoperabilidad de unidad de edad del paciente a informar (años, meses, dias).
                 </li>
-                    </ul>
-                
-            <div class="fecha">2025.11.18</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Mecanismos de Resistencia en Microbiologia:</strong>
-                    <ul>
-                        <li class="cambio2">Se agrega la posibilidad de registrar en los ATB multiples mecanismos de resistencia. <strong>Nueva Funcionalidad</strong></li>
-                        <li class="cambio2">Se corrige edicion de ATB con mecanismos de resistencia, entre otras mejoras relacionadas</li>
-                    </ul>
-                <li class="cambio">
-                    <strong>Derivaciones: </strong>Se agrega posibilidad de descargar PDF de derivaciones en cualquier estado de la derivacion.<strong>Nueva Funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    <strong>Interoperabilidad SNVS: </strong>Se inhabilita servicio para Eventos Sifilis.
-                </li>
+                </ul>
+            
+                <div class="fecha">2025.12.22</div>
+                <ul>
 
-            </ul>
+                    <li class="cambio">
+                        <strong>Protocolos:</strong> Se agrega mejora para evitar que protocolos de Laboratorio General se graben como de Microbiologia y viceversa.                        
+                    </li>
+                    <li class="cambio">
+                        <strong>Placas R1 y R2 (ALPLEX):</strong> Se corrige y mejora visualizacion de resultados positivos de la placas de LNC.
+                    </li>
+                    <li class="cambio">
+                        <strong>Estadisticas-Grupos Etareos:</strong> Se cambia el grupo etareo de "1 a 2 (años)" por "12 a 23 m (meses)" de acuerdo a lo determinado por Nacion - SNVS.
+                    </li>
+                </ul>
+                <div class="fecha">2025.12.15</div>
+                <ul>
+                    <li class="cambio">
+                        <strong> API Resultados para ANDES:</strong>
+                        <ul>
+                            <li class="cambio2">Se corrige para mostrar las observaciones de los resultados numericos.</li>
+                            <li class="cambio2">Se corrige para mostrar las derivaciones de microbiologia.</li>
+                        </ul>
+                    </li>
+                    <li class="cambio">
+                        <strong>Derivaciones:</strong> Se agrega posibilidad de imprimir etiquetas sin condicionamiento de que se encuentren las derivaciones en un lote.<strong>Cambio de Funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Carga Resultados Microbiologia:</strong>Se habilita la carga de resultados en aislamientos y antibiogramas desde la opción Carga (Perfil Administrativo) <strong>Nueva Funcionalidad</strong>:
+                        <ul>
+                            <li class="cambio2">Cuando no existen datos validados en aislamientos y antibiogramas.</li>
+                            <li class="cambio2">Pero sí existen datos validados en la solapa de análisis principal.</li>
+                            <li class="cambio2">En la edicion de Antibiograma se habilita la modificacion de Mecanismos de Resistencia (en Perfil Administrativo) </li>
+                        </ul>
+                    </li>
+                    <li class="cambio">
+                        <strong>Listado Ordenado</strong>. Se corrige error que no mostraba todas las determinaciones de los protocolos en algunos casos.
+                    </li>
 
-			  <div class="fecha">2025.11.11</div>
-            <ul>
-                <li class="cambio">
-                 
-                    <strong>Mecanismos de Resistencia en Microbiologia:Nuevas Funcionalidades </strong>
-                    <ul>
-                        <li class="cambio2">Se agregó la posibilidad de registrar en los ATB el mecanismo de resistencia.                </li>
-                        <li class="cambio2">En la validacion de resultados, al clickear "Mostrar Resultados Anteriores" se muestra el ultimo mecanismo de resistencia registrado en antibiogramas previos del mismo paciente o muestra (si es que hubiera)                    </li>
+                </ul>
+                <div class="fecha">2025.12.11</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Mecanismos de Resistencia en Microbiologia:</strong> Se agrega posibilidad de modificar los mecanismos de resistencia de ATB cargados previamente (desde Validacion).<strong>Nueva Funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Usuarios:</strong> Se agrega posibilidad de cambiar estado (Activo/Inactivo) de los usuarios, desde el perfil Bioquimico, de cada Laboratorio.<strong>Nueva Funcionalidad</strong>
+                    </li>
+                </ul>
 
-                        <li class="cambio2">En la visualizacion de resultados por pantalla y en los PDF se agregó el mecanismo de resistencia en los ATB de forma destacada.                    </li>
+                <div class="fecha">2025.12.04</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Derivaciones:</strong>Se realizan mejoras en el PDF de Control de Derivaciones; agregando el estado de la derivacion entre otras mejoras.<strong>Nueva Funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Mecanismos de Resistencia en Microbiologia:</strong> API Resultados para ANDES. Se corrige visualizacion en casos de mas un ATB con mas de un mecanismo de resistencia.
+                    </li>
+                </ul>
+                <div class="fecha">2025.12.02</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Mecanismos de Resistencia en Microbiologia:</strong>Se corrige error en boton "Mostrar Resultados anteriores" reportado por JNA
+                    </li>
+                    <li class="cambio">
+                        <strong>Valor de Referencia:</strong> Ajuste en forma de determinar el valor de referencia por paciente:
+                        <ul>
+                            <li class="cambio2">Si el diagnóstico indica embarazo (código Z32.1), se asigna el VR específico para Embarazada (E).</li>
+                            <li class="cambio2">Si no existe un VR definido para embarazadas en la configuración, se utiliza en primera instancia el VR correspondiente a Femenino (F).</li>
+                            <li class="cambio2">Si tampoco existe un VR definido para Femenino, se utiliza el VR de Indistinto (I), que aplica a cualquier sexo.</li>
+                        </ul>
+                    </li>
+                </ul>
 
-                        <li class="cambio2">
-                            Se agregó en el servicio que consume ANDES la visualizacion del Mecanismo de resistencia en ATB.</li>
-                        <li class="cambio2">   
-                            <strong>Estadísticas Microbiología:</strong>
-                            <ul>
+                <div class="fecha">2025.11.18</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Mecanismos de Resistencia en Microbiologia:</strong>
+                        <ul>
+                            <li class="cambio2">Se agrega la posibilidad de registrar en los ATB multiples mecanismos de resistencia. <strong>Nueva Funcionalidad</strong></li>
+                            <li class="cambio2">Se corrige edicion de ATB con mecanismos de resistencia, entre otras mejoras relacionadas</li>
+                        </ul>
+                    <li class="cambio">
+                        <strong>Derivaciones: </strong>Se agrega posibilidad de descargar PDF de derivaciones en cualquier estado de la derivacion.<strong>Nueva Funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Interoperabilidad SNVS: </strong>Se inhabilita servicio para Eventos Sifilis.
+                    </li>
+
+                </ul>
+
+                <div class="fecha">2025.11.11</div>
+                <ul>
+                    <li class="cambio">
+
+                        <strong>Mecanismos de Resistencia en Microbiologia:Nuevas Funcionalidades </strong>
+                        <ul>
+                            <li class="cambio2">Se agregó la posibilidad de registrar en los ATB el mecanismo de resistencia.                </li>
+                            <li class="cambio2">En la validacion de resultados, al clickear "Mostrar Resultados Anteriores" se muestra el ultimo mecanismo de resistencia registrado en antibiogramas previos del mismo paciente o muestra (si es que hubiera)                    </li>
+
+                            <li class="cambio2">En la visualizacion de resultados por pantalla y en los PDF se agregó el mecanismo de resistencia en los ATB de forma destacada.                    </li>
+
                             <li class="cambio2">
-                                Se agregó una nueva solapa "Mecanismos de Resistencia" con las cantidades registradas por determinacion, grupo etario, sexo y tipo de muestra.
-                                </li>
+                                Se agregó en el servicio que consume ANDES la visualizacion del Mecanismo de resistencia en ATB.
+                            </li>
                             <li class="cambio2">
-                                Se incorpora la funcionalidad para exportar a Excel el listado de pacientes con mecanismos de resistencia registrados</li>
+                                <strong>Estadísticas Microbiología:</strong>
+                                <ul>
+                                    <li class="cambio2">
+                                        Se agregó una nueva solapa "Mecanismos de Resistencia" con las cantidades registradas por determinacion, grupo etario, sexo y tipo de muestra.
+                                    </li>
+                                    <li class="cambio2">
+                                        Se incorpora la funcionalidad para exportar a Excel el listado de pacientes con mecanismos de resistencia registrados
+                                    </li>
                                 </ul>
                             </li>
-                    </ul>
-                    
-                
-               
+                        </ul>
+
+
+
                     <li class="cambio">
                         <strong>Placas VR2: </strong>Se ajusta visualizacion en placas de virus respiratorios.
- 
+
                     </li>
-                   
-            </ul>
-			
-			   <div class="fecha">2025.11.05</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Derivaciones No Pacientes: </strong>Se agrega posibilidad de incluir en los lotes derivaciones del modulo de no pacientes y recibirlos en destino.
 
-                    <strong>Nueva Funcionalidad</strong>
-                </li>                
+                </ul>
 
-            </ul>
-            <div class="fecha">2025.10.30</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Interoperabilidad SISA: </strong>Se corrige notificacion de mas un resultado por muestra y evento.
-                </li>                
-                <li class="cambio">
-                    <strong>Carga/Validacion por HT: </strong>Se modifica para que las determinaciones de seleccion multiple se seleccione por defecto desde una lista desplegable de selccion simple y se habilita un boton para seleccion multiple en caso de requerir. 
-                    <strong>Cambio de funcionalidad</strong>
-                </li>                
-                <li class="cambio">
-                    <strong>Carga/Validacion por Analisis: </strong>Se modifica para que las determinaciones se listen ordenadas por fecha y numero de protocolo.
-                    <strong>Cambio de funcionalidad</strong>
-                </li>       
-                <li class="cambio">
-                    <strong>Impresion de Etiquetas: </strong>Se cargan las siglas de las areas que impactaran en la impresion de etiquetas.
-                    <strong>Nueva Funcionalidad</strong>
-                </li>                
+                <div class="fecha">2025.11.05</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Derivaciones No Pacientes: </strong>Se agrega posibilidad de incluir en los lotes derivaciones del modulo de no pacientes y recibirlos en destino.
 
-            </ul>
-            <div class="fecha">2025.10.29</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Edicion de Protocolos: </strong>Se corrige error "Codigo de analisis no existe o no es valido" al momento de editar un protocolo (pacientes y no pacientes).
-                </li>
-                <li class="cambio">
-                    <strong>Edicion de Determinaciones desde Validacion:</strong>Se corrige que no generaba la derivacion en los casos que si debe generar.
-                </li>
-                <li class="cambio">
-                    <strong>Configuracion Determinaciones:</strong>Se cambia para que no sea posible eliminar determinaciones creadas; solo modificar o inhabilitar.
-                    <strong>Cambio de funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    <strong>Impresion de Etiquetas:</strong> Se agregó la posibilidad de imprimir las siglas de las areas (sujeto a que se definan dichas siglas)
-                    <strong>Nueva Funcionalidad</strong>
-                </li>
+                        <strong>Nueva Funcionalidad</strong>
+                    </li>
 
-            </ul>
-            <div class="fecha">2025.10.22</div>
-            <ul>                
-                <li class="cambio">
-                    <strong>Interoperabilidad LNC :</strong>Se cambia interoperabilidad de tipo de muestras Hisopado y Aspirado en SISA y en ANDES.
-                </li>                
-            </ul>
+                </ul>
+                <div class="fecha">2025.10.30</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Interoperabilidad SISA: </strong>Se corrige notificacion de mas un resultado por muestra y evento.
+                    </li>
+                    <li class="cambio">
+                        <strong>Carga/Validacion por HT: </strong>Se modifica para que las determinaciones de seleccion multiple se seleccione por defecto desde una lista desplegable de selccion simple y se habilita un boton para seleccion multiple en caso de requerir.
+                        <strong>Cambio de funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Carga/Validacion por Analisis: </strong>Se modifica para que las determinaciones se listen ordenadas por fecha y numero de protocolo.
+                        <strong>Cambio de funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Impresion de Etiquetas: </strong>Se cargan las siglas de las areas que impactaran en la impresion de etiquetas.
+                        <strong>Nueva Funcionalidad</strong>
+                    </li>
 
-            <div class="fecha">2025.10.20</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Lista de Lotes:</strong> Se agrega nuevo punto de menu en <strong> Derivaciones-->Lista de Lotes</strong> con la posibilidad de obtener una trazabilidad de los cambios de estado de los mismos.
-                    
-    <strong> Nueva Funcionalidad</strong> <small> 1er. version de funcionalidad. Se agregaran mas cambios</small>
-</li>
-                <li class="cambio">
-                    <strong>Ingreso de Protocolos:</strong>Se corrige ingreso de determinaciones desde turno para que tome el mismo orden en que fueron ingresadas en el turno.
-                </li>
-                <li class="cambio">
-                    <strong>Interoperabilidad SISA:</strong>Mejora en performance de notificacion.
-                </li>
-                <li class="cambio">
-                    <strong>Placas LC:</strong>Se readapta interpretacion de resultados de acuerdo a nueva forma de informar (antes en mayusculas).
-                </li>
-                <li class="cambio">
-                    <strong>Panel Seguimiento Diario LC:</strong>Se ordena listado por numero de protocolo de menor a mayor.
-                </li>
-                <li class="cambio">
-                    <strong>Ingreso de FFEE:</strong>Se adapta control de ingreso de paciente con la misma muestra en el mismo dia controlando que sea por efector.
-                    <strong>Cambio de Funcionalidad</strong>
-                </li>
+                </ul>
+                <div class="fecha">2025.10.29</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Edicion de Protocolos: </strong>Se corrige error "Codigo de analisis no existe o no es valido" al momento de editar un protocolo (pacientes y no pacientes).
+                    </li>
+                    <li class="cambio">
+                        <strong>Edicion de Determinaciones desde Validacion:</strong>Se corrige que no generaba la derivacion en los casos que si debe generar.
+                    </li>
+                    <li class="cambio">
+                        <strong>Configuracion Determinaciones:</strong>Se cambia para que no sea posible eliminar determinaciones creadas; solo modificar o inhabilitar.
+                        <strong>Cambio de funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong>Impresion de Etiquetas:</strong> Se agregó la posibilidad de imprimir las siglas de las areas (sujeto a que se definan dichas siglas)
+                        <strong>Nueva Funcionalidad</strong>
+                    </li>
 
-            </ul>
-            <div class="fecha">2025.10.15</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Lote de derivacion:</strong> Se corrige error reportado al seleccionar un lote con derivaciones borradas.
+                </ul>
+                <div class="fecha">2025.10.22</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Interoperabilidad LNC :</strong>Se cambia interoperabilidad de tipo de muestras Hisopado y Aspirado en SISA y en ANDES.
+                    </li>
+                </ul>
 
-                </li>
+                <div class="fecha">2025.10.20</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Lista de Lotes:</strong> Se agrega nuevo punto de menu en <strong> Derivaciones-->Lista de Lotes</strong> con la posibilidad de obtener una trazabilidad de los cambios de estado de los mismos.
 
+                        <strong> Nueva Funcionalidad</strong> <small> 1er. version de funcionalidad. Se agregaran mas cambios</small>
+                    </li>
+                    <li class="cambio">
+                        <strong>Ingreso de Protocolos:</strong>Se corrige ingreso de determinaciones desde turno para que tome el mismo orden en que fueron ingresadas en el turno.
+                    </li>
+                    <li class="cambio">
+                        <strong>Interoperabilidad SISA:</strong>Mejora en performance de notificacion.
+                    </li>
+                    <li class="cambio">
+                        <strong>Placas LC:</strong>Se readapta interpretacion de resultados de acuerdo a nueva forma de informar (antes en mayusculas).
+                    </li>
+                    <li class="cambio">
+                        <strong>Panel Seguimiento Diario LC:</strong>Se ordena listado por numero de protocolo de menor a mayor.
+                    </li>
+                    <li class="cambio">
+                        <strong>Ingreso de FFEE:</strong>Se adapta control de ingreso de paciente con la misma muestra en el mismo dia controlando que sea por efector.
+                        <strong>Cambio de Funcionalidad</strong>
+                    </li>
 
-            </ul>
-            <div class="fecha">2025.10.14</div>
-            <ul>
-                <li class="cambio">
-                    <strong> Etiquetas de CB:</strong>Se habilita desde los Parametros del SI la posibilidad de incluir la impresion del <strong>
-    tipo de muestra</strong> en la etiqueta de Microbiologia
-    <strong> Nueva Funcionalidad</strong>
+                </ul>
+                <div class="fecha">2025.10.15</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Lote de derivacion:</strong> Se corrige error reportado al seleccionar un lote con derivaciones borradas.
+
+                    </li>
 
 
-</li>
-                <li class="cambio">
-                    <strong>Recepcion de FFEE:</strong> Se ajustan parametros para la recepcion de fichas electronicas para determinaciones del Laboratorio Central (LNC)
-
-                </li>
-                <li class="cambio">
-                    <strong>Interoperabilidad SISA:</strong> Se migran los eventos que informa Laboratorio Central (LNC) en el SIL1 al SIl2 <strong> Nueva Funcionalidad</strong>:
-                    <ul>
-                        <li class="cambio2">COVID-19, Influenza y OVR en ambulatorios (No UMAs)</li>
-                        <li class="cambio2">Internado y/o fallecido por COVID o IRA</li>
-                        <li class="cambio2">Monitoreo de SARS COV-2 y OVR en ambulatorios</li>
-                        <li class="cambio2">Unidad Centinela de Infección Respiratoria Aguda Grave (UC-IRAG)</li>
-                        <li class="cambio2">Chagas agudo congenito</li>
-                        <li class="cambio2">Hantavirosis</li>
-                        <li class="cambio2">Hantavirus en estudio de contactos estrechos</li>
-
-                        
-                    </ul>
-                </li>
-
-            </ul>
-    <div class="fecha">2025.10.08</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Generacion de PDF:</strong> Se corrige error reportado del limite de conexiones. 
-
-                </li>
-                 
-
-            </ul>
-            <div class="fecha">2025.10.02</div>
-            <ul>
-                <li class="cambio">
-                    <strong>Etiquetas de Derivaciones:</strong> Se modifica para imprimir etiquetas incluidas en un lote generado o enviado.<strong> Nueva Funcionalidad</strong>
+                </ul>
+                <div class="fecha">2025.10.14</div>
+                <ul>
+                    <li class="cambio">
+                        <strong> Etiquetas de CB:</strong>Se habilita desde los Parametros del SI la posibilidad de incluir la impresion del <strong>
+                            tipo de muestra
+                        </strong> en la etiqueta de Microbiologia
+                        <strong> Nueva Funcionalidad</strong>
 
 
-                </li>
-                 
+                    </li>
+                    <li class="cambio">
+                        <strong>Recepcion de FFEE:</strong> Se ajustan parametros para la recepcion de fichas electronicas para determinaciones del Laboratorio Central (LNC)
 
-            </ul>
-            <div class="fecha">2025.09.29</div>
-            <ul>
-                <li class="cambio"><strong>Derivacion:</strong> Se agrega posibilidad de descargar PDF en los listados de derivaciones
-                </li>
-                <li class="cambio">
-                    <strong> Resultados anteriores en Validacion:</strong> Se cambia logica de busqueda de resultados anteriores.
-                </li>
-                <li class="cambio">
-                    <strong> Presentacion en Validacion:</strong> Se amplia tamaño de prompt para que se pueda seleccionar presentaciones de nombres largos y quede visible el boton Guardar.
-                </li>
-				 <li class="cambio">
-                    <strong> Laboratorio Central:</strong> Se habilita agregan nuevas determinaciones en panel de Seguimiento Diario.
-                </li>
-                
-            </ul>
-			 <div class="fecha">2025.09.25</div>
-            <ul>
-                <li class="cambio">
-                    <strong> Derivacion por Lotes:</strong> Se habilita la generacion y recepcion de derivaciones por lote.<strong> Nueva Funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    <strong> Laboratorio Central:</strong> Se habilita panel de Seguimiento.
-                </li>
-                <li class="cambio">
-                    <strong> Estadistica de Produccion:</strong> Se corrige la generacion por Efector.
-                </li>
-            </ul>
-			
-            <div class="fecha">2025.09.11</div>
-            <ul>
-                <li class="cambio">
-                    <strong> Estadistica Microbiologia:</strong> Se corrige calculo de cantidad de protocolos con protocolos con multiples diagnosticos.
-                </li>
-                <li class="cambio">
-                    <strong> Placas Laboratorio Central:</strong> Se habilita funcionalidad de automatizacion de Placas.<strong> Nueva Funcionalidad</strong>
-
-                </li>
-                <li class="cambio">
-                    <strong> Estado Protocolos:</strong> Se cambia para que cuando un protocolo Terminado no cambie su estado cuando se gestionen las derivaciones.
-                    <strong> Nueva Funcionalidad</strong>
-
-                </li>
-
-            </ul>
-            <div class="fecha">2025.09.02</div>
-            <ul>
-                <li class="cambio">
-                    <strong> Etiquetas de CB:</strong> Se habilitó una nueva solapa denominada "Etiquetas Áreas" en los Parámetros del SI. Esta permite seleccionar qué áreas imprimirán etiquetas al momento del alta de un nuevo protocolo por parte del efector.
-                    Las áreas no destinadas a impresión, como por ejemplo el Área Administrativa, no estarán disponibles para su selección.<strong>Nueva funcionalidad</strong>
-</li>
-
-                <li class="cambio">
-                    Resultados a SISA Interoperabilidad: Se cambia usuario de interoperabilidad y forma de obtenerlo. 
-                </li>
-            </ul>
-            <div class="fecha">2025.08.07</div>
-            <ul>
-                <li class="cambio">
-                    Nomenclador de Recupero Financiero: Se vinculan las determinaciones al nomenclador.
-                </li>
-
-                <li class="cambio">
-                    Estadistica Resultado Predefinido: Se ajusta conteo de pacientes en descarga de excel o pdf de pacientes cuando se destilda "Incluir sin Diagnostico".
-                </li>
-            </ul>
-            <div class="fecha">2025.08.06</div>
-            <ul>
-                <li class="cambio">
-                   Configuracion Determinaciones: se agrega nueva solapa con visualizacion de <strong>Autoanalizadores </strong>a los que está vinculados la determinacion; con el objetivo de automatizar, en proximas actualizaciones, la determinacion de valor de referencia por equipo. <strong>Nueva funcionalidad</strong>
-</li>
-                <li class="cambio">
-                    Resultados a SISA Interoperabilidad: <strong>Nueva funcionalidad</strong>
-<ul>
-    <li class="cambio2">Se amplian los resultados a interoperar para los eventos <strong>Sifilis</strong> y <strong>Sifilis en Personas Gestantes</strong></li>
-    <li class="cambio2">Se agrega nuevo evento <strong>Sifilis congénita </strong></li>
-    </ul>
-                                                                                                                  
-</li>
-                <li class="cambio">
-                    Hoja de trabajo: se agrega nuevo parametro para Imprimir Diagnostico. <strong>Nueva funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    Conexion con MPI Andes: se modifica para que cuando no traiga todos los datos basicos del paciente no muestre error, solo muestre los datos encontrados. <strong>Mejora funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    Resultados a SISA Interoperabilidad: Se corrige cuando el paciente no tiene domicilio cargado, se genera error. Se cambia para que se informen "Sin Datos" en SISA. <strong>Mejora funcionalidad</strong>
-                </li>
-
-            </ul>
-            <div class="fecha">2025.07.21</div>
-            <ul>
-                <li class="cambio">
-                    Resultados a SISA Interoperabilidad: Se corrige error detectado en la interoperabilidad de muestras</li>                   
-
-            </ul>
-            <div class="fecha">2025.07.18</div>
-            <ul>
-                <li class="cambio">
-                    Resultados a SISA Interoperabilidad: <strong> TBC </strong>. Se agrega nuevo evento para interoperar <strong>Nueva funcionalidad</strong></li>                        
-                    
-
-            </ul>
-
-            <div class="fecha">2025.07.10</div>
-            <ul>
-                <li class="cambio">
-                    Resultados a SISA Interoperabilidad:
-                    <ul>
-                        <li class="cambio2">Se cambió filtro de busqueda de "Determinacion" por "Evento a informar".<strong>Cambio de funcionalidad</strong></li>
-                        <li class="cambio2">Se mejora búsqueda de datos, al selecionar evento o resultado de recarga la grilla de datos.<strong>Nueva funcionalidad</strong></li>
-                        <li class="cambio2">Se agregó log de errores para control cuando no interopera con algun evento, para uso interno.<strong>Nueva funcionalidad</strong></li>
-                        <li class="cambio2">Se agregó control de error para cuando el dato "telefono" supera la cantidad de caracteres con los que se puede interoperar.</li>
+                    </li>
+                    <li class="cambio">
+                        <strong>Interoperabilidad SISA:</strong> Se migran los eventos que informa Laboratorio Central (LNC) en el SIL1 al SIl2 <strong> Nueva Funcionalidad</strong>:
+                        <ul>
+                            <li class="cambio2">COVID-19, Influenza y OVR en ambulatorios (No UMAs)</li>
+                            <li class="cambio2">Internado y/o fallecido por COVID o IRA</li>
+                            <li class="cambio2">Monitoreo de SARS COV-2 y OVR en ambulatorios</li>
+                            <li class="cambio2">Unidad Centinela de Infección Respiratoria Aguda Grave (UC-IRAG)</li>
+                            <li class="cambio2">Chagas agudo congenito</li>
+                            <li class="cambio2">Hantavirosis</li>
+                            <li class="cambio2">Hantavirus en estudio de contactos estrechos</li>
 
 
-                    </ul>
-                </li>
+                        </ul>
+                    </li>
 
-            </ul>
-            <div class="fecha">2025.07.03</div>
-            <ul>
-                <li class="cambio">
-                    Estadisticas Produccción:
-                    <ul>
-                        <li class="cambio2">Se mejoró el tiempo de respuesta del proceso mediante una optimización interna de las consultas de datos.</li>
-                        <li class="cambio2">Se incorporó una validación para limitar la generación de información a un máximo de un año.</li>
-                        <li class="cambio2">Se implementó un control para evitar múltiples solicitudes de información al hacer doble clic en el botón 'Generar Reporte' durante la misma sesión de usuario</li>
+                </ul>
+                <div class="fecha">2025.10.08</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Generacion de PDF:</strong> Se corrige error reportado del limite de conexiones.
+
+                    </li>
 
 
-                    </ul>
-                </li>
-
-            </ul>
-            <div class="fecha">2025.06.30</div>
-            <ul>
-                <li class="cambio">
-                   Usuarios: Se agrega posibilidad de descargar a excel.<strong>Nueva funcionalidad</strong>
-                </li>
-              
-            </ul>
-            <div class="fecha">2025.06.25</div>
-            <ul>
-                <li class="cambio">
-                    API Resultados para ANDES. Se agrega posibilidad de mostrar protocolos de microbiologia con ATB validados y sin determinaciones validadas.<strong>Nueva funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    Estadistica de Turnos: Se agrega control para que las fechas ingresadas sean válidas.
-                </li>
-                <li class="cambio">
-                    Resultados de Contador Hematologico 5 poblaciones: Calculo automático de fórmulas.<strong>Nueva funcionalidad</strong>
-                </li>
-                
-            </ul>
-
-            <div class="fecha">2025.06.10</div>
-            <ul>
-                <li class="cambio">
-                    Estadistica de Detalle de Derivaciones: Se agrega descarga de excel con determinaciones derivadas desde efector.<strong>Nueva funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    Estadistica de Turnos: Se agrega estadistica consolidada por todos los efectores para nivel central.<strong>Nueva funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    Derivaciones: Se corrige perdida del dato de usuario de registracion el momento de la derivacion.
-                </li>
-                <li class="cambio">
-                    Adjuntos de Resultados: Se habilita para que se pueda adjuntar mas un archivo por determinación.<strong>Nueva funcionalidad</strong>
-                </li>
-                <li class="cambio">
-                    
-                    Resultados Predefinidos Multiples: se agrega la opcion de borrar resultados ingresado previamente.<strong>Nueva funcionalidad</strong>
-                    <ul>
-                        <li class="cambio2">Carga / Validacion por Hoja de Trabajo</li>
-                        <li class="cambio2">Carga / Validacion por Analisis</li>
+                </ul>
+                <div class="fecha">2025.10.02</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Etiquetas de Derivaciones:</strong> Se modifica para imprimir etiquetas incluidas en un lote generado o enviado.<strong> Nueva Funcionalidad</strong>
 
 
-                    </ul>
-                </li>
-            </ul>
-            <div class="fecha">2025.06.03</div>
-            <ul>
-                <li class="cambio">
-                    Hoja Trabajo a Demanda: Se corrige para que muestre determinaciones que forman parte de Determinaciones compuestas.
-                </li>
-                <li class="cambio">
-                   Turnos: Se habilita la modificacion de turnos del dia y a futuro.
-                </li>
-            </ul>
-            <div class="fecha">2025.06.02</div>
-            <ul>
-               
-                <li class="cambio">
-                    Generacion de Hoja de Trabajo: Se corrige que no mostraban los antecedentes en las hojas marcadas con esta opcion.
-                    Los antecedentes se muestran considerando el resultado anterior del paciente para una determincion en cualquier laboratorio.             
-                </li>
-                <li class="cambio">
-                    Estadistica: Cambio de nombre de origen "Externo" por "Ambulatorio".
-                </li>
-            </ul>
-            <div class="fecha">2025.05.28</div>
-            <ul>
-                <li class="cambio">
+                    </li>
 
-                    Carga / Validacion por Hoja de Trabajo
-                    <ul>
-                        <li class="cambio2">Se corrige alineación de la grilla cuando tiene determinaciones con resultados predefinidos multiples.</li>
-                        <li class="cambio2">Resultados Predefinidos Multiples: Se saca boton para agregar opcion; reemplazando por el click en la caja de texto para mostrar y elegir las opciones multiples<strong>Nueva funcionalidad</strong></li>
-                        
 
-                    </ul>
-                </li>
-            </ul>
-            <div class="fecha">2025.05.22</div>
-            <ul>
-                <li class="cambio">
-                    Impresion de Resultados: Se corrige para que no se visualicen los titulos no informables de determinaciones compuestas.
-                </li>
-                <li class="cambio">
-                    Auditoria: Se controla que se ingresen numeros de protocolos válidos.
-                </li>
-            </ul>
+                </ul>
+                <div class="fecha">2025.09.29</div>
+                <ul>
+                    <li class="cambio">
+                        <strong>Derivacion:</strong> Se agrega posibilidad de descargar PDF en los listados de derivaciones
+                    </li>
+                    <li class="cambio">
+                        <strong> Resultados anteriores en Validacion:</strong> Se cambia logica de busqueda de resultados anteriores.
+                    </li>
+                    <li class="cambio">
+                        <strong> Presentacion en Validacion:</strong> Se amplia tamaño de prompt para que se pueda seleccionar presentaciones de nombres largos y quede visible el boton Guardar.
+                    </li>
+                    <li class="cambio">
+                        <strong> Laboratorio Central:</strong> Se habilita agregan nuevas determinaciones en panel de Seguimiento Diario.
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.09.25</div>
+                <ul>
+                    <li class="cambio">
+                        <strong> Derivacion por Lotes:</strong> Se habilita la generacion y recepcion de derivaciones por lote.<strong> Nueva Funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        <strong> Laboratorio Central:</strong> Se habilita panel de Seguimiento.
+                    </li>
+                    <li class="cambio">
+                        <strong> Estadistica de Produccion:</strong> Se corrige la generacion por Efector.
+                    </li>
+                </ul>
+
+                <div class="fecha">2025.09.11</div>
+                <ul>
+                    <li class="cambio">
+                        <strong> Estadistica Microbiologia:</strong> Se corrige calculo de cantidad de protocolos con protocolos con multiples diagnosticos.
+                    </li>
+                    <li class="cambio">
+                        <strong> Placas Laboratorio Central:</strong> Se habilita funcionalidad de automatizacion de Placas.<strong> Nueva Funcionalidad</strong>
+
+                    </li>
+                    <li class="cambio">
+                        <strong> Estado Protocolos:</strong> Se cambia para que cuando un protocolo Terminado no cambie su estado cuando se gestionen las derivaciones.
+                        <strong> Nueva Funcionalidad</strong>
+
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.09.02</div>
+                <ul>
+                    <li class="cambio">
+                        <strong> Etiquetas de CB:</strong> Se habilitó una nueva solapa denominada "Etiquetas Áreas" en los Parámetros del SI. Esta permite seleccionar qué áreas imprimirán etiquetas al momento del alta de un nuevo protocolo por parte del efector.
+                        Las áreas no destinadas a impresión, como por ejemplo el Área Administrativa, no estarán disponibles para su selección.<strong>Nueva funcionalidad</strong>
+                    </li>
+
+                    <li class="cambio">
+                        Resultados a SISA Interoperabilidad: Se cambia usuario de interoperabilidad y forma de obtenerlo.
+                    </li>
+                </ul>
+                <div class="fecha">2025.08.07</div>
+                <ul>
+                    <li class="cambio">
+                        Nomenclador de Recupero Financiero: Se vinculan las determinaciones al nomenclador.
+                    </li>
+
+                    <li class="cambio">
+                        Estadistica Resultado Predefinido: Se ajusta conteo de pacientes en descarga de excel o pdf de pacientes cuando se destilda "Incluir sin Diagnostico".
+                    </li>
+                </ul>
+                <div class="fecha">2025.08.06</div>
+                <ul>
+                    <li class="cambio">
+                        Configuracion Determinaciones: se agrega nueva solapa con visualizacion de <strong>Autoanalizadores </strong>a los que está vinculados la determinacion; con el objetivo de automatizar, en proximas actualizaciones, la determinacion de valor de referencia por equipo. <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Resultados a SISA Interoperabilidad: <strong>Nueva funcionalidad</strong>
+                        <ul>
+                            <li class="cambio2">Se amplian los resultados a interoperar para los eventos <strong>Sifilis</strong> y <strong>Sifilis en Personas Gestantes</strong></li>
+                            <li class="cambio2">Se agrega nuevo evento <strong>Sifilis congénita </strong></li>
+                        </ul>
+
+                    </li>
+                    <li class="cambio">
+                        Hoja de trabajo: se agrega nuevo parametro para Imprimir Diagnostico. <strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Conexion con MPI Andes: se modifica para que cuando no traiga todos los datos basicos del paciente no muestre error, solo muestre los datos encontrados. <strong>Mejora funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Resultados a SISA Interoperabilidad: Se corrige cuando el paciente no tiene domicilio cargado, se genera error. Se cambia para que se informen "Sin Datos" en SISA. <strong>Mejora funcionalidad</strong>
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.07.21</div>
+                <ul>
+                    <li class="cambio">
+                        Resultados a SISA Interoperabilidad: Se corrige error detectado en la interoperabilidad de muestras
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.07.18</div>
+                <ul>
+                    <li class="cambio">
+                        Resultados a SISA Interoperabilidad: <strong> TBC </strong>. Se agrega nuevo evento para interoperar <strong>Nueva funcionalidad</strong>
+                    </li>
+
+
+                </ul>
+
+                <div class="fecha">2025.07.10</div>
+                <ul>
+                    <li class="cambio">
+                        Resultados a SISA Interoperabilidad:
+                        <ul>
+                            <li class="cambio2">Se cambió filtro de busqueda de "Determinacion" por "Evento a informar".<strong>Cambio de funcionalidad</strong></li>
+                            <li class="cambio2">Se mejora búsqueda de datos, al selecionar evento o resultado de recarga la grilla de datos.<strong>Nueva funcionalidad</strong></li>
+                            <li class="cambio2">Se agregó log de errores para control cuando no interopera con algun evento, para uso interno.<strong>Nueva funcionalidad</strong></li>
+                            <li class="cambio2">Se agregó control de error para cuando el dato "telefono" supera la cantidad de caracteres con los que se puede interoperar.</li>
+
+
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.07.03</div>
+                <ul>
+                    <li class="cambio">
+                        Estadisticas Produccción:
+                        <ul>
+                            <li class="cambio2">Se mejoró el tiempo de respuesta del proceso mediante una optimización interna de las consultas de datos.</li>
+                            <li class="cambio2">Se incorporó una validación para limitar la generación de información a un máximo de un año.</li>
+                            <li class="cambio2">Se implementó un control para evitar múltiples solicitudes de información al hacer doble clic en el botón 'Generar Reporte' durante la misma sesión de usuario</li>
+
+
+                        </ul>
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.06.30</div>
+                <ul>
+                    <li class="cambio">
+                        Usuarios: Se agrega posibilidad de descargar a excel.<strong>Nueva funcionalidad</strong>
+                    </li>
+
+                </ul>
+                <div class="fecha">2025.06.25</div>
+                <ul>
+                    <li class="cambio">
+                        API Resultados para ANDES. Se agrega posibilidad de mostrar protocolos de microbiologia con ATB validados y sin determinaciones validadas.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Estadistica de Turnos: Se agrega control para que las fechas ingresadas sean válidas.
+                    </li>
+                    <li class="cambio">
+                        Resultados de Contador Hematologico 5 poblaciones: Calculo automático de fórmulas.<strong>Nueva funcionalidad</strong>
+                    </li>
+
+                </ul>
+
+                <div class="fecha">2025.06.10</div>
+                <ul>
+                    <li class="cambio">
+                        Estadistica de Detalle de Derivaciones: Se agrega descarga de excel con determinaciones derivadas desde efector.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Estadistica de Turnos: Se agrega estadistica consolidada por todos los efectores para nivel central.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+                        Derivaciones: Se corrige perdida del dato de usuario de registracion el momento de la derivacion.
+                    </li>
+                    <li class="cambio">
+                        Adjuntos de Resultados: Se habilita para que se pueda adjuntar mas un archivo por determinación.<strong>Nueva funcionalidad</strong>
+                    </li>
+                    <li class="cambio">
+
+                        Resultados Predefinidos Multiples: se agrega la opcion de borrar resultados ingresado previamente.<strong>Nueva funcionalidad</strong>
+                        <ul>
+                            <li class="cambio2">Carga / Validacion por Hoja de Trabajo</li>
+                            <li class="cambio2">Carga / Validacion por Analisis</li>
+
+
+                        </ul>
+                    </li>
+                </ul>
+                <div class="fecha">2025.06.03</div>
+                <ul>
+                    <li class="cambio">
+                        Hoja Trabajo a Demanda: Se corrige para que muestre determinaciones que forman parte de Determinaciones compuestas.
+                    </li>
+                    <li class="cambio">
+                        Turnos: Se habilita la modificacion de turnos del dia y a futuro.
+                    </li>
+                </ul>
+                <div class="fecha">2025.06.02</div>
+                <ul>
+
+                    <li class="cambio">
+                        Generacion de Hoja de Trabajo: Se corrige que no mostraban los antecedentes en las hojas marcadas con esta opcion.
+                        Los antecedentes se muestran considerando el resultado anterior del paciente para una determincion en cualquier laboratorio.
+                    </li>
+                    <li class="cambio">
+                        Estadistica: Cambio de nombre de origen "Externo" por "Ambulatorio".
+                    </li>
+                </ul>
+                <div class="fecha">2025.05.28</div>
+                <ul>
+                    <li class="cambio">
+
+                        Carga / Validacion por Hoja de Trabajo
+                        <ul>
+                            <li class="cambio2">Se corrige alineación de la grilla cuando tiene determinaciones con resultados predefinidos multiples.</li>
+                            <li class="cambio2">Resultados Predefinidos Multiples: Se saca boton para agregar opcion; reemplazando por el click en la caja de texto para mostrar y elegir las opciones multiples<strong>Nueva funcionalidad</strong></li>
+
+
+                        </ul>
+                    </li>
+                </ul>
+                <div class="fecha">2025.05.22</div>
+                <ul>
+                    <li class="cambio">
+                        Impresion de Resultados: Se corrige para que no se visualicen los titulos no informables de determinaciones compuestas.
+                    </li>
+                    <li class="cambio">
+                        Auditoria: Se controla que se ingresen numeros de protocolos válidos.
+                    </li>
+                </ul>
                 <div class="fecha">2025.05.19</div>
                 <ul>
                     <li class="cambio">

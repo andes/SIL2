@@ -72,20 +72,47 @@ namespace WebLab.ControlResultados
             /*  Filtra los protocolos con analisis con formulas a calcular sin resultados*/
             
 
+            //string m_strSQL = @" SELECT    P.idProtocolo, P.numero as numero,  cONVERT(varchar(10),P.fecha,103) as fecha,                               
+            //                 CASE 
+            //                    WHEN Pa.idestado = 2                                     THEN CAST(Pa.numeroAdic AS varchar(20))
+            //                    ELSE         CAST(Pa.numeroDocumento AS varchar(20))
+            //                    END AS dni,
+            //                    Pa.apellido+ ' ' + Pa.nombre as paciente,
+            //                   O.nombre as origen, Pri.nombre as prioridad, SS.nombre as sector,P.estado, P.impreso 
+            //                   FROM Lab_Protocolo P with (nolock)
+            //                   INNER JOIN Lab_Origen O with (nolock) on O.idOrigen= P.idOrigen
+            //                   INNER JOIN Lab_Prioridad Pri with (nolock) on Pri.idPrioridad= P.idPrioridad
+            //                   INNER JOIN Sys_Paciente Pa with (nolock) on Pa.idPaciente= P.idPaciente                              
+            //                   INNER JOIN LAB_SectorServicio SS with (nolock) ON P.idSector= SS.idSectorServicio 
+            //                   INNER JOIN    LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo
+            //                   INNER JOIN   LAB_Item AS I with (nolock) ON DP.idSubItem = I.idItem
+            //                   INNER JOIN  LAB_Formula AS F with (nolock) ON I.idItem = F.idItem
+            //                   WHERE  (F.idTipoFormula = 1) AND (P.estado =1) AND (DP.conResultado = 0) AND " + Request["Parametros"].ToString(); // +str_orden;
+
+            /*Se reformula sql con mejor preformance para no mostrar protocolos duplicados */
             string m_strSQL = @" SELECT    P.idProtocolo, P.numero as numero,  cONVERT(varchar(10),P.fecha,103) as fecha,                               
-                                case when Pa.idestado=2 then Pa.numeroAdic else  Pa.numeroDocumento end as dni,Pa.apellido+ ' ' + Pa.nombre as paciente,
+                                CASE 
+                                    WHEN Pa.idestado = 2  THEN CAST(Pa.numeroAdic AS varchar(20))
+                                ELSE     CAST(Pa.numeroDocumento AS varchar(20))
+                                END AS dni,
+                                 LTRIM(RTRIM(ISNULL(Pa.apellido,'') + ' ' + ISNULL(Pa.nombre,''))) AS paciente,
                                O.nombre as origen, Pri.nombre as prioridad, SS.nombre as sector,P.estado, P.impreso 
-                               FROM Lab_Protocolo P with (nolock)
-                               INNER JOIN Lab_Origen O with (nolock) on O.idOrigen= P.idOrigen
-                               INNER JOIN Lab_Prioridad Pri with (nolock) on Pri.idPrioridad= P.idPrioridad
-                               INNER JOIN Sys_Paciente Pa with (nolock) on Pa.idPaciente= P.idPaciente                              
-                               INNER JOIN LAB_SectorServicio SS with (nolock) ON P.idSector= SS.idSectorServicio 
-                               INNER JOIN    LAB_DetalleProtocolo AS DP with (nolock) ON P.idProtocolo = DP.idProtocolo
-                               INNER JOIN   LAB_Item AS I with (nolock) ON DP.idSubItem = I.idItem
-                               INNER JOIN  LAB_Formula AS F with (nolock) ON I.idItem = F.idItem
-                               WHERE  (F.idTipoFormula = 1) AND (P.estado =1) AND (DP.conResultado = 0) AND " + Request["Parametros"].ToString(); // +str_orden;
-                              
-            //" INNER JOIN Lab_Configuracion Con ON Con.idEfector= P.idEfector " +
+                             FROM Lab_Protocolo P WITH (NOLOCK)
+                            INNER JOIN Lab_Origen O WITH (NOLOCK) ON O.idOrigen = P.idOrigen
+                            INNER JOIN Lab_Prioridad Pri WITH (NOLOCK) ON Pri.idPrioridad = P.idPrioridad
+                            INNER JOIN Sys_Paciente Pa WITH (NOLOCK) ON Pa.idPaciente = P.idPaciente
+                            INNER JOIN LAB_SectorServicio SS WITH (NOLOCK) ON P.idSector = SS.idSectorServicio
+                               WHERE  (P.estado =1) AND " + Request["Parametros"].ToString()+
+                               @"   AND EXISTS ( SELECT 1
+        FROM LAB_DetalleProtocolo DP WITH (NOLOCK)
+     
+        INNER JOIN LAB_Formula F WITH (NOLOCK) ON DP.idSubItem = F.idItem
+        WHERE DP.idProtocolo = P.idProtocolo and P.idEfector = DP.idEfector
+          AND DP.conResultado = 0
+          AND F.idTipoFormula = 1 )
+                order by P.numero "                               ; 
+
+            
             DataSet Ds = new DataSet();
             //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura

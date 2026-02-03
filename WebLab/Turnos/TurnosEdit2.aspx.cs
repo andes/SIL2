@@ -92,33 +92,37 @@ namespace WebLab.Turnos
                 {
                     CargarListas();
                     lblTitulo.Text = "NUEVO TURNO";
-                    DateTime m_fecha =DateTime.Parse(Session["Turno_Fecha"].ToString());
-                    string m_tipoServicio = Session["Turno_IdTipoServicio"].ToString();
-                    string m_hora = Session["Turno_Hora"].ToString();
-                    string m_iditem = Session["idItem"].ToString();
-
-                    lblFecha.Text = m_fecha.ToShortDateString();
-                    lblHora.Text = m_hora;
-                    lblIdTipoServicio.Text = m_tipoServicio;
-                    
-                    TipoServicio oServicio = new TipoServicio();
-                    oServicio = (TipoServicio)oServicio.Get(typeof(TipoServicio), int.Parse(m_tipoServicio));
-
-
-                    if (m_iditem != "0")
+                    if (Session["Turno_Fecha"] != null)
                     {
-                        Item oItem = new Item();
-                        oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));                      
-                        string sDatos = "";                      
-                        sDatos += "#" +oItem.Codigo+ "#" + oItem.Nombre + "@";
-                        TxtDatos.Value = sDatos;
-                    }
+                        DateTime m_fecha = DateTime.Parse(Session["Turno_Fecha"].ToString());
+                        string m_tipoServicio = Session["Turno_IdTipoServicio"].ToString();
+                        string m_hora = Session["Turno_Hora"].ToString();
+                        string m_iditem = Session["idItem"].ToString();
 
-                    if (oServicio!=null)
-                    lblTipoServicio.Text = oServicio.Nombre;
-                 
-                    MostrarPaciente();
-                 
+                        lblFecha.Text = m_fecha.ToShortDateString();
+                        lblHora.Text = m_hora;
+                        lblIdTipoServicio.Text = m_tipoServicio;
+
+                        TipoServicio oServicio = new TipoServicio();
+                        oServicio = (TipoServicio)oServicio.Get(typeof(TipoServicio), int.Parse(m_tipoServicio));
+
+
+                        if (m_iditem != "0")
+                        {
+                            Item oItem = new Item();
+                            oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));
+                            string sDatos = "";
+                            sDatos += "#" + oItem.Codigo + "#" + oItem.Nombre + "@";
+                            TxtDatos.Value = sDatos;
+                        }
+
+                        if (oServicio != null)
+                            lblTipoServicio.Text = oServicio.Nombre;
+
+                        MostrarPaciente();
+                    }
+                    else
+                        Response.Redirect("../FinSesion.aspx", false);
                 }
                 chkImprimir.Visible = false;
                 lnkReimprimirComprobante.Visible = false;
