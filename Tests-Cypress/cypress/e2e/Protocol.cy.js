@@ -5,7 +5,6 @@
         cy.login();
         cy.seleccionarEfector();
 
-
         //Creo un protocolo sin turno
         cy.get("[id$='mnuPrincipal']")
             .contains("Recepcion")
@@ -70,7 +69,6 @@
 
         cy.login();
         cy.seleccionarEfector();
-
 
         //Creo un protocolo sin turno
         cy.get("[id$='mnuPrincipal']")
