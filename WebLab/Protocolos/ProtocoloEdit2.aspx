@@ -493,7 +493,7 @@
 
 </ul>
                           
-                            <div id="tab1" style="height: 350px">
+                            <div id="tab1" style="height: 300px">
                    
 
                                  <table style="width:1000px;">
@@ -574,11 +574,7 @@
                                         </td>
                                 </tr>
                                 </table> 
-                                 <div id="pnlImpresoraAlta" runat="server">
-                                   
-                            Impresora de Etiquetas:   <asp:DropDownList    class="form-control input-sm" ToolTip="Seleccione Impresora de Etiqueta" ID="ddlImpresoraEtiqueta" runat="server">
-                                             </asp:DropDownList>
-                                </div>
+                              
                                 <input type="hidden" runat="server" name="TxtDatosCargados" id="TxtDatosCargados" value="" />                                
                                    <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />                                
                 <input id="txtTareas" name="txtTareas" runat="server" type="hidden"  />
@@ -794,7 +790,13 @@
 							<td colspan="2" style="vertical-align: top"   >  
                                    
                             
-
+                                <br />
+                                   <div id="pnlImpresoraAlta" runat="server">
+                                   
+                           <label>    Impresora de Etiquetas:  		</label> <asp:DropDownList    class="form-control input-sm" ToolTip="Seleccione Impresora de Etiqueta" ID="ddlImpresoraEtiqueta" runat="server">
+                                             </asp:DropDownList>
+                                </div>
+                               
                              <label>   Observaciones Internas:  						</label>
                                     <asp:TextBox ID="txtObservacion" runat="server" class="form-control input-sm" 
                                                 TextMode="MultiLine"  TabIndex="23" Width="600px"  ></asp:TextBox> 

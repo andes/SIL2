@@ -202,17 +202,24 @@ namespace WebLab.ImpresionResult
 
             string m_strSQL = "";
             if (Request["idTipoServicio"].ToString() != "5")
-             m_strSQL = @" SELECT DISTINCT  P.idProtocolo, 
-                          P.numero  as numero,  CONVERT(varchar(10),P.fecha,103) as fecha, case when Pa.idestado= 2 then Pa.numeroAdic  else convert(varchar,Pa.numeroDocumento) end as dni ,Pa.apellido+ ' ' + Pa.nombre as paciente,
+             m_strSQL = @" SELECT   P.idProtocolo, 
+                          P.numero  as numero,  CONVERT(varchar(10),P.fecha,103) as fecha, 
+                                CASE 
+                                    WHEN Pa.idestado = 2  THEN CAST(Pa.numeroAdic AS varchar(20))
+                                ELSE     CAST(Pa.numeroDocumento AS varchar(20))
+                                END  as dni ,Pa.apellido+ ' ' + Pa.nombre as paciente,
                             O.nombre as origen, Pri.nombre as prioridad, SS.nombre as sector,P.estado, P.impreso 
                            FROM Lab_Protocolo P (nolock)
                            INNER JOIN Lab_Origen O (nolock) on O.idOrigen= P.idOrigen 
                              INNER JOIN Lab_Prioridad Pri (nolock) on Pri.idPrioridad= P.idPrioridad 
                              INNER JOIN Sys_Paciente Pa (nolock) on Pa.idPaciente= P.idPaciente                               
-                             INNER JOIN LAB_SectorServicio SS (nolock) ON P.idSector= SS.idSectorServicio 
-                              INNER JOIN  LAB_DetalleProtocolo AS DP (nolock)  ON P.idProtocolo = DP.idProtocolo 
-                              INNER JOIN    LAB_Item AS I (nolock) ON DP.idItem = I.idItem 
-                                WHERE " + str_condicion  +str_orden;
+                             INNER JOIN LAB_SectorServicio SS (nolock) ON P.idSector= SS.idSectorServicio                               
+                                WHERE " + str_condicion  +
+                                @"	 AND EXISTS (
+                                    SELECT 1
+                                    FROM LAB_DetalleProtocolo DP WITH (NOLOCK)  
+                                    WHERE DP.idProtocolo = P.idProtocolo
+                              )"+                                str_orden;
             else
                 m_strSQL = @" SELECT DISTINCT  P.idProtocolo, P.numero  as numero,
                               CONVERT(varchar(10),P.fecha,103) as fecha,  M.nombre as muestra,  C.descripcion as conservacion,
