@@ -1,13 +1,47 @@
-- name: Install dependencies
-  run: npm ci
-  working-directory: SIL2/Tests-Cypress
+name: Cypress Tests
 
-- name: Run Cypress tests
-  uses: cypress-io/github-action@v6
-  with:
-    browser: chrome
-    working-directory: SIL2/Tests-Cypress
-  env:
-    CYPRESS_baseUrl: ${{ secrets.BASE_URL }}
-    CYPRESS_USER_NAME: ${{ secrets.USER_NAME }}
-    CYPRESS_USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_review:
+    types: [submitted]
+  push:
+    branches:
+      - main
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    # Solo corre en:
+    # - PR normal
+    # - Review APPROVED
+    # - Push a main (merge)
+    if: >
+      github.event_name == 'pull_request' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request_review' &&
+       github.event.review.state == 'approved')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: SIL2/Tests-Cypress
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          working-directory: SIL2/Tests-Cypress
+        env:
+          CYPRESS_baseUrl: ${{ secrets.BASE_URL }}
+          CYPRESS_USER_NAME: ${{ secrets.USER_NAME }}
+          CYPRESS_USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
