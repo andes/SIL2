@@ -1,0 +1,13 @@
+- name: Install dependencies
+  run: npm ci
+  working-directory: SIL2/Tests-Cypress
+
+- name: Run Cypress tests
+  uses: cypress-io/github-action@v6
+  with:
+    browser: chrome
+    working-directory: SIL2/Tests-Cypress
+  env:
+    CYPRESS_baseUrl: ${{ secrets.BASE_URL }}
+    CYPRESS_USER_NAME: ${{ secrets.USER_NAME }}
+    CYPRESS_USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
