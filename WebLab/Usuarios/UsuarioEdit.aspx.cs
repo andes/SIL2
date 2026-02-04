@@ -131,7 +131,7 @@ namespace WebLab.Usuarios
             MostrarEfectores();
 
             ddlTipoAutenticacion.SelectedValue =  oRegistro.TipoAutenticacion.Trim();
-            ddlTipoAutenticacion.Enabled = false;
+           
             habilitarPorAutenticacion();
         }
 
