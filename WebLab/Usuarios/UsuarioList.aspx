@@ -12,7 +12,7 @@
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">           
  
-    	   <div align="center" class="form-inline" style="width:800px;"  >
+    	   <div align="center" class="form-inline" style="width:1000px;"  >
    <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title"> USUARIOS
