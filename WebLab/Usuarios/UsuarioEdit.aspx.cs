@@ -175,7 +175,7 @@ namespace WebLab.Usuarios
         private void Guardar(Usuario oRegistro)
         {
             string accion = "Crea";
-            if (oRegistro != null)
+            if(Request["id"] != null)
                 accion = "Modifica";
 
             Perfil oPerfil = new Perfil();
@@ -207,7 +207,7 @@ namespace WebLab.Usuarios
             oRegistro.Telefono = txtTelefono.Text;
 
 
-            if (accion != "Modifica") //no se modifica contrasñea
+            if (accion != "Modifica") //no se modifica contraseña
             {
                 Utility oUtil = new Utility();
                 string m_password = oUtil.Encrypt(txtPassword.Text);
