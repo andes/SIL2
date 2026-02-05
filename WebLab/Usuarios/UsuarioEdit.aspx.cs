@@ -16,6 +16,7 @@ using Business;
 using System.Data.SqlClient;
 using CrystalDecisions.Shared;
 using CrystalDecisions.Web;
+using System.Text.RegularExpressions;
 
 namespace WebLab.Usuarios
 {
@@ -129,6 +130,9 @@ namespace WebLab.Usuarios
 
             MostrarEfectores();
 
+            ddlTipoAutenticacion.SelectedValue =  oRegistro.TipoAutenticacion.Trim();
+           
+            habilitarPorAutenticacion();
         }
 
         private void habilitarAdministrador()
@@ -203,7 +207,7 @@ namespace WebLab.Usuarios
             oRegistro.Telefono = txtTelefono.Text;
 
 
-            if (accion != "Modifica") //no se modifica contrasñea
+            if (accion != "Modifica") //no se modifica contraseña
             {
                 Utility oUtil = new Utility();
                 string m_password = oUtil.Encrypt(txtPassword.Text);
@@ -227,7 +231,7 @@ namespace WebLab.Usuarios
             oRegistro.RequiereCambioPass = chkRequiereContrasenia.Checked;
             oRegistro.IdUsuarioActualizacion = int.Parse(Session["idUsuario"].ToString());
             oRegistro.FechaActualizacion = DateTime.Now;
-
+            oRegistro.TipoAutenticacion = ddlTipoAutenticacion.SelectedValue;
             oRegistro.Save();
 
             if (Request["id"] == null) // NUEVO USUARIO
@@ -541,5 +545,59 @@ namespace WebLab.Usuarios
 
             
         }
+        
+        private void habilitarPorAutenticacion()
+        {
+            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
+            {
+                //No se habilita “Requiere nueva contraseña al ingresar”
+                chkRequiereContrasenia.Enabled = false;
+                chkRequiereContrasenia.Checked = false;
+                //No se habilita “exclusivo Río Negro”
+                chkExterno.Enabled = false;
+                chkExterno.Enabled = false;
+                //Por defecto la contraseña es el username
+                txtPassword.Enabled = false;
+                rfvPassword.Enabled = false;
+            }
+            else
+            {
+                chkRequiereContrasenia.Enabled = true;
+                chkExterno.Enabled = true;
+
+                //Se puede poner una contraseña
+                if (Request["id"] == null){ txtPassword.Enabled = true; rfvPassword.Enabled = true; }
+                else
+                    txtPassword.Enabled = false;
+            }
+
+
+        }
+        protected void ddlTipoAutenticacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          
+           habilitarPorAutenticacion();
+            
+        }
+
+
+        protected void customValidacionGeneral1_ServerValidate1(object source, ServerValidateEventArgs args)
+        {
+            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
+            {
+                //El username debe ser un numero (numero de documento) no debe admitir letras ni caracteres especiales.
+                
+                bool validate = Regex.IsMatch(txtUsername.Text, @"^\d+$");
+                if (!validate)
+                {
+                    args.IsValid = false;
+                    return;
+                }
+                //Luego de validar el usuario, pongo la contraseña por defecto
+                if (Request["id"] == null) txtPassword.Text = txtUsername.Text;
+            }
+        }
+
+        
     }
 }

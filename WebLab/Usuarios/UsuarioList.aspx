@@ -12,7 +12,7 @@
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">           
  
-    	   <div align="center" class="form-inline" style="width:800px;"  >
+    	   <div align="center" class="form-inline" style="width:1000px;"  >
    <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title"> USUARIOS
@@ -67,7 +67,10 @@
                     <ItemStyle Width="30%" />
                 </asp:BoundField>
                 <asp:BoundField DataField="habilitado" HeaderText="Activo" />
+               <asp:BoundField DataField="tipoAutenticacion" HeaderText="Tipo Autenticacion" >
                         
+                    <ItemStyle Width="30%" />
+                </asp:BoundField>
                 <asp:TemplateField HeaderText="">
                             <ItemTemplate>
                             <asp:ImageButton ID="Modificar" ToolTip="Modificar" runat="server" ImageUrl="~/App_Themes/default/images/editar.jpg"

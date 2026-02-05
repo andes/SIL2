@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Usuarios {
-    
-    
-    public partial class UsuarioEdit {
-        
+namespace WebLab.Usuarios
+{
+
+
+    public partial class UsuarioEdit
+    {
+
         /// <summary>
         /// HFCurrTabIndex control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
-        
+
         /// <summary>
         /// txtApellido control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtApellido;
-        
+
         /// <summary>
         /// rfvApellido control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvApellido;
-        
+
         /// <summary>
         /// txtNombre control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNombre;
-        
+
         /// <summary>
         /// rfvNombre control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNombre;
-        
+
         /// <summary>
         /// txtFirmaValidacion control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFirmaValidacion;
-        
+
         /// <summary>
         /// email control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl email;
-        
+
         /// <summary>
         /// txtTelefono control.
         /// </summary>
@@ -83,7 +85,16 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtTelefono;
-        
+
+        /// <summary>
+        /// ddlTipoAutenticacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoAutenticacion;
+
         /// <summary>
         /// txtUsername control.
         /// </summary>
@@ -92,7 +103,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtUsername;
-        
+
         /// <summary>
         /// rfvUsuario control.
         /// </summary>
@@ -101,7 +112,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUsuario;
-        
+
         /// <summary>
         /// customValidacionGeneral control.
         /// </summary>
@@ -110,7 +121,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator customValidacionGeneral;
-        
+
         /// <summary>
         /// customValidacionGeneral0 control.
         /// </summary>
@@ -119,7 +130,16 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator customValidacionGeneral0;
-        
+
+        /// <summary>
+        /// customValidacionGeneral1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator customValidacionGeneral1;
+
         /// <summary>
         /// txtPassword control.
         /// </summary>
@@ -128,7 +148,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPassword;
-        
+
         /// <summary>
         /// rfvPassword control.
         /// </summary>
@@ -137,7 +157,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPassword;
-        
+
         /// <summary>
         /// chkAdministrador control.
         /// </summary>
@@ -146,7 +166,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CheckBox chkAdministrador;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -155,7 +175,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// rvEfector control.
         /// </summary>
@@ -164,7 +184,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RangeValidator rvEfector;
-        
+
         /// <summary>
         /// ddlArea control.
         /// </summary>
@@ -173,7 +193,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlArea;
-        
+
         /// <summary>
         /// ddlPerfil control.
         /// </summary>
@@ -182,7 +202,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlPerfil;
-        
+
         /// <summary>
         /// rvPerfil control.
         /// </summary>
@@ -191,7 +211,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RangeValidator rvPerfil;
-        
+
         /// <summary>
         /// ddlEfectorDestino control.
         /// </summary>
@@ -200,7 +220,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfectorDestino;
-        
+
         /// <summary>
         /// rvEfectorDestino control.
         /// </summary>
@@ -209,7 +229,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RangeValidator rvEfectorDestino;
-        
+
         /// <summary>
         /// chkActivo control.
         /// </summary>
@@ -218,7 +238,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkActivo;
-        
+
         /// <summary>
         /// chkExterno control.
         /// </summary>
@@ -227,7 +247,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkExterno;
-        
+
         /// <summary>
         /// chkRequiereContrasenia control.
         /// </summary>
@@ -236,7 +256,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkRequiereContrasenia;
-        
+
         /// <summary>
         /// lnkRegresar control.
         /// </summary>
@@ -245,7 +265,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkRegresar;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>
@@ -254,7 +274,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>
@@ -263,7 +283,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
-        
+
         /// <summary>
         /// btnAuditoria control.
         /// </summary>
@@ -272,7 +292,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAuditoria;
-        
+
         /// <summary>
         /// btnBlanquear control.
         /// </summary>
@@ -281,7 +301,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBlanquear;
-        
+
         /// <summary>
         /// ddlEfector2 control.
         /// </summary>
@@ -290,7 +310,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfector2;
-        
+
         /// <summary>
         /// btnAgregarEfector control.
         /// </summary>
@@ -299,7 +319,7 @@ namespace WebLab.Usuarios {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAgregarEfector;
-        
+
         /// <summary>
         /// gvListaEfector control.
         /// </summary>
