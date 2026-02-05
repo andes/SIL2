@@ -175,7 +175,7 @@ namespace WebLab.Usuarios
         private void Guardar(Usuario oRegistro)
         {
             string accion = "Crea";
-            if(Request["id"] != null)
+            if (oRegistro != null)
                 accion = "Modifica";
 
             Perfil oPerfil = new Perfil();
