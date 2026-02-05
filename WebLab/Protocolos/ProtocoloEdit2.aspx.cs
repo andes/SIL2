@@ -141,7 +141,9 @@ namespace WebLab.Protocolos
         {
 
             if (!Page.IsPostBack)
-            {           
+            {
+                Session["matricula"] = ""; //para que lo borre de la sesion al entrar a un nuevo protocolo
+                Session["apellidoNombre"] = null;
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
                 if (Session["idUsuario"] != null)
@@ -177,6 +179,11 @@ namespace WebLab.Protocolos
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
 
+                        }
+
+                        if(Request["idPaciente"] != null) //Cambio de paciente
+                        {
+                            HFModificarPaciente.Value = "Si";
                         }
                     }
                     else
@@ -249,7 +256,6 @@ namespace WebLab.Protocolos
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" )
                             {
-
                                 int numeroProtocolo = int.Parse(Session["numeroProtocolo"].ToString()); 
                                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                                 oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", numeroProtocolo);
@@ -3675,11 +3681,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
          
         }
 
-        protected void cvValidacionInput_ServerValidate_vane(object source, ServerValidateEventArgs args)
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         { 
            
-            string[] bk = TxtDatosCargados.Value.Split(';');
-
+            
             TxtDatosCargados.Value = TxtDatos.Value;
 
             string sDatos = "";
@@ -3689,20 +3694,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             for (int i = 0; i < tabla.Length - 1; i++)
             {
                 string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();
-                string conResultado = "false";
 
-                //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
-                {
-                    string[] filaBk = bk[i].Split('#');
-                    conResultado = filaBk[2].ToString();
-                }
+                string codigo = fila[1].ToString();
+                string tarea = fila[2].ToString();
+                string muestra= fila[3].ToString();
+                string estado = "false";
+             
+                if (tabla.Length > 1) //TxtDatosCargados en Alta no tiene valores!
+                    estado = fila[4].ToString();
+                
                 if (sDatos == "")
-                        sDatos = codigo + "#" + muestra + "#" + conResultado;
+                        sDatos = codigo + "#" + muestra + "#" + estado;
                 else
-                        sDatos += ";" +  codigo + "#" + muestra + "#" + conResultado;
+                        sDatos += ";" +  codigo + "#" + muestra + "#" + estado;
 
             }
 
@@ -3721,7 +3725,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //    }
 
             if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
+            {  //TxtDatos.Value = "";
                 args.IsValid = false;
              
                 return;
@@ -3747,7 +3751,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if (oC.DiagObligatorio)
                 {if (lstDiagnosticosFinal.Items.Count == 0)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
                         return;
@@ -3757,7 +3761,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 ///Validacion de la fecha de protocolo
                 if (txtFecha.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
                     return;
@@ -3767,7 +3771,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
                         return;
@@ -3779,7 +3783,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlSectorServicio.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar sector";
                     return;
@@ -3787,7 +3791,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlOrigen.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Origen";
                     return;
@@ -3795,7 +3799,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlPrioridad.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Prioridad";
                     return;
@@ -3803,7 +3807,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlMuestra.SelectedValue == "0") && (pnlMuestra.Visible))
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Tipo de Muestra";
                     return;
@@ -3815,7 +3819,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
                 //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe seleccionar el caracter del protocolo";
                     return;
@@ -3827,7 +3831,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
                         return;
@@ -3837,7 +3841,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
                 {
                     
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
                         return;
@@ -3845,21 +3849,21 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 }
                 if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
                     return;
                 }
                 if (ddlOrigen.SelectedValue == "0")
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
                     return;
                 }
                 if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
                         return;
@@ -3868,7 +3872,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
                     return;
@@ -3878,7 +3882,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (txtFechaOrden.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
                     return;
@@ -3887,7 +3891,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
                         return;
@@ -3896,7 +3900,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
                             return;
@@ -3996,36 +4000,228 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     }
                 }//fin control
 
+                if (txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
             }
         }
-		 
-		 protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        { 
-           
 
-            TxtDatosCargados.Value = TxtDatos.Value;
+        private bool VerificarAnalisisContenidos()
+        {
+            bool devolver = true;
+            string[] tabla = TxtDatos.Value.Split('@');
+            string listaCodigo = "";
 
-            string sDatos = "";
+            var subItemsEnBD = new Dictionary<int, int>();
+            //List<Item> subItemsEnDB = new List<Item>();
 
-              string[] tabla = TxtDatos.Value.Split('@');
-          
+
+
             for (int i = 0; i < tabla.Length - 1; i++)
+
             {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
-            
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
+                if (listaCodigo == "")
+                    listaCodigo = "'" + codigo + "'";
+                else
+                    listaCodigo += ",'" + codigo + "'";
+
+                if (codigo != "")
+                {
+                    Item oItem = new Item();
+                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+                    //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
+                    // if (Request["Operacion"].ToString() == "Modifica")
+                    if (Request["idProtocolo"] != null)//Caro: unifco instanciacion de protocolo cuando es modificacion 
+                    {
+                        Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+                        oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+                        //try  //Caro: saco try cath por errores silenciosos 
+                        //{
+                        if ((oRegistro != null) && (oItem != null))
+                        {
+                            ISession m_session = NHibernateHttpModule.CurrentSession;
+                            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+                            crit.Add(Expression.Eq("IdItem", oItem));
+                            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+                            IList lista = crit.List();
+
+                            if (lista.Count == 0)//no esta en la base
+                            {
+                                devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, subItemsEnBD);
+
+                            }
+                            else
+                            {
+                                foreach (DetalleProtocolo oDetalle in lista)
+                                {
+                                    subItemsEnBD[oDetalle.IdSubItem.IdItem] = oDetalle.IdItem.IdItem;
+                                }
+
+                            }
+                        }
+                        //}
+                        //catch(Exception e) 
+                        //{
+                        //    this.cvValidacionInput.ErrorMessage = e.Message;
+                        //    devolver = false; break;
+                        //}
+
+                    }
+                    else  // no es modificacion
+                    {
+                        devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla);
+                    }
+
+
+                }/// if codigo
+                if (!devolver) break;
+            }
+
+            if ((devolver) && (listaCodigo != ""))
+            { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
+
+            return devolver;
+
+        }
+
+        private bool VerificaMuestrasAsociadas(string codigo, Item oItem, string[] tabla, Dictionary<int,int> itemsEnBD = null)
+        {
+            bool devolver = true;
+
+
+            if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
+            {
+
+
+                for (int j = 0; j < tabla.Length - 1; j++)
+
+                {
+                    string[] fila2 = tabla[j].Split('#');
+                    string codigo2 = fila2[1].ToString();
+                    if ((codigo2 != "") && (codigo != codigo2))
+                    {
+                        Item oItem2 = new Item();
+                        oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+
+                        //MultiEfector: filtro por efector
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                        crit.Add(Expression.Eq("IdItemPractica", oItem));
+                        crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+                        crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                        PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+
+
+                        if (oGrupo != null)
+                        {
+
+                            this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+                            devolver = false; break;
+
+                        }
+
+                        // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+                        //Verifico que el codigo cargado tampoco este en mi lista de subItems de la base de datos!
+
+                        if (itemsEnBD != null)
+                        {
+                            Item oItemExistente = new Item();
+                            bool hayConflicto = false;
+                            int itemExistente=0;
+
+                            m_session = NHibernateHttpModule.CurrentSession;
+                            crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                            crit.Add(Expression.Eq("IdItemPractica", oItem));
+                            crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                            IList detalle = crit.List();
+
+                            if (detalle.Count > 0) //Es practica
+                            {
+                                foreach (PracticaDeterminacion item in detalle)
+                                {
+                                    if (itemsEnBD.ContainsKey(item.IdItemDeterminacion))
+                                    {
+                                        itemExistente = itemsEnBD[item.IdItemDeterminacion];
+                                        hayConflicto = true; break;
+                                    }
+                                }
+                            }
+                            else //es determinacion simple idItem=idSubitem
+                            {
+                                if (itemsEnBD.ContainsKey(oItem.IdItem))
+                                {
+                                    itemExistente = itemsEnBD[oItem.IdItem];
+                                    hayConflicto = true;
+                                }
+                            }
+
+                            if (hayConflicto)
+                            {
+                                string mensajeerror = "";
+                                oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente);//, "Baja", false); //Caro: le saco la condicion de baja porque si fue grabado en la base y despues lo pusieron de baja no lo va a encontrar
+                                if (oItemExistente != null)///Caro agrego control de que exista si no va a dar error al usarlo
+                                {
+                                    mensajeerror =
+                                    "Ha cargado análisis contenidos en otros. Verifique los códigos " +
+                                    codigo + " y " + oItemExistente.Codigo + "!";
+
+                                }
+                                else
+                                    mensajeerror = "Ha cargado análisis contenidos en otros. Verifique los códigos ";
+
+                                this.cvValidacionInput.ErrorMessage = mensajeerror;
+                                devolver = false;
+                            }
+
+                        }
+                    }
+
+                }////for           
+            }
+            else
+            {
+                this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+                devolver = false; //break;
 
             }
 
-          
+            return devolver;
+        }
 
 
-            TxtDatosCargados.Value = sDatos;
+        protected void cvValidacionInput_ServerValidate_old(object source, ServerValidateEventArgs args)
+        { 
+           
+
+             TxtDatosCargados.Value = TxtDatos.Value; 
+
+             string sDatos = "";
+
+               string[] tabla = TxtDatos.Value.Split('@');
+
+             for (int i = 0; i < tabla.Length - 1; i++)
+             {
+                 string[] fila = tabla[i].Split('#');
+                 string codigo = fila[1].ToString();
+                 string muestra= fila[2].ToString();                
+
+                     if (sDatos == "")
+                         sDatos = codigo + "#" + muestra;
+                     else
+                         sDatos += ";" +  codigo + "#" + muestra;                                                        
+
+             }
+
+
+
+
+             TxtDatosCargados.Value = sDatos;
             //saco restriccion de forma temporal
             //if (Request["Operacion"].ToString()!="Modifica")
             //    if (!VerificarFechaPacienteMuestra())
@@ -4311,6 +4507,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             args.IsValid = true;
                     }
                 }//fin control
+
+                if(txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
 
             }
         }
@@ -4368,83 +4571,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         //}
  
 
-        private bool VerificarAnalisisContenidos()
-        {
-            bool devolver = true;
-            string[] tabla = TxtDatos.Value.Split('@');
-            string listaCodigo = "";
-
-             for (int i = 0; i < tabla.Length - 1; i++)
-            
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                if (listaCodigo == "")
-                    listaCodigo = "'" + codigo + "'";
-                else
-                    listaCodigo += ",'" + codigo + "'";
-
-                int i_idItemPractica = 0;
-                if (codigo != "")
-                {
-
-                    Item oItem = new Item();
-                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);                 
-                    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
-                    { 
-
-                    i_idItemPractica = oItem.IdItem;
-                        for (int j = 0; j < tabla.Length - 1; j++)
-
-                        {
-                            string[] fila2 = tabla[j].Split('#');
-                            string codigo2 = fila2[1].ToString();
-                            if ((codigo2 != "") && (codigo != codigo2))
-                            {
-                                Item oItem2 = new Item();
-                                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
-
-                                //MultiEfector: filtro por efector
-
-
-                                ISession m_session = NHibernateHttpModule.CurrentSession;
-                                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
-                                crit.Add(Expression.Eq("IdItemPractica", oItem));
-                                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
-                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
-
-
-
-                                if (oGrupo != null)
-                                {
-
-                                    this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
-                                    devolver = false; break;
-
-                                }
-
-                            }
-                        
-                    }////for           
-                    }
-                    else
-                    {
-                        this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
-                        devolver = false; break;
-
-                    }
-
-                }/// if codigo
-                if (!devolver) break;
-            }
-
-            if ((devolver) && (listaCodigo != ""))
-            { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
-           
-            return devolver;
-         
-        }
+     
 
         private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
         { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
@@ -4770,8 +4897,41 @@ ORDER BY cantidad desc";
                                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula+ '#' + espe));
                             }
                             if (pro.Count > 1)
+                            {
                                 if (Request["idProtocolo"] == null)
                                 { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
+
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion + 1).Trim();
+
+
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+
 
                             lblErrorMedico.Visible = false;
 
@@ -4802,7 +4962,7 @@ ORDER BY cantidad desc";
 
 
         }
-
+       
         public class Profesiones
         {
             public List<Matricula> matriculacion { get; set; }
@@ -4810,19 +4970,21 @@ ORDER BY cantidad desc";
         }
 
         public class Matricula
-
         {
             public string  matriculaNumero { get; set; }
-           
+            public DateTime fin { get; set; }
+
         }
 
        
-            public class ProfesionalMatriculado
+        public class ProfesionalMatriculado
         {
         //    public int documento { get; set; }
             public string nombre { get; set; }
             public string apellido { get; set; }
+            public string cuit { get; set; }
            public List<Profesiones> profesiones { get; set; }
+            public string id { get; set; } //id que trae de ANDES
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
             //public string FechaNac { get; set; }
@@ -4882,13 +5044,16 @@ ORDER BY cantidad desc";
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "") 
+                //Agregue que sea distinto de vacio porque al Cancelar sin traer matricula,
+                //deja un string vacio, que hacia que entrara al if y buscara nuevamente un medico
+                //haciendo que la ejecucion se extendiera innecesariamente
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
                
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //No quiero pisar los datos cargados
             }
         }
 
@@ -5289,7 +5454,6 @@ System.Net.ServicePointManager.SecurityProtocol =
                     request.Headers.Add("app_id", "0e4fcbbf");
 
 
-
                     Stream postStream = request.GetRequestStream();
                     postStream.Write(data, 0, data.Length);
 
@@ -5341,7 +5505,6 @@ System.Net.ServicePointManager.SecurityProtocol =
                 CargarProtocoloDerivado(oRegistro, analisis);
             }
         }
-
     }
 
 }

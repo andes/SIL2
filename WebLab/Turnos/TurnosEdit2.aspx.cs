@@ -72,11 +72,13 @@ namespace WebLab.Turnos
             if (!Page.IsPostBack)
             {
                 SetToken();
-               VerificaPermisos("Asignacion de turnos");               
-            
+               VerificaPermisos("Asignacion de turnos");
+
 
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
-             
+
+                Session["matricula"] = null;
+                Session["apellidoNombre"] = null;
 
                 if (Request["Modifica"].ToString() == "1")
                 {
@@ -992,7 +994,15 @@ ORDER BY cantidad desc";
                         return;
                     }
                     else
-                        args.IsValid = true;
+                    {
+                        if(ddlEspecialista.SelectedValue == "0" && txtEspecialista.Text != "0") //Trajo varios medicos pero elijio "--Seleccionar--"
+                        {
+                            args.IsValid = false;
+                            this.cvValidaPracticas.ErrorMessage = "Debe seleccionar médico solicitante del listado";
+                        }
+                        else
+                            args.IsValid = true;
+                    }
                 }
             }
             else
@@ -1056,12 +1066,12 @@ ORDER BY cantidad desc";
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "")
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //Comentado para que no borre lo que esta cargado dinamicamente
             }
         }
 
@@ -1139,28 +1149,62 @@ ORDER BY cantidad desc";
                             for (int i = 0; i < pro.Count; i++)
                             {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
-                                //documento = pro[i].documento.ToString();
+
                                 // ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula));
-                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
+                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#'));
                             }
                             if (pro.Count > 1)
+                            {
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+
+                                //LAB-119  Seleccion de profesionales solicitantes en dación de turnos filtro por matricula y apellido
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+                                       
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+                                        
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion+1).Trim();
+
+                                       
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+                        }
 
                             lblErrorMedico.Visible = false;
 
-                        }
-                        else
-                        { //error no encontrado}
+                    }
+                    else
+                    { //error no encontrado}
 
 
-                            lblErrorMedico.Text = "Médico no encontrado!!";
-                            lblErrorMedico.Visible = true;
-                            ddlEspecialista.Items.Clear();
-                            ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
+                        lblErrorMedico.Text = "Médico no encontrado!!";
+                        lblErrorMedico.Visible = true;
+                        ddlEspecialista.Items.Clear();
+                        ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
 
-                        }
+                    }
                     } // s!=0
-                }// matricula
+                // matricula
             }// try
             catch (Exception ex)
             {
