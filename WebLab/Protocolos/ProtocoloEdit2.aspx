@@ -404,7 +404,6 @@
 
                                         
                           
-                                        
                                     </td>
                                 </tr>
                                 <tr>
@@ -548,7 +547,7 @@
 
                                          <tr><td  >  <anthem:DropDownList ID="ddlRutina" runat="server" AutoCallBack="True"                                                
                                                 
-                               class="form-control input-sm" TabIndex="20" 
+                               class="form-control input-sm" TabIndex="20"  Width="250px"
                                 onselectedindexchanged="ddlRutina_SelectedIndexChanged">
                                           </anthem:DropDownList>
                                                  <anthem:LinkButton ID="lnkAgregarRutina" runat="server" ToolTip="Agregar Rutina" OnClientClick="javascript:AgregarDeLaListaRutina();"  Width="40px" >
