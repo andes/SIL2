@@ -37,6 +37,8 @@
        
         <br />
         <asp:Button ID="btnBuscar" CssClass="btn btn-primary" Width="80px" runat="server" OnClick="btnBuscar_Click" Text="Buscar" />
+        <br />
+        <asp:Label ID="lblErrorAPI" runat="server" Font-Bold="True"  CssClass="myLabelIzquierdaGde"  ForeColor="Red" Visible="False" ></asp:Label>
         <asp:GridView ID="gvMedico" runat="server" AutoGenerateColumns="False" DataKeyNames="matriculaNumero" OnRowCommand="gvMedico_RowCommand" OnRowDataBound="gvMedico_RowDataBound" CssClass="table table-bordered bs-table"
             EmptyDataText="La busqueda no arrojo resultados. Verifique nombre y apellido.">
             <Columns>

@@ -33,6 +33,7 @@ namespace WebLab.Protocolos
         {
             try
             {
+                lblErrorAPI.Text = "";
                 Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
                 ///Buscar especilista
@@ -59,8 +60,8 @@ namespace WebLab.Protocolos
             }
             catch (Exception ex)
             {
-                
-
+                lblErrorAPI.Visible = true;
+                lblErrorAPI.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
             }
 
 
