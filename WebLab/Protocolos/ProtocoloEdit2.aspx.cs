@@ -3915,7 +3915,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (txtFechaTomaMuestra.Value == "")
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de toma de muestra";
                     return;
@@ -3924,7 +3924,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha actual";
                         return;
@@ -3933,7 +3933,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Parse(txtFecha.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha del protocolo";
                             return;
@@ -3952,7 +3952,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaFIS.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La FIS no puede ser superior a la fecha actual";
                         return;
@@ -3961,7 +3961,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFIS.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La FIS no puede ser despues de la fecha de toma de muestra";
                             return;
@@ -3981,7 +3981,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaFUC.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La FUC no puede ser superior a la fecha actual";
                         return;
@@ -3990,7 +3990,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFUC.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La FUC no puede ser despues de la fecha de toma de muestra";
                             return;

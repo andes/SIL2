@@ -182,7 +182,7 @@ namespace WebLab.Turnos
                 //txtEspecialista.Text = oRegistro.MatriculaEspecialista;
                 lblObraSocial.Text = oRegistro.NombreObraSocial;
 
-                ddlEspecialista.Items.Insert(0, new ListItem(oRegistro.Especialista, txtEspecialista.Text));
+               // ddlEspecialista.Items.Insert(0, new ListItem(oRegistro.Especialista, txtEspecialista.Text)); --> Duplicada profesional en el combo
                 switch (oRegistro.IdPaciente.IdSexo)
                 {
                     case 1: lblSexo.Text = "Indeterminado"; break;
