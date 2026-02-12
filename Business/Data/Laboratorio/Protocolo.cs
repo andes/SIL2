@@ -11,6 +11,9 @@ using MathParser;
 using System.IO;
 using System.Drawing;
 using QRCoder;
+using System.Configuration;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Business.Data.Laboratorio
 {
@@ -3157,6 +3160,292 @@ and   P.Baja = 0 and P.Estado > 0  and P.IdPaciente = " + s_idPaciente + "   and
             return s_resultadoAnterior;
 
         }
-    
+
+        public class ResultadoDTO
+        {
+            public string Codigo { get; set; }
+            public Item IdItem { get; set; }
+            public Item IdSubItem { get; set; }
+        }
+        public static string VerificarAnalisisContenidos(string TxtDatos, string analisisOriginales, string idProtocolo, Usuario oUser, string muestraAsociada)
+        {
+            bool devolver = true;
+            string[] tabla = TxtDatos.Split('@');
+            string[] tablaOriginal = analisisOriginales.Split(';');
+            string listaCodigo = "";
+            string error = string.Empty;
+
+            Dictionary<string, Item> itemsPorCodigo = new Dictionary<string, Item>(); 
+            Protocolo oRegistro = null;
+           
+            List<string> codigos = new List<string>();
+            List<string> codigosOriginal = new List<string>();
+            DataTable dt = new DataTable();
+            
+
+            //Armo los buffers de datos para no ir tantas veces a la base de datos
+
+
+            if (idProtocolo != null) //Es Modificacion, me traigo todos los iditems cargados a DataSet(ds)
+            {
+                //Instancio Protocolo fuera de la repetitiva
+               oRegistro = (Business.Data.Laboratorio.Protocolo) oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo),int.Parse(idProtocolo.ToString()));
+
+                foreach (string fila in tablaOriginal)
+                {
+                    string[] codigo = fila.Split('#');
+                    codigosOriginal.Add(codigo[1]);
+                }
+
+                foreach (string fila in tabla)
+                {
+                    string[] codigo = fila.Split('#');
+                    codigos.Add(codigo[1]);
+                }
+
+                string[] diferencia = codigosOriginal.Intersect(codigos).ToArray(); //Solo los codigos que estan en BD y no borraron de la grilla
+
+                string resultado = string.Join(", ", diferencia.Select(v => $"'{v}'"));
+
+                string m_ssql = @"SELECT I.codigo, DP.idItem, DP.idSubItem
+                                from LAB_DetalleProtocolo AS DP  with (nolock) 
+                                INNER JOIN LAB_Item AS I  with (nolock) ON DP.idSubItem = I.idItem 
+                                WHERE DP.idProtocolo = " + idProtocolo +
+                                " and codigo in (" + resultado + ")";
+                //ISession m_session = NHibernateHttpModule.CurrentSession;
+                //ICriteria criteria = m_session.CreateCriteria(typeof(DetalleProtocolo))
+                //.CreateAlias("DP.IdSubItem", "I")
+                //.CreateAlias("DP.IdProtocolo", "P")
+                //.Add(Expression.Eq("P.IdProtocolo", idProtocolo))
+                //.Add(Expression.In("I.Codigo", diferencia.ToArray()))));
+
+    //            criteria.SetProjection(
+    //Projections.ProjectionList()
+    //    .Add(Projections.Property("I.Codigo"), "Codigo")
+    //    .Add(Projections.Property("DP.IdItem"), "IdItem")
+    //    .Add(Projections.Property("DP.IdSubItem"), "IdSubItem")
+//);
+                //criteria.SetResultTransformer(Transformers.AliasToBean<ResultadoDTO>());
+               // IList<Business.Data.Laboratorio.DetalleProtocolo> detalles = criteria.List<Business.Data.Laboratorio.DetalleProtocolo>();
+            }
+
+            for (int i = 0; i < tabla.Length - 1; i++)
+            {
+                string[] fila = tabla[i].Split('#');
+                string codigo = fila[1].ToString();
+                if (listaCodigo == "")
+                    listaCodigo = "'" + codigo + "'";
+                else
+                    listaCodigo += ",'" + codigo + "'";
+
+                if (codigo != "")
+                {
+                    Item oItem; ;
+
+                    if (!itemsPorCodigo.TryGetValue(codigo, out oItem))
+                    {
+                        oItem = new Item();
+                        oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+                        itemsPorCodigo[codigo] = oItem; //Tambien lo guardo en un buffer //Aca la key es el codigo 
+
+                        if (oItem.Tipo == "P") //Para las practicas guardo los idItem tambien en el buffer
+                        {
+                            ISession m_session = NHibernateHttpModule.CurrentSession;
+                            ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                            crit.Add(Expression.Eq("IdItemPractica", oItem));
+                            crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                            IList detalle = crit.List();
+
+                            List<int> idsDeterminaciones = new List<int>();
+                            foreach (PracticaDeterminacion item in detalle)
+                            {
+                                idsDeterminaciones.Add(item.IdItemDeterminacion);
+                            }
+
+                            if (idsDeterminaciones.Count > 0)
+                            {
+                                ICriteria critItems = m_session.CreateCriteria(typeof(Item));
+                                critItems.Add(Expression.In("IdItem", idsDeterminaciones));
+                                IList determinaciones = critItems.List();
+                                foreach (Item oItem2 in determinaciones)
+                                {
+                                    string key = oItem2.IdItem.ToString();
+                                    if (!itemsPorCodigo.ContainsKey(key))
+                                    {
+                                        itemsPorCodigo[key] = oItem2; //La key para estos items es su IdItem
+                                    }
+                                }
+                            }
+                        }
+
+                        //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
+                        if (oRegistro != null)//Caro: unifico instanciacion de protocolo cuando es modificacion 
+                        {
+                            if (oItem != null)
+                            {
+                                if (!codigosOriginal.Contains(codigo))//no esta en la base
+                                {
+                                    devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, muestraAsociada, oUser, dt, itemsPorCodigo);
+                                }
+                            }
+                        }
+                        else  // Para el alta
+                        {
+                            devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, muestraAsociada, oUser, dt, itemsPorCodigo);
+                        }
+
+
+                    }
+                }/// if codigo
+
+                if (!devolver) break;
+            }
+
+            if ((devolver) && (listaCodigo != ""))
+            { error = VerificarAnalisisComplejosContenidos(listaCodigo, oUser); }
+
+            return error;
+
+        }
+
+        private static bool VerificaMuestrasAsociadas(string codigo, Item oItem, string[] tabla, string muestraAsociada, Usuario oUser, DataTable dt = null,  Dictionary<string, Item> itemsPorCodigo = null)
+        {
+            string error = string.Empty;
+
+
+            //Verifica si la muestra asociada es la correcta
+            if (oItem.VerificaMuestrasAsociadas(int.Parse(muestraAsociada)))
+            {
+                for (int j = 0; j < tabla.Length - 1; j++)
+                {
+                    string[] fila2 = tabla[j].Split('#');
+                    string codigo2 = fila2[1].ToString();
+                    //Verifico que el item y subItem no estan repetidos
+
+                    if ((codigo2 != "") && (codigo != codigo2))
+                    {
+                        Item oItem2;
+                        if (itemsPorCodigo != null &&  itemsPorCodigo.TryGetValue(codigo2, out oItem2))
+                        {
+                            oItem2 = itemsPorCodigo[codigo2];
+                        }
+                        else
+                        {
+                            oItem2 = new Item();
+                            oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+                            if (itemsPorCodigo != null)
+                                itemsPorCodigo[codigo2] = oItem2; //lo guardo en un buffer para la proxima busqueda
+                        }
+                        
+
+                        //MultiEfector: filtro por efector
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                        crit.Add(Expression.Eq("IdItemPractica", oItem));
+                        crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+                        crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                        PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+                        if (oGrupo != null)
+                        {
+                            error = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+                            break;
+                        }
+
+                        //Verifica analisis contendo en otro pero con en el buffer
+
+                        if (dt != null)
+                        {
+                            Item oItemExistente = new Item();
+                            bool hayConflicto = false;
+                            int itemExistente = 0;
+
+                          
+
+                            if (oItem.Tipo == "P") //Es practica
+                            {
+                                foreach (PracticaDeterminacion item in detalle)
+                                {
+                                    if (itemsEnBD.ContainsKey(item.IdItemDeterminacion))
+                                    {
+                                        itemExistente = itemsEnBD[item.IdItemDeterminacion];
+                                        hayConflicto = true; break;
+                                    }
+                                }
+                            }
+                            else //es determinacion simple idItem=idSubitem
+                            {
+                                if (itemsEnBD.ContainsKey(oItem.IdItem))
+                                {
+                                    itemExistente = itemsEnBD[oItem.IdItem];
+                                    hayConflicto = true;
+                                }
+                            }
+
+                            if (hayConflicto)
+                            {
+                                string mensajeerror = "";
+                                oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente);//, "Baja", false); //Caro: le saco la condicion de baja porque si fue grabado en la base y despues lo pusieron de baja no lo va a encontrar
+                                if (oItemExistente != null)///Caro agrego control de que exista si no va a dar error al usarlo
+                                {
+                                    mensajeerror =
+                                    "Ha cargado análisis contenidos en otros. Verifique los códigos " +
+                                    codigo + " y " + oItemExistente.Codigo + "!";
+
+                                }
+                                else
+                                    mensajeerror = "Ha cargado análisis contenidos en otros. Verifique los códigos ";
+
+                                error = mensajeerror;
+                               
+                            }
+
+                        }
+                    }
+
+                }////for           
+            }
+            else
+            {
+               error = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+               
+
+            }
+
+            return error;
+        }
+
+        private static string VerificarAnalisisComplejosContenidos(string listaCodigo, Usuario oUser)
+        { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
+           string error= string.Empty;
+            string m_ssql = "SELECT  distinct PD.idItemDeterminacion, I.codigo" +
+                            " FROM         LAB_PracticaDeterminacion AS PD " +
+                            " INNER JOIN   LAB_Item AS I ON PD.idItemPractica = I.idItem " +
+                            " WHERE     I.codigo IN (" + listaCodigo + ") AND (I.baja = 0)" +
+                            " and PD.idEfector= " + oUser.IdEfector.IdEfector.ToString() + " ORDER BY PD.idItemDeterminacion ";
+
+            //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
+            //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlDataAdapter da = new SqlDataAdapter(m_ssql, conn);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+
+            string itempivot = "";
+            string codigopivot = "";
+            for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+            {
+                if (ds.Tables[0].Rows[i][0].ToString() == itempivot)
+                {
+                    error = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigopivot + " y " + ds.Tables[0].Rows[i][1].ToString() + "!";
+                    break;
+                }
+                codigopivot = ds.Tables[0].Rows[i][1].ToString();
+                itempivot = ds.Tables[0].Rows[i][0].ToString();
+            }
+            return error;
+
+        }
+
     }
 }
