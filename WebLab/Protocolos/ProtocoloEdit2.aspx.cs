@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 using Business;
 using Business.Data.Laboratorio;
 using Business.Data;
-
+using System.Linq;
 using NHibernate;
 using NHibernate.Expression;
 using System.Data.SqlClient;
@@ -3675,333 +3675,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
          
         }
 
-        protected void cvValidacionInput_ServerValidate_vane(object source, ServerValidateEventArgs args)
-        { 
-           
-            string[] bk = TxtDatosCargados.Value.Split(';');
-
-            TxtDatosCargados.Value = TxtDatos.Value;
-
-            string sDatos = "";
-
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();
-                string conResultado = "false";
-
-                //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
-                {
-                    string[] filaBk = bk[i].Split('#');
-                    conResultado = filaBk[2].ToString();
-                }
-                if (sDatos == "")
-                        sDatos = codigo + "#" + muestra + "#" + conResultado;
-                else
-                        sDatos += ";" +  codigo + "#" + muestra + "#" + conResultado;
-
-            }
-
-          
-
-
-            TxtDatosCargados.Value = sDatos;
-            //saco restriccion de forma temporal
-            //if (Request["Operacion"].ToString()!="Modifica")
-            //    if (!VerificarFechaPacienteMuestra())
-            //    {
-            //        TxtDatos.Value = "";
-            //        args.IsValid = false;
-            //        this.cvValidacionInput.ErrorMessage = "No es posible ingresar para la misma fecha, muestra y paciente un nuevo protocolo.";
-            //        return;
-            //    }
-
-            if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
-                args.IsValid = false;
-             
-                return;
-            }
-            else
-            {
-
-              
-
-            ///
-
-            if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
-                {
-
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
-                    return;
-                }
-                else args.IsValid = true;
-
-
-                //validacion Diagnostico
-                if (oC.DiagObligatorio)
-                {if (lstDiagnosticosFinal.Items.Count == 0)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
-                        return;
-                    }
-                }
-
-                ///Validacion de la fecha de protocolo
-                if (txtFecha.Value == "")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
-                    return;
-                }
-                else
-                {
-
-                    if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                        args.IsValid = true;
-                }
-
-
-                if ((ddlSectorServicio.SelectedValue == "0"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar sector";
-                    return;
-                }
-
-                if ((ddlOrigen.SelectedValue == "0"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar Origen";
-                    return;
-                }
-                
-                if ((ddlPrioridad.SelectedValue == "0"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar Prioridad";
-                    return;
-                }
-                
-                if ((ddlMuestra.SelectedValue == "0") && (pnlMuestra.Visible))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar Tipo de Muestra";
-                    return;
-                }
-                /// Valida que debe seleccionar un caracter si es un caso notificable a SISA
-
-
-
-                if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
-                //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar el caracter del protocolo";
-                    return;
-                }
-                // fin valida
-                // validacion si es sospechoso o detctar ingresar fecha de inicio de sintomas
-
-                if (VerificaObligatoriedadFIS()) 
-                {
-                    if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
-                        return;
-                    }
-                }
-                // validacion si es contacto  ingresar fecha de ultimo contacto
-                if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
-                {
-                    
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
-                        return;
-                     
-                }
-                if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
-                    return;
-                }
-                if (ddlOrigen.SelectedValue == "0")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
-                    return;
-                }
-                if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
-                        return;
-                    }
-                         
-
-                    if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
-                    return;
-                }
-
-                ///Validacion de la fecha de la orden
-
-                if (txtFechaOrden.Value == "")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
-                    return;
-                }
-                else
-                {
-                    if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }
-
-
-              
-
-                if (txtFechaTomaMuestra.Value == "")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de toma de muestra";
-                    return;
-                }
-                else
-                {
-                    if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Parse(txtFecha.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha del protocolo";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }
-
-
-                /// control de fecha inicio de sintomas
-                /// 
-                
-                if (txtFechaFIS.Value != "")
-               
-                {
-                    if (DateTime.Parse(txtFechaFIS.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La FIS no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFIS.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La FIS no puede ser despues de la fecha de toma de muestra";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }//fin control
-
-
-                /// control de fecha inicio de sintomas
-                /// 
-                
-
-                if (txtFechaFUC.Value != "")
-
-                {
-                    if (DateTime.Parse(txtFechaFUC.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La FUC no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFUC.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La FUC no puede ser despues de la fecha de toma de muestra";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }//fin control
-
-            }
-        }
+       
 		 
 		 protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        { 
-           
+        {
+            string tablaOriginal = TxtDatosCargados.Value;
 
             TxtDatosCargados.Value = TxtDatos.Value;
 
@@ -4036,10 +3714,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //        return;
             //    }
 
-            if (!VerificarAnalisisContenidos() )
+            string error = Protocolo.VerificarAnalisisContenidos(sDatos, tablaOriginal, ddlMuestra.SelectedValue, oUser, Request["idProtocolo"]);
+            if (!string.IsNullOrEmpty(error))
             {  TxtDatos.Value = "";
                 args.IsValid = false;
-             
+                this.cvValidacionInput.ErrorMessage = error;
                 return;
             }
             else
@@ -4373,18 +4052,18 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             bool devolver = true;
             string[] tabla = TxtDatos.Value.Split('@');
             string listaCodigo = "";
+ 
 
-             for (int i = 0; i < tabla.Length - 1; i++)
-            
+
+            for (int i = 0; i < tabla.Length - 1; i++)
             {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
+            string[] fila = tabla[i].Split('#');
+            string codigo = fila[1].ToString();
                 if (listaCodigo == "")
                     listaCodigo = "'" + codigo + "'";
                 else
                     listaCodigo += ",'" + codigo + "'";
 
-                int i_idItemPractica = 0;
                 if (codigo != "")
                 {
 
@@ -4392,8 +4071,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);                 
                     if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
                     { 
-
-                    i_idItemPractica = oItem.IdItem;
+                   
                         for (int j = 0; j < tabla.Length - 1; j++)
 
                         {
@@ -4427,13 +4105,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             }
                         
                     }////for           
-                    }
-                    else
-                    {
-                        this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
-                        devolver = false; break;
+                }
+                else
+                {
+                    this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+                    devolver = false; break;
 
-                    }
+                }
 
                 }/// if codigo
                 if (!devolver) break;
