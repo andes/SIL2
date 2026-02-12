@@ -6,7 +6,7 @@ using System.Web.UI.WebControls;
 using Business;
 using Business.Data.Laboratorio;
 using Business.Data;
-
+using System.Linq;
 using NHibernate;
 using NHibernate.Expression;
 using System.Data.SqlClient;
@@ -4526,6 +4526,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             return devolver;
 
         }
+        //            string error = Protocolo.VerificarAnalisisContenidos(sDatos, tablaOriginal, ddlMuestra.SelectedValue, oUser, Request["idProtocolo"]);
+
 
         //LAB-192: Bug análisis Repetidos en protocolos. No lo pasamos a produccion porque baja la perfomance del sistema. 
 
