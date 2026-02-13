@@ -384,9 +384,10 @@ namespace WebLab.Protocolos
                 {
                     lblMensaje.Visible = false;
 
-
-                    Response.Redirect("ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
-
+                    if (Request["Operacion"] != "Modifica")
+                        Response.Redirect("ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+                    else
+                        Response.Redirect("ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString()+ "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo="+ Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
 
                 }
                 else
@@ -406,9 +407,10 @@ namespace WebLab.Protocolos
                     {
                         lblMensaje.Visible = false;
 
-
-                        Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
-
+                        if (Request["Operacion"] != "Modifica")
+                            Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+                        else
+                            Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
 
                     }
                     else
