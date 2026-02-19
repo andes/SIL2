@@ -270,6 +270,10 @@ namespace WebLab.Turnos
                     oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
                     oDia.Value = oDiagnostico.Id.ToString();
                     lstDiagnosticos.Items.Add(oDia);
+                    //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                    lstDiagnosticosFinal.Items.Clear();
+                    lstDiagnosticosFinal.Items.Add(oDia);
+                    lstDiagnosticosFinal.UpdateAfterCallBack = true;
 
                 }
                 else

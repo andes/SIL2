@@ -3455,7 +3455,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
                     adapter.Fill(Ds);
                     lstDiagnosticos.Items.Clear();
-                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+                    int cantDiag = Ds.Tables[0].Rows.Count;
+                    for (int i = 0; i < cantDiag; i++)
                     {
 
                         ListItem oDia = new ListItem();
@@ -3463,7 +3464,12 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
                         lstDiagnosticos.Items.Add(oDia);
 
- 
+                        if (cantDiag == 1) //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                        {
+                            lstDiagnosticosFinal.Items.Clear();
+                            lstDiagnosticosFinal.Items.Add(oDia);
+                            lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                        }
                     }
 
 
