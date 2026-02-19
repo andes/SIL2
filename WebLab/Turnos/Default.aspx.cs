@@ -338,9 +338,9 @@ namespace WebLab.Turnos
 
             if (txtApellido.Text != "") str_condicion += " AND (Pa.apellido like '%" + txtApellido.Text + "%')";
             if (txtNombre.Text != "") str_condicion += " AND (Pa.nombre like '%" + txtNombre.Text + "%')";
-            if (txtDniMadre.Value != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and numeroDocumento=" + txtDniMadre.Value + "))";
-            if (txtApellidoMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtApellidoMadre.Text + "))";
-            if (txtNombreMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtNombreMadre.Text + "))";
+            if (txtDniMadre.Value != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and numeroDocumento=" + txtDniMadre.Value + ")";
+            if (txtApellidoMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtApellidoMadre.Text + ")";
+            if (txtNombreMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtNombreMadre.Text + ")";
 
             m_strSQL = " SELECT top 10  Pa.idPaciente,  case when Pa.idestado=2 then convert(varchar,Pa.numeroAdic) + '-T' else convert(varchar,Pa.numeroDocumento)  end as dni,Pa.apellido+ ' ' + Pa.nombre as paciente, convert(varchar(10),Pa.fechaNacimiento,103) as fechaNacimiento, " +
                         " case Pa.idSexo when 1 then 'Ind' when 2 then 'Fem' when 3 then 'Masc' end as sexo, " +

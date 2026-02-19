@@ -37,19 +37,21 @@
        
         <br />
         <asp:Button ID="btnBuscar" CssClass="btn btn-primary" Width="80px" runat="server" OnClick="btnBuscar_Click" Text="Buscar" />
-        <asp:GridView ID="gvMedico" runat="server" AutoGenerateColumns="False" DataKeyNames="matriculaNumero" OnRowCommand="gvMedico_RowCommand" OnRowDataBound="gvMedico_RowDataBound" CssClass="table table-bordered bs-table" >
+        <br />
+        <asp:Label ID="lblErrorAPI" runat="server" Font-Bold="True"  CssClass="myLabelIzquierdaGde"  ForeColor="Red" Visible="False" ></asp:Label>
+        <asp:GridView ID="gvMedico" runat="server" AutoGenerateColumns="False" DataKeyNames="matriculaNumero" OnRowCommand="gvMedico_RowCommand" OnRowDataBound="gvMedico_RowDataBound" CssClass="table table-bordered bs-table"
+            EmptyDataText="La busqueda no arrojo resultados. Verifique nombre y apellido.">
             <Columns>
                 <asp:BoundField DataField="apellido" HeaderText="Apellido" />
-                <asp:BoundField DataField="nombre" HeaderText="Nombre" Visible="false" />
+                <asp:BoundField DataField="nombre" HeaderText="Nombre"/>
                 <asp:BoundField DataField="matriculaNumero" HeaderText="Matricula" />
-                  <asp:TemplateField HeaderText="Seleccionar">
-                                                                        <ItemTemplate>
-                                                                       
-                                                                              <asp:LinkButton ID="Eliminar" runat="server" Text="" Width="20px"  OnClientClick="return Close();">
-                                             <span class="glyphicon glyphicon-ok"></span></asp:LinkButton>
-                                                                        </ItemTemplate>
-                                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
-                                                                    </asp:TemplateField>
+                <asp:TemplateField HeaderText="Seleccionar">
+                    <ItemTemplate>
+                        <asp:LinkButton ID="Eliminar" runat="server" Text="" Width="20px"  OnClientClick="return Close();">
+                            <span class="glyphicon glyphicon-ok"></span></asp:LinkButton>
+                    </ItemTemplate>
+                    <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                </asp:TemplateField>
             </Columns>
         </asp:GridView>
     </div>

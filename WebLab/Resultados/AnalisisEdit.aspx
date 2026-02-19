@@ -66,9 +66,10 @@
     
   </div>
                     <div class="panel-body">
-                          <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
-                     HeaderText="Debe completar los datos requeridos:" ShowMessageBox="True" 
-                     ValidationGroup="0" ShowSummary="false" />	
+                         <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                                ErrorMessage="Debe completar al menos un analisis" 
+                                    ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
+                                             ></asp:CustomValidator>
 <asp:Panel  runat="server" ID="pnlMuestra" Width="100%" Visible="false">
 					 
                           Muestra: &nbsp; &nbsp; 
@@ -91,7 +92,7 @@
 						
 					
                           
-                            <div id="tab1" style="height: 200px">
+                            <div id="tab1" style="height: 230px">
                    
 
                                  <table style="width:600px;">
@@ -126,10 +127,10 @@
                                              
                             
 						
-                                            <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                           <%-- <asp:CustomValidator ID="cvValidacionInput" runat="server" 
                                                 ErrorMessage="Debe completar al menos un analisis" 
                                     ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
-                                             ></asp:CustomValidator>
+                                             ></asp:CustomValidator>--%>
                                                  
                                 </div>                 
                                       </td>
@@ -219,7 +220,9 @@
                                <div class="panel-footer">	
                                                
 		
-					
+			  <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
+                     HeaderText="Debe completar los datos requeridos:" ShowMessageBox="True" 
+                     ValidationGroup="0" ShowSummary="False" />			
                                         
                                         <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0"  Width="100px" CssClass ="btn btn-primary"
                                                 onclick="btnGuardar_Click"    TabIndex="24" />
@@ -612,7 +615,7 @@
         //    alert('entra');
         CrearFila(true);
         var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-
+      
         if (elvalor != '') {
             var sTabla = elvalor.split(';');
             for (var i = 0; i < (sTabla.length); i++) {
