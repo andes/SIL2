@@ -385,6 +385,7 @@
     }
 
     function CargarDatos() {
+        setTimeout(() => { //Tuve que agregar esto, ya que tomaba valores desactualizados del DOM para el valor checked
         var str = '';
         for (var i = 0; i < contadorfilas; i++) {
             var nroFila = document.getElementById('NroFila_' + i);
@@ -396,7 +397,7 @@
         }
         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
 
-
+        }, 0);
     }
 
     function PasarFoco(Fila) {
@@ -647,5 +648,5 @@
 
 
 
-    </script>
+</script>
    </asp:Content>
