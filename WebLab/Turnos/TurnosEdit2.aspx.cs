@@ -60,8 +60,8 @@ namespace WebLab.Turnos
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (oUser.IdPerfil.IdPerfil!=15)  ///no sea un externo; si es externo no hay registro en la lab_confi
                     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-           
-        }
+         
+            }
             else Response.Redirect("../FinSesion.aspx", false);
 
 
@@ -1123,7 +1123,7 @@ ORDER BY cantidad desc";
             {
                 ///Buscar especilista
                 string matricula = txtEspecialista.Text;
-
+                lblErrorMedico.Text = "";
                 if (matricula == "0")
                 {
                     ddlEspecialista.Items.Clear();
@@ -1131,6 +1131,10 @@ ORDER BY cantidad desc";
                 }
                 else
                 {
+
+                    if (oC.UrlMatriculacion == string.Empty)  //Es porque no se cargo la configuracion --> Es porque el idPerfil=15
+                        oC = (Configuracion)oC.Get(typeof(Configuracion), 1); //Necesito tomar el OC.Matriculacion
+
                     string s_urlWFC = oC.UrlMatriculacion;
                     string s_url = s_urlWFC + "numeroMatricula=" + matricula;// + "&codigoProfesion=1";
 
@@ -1207,13 +1211,18 @@ ORDER BY cantidad desc";
                         ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
 
                     }
-                    } // s!=0
+                    if (oC.UrlMatriculacion == string.Empty) //Vuelvo a dejar la configuracion por defecto
+                        oC = new Configuracion();
+                } // s!=0
                 // matricula
             }// try
             catch (Exception ex)
             {
                 ddlEspecialista.Items.Clear();
                 ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
+
+                lblErrorMedico.Visible = true;
+                lblErrorMedico.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
             }
 
             ddlEspecialista.UpdateAfterCallBack = true;
