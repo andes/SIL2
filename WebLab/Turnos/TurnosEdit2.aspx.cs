@@ -1131,9 +1131,9 @@ ORDER BY cantidad desc";
                 }
                 else
                 {
-
-                    if (oC.UrlMatriculacion == string.Empty)  //Es porque no se cargo la configuracion --> Es porque el idPerfil=15
-                        oC = (Configuracion)oC.Get(typeof(Configuracion), 1); //Necesito tomar el OC.Matriculacion
+                    //Necesito OC.Matriculacion para armar la URL asi que agrego este IF
+                    if (oC.UrlMatriculacion == string.Empty)  //Con idPerfil=15 no se carga configuracion (porque no existe lab_config)
+                        oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
 
                     string s_urlWFC = oC.UrlMatriculacion;
                     string s_url = s_urlWFC + "numeroMatricula=" + matricula;// + "&codigoProfesion=1";
@@ -1220,7 +1220,7 @@ ORDER BY cantidad desc";
             {
                 ddlEspecialista.Items.Clear();
                 ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
-
+                //Pongo el label para otros errores silenciosos
                 lblErrorMedico.Visible = true;
                 lblErrorMedico.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
             }
