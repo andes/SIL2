@@ -4611,7 +4611,20 @@ ORDER BY cantidad desc";
 
         protected void lnkValidarRenaper_Click(object sender, EventArgs e)
         {
-            Avanzar(0);
+           // Avanzar(0);
+           if(HFSelRenaper.Value == "Si")
+            {
+                int idPaciente=int.Parse(HFIdPaciente.Value);
+                Paciente pac = new Paciente();
+                if (idPaciente != 0) pac = (Paciente)pac.Get(typeof(Paciente), idPaciente);
+
+                if (pac.IdEstado == 3)
+                {
+                    lnkValidarRenaper.Visible = false;
+                    logoRenaper.Visible = true;
+                }
+              
+            }
         }
 
         protected void txtEspecialista_TextChanged(object sender, EventArgs e)
