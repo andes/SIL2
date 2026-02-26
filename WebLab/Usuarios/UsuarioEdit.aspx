@@ -142,10 +142,11 @@
                     <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" 
                         ControlToValidate="txtUsername" ErrorMessage="Usuario" ValidationGroup="0">*</asp:RequiredFieldValidator>
                     <asp:CustomValidator ID="customValidacionGeneral" runat="server" ErrorMessage="Usuario Existente" OnServerValidate="customValidacionGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                    <asp:CustomValidator ID="customValidacionGeneral0" runat="server" ErrorMessage="Usuario debe contener al menos 6 caracteres (letras o numeros)" OnServerValidate="customValidacionGeneral0_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                     <asp:CustomValidator ID="customValidacionGeneral1" runat="server" ErrorMessage="Usuario no puede contener letras ni caracteres especiales" OnServerValidate="customValidacionGeneral1_ServerValidate1" ValidationGroup="0"></asp:CustomValidator>
+                    <asp:CustomValidator ID="customValidacionGeneral0" runat="server" ErrorMessage="" OnServerValidate="customValidacionGeneral0_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                 </td>
             </tr>
+            <tr><td  style="width: 93px"></td>
+                <td style="width: 497px"><asp:CustomValidator ID="customValidacionGeneral1" runat="server" ErrorMessage="Usuario no puede contener letras ni caracteres especiales" OnServerValidate="customValidacionGeneral1_ServerValidate1" ValidationGroup="0"></asp:CustomValidator></td></tr>
             <tr>
                 <td  style="width: 93px">
                     Contraseña:</td>
@@ -218,6 +219,12 @@
                      <asp:CheckBox ID="chkRequiereContrasenia" runat="server" Checked="True" Text="Requiere nueva contraseña al ingresar" Font-Bold="True" />
                 </td>
             </tr>
+             <tr>  
+                <td colspan="2">
+                    <asp:CustomValidator ID="customValidatorExterno" runat="server" OnServerValidate="customValidator_ServerValidate" 
+                           ErrorMessage="" ValidationGroup="0" Font-Size="12pt" />
+                </td>
+            </tr>  
             <tr>
                 <td>
                      <asp:LinkButton ID="lnkRegresar" runat="server" CssClass="myLink" 

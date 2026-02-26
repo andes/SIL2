@@ -220,6 +220,14 @@ namespace WebLab.Usuarios
                 oRegistro.Password = m_password;
             }
 
+            if (Request["id"] == null && ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
+            {
+                Utility oUtil = new Utility();
+                string m_password = oUtil.Encrypt(txtUsername.Text); //La contraseña de ONELOGIN es el username
+                oRegistro.Password = m_password;
+            }
+
+
             if (oRegistro != null)
             {
                 if ((oRegistro.Activo == true) && (chkActivo.Checked == false))
@@ -546,6 +554,11 @@ namespace WebLab.Usuarios
                 if (txtUsername.Text.Trim().Length<6)                
                 {
                     args.IsValid = false;
+                    if (ddlTipoAutenticacion.SelectedValue == "SIL")
+                        customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 caracteres(letras o numeros)";
+                    else
+                    customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 numeros";
+                    
                     return;
                 }
 
@@ -592,18 +605,25 @@ namespace WebLab.Usuarios
             if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
             {
                 //El username debe ser un numero (numero de documento) no debe admitir letras ni caracteres especiales.
-                
+
                 bool validate = Regex.IsMatch(txtUsername.Text, @"^\d+$");
                 if (!validate)
                 {
                     args.IsValid = false;
                     return;
                 }
-                //Luego de validar el usuario, pongo la contraseña por defecto
-                if (Request["id"] == null) txtPassword.Text = txtUsername.Text;
             }
         }
 
-        
+        protected void customValidator_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN" && chkExterno.Checked)
+            {
+                customValidatorExterno.ErrorMessage = "Usuario ONLOGIN no puede ser “Exclusivo Río Negro”";
+                args.IsValid = false;
+                return;
+
+            }
+        }
     }
 }
