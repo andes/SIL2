@@ -258,6 +258,15 @@ namespace WebLab.Usuarios
         protected global::System.Web.UI.WebControls.CheckBox chkRequiereContrasenia;
 
         /// <summary>
+        /// customValidatorExterno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator customValidatorExterno;
+
+        /// <summary>
         /// lnkRegresar control.
         /// </summary>
         /// <remarks>
