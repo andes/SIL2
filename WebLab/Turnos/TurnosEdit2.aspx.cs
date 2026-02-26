@@ -1131,11 +1131,12 @@ ORDER BY cantidad desc";
                 }
                 else
                 {
-                    //Necesito OC.Matriculacion para armar la URL asi que agrego este IF
-                    if (oC.UrlMatriculacion == string.Empty)  //Con idPerfil=15 no se carga configuracion (porque no existe lab_config)
-                        oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
+                    //Con idPerfil=15 no se carga configuracion (porque no existe lab_config) 
+                    //asi que tomamos la misma configuracion que se usa en ProtocoloEdit2
+                    Configuracion oCon = new Configuracion();
+                    oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
-                    string s_urlWFC = oC.UrlMatriculacion;
+                    string s_urlWFC = oCon.UrlMatriculacion;
                     string s_url = s_urlWFC + "numeroMatricula=" + matricula;// + "&codigoProfesion=1";
 
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
@@ -1211,15 +1212,14 @@ ORDER BY cantidad desc";
                         ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
 
                     }
-                    if (oC.UrlMatriculacion == string.Empty) //Vuelvo a dejar la configuracion por defecto
-                        oC = new Configuracion();
+                    
                 } // s!=0
                 // matricula
             }// try
             catch (Exception ex)
             {
-                ddlEspecialista.Items.Clear();
-                ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
+                //ddlEspecialista.Items.Clear();
+                //ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
                 //Pongo el label para otros errores silenciosos
                 lblErrorMedico.Visible = true;
                 lblErrorMedico.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
