@@ -890,7 +890,9 @@
             const txtDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
 
             if (redirect) {
-                AgregarCargados(); //Recarga todo desde cero
+                
+                if (!postBack) AgregarCargados(); //Recarga todo desde cero
+                else AgregarCargadoSinVerificar(); //Si da error de postback se debe cargar nuevamente sin verificar
             } else {
                 if (txtDatos != "") {
                     AgregarCargadoSinVerificar();
