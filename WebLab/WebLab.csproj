@@ -2729,6 +2729,7 @@
     <Content Include="SeguimientoResultadosSemanal.aspx" />
     <Content Include="SeguimientoResultados.aspx" />
     <Content Include="SeguimientoTestAntigenos.aspx" />
+    <Content Include="select2.aspx" />
     <Content Include="Seroteca\ImportaDatos.aspx" />
     <Content Include="Services\ObrasSociales.ascx" />
     <Content Include="Turnos\FeriadoEdit.ascx" />
@@ -6083,6 +6084,13 @@
     </Compile>
     <Compile Include="SeguimientoTestAntigenos.aspx.designer.cs">
       <DependentUpon>SeguimientoTestAntigenos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="select2.aspx.cs">
+      <DependentUpon>select2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="select2.aspx.designer.cs">
+      <DependentUpon>select2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Seroteca\ImportaDatos.aspx.cs">
       <DependentUpon>ImportaDatos.aspx</DependentUpon>
