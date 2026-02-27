@@ -222,7 +222,7 @@
              <tr>  
                 <td colspan="2">
                     <asp:CustomValidator ID="customValidatorExterno" runat="server" OnServerValidate="customValidator_ServerValidate" 
-                           ErrorMessage="" ValidationGroup="0" Font-Size="12pt" />
+                           ErrorMessage="" ValidationGroup="0"  />
                 </td>
             </tr>  
             <tr>
