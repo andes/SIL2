@@ -574,7 +574,6 @@ namespace WebLab.Usuarios
                 chkRequiereContrasenia.Checked = false;
                 //No se habilita “exclusivo Río Negro”
                 chkExterno.Enabled = false;
-                chkExterno.Enabled = false;
                 //Por defecto la contraseña es el username
                 txtPassword.Enabled = false;
                 rfvPassword.Enabled = false;
