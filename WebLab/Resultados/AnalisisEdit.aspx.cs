@@ -389,18 +389,31 @@ namespace WebLab.Resultados
                         // GuardarDerivacion(oDetalle);
                         //oDetalle.GuardarDerivacion(oUser);
                     }
-                    else  //si ya esta actualizo si trajo muestra o no
+                    else  //si ya esta actualizo si trajo muestra o no //3/3/2026 Y regenero los analisis de las practicas si no estaban en el alta
                     {
+                        /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                         * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                         * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                         * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                         */
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
+                            bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
+                            bool ahoraConMuestra = (trajomuestra == "false"); //Trajomuestra==check en "S/muestra" 
+
                             if (trajomuestra == "true")
                                 oDetalle.TrajoMuestra = "No";
                             else
                                 oDetalle.TrajoMuestra = "Si";
 
                             oDetalle.Save();
-                        }
 
+                            // Si antes no tenia muestra y ahora sí, y es el caso que no tiene guardar la practica, regenero los detalles  SOLO si nunca se crearon
+                            if (antesSinMuestra && ahoraConMuestra && oDetalle.IdItem == oDetalle.IdSubItem)
+                            {
+                                GuardarDetallePractica(oDetalle);
+                            }
+                        }
                     }
                 }
             }
