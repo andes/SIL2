@@ -60,8 +60,8 @@ namespace WebLab.Turnos
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (oUser.IdPerfil.IdPerfil!=15)  ///no sea un externo; si es externo no hay registro en la lab_confi
                     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-           
-        }
+         
+            }
             else Response.Redirect("../FinSesion.aspx", false);
 
 
@@ -1123,7 +1123,7 @@ ORDER BY cantidad desc";
             {
                 ///Buscar especilista
                 string matricula = txtEspecialista.Text;
-
+                lblErrorMedico.Text = "";
                 if (matricula == "0")
                 {
                     ddlEspecialista.Items.Clear();
@@ -1131,7 +1131,12 @@ ORDER BY cantidad desc";
                 }
                 else
                 {
-                    string s_urlWFC = oC.UrlMatriculacion;
+                    //Con idPerfil=15 no se carga configuracion (porque no existe lab_config) 
+                    //asi que tomamos la misma configuracion que se usa en ProtocoloEdit2
+                    Configuracion oCon = new Configuracion();
+                    oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+
+                    string s_urlWFC = oCon.UrlMatriculacion;
                     string s_url = s_urlWFC + "numeroMatricula=" + matricula;// + "&codigoProfesion=1";
 
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
@@ -1207,13 +1212,17 @@ ORDER BY cantidad desc";
                         ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
 
                     }
-                    } // s!=0
+                    
+                } // s!=0
                 // matricula
             }// try
             catch (Exception ex)
             {
-                ddlEspecialista.Items.Clear();
-                ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
+                //ddlEspecialista.Items.Clear();
+                //ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
+                //Pongo el label para otros errores silenciosos
+                lblErrorMedico.Visible = true;
+                lblErrorMedico.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
             }
 
             ddlEspecialista.UpdateAfterCallBack = true;
