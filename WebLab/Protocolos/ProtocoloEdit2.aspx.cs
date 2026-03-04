@@ -2673,6 +2673,13 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     { /// si cambió la marca de sin muetsra
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
+                            /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                             * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                             * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                             * Correcion: si en protocolo se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                             */
+                           
+
                             if (trajomuestra == "true") /// es no trajo
                             {
                                 if (oDetalle.TrajoMuestra == "Si") // estaba grabado Si
@@ -2689,6 +2696,12 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                     oDetalle.TrajoMuestra = "Si";
                                     oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario);
                                     oDetalle.Save();
+
+                                    // Si antes no tenia muestra y ahora sí, y es el caso que no tiene guardar la practica, regenero los detalles  SOLO si nunca se crearon
+                                    if (oDetalle.IdItem == oDetalle.IdSubItem)
+                                    {
+                                        GuardarDetallePractica(oDetalle);
+                                    }
                                 }
                             }
 
