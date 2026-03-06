@@ -2697,8 +2697,9 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                     oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario);
                                     oDetalle.Save();
 
-                                    // Si antes no tenia muestra y ahora sí, y es el caso que no tiene guardar la practica, regenero los detalles  SOLO si nunca se crearon
-                                    if (oDetalle.IdItem == oDetalle.IdSubItem)
+                                    // Si antes no tenia muestra y ahora sí, es Compuesta PERO idItem=idSubItem es porque no se guardo inicialmente los idSubItems
+                                    // si se cumple esa condicion regenero los detalles  con GuardarDetallePractica
+                                    if (oItem.IdCategoria == 1 && oDetalle.IdItem == oDetalle.IdSubItem)
                                     {
                                         GuardarDetallePractica(oDetalle);
                                     }
