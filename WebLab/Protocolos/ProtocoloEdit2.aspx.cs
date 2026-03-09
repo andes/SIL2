@@ -1111,12 +1111,16 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
 
             IList items = crit.List();
-            string pivot = "";
+            string pivot = ""; 
             string sDatos = "";
-           
+            HashSet<string> pivote  = new HashSet<string>();
+
             foreach (DetalleProtocolo oDet in items)
             {
-                if (pivot != oDet.IdItem.Nombre)
+                //Debo cambiar la manera que verifica los repetidos, porque ahora cuando se regenera un subItem el IdDetalleProtocolo no es secuencial
+                //Y en la vista del protocolo se ve "duplicado"
+                //if (pivot != oDet.IdItem.Nombre)
+                if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego porque no hay duplicados
                 {
                     /*if (sDatos == "")
                         sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
@@ -2673,12 +2677,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     { /// si cambió la marca de sin muetsra
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
-                            /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
-                             * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
-                             * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
-                             * Correcion: si en protocolo se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
-                             */
-                           
+                            
 
                             if (trajomuestra == "true") /// es no trajo
                             {
@@ -2697,11 +2696,39 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                     oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario);
                                     oDetalle.Save();
 
-                                    // Si antes no tenia muestra y ahora sí, es Compuesta PERO idItem=idSubItem es porque no se guardo inicialmente los idSubItems
-                                    // si se cumple esa condicion regenero los detalles  con GuardarDetallePractica
-                                    if (oItem.IdCategoria == 1 && oDetalle.IdItem == oDetalle.IdSubItem)
+                                    /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                                     * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                                     * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                                     * Correcion: si en protocolo se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                                     */
+
+                                    if (oDetalle.IdItem == oDetalle.IdSubItem)
                                     {
-                                        GuardarDetallePractica(oDetalle);
+                                          /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
+                                           * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
+                                           */
+
+                                        //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
+                                        if (oDetalle.ResultadoCar == "" && oDetalle.ResultadoNum == 0)
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+
+                                        //Caso 2: Es derivacion.
+                                        //Si  todavia no se derivo, debo resetear el IdUsuarioValida.
+                                        //Cuando se deriva el lote, se actualiza el idUsuarioResultado
+                                        //Queda pendiente ver idUsuarioValida cuando el lote se deriva/recibe !!!!!!!!!! que hacemos con el idUsuarioValida
+
+                                        if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+                                       if (oItem.IdCategoria == 1 )
+                                        { 
+                                            GuardarDetallePractica(oDetalle, true);  //true -->  se omite si es Derivacion para no generar una nueva Derivacion
+                                        } 
                                     }
                                 }
                             }
@@ -2883,11 +2910,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
        
 
-        private void GuardarDetallePractica(DetalleProtocolo oDet)
+        private void GuardarDetallePractica(DetalleProtocolo oDet, bool regenera=false)
         {
-
-
-            if (oDet.VerificarSiEsDerivable(oUser.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            //Alta normal (regenera = false) --> el código funciona como antes
+            // Modificación con regeneración(regenera = true) --> se omite si es Derivacion para no generar una nueva Derivacion
+            if (!regenera &&  oDet.VerificarSiEsDerivable(oUser.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
                  oDet.IdSubItem = oDet.IdItem;
                             oDet.Save();
