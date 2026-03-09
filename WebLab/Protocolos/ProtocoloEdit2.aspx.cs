@@ -2704,30 +2704,28 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                                     if (oDetalle.IdItem == oDetalle.IdSubItem)
                                     {
-                                          /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
-                                           * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
-                                           */
+                                        /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
+                                         * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
+                                         */
 
                                         //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
-                                        if (oDetalle.ResultadoCar == "" && oDetalle.ResultadoNum == 0)
+                                        if (!oDetalle.ConResultado)
                                         {
                                             oDetalle.IdUsuarioValida = 0;
                                             oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                                         }
 
                                         //Caso 2: Es derivacion.
-                                        //Si  todavia no se derivo, debo resetear el IdUsuarioValida.
-                                        //Cuando se deriva el lote, se actualiza el idUsuarioResultado
-                                        //Queda pendiente ver idUsuarioValida cuando el lote se deriva/recibe !!!!!!!!!! que hacemos con el idUsuarioValida
+                                        //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
 
                                         if (oDetalle.ResultadoCar == "Pendiente de derivar")
                                         {
                                             oDetalle.IdUsuarioValida = 0;
                                             oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                                         }
-                                       if (oItem.IdCategoria == 1 )
+                                        if (oItem.IdCategoria == 1 )
                                         { 
-                                            GuardarDetallePractica(oDetalle, true);  //true -->  se omite si es Derivacion para no generar una nueva Derivacion
+                                            GuardarDetallePractica(oDetalle, true);  //regenera=true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                         } 
                                     }
                                 }
