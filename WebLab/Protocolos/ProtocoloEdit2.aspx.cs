@@ -2069,7 +2069,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         //        ticket.AddSubHeaderLine("PRACTICAS SOLICITADAS");
         //        for (int i = 1; i <= cantidadFilas; i++)
         //        {
-        //            int l = i * 90;
+        //            int td = i * 90;
         //            analisis = analisis.Insert(l, "&");
 
         //        }
