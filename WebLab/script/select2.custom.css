@@ -1,0 +1,96 @@
+﻿/* ======================================================
+   SELECT2 CUSTOM STYLES
+   Compatible:
+   - Select2 3.5.x
+   - jQuery UI 1.8.x
+   - Bootstrap 3
+   - ASP.NET WebForms + Anthem
+   ====================================================== */
+
+
+/* ===== CONTENEDOR GENERAL ===== */
+.select2-container {
+    width: 100% !important;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+
+/* ===== CAJA PRINCIPAL MULTISELECT ===== */
+.select2-container-multi .select2-choices {
+    min-height: 34px !important;
+    height: 34px !important; /* altura fija */
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding: 2px 5px;
+}
+
+
+/* ===== CUANDO ESTA ACTIVO (ESCRIBIENDO) ===== */
+.select2-container-multi.select2-container-active .select2-choices {
+    height: auto !important;
+    min-height: 34px !important;
+    max-height: 120px;
+}
+
+
+/* ===== INPUT DE BUSQUEDA ===== */
+.select2-container-multi .select2-search-field input {
+    width: 100% !important;
+    min-width: 200px !important;
+    height: 26px !important;
+    box-sizing: border-box;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+}
+
+
+/* ===== PLACEHOLDER ===== */
+.select2-default {
+    width: 100% !important;
+    color: #999;
+}
+
+
+/* ===== ITEMS SELECCIONADOS (TAGS) ===== */
+.select2-container-multi .select2-search-choice {
+    margin-top: 4px;
+    margin-bottom: 2px;
+    font-size: 12px;
+}
+
+
+/* ===== DROPDOWN RESULTADOS ===== */
+.select2-results {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+
+/* ===== EVITA SALTOS VISUALES ===== */
+.select2-container *,
+.select2-drop {
+    transition: none !important;
+}
+
+
+/* ===== COMPATIBILIDAD JQUERY UI ===== */
+.ui-widget .select2-container {
+    font-family: inherit;
+    font-size: 12px;
+}
+
+
+/* ===== ARMONIZA CON BOOTSTRAP 3 ===== */
+.select2-container .select2-choice,
+.select2-container-multi .select2-choices {
+    border-radius: 4px;
+}
+
+
+/* ===== FIX ANTHEM POSTBACK REDRAW ===== */
+.select2-container-hidden-accessible {
+    display: none !important;
+}

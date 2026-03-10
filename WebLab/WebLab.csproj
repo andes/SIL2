@@ -2705,6 +2705,7 @@
     <Content Include="script\Resources\jQuery-ui-1.8.18.min.js" />
     <Content Include="script\Resources\jquery-ui-1.8.20.css" />
     <Content Include="script\Resources\jquery.min.js" />
+    <Content Include="script\select2.custom.css" />
     <Content Include="script\ValidaFecha.js" />
     <Content Include="Seguimiento.aspx" />
     <Content Include="seguimientoCovid.ascx" />
