@@ -88,6 +88,7 @@ namespace WebLab.Usuarios
             
         }
 
+        #region Datos Generales
         private void MostrarDatos()
         {
             Usuario oRegistro = new Usuario();
@@ -125,7 +126,7 @@ namespace WebLab.Usuarios
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oAuditor.GrabaAuditoria("Consulta", oRegistro.IdUsuario, oRegistro.Username);
 
-            // MostrarEfectores(); //lo llamo en habilitarAdministrador para que se muestre el efector del admin
+             MostrarEfectores();
 
             ddlTipoAutenticacion.SelectedValue =  oRegistro.TipoAutenticacion.Trim();
            
@@ -140,41 +141,24 @@ namespace WebLab.Usuarios
                 ddlPerfil.Enabled = false;
                 ddlPerfil.SelectedValue = "2";
                 btnAgregarEfector.Enabled = false;
-                lstEfectoresFinal.Enabled = false;
-                ddlEfector3.Enabled = false;
-                btnSacarEfector.Enabled = false;
-                lstEfectoresFinal.Items.Clear();
-                lstEfectoresFinal.Items.Add( new ListItem("SUBSECRETARIA DE SALUD", "227"));
-                //Cuando uso Select para que se refleje el cambio en el combo se debe hacer por javascript
-                ScriptManager.RegisterStartupScript( this, this.GetType(), "adminSelect2", "setAdministradorEfector(true);",  true);
             }
             else
             {
                 ddlArea.Enabled = true;
                 ddlPerfil.Enabled = true;
                 btnAgregarEfector.Enabled = true;
-                ddlEfector3.Enabled = true;
-                lstEfectoresFinal.Enabled = true;
-                btnSacarEfector.Enabled = true;
-                MostrarEfectores();
-               
-                //Cuando uso Select para que se refleje el cambio en el combo se debe hacer por javascript
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "adminSelect2", "setAdministradorEfector(false);", true);
             }
 
             ddlArea.UpdateAfterCallBack = true;
             ddlPerfil.UpdateAfterCallBack = true;
             btnAgregarEfector.UpdateAfterCallBack = true;
-            btnSacarEfector.UpdateAfterCallBack = true;
-            lstEfectoresFinal.UpdateAfterCallBack = true;
+
+            //Cuando uso Select para que se refleje el cambio en el combo se debe hacer por javascript
+            string script = string.Format("setAdministradorEfector({0});", chkAdministrador.Checked ? "true" : "false");
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "adminSelect2", script, true);
+
         }
-
-        
-
-        //protected void btnGuardar_Click(object sender, EventArgs e)
-        //{
-
-        //}
 
 
         private void Guardar(Usuario oRegistro)
@@ -187,8 +171,8 @@ namespace WebLab.Usuarios
             oPerfil = (Perfil)oPerfil.Get(typeof(Perfil), int.Parse(ddlPerfil.SelectedValue));
 
             Efector oEfector = new Efector();
-            
-            int idEfector = int.Parse(lstEfectoresFinal.Items[0].Value); //Tomo el primero de la lista
+
+            int idEfector = int.Parse((ViewState["efectores"] as DataTable).Rows[0]["idEfector"].ToString()); //Tomo el primero de la grilla
             oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
 
             Efector oEfectorDestino = new Efector();
@@ -293,23 +277,6 @@ namespace WebLab.Usuarios
             habilitarAdministrador();
         }
 
-       
-
-        //protected void btnAgregarEfector_Click(object sender, EventArgs e)
-        //{
-
-        //    if (Page.IsValid)
-        //    {
-        //        AgregarEfector();
-        //        MostrarEfectores();
-
-        //    }
-        
-        //}
-
-
-       
-
         private DataTable LeerDatosEfector()
         {
             string m_strSQL = @" SELECT IR.idUsuarioEfector, R.nombre as nombre , R.idEfector
@@ -329,36 +296,9 @@ namespace WebLab.Usuarios
             return Ds.Tables[0];
         }
 
-        //protected void gvListaEfector_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
-        //    if (e.Row.RowType == DataControlRowType.DataRow)
-        //    {
+        
 
 
-
-        //        ImageButton CmdEliminar = (ImageButton)e.Row.Cells[1].Controls[1];
-        //        CmdEliminar.CommandArgument = this.gvListaEfector.DataKeys[e.Row.RowIndex].Value.ToString();
-        //        CmdEliminar.CommandName = "Eliminar";
-        //        CmdEliminar.ToolTip = "Eliminar";
-        //    }
-        //}
-
-        //protected void gvListaEfector_RowCommand(object sender, GridViewCommandEventArgs e)
-        //{
-        //    if (e.CommandName != "Page")
-        //    {
-        //        switch (e.CommandName)
-        //        {
-
-        //            case "Eliminar":
-        //                Eliminar(e.CommandArgument);
-        //                MostrarEfectores();
-        //                break;
-        //        }
-        //    }
-        //}
-
-       
 
         protected void btnAuditoria_Click(object sender, EventArgs e)
         {
@@ -574,13 +514,12 @@ namespace WebLab.Usuarios
             }
         }
 
-       
-
-       
-
         protected void customValidatorEfector_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            if (lstEfectoresFinal.Items.Count == 0)
+           
+
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if(dt == null || dt.Rows.Count == 0)
             {
                 args.IsValid = false;
                 this.customValidatorEfector.ErrorMessage = "Debe ingresar al menos un efector para el usuario";
@@ -588,32 +527,68 @@ namespace WebLab.Usuarios
             }
         }
 
-
+        #endregion
 
         #region Efectores
 
+        protected void gvListaEfector_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                ImageButton CmdEliminar = (ImageButton)e.Row.Cells[1].Controls[1];
+                CmdEliminar.CommandArgument = this.gvListaEfector.DataKeys[e.Row.RowIndex].Value.ToString();
+                CmdEliminar.CommandName = "Eliminar";
+                CmdEliminar.ToolTip = "Eliminar";
+            }
+        }
+
+        protected void gvListaEfector_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "Page")
+            {
+                switch (e.CommandName)
+                {
+
+                    case "Eliminar":
+                        EliminarEfector(e.CommandArgument);
+                        MostrarEfectores();
+                        break;
+                }
+               
+            }
+        }
+       
         protected void btnAgregarEfector_Click(object sender, EventArgs e)
         {
-            AgregarEfector();
+
+            if (Page.IsValid)
+            {
+                AgregarEfector();
+                MostrarEfectores();
+
+            }
+
         }
-      
+       
+
         private void AgregarEfector()
         {
             lblMensajeEfector.Visible = false;
             if (ddlEfector3.SelectedValue != "0")
             {
-                bool agrego = true;
-               ListItem efectorEncontrado = lstEfectoresFinal.Items.FindByValue(ddlEfector3.SelectedItem.Value); //Verifica si ya fue agregado el efctor
+                bool puedeAgregar = true;
 
+                DataTable dt = ViewState["efectores"] as DataTable;
+                DataRow efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); //Verifica si ya fue agregado el efctor
                 if (efectorEncontrado != null)
                 {
-                    agrego = false;
+                    puedeAgregar = false;
                 }
 
-                if (agrego)
+                if (puedeAgregar)
                 {
-                    lstEfectoresFinal.Items.Add(ddlEfector3.SelectedItem);
-                    lstEfectoresFinal.UpdateAfterCallBack = true;
+                    dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue);
+                    ViewState["efectores"] = dt;
                 }
                 else
                 {
@@ -626,13 +601,6 @@ namespace WebLab.Usuarios
         }
 
 
-        protected void btnSacarEfector_Click(object sender, ImageClickEventArgs e)
-        {
-            if (lstEfectoresFinal.SelectedValue != "")
-            {
-                EliminarEfector(lstEfectoresFinal.SelectedValue);
-            }
-        }
 
         private void GuardarEfectores(Business.Data.Usuario oUsuario)
         {
@@ -641,58 +609,50 @@ namespace WebLab.Usuarios
             ICriteria crit = m_session.CreateCriteria(typeof(UsuarioEfector));
             crit.Add(Expression.Eq("IdUsuario", oUsuario));
             IList lista = crit.List();
-            
+
 
             foreach (UsuarioEfector oUsuarioEfector in lista)
             {
                 oUsuarioEfector.Delete();
             }
 
-           
-            if (lstEfectoresFinal.Items.Count > 0)
+            //los genero nuevamente
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if (dt != null || dt.Rows.Count > 0)
             {
-                /////Crea nuevamente los efectores
-                for (int i = 0; i < lstEfectoresFinal.Items.Count; i++)
+                foreach (DataRow row in dt.Rows)
                 {
-
                     UsuarioEfector oRegistro = new UsuarioEfector();
-                    int idEfector = int.Parse(lstEfectoresFinal.Items[i].Value);
+                    int idEfector = int.Parse(row["idEfector"].ToString());
                     Efector oEfector = new Efector();
                     oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
                     oRegistro.IdUsuario = oUsuario;
                     oRegistro.IdEfector = oEfector;
                     oRegistro.Activo = true;
                     oRegistro.Save();
-
-
                     Usuario oAuditor = new Usuario();
                     oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
                     oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
                 }
             }
         }
-
         private void MostrarEfectores()
         {
-            //ddlEfector2.SelectedValue = "0";
-
-            //gvListaEfector.AutoGenerateColumns = false;
-            //gvListaEfector.DataSource = LeerDatosEfector();
-            //gvListaEfector.DataBind();
-            //gvListaEfector.UpdateAfterCallBack = true;
-            lstEfectoresFinal.Items.Clear();
-            if (Request["id"]  != null)
-            {
-                DataTable dt = LeerDatosEfector();
-                
-                foreach (DataRow item in dt.Rows)
-                {
-                    ListItem listItem = new ListItem( item[1].ToString(), item[2].ToString()); //Texto R.nombre as nombre , Value R.idEfector 
-                    lstEfectoresFinal.Items.Add(listItem);
-                }
+            DataTable dt;
+            if (ViewState["efectores"] == null)
+            { 
+                dt = LeerDatosEfector();
+                dt.PrimaryKey = new DataColumn[] { dt.Columns["idEfector"] }; //le asigno clave primaria para despues poder buscar por este valor
+                ViewState["efectores"] = dt; 
             }
-           
+            else
+                dt = ViewState["efectores"] as DataTable;
+
+            gvListaEfector.AutoGenerateColumns = false;
+            gvListaEfector.DataSource = dt;
+            gvListaEfector.DataBind();
+            gvListaEfector.UpdateAfterCallBack = true;
+
         }
 
 
@@ -701,32 +661,32 @@ namespace WebLab.Usuarios
             bool puedeEliminar = true;
 
             lblMensajeEfector.Visible = false;
-            if (lstEfectoresFinal.Items.Count > 1)
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if(dt.Rows.Count > 1)
             {
                 if (Request["id"] != null)
                 {
-                    int idUsuario = int.Parse(Request["id"].ToString());
-                    Usuario usuario = new Usuario();
-                    usuario = (Usuario)usuario.Get(typeof(Usuario), idUsuario);
+                    DataRow dr = dt.Rows.Find(idEfector); //Me traigo la fila para traer el idUsuarioEfector 
+                    int idUsuarioEfector = int.Parse(dr["idUsuarioEfector"].ToString());
 
-                    Efector ef = new Efector();
-                    ef = (Efector)ef.Get(typeof(Efector), int.Parse(idEfector.ToString()));
-                    
-                    UsuarioEfector oRegistro = new UsuarioEfector();
-                    oRegistro = (UsuarioEfector)oRegistro.Get(typeof(UsuarioEfector), "IdEfector", ef, "IdUsuario", usuario);
-
-                    if (oRegistro != null) //si esta en base lo elimina sino no hace nada
+                    if(idUsuarioEfector != 0)
                     {
-                        string s_efector = oRegistro.IdEfector.Nombre;
-                        string s_username = oRegistro.IdUsuario.Username;
-                        oRegistro.Delete();
-                        /////Auditoria
-                        Usuario oAuditor = new Usuario();
-                        oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                        oAuditor.GrabaAuditoria("DesVincula " + s_efector.TrimStart().TrimEnd(), idUsuario, s_username);
-                    }
-                }
+                        UsuarioEfector oRegistro = new UsuarioEfector();
+                        oRegistro = (UsuarioEfector)oRegistro.Get(typeof(UsuarioEfector), idUsuarioEfector);
+
+                        if (oRegistro != null) 
+                        {
+                            string s_efector = oRegistro.IdEfector.Nombre;
+                            string s_username = oRegistro.IdUsuario.Username;
+                            oRegistro.Delete();
+                            /////Auditoria
+                            Usuario oAuditor = new Usuario();
+                            oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                            oAuditor.GrabaAuditoria("DesVincula " + s_efector.TrimStart().TrimEnd(), int.Parse(Request["id"].ToString()), s_username);
+                        }
+                    } //else: esta solo en la visualizacion pero no en la base de datos
                     
+                }
 
             }
             else
@@ -736,13 +696,14 @@ namespace WebLab.Usuarios
                 lblMensajeEfector.UpdateAfterCallBack = true;
                 puedeEliminar = false;
             }
-                
-            
-            if (puedeEliminar)
+
+            if (puedeEliminar) //lo borro del viewstate para mantener consistencia con lo que se va a guardar en la base
             {
-                lstEfectoresFinal.Items.Remove(lstEfectoresFinal.SelectedItem);
-                lstEfectoresFinal.UpdateAfterCallBack = true;
+                DataRow efectorEliminar = dt.Rows.Find(idEfector); //Lo busco para eliminarlo
+                dt.Rows.Remove(efectorEliminar);
+                ViewState["efectores"] = dt;
             }
+          
         }
         #endregion
 
