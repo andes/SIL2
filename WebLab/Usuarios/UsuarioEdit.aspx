@@ -19,6 +19,7 @@
       <!-- jQuery para Select2 -->
     <script src="https://code.jquery.com/jquery-1.11.3.min.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2_locale_es.js" type="text/javascript"></script>
 
     <script type="text/javascript">
         var jqSelect2 = jQuery.noConflict(true);
@@ -67,39 +68,62 @@
            inicializarSelect2Efector();
        });
        function inicializarSelect2Efector() {
-
+           //Select2 v3 tiene un bug cuando el <select> está deshabilitado al inicializarse; luego no se puede habilitar correctamente.
            var select = jqSelect2('#<%= ddlEfector3.ClientID %>');
 
            select.select2({
                theme: "classic",
                width: "100%",
                language: "es",
-               allowClear: true,
-               placeholder: "Seleccione uno o más efectores"
+               allowClear: true
            });
        }
        function setAdministradorEfector(esAdministrador) {
 
-          // var select = jqSelect2('#ddlEfector3');
-           //console.log(select);
-
+          //Select2 v3 tiene un bug cuando el < select > está deshabilitado al inicializarse; luego no se puede habilitar correctamente.
            var select = jqSelect2('#<%= ddlEfector3.ClientID %>');
 
-           if (!select.data('select2'))
-               return;
-           if (esAdministrador) {
-               //select.prop("disabled", true);
-               select.select2("val", ["227"]);
-               select.prop("disabled", true);
-               select.select2("enable", false);
-           } else {
-               //select.prop("disabled", false);
-               select.select2("val", []);
-               select.prop("disabled", false);
-               select.select2("enable", true);
-               // forzar refresh visual (CLAVE en v3)
-               select.select2("close");
-               select.select2("focus");
+           if (!select.data('select2')) return;
+
+           //if (esAdministrador) {
+           //    select.prop("disabled", true);
+           //    select.select2("enable", false);
+           //} else {
+
+           //    select.prop("disabled", false);
+           //    select.select2("enable", true);
+           //    //// forzar refresh visual (CLAVE en v3)
+           //    //select.select2("close");
+           //    //select.select2("focus");
+           //}
+           try {
+               
+               if (select.data('select2')) {
+                   try {
+                       select.select2('enable', esAdministrador ? false : true);
+                       select.prop('disabled', esAdministrador);
+                       return;
+                   } catch (apiErr) {
+                       // Si falla la API, hacemos fallback abajo
+                   }
+               }
+
+               // Si falla continuamos aqui
+               try { select.select2('destroy'); } catch (d) { /* ignore */ }
+
+                select.prop('disabled', false);
+
+               select.select2({
+                   theme: "classic",
+                   width: "100%",
+                   language: "es",
+                   allowClear: true });
+
+               if (esAdministrador) {
+                   try { select.select2('enable', false); } catch (e) { select.prop('disabled', true); }
+               }
+           } catch (ex) {
+               console && console.error && console.error('setAdministradorEfector error', ex);
            }
        }
 
@@ -341,66 +365,51 @@
                    <%--  <anthem:dropdownlist ID="ddlEfector2" runat="server" Width="200px" class="form-control input-sm">
                     </anthem:dropdownlist> --%>
 
-                    <asp:ListBox  ID="ddlEfector3" runat="server"  CssClass="select2"   ClientIDMode="Static"> </asp:ListBox>
+                    <asp:ListBox  ID="ddlEfector3" runat="server"  CssClass="select2"   ClientIDMode="Static" Width="200px"> </asp:ListBox>
 
-                    <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" ValidationGroup="5" />
+                    <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" />
 
-                    <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
+                    
                 </td>
              
             </tr>
-               <tr>
-                   <td><br /></td>   
-                  
-               </tr>  
-               <tr>
-                                   <td class="auto-style1">
-                    <anthem:ListBox ID="lstEfectoresFinal" runat="server"    class="form-control input-sm"
-                        Height="100px" Width="650px" SelectionMode="Multiple">
-                    </anthem:ListBox></td>                                         
-                <td style="vertical-align: top">
-     
-                <anthem:ImageButton ID="btnSacarEfector" runat="server" 
-                    ImageUrl="~/App_Themes/default/images/sacar.jpg" ToolTip="Sacar Efector" onclick="btnSacarEfector_Click" />
-     
-      
-</td>   
-               </tr>
+             <tr>
+                 <td>
+                     <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
+                 </td>
+             </tr>
+          
             <tr>
                 <td >
-       <%-- <anthem:GridView ID="gvListaEfector" runat="server" AutoGenerateColumns="False" Visible="false"
-            DataKeyNames="idUsuarioEfector" Font-Size="12pt" Width="100%"
-            ForeColor="#333333" EmptyDataText="Agregue al menos un efector"
-            CellPadding="0"
-            BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px"
-            GridLines="Horizontal" OnRowCommand="gvListaEfector_RowCommand" OnRowDataBound="gvListaEfector_RowDataBound">
-            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-            <Columns>
-               <asp:BoundField DataField="nombre" 
-                    HeaderText="Efector" >
-                    <ItemStyle Width="90%" />
-                </asp:BoundField>
-              <asp:TemplateField HeaderText="">
-                            <ItemTemplate>
-                            <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg" 
-                             OnClientClick="return PreguntoEliminar();" CommandName="Eliminar" />
-                            </ItemTemplate>
+                        <anthem:GridView ID="gvListaEfector" runat="server" AutoGenerateColumns="False" 
+                            DataKeyNames="idEfector" Font-Size="12pt" Width="100%"
+                            ForeColor="#333333" EmptyDataText="Agregue al menos un efector"
+                            CellPadding="0"
+                            BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px"
+                            GridLines="Horizontal" OnRowCommand="gvListaEfector_RowCommand" OnRowDataBound="gvListaEfector_RowDataBound">
+                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+                            <Columns>
+                               <asp:BoundField DataField="nombre" 
+                                    HeaderText="Efector" >
+                                    <ItemStyle Width="90%" />
+                                </asp:BoundField>
+                              <asp:TemplateField HeaderText="">
+                                            <ItemTemplate>
+                                            <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg" 
+                                                CommandName="Eliminar" />
+                                            </ItemTemplate>
                           
-                               <ItemStyle Width="5%" HorizontalAlign="Center" />
+                                               <ItemStyle Width="5%" HorizontalAlign="Center" />
                           
-                        </asp:TemplateField>
-            </Columns>
-            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
-            <EditRowStyle BackColor="#999999" />
-            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-        </anthem:GridView>--%>
-
-                     
-              
-                                
+                                        </asp:TemplateField>
+                            </Columns>
+                            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
+                            <EditRowStyle BackColor="#999999" />
+                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                        </anthem:GridView>
                         <br />
                 </td>
                
@@ -408,7 +417,7 @@
             <tr>
                 <td>
                      <asp:LinkButton ID="lnkRegresar1" runat="server" CssClass="myLink"   PostBackUrl="UsuarioList.aspx" CausesValidation="False">Regresar</asp:LinkButton></td>
-                
+                 
             </tr>
         </table>
        </div>

@@ -330,22 +330,13 @@ namespace WebLab.Usuarios
         protected global::Anthem.Label lblMensajeEfector;
 
         /// <summary>
-        /// Control lstEfectoresFinal.
+        /// Control gvListaEfector.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::Anthem.ListBox lstEfectoresFinal;
-
-        /// <summary>
-        /// Control btnSacarEfector.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::Anthem.ImageButton btnSacarEfector;
+        protected global::Anthem.GridView gvListaEfector;
 
         /// <summary>
         /// Control lnkRegresar1.
