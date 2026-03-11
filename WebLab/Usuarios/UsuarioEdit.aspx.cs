@@ -418,6 +418,12 @@ namespace WebLab.Usuarios
             {
                 CargarEfectorLabo();
             }
+            else
+            {
+                //Si habia algun valor seleccionado lo limpio
+                ddlEfectorDestino.SelectedValue = "0";
+            }
+            ddlEfectorDestino.UpdateAfterCallBack = true;
         }
 
         private void CargarEfectorLabo()
