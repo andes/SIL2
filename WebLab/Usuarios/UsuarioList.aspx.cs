@@ -102,13 +102,18 @@ namespace WebLab.Usuarios
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
             if   (nivelcentral)
                ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
-         
+
+            m_ssql = @"SELECT idPerfil, nombre FROM Sys_Perfil with (nolock) ORDER BY nombre";
+            oUtil.CargarCombo(ddlPerfil, m_ssql, "idPerfil", "nombre");
+            ddlPerfil.Items.Insert(0, new ListItem("Todos", "0"));
+
         }
         private void CargarGrilla()
         {
             gvLista.AutoGenerateColumns = false;
             gvLista.DataSource = LeerDatos();
             gvLista.DataBind();
+            CurrentPageLabel.Text = "Página " + (gvLista.PageIndex+1) + " de " + gvLista.PageCount.ToString();
         }
         
         private object LeerDatos()
@@ -118,10 +123,28 @@ case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo 
 FROM         Sys_Usuario AS U (nolock) INNER JOIN
                       Sys_Perfil AS P (nolock)  ON U.idPerfil = P.idPerfil inner join
 					  Sys_UsuarioEfector UE (nolock)  on Ue.idusuario= U.idUsuario inner join
-					  sys_efector as E (nolock) on Ue.idEfector= E.idEfector";
+					  sys_efector as E (nolock) on Ue.idEfector= E.idEfector
+            where 1=1 ";
 
             if (ddlEfector.SelectedValue != "0")
-                m_strSQL += " where E.idEfector=" + ddlEfector.SelectedValue.ToString();
+                m_strSQL += " and E.idEfector=" + ddlEfector.SelectedValue.ToString();
+
+            if (ddlPerfil.SelectedValue != "0")
+                m_strSQL += " and P.idPerfil=" + ddlPerfil.SelectedValue.ToString();
+            if (ddlTipoAutenticacion.SelectedValue != "0")
+                m_strSQL += " and tipoAutenticacion='" + ddlTipoAutenticacion.SelectedValue.ToString()+"'";
+            if (ddlHabilitados.SelectedValue != "0")
+                if(ddlHabilitados.SelectedValue == "1") m_strSQL += " and U.activo=1";
+                else m_strSQL += " and U.activo=0";
+
+            if (txtUsername.Text != "")
+                    m_strSQL += " and U.username LIKE '%" + txtUsername.Text + "%'";
+            if (txtNombre.Text != "")
+                m_strSQL += " and U.nombre LIKE '%" + txtNombre.Text +"%'";
+            if (txtApellido.Text != "")
+                m_strSQL += " and U.apellido LIKE '%" + txtApellido.Text +"%'";
+
+           
 
             m_strSQL += " order by username";
 
@@ -133,8 +156,8 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
-
-
+            CantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+            
 
             return Ds.Tables[0];
         }
@@ -243,16 +266,30 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
 
         private DataTable LeerDatosExcel()
         {
-            string m_strFiltro = "";
+            string m_strFiltro = "1=1 ";
             DataSet Ds = new DataSet();
             //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             if (ddlEfector.SelectedValue != "0")
-                m_strFiltro = "   E.idEfector=" + ddlEfector.SelectedValue.ToString();
+                m_strFiltro += " AND  E.idEfector=" + ddlEfector.SelectedValue.ToString();
 
 
+            if (ddlPerfil.SelectedValue != "0")
+                m_strFiltro += " and P.idPerfil=" + ddlPerfil.SelectedValue.ToString();
+            if (ddlTipoAutenticacion.SelectedValue != "0")
+                m_strFiltro += " and tipoAutenticacion='" + ddlTipoAutenticacion.SelectedValue.ToString() + "'";
+            if (ddlHabilitados.SelectedValue != "0")
+                if (ddlHabilitados.SelectedValue == "1") m_strFiltro += " and U.activo=1";
+                else m_strFiltro += " and U.activo=0";
+
+            if (txtUsername.Text != "")
+                m_strFiltro += " and U.username LIKE '%" + txtUsername.Text + "%'";
+            if (txtNombre.Text != "")
+                m_strFiltro += " and U.nombre LIKE '%" + txtNombre.Text + "%'";
+            if (txtApellido.Text != "")
+                m_strFiltro += " and U.apellido LIKE '%" + txtApellido.Text + "%'";
 
             cmd.CommandText = "[LAB_ListaUsuarios]";
 
@@ -299,6 +336,41 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
                 Response.Write(sb.ToString());
                 Response.End();
             }
+        }
+
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
+
+        protected void ddlPerfil_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
+
+       
+
+        protected void gvLista_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                gvLista.PageIndex = e.NewPageIndex;
+                int currentPage = gvLista.PageIndex + 1;
+                CurrentPageLabel.Text = "Página " + currentPage.ToString() + " de " + gvLista.PageCount.ToString();
+                CargarGrilla();
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+
+        protected void ddlTipoAutenticacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
+
+        protected void ddlHabilitados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarGrilla();
         }
     }
 }
