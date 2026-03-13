@@ -144,7 +144,8 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
             if (txtApellido.Text != "")
                 m_strSQL += " and U.apellido LIKE '%" + txtApellido.Text +"%'";
 
-           
+           if(chbAdministrador.Checked)
+                m_strSQL += " and U.administrador=1";
 
             m_strSQL += " order by username";
 
@@ -290,6 +291,8 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
                 m_strFiltro += " and U.nombre LIKE '%" + txtNombre.Text + "%'";
             if (txtApellido.Text != "")
                 m_strFiltro += " and U.apellido LIKE '%" + txtApellido.Text + "%'";
+            if (chbAdministrador.Checked)
+                m_strFiltro += " and U.administrador=1";
 
             cmd.CommandText = "[LAB_ListaUsuarios]";
 
@@ -369,6 +372,11 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
         }
 
         protected void ddlHabilitados_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
+
+        protected void chbAdministrador_CheckedChanged(object sender, EventArgs e)
         {
             CargarGrilla();
         }
