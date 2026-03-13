@@ -3,37 +3,25 @@
      
      
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
- 
-        <!-- CSS -->
-    <link href="../script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
-    <link href="../script/moverfilas/moverfilas.css" rel="stylesheet" type="text/css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.css" rel="stylesheet" type="text/css" />
-    <link href="../script/select2.custom.css" rel="stylesheet"  type="text/css" />
-        <!-- JS -->
-    <script src="../script/jquery.min.js" type="text/javascript"></script>
-    <script src="../script/jquery-ui.min.js" type="text/javascript"></script>
-    <script src="../script/Mascara.js" type="text/javascript"></script>
-    <script src="../script/ValidaFecha.js" type="text/javascript"></script>
-    <script src="../script/moverfilas/codigo.js" type="text/javascript"></script>
+    <!-- CSS -->
+<link href="../script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../script/chosen/chosen.css" />
 
-      <!-- jQuery para Select2 -->
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2_locale_es.js" type="text/javascript"></script>
+    <!-- JS -->
+<script src="https://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../script/jquery-ui.min.js" type="text/javascript"></script>
 
-    <script type="text/javascript">
-        var jqSelect2 = jQuery.noConflict(true);
-    </script>
-    <script type="text/javascript">
+<script src="../script/chosen/chosen.jquery.js" type="text/javascript"></script>
+   
+<script type="text/javascript">
   $(function() {
 
-                 $("#tabContainer").tabs();
-                        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
-                      
-                        $("#tabContainer").tabs({ selected: currTab });
+    $("#tabContainer").tabs();
+        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
+    $("#tabContainer").tabs({ selected: currTab });
   });
        
-    </script>
+</script>
    
    
   
@@ -49,85 +37,62 @@
         }
     </style>
    <script type="text/javascript">
-      
-       //function iniciarSelect2() {
+     
 
-       //    jqSelect2(".select2").select2({
-       //        theme: "classic",
-       //        width: "100%",
-       //        language: "es",
-       //        allowClear: true
-       //    });
+       function inicializarChosen() {
+           
+          var select = $('#<%= ddlEfector3.ClientID %>');
 
-       //}
+           if (select.data('chosen')) { 
+               select.chosen('destroy'); //El destroy evita que Anthem duplique la lista después de un callback.
+           }
 
-       //jqSelect2(document).ready(function () {
-       //    iniciarSelect2();
-       //});
-       jqSelect2(document).ready(function () {
-           inicializarSelect2Efector();
-       });
-       function inicializarSelect2Efector() {
-           //Select2 v3 tiene un bug cuando el <select> está deshabilitado al inicializarse; luego no se puede habilitar correctamente.
-           var select = jqSelect2('#<%= ddlEfector3.ClientID %>');
-
-           select.select2({
-               theme: "classic",
-               width: "100%",
-               language: "es",
-               allowClear: true
+           //convierte el select en un dropdown Chosen
+           select.chosen({
+               width: "250px",
+               search_contains: true,
+               no_results_text: "No se encontraron resultados:"
            });
        }
-       function setAdministradorEfector(esAdministrador) {
 
-          //Select2 v3 tiene un bug cuando el < select > está deshabilitado al inicializarse; luego no se puede habilitar correctamente.
-           var select = jqSelect2('#<%= ddlEfector3.ClientID %>');
+       function habilitarListaEfectores() {
 
-           if (!select.data('select2')) return;
+           var select = $('#<%= ddlEfector3.ClientID %>');
+           var esAdministrador = $('#<%= chkAdministrador.ClientID %>').is(':checked');
 
-           //if (esAdministrador) {
-           //    select.prop("disabled", true);
-           //    select.select2("enable", false);
-           //} else {
-
-           //    select.prop("disabled", false);
-           //    select.select2("enable", true);
-           //    //// forzar refresh visual (CLAVE en v3)
-           //    //select.select2("close");
-           //    //select.select2("focus");
-           //}
-           try {
-               
-               if (select.data('select2')) {
-                   try {
-                       select.select2('enable', esAdministrador ? false : true);
-                       select.prop('disabled', esAdministrador);
-                       return;
-                   } catch (apiErr) {
-                       // Si falla la API, hacemos fallback abajo
-                   }
-               }
-
-               // Si falla continuamos aqui
-               try { select.select2('destroy'); } catch (d) { /* ignore */ }
-
-                select.prop('disabled', false);
-
-               select.select2({
-                   theme: "classic",
-                   width: "100%",
-                   language: "es",
-                   allowClear: true });
-
-               if (esAdministrador) {
-                   try { select.select2('enable', false); } catch (e) { select.prop('disabled', true); }
-               }
-           } catch (ex) {
-               console && console.error && console.error('setAdministradorEfector error', ex);
+           // destruir chosen SI existe
+           if (select.data('chosen')) {
+               select.chosen('destroy');
            }
+           // cambiar estado real del select
+           select.prop("disabled", esAdministrador);
+
+           // recrear chosen (lee el disabled correctamente)
+           select.chosen({
+               width: "250px",
+               search_contains: true,
+               no_results_text: "No se encontraron resultados:",
+               allow_single_deselect: true
+           });
        }
 
-       
+
+       $(document).ready(function () {
+           inicializarChosen();
+           habilitarListaEfectores(); 
+       });
+
+       // Reaplicar después de callbacks Anthem
+       if (typeof Anthem !== "undefined") {
+           Anthem.addCallbackComplete(function () {
+
+               habilitarListaEfectores();
+
+           });
+
+       }
+
+      
    </script>
    
   
@@ -253,7 +218,7 @@
                 <td  style="width: 93px">
                     Administrador:</td>
                 <td style="width: 497px"  >
-                    <anthem:checkbox ID="chkAdministrador" runat="server" Text="SI" AutoCallBack="True" OnCheckedChanged="chkAdministrador_CheckedChanged" />
+                    <anthem:checkbox ID="chkAdministrador" runat="server" Text="SI" AutoCallBack="True" onclick="habilitarListaEfectores();" OnCheckedChanged="chkAdministrador_CheckedChanged" />
                 </td>
             </tr>
            <%-- <tr>
@@ -365,11 +330,11 @@
                    <%--  <anthem:dropdownlist ID="ddlEfector2" runat="server" Width="200px" class="form-control input-sm">
                     </anthem:dropdownlist> --%>
 
-                    <asp:ListBox  ID="ddlEfector3" runat="server"  CssClass="select2"   ClientIDMode="Static" Width="200px"> </asp:ListBox>
+                    <asp:DropDownList   ID="ddlEfector3" runat="server"    Width="200px"> </asp:DropDownList>
 
                     <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" />
 
-                    
+                  
                 </td>
              
             </tr>

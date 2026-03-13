@@ -2674,6 +2674,14 @@
     <Content Include="Rutinas\RutinaMuestraEdit.aspx" />
     <Content Include="Rutinas\RutinaBroEdit.aspx" />
     <Content Include="Rutinas\RutinaBroList.aspx" />
+    <Content Include="script\chosen\chosen-sprite%402x.png" />
+    <Content Include="script\chosen\chosen-sprite.png" />
+    <Content Include="script\chosen\chosen.css" />
+    <Content Include="script\chosen\chosen.jquery.js" />
+    <Content Include="script\chosen\chosen.jquery.min.js" />
+    <Content Include="script\chosen\chosen.min.css" />
+    <Content Include="script\chosen\chosen.proto.js" />
+    <Content Include="script\chosen\chosen.proto.min.js" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -3099,6 +3107,8 @@
     <Content Include="website\SUHI.html" />
     <Content Include="website\terminos.html" />
     <Content Include="website\tesis.html" />
+    <Content Include="script\chosen\composer.json" />
+    <Content Include="script\chosen\LICENSE.md" />
     <None Include="Service References\IntAutenticacion\configuration.svcinfo" />
     <None Include="Service References\IntAutenticacion\configuration91.svcinfo" />
     <None Include="Service References\IntAutorizacion\configuration.svcinfo" />
