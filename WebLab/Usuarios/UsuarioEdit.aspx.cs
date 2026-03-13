@@ -48,6 +48,11 @@ namespace WebLab.Usuarios
                 CargarListas();
                 if (Request["id"] != null)
                     MostrarDatos();
+                else
+                    MostrarEfectores(); 
+
+
+            
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
             }
@@ -77,9 +82,9 @@ namespace WebLab.Usuarios
             ddlPerfil.Items.Insert(0, new ListItem("Seleccione un perfil", "0"));
 
             m_ssql = @" SELECT idEfector, nombre FROM Sys_Efector  (nolock) ORDER BY nombre ";
-            oUtil.CargarListBox(ddlEfector3, m_ssql, "idEfector", "nombre");
-            ddlEfector3.Items.Insert(0, new ListItem("Seleccione un efector", "0"));
-            ddlEfector3.Items.FindByValue("0").Selected = true; 
+            oUtil.CargarCombo(ddlEfector3, m_ssql, "idEfector", "nombre");
+            ddlEfector3.Items.Insert(0, new ListItem("--Seleccione un efector--", "0"));
+
 
             m_ssql = @" SELECT idArea, nombre FROM LAB_Area  (nolock) where baja=0  ORDER BY nombre ";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
@@ -119,9 +124,6 @@ namespace WebLab.Usuarios
             ddlArea.SelectedValue = oRegistro.IdArea.ToString();
             chkExterno.Checked = oRegistro.Externo;
             rfvPassword.Enabled = false;
-
-
-
             email.Value = oRegistro.Email;
             txtTelefono.Text = oRegistro.Telefono;
             btnBlanquear.Visible = true;
@@ -131,8 +133,7 @@ namespace WebLab.Usuarios
             Usuario oAuditor = new Usuario();
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oAuditor.GrabaAuditoria("Consulta", oRegistro.IdUsuario, oRegistro.Username);
-
-             MostrarEfectores();
+            MostrarEfectores();
 
             ddlTipoAutenticacion.SelectedValue =  oRegistro.TipoAutenticacion.Trim();
            
@@ -147,6 +148,8 @@ namespace WebLab.Usuarios
                 ddlPerfil.Enabled = false;
                 ddlPerfil.SelectedValue = "2";
                 btnAgregarEfector.Enabled = false;
+                lblMensajeEfector.Visible = false; lblMensajeEfector.UpdateAfterCallBack = true;
+
             }
             else
             {
@@ -158,11 +161,6 @@ namespace WebLab.Usuarios
             ddlArea.UpdateAfterCallBack = true;
             ddlPerfil.UpdateAfterCallBack = true;
             btnAgregarEfector.UpdateAfterCallBack = true;
-
-            //Cuando uso Select para que se refleje el cambio en el combo se debe hacer por javascript
-            string script = string.Format("setAdministradorEfector({0});", chkAdministrador.Checked ? "true" : "false");
-
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "adminSelect2", script, true);
 
         }
 
@@ -285,21 +283,25 @@ namespace WebLab.Usuarios
 
         private DataTable LeerDatosEfector()
         {
-            string m_strSQL = @" SELECT IR.idUsuarioEfector, R.nombre as nombre , R.idEfector
+            if (Request["id"] != null)
+            {
+                string m_strSQL = @" SELECT IR.idUsuarioEfector, R.nombre as nombre , R.idEfector
                                FROM Sys_UsuarioEfector IR (nolock) 
                               INNER JOIN sys_efector R (nolock) ON R.idEfector=IR.idEfector 
                                WHERE IR.idUsuario=" + Request["id"].ToString();
 
 
-            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
+                DataSet Ds = new DataSet();
+                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                adapter.Fill(Ds);
 
 
 
-            return Ds.Tables[0];
+                return Ds.Tables[0];
+            }
+            else return new DataTable();
         }
 
         
@@ -572,14 +574,11 @@ namespace WebLab.Usuarios
        
         protected void btnAgregarEfector_Click(object sender, EventArgs e)
         {
-
             if (Page.IsValid)
             {
                 AgregarEfector();
                 MostrarEfectores();
-
             }
-
         }
        
 
@@ -590,12 +589,13 @@ namespace WebLab.Usuarios
             {
                 bool puedeAgregar = true;
 
-                DataTable dt = ViewState["efectores"] as DataTable;
-                DataRow efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); //Verifica si ya fue agregado el efctor
-                if (efectorEncontrado != null)
-                {
-                    puedeAgregar = false;
-                }
+                DataTable dt = ViewState["efectores"] as DataTable; DataRow efectorEncontrado = null;
+
+                if (dt != null && dt.Rows.Count > 0) 
+                    efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); //Verifica si ya fue agregado el efctor
+
+                if (efectorEncontrado != null) puedeAgregar = false;
+                
 
                 if (puedeAgregar)
                 {
@@ -651,15 +651,22 @@ namespace WebLab.Usuarios
         private void MostrarEfectores()
         {
             DataTable dt;
-            if (ViewState["efectores"] == null)
-            { 
-                dt = LeerDatosEfector();
-                dt.PrimaryKey = new DataColumn[] { dt.Columns["idEfector"] }; //le asigno clave primaria para despues poder buscar por este valor
-                ViewState["efectores"] = dt; 
-            }
-            else
-                dt = ViewState["efectores"] as DataTable;
+            //Cargo la tabla con valores de la base que luego guardare en el ViewState
+            if (ViewState["efectores"] == null) dt = LeerDatosEfector();
+            else dt = ViewState["efectores"] as DataTable;
 
+            //Si no tiene valores defino la estructura de la tabla
+            if (dt == null || dt.Columns.Count == 0)
+            {
+                dt = new DataTable();
+                dt.Columns.Add("idUsuarioEfector", typeof(int));
+                dt.Columns.Add("nombre", typeof(string));
+                dt.Columns.Add("idEfector", typeof(int));
+            }
+
+            //le asigno clave primaria para despues poder buscar por este valor
+            dt.PrimaryKey = new DataColumn[] { dt.Columns["idEfector"] }; 
+            ViewState["efectores"] = dt;
             gvListaEfector.AutoGenerateColumns = false;
             gvListaEfector.DataSource = dt;
             gvListaEfector.DataBind();
@@ -717,8 +724,10 @@ namespace WebLab.Usuarios
             }
           
         }
-        #endregion
 
+
+
+        #endregion
 
     }
 }
