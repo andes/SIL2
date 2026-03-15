@@ -38,17 +38,21 @@ namespace WebLab.Usuarios
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            if (Session["s_permiso"] != null)
             {
-                VerificaPermisos("Usuarios");
-                CargarListas();
-                if (Request["id"] != null)
-                    MostrarDatos();
-                else
-                    MostrarEfectores(); 
+                if (!Page.IsPostBack)
+                {
+                    VerificaPermisos("Usuarios");
+                    CargarListas();
+                    if (Request["id"] != null)
+                        MostrarDatos();
+                    else
+                        MostrarEfectores();
 
 
+                }
             }
+            else Response.Redirect("../FinSesion.aspx", false);
         }
 
         private void VerificaPermisos(string sObjeto)
