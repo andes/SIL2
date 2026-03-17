@@ -468,32 +468,8 @@ namespace WebLab.Usuarios
             
         }
         
-        private void habilitarPorAutenticacion()
-        {
-            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
-            {
-                //No se habilita “Requiere nueva contraseña al ingresar”
-                chkRequiereContrasenia.Enabled = false;
-                chkRequiereContrasenia.Checked = false;
-                //No se habilita “exclusivo Río Negro”
-                chkExterno.Enabled = false;
-                //Por defecto la contraseña es el username
-                txtPassword.Enabled = false;
-                rfvPassword.Enabled = false;
-            }
-            else
-            {
-                chkRequiereContrasenia.Enabled = true;
-                chkExterno.Enabled = true;
+       
 
-                //Se puede poner una contraseña
-                if (Request["id"] == null){ txtPassword.Enabled = true; rfvPassword.Enabled = true; }
-                else
-                    txtPassword.Enabled = false;
-            }
-
-
-        }
         protected void ddlTipoAutenticacion_SelectedIndexChanged(object sender, EventArgs e)
         {
           
@@ -512,15 +488,12 @@ namespace WebLab.Usuarios
                 if (!validate)
                 {
                     args.IsValid = false;
-                    if (ddlTipoAutenticacion.SelectedValue == "SIL")
-                        customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 caracteres(letras o numeros)";
-                    else
                     customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 numeros";
-                    
+
                     return;
                 }
 
-            
+            }
         }
         
         private void habilitarPorAutenticacion()
@@ -549,28 +522,9 @@ namespace WebLab.Usuarios
 
 
         }
-        protected void ddlTipoAutenticacion_SelectedIndexChanged(object sender, EventArgs e)
-        {
-          
-           habilitarPorAutenticacion();
-            
-        }
+       
 
-
-        protected void customValidacionGeneral1_ServerValidate1(object source, ServerValidateEventArgs args)
-        {
-            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
-            {
-                //El username debe ser un numero (numero de documento) no debe admitir letras ni caracteres especiales.
-
-                bool validate = Regex.IsMatch(txtUsername.Text, @"^\d+$");
-                if (!validate)
-                {
-                    args.IsValid = false;
-                    return;
-                }
-            }
-        }
+        
 
         protected void customValidator_ServerValidate(object source, ServerValidateEventArgs args)
         {
