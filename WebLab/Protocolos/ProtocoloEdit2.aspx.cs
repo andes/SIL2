@@ -1753,9 +1753,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
                         /// actualiza al paciente con la ultima obra social guardada: solo en las altas
+                   /*    No es necesario siempre se guarda -1 con el sil2
                         oRegistro.IdPaciente.IdObraSocial = oRegistro.IdObraSocial.IdObraSocial;
                         oRegistro.IdPaciente.FechaUltimaActualizacion = DateTime.Now;
                         oRegistro.IdPaciente.Save();
+                        */
 
                         if (ddlImpresoraEtiqueta.SelectedValue != "0")
                         //   oRegistro.ImprimirCodigoBarras(ddlImpresoraEtiqueta.SelectedItem.Text, int.Parse(Session["idUsuario"].ToString()));
