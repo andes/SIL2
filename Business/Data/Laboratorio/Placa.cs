@@ -20,6 +20,7 @@ namespace Business.Data.Laboratorio
         private bool m_isChanged;
 
         private int m_idPlaca;
+        private Efector m_idefector;
         private DateTime m_fecha;
         private string m_operador;
         private string m_equipo;
@@ -37,6 +38,7 @@ namespace Business.Data.Laboratorio
         public Placa()
         {
             m_idPlaca = 0;
+            m_idefector = new Efector();
             m_fecha = DateTime.MinValue;
             m_operador = String.Empty;
             m_equipo = String.Empty;
@@ -53,6 +55,7 @@ namespace Business.Data.Laboratorio
         /// </summary>
         public Placa(
             int idPlaca,
+            Efector idefector,
             DateTime fecha,
             string operador,
             string equipo,
@@ -62,6 +65,7 @@ namespace Business.Data.Laboratorio
                 : this()
         {
             m_idPlaca = idPlaca;
+            m_idefector = idefector;
             m_fecha = fecha;
             m_operador = operador;
             m_equipo = equipo;
@@ -85,6 +89,18 @@ namespace Business.Data.Laboratorio
             }
 
         }
+
+        public Efector IdEfector
+        {
+            get { return m_idefector; }
+            set
+            {
+                m_isChanged |= (m_idefector != value);
+                m_idefector = value;
+            }
+
+        }
+
 
         public DateTime Fecha
         {

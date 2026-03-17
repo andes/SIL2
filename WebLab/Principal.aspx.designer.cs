@@ -130,6 +130,15 @@ namespace WebLab {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Div1;
         
         /// <summary>
+        /// btnProtocoloEfector control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnProtocoloEfector;
+        
+        /// <summary>
         /// gvProtocolosxEfector control.
         /// </summary>
         /// <remarks>
@@ -137,6 +146,24 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvProtocolosxEfector;
+        
+        /// <summary>
+        /// btnSISA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSISA;
+        
+        /// <summary>
+        /// gvProtocolosxSISA control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvProtocolosxSISA;
         
         /// <summary>
         /// Div2 control.
@@ -164,15 +191,6 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkCambioEfector;
-        
-        /// <summary>
-        /// gvProtocolosxSISA control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvProtocolosxSISA;
         
         /// <summary>
         /// mensajeria control.

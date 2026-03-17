@@ -429,6 +429,7 @@ namespace WebLab.Placas {
            
             oRegistro.Operador = ddlOperador.SelectedItem.Text + " -" + ddlOperador0.SelectedItem.Text;
             oRegistro.Equipo = lblEquipo.Text;
+            oRegistro.IdEfector = oC.IdEfector;
             oRegistro.Fecha =DateTime.Parse( lblFecha.Text);
 
             if (Request["id"] == null)
@@ -852,7 +853,7 @@ namespace WebLab.Placas {
 
             Business.Data.Laboratorio.Placa oRegistro = new Business.Data.Laboratorio.Placa();
             oRegistro = (Business.Data.Laboratorio.Placa)oRegistro.Get(typeof(Business.Data.Laboratorio.Placa), int.Parse(id));
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+       //     Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oC.IdEfector);
 
             CrystalReportSource oCr = new CrystalReportSource();
 

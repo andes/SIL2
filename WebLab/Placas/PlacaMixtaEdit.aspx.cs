@@ -411,6 +411,7 @@ namespace WebLab.Placas {
             oRegistro.Operador = ddlOperador.SelectedItem.Text + " -" + ddlOperador0.SelectedItem.Text;
             oRegistro.Equipo = lblEquipo.Text;
             oRegistro.Fecha =DateTime.Parse( lblFecha.Text);
+                oRegistro.IdEfector = oC.IdEfector;
 
             if (Request["id"] == null)
             {

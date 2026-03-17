@@ -1672,6 +1672,16 @@ $("#tabContainer").tabs({ selected: currTab });
                                             <asp:TextBox ID="txtCodigoEstablecimientoSISA" runat="server"  class="form-control input-sm" Width="200px"></asp:TextBox>
                                         </td>
                                     </tr>
+                             <tr>
+                                        <td   >
+                                         <h6>  Mapeo SIL y SISA: </h6>
+                                            </td>
+                                        <td    >
+                                                <img alt="" src="../App_Themes/default/images/excelPeq.gif"/>
+                                                                <asp:LinkButton ID="lnkExcel" runat="server" CssClass="myLittleLink" 
+                                                                    onclick="lnkExcel_Click"  >Descargar Excel</asp:LinkButton>
+                                        </td>
+                                    </tr>
 
                           </table>
                      </div>

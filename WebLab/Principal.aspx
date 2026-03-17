@@ -113,8 +113,12 @@
                     
             </div>
              
-               <div class="col-sm-4" id="Div1" runat="server">
-                             <asp:GridView ID="gvProtocolosxEfector" runat="server" CssClass="table table-bordered bs-table"></asp:GridView>
+               <div class="col-sm-4" id="Div1" runat="server"> 
+                     <asp:Button Visible="true" Width="200px" Height="40px"   ID="btnProtocoloEfector" class="btn btn-sq btn-success" runat="server" Text="Protocolos Efector" OnClick="btnProtocoloEfector_Click"/>
+                             <asp:GridView ID="gvProtocolosxEfector" runat="server" CssClass="table table-bordered bs-table"></asp:GridView>   
+                   <br />
+                   <asp:Button Visible="true" Width="200px" Height="40px"   ID="btnSISA" class="btn btn-sq btn-success" runat="server" Text="Protocolos SISA" OnClick="btnSISA_Click"/>
+                    <asp:GridView ID="gvProtocolosxSISA" runat="server" CssClass="table table-bordered bs-table" Width="250px"></asp:GridView>  
                           
        </div> 
            
@@ -126,7 +130,6 @@
                    <br />
                    <br />
                   
-                    <asp:GridView ID="gvProtocolosxSISA" runat="server" CssClass="table table-bordered bs-table" Width="250px"></asp:GridView>  
              </div>
          
               <div class="col-sm-4" id="mensajeria" runat="server"  style="width:305px;height:400px;overflow:scroll;overflow-x:hidden;" 

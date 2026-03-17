@@ -39,14 +39,21 @@ namespace WebLab.Usuarios
           
             if (!Page.IsPostBack)
             {
-                RegistrarScriptConfirmacion();
-                VerificaPermisos("Usuarios");
-                CargarListas();
-                CargarGrilla();
-                if (oUser.IdEfector.IdEfector == 227) /// nivel central
+                if (Session["idUsuario"] != null)
                 {
-                    btnAgregar.Visible = true;
+                     
+
+               
+                    RegistrarScriptConfirmacion();
+                    VerificaPermisos("Usuarios");
+                    CargarListas();
+                    CargarGrilla();
+                    if (oUser.IdEfector.IdEfector == 227) /// nivel central
+                    {
+                        btnAgregar.Visible = true;
+                    }
                 }
+                else Response.Redirect("../FinSesion.aspx", false);
             }
         }
         private void RegistrarScriptConfirmacion()
@@ -113,6 +120,7 @@ namespace WebLab.Usuarios
         
         private object LeerDatos()
         {
+            string str_condicion = " where username!='adminapi'";
             string m_strSQL = @"SELECT     U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
 case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo
 FROM         Sys_Usuario AS U (nolock) INNER JOIN
@@ -121,9 +129,9 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
 					  sys_efector as E (nolock) on Ue.idEfector= E.idEfector";
 
             if (ddlEfector.SelectedValue != "0")
-                m_strSQL += " where E.idEfector=" + ddlEfector.SelectedValue.ToString();
+                str_condicion += " and E.idEfector=" + ddlEfector.SelectedValue.ToString();
 
-            m_strSQL += " order by username";
+            m_strSQL += str_condicion+ " order by username";
 
         
 

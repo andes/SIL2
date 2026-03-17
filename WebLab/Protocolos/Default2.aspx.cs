@@ -459,8 +459,8 @@ namespace WebLab.Protocolos
             {
                 str_condicion += " and Pa.idEstado in (2)"; // temporal
                 if (txtDni.Value != "") str_condicion += " AND (Pa.numeroDocumento = '" + txtDni.Value.Trim() + "')";
-                if (txtNumeroAdicional.Text != "")  str_condicion +=" and (Pa.numeroAdic like '%" + txtNumeroAdicional.Text.Trim() + @"%'  
-                                                                        or Pa.idPaciente in (select idPaciente from sys_parentesco with (nolock) where numeroDocumento=" + txtNumeroAdicional.Text.Trim()+"))";
+                if (txtNumeroAdicional.Text != "") str_condicion += " and (Pa.numeroAdic like '%" + txtNumeroAdicional.Text.Trim() + @"%')";
+                ///or Pa.idPaciente in (select idPaciente from sys_parentesco with (nolock) where numeroDocumento=" + txtNumeroAdicional.Text.Trim()+"))";  // es incorrecto porque el campo numerodocumento es int y no graba txtNumeroAdicional en sys_parentesco
             }
 
             m_strSQL = " SELECT top 10 Pa.idPaciente,  case when Pa.idestado=2 then convert(varchar,Pa.numeroAdic) + '-T' else convert(varchar,Pa.numeroDocumento)  end as dni,Pa.apellido+ ' ' + Pa.nombre as paciente, convert(varchar(10),Pa.fechaNacimiento,103) as fechaNacimiento, " +
