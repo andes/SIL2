@@ -2,20 +2,50 @@
 
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+     <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
 
-<script type="text/javascript" src="../script/Mascara.js"></script>
-    <script type="text/javascript" src="../script/ValidaFecha.js"></script>      
-    <%--<script src="../script/jquery.min.js" type="text/javascript"></script>--%>
- <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />   
+  <script type="text/javascript"      src="../script/jquery.min.js"></script> 
+  <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
+    
+      <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
+      
+      <script type="text/javascript"> 
+      
+
+	$(function() {
+		$("#<%=txtFechaDesde.ClientID %>").datepicker({
+		    maxDate: 0,
+		    minDate: null,
+
+			showOn: 'button',
+			buttonImage: '../App_Themes/default/images/calend1.jpg',
+			buttonImageOnly: true
+		});
+	});
+
+	<%--$(function() {
+	    $("#<%=txtFechaHasta.ClientID %>").datepicker({
+	        maxDate: 0,
+	        minDate: null,
+
+			showOn: 'button',
+			buttonImage: '../App_Themes/default/images/calend1.jpg',
+			buttonImageOnly: true
+		});
+	});--%>
  
-                  <script src="jquery.min.js" type="text/javascript"></script>  
-                  <script src="jquery-ui.min.js" type="text/javascript"></script> 
+     
+  </script>  
+  
+  
+   	 <script type="text/javascript" src="../script/Mascara.js"></script>
+    <script type="text/javascript" src="../script/ValidaFecha.js"></script>   
+  
+ 
 
-                    
 
   
     </asp:Content>
-
 
 
 
@@ -35,7 +65,7 @@
 					
 					
 					<tr>
-						<td  >Efector:&nbsp;</td>
+						 <td class="myLabelIzquierda">Efector:&nbsp;</td>
 						<td>
                             <anthem:DropDownList ID="ddlEfector" runat="server" class="form-control input-sm" 
                                 TabIndex="9" ToolTip="Seleccione el efector" AutoPostBack="True"  >
@@ -44,7 +74,7 @@
 					</tr>
 
           	<tr>
-						<td   >Servicio:</td>
+						 <td class="myLabelIzquierda">Servicio:</td>
 						<td>
                             <anthem:DropDownList ID="ddlServicio" runat="server" 
                                 ToolTip="Seleccione el servicio" TabIndex="4" class="form-control input-sm" 
@@ -54,7 +84,7 @@
                             </td>
                   </tr>
                                         
-          <tr>	<td    >
+          <tr>	 <td class="myLabelIzquierda">
                                                         Area:</td>
 						<td>
                                         
@@ -66,7 +96,7 @@
 
           </tr>
 
-          <tr>	<td    >
+          <tr>	 <td class="myLabelIzquierda">
                                                         Estado:</td>
 						<td>
                                         
@@ -80,6 +110,31 @@
                             </td>
 
           </tr>
+          <tr>
+              <td class="myLabelIzquierda">
+                            Fecha Desde: </td>
+                   	<td class="myLabelIzquierda" > <input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
+                         onblur="valFecha(this)" 
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="2" class="form-control input-sm"
+                                style="width: 100px"  />
+					
+                          <%--  Fecha Hasta: 
+                    <input id="txtFechaHasta" runat="server" type="text" maxlength="10" 
+                        style="width: 100px"  onblur="valFecha(this)" 
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="3" class="form-control input-sm"  />  --%>
+                            <label>Indique desde que fechas de protocolos existentes que afectará este cambio. </label>
+              </td>
+           
+					</tr>
+         
+           <tr>
+                                                    <td>
+                                                           <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                                ErrorMessage="Debe ingresar fecha desde" 
+                                    ValidationGroup="0" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" 
+                                             ></asp:CustomValidator></td>
+               <td></td>
+                                                </tr>
 
           </table>         
            
@@ -137,7 +192,7 @@
               
         </div>  
             <asp:Button ID="btnGuardar" runat="server" onclick="btnGuardar_Click"  CssClass="btn btn-primary" Width="150px"
-                Text="Guardar" />
+                Text="Guardar" ValidationGroup="0" />
 
        </div>
           </div>

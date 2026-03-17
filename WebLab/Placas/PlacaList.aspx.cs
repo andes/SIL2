@@ -161,7 +161,7 @@ namespace WebLab.Placas
         }
         private object LeerDatos( )
         {
-            string m_condicion = " 1=1 ";        
+            string m_condicion = " 1=1 and P.idEfector="+ oUser.IdEfector.IdEfector.ToString();      ///placas del efector   
 
                         if (txtNumero.Text != "") m_condicion += " and IDPlaca =" + txtNumero.Text.Trim();
           
@@ -408,7 +408,7 @@ where   " + m_condicion + m_orden;
             DataTable dtAuditoria = GetDataSetAuditoria(v);
             if (dtAuditoria.Columns.Count > 2)
             {
-                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion),      "IdEfector", oUser.IdEfector);///encabezado del efector
 
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
                 encabezado1.Value = oCon.EncabezadoLinea1;

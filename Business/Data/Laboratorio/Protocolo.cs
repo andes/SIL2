@@ -2161,10 +2161,18 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
 
             IList lista = crit.List();
  
-            if (lista.Count > 0)
-            {
+            //if (lista.Count > 0)
+            //{
                 foreach (DetalleProtocolo oDet in lista)
-                {                   
+                {
+
+                /*Agrego control si no tiene insumo no calcula*/
+                ItemEfector oItem = new ItemEfector();
+                oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), "IdItem", oDet.IdSubItem, "IdEfector", this.IdEfector);
+
+                if (oItem.SinInsumo) continue;
+
+                /*fin control insumo */
                     ICriteria critFormula = m_session.CreateCriteria(typeof(Formula));
                     critFormula.Add(Expression.Eq("IdItem", oDet.IdSubItem));
                     critFormula.Add(Expression.Eq("IdTipoFormula", 1));
@@ -2199,22 +2207,26 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                                 ///evaluar si la condicion de determinacion habilita el calculo de la formula
                             }
 
-                          
+                            /*   if (idraza == 1)  // si es afro
+                               {
+                                   if (idraza == oDet.IdProtocolo.IdPaciente.IdRaza)
+                                       sicalcula = true;
+                                   else
+                                       sicalcula = false;
+                               }
+                               if (idraza == 0)
+                               {
+                                   if ( oDet.IdProtocolo.IdPaciente.IdRaza!=1)
+                                       sicalcula = true;
+                                   else
+                                       sicalcula = false;
+                               }
+                               */
+                            if ((idraza == 1) && (oDet.IdProtocolo.IdPaciente.IdRaza != 1))
+                                sicalcula = false;
 
-                            if (idraza == 1)  // si es afro
-                            {
-                                if (idraza == oDet.IdProtocolo.IdPaciente.IdRaza)
-                                    sicalcula = true;
-                                else
-                                    sicalcula = false;
-                            }
-                            if (idraza == 0)
-                            {
-                                if ( oDet.IdProtocolo.IdPaciente.IdRaza!=1)
-                                    sicalcula = true;
-                                else
-                                    sicalcula = false;
-                            }
+                            if ((idraza == 0) && (oDet.IdProtocolo.IdPaciente.IdRaza == 1))
+                                sicalcula = false;
 
                         }
 
@@ -2308,7 +2320,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                         //valor = resultado.ToString();
                     }
                 }
-            }
+            
             //return valor;
 
 

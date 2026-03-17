@@ -37,10 +37,16 @@ namespace WebLab.Usuarios
         {
             if (!Page.IsPostBack)
             {
-                VerificaPermisos("Usuarios");
+                if (Session["idUsuario"] != null)
+                {
+
+
+                    VerificaPermisos("Usuarios");
                 CargarListas();
                 if (Request["id"] != null)
                     MostrarDatos();
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
             }
         }
 

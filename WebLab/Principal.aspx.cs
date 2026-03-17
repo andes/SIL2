@@ -201,9 +201,11 @@ namespace WebLab
                         lnkCambioEfector.Visible = oUser.Administrador;
                         if (oUser.IdEfector.IdEfector == 227)
                         {
-                            CargarGrilla();
-                            CargarGrillaSISA();
+                            //CargarGrilla();
+                            //CargarGrillaSISA();
                             gvProtocolosxEfector.Visible = oUser.Administrador;
+                            btnProtocoloEfector.Visible = oUser.Administrador;
+                            btnSISA.Visible = oUser.Administrador;
                             gvProtocolosxSISA.Visible = oUser.Administrador;
                             pnlRecepcion.Visible = false;
                             pnlTurno.Visible = false;
@@ -211,8 +213,8 @@ namespace WebLab
                         }
                         else
                         {
-                            gvProtocolosxEfector.Visible = false;
-                            gvProtocolosxSISA.Visible = false;
+                            btnProtocoloEfector.Visible = false;
+                            btnSISA.Visible = false;
                         }
                     }
 
@@ -516,6 +518,19 @@ namespace WebLab
         protected void btnSeguimiento_Click(object sender, EventArgs e)
         {
             Response.Redirect("Seguimiento.aspx", false);
+        }
+
+        protected void btnProtocoloEfector_Click(object sender, EventArgs e)
+        {   CargarGrilla();
+            //CargarGrillaSISA();
+            gvProtocolosxEfector.Visible = true; ;
+
+        }
+
+        protected void btnSISA_Click(object sender, EventArgs e)
+        {  CargarGrillaSISA();
+            gvProtocolosxSISA.Visible = true; ;
+
         }
     }
 }

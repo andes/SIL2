@@ -20,6 +20,8 @@ using Business.Data;
 using CrystalDecisions.Web;
 using CrystalDecisions.Shared;
 using System.Web.Script.Serialization;
+using System.Text;
+using System.IO;
 
 namespace WebLab
 {
@@ -54,7 +56,7 @@ namespace WebLab
              
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
               
-            else Response.Redirect("../FinSesion.aspx", false);
+            else Response.Redirect("FinSesion.aspx", false);
           
         }
 
@@ -64,12 +66,16 @@ namespace WebLab
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
-            {               
-                VerificaPermisos("Parametros SI");                              
-                CargarListas();
-                MostrarDatos();
-                HabilitarDatosModificables();
-                         
+            {
+                if (Session["idUsuario"] != null)
+                {
+                    VerificaPermisos("Parametros SI");
+                    CargarListas();
+                    MostrarDatos();
+                    HabilitarDatosModificables();
+                }
+                else Response.Redirect("FinSesion.aspx", false);
+
             }
 
         }
@@ -469,6 +475,7 @@ select * from areas order by nombre ";
         }
         private void MostrarDatos()
         {
+            
             Efector oEfector = new Efector();
             oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
             if (oEfector != null)
@@ -859,7 +866,74 @@ select * from areas order by nombre ";
           }
       }
 
-      private bool SiNoHayProtocolosCargados()
+
+        protected void lnkExcel_Click(object sender, EventArgs e)
+        {
+           
+                dataTableAExcel(LeerDatosSISA(), "MapeoSIL_SISA");
+        }
+
+        private void dataTableAExcel(DataTable tabla, string nombreArchivo)
+        {
+            if (tabla.Rows.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                Page pagina = new Page();
+                HtmlForm form = new HtmlForm();
+                GridView dg = new GridView();
+                dg.EnableViewState = false;
+                dg.DataSource = tabla;
+                dg.DataBind();
+                pagina.EnableEventValidation = false;
+                pagina.DesignerInitialize();
+                pagina.Controls.Add(form);
+                form.Controls.Add(dg);
+                pagina.RenderControl(htw);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.ContentType = "application/vnd.ms-excel";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
+                Response.Charset = "UTF-8";
+                Response.ContentEncoding = Encoding.Default;
+                Response.Write(sb.ToString());
+                Response.End();
+            }
+        }
+        private DataTable LeerDatosSISA()
+        {
+
+           string  m_strSQL = @"select idEvento as [idEventoSISA], nombreevento [Nombre Evento], idClasificacionManual, nombreClasificacionManual, idGrupoEvento, nombreGrupoEvento,
+s.idmuestra as idmuestrasisa, idTipoMuestra as idtipomuestrasisa, idPrueba as idPruebaSISA , idTipoPrueba as idTipoPruebaSISA, 
+I.codigo as [codigo SIL],case when i.baja=0 then 'Activa' else 'Dada de baja' end as [Estado en SIL] ,I.nombre as [Det. Sil] , 
+fechaVigenciaDesde as [Fecha Vigencia Desde], case when fechaVigenciaHasta='19000101' then '' else  convert(varchar,fechaVigenciaHasta) end [Fecha Vigencia Hasta], 
+isnull(o.nombre, 'Todos') as [Origen SIL], isnull(E.nombre, 'Todos') as [Efector Solicitante], edaddesde as [Edad Desde],   edadHasta [Edad Hasta], 
+case unidadEdad when -1 then 'Todas las edades'
+	when 0 then 'Años'
+	when 1 then 'meses'
+	when 2 then 'dias'
+	end  as [Tipo Edad], isnull(M.nombre, 'No aplica') as [Muestra SIL], isnull(c.nombre,'No aplica') as [Caracter SIL]
+from lab_configuracionsisa s with (nolock)
+left join  LAB_Caracter  c with (nolock) on C.idCaracter= s.idCaracter
+inner join lab_item i with (nolock) on i.idItem= S.idItem
+left join lab_origen O with (nolock) on S.idOrigen= O.idOrigen
+left join Sys_Efector E with (nolock) on E.idEfector= S.idEfectorSolicitante
+left join LAB_Muestra as M with (nolock) on M.idMuestra= S.idMuestraSIL
+order by s.idEvento,s.idClasificacionManual,s.idGrupoEvento
+";
+            
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;           
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+
+            return Ds.Tables[0];
+        }
+
+
+        private bool SiNoHayProtocolosCargados()
       {
           bool dev=true;
           ISession m_session = NHibernateHttpModule.CurrentSession;

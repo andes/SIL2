@@ -84,8 +84,18 @@ namespace WebLab.Agendas
                 IList items = crit.List();
                 foreach (AgendaDia oDia in items)
                 {
-                    int i = oDia.Dia;
-                    cklDias.Items[i - 1].Selected = true;
+                 ///Correccion ppara dias domingo grabar 0 en base de datos.
+				    int diagrabado = oDia.Dia;
+                 //   cklDias.Items[i - 1].Selected = true;
+
+                    for (int i = 0; i < cklDias.Items.Count; i++)
+                    {
+                        if (int.Parse(cklDias.Items[i].Value)== diagrabado)
+                        {
+                            cklDias.Items[i].Selected = true; break;
+
+                        }
+                    }
                     txtLimite.Value = oDia.LimiteTurnos.ToString();
                     txtHoraDesde.Value = oDia.HoraDesde.ToString();
                     txtHoraHasta.Value = oDia.HoraHasta.ToString();
@@ -180,7 +190,7 @@ namespace WebLab.Agendas
                     AgendaDia oDia = new AgendaDia();
                     oDia.IdAgenda = oRegistro;
                     oDia.IdEfector = oRegistro.IdEfector;
-                    oDia.Dia = i + 1;
+                    oDia.Dia = int.Parse(cklDias.Items[i].Value); //i + 1;
                     oDia.LimiteTurnos = int.Parse(txtLimite.Value);
                     oDia.HoraDesde = txtHoraDesde.Value;
                     oDia.HoraHasta = txtHoraHasta.Value;

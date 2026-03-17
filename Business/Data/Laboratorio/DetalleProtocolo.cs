@@ -470,6 +470,35 @@ namespace Business.Data.Laboratorio
 
         }
 
+        public void GuardarDisponible( )
+        {/// saca las marcas de validacion 
+            //ItemEfector oItem = new ItemEfector();
+            //oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), "IdItem", this.IdSubItem, "IdEfector", this.IdEfector);
+            //if (oItem != null) //Siempre tiene que haber 
+            //    if (oItem.IdEfectorDerivacion == this.IdEfector)
+            //    {
+            //        if (!oItem.SinInsumo)
+            //        {
+                        //resul = "Sin Insumo";
+
+                        if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
+                        {
+                            this.Observaciones = "";
+                            this.IdUsuarioValidaObservacion =0;
+                            this.FechaValidaObservacion = DateTime.Parse("01/01/1900");
+                            this.FechaValida = DateTime.Parse("01/01/1900");
+                        }
+                        if (this.IdSubItem.IdTipoResultado == 2)///texto
+                        {
+                            this.ResultadoCar = "";
+                            this.IdUsuarioValida = 0; // oItem.IdUsuarioRegistro.IdUsuario;
+                            this.FechaValida = DateTime.Parse("01/01/1900");
+                        }
+                        this.Save();
+                //    }
+                //}
+
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -1330,8 +1359,40 @@ namespace Business.Data.Laboratorio
             return sederiva;
         }
 
-        public void GuardarSinInsumo()
+        public void GuardarSinInsumo(Usuario oUser)
         {
+            //Llamado desde marca de sin insumo
+            string resul = "";
+            //ItemEfector oItem = new ItemEfector();
+            //oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), "IdItem", this.IdSubItem, "IdEfector", this.IdEfector);
+            //if (oItem != null) //Siempre tiene que haber 
+            //    if (oItem.IdEfectorDerivacion == this.IdEfector)
+            //    {
+            //        if (oItem.SinInsumo)
+            //        {
+                        resul = "Sin Insumo";
+
+                        if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
+                        {
+                            this.Observaciones = resul;
+                            this.IdUsuarioValidaObservacion = oUser.IdUsuario;
+                            this.FechaValidaObservacion = DateTime.Now;
+                            this.FechaValida = DateTime.Now;
+                        }
+                        if (this.IdSubItem.IdTipoResultado == 2)///texto
+                        {
+                            this.ResultadoCar = resul;
+                            this.IdUsuarioValida = oUser.IdUsuario;
+                           this.FechaValida = DateTime.Now;
+                        }
+                        this.Save();
+                //    }
+                //}
+              
+
+        }
+        public void GuardarSinInsumo( )
+        {//Llamado de guardado de protocolo
 
             string resul = "";
             ItemEfector oItem = new ItemEfector();
@@ -1343,23 +1404,23 @@ namespace Business.Data.Laboratorio
                     {
                         resul = "Sin Insumo";
 
-                        if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
-                        {
-                            this.Observaciones = resul;
+            if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
+            {
+                this.Observaciones = resul;
                             this.IdUsuarioValidaObservacion = oItem.IdUsuarioRegistro.IdUsuario;
-                            this.FechaValidaObservacion = DateTime.Now;
+                this.FechaValidaObservacion = DateTime.Now;
+                this.FechaValida = DateTime.Now;
+            }
+            if (this.IdSubItem.IdTipoResultado == 2)///texto
+            {
+                this.ResultadoCar = resul;
+                this.IdUsuarioValida = oItem.IdUsuarioRegistro.IdUsuario;
                             this.FechaValida = DateTime.Now;
-                        }
-                        if (this.IdSubItem.IdTipoResultado == 2)///texto
-                        {
-                            this.ResultadoCar = resul;
-                            this.IdUsuarioValida = oItem.IdUsuarioRegistro.IdUsuario;
-                            this.FechaValida = DateTime.Now;
-                        }
-                        this.Save();
+            }
+            this.Save();
                     }
                 }
-              
+
 
         }
 

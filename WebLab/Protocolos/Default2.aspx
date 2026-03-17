@@ -119,7 +119,7 @@
 					
 					<tr>
 						<td class="myLabelIzquierda"  style="width: 150px">
-                                            Nro. Ident. Adicional/Parentesco:</td>
+                                            Nro. Ident. Adicional:</td>
 						<td align="left" colspan="2">
                                             <asp:TextBox ID="txtNumeroAdicional" runat="server" CssClass="form-control input-sm" Enabled="False" TabIndex="3"></asp:TextBox>
                                             <asp:Button ID="btnBuscar" runat="server" Text="Buscar" ValidationGroup="0"  Width="100px"

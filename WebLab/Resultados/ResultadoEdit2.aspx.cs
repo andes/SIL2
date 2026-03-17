@@ -69,19 +69,19 @@ namespace WebLab.Resultados
                 if (oCon != null)
                 {
                     oCr.Report.FileName = ""; oCr.CacheDuration = 0; oCr.EnableCaching = false;
-                    
 
-                    //if (Request["idProtocolo"] != null) //Pasado a Page_Load para que no genere el error ViewState
-                    //{
-                    //    if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
-                    //    {
-                       
-                    //        LlenarTabla(Request["idProtocolo"].ToString());
-                    //    }
-                    //    else
-                    //        Response.Redirect("../FinSesion.aspx", false);
-                           
-                    //}
+
+                    if (Request["idProtocolo"] != null) //Pasado a Page_Load para que no genere el error ViewState : error que se produce cuando se tilda sin muestra desde prompt AnalisisEdit.aspx
+                    {
+                        if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
+                        {
+
+                            LlenarTabla(Request["idProtocolo"].ToString());
+                        }
+                        else
+                            Response.Redirect("../FinSesion.aspx", false);
+
+                    }
                 }
             }
             else Response.Redirect("../FinSesion.aspx", false);
@@ -91,16 +91,16 @@ namespace WebLab.Resultados
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request["idProtocolo"] != null)
-            {
-                if ((Session["idUsuario"] != null))
-                {
-                    LlenarTabla(Request["idProtocolo"].ToString());
-                }
-                else
-                    Response.Redirect("../FinSesion.aspx", false);
+            //if (Request["idProtocolo"] != null)
+            //{
+            //    if ((Session["idUsuario"] != null))
+            //    {
+            //        LlenarTabla(Request["idProtocolo"].ToString());
+            //    }
+            //    else
+            //        Response.Redirect("../FinSesion.aspx", false);
 
-            }
+            //}
 
             if (!Page.IsPostBack)
             {
@@ -2705,7 +2705,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 if (chk1.Items[i].Selected)
                 {
                     if (val == "") val = chk1.Items[i].Text;
-                    else val += "\n" + chk1.Items[i].Text;//salto de linea
+                    else val += Environment.NewLine +   chk1.Items[i].Text;//salto de linea
                 }
             }
             //////Guarda las observaciones asociadas a un resultado numerico

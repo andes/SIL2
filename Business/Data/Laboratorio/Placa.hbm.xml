@@ -5,7 +5,7 @@
 		<id name="IdPlaca" column="idPlaca" type="Int32" unsaved-value="0">
 			<generator class="native"/>
 		</id>
-
+<many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
 		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
 		<property column="operador" type="String" name="Operador" not-null="true" />
 		<property column="equipo" type="String" name="Equipo" not-null="true" />
