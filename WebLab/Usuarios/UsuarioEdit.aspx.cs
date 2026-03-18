@@ -6,6 +6,7 @@ using CrystalDecisions.Web;
 using Microsoft.Win32;
 using NHibernate;
 using NHibernate.Expression;
+using Salud;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -169,10 +170,10 @@ namespace WebLab.Usuarios
         private void Guardar(Usuario oRegistro)
         {
             string accion = "Crea";
-            if (oRegistro != null)
+            if (Request["id"] != null) //oRegistro nunca es null
                 accion = "Modifica";
+      
 
-           
             Perfil oPerfil = new Perfil();
             oPerfil = (Perfil)oPerfil.Get(typeof(Perfil), int.Parse(ddlPerfil.SelectedValue));
 
@@ -187,7 +188,7 @@ namespace WebLab.Usuarios
             else
                 oEfectorDestino = oEfector;
 
-            GuardaAuditorias(oRegistro, oEfectorDestino, oPerfil);
+          
 
             oRegistro.IdEfector = oEfector;
             oRegistro.IdEfectorDestino = oEfectorDestino;
@@ -206,7 +207,7 @@ namespace WebLab.Usuarios
             oRegistro.Telefono = txtTelefono.Text;
 
 
-            if (Request["id"] == null) //no se modifica contraseña
+            if (Request["id"] == null) //oRegistro nunca es null
             {
                 Utility oUtil = new Utility();
 
@@ -221,7 +222,7 @@ namespace WebLab.Usuarios
 
             
 
-            if (oRegistro != null)
+            if (Request["id"] != null) //oRegistro nunca es null
             {
                 if ((oRegistro.Activo == true) && (chkActivo.Checked == false))
                     accion = "Inhabilita";
@@ -230,6 +231,9 @@ namespace WebLab.Usuarios
 
                 if (oRegistro.IdPerfil != oPerfil)
                     accion = "Cambia Perfil";
+
+                if (oRegistro.TipoAutenticacion.Trim() != ddlTipoAutenticacion.SelectedValue)
+                   accion = "Cambia Autenticacion: " + ddlTipoAutenticacion.SelectedValue.Trim();
 
             }
 
@@ -249,70 +253,14 @@ namespace WebLab.Usuarios
 
             oAuditor.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
 
-            GuardarEfectores(oRegistro);
+            if (Request["id"] == null) //en el alta se guardan los efectores luego de crear el usuario
+                //en modificacion no los guardamos desde aca, ya que se guardan en el evento "Agregar Efector"
+                GuardarEfectores(oRegistro);
 
 
         }
 
-        private void GuardaAuditorias(Usuario oRegistro, Efector oEfectorDestino, Perfil oPerfil)
-        {
-            if (Request["id"] != null)
-            {
-                if (oRegistro.IdEfectorDestino != oEfectorDestino)
-                    oRegistro.GrabaAuditoria("Cambia Laboratorio Destino: " + oRegistro.IdEfectorDestino.Nombre.Trim() + " a " + oEfectorDestino.Nombre.Trim(), int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-                if ( oRegistro.IdPerfil != oPerfil)
-                    oRegistro.GrabaAuditoria("Cambia Perfil: " + oRegistro.IdPerfil + " a "+ oPerfil.Nombre.Trim(), int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-                if (oRegistro.IdArea != int.Parse(ddlArea.SelectedValue))
-                {  Area oArea = new Area();
-                    oArea = (Area)oArea.Get(typeof(Area), oRegistro.IdArea);
-                    oRegistro.GrabaAuditoria("Cambia Area: " + oArea.Nombre+ " a " + ddlArea.SelectedItem.Text, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username); 
-                }
-
-                if (oRegistro.Apellido != txtApellido.Text)
-                    oRegistro.GrabaAuditoria("Cambia apellido: " + oRegistro.Apellido  + " a "+ txtApellido.Text, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-                if (oRegistro.Nombre != txtNombre.Text)
-                      oRegistro.GrabaAuditoria("Cambia Nombre: "+ oRegistro.Nombre + " a " + txtNombre.Text, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-              
-                if (oRegistro.FirmaValidacion != txtFirmaValidacion.Text)
-                    oRegistro.GrabaAuditoria("Cambia Firma Validacion: " + oRegistro.FirmaValidacion +" a "+txtFirmaValidacion.Text, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-                
-                if (oRegistro.Administrador != chkAdministrador.Checked)
-                    oRegistro.GrabaAuditoria("Cambia Administrador: "  + ((oRegistro.Administrador) ? "SI" : "NO") + " a "+ ((chkAdministrador.Checked) ? "SI" : "NO")
-                        , int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-                
-                if (oRegistro.Username != txtUsername.Text)
-                    oRegistro.GrabaAuditoria("Cambia Username: "+oRegistro.Username +" a "+txtUsername.Text, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-                if (oRegistro.Email != email.Value)
-                      oRegistro.GrabaAuditoria("Cambia Emaail: "+oRegistro.Email + " a "+ email.Value, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-               
-                if (oRegistro.Telefono != txtTelefono.Text)
-                    oRegistro.GrabaAuditoria("Cambia Telefono: "+oRegistro.Telefono+" a "+txtTelefono.Text, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-                if (oRegistro.Activo != chkActivo.Checked)
-                    oRegistro.GrabaAuditoria("Cambia Activo: " + ((oRegistro.Activo) ? "SI" : "NO") + " a " + ((chkActivo.Checked) ? "SI" : "NO")
-                        , int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-                
-                if (oRegistro.Externo != chkExterno.Checked)
-                    oRegistro.GrabaAuditoria("Cambia Exclusivo Rio Negro: " + ((oRegistro.Externo) ? "SI" : "NO") + " a " + ((chkExterno.Checked) ? "SI" : "NO")
-                            , int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-
-                if (oRegistro.RequiereCambioPass != chkRequiereContrasenia.Checked)
-                    oRegistro.GrabaAuditoria("Cambia Requiere cambio contraseña: " + ((oRegistro.RequiereCambioPass) ? "SI" : "NO") + " a " + ((chkRequiereContrasenia.Checked) ? "SI" : "NO")
-                          , int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-
-
-                if (oRegistro.TipoAutenticacion != ddlTipoAutenticacion.SelectedValue)
-                    oRegistro.GrabaAuditoria("Cambia Tipo Autenticacion: " +  ddlTipoAutenticacion.SelectedValue, int.Parse(Session["idUsuario"].ToString()), oRegistro.Username);
-                
-            }
-                
-        }
+       
 
         protected void btnRegresar_Click(object sender, EventArgs e)
         {
@@ -324,7 +272,7 @@ namespace WebLab.Usuarios
             if (Page.IsValid)
             {
 
-                Usuario oRegistro = new Usuario();
+                Usuario oRegistro = new Usuario(); 
                 if (Request["id"] != null)
                 {
                     oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Request["id"]));
@@ -676,6 +624,13 @@ namespace WebLab.Usuarios
                 {
                     dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue);
                     ViewState["efectores"] = dt;
+                    //Si el usuario existe lo guarda en la base, sino lo deja en el viewstate para guardarlo cuando se guarde el usuario
+                    if (Request["id"] != null)
+                    {
+                        Usuario oUsuario = new Usuario();
+                        oUsuario = (Usuario)oUsuario.Get(typeof(Usuario), int.Parse(Request["id"]));
+                        GuardarEfectores(oUsuario);
+                    }
                 }
                 else
                 {
@@ -697,9 +652,11 @@ namespace WebLab.Usuarios
             crit.Add(Expression.Eq("IdUsuario", oUsuario));
             IList lista = crit.List();
 
+            HashSet<int> yaTieneAuditoriaVincula = new HashSet<int>();
 
             foreach (UsuarioEfector oUsuarioEfector in lista)
             {
+                yaTieneAuditoriaVincula.Add(oUsuarioEfector.IdEfector.IdEfector);
                 oUsuarioEfector.Delete();
             }
 
@@ -707,6 +664,9 @@ namespace WebLab.Usuarios
             DataTable dt = ViewState["efectores"] as DataTable;
             if (dt != null || dt.Rows.Count > 0)
             {
+                //instancio una sola vez el usuario auditor
+                Usuario oAuditor = new Usuario();
+                oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 foreach (DataRow row in dt.Rows)
                 {
                     UsuarioEfector oRegistro = new UsuarioEfector();
@@ -717,9 +677,10 @@ namespace WebLab.Usuarios
                     oRegistro.IdEfector = oEfector;
                     oRegistro.Activo = true;
                     oRegistro.Save();
-                    Usuario oAuditor = new Usuario();
-                    oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                    oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
+                    
+                    //solo genero auditoria la primera vez que vincula el efector
+                    if (!yaTieneAuditoriaVincula.Contains(idEfector))
+                        oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
                 }
             }
         }
