@@ -71,17 +71,17 @@ namespace WebLab.Resultados
                     oCr.Report.FileName = ""; oCr.CacheDuration = 0; oCr.EnableCaching = false;
 
 
-                    if (Request["idProtocolo"] != null) //Pasado a Page_Load para que no genere el error ViewState : error que se produce cuando se tilda sin muestra desde prompt AnalisisEdit.aspx
-                    {
-                        if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
-                        {
+                    //if (Request["idProtocolo"] != null) //Pasado a Page_Init para que no genere el error ViewState : error que se produce cuando se tilda sin muestra desde prompt AnalisisEdit.aspx
+                    //{
+                    //    if ((Session["idUsuario"] != null))// &&  (!Page.IsPostBack))
+                    //    {
 
-                            LlenarTabla(Request["idProtocolo"].ToString());
-                        }
-                        else
-                            Response.Redirect("../FinSesion.aspx", false);
+                    //        LlenarTabla(Request["idProtocolo"].ToString());
+                    //    }
+                    //    else
+                    //        Response.Redirect("../FinSesion.aspx", false);
 
-                    }
+                    //}
                 }
             }
             else Response.Redirect("../FinSesion.aspx", false);
@@ -89,29 +89,29 @@ namespace WebLab.Resultados
 
         }
 
+        protected void Page_Init(object sender, EventArgs e) //AQUÍ deben existir los controles
+        {
+            if (Request["idProtocolo"] != null) {
+                if ((Session["idUsuario"] != null)) {
+                    LlenarTabla(Request["idProtocolo"].ToString());
+                }
+                else
+                    Response.Redirect("../FinSesion.aspx", false);
+
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (Request["idProtocolo"] != null)
-            //{
-            //    if ((Session["idUsuario"] != null))
-            //    {
-            //        LlenarTabla(Request["idProtocolo"].ToString());
-            //    }
-            //    else
-            //        Response.Redirect("../FinSesion.aspx", false);
-
-            //}
-
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] != null)
                 {
                     Inicializar();
                     CargarListas();
-                   
+
                 }
                 else
-                    Response.Redirect("../FinSesion.aspx", false);                             
+                    Response.Redirect("../FinSesion.aspx", false);
             }
 
         }
