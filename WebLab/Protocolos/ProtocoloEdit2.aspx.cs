@@ -1664,14 +1664,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                     chkRecordarPractica.Checked = true;
                             }
                             break;
-                        case "prácticas":
-                            TxtDatosCargados.Value = s_control[1].ToString(); break;
+                        case "prácticas":   if(Request["idServicio"] == "1") TxtDatosCargados.Value = s_control[1].ToString(); break;
+                        case "prácticasMicro":   if(Request["idServicio"] == "3")  TxtDatosCargados.Value = s_control[1].ToString(); break;
                         //case "ddlImpresora":
                         //    ddlImpresora.SelectedValue = s_control[1].ToString(); break;
 
                         case "ddlImpresoraEtiqueta":
-                            ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
-                    }
+                                    ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
+                                }
                 }
             }
             else
@@ -2495,10 +2495,39 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     if (Request["Operacion"].ToString() != "AltaTurno")
                     {
                         s_valores += "@ddlSectorServicio:" + ddlSectorServicio.SelectedValue;            
-                    }                                                                                      
+                    }
 
+            if (chkRecordarPractica.Checked)
+            {//guardo la sesion de general y microbiologia por si vuelvo a cargar esos tipos de labos, luego en GuardarDetalle se actualizan si el usuario lo cambio
+                if(Session["ProtocoloLaboratorio"] != null)
+                {
+                    string[] arr = Session["ProtocoloLaboratorio"].ToString().Split(("@").ToCharArray());
+                    foreach (string item in arr)
+                    {
+                        string[] s_control = item.Split((":").ToCharArray());
+                        switch (s_control[0].ToString()) {
+
+                            case "prácticas":
+                                string practicas = "@prácticas:" + s_control[1].ToString();
+                                if (Request["idServicio"] == "1") 
+                                    s_valores = s_valores.Replace(practicas, ""); //si es laboratorio general lo borro y lo cargo en GuardarDetalle.
+                                else
+                                        s_valores += practicas; //si no es laboratorio general no quiero perder su session "prácticas"
+                                break;
+
+                            case "prácticasMicro":
+                                string practicasMicro = "@prácticasMicro:" + s_control[1].ToString();
+                                if (Request["idServicio"] != "3") //si no es microbiologia no quiero perder su session "prácticasMicro"
+                                    s_valores += "@prácticasMicro:" + s_control[1].ToString(); 
+                                else
+                                    s_valores = s_valores.Replace(practicasMicro, ""); //si es micro lo borro y lo cargo en GuardarDetalle.
+                                break;
+                        }
+                    }
+                }
+            }
                
-            Session["ProtocoloLaboratorio"] = s_valores;
+                Session["ProtocoloLaboratorio"] = s_valores;
         
         }
 
@@ -2743,7 +2772,17 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             if (Request["Operacion"].ToString() != "Modifica")
             {
                 if (chkRecordarPractica.Checked)
-                    Session["ProtocoloLaboratorio"] += "@prácticas:" + recordar_practicas;
+                {
+                    //actualizo los analisis a recordar por IdTipoServicio
+                    switch (oRegistro.IdTipoServicio.IdTipoServicio)
+                    {
+                        case 1:  Session["ProtocoloLaboratorio"] += "@prácticas:" + recordar_practicas; /*labo general*/ break;
+                        case 3:  Session["ProtocoloLaboratorio"] += "@prácticasMicro:" + recordar_practicas;  /*microbiologia*/ break;
+                    }
+
+                   
+
+                }
             }
 
 
