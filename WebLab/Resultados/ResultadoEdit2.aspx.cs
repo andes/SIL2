@@ -56,7 +56,20 @@ namespace WebLab.Resultados
         {
             HFCurrTabIndex.Value = ((int)tabIndex).ToString();
         }
-
+        /*
+         PreInit
+           ↓
+        OnInit
+           └── LlenarTabla()   ← CONTROLES DINÁMICOS
+           ↓
+        Load
+           └── Inicializar()   ← DATOS GENERALES
+           ↓
+        ViewState Restore
+           ↓
+        Eventos
+         
+         */
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -88,18 +101,32 @@ namespace WebLab.Resultados
 
 
         }
-
-        protected void Page_Init(object sender, EventArgs e) //AQUÍ deben existir los controles
+        protected override void OnInit(EventArgs e)
         {
-            if (Request["idProtocolo"] != null) {
-                if ((Session["idUsuario"] != null)) {
-                    LlenarTabla(Request["idProtocolo"].ToString());
-                }
-                else
-                    Response.Redirect("../FinSesion.aspx", false);
+            base.OnInit(e);
 
+            if (Request["idProtocolo"] != null)
+            {
+                this.ViewStateUserKey =
+                    Request["idProtocolo"].ToString()
+                    + "_" +
+                    Session.SessionID;
             }
+
+            LlenarTabla(Request["idProtocolo"].ToString());
         }
+
+        //protected void Page_Init(object sender, EventArgs e) //AQUÍ deben existir los controles
+        //{
+        //    if (Request["idProtocolo"] != null) {
+        //        if ((Session["idUsuario"] != null)) {
+        //            LlenarTabla(Request["idProtocolo"].ToString());
+        //        }
+        //        else
+        //            Response.Redirect("../FinSesion.aspx", false);
+
+        //    }
+        //}
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
