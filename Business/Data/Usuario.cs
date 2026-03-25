@@ -33,9 +33,10 @@ namespace Business.Data
         private int m_idarea;
         private bool m_requiereCambioPass;
         private bool m_administrador;
-   private bool m_externo;
+        private bool m_externo;
         private string m_email;
         private string m_telefono;
+        private DateTime m_fechaTerminosCondiciones;
         private string m_tipoAutenticacion;
         #endregion
 
@@ -65,6 +66,7 @@ namespace Business.Data
             m_email= String.Empty;
             m_telefono = String.Empty;
             m_tipoAutenticacion = String.Empty;
+            m_fechaTerminosCondiciones = new DateTime(1900,01,01);
 
         }
 
@@ -95,6 +97,7 @@ namespace Business.Data
             m_administrador = false;
 			 m_externo = false;
             m_tipoAutenticacion = String.Empty;
+            m_fechaTerminosCondiciones = new DateTime(1900, 01, 01);
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -331,7 +334,7 @@ namespace Business.Data
 			}
 
 		}
-    public bool Externo
+        public bool Externo
         {
             get { return m_externo; }
             set
@@ -463,5 +466,13 @@ namespace Business.Data
         //}
 
 
+        public DateTime FechaAceptaTerminosCondiciones {
+            get { return m_fechaTerminosCondiciones; }
+            set {
+                m_isChanged |= (m_fechaTerminosCondiciones != value);
+                m_fechaTerminosCondiciones = value;
+            }
+
+        }
     }
 }
