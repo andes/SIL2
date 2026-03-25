@@ -3,24 +3,28 @@
      
      
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
-    <!-- CSS -->
-<link href="../script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" href="../script/chosen/chosen.css" />
+     <link href="../script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
+ 
 
-    <!-- JS -->
-<script src="https://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
-<script src="../script/jquery-ui.min.js" type="text/javascript"></script>
+     <script src="../script/jquery.min.js" type="text/javascript"></script>  
+                  <script src="../script/jquery-ui.min.js" type="text/javascript"></script> 
 
-<script src="../script/chosen/chosen.jquery.js" type="text/javascript"></script>
-   
-<script type="text/javascript">
+
+    <script type="text/javascript" src="../script/Mascara.js"></script>
+    <script type="text/javascript" src="../script/ValidaFecha.js"></script>   
+  
+
+    <link rel="stylesheet" type="text/css" href ="../script/moverfilas/moverfilas.css" />
+<script type="text/javascript" src="../script/moverfilas/codigo.js"></script>
+
+    <script type="text/javascript">
   $(function() {
 
-    $("#tabContainer").tabs();
-        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
-    $("#tabContainer").tabs({ selected: currTab });
-  });
-       
+                 $("#tabContainer").tabs();
+                        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
+                      
+                        $("#tabContainer").tabs({ selected: currTab });
+             });
 </script>
    
    
@@ -36,64 +40,7 @@
             height: 38px;
         }
     </style>
-   <script type="text/javascript">
-     
-
-       function inicializarChosen() {
-           
-          var select = $('#<%= ddlEfector3.ClientID %>');
-
-           if (select.data('chosen')) { 
-               select.chosen('destroy'); //El destroy evita que Anthem duplique la lista después de un callback.
-           }
-
-           //convierte el select en un dropdown Chosen
-           select.chosen({
-               width: "250px",
-               search_contains: true,
-               no_results_text: "No se encontraron resultados:"
-           });
-       }
-
-       function habilitarListaEfectores() {
-
-           var select = $('#<%= ddlEfector3.ClientID %>');
-           var esAdministrador = $('#<%= chkAdministrador.ClientID %>').is(':checked');
-
-           // destruir chosen SI existe
-           if (select.data('chosen')) {
-               select.chosen('destroy');
-           }
-           // cambiar estado real del select
-           select.prop("disabled", esAdministrador);
-
-           // recrear chosen (lee el disabled correctamente)
-           select.chosen({
-               width: "250px",
-               search_contains: true,
-               no_results_text: "No se encontraron resultados:",
-               allow_single_deselect: true
-           });
-       }
-
-
-       $(document).ready(function () {
-           inicializarChosen();
-           habilitarListaEfectores(); 
-       });
-
-       // Reaplicar después de callbacks Anthem
-       if (typeof Anthem !== "undefined") {
-           Anthem.addCallbackComplete(function () {
-
-               habilitarListaEfectores();
-
-           });
-
-       }
-
-      
-   </script>
+   
    
   
    
@@ -101,8 +48,6 @@
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">  
  
-    
-  
     
 <asp:HiddenField runat="server" ID="HFCurrTabIndex"   /> 
         <div align="center" class="form-inline" style="width:800px;"  >
@@ -181,13 +126,6 @@
                 <td  colspan="2">
                     <hr /></td>
             </tr>
-             <tr>
-                <td style="width: 93px">Tipo Autenticacion:</td>
-                <td  style="width: 497px" ><asp:DropDownList ID="ddlTipoAutenticacion" runat="server" CssClass="form-control input-sm" AutoPostBack="true" OnSelectedIndexChanged="ddlTipoAutenticacion_SelectedIndexChanged">
-                     <asp:ListItem Value="SIL" Text="SIL" ></asp:ListItem>
-                     <asp:ListItem Value="ONELOGIN" Text="ONELOGIN"></asp:ListItem>
-                    </asp:DropDownList></td>
-            </tr>
             <tr>
                 <td  style="width: 93px">
                     Usuario:</td>
@@ -197,11 +135,9 @@
                     <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" 
                         ControlToValidate="txtUsername" ErrorMessage="Usuario" ValidationGroup="0">*</asp:RequiredFieldValidator>
                     <asp:CustomValidator ID="customValidacionGeneral" runat="server" ErrorMessage="Usuario Existente" OnServerValidate="customValidacionGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                    <asp:CustomValidator ID="customValidacionGeneral0" runat="server" ErrorMessage="" OnServerValidate="customValidacionGeneral0_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                    <asp:CustomValidator ID="customValidacionGeneral0" runat="server" ErrorMessage="Usuario debe contener al menos 6 caracteres (letras o numeros)" OnServerValidate="customValidacionGeneral0_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                 </td>
             </tr>
-            <tr><td  style="width: 93px"></td>
-                <td style="width: 497px"><asp:CustomValidator ID="customValidacionGeneral1" runat="server" ErrorMessage="Usuario no puede contener letras ni caracteres especiales" OnServerValidate="customValidacionGeneral1_ServerValidate1" ValidationGroup="0"></asp:CustomValidator></td></tr>
             <tr>
                 <td  style="width: 93px">
                     Contraseña:</td>
@@ -211,17 +147,16 @@
                     <asp:RequiredFieldValidator ID="rfvPassword" runat="server" 
                         ControlToValidate="txtPassword" ErrorMessage="Contraseña" 
                         ValidationGroup="0">*</asp:RequiredFieldValidator>
-
                 </td>
             </tr>
             <tr>
                 <td  style="width: 93px">
                     Administrador:</td>
                 <td style="width: 497px"  >
-                    <anthem:checkbox ID="chkAdministrador" runat="server" Text="SI" AutoCallBack="True" onclick="habilitarListaEfectores();" OnCheckedChanged="chkAdministrador_CheckedChanged" />
+                    <anthem:checkbox ID="chkAdministrador" runat="server" Text="SI" AutoCallBack="True" OnCheckedChanged="chkAdministrador_CheckedChanged" />
                 </td>
             </tr>
-           <%-- <tr>
+            <tr>
                 <td class="auto-style1">
                     Efector</td>
                 <td class="auto-style2"  >
@@ -231,7 +166,7 @@
                         ErrorMessage="Efector" MaximumValue="999999" MinimumValue="1" Type="Integer" 
                         ValidationGroup="0">*</anthem:rangevalidator>
                 </td>
-            </tr>--%>
+            </tr>
             <tr>
                 <td  style="width: 93px">
                     Area/Laboratorio:</td>
@@ -263,7 +198,6 @@
                     <asp:CheckBox ID="chkActivo" runat="server" Checked="True" />
                 </td>
             </tr>
-         
             <tr>
                 <td  colspan="2">
                     <hr /></td>
@@ -274,18 +208,6 @@
                      <asp:CheckBox ID="chkRequiereContrasenia" runat="server" Checked="True" Text="Requiere nueva contraseña al ingresar" Font-Bold="True" />
                 </td>
             </tr>
-             <tr>  
-                <td colspan="2">
-                    <asp:CustomValidator ID="customValidatorExterno" runat="server" OnServerValidate="customValidator_ServerValidate" 
-                           ErrorMessage="" ValidationGroup="0"  />
-                </td>
-            </tr>  
-             <tr>  
-                <td colspan="2">
-                    <asp:CustomValidator ID="customValidatorEfector" runat="server" OnServerValidate="customValidatorEfector_ServerValidate" 
-                           ErrorMessage="" ValidationGroup="0"  />
-                </td>
-            </tr>  
             <tr>
                 <td>
                      <asp:LinkButton ID="lnkRegresar" runat="server" CssClass="myLink" 
@@ -327,66 +249,49 @@
             <tr>
                 <td colspan="2">
                                          
-                   <%--  <anthem:dropdownlist ID="ddlEfector2" runat="server" Width="200px" class="form-control input-sm">
-                    </anthem:dropdownlist> --%>
-
-                    <asp:DropDownList   ID="ddlEfector3" runat="server"    Width="200px"> </asp:DropDownList>
-
-                    <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" />
-
-                  
+                     <anthem:dropdownlist ID="ddlEfector2" runat="server" Width="200px" class="form-control input-sm">
+                    </anthem:dropdownlist>   <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar" 
+                                                onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" 
+                               ValidationGroup="5" />
                 </td>
-             
             </tr>
-             <tr>
-                 <td>
-                     <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
-                 </td>
-             </tr>
-          
             <tr>
-                <td >
-                        <anthem:GridView ID="gvListaEfector" runat="server" AutoGenerateColumns="False" 
-                            DataKeyNames="idEfector" Font-Size="12pt" Width="100%"
-                            ForeColor="#333333" EmptyDataText="Agregue al menos un efector"
-                            CellPadding="0"
-                            BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px"
-                            GridLines="Horizontal" OnRowCommand="gvListaEfector_RowCommand" OnRowDataBound="gvListaEfector_RowDataBound">
-                            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
-                            <Columns>
-                               <asp:BoundField DataField="nombre" 
-                                    HeaderText="Efector" >
-                                    <ItemStyle Width="90%" />
-                                </asp:BoundField>
-                              <asp:TemplateField HeaderText="">
-                                            <ItemTemplate>
-                                            <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg" 
-                                                CommandName="Eliminar" />
-                                            </ItemTemplate>
+                <td colspan="2">
+        <anthem:GridView ID="gvListaEfector" runat="server" AutoGenerateColumns="False" 
+                                DataKeyNames="idUsuarioEfector" Font-Size="12pt" Width="100%" 
+                                ForeColor="#333333" EmptyDataText="Agregue al menos un efector" 
+                                CellPadding="0" 
+                                BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px" 
+                                GridLines="Horizontal" OnRowCommand="gvListaEfector_RowCommand" OnRowDataBound="gvListaEfector_RowDataBound">
+            <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+            <Columns>
+               <asp:BoundField DataField="nombre" 
+                    HeaderText="Efector" >
+                    <ItemStyle Width="90%" />
+                </asp:BoundField>
+              <asp:TemplateField HeaderText="">
+                            <ItemTemplate>
+                            <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg" 
+                             OnClientClick="return PreguntoEliminar();" CommandName="Eliminar" />
+                            </ItemTemplate>
                           
-                                               <ItemStyle Width="5%" HorizontalAlign="Center" />
+                               <ItemStyle Width="5%" HorizontalAlign="Center" />
                           
-                                        </asp:TemplateField>
-                            </Columns>
-                            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
-                            <EditRowStyle BackColor="#999999" />
-                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                        </anthem:GridView>
+                        </asp:TemplateField>
+            </Columns>
+            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
+            <EditRowStyle BackColor="#999999" />
+            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+        </anthem:GridView>
                         <br />
                 </td>
-               
             </tr>
-            <tr>
-                <td>
-                     <asp:LinkButton ID="lnkRegresar1" runat="server" CssClass="myLink"   PostBackUrl="UsuarioList.aspx" CausesValidation="False">Regresar</asp:LinkButton></td>
-                 
-            </tr>
+           
         </table>
        </div>
-               
 </div>
     </div>
     </div>
@@ -394,5 +299,4 @@
        </div>
 
             </div>
- 
  </asp:Content>
