@@ -62,6 +62,7 @@
     </LayoutTemplate>
     </asp:Login>
 
+<asp:Label ID="lblMensajeError" runat="server" Text="" ForeColor="Red"></asp:Label>
 <!-- Terminos y condiciones de uso-->
 <div class="modal fade" tabindex="-1" role="dialog" id="modalTerminosCondiciones">
   <div class="modal-dialog modal-lg" role="document">

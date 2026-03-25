@@ -337,6 +337,9 @@ namespace WebLab
                 e.Authenticated = false;
                 Login1.FailureText = "El usuario y/o contraseña no son correctos.";
             }
+
+            lblMensajeError.Text = Login1.FailureText;
+            Login1.FailureText = ""; //Muestro solo lblMensajeError, ya que Login1.FailureText solo sirve para Login1_Authenticate y no para btn_aceptarTerminosCondiciones_Click
         }
         protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)
         {
@@ -351,12 +354,11 @@ namespace WebLab
                 //Actualizo acceso en log
                 CrearLogAcceso(oUser);
                 //Ingreso al sistema
-                AuthenticateEventArgs evento = new AuthenticateEventArgs();
+                AuthenticateEventArgs evento = new AuthenticateEventArgs(true);
                 IngresoSistema(oUser, evento);
             }
             else
             {
-                // Fallback: recargar página o mostrar error
                 Response.Redirect("Logout.aspx", true);
             }
         }
