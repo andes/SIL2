@@ -1226,6 +1226,7 @@
                 OrdenarDatos();
 
                 contadorfilas = contadorfilas - 1;
+                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas; //para no perder el valor luego de un postback
             }
             else {
 

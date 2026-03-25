@@ -3819,11 +3819,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             else
             {
 
-              
 
-            ///
 
-            if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
+                ///
+
+                if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@") || (TxtDatos.Value == "1###on#0@") || TxtDatos.Value == "1###false#0@")
                 {
 
                     args.IsValid = false;
