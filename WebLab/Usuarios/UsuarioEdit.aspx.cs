@@ -1,8 +1,19 @@
-﻿using System;
+﻿using Business;
+using Business.Data;
+using Business.Data.Laboratorio;
+using CrystalDecisions.Shared;
+using CrystalDecisions.Web;
+using Microsoft.Win32;
+using NHibernate;
+using NHibernate.Expression;
+using Salud;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Linq;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
@@ -10,12 +21,6 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
-using Business.Data;
-using Business.Data.Laboratorio;
-using Business;
-using System.Data.SqlClient;
-using CrystalDecisions.Shared;
-using CrystalDecisions.Web;
 
 namespace WebLab.Usuarios
 {
@@ -45,6 +50,11 @@ namespace WebLab.Usuarios
                 CargarListas();
                 if (Request["id"] != null)
                     MostrarDatos();
+                else
+                    MostrarEfectores(); 
+
+
+            
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
             }
@@ -74,18 +84,13 @@ namespace WebLab.Usuarios
             ddlPerfil.Items.Insert(0, new ListItem("Seleccione un perfil", "0"));
 
             m_ssql = @" SELECT idEfector, nombre FROM Sys_Efector  (nolock) ORDER BY nombre ";
-            oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
-            //    ddlEfector.Items.Insert(0, new ListItem("Seleccione un efector", "0"));
-            ddlEfector.SelectedValue = oC.IdEfector.IdEfector.ToString();
-            m_ssql = @" SELECT idArea, nombre FROM LAB_Area  (nolock) where baja=0  ORDER BY nombre ";
+            oUtil.CargarCombo(ddlEfector3, m_ssql, "idEfector", "nombre");
+            ddlEfector3.Items.Insert(0, new ListItem("--Seleccione un efector--", "0"));
 
+
+            m_ssql = @" SELECT idArea, nombre FROM LAB_Area  (nolock) where baja=0  ORDER BY nombre ";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
             ddlArea.Items.Insert(0, new ListItem("Todas", "0"));
-
-
-            m_ssql = @" SELECT idEfector, nombre FROM Sys_Efector  (nolock) ORDER BY nombre ";
-            oUtil.CargarCombo(ddlEfector2, m_ssql, "idEfector", "nombre");
-            ddlEfector2.Items.Insert(0, new ListItem("Seleccione un efector", "0"));
 
             if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
             {
@@ -96,6 +101,7 @@ namespace WebLab.Usuarios
             
         }
 
+        #region Datos Generales
         private void MostrarDatos()
         {
             Usuario oRegistro = new Usuario();
@@ -109,8 +115,8 @@ namespace WebLab.Usuarios
             txtPassword.Enabled = false;
             chkActivo.Checked = oRegistro.Activo;
             ddlPerfil.SelectedValue = oRegistro.IdPerfil.IdPerfil.ToString();
-            ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
-            ddlEfector.Enabled = false;
+            //ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
+            //ddlEfector.Enabled = false;
             if (ddlPerfil.SelectedValue == "15")
             {
                 CargarEfectorLabo();
@@ -120,9 +126,6 @@ namespace WebLab.Usuarios
             ddlArea.SelectedValue = oRegistro.IdArea.ToString();
             chkExterno.Checked = oRegistro.Externo;
             rfvPassword.Enabled = false;
-
-
-
             email.Value = oRegistro.Email;
             txtTelefono.Text = oRegistro.Telefono;
             btnBlanquear.Visible = true;
@@ -132,44 +135,34 @@ namespace WebLab.Usuarios
             Usuario oAuditor = new Usuario();
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oAuditor.GrabaAuditoria("Consulta", oRegistro.IdUsuario, oRegistro.Username);
-
             MostrarEfectores();
 
+            ddlTipoAutenticacion.SelectedValue =  oRegistro.TipoAutenticacion.Trim();
+           
+            habilitarPorAutenticacion();
         }
 
         private void habilitarAdministrador()
         {
             if (chkAdministrador.Checked)
             {
-                ddlEfector.Enabled = false;
-                ddlEfector.SelectedValue = "227"; /// subsecretaria de salud
                 ddlArea.Enabled = false;
                 ddlPerfil.Enabled = false;
                 ddlPerfil.SelectedValue = "2";
                 btnAgregarEfector.Enabled = false;
-                ddlEfector2.Enabled = false;
+                lblMensajeEfector.Visible = false; lblMensajeEfector.UpdateAfterCallBack = true;
+
             }
             else
             {
-                if (Request["id"] == null)
-                {
-                    ddlEfector.Enabled = true;
-                }
                 ddlArea.Enabled = true;
                 ddlPerfil.Enabled = true;
                 btnAgregarEfector.Enabled = true;
-                ddlEfector2.Enabled = true;
             }
 
-            ddlEfector.UpdateAfterCallBack = true;
             ddlArea.UpdateAfterCallBack = true;
             ddlPerfil.UpdateAfterCallBack = true;
-            ddlEfector2.UpdateAfterCallBack = true;
             btnAgregarEfector.UpdateAfterCallBack = true;
-        }
-
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
 
         }
 
@@ -177,20 +170,25 @@ namespace WebLab.Usuarios
         private void Guardar(Usuario oRegistro)
         {
             string accion = "Crea";
-            if (oRegistro != null)
+            if (Request["id"] != null) //oRegistro nunca es null
                 accion = "Modifica";
+      
 
             Perfil oPerfil = new Perfil();
             oPerfil = (Perfil)oPerfil.Get(typeof(Perfil), int.Parse(ddlPerfil.SelectedValue));
 
             Efector oEfector = new Efector();
-            oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
+
+            int idEfector = int.Parse((ViewState["efectores"] as DataTable).Rows[0]["idEfector"].ToString()); //Tomo el primero de la grilla
+            oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
 
             Efector oEfectorDestino = new Efector();
             if ((ddlEfectorDestino.SelectedValue != "0") && (ddlEfectorDestino.SelectedValue != ""))
                 oEfectorDestino = (Efector)oEfectorDestino.Get(typeof(Efector), int.Parse(ddlEfectorDestino.SelectedValue));
             else
                 oEfectorDestino = oEfector;
+
+          
 
             oRegistro.IdEfector = oEfector;
             oRegistro.IdEfectorDestino = oEfectorDestino;
@@ -209,14 +207,22 @@ namespace WebLab.Usuarios
             oRegistro.Telefono = txtTelefono.Text;
 
 
-            if (accion != "Modifica") //no se modifica contrasñea
+            if (Request["id"] == null) //oRegistro nunca es null
             {
                 Utility oUtil = new Utility();
+
                 string m_password = oUtil.Encrypt(txtPassword.Text);
+
+                if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
+                {
+                    m_password = oUtil.Encrypt(txtUsername.Text); //La contraseña de ONELOGIN es el username
+                }
                 oRegistro.Password = m_password;
             }
 
-            if (oRegistro != null)
+            
+
+            if (Request["id"] != null) //oRegistro nunca es null
             {
                 if ((oRegistro.Activo == true) && (chkActivo.Checked == false))
                     accion = "Inhabilita";
@@ -226,6 +232,9 @@ namespace WebLab.Usuarios
                 if (oRegistro.IdPerfil != oPerfil)
                     accion = "Cambia Perfil";
 
+                if (oRegistro.TipoAutenticacion.Trim() != ddlTipoAutenticacion.SelectedValue)
+                   accion = "Cambia Autenticacion: " + ddlTipoAutenticacion.SelectedValue.Trim();
+
             }
 
             oRegistro.Activo = chkActivo.Checked;
@@ -234,26 +243,24 @@ namespace WebLab.Usuarios
             oRegistro.IdUsuarioActualizacion = int.Parse(Session["idUsuario"].ToString());
             oRegistro.FechaActualizacion = DateTime.Now;
 
+           
+            oRegistro.TipoAutenticacion = ddlTipoAutenticacion.SelectedValue;
             oRegistro.Save();
 
-            if (Request["id"] == null) // NUEVO USUARIO
-            {
-                UsuarioEfector oUsuarioEfector = new UsuarioEfector();
-                oUsuarioEfector.IdUsuario = oRegistro;
-                oUsuarioEfector.IdEfector = oEfector;
-                oUsuarioEfector.Activo = true;
-                oUsuarioEfector.Save();
-            }
 
             Usuario oAuditor = new Usuario();
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
             oAuditor.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
 
-
+            if (Request["id"] == null) //en el alta se guardan los efectores luego de crear el usuario
+                //en modificacion no los guardamos desde aca, ya que se guardan en el evento "Agregar Efector"
+                GuardarEfectores(oRegistro);
 
 
         }
+
+       
 
         protected void btnRegresar_Click(object sender, EventArgs e)
         {
@@ -265,7 +272,7 @@ namespace WebLab.Usuarios
             if (Page.IsValid)
             {
 
-                Usuario oRegistro = new Usuario();
+                Usuario oRegistro = new Usuario(); 
                 if (Request["id"] != null)
                 {
                     oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Request["id"]));
@@ -288,116 +295,32 @@ namespace WebLab.Usuarios
             habilitarAdministrador();
         }
 
-
-
-        private void AgregarEfector()
+        private DataTable LeerDatosEfector()
         {
-
-            UsuarioEfector oRegistro = new UsuarioEfector();
-            Usuario oUsuario = new Usuario();
-            Efector oEfector = new Efector();
-
-            oRegistro.IdUsuario = (Usuario)oUsuario.Get(typeof(Usuario), int.Parse(Request["id"].ToString()));
-            oRegistro.IdEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector2.SelectedValue.ToString()));
-            oRegistro.Activo = true;
-            oRegistro.Save();
-
-
-            Usuario oAuditor = new Usuario();
-            oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-            oAuditor.GrabaAuditoria("Vincula " + ddlEfector2.SelectedItem.Text.TrimStart().TrimEnd(), oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
-
-
-        }
-
-        protected void btnAgregarEfector_Click(object sender, EventArgs e)
-        {
-            if (Page.IsValid)
+            if (Request["id"] != null)
             {
-                AgregarEfector();
-                MostrarEfectores();
-
-            }
-        }
-
-
-        private void MostrarEfectores()
-        {
-            ddlEfector2.SelectedValue = "0";
-
-            gvListaEfector.AutoGenerateColumns = false;
-            gvListaEfector.DataSource = LeerDatosEfector();
-            gvListaEfector.DataBind();
-            gvListaEfector.UpdateAfterCallBack = true;
-        }
-
-        private object LeerDatosEfector()
-        {
-            string m_strSQL = @" SELECT IR.idUsuarioEfector, R.nombre as nombre 
+                string m_strSQL = @" SELECT IR.idUsuarioEfector, R.nombre as nombre , R.idEfector
                                FROM Sys_UsuarioEfector IR (nolock) 
                               INNER JOIN sys_efector R (nolock) ON R.idEfector=IR.idEfector 
                                WHERE IR.idUsuario=" + Request["id"].ToString();
 
 
-            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
+                DataSet Ds = new DataSet();
+                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                adapter.Fill(Ds);
 
 
 
-            return Ds.Tables[0];
-        }
-
-        protected void gvListaEfector_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-
-
-
-                ImageButton CmdEliminar = (ImageButton)e.Row.Cells[1].Controls[1];
-                CmdEliminar.CommandArgument = this.gvListaEfector.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdEliminar.CommandName = "Eliminar";
-                CmdEliminar.ToolTip = "Eliminar";
+                return Ds.Tables[0];
             }
+            else return new DataTable();
         }
 
-        protected void gvListaEfector_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName != "Page")
-            {
-                switch (e.CommandName)
-                {
-
-                    case "Eliminar":
-                        Eliminar(e.CommandArgument);
-                        MostrarEfectores();
-                        break;
-                }
-            }
-        }
-
-        private void Eliminar(object idItem)
-        {
-            UsuarioEfector oRegistro = new UsuarioEfector();
-
-            oRegistro = (UsuarioEfector)oRegistro.Get(typeof(UsuarioEfector), int.Parse(idItem.ToString()));
-            string s_efector = oRegistro.IdEfector.Nombre;
-            int iidusuario = oRegistro.IdUsuario.IdUsuario;
-            string s_username = oRegistro.IdUsuario.Username;
+        
 
 
-            oRegistro.Delete();
-            /////Auditoria
-            Usuario oAuditor = new Usuario();
-            oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-            oAuditor.GrabaAuditoria("DesVincula " + s_efector.TrimStart().TrimEnd(), iidusuario, s_username);
-
-        }
 
         protected void btnAuditoria_Click(object sender, EventArgs e)
         {
@@ -517,6 +440,12 @@ namespace WebLab.Usuarios
             {
                 CargarEfectorLabo();
             }
+            else
+            {
+                //Si habia algun valor seleccionado lo limpio
+                ddlEfectorDestino.SelectedValue = "0";
+            }
+            ddlEfectorDestino.UpdateAfterCallBack = true;
         }
 
         private void CargarEfectorLabo()
@@ -542,10 +471,299 @@ namespace WebLab.Usuarios
                 if (txtUsername.Text.Trim().Length<6)                
                 {
                     args.IsValid = false;
+                    if (ddlTipoAutenticacion.SelectedValue == "SIL")
+                        customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 caracteres(letras o numeros)";
+                    else
+                    customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 numeros";
+                    
                     return;
                 }
 
             
         }
+        
+       
+
+        protected void ddlTipoAutenticacion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          
+           habilitarPorAutenticacion();
+            
+        }
+
+
+        protected void customValidacionGeneral1_ServerValidate1(object source, ServerValidateEventArgs args)
+        {
+            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
+            {
+                //El username debe ser un numero (numero de documento) no debe admitir letras ni caracteres especiales.
+
+                bool validate = Regex.IsMatch(txtUsername.Text, @"^\d+$");
+                if (!validate)
+                {
+                    args.IsValid = false;
+                    customValidacionGeneral0.ErrorMessage = "Usuario debe contener al menos 6 numeros";
+
+                    return;
+                }
+
+            }
+        }
+        
+        private void habilitarPorAutenticacion()
+        {
+            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN")
+            {
+                //No se habilita “Requiere nueva contraseña al ingresar”
+                chkRequiereContrasenia.Enabled = false;
+                chkRequiereContrasenia.Checked = false;
+                //No se habilita “exclusivo Río Negro”
+                chkExterno.Enabled = false;
+                //Por defecto la contraseña es el username
+                txtPassword.Enabled = false;
+                rfvPassword.Enabled = false;
+            }
+            else
+            {
+                chkRequiereContrasenia.Enabled = true;
+                chkExterno.Enabled = true;
+
+                //Se puede poner una contraseña
+                if (Request["id"] == null){ txtPassword.Enabled = true; rfvPassword.Enabled = true; }
+                else
+                    txtPassword.Enabled = false;
+            }
+
+
+        }
+       
+
+        
+
+        protected void customValidator_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (ddlTipoAutenticacion.SelectedValue == "ONELOGIN" && chkExterno.Checked)
+            {
+                customValidatorExterno.ErrorMessage = "Usuario ONLOGIN no puede ser “Exclusivo Río Negro”";
+                args.IsValid = false;
+                return;
+
+            }
+        }
+
+        protected void customValidatorEfector_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+           
+
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if(dt == null || dt.Rows.Count == 0)
+            {
+                args.IsValid = false;
+                this.customValidatorEfector.ErrorMessage = "Debe ingresar al menos un efector para el usuario";
+                return;
+            }
+        }
+
+        #endregion
+
+        #region Efectores
+
+        protected void gvListaEfector_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                ImageButton CmdEliminar = (ImageButton)e.Row.Cells[1].Controls[1];
+                CmdEliminar.CommandArgument = this.gvListaEfector.DataKeys[e.Row.RowIndex].Value.ToString();
+                CmdEliminar.CommandName = "Eliminar";
+                CmdEliminar.ToolTip = "Eliminar";
+            }
+        }
+
+        protected void gvListaEfector_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "Page")
+            {
+                switch (e.CommandName)
+                {
+
+                    case "Eliminar":
+                        EliminarEfector(e.CommandArgument);
+                        MostrarEfectores();
+                        break;
+                }
+               
+            }
+        }
+       
+        protected void btnAgregarEfector_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+            {
+                AgregarEfector();
+                MostrarEfectores();
+            }
+        }
+       
+
+        private void AgregarEfector()
+        {
+            lblMensajeEfector.Visible = false;
+            if (ddlEfector3.SelectedValue != "0")
+            {
+                bool puedeAgregar = true;
+
+                DataTable dt = ViewState["efectores"] as DataTable; DataRow efectorEncontrado = null;
+
+                if (dt != null && dt.Rows.Count > 0) 
+                    efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); //Verifica si ya fue agregado el efctor
+
+                if (efectorEncontrado != null) puedeAgregar = false;
+                
+
+                if (puedeAgregar)
+                {
+                    dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue);
+                    ViewState["efectores"] = dt;
+                    //Si el usuario existe lo guarda en la base, sino lo deja en el viewstate para guardarlo cuando se guarde el usuario
+                    if (Request["id"] != null)
+                    {
+                        Usuario oUsuario = new Usuario();
+                        oUsuario = (Usuario)oUsuario.Get(typeof(Usuario), int.Parse(Request["id"]));
+                        GuardarEfectores(oUsuario);
+                    }
+                }
+                else
+                {
+                    lblMensajeEfector.Visible = true;
+                    lblMensajeEfector.Text = "Alerta: Efector ya ingresado para el usuario.";
+
+                }
+            }
+            lblMensajeEfector.UpdateAfterCallBack = true;
+        }
+
+
+
+        private void GuardarEfectores(Business.Data.Usuario oUsuario)
+        {
+            ///Eliminar los efectores y volverlos a crear
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(UsuarioEfector));
+            crit.Add(Expression.Eq("IdUsuario", oUsuario));
+            IList lista = crit.List();
+
+            HashSet<int> yaTieneAuditoriaVincula = new HashSet<int>();
+
+            foreach (UsuarioEfector oUsuarioEfector in lista)
+            {
+                yaTieneAuditoriaVincula.Add(oUsuarioEfector.IdEfector.IdEfector);
+                oUsuarioEfector.Delete();
+            }
+
+            //los genero nuevamente
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if (dt != null || dt.Rows.Count > 0)
+            {
+                //instancio una sola vez el usuario auditor
+                Usuario oAuditor = new Usuario();
+                oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                foreach (DataRow row in dt.Rows)
+                {
+                    UsuarioEfector oRegistro = new UsuarioEfector();
+                    int idEfector = int.Parse(row["idEfector"].ToString());
+                    Efector oEfector = new Efector();
+                    oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
+                    oRegistro.IdUsuario = oUsuario;
+                    oRegistro.IdEfector = oEfector;
+                    oRegistro.Activo = true;
+                    oRegistro.Save();
+                    
+                    //solo genero auditoria la primera vez que vincula el efector
+                    if (!yaTieneAuditoriaVincula.Contains(idEfector))
+                        oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
+                }
+            }
+        }
+        private void MostrarEfectores()
+        {
+            DataTable dt;
+            //Cargo la tabla con valores de la base que luego guardare en el ViewState
+            if (ViewState["efectores"] == null) dt = LeerDatosEfector();
+            else dt = ViewState["efectores"] as DataTable;
+
+            //Si no tiene valores defino la estructura de la tabla
+            if (dt == null || dt.Columns.Count == 0)
+            {
+                dt = new DataTable();
+                dt.Columns.Add("idUsuarioEfector", typeof(int));
+                dt.Columns.Add("nombre", typeof(string));
+                dt.Columns.Add("idEfector", typeof(int));
+            }
+
+            //le asigno clave primaria para despues poder buscar por este valor
+            dt.PrimaryKey = new DataColumn[] { dt.Columns["idEfector"] }; 
+            ViewState["efectores"] = dt;
+            gvListaEfector.AutoGenerateColumns = false;
+            gvListaEfector.DataSource = dt;
+            gvListaEfector.DataBind();
+            gvListaEfector.UpdateAfterCallBack = true;
+
+        }
+
+
+        private void EliminarEfector(object idEfector)
+        {
+            bool puedeEliminar = true;
+
+            lblMensajeEfector.Visible = false;
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if(dt.Rows.Count > 1)
+            {
+                if (Request["id"] != null)
+                {
+                    DataRow dr = dt.Rows.Find(idEfector); //Me traigo la fila para traer el idUsuarioEfector 
+                    int idUsuarioEfector = int.Parse(dr["idUsuarioEfector"].ToString());
+
+                    if(idUsuarioEfector != 0)
+                    {
+                        UsuarioEfector oRegistro = new UsuarioEfector();
+                        oRegistro = (UsuarioEfector)oRegistro.Get(typeof(UsuarioEfector), idUsuarioEfector);
+
+                        if (oRegistro != null) 
+                        {
+                            string s_efector = oRegistro.IdEfector.Nombre;
+                            string s_username = oRegistro.IdUsuario.Username;
+                            oRegistro.Delete();
+                            /////Auditoria
+                            Usuario oAuditor = new Usuario();
+                            oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                            oAuditor.GrabaAuditoria("DesVincula " + s_efector.TrimStart().TrimEnd(), int.Parse(Request["id"].ToString()), s_username);
+                        }
+                    } //else: esta solo en la visualizacion pero no en la base de datos
+                    
+                }
+
+            }
+            else
+            {
+                lblMensajeEfector.Visible = true;
+                lblMensajeEfector.Text = "Alerta: Debe tener al menos 1 efector asociado";
+                lblMensajeEfector.UpdateAfterCallBack = true;
+                puedeEliminar = false;
+            }
+
+            if (puedeEliminar) //lo borro del viewstate para mantener consistencia con lo que se va a guardar en la base
+            {
+                DataRow efectorEliminar = dt.Rows.Find(idEfector); //Lo busco para eliminarlo
+                dt.Rows.Remove(efectorEliminar);
+                ViewState["efectores"] = dt;
+            }
+          
+        }
+
+
+
+        #endregion
+
     }
 }
