@@ -1176,11 +1176,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         private void LlenarTabla(string p)
         {
-            /* Vane 26-3-2026:
-             * Para solucionar el error: No se pudo cargar viewstate:
-             * Se ha agregado a cada control -> control.EnableViewState = false; para que no se guarde el control en el viewstate.
-             * Los unicos controles que tienen activo el viewstate son los que usan anthem, ya que depende de ello.
-            */
+               /*
+               * Vane 26-03-2026
+               *
+               * Fix error "No se pudo cargar viewstate".
+               *
+               * LlenarTabla genera controles dinámicos que pueden cambiar entre postbacks. 
+               * ViewState requiere que el árbol de controles sea igualen cada request; 
+               * cuando no coincide, falla la restauración.
+               *
+               * Se desactiva EnableViewState en controles dinámicos para evitar persistir estado inválido. 
+               * Los controles Anthem lo mantienen activo porque sus callbacks lo requieren.
+               */
             //bool hayAntecedente = false;
             string m_strSQL = " 1=1 ";
                 
