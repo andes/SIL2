@@ -1226,6 +1226,7 @@
                 OrdenarDatos();
 
                 contadorfilas = contadorfilas - 1;
+                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
             }
             else {
 
@@ -1259,6 +1260,7 @@
                     var desde = document.getElementById('Desde_' + i);
                     desde.name = 'Desde_' + pos;
                     desde.id = 'Desde_' + pos;
+                    
                     var estado = 0;
 
                     if (cod != null) { //si no es la ultima fila
@@ -1270,7 +1272,7 @@
                     }
 
                     pos = pos + 1;
-                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '#' + estado + '@';
+                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '#' + estado + '@';
                 }
             }
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;

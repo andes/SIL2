@@ -536,6 +536,8 @@
             OrdenarDatos();
 
             contadorfilas = contadorfilas - 1;
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+
         }
         else {
 
@@ -571,7 +573,7 @@
                 desde.id = 'Desde_' + pos;
 
                 pos = pos + 1;
-                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '@';
+                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
             }
         }
         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
