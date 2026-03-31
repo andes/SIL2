@@ -1232,7 +1232,7 @@
                 OrdenarDatos();
 
                 contadorfilas = contadorfilas - 1;
-                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas; //para no perder el valor luego de un postback
+                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
             }
             else {
 
@@ -1266,6 +1266,7 @@
                     var desde = document.getElementById('Desde_' + i);
                     desde.name = 'Desde_' + pos;
                     desde.id = 'Desde_' + pos;
+                    
                     var estado = 0;
 
                     if (cod != null) { //si no es la ultima fila
