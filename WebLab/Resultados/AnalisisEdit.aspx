@@ -637,8 +637,11 @@
                 var boton = document.getElementById('boton_' + con);
 
 
-                if (sItem[2] == 'True')
+                if (sItem[2] == '1')
                     document.getElementById('Codigo_' + con).className = 'codigoConResultado';
+
+                if (sItem[2] == '2')///resultado validado
+                    document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
                 desde.checked = sinMuestra;
 
 
