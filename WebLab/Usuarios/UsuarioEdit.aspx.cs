@@ -681,7 +681,12 @@ namespace WebLab.Usuarios
                     //solo genero auditoria la primera vez que vincula el efector
                     if (!yaTieneAuditoriaVincula.Contains(idEfector))
                         oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
+
+                    //actualizo el viewstate con los nuevos ID
+                    row[0] = oRegistro.IdUsuarioEfector;
+                   
                 }
+                ViewState["efectores"] = dt;
             }
         }
         private void MostrarEfectores()
@@ -757,6 +762,19 @@ namespace WebLab.Usuarios
                 DataRow efectorEliminar = dt.Rows.Find(idEfector); //Lo busco para eliminarlo
                 dt.Rows.Remove(efectorEliminar);
                 ViewState["efectores"] = dt;
+
+                //Luego de borrar un efector y me queda uno solo actualizo el idEfector de sys_usuario, porque si no hacen "Guardar" no se actualiza
+                if (dt.Rows.Count == 1 && Request["id"] != null)
+                {
+                    int idEfectorNuevo = int.Parse((ViewState["efectores"] as DataTable).Rows[0]["idEfector"].ToString()); //Tomo el primero de la grilla
+                    Efector oEfector = new Efector();
+                    oEfector = (Efector)oEfector.Get(typeof(Efector), idEfectorNuevo);
+                    
+                    Usuario oRegistro = new Usuario();
+                    oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Request["id"]));
+                    oRegistro.IdEfector = oEfector;
+                    oRegistro.Save();
+                }
             }
           
         }
