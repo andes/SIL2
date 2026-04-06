@@ -104,7 +104,9 @@ namespace WebLab.Usuarios
             }
             else
                 m_ssql = @"   SELECT idEfector, nombre FROM Sys_Efector e with (nolock) 
-					  where E.idEfector=" + oUser.IdEfector.IdEfector.ToString() + " and exists (select 1 from Sys_UsuarioEfector u with (nolock)  where e.idefector= u.idefector) ORDER BY nombre ";
+					  where E.idEfector=" + oUser.IdEfector.IdEfector.ToString() + " and exists (select 1 from Sys_UsuarioEfector u with (nolock)  where e.idefector= u.idefector) " +
+                      "  or ( E.idEfector in (select idEfector from Sys_Usuario where idEfectorDestino= " + oUser.IdEfector.IdEfector.ToString() + ")) " +
+                      " ORDER BY nombre ";
              
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
             if   (nivelcentral)
