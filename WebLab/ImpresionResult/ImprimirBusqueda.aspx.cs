@@ -11,16 +11,41 @@ using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using Business;
+using Business.Data;
 
 namespace WebLab.ImpresionResult
 {
     public partial class ImprimirBusqueda : System.Web.UI.Page
     {
+        
+        public Usuario oUser = new Usuario();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+          
+            //MiltiEfector: Filtra para configuracion del efector del usuario 
+            if (Session["idUsuario"] != null)
+            {
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+              
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+
+
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
-               CargarPagina();
+                if (Session["idUsuario"] != null)
+                {
+                    CargarPagina();
+
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
+
+               
             }
         }
 
@@ -203,7 +228,8 @@ namespace WebLab.ImpresionResult
             CargarArea();
 
             ///Carga de Sectores          
-            m_ssql = "SELECT idSectorServicio, prefijo + ' - ' + nombre as nombre FROM LAB_SectorServicio (nolock) WHERE (baja = 0) order by nombre";
+            m_ssql = @"SELECT idSectorServicio, prefijo + ' - ' + nombre as nombre FROM LAB_SectorServicio S (nolock) WHERE (baja = 0) 
+                     and exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio = S.idSectorServicio and se.idefector = " + oUser.IdEfector.IdEfector.ToString() + @")  order by nombre";
             oUtil.CargarListBox(lstSector, m_ssql, "idSectorServicio", "nombre");
             for (int i = 0; i < lstSector.Items.Count; i++)
             {

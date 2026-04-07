@@ -554,10 +554,17 @@ select * from areas order by nombre ";
                 else
                     ddlDiagnostico.SelectedValue = "0";
 
+                if (oC.HabilitaEnfermedadBase)
+                    ddlEnfermedadBase.SelectedValue = "1";
+                else
+                    ddlEnfermedadBase.SelectedValue = "0";
+
+
                 if (oC.MedicoObligatorio)
                     ddlMedicoObligatorio.SelectedValue = "1";
                 else
                     ddlMedicoObligatorio.SelectedValue = "0";
+
                 txtUrlMatriculacion.Text = oC.UrlMatriculacion;
                 string[] arr = oC.OrigenHabilitado.Split((",").ToCharArray());
                 foreach (string item in arr)
@@ -932,6 +939,25 @@ order by s.idEvento,s.idClasificacionManual,s.idGrupoEvento
             return Ds.Tables[0];
         }
 
+        private DataTable LeerDatosSISAResultados()
+        {
+
+            string m_strSQL = @"select I.codigo, I.nombre,  C.resultado as [Resultado SIL], idResultadoSISA as [Id Resultado SISA], nombreResultadoSISA  as [Resultado SISA]
+from LAB_ConfiguracionSISADetalle C with (nolock)
+inner join lab_item I with (nolock) on I.idItem= C.idItem
+order by I.codigo, I.nombre
+";
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+
+            return Ds.Tables[0];
+        }
+
+
 
         private bool SiNoHayProtocolosCargados()
       {
@@ -1034,7 +1060,12 @@ order by s.idEvento,s.idClasificacionManual,s.idGrupoEvento
 
               if (ddlDiagnostico.SelectedValue == "0") oC.DiagObligatorio = false;
               else oC.DiagObligatorio = true;
-              if (ddlPreValidacion.SelectedValue == "0") oC.PreValida = false;
+
+              
+                if (ddlEnfermedadBase.SelectedValue == "0") oC.HabilitaEnfermedadBase = false;
+                else oC.HabilitaEnfermedadBase = true;
+
+                if (ddlPreValidacion.SelectedValue == "0") oC.PreValida = false;
               else oC.PreValida = true;
 
               if (ddlNotificarSISA.SelectedValue == "0") oC.NotificarSISA = false;
@@ -1664,6 +1695,39 @@ order by s.idEvento,s.idClasificacionManual,s.idGrupoEvento
             MostrarDatos();
         }
 
+        protected void lnkExcelSISAResultados_Click(object sender, EventArgs e)
+        {
+            dataTableAExcelResultados(LeerDatosSISAResultados(), "MapeoSIL_SISA_Resultados");
+        }
+
+        private void dataTableAExcelResultados(DataTable tabla, string nombreArchivo)
+        {
+            if (tabla.Rows.Count > 0)
+            {
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                HtmlTextWriter htw = new HtmlTextWriter(sw);
+                Page pagina = new Page();
+                HtmlForm form = new HtmlForm();
+                GridView dg = new GridView();
+                dg.EnableViewState = false;
+                dg.DataSource = tabla;
+                dg.DataBind();
+                pagina.EnableEventValidation = false;
+                pagina.DesignerInitialize();
+                pagina.Controls.Add(form);
+                form.Controls.Add(dg);
+                pagina.RenderControl(htw);
+                Response.Clear();
+                Response.Buffer = true;
+                Response.ContentType = "application/vnd.ms-excel";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
+                Response.Charset = "UTF-8";
+                Response.ContentEncoding = Encoding.Default;
+                Response.Write(sb.ToString());
+                Response.End();
+            }
+        }
         //protected void lnkImpresionPrueba_Click(object sender, EventArgs e)
         //{
         //    ImpresiondePrueba();

@@ -40,15 +40,6 @@ namespace WebLab.Turnos {
         protected global::System.Web.UI.WebControls.CompareValidator cvDni;
         
         /// <summary>
-        /// rvSexo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvSexo;
-        
-        /// <summary>
         /// ddlSexo control.
         /// </summary>
         /// <remarks>
@@ -56,6 +47,15 @@ namespace WebLab.Turnos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSexo;
+        
+        /// <summary>
+        /// lblMensajeSexo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeSexo;
         
         /// <summary>
         /// txtNumeroAdicional control.

@@ -1324,7 +1324,7 @@ namespace Business.Data.Laboratorio
                 return false;
         }
 
-        public string getPlaca()
+        public string getPlaca_old()
         {
             string s_placa = "";
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocoloPlaca));
@@ -1345,6 +1345,26 @@ namespace Business.Data.Laboratorio
                 }
             }
             return s_placa;
+        }
+
+        public string getPlaca()
+        {
+            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocoloPlaca));
+            crit.Add(Expression.Eq("IdDetalleProtocolo", this.IdDetalleProtocolo));
+
+            IList lista = crit.List();
+
+            HashSet<int> placas = new HashSet<int>();
+
+            foreach (DetalleProtocoloPlaca oDetalle in lista)
+            {
+                Placa oP = (Placa)m_session.Get(typeof(Placa), oDetalle.IdPlaca);
+
+                if (!oP.Baja)
+                    placas.Add(oDetalle.IdPlaca);
+            }
+
+            return string.Join("-", placas);
         }
 
         public bool esDerivado()

@@ -83,7 +83,8 @@ namespace WebLab.ControlResultados
             oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre");
 
             ///Carga de Sectores
-            m_ssql = "SELECT idSectorServicio, prefijo + ' - ' + nombre as nombre FROM LAB_SectorServicio with (nolock) WHERE (baja = 0) order by nombre";
+            m_ssql = @"SELECT idSectorServicio, prefijo + ' - ' + nombre as nombre FROM LAB_SectorServicio S with (nolock) WHERE (baja = 0) 
+                   and   exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio = S.idSectorServicio and se.idefector = " + oUser.IdEfector.IdEfector.ToString() + @")  order by nombre";
             oUtil.CargarListBox(lstSector, m_ssql, "idSectorServicio", "nombre");
 
             for (int i = 0; i < lstSector.Items.Count; i++)

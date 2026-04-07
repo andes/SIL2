@@ -156,7 +156,8 @@ namespace WebLab.AutoAnalizador
 
 
             ///Carga de Sectores          
-            string m_ssql = "SELECT idSectorServicio, prefijo + ' - ' + nombre as nombre  FROM LAB_SectorServicio WHERE (baja = 0) order by nombre";
+            string m_ssql = @"SELECT idSectorServicio, prefijo + ' - ' + nombre as nombre  FROM LAB_SectorServicio S with (nolock) WHERE (baja = 0) 
+                          and exists(select 1 from Lab_SectorServicioEfector SE with (nolock)  where SE.idSectorServicio = S.idSectorServicio and se.idefector = " + oUser.IdEfector.IdEfector.ToString()+@")  order by nombre";                
             oUtil.CargarListBox(lstSector, m_ssql, "idSectorServicio", "nombre");
             for (int i = 0; i < lstSector.Items.Count; i++)
             {
@@ -281,33 +282,7 @@ order by tipoMuestra";
                     if (txtProtocoloDesde.Value != "") m_parametro += " And P.numero>=" + int.Parse(txtProtocoloDesde.Value);
                     if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numero<=" + int.Parse(txtProtocoloHasta.Value);
 
-               /*     switch (oC.TipoNumeracionProtocolo)// busqueda con autonumerico
-                    {
-                        case 0:
-                            {
-                                if (txtProtocoloDesde.Value != "") m_parametro += " And P.numero>=" + int.Parse(txtProtocoloDesde.Value);
-                                if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numero<=" + int.Parse(txtProtocoloHasta.Value);
-                            }
-                            break;
-                        case 1:
-                            {
-                                if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroDiario>=" + int.Parse(txtProtocoloDesde.Value);
-                                if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroDiario<=" + int.Parse(txtProtocoloHasta.Value);
-                            }
-                            break;
-                        case 2:
-                            {
-                                if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroSector>=" + int.Parse(txtProtocoloDesde.Value);
-                                if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroSector<=" + int.Parse(txtProtocoloHasta.Value);
-                            }
-                            break;
-                        case 3:
-                            {
-                                if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroTipoServicio>=" + int.Parse(txtProtocoloDesde.Value);
-                                if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroTipoServicio<=" + int.Parse(txtProtocoloHasta.Value);
-                            }
-                            break;
-                    }*/
+             
 
 
                     if (ddlEfector.SelectedValue != "0") m_parametro += " AND P.idEfectorSolicitante=" + ddlEfector.SelectedValue;

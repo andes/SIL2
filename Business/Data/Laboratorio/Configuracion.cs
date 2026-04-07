@@ -152,6 +152,7 @@ namespace Business.Data.Laboratorio
         private string m_urlResultadosQR;
 
         private bool m_verificaIngresoAnterior;
+        private bool m_habilitaEnfermedadBase;
         private string m_tipoOrdenProtocolo;
 
         #endregion
@@ -304,6 +305,7 @@ namespace Business.Data.Laboratorio
             m_verificaIngresoAnterior = false;
             m_habilitaNoPublicacion = false;
             m_tipoOrdenProtocolo = String.Empty;
+            m_habilitaEnfermedadBase = false;
 
         }
 
@@ -453,8 +455,8 @@ int valordefectofechatomamuestra,
         string tokenMPI  ,
         string  urlResultadosQR ,
         bool verificaIngresoAnterior,
-        string  tipoOrdenProtocolo
-
+        string  tipoOrdenProtocolo,
+            bool habilitaEnfermedadBase
             )
             : this()
 		{
@@ -592,6 +594,7 @@ int valordefectofechatomamuestra,
 
             m_verificaIngresoAnterior = verificaIngresoAnterior;
             m_tipoOrdenProtocolo = tipoOrdenProtocolo;
+            m_habilitaEnfermedadBase = habilitaEnfermedadBase;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -793,6 +796,17 @@ int valordefectofechatomamuestra,
             {
                 m_isChanged |= (m_habilitaNoPublicacion != value);
                 m_habilitaNoPublicacion = value;
+            }
+
+        }
+
+        public bool HabilitaEnfermedadBase
+        {
+            get { return m_habilitaEnfermedadBase; }
+            set
+            {
+                m_isChanged |= (m_habilitaEnfermedadBase != value);
+                m_habilitaEnfermedadBase = value;
             }
 
         }

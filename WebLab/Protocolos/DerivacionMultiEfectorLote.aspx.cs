@@ -42,7 +42,7 @@ namespace WebLab.Protocolos
             if (!Page.IsPostBack)
             {
 
-                VerificaPermisos("Derivacion");
+                VerificaPermisos("Derivacion por Lotes");
                 if (Request["idServicio"].ToString() != "5")
                     ProtocoloList1.CargarGrillaProtocolo(Request["idServicio"].ToString());
                 else
