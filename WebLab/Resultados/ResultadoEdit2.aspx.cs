@@ -1163,7 +1163,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         private void LlenarTabla(string p)
         {
-           
+            /*
+                * Vane 26-03-2026
+                *
+                * Fix error "No se pudo cargar viewstate".
+                *
+                * LlenarTabla genera controles dinámicos que pueden cambiar entre postbacks. 
+                * ViewState requiere que el árbol de controles sea igualen cada request; 
+                * cuando no coincide, falla la restauración.
+                *
+                * Se desactiva EnableViewState en controles dinámicos para evitar persistir estado inválido. 
+                * Los controles Anthem lo mantienen activo porque sus callbacks lo requieren.
+                */
             string m_strSQL = " 1=1 ";                                                       
             if (Request["idArea"].ToString() != "0")   m_strSQL += " and idArea in (" + Request["idArea"].ToString()+")";            
             if (Request["Operacion"].ToString() == "HC")
@@ -1358,7 +1369,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 lbl1.ForeColor = Color.Black;
                 lbl1.Font.Size = FontUnit.Point(9);
                 lbl1.EnableViewState = false;
-
                 DetalleProtocolo oDetalle = new DetalleProtocolo();
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
                 Item oItem = new Item();
