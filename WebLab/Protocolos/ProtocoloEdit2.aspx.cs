@@ -1721,8 +1721,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         //    ddlImpresora.SelectedValue = s_control[1].ToString(); break;
 
                         case "ddlImpresoraEtiqueta":
-                            ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
-                    }
+                                    ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
+                                }
                 }
             }
             else
@@ -4031,9 +4031,9 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             else
             {
 
-              
 
-            ///
+
+                ///
 
                 if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@") || (TxtDatos.Value == "1###on#0@") || TxtDatos.Value == "1###false#0@")
                 {
