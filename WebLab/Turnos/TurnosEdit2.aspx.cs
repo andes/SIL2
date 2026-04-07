@@ -60,8 +60,8 @@ namespace WebLab.Turnos
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (oUser.IdPerfil.IdPerfil!=15)  ///no sea un externo; si es externo no hay registro en la lab_confi
                     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-         
-            }
+           
+        }
             else Response.Redirect("../FinSesion.aspx", false);
 
 
@@ -255,6 +255,73 @@ namespace WebLab.Turnos
 
 
         }
+        private void BuscarCodigoDiagnostico()
+        {
+            lstDiagnosticos.Items.Clear();
+            if (txtCodigoDiagnostico.Text != "")
+            {
+
+
+
+                if (oC.NomencladorDiagnostico == 0) /// Cie10
+                {
+                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 with (nolock) where tipo='DIAG' and CODIGO like '%" + txtCodigoDiagnostico.Text.Trim() + "%'";
+
+                    DataSet Ds = new DataSet();
+                    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                    adapter.Fill(Ds);
+                    lstDiagnosticos.Items.Clear();
+                    int cantDiag = Ds.Tables[0].Rows.Count;
+                    for (int i = 0; i < cantDiag; i++)
+                    {
+
+                        ListItem oDia = new ListItem();
+                        oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+                        oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+
+                        if (cantDiag == 1) //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                        {
+                            if (!ExisteItem(lstDiagnosticosFinal, oDia.Value))
+                            {
+                                //    lstDiagnosticosFinal.Items.Clear();
+                                lstDiagnosticosFinal.Items.Add(oDia);
+                                lstDiagnosticosFinal.UpdateAfterCallBack = true;
+
+                            }
+                        }
+                    }
+
+
+
+
+                }
+                else /// diagnostico propio
+                {
+                    DiagnosticoP oDiagnostico = new DiagnosticoP();
+                    oDiagnostico = (DiagnosticoP)oDiagnostico.Get(typeof(DiagnosticoP), "Codigo", txtCodigoDiagnostico.Text);
+                    if (oDiagnostico != null)
+                    {
+                        ListItem oDia = new ListItem();
+                        oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                        oDia.Value = oDiagnostico.IdDiagnostico.ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+
+                    }
+                    else
+                        lstDiagnosticos.Items.Clear();
+                }
+
+            }
+            lstDiagnosticos.UpdateAfterCallBack = true;
+
+        }
+        private bool ExisteItem(ListControl lista, string value)
+        {
+            return lista.Items.FindByValue(value) != null;
+        }
 
         private void BuscarDiagnostico()
         {
@@ -262,45 +329,130 @@ namespace WebLab.Turnos
             lstDiagnosticos.Items.Clear();
             if (txtCodigoDiagnostico.Text != "")
             {
-                Cie10 oDiagnostico = new Cie10();
-                oDiagnostico = (Cie10)oDiagnostico.Get(typeof(Cie10), "Codigo", txtCodigoDiagnostico.Text);
-                if (oDiagnostico != null)
-                {
-                    ListItem oDia = new ListItem();
-                    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
-                    oDia.Value = oDiagnostico.Id.ToString();
-                    lstDiagnosticos.Items.Add(oDia);
-                    //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
-                    lstDiagnosticosFinal.Items.Clear();
-                    lstDiagnosticosFinal.Items.Add(oDia);
-                    lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                BuscarCodigoDiagnostico();
+                //Cie10 oDiagnostico = new Cie10();
+                //oDiagnostico = (Cie10)oDiagnostico.Get(typeof(Cie10), "Codigo", txtCodigoDiagnostico.Text);
+                //if (oDiagnostico != null)
+                //{
+                //    ListItem oDia = new ListItem();
+                //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                //    oDia.Value = oDiagnostico.Id.ToString();
+                //    lstDiagnosticos.Items.Add(oDia);
+                //    //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                //    //   lstDiagnosticosFinal.Items.Clear();
 
-                }
-                else
-                    lstDiagnosticos.Items.Clear();
+
+                //    // Verificar si ya existe en lstDiagnosticosFinal
+                //    bool existeEnFinal = lstDiagnosticosFinal.Items.Cast<ListItem>()
+                //                              .Any(item => item.Value == oDia.Value);
+
+                //    if (!existeEnFinal)
+                //    {
+                //        lstDiagnosticosFinal.Items.Add(oDia);
+                //        lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                //    }
+                //    //lstDiagnosticosFinal.Items.Add(oDia);
+                //    //lstDiagnosticosFinal.UpdateAfterCallBack = true;
+
+                //}
+                //else
+                //{
+                //    lstDiagnosticos.Items.Clear();
+                //    lstDiagnosticos.UpdateAfterCallBack = true;
+                //}
             }
 
             if (txtNombreDiagnostico.Text != "")
             {
-                lstDiagnosticos.Items.Clear();
-                ISession m_session = NHibernateHttpModule.CurrentSession;
-                ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
-                crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
+                BuscarNombreDiagnostico();
+                //lstDiagnosticos.Items.Clear();
+                //ISession m_session = NHibernateHttpModule.CurrentSession;
+                //ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
+                //crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
 
-                IList items = crit.List();
+                //IList items = crit.List();
 
-                foreach (Cie10 oDiagnostico in items)
-                {
-                    ListItem oDia = new ListItem();
-                    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
-                    oDia.Value = oDiagnostico.Id.ToString();
-                    lstDiagnosticos.Items.Add(oDia);
-                }
+                //foreach (Cie10 oDiagnostico in items)
+                //{
+                //    ListItem oDia = new ListItem();
+                //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                //    oDia.Value = oDiagnostico.Id.ToString();
+                //    lstDiagnosticos.Items.Add(oDia);
+                //    lstDiagnosticos.UpdateAfterCallBack = true;
+                //}
 
 
             }
-            lstDiagnosticos.UpdateAfterCallBack = true;
+         
 
+        }
+
+        private void BuscarNombreDiagnostico()
+        {
+            lstDiagnosticos.Items.Clear();
+            if (txtNombreDiagnostico.Text != "")
+            {
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                if (oC.NomencladorDiagnostico == 0)
+                {
+                    //ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
+                    //crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
+
+                    //IList items = crit.List();
+
+                    //foreach (Cie10 oDiagnostico in items)
+                    //{
+                    //    ListItem oDia = new ListItem();
+                    //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                    //    oDia.Value = oDiagnostico.Id.ToString();
+                    //    lstDiagnosticos.Items.Add(oDia);
+                    //}
+
+
+                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 (nolock) where  tipo='DIAG' and  Nombre like '%" + txtNombreDiagnostico.Text.Trim() + "%' order by Nombre";
+
+                    DataSet Ds = new DataSet();
+                    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                    adapter.Fill(Ds);
+                    lstDiagnosticos.Items.Clear();
+                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+                    {
+
+                        ListItem oDia = new ListItem();
+                        oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+                        oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+
+
+                    }
+
+
+                    lstDiagnosticos.UpdateAfterCallBack = true;
+                }
+
+                else //nomenclador propio
+                {
+                    ICriteria crit1 = m_session.CreateCriteria(typeof(DiagnosticoP));
+
+                    crit1.Add(Expression.InsensitiveLike("Nombre", txtNombreDiagnostico.Text, MatchMode.Anywhere));
+                    crit1.Add(Expression.Eq("Baja", false));
+                    IList items = crit1.List();
+
+                    foreach (DiagnosticoP oDiagnostico in items)
+                    {
+                        ListItem oDia = new ListItem();
+                        oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                        oDia.Value = oDiagnostico.IdDiagnostico.ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+                    }
+
+                    lstDiagnosticos.UpdateAfterCallBack = true;
+                }
+
+            }
         }
 
         protected void btnBusquedaFrecuente_Click(object sender, EventArgs e)
@@ -321,7 +473,7 @@ namespace WebLab.Turnos
             string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
 FROM Sys_CIE10 c with (nolock) 
 inner join LAB_ProtocoloDiagnostico p with (nolock)  on c.id = p.idDiagnostico
-where p.idEfector=" + oUser.IdEfector.IdEfector.ToString()+ @"
+where  c.tipo='DIAG' and  p.idEfector=" + oUser.IdEfector.IdEfector.ToString()+ @"
 group by id, codigo, nombre
 ORDER BY cantidad desc";
             oUtil.CargarListBox(lstDiagnosticos, m_ssql, "id", "nombre");

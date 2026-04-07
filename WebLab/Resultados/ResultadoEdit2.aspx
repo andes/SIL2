@@ -645,8 +645,7 @@
                                 onclick="btnValidarPendiente_Click" Visible="false" ValidationGroup="0" Width="150px" TabIndex="600" />  
 
                                  &nbsp; 
-           <asp:LinkButton ID="imgPdf" runat="server" CssClass="btn btn-info" ForeColor="White" Text="Buscar" OnClick="imgPdf_Click" Width="140px" >
-                                             <span class="glyphicon glyphicon-download-alt"></span>&nbsp;Descargar PDF</asp:LinkButton>
+           <asp:LinkButton ID="imgPdf" runat="server" CssClass="btn btn-info" ForeColor="White" Text="Buscar" OnClick="imgPdf_Click" Width="140px" Visible="False" ></asp:LinkButton>
 
            <asp:LinkButton ID="imgAdjunto" runat="server" CssClass="btn btn-info" Text="Adjuntar Archivos" ForeColor="White" Width="165px" 
                OnClientClick="AdjuntoProtocoloEdit(); return false;"  Visible="False"></asp:LinkButton>

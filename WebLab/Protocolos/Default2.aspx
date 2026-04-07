@@ -99,9 +99,10 @@
 					
 					<tr>
 						<td class="myLabelIzquierda"  style="width: 150px">
-                                            Sexo:<asp:RangeValidator ID="rvSexo" runat="server" 
+                                            Sexo:
+                            <%--<asp:RangeValidator ID="rvSexo" runat="server" 
                                 ControlToValidate="ddlSexo" ErrorMessage="Sexo" MaximumValue="999999" 
-                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>
+                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>--%>
                                         </td>
 						<td align="left" colspan="2">
                                             <asp:DropDownList ID="ddlSexo" runat="server" TabIndex="2" class="form-control input-sm">
@@ -112,6 +113,7 @@
                                                 <asp:ListItem Value="4">X-No Binario</asp:ListItem>
                                              
                                             </asp:DropDownList>
+                                            <asp:Label ID="lblMensajeSexo" runat="server" Font-Bold="True" ForeColor="#CC3300" Visible="False"></asp:Label>
                         </td>
 						<td rowspan="5" >   </td>
 					</tr>
@@ -204,7 +206,7 @@
 						<td  colspan="4" >					
 
                              
-                            <asp:Label ID="lblMensaje" runat="server" ForeColor="Red" Text="Se encontraron los siguientes datos para el dni ingresado:" Visible="False"></asp:Label>
+                            <asp:Label ID="lblMensaje" runat="server" ForeColor="Blue" Text="Se encontraron los siguientes datos para el dni ingresado:" Visible="False"></asp:Label>
                             <asp:GridView ID="gvLista" runat="server" AllowPaging="True" AutoGenerateColumns="False" CellPadding="1" CssClass="table table-bordered bs-table" DataKeyNames="idPaciente" EmptyDataText="No se encontraron pacientes para los parametros de busqueda ingresados" Font-Size="9pt" ForeColor="#666666" GridLines="Horizontal" onpageindexchanging="gvLista_PageIndexChanging" onrowcommand="gvLista_RowCommand" onrowdatabound="gvLista_RowDataBound" PageSize="13" Width="100%">
                <%--<RowStyle BackColor="#F7F6F3" ForeColor="Black" Font-Names="Arial" 
                 Font-Size="8pt" />--%>

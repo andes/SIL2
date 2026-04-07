@@ -118,10 +118,19 @@ namespace WebLab.Resultados
                 // Y en la vista del protocolo se ve "duplicado"
                 if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego sin problemas de duplicados
                 {
-                    if (sDatos == "")
-                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
+                    string estado = "0";
+                    if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioValidaObservacion > 0)) //validado
+                        estado = "2";
                     else
-                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
+                    {
+                        if ((oDet.IdUsuarioResultado > 0) || (oDet.IdUsuarioObservacion > 0) || (oDet.Enviado == 2)) //cargado
+                            estado = "1";
+                    }
+
+                    if (sDatos == "")
+                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
+                    else
+                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
                     //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
                     pivot = oDet.IdItem.Nombre;
                 }
@@ -394,14 +403,12 @@ namespace WebLab.Resultados
                         // GuardarDerivacion(oDetalle);
                         //oDetalle.GuardarDerivacion(oUser);
                     }
-                    else  //si ya esta actualizo si trajo muestra o no //3/3/2026 Y regenero los analisis de las practicas si no estaban en el alta
+                    else  //si ya esta actualizo si trajo muestra o no
                     {
-                        
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
                             if (trajomuestra == "true")
                                 oDetalle.TrajoMuestra = "No";
-
                             else // (trajomuestra == "false"
                             {
                                 /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
@@ -446,10 +453,9 @@ namespace WebLab.Resultados
                                 }
                                 
                             }
-
                             oDetalle.Save();
-                           
                         }
+
                     }
                 }
             }

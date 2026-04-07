@@ -242,23 +242,7 @@ namespace WebLab.Protocolos
                 m_ssql += " and idTipoServicio>0";
             oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
 
-
-
-            //if (oUser.Administrador)
-            //{
-            //    m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E " +
-            //         " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
-            //         "order by E.nombre";
-
-            //    oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
-            //    ddlEfector.Items.Insert(0, new ListItem("Configuracion General", "227"));
-            //}
-            //else
-            //{
-            //    m_ssql = "select  E.idEfector, E.nombre  from sys_efector E  where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
-            //    oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
-            //}
-
+             
 
 
 
@@ -314,7 +298,8 @@ namespace WebLab.Protocolos
                 ddlPrioridad.Visible = false;
             }
             ///Carga de Sectores
-            m_ssql = "SELECT idSectorServicio,  nombre  + ' - ' + prefijo as nombre FROM LAB_SectorServicio with (nolock)  WHERE (baja = 0) order by nombre";
+            m_ssql = @"SELECT idSectorServicio,  nombre  + ' - ' + prefijo as nombre FROM LAB_SectorServicio S with (nolock)  WHERE (baja = 0) 
+                  and exists(select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio = S.idSectorServicio and se.idefector = "+oUser.IdEfector.IdEfector.ToString()+@")  order by nombre";                
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorServicio.Items.Insert(0, new ListItem("-- Todos --", "0"));
 

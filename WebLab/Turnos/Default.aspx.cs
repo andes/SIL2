@@ -81,11 +81,12 @@ namespace WebLab.Turnos
         }
         private void CargarGrilla()
         {
-            string m_sexo = "F";
-            if (ddlSexo.SelectedValue == "2")
-                m_sexo = "F";
-            else
-                m_sexo = "M";
+            string m_sexo = ""; lblMensajeSexo.Visible = false;
+            //string m_sexo = "F";
+            //if (ddlSexo.SelectedValue == "2")
+            //    m_sexo = "F";
+            //else
+            //    m_sexo = "M";
 
 
 
@@ -98,11 +99,21 @@ namespace WebLab.Turnos
 
                 if (gvLista.Rows.Count == 0)
                 {
-                    lblMensaje.Visible = false;
-
-
-                    Response.Redirect("../Protocolos/ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
-
+                    if (ddlSexo.SelectedValue != "0")  // se debe seleccionar el sexo para generar un paciente nuevo
+                    {
+                          m_sexo = "F";
+                        if (ddlSexo.SelectedValue == "2")
+                            m_sexo = "F";
+                        else
+                            m_sexo = "M";
+                        lblMensaje.Visible = false;
+                        Response.Redirect("../Protocolos/ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
+                    }
+                    else
+                    {
+                        lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                        lblMensajeSexo.Visible = true;
+                    }
 
                 }
                 else
@@ -112,28 +123,60 @@ namespace WebLab.Turnos
 
             if ((ddlTipo.SelectedValue == "T"))
             { //temporal
+
+
                 if ((txtDni.Value != "") || (txtNumeroAdicional.Text != ""))
                 {
+
                     gvLista.DataSource = LeerDatos();
                     gvLista.DataBind();
 
 
                     if (gvLista.Rows.Count == 0)
                     {
-                        lblMensaje.Visible = false;
+                        if (ddlSexo.SelectedValue != "0")
+                        {
+                            m_sexo = "F";
+                            if (ddlSexo.SelectedValue == "2")
+                                m_sexo = "F";
+                            else
+                                m_sexo = "M";
+                            lblMensaje.Visible = false;
 
 
-                        Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0" );// + Session["idUrgencia"].ToString());
+                            Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0");// + Session["idUrgencia"].ToString());
+                        }
+                        else
+                        {
 
-
+                            lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                            lblMensajeSexo.Visible = true;
+                        }
                     }
                     else
                         lblMensaje.Visible = true;
                 }
 
                 else
+                {
+                    if (ddlSexo.SelectedValue != "0")
+                    {
+                        m_sexo = "F";
+                        if (ddlSexo.SelectedValue == "2")
+                            m_sexo = "F";
+                        else
+                            m_sexo = "M";
+                        lblMensaje.Visible = false;
+                        Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
+                    }
+                    else
+                    {
 
-                    Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
+                        lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                        lblMensajeSexo.Visible = true;
+                    }
+                }
+               
             }
 
 

@@ -38,7 +38,7 @@ namespace WebLab.Protocolos
         {
             if (!Page.IsPostBack)
             {
-                VerificaPermisos("Derivacion");
+                VerificaPermisos("Derivacion por Lotes");
                 CargarEncabezado();
             }
         }

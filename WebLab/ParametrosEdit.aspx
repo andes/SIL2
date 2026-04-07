@@ -275,6 +275,19 @@ $("#tabContainer").tabs({ selected: currTab });
                                             </asp:DropDownList>
                                         </td>
                                     </tr>
+                                            <tr>
+                                        <td class="myLabelIzquierda">
+                                           Habilita Enfermedad Base :</td>
+                                        <td class="myLabelIzquierda">
+                                            
+                                            <asp:DropDownList ID="ddlEnfermedadBase" runat="server"  class="form-control input-sm" Width="100px"
+                                                
+                                                >
+                                                <asp:ListItem Selected="True" Value="0">No</asp:ListItem>
+                                                <asp:ListItem Value="1">Si</asp:ListItem>
+                                            </asp:DropDownList><small>Solo Microbiologia</small>
+                                        </td>
+                                    </tr>
                         
                                     <tr>
                                         <td class="myLabelIzquierda">
@@ -1680,6 +1693,16 @@ $("#tabContainer").tabs({ selected: currTab });
                                                 <img alt="" src="../App_Themes/default/images/excelPeq.gif"/>
                                                                 <asp:LinkButton ID="lnkExcel" runat="server" CssClass="myLittleLink" 
                                                                     onclick="lnkExcel_Click"  >Descargar Excel</asp:LinkButton>
+                                        </td>
+                                    </tr>
+                            <tr>
+                                        <td   >
+                                         <h6>  Mapeo SIL y SISA (Resultados): </h6>
+                                            </td>
+                                        <td    >
+                                                <img alt="" src="../App_Themes/default/images/excelPeq.gif"/>
+                                                                <asp:LinkButton ID="lnkExcelSISAResultados" runat="server" CssClass="myLittleLink" OnClick="lnkExcelSISAResultados_Click" 
+                                                                     >Descargar Excel</asp:LinkButton>
                                         </td>
                                     </tr>
 

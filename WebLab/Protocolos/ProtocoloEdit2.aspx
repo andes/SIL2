@@ -643,7 +643,7 @@
                                              <td class="auto-style1">                                               
                                             
                                                Diagnósticos encontrados<anthem:ListBox ID="lstDiagnosticos" runat="server" AutoCallBack="True" 
-                                                     class="form-control input-sm"  Height="100px" Width="750px">
+                                                     class="form-control input-sm"  Height="90px" Width="750px">
                                                </anthem:ListBox>
                                                  <anthem:Label ID="lblMensajeDiagnostico" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
 
@@ -660,18 +660,11 @@
                                              </td>   
                                 
                                 </tr>
-                                <tr>
-                                             <td class="auto-style1">
-                                                 <p  >Diagnósticos del Paciente</p>
-                                                 </td>                                         
-                                             <td style="vertical-align: top">
-                                                 &nbsp;</td>   
                                 
-                                </tr>
                                 <tr>
-                                             <td class="auto-style1">
+                                             <td class="auto-style1">Diagnósticos del Paciente
                                                  <anthem:ListBox ID="lstDiagnosticosFinal" runat="server"    class="form-control input-sm"
-                                                     Height="100px" Width="650px" SelectionMode="Multiple">
+                                                     Height="90px" Width="750px" SelectionMode="Multiple">
                                                  </anthem:ListBox></td>                                         
                                              <td style="vertical-align: top">
                                     
@@ -689,17 +682,31 @@
                                                                                            
                                         &nbsp; <input id="txtFechaFIS" runat="server" type="text" maxlength="10" 
                         style="width: 120px"  onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  />
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  title="Fecha de inicio de sintomas" />
                                                    <asp:CheckBox ID="chkSinFIS" runat="server" Text="Sin informar" />
                                                    &nbsp;&nbsp;&nbsp;&nbsp;
                                                   <anthem:Label ID="Label1" runat="server" Text="FUC:"></anthem:Label>
                                                             &nbsp;                                
                                         <input id="txtFechaFUC" runat="server" type="text" maxlength="10" 
                         style="width: 120px"  onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  />  <asp:CheckBox ID="chkSinFUC" runat="server" Text="Sin informar" />
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  title="Fecha de Ultimo Control" />  <asp:CheckBox ID="chkSinFUC" runat="server" Text="Sin informar" />
                                                </div></td>                                         
                                              <td style="vertical-align: top">
                                                  &nbsp;</td>   
+                                
+                                </tr>
+                                      <tr>
+                                             <td colspan="5"  >  
+						<asp:Panel   runat="server" ID="pnlEnfermedadBase" Visible="false" Width="100%">
+                            <hr />
+                                                 <anthem:Label ID="lblEB" runat="server" Text="Enfermedad Base:"></anthem:Label>
+                                                                                           
+                                        
+                                                 <anthem:TextBox ID="txtCodigoEnfermedadBase" Width="60px" TabIndex="12" class="form-control input-sm" runat="server"   AutoCallBack="true" OnTextChanged="txtCodigoEnfermedadBase_TextChanged"></anthem:TextBox> 
+                            <anthem:DropDownList ID="ddlEnfermedadBase" Width="400px" runat="server" TabIndex="13"  AutoCallBack="true"    class="form-control input-sm" OnSelectedIndexChanged="ddlEnfermedadBase_SelectedIndexChanged" >
+                            </anthem:DropDownList>
+                            </asp:Panel>
+                            </td>   
                                 
                                 </tr>
                                 </table>
@@ -890,7 +897,6 @@
             const txtDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
 
             if (redirect) {
-                
                 if (!postBack) AgregarCargados(); //Recarga todo desde cero
                 else AgregarCargadoSinVerificar(); //Si da error de postback se debe cargar nuevamente sin verificar
             } else {
@@ -1226,6 +1232,7 @@
                 OrdenarDatos();
 
                 contadorfilas = contadorfilas - 1;
+                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas; //para no perder el valor luego de un postback
             }
             else {
 
@@ -1270,7 +1277,7 @@
                     }
 
                     pos = pos + 1;
-                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '#' + estado + '@';
+                    str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '#' + estado + '@';
                 }
             }
             document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;

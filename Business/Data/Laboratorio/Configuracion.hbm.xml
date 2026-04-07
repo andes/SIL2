@@ -155,5 +155,6 @@
     <property column="tipoOrdenProtocolo" type="String" name="TipoOrdenProtocolo"   />
 
     <property column="verificaIngresoAnterior" type="Boolean" name="VerificaIngresoAnterior" not-null="true" />
+    <property column="habilitaEnfermedadBase" type="Boolean" name="HabilitaEnfermedadBase" not-null="true" />
   </class>
 </hibernate-mapping>

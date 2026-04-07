@@ -728,10 +728,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
             lblServicio.Text = oRegistro.IdTipoServicio.Nombre.ToUpper();
             //if (Request["Operacion"].ToString() == "HC") { oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString())); }
-            if (oRegistro.tieneAdjuntoProtocolo())
-            {   spanadjunto.Visible = true; }
-            else
-            {   spanadjunto.Visible = false; }
+            
+            spanadjunto.Visible = oRegistro.tieneAdjuntoProtocolo();
             if (Request["Operacion"].ToString() == "Valida") imgAdjunto.Visible = true;
 
             HFIdProtocolo.Value = CurrentPageIndex.ToString();
@@ -804,7 +802,10 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     else chkWhonet.Checked = false;
                 }
 
-                lblPlaca.Text = s_placa;
+                if (oRegistro.IdTipoServicio.IdTipoServicio == 3)
+                    lblPlaca.Text = s_placa;
+                else
+                    lblPlaca.Visible = false;
                 CargarListasAislamientos();
                 CargarListaAntibiotico();
                 CargarListasAntibiogramas();
@@ -826,18 +827,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     if (oConserva!=null)
                     lblConservacion.Text = oConserva.Descripcion;
                 }
-                if (oRegistro.IdCaracter > 0)
+                if (oRegistro.IdCaracter > 0)//Caracter se usa para clasificacion SNVS
                 {
                     lblCovid.Visible = true;
                     Caracter oCaracter = new Caracter();
                     oCaracter = (Caracter)oCaracter.Get(typeof(Caracter), oRegistro.IdCaracter);
-                    if (oCaracter!= null)
-                    lblCovid.Text = "Clasificación Covid-19: " + oCaracter.Nombre;
-                    if (oRegistro.FechaInicioSintomas.Year != 1900)
-                        lblCovid.Text = lblCovid.Text + " - FIS: " + oRegistro.FechaInicioSintomas.ToShortDateString();
-                    if (oRegistro.FechaUltimoContacto.Year != 1900)
-                        lblCovid.Text = lblCovid.Text + " - FUC: " + oRegistro.FechaUltimoContacto.ToShortDateString();
+                    if (oCaracter!= null) 
+                    lblCovid.Text = "Clasificación SNVS: " + oCaracter.Nombre;
+                   
                 }
+                if (oRegistro.FechaInicioSintomas.Year != 1900)
+                    lblCovid.Text = lblCovid.Text + " - FIS: " + oRegistro.FechaInicioSintomas.ToShortDateString();
+                if (oRegistro.FechaUltimoContacto.Year != 1900)
+                    lblCovid.Text = lblCovid.Text + " - FUC: " + oRegistro.FechaUltimoContacto.ToShortDateString();
 
                 pnlMicroOrganismo.Visible = true;
                 pnlAntibiograma.Visible = true;
@@ -1021,25 +1023,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             {
                 lblPrioridad.ForeColor = Color.Red;
                 lblPrioridad.Font.Bold = true;
-            }
-
-            //if (oCon.IdSectorDefecto == 0)
-            //{
-               
-            
+            }            
             lblSector.Text = oRegistro.IdSector.Nombre;
             lblSector1.Text = lblSector.Text;
-            //}
+            
             if (oRegistro.Sala != "") lblSector.Text += " Sala: " + oRegistro.Sala;
             if (oRegistro.Cama != "") lblSector.Text += " Cama: " + oRegistro.Cama;
 
             lblDescripcionProducto.Text = oRegistro.DescripcionProducto;
             ///Datos del Paciente            
             if (oRegistro.IdPaciente.IdEstado==2) lblDni.Text = "(Sin DU Temporal)";            
-            else lblDni.Text = oRegistro.IdPaciente.NumeroDocumento.ToString();
-            
-
-            if (oRegistro.IdTipoServicio.IdTipoServicio == 4)
+            else lblDni.Text = oRegistro.IdPaciente.NumeroDocumento.ToString();            
+            if (oRegistro.IdTipoServicio.IdTipoServicio == 4)  //pesquisa neonatal sil1
                 lblPaciente.Text = oRegistro.getDatosParentesco();
             else
                 lblPaciente.Text = oRegistro.IdPaciente.Apellido.ToUpper() + " " + oRegistro.IdPaciente.Nombre.ToUpper();
@@ -1107,11 +1102,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                     if (oD.Codigo=="Z32.1") embarazada="E";
                 }
-            }
-
-            //oRegistro.IdPaciente.getCodificaHiv(); //
+            }            
             lblCodigoPaciente.Text = oRegistro.getCodificaHiv(embarazada); //lblSexo.Text.Substring(0, 1) + " " + oRegistro.IdPaciente.Nombre.Substring(0, 2) + oRegistro.IdPaciente.Apellido.Substring(0, 2) + " " + lblFechaNacimiento.Text.Replace("/", "") + embarazada;
-            //lblCodigoPaciente.Text = lblCodigoPaciente.Text.ToUpper();
             
             ///Observaciones de Resultados al pie 
             if (oRegistro.ObservacionResultado != "")
@@ -1124,8 +1116,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 if (oRegistro.ObservacionResultado != "")
                 {
                     txtObservacion.Text = oRegistro.ObservacionResultado;
-                    //pnlObsGeneral.Visible = true;
-                    //btnObservaciones.Enabled = false;
+            
                 }
                 else
                 {
@@ -1136,9 +1127,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             }
           
 
-
-            //if (Request["desde"].ToString() != "Urgencia")
-            //{ 
+            
             if (Request["desde"] != null)
             { 
             if (Request["desde"].ToString() != "Urgencia")
@@ -1150,9 +1139,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     btnActualizarPracticasCarga.Enabled = false;
                 }
             }
-                }
-          
-
+                }          
         }
 
         //private int esdeArea()
@@ -1186,77 +1173,38 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         private void LlenarTabla(string p)
         {
-            //bool hayAntecedente = false;
-            string m_strSQL = " 1=1 ";
-                
-         
-                              
-
-            if (Request["idArea"].ToString() != "0")   m_strSQL += " and idArea in (" + Request["idArea"].ToString()+")";
-
-
-            //////////////////control de hemoterapia            
-            //if (Request["desde"] != null)
-            //{
-            //    if (Request["desde"].ToString() != "Urgencia")
-            //    { if (esHemoterapia()) m_strSQL += " and idItem in (select iditem from lab_item where codigo like '433%')"; }
-            //}
-            ////////////////////
-
+           
+            string m_strSQL = " 1=1 ";                                                       
+            if (Request["idArea"].ToString() != "0")   m_strSQL += " and idArea in (" + Request["idArea"].ToString()+")";            
             if (Request["Operacion"].ToString() == "HC")
             {
                 if (Request["validado"].ToString() == "1") { m_strSQL += " and estado=2 "; }
-                m_strSQL += " order by ordenArea, orden, idDetalleProtocolo ";  //orden de impresion
-
-             
-
+                m_strSQL += " order by ordenArea, orden, idDetalleProtocolo ";  //orden de impresion             
             }
             else
             { 
                 if (oCon.OrdenCargaResultado)/// orden de impresion
                     m_strSQL += " order by ordenArea, orden, idDetalleProtocolo ";  //orden de impresion
                 else
-                    m_strSQL += " order by  idDetalleProtocolo ";  //orden de impresion
-                
-            }
-
-             
-
-            /*nuevo con SP*/
-
+                    m_strSQL += " order by  idDetalleProtocolo ";  //orden de impresion                
+            }                         
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-             
-                cmd.CommandText = "[LAB_Resultados]";
-
-
+            cmd.CommandType = CommandType.StoredProcedure;             
+            cmd.CommandText = "[LAB_Resultados]";
             cmd.Parameters.Add("@idProtocolo", SqlDbType.Int);
             cmd.Parameters["@idProtocolo"].Value = int.Parse(p);
-
-
             cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
-            cmd.Parameters["@FiltroBusqueda"].Value = m_strSQL;
-             
+            cmd.Parameters["@FiltroBusqueda"].Value = m_strSQL;             
             cmd.Connection = conn;
-
-
             SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(Ds);            
 
-            da.Fill(Ds);
-
-            /*fin de nuevo*/
-
-            string s= System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
-
-    
+            string s= System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;    
             string m_titulo= "";
             string m_hijo = "";
-            string m_nombre = "";
- 
-
-
+            string m_nombre = ""; 
             TableRow objFila_TITULO = new TableRow();
             TableCell objCellAnalisis_TITULO = new TableCell();
             TableCell objCellResultado_TITULO = new TableCell();
@@ -1267,38 +1215,28 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             TableCell objCellPersona_TITULO = new TableCell();
             TableCell objCellObservaciones_TITULO = new TableCell();
             TableCell objCellImagenes_TITULO = new TableCell();
-
-
-
+            
             Label lblAnalisis = new Label();
             lblAnalisis.Text = "ANALISIS";
-            objCellAnalisis_TITULO.Controls.Add(lblAnalisis);
-               
+            objCellAnalisis_TITULO.Controls.Add(lblAnalisis);             
 
             Label lblResultado = new Label();
             lblResultado.Text = "RESULTADO";            
             objCellResultado_TITULO.Controls.Add(lblResultado);
             
-
             Label lblResultadoAnterior = new Label();
             lblResultadoAnterior.Text = "R.ANTER.";
             objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
             
-
             if (Request["Operacion"].ToString() != "HC")
             {
                 Label lblUM = new Label();
                 lblUM.Text = "UM";
                 objCellUnMedida_TITULO.Controls.Add(lblUM);
             }
-
             Label lblVR = new Label();
             lblVR.Text = "VR|METODO";           
-            objCellValoresReferencia_TITULO.Controls.Add(lblVR);
-
-            
-
-
+            objCellValoresReferencia_TITULO.Controls.Add(lblVR);            
             Label lblValida = new Label();
             if ((Request["Operacion"].ToString() == "Carga") || (Request["Operacion"].ToString() == "HC")) lblValida.Text = "";
             else
@@ -1306,98 +1244,61 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 if (Request["Operacion"].ToString() == "Control") lblValida.Text = "CTRL";
             }
             objCellValida_TITULO.Controls.Add(lblValida);
-
             Label lblCargadoPor = new Label();
-            if ((Request["Operacion"].ToString() == "HC")&&(Request["validado"].ToString() == "1"))
-            {
-                lblCargadoPor.Text = "VALIDADO POR";
-//                Panel1.ScrollBars = ScrollBars.None;
-            }
+            if ((Request["Operacion"].ToString() == "HC")&&(Request["validado"].ToString() == "1"))            
+                lblCargadoPor.Text = "VALIDADO POR";            
             else
-                lblCargadoPor.Text = "ESTADO";
-            
+                lblCargadoPor.Text = "ESTADO";            
             objCellPersona_TITULO.Controls.Add(lblCargadoPor);
-
-
-            /////observaciones
-            //if (Request["Operacion"].ToString() == "Valida")
-            //{
+            
+            
             if (Request["Operacion"].ToString() != "HC")
             {
                 Label lblObservaciones = new Label();
-                lblObservaciones.Text = "OBS.";               
-                //    else
-                //        lblObservaciones.Text = "";
+                lblObservaciones.Text = "OBS.";                           
                 objCellObservaciones_TITULO.Controls.Add(lblObservaciones);
-
                 objCellObservaciones_TITULO.Width = Unit.Pixel(60);
-            }
-            //}             
+            }            
             if (Request["Operacion"].ToString() != "HC")
             {
-                Label lblImagenes = new Label();
-                lblImagenes.Text = "IMG";
-              
+                Label lblImagenes = new Label();                lblImagenes.Text = "IMG";              
                 objCellImagenes_TITULO.Controls.Add(lblImagenes);
                 objCellImagenes_TITULO.Width = Unit.Pixel(60);
-            }
-            //}           
-
+            }            
             objFila_TITULO.Cells.Add(objCellAnalisis_TITULO);
-            objFila_TITULO.Cells.Add(objCellResultado_TITULO);
-
-          
-
+            objFila_TITULO.Cells.Add(objCellResultado_TITULO);          
 
             if ((Request["Operacion"].ToString() == "Valida")||  (Request["Operacion"].ToString() == "Control")) objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
-
-            if (Request["Operacion"].ToString() != "HC") objFila_TITULO.Cells.Add(objCellUnMedida_TITULO);
-            
+            if (Request["Operacion"].ToString() != "HC") objFila_TITULO.Cells.Add(objCellUnMedida_TITULO);            
             objFila_TITULO.Cells.Add(objCellValoresReferencia_TITULO);
 
             if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
-            {
-                //objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
+            {            
                 objFila_TITULO.Cells.Add(objCellValida_TITULO);
             }
-
-
             objFila_TITULO.Cells.Add(objCellPersona_TITULO);
             objFila_TITULO.Cells.Add(objCellObservaciones_TITULO);
             if (Request["Operacion"].ToString() != "HC") objFila_TITULO.Cells.Add(objCellImagenes_TITULO);
-
-
             objFila_TITULO.CssClass = "myLabelIzquierda";
             objFila_TITULO.BackColor = Color.Gainsboro;
-
-            
             
             Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
-
             //'añadimos la fila a la tabla
             if (objFila_TITULO != null)   tContenido.Controls.Add(objFila_TITULO);//.Rows.Add(objRow);    
-
-                     
+                                
 
             for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
-            {  
-                //decimal m_minimoReferencia=-1;
-                //decimal m_maximoReferencia=-1;
-                bool algovalidado = false;
-                
-
+            {              
+                bool algovalidado = false;                
                 string valorReferencia = Ds.Tables[0].Rows[i].ItemArray[11].ToString();
                 int m_idItem = int.Parse(Ds.Tables[0].Rows[i].ItemArray[2].ToString());
                 string unMedida = Ds.Tables[0].Rows[i].ItemArray[8].ToString();
                 string Observaciones = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
                 int tiporesultado = (int.Parse(Ds.Tables[0].Rows[i].ItemArray[7].ToString()));
-                int tipodeterminacion = int.Parse(Ds.Tables[0].Rows[i].ItemArray[6].ToString());
-              
+                int tipodeterminacion = int.Parse(Ds.Tables[0].Rows[i].ItemArray[6].ToString());              
                 int estado = int.Parse(Ds.Tables[0].Rows[i].ItemArray[9].ToString());
                 if (estado == 2) algovalidado = true;
-
-                string m_metodo = Ds.Tables[0].Rows[i].ItemArray[10].ToString();
-           
+                string m_metodo = Ds.Tables[0].Rows[i].ItemArray[10].ToString();           
                 string m_observacionReferencia =Ds.Tables[0].Rows[i].ItemArray[13].ToString();
                 string m_usuarioCarga = Ds.Tables[0].Rows[i].ItemArray[14].ToString();
                 string m_trajoMuestra = Ds.Tables[0].Rows[i].ItemArray[15].ToString();
@@ -1414,15 +1315,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 string m_usuariovalida = Ds.Tables[0].Rows[i].ItemArray[28].ToString();
                 int i_iddetalleProtocolo= int.Parse( Ds.Tables[0].Rows[i].ItemArray[26].ToString());
                 string m_codificaPaciente = Ds.Tables[0].Rows[i].ItemArray[27].ToString();
-
                 string m_estadoObservacion = Ds.Tables[0].Rows[i].ItemArray[29].ToString();
-
                 if (m_codificaPaciente == "True")
                 {
                     lblPaciente.Visible = false;
                     lblCodigoPaciente.Visible = true;
                 }
-
                 m_hijo = Ds.Tables[0].Rows[i].ItemArray[1].ToString();
                 m_titulo = Ds.Tables[0].Rows[i].ItemArray[0].ToString();
                 
@@ -1440,10 +1338,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 objCellUnMedida.Width = Unit.Pixel(60);
                 objCellImagenes.Width = Unit.Pixel(60);
                 objCellObservaciones.Width = Unit.Pixel(60);
-
-                decimal x = 0;
-               
-
+                decimal x = 0;               
                 if ((m_hijo != m_titulo)&& (m_nombre!=m_titulo)) ///poner titulo de la practica
                 {                    
                         TableRow objRow = new TableRow();
@@ -1452,7 +1347,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         lbl0.Text = Ds.Tables[0].Rows[i].ItemArray[0].ToString();
                         lbl0.TabIndex = short.Parse("500");
                         lbl0.Font.Bold = true;
-
                         Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(lbl0);
                         objCell.Controls.Add(lbl0);
                         if (Request["Operacion"].ToString() == "HC")
@@ -1462,12 +1356,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         
                         objRow.Cells.Add(objCell);                      
                         objRow.CssClass = "myLabelIzquierda";
-                        tContenido.Controls.Add(objRow);
-                      
+                        tContenido.Controls.Add(objRow);                      
                         m_nombre = m_titulo;                                                        
-                }
-                
-                  
+                }                                  
 
                 Label lbl1 = new Label();
                 if (m_hijo == m_titulo) lbl1.Text =m_hijo; 
@@ -1501,8 +1392,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     tContenido.Controls.Add(objRowTitulo);
 
                     /// puede ser tambien derivable el titulo 
-                    //if  (oDetalle.esDerivado()) //(oItem.esDerivado(oCon.IdEfector))
-                    //{
+                    
                         Label lblDerivacion = new Label();
                         lblDerivacion.Font.Italic = true;
                         lblDerivacion.TabIndex = short.Parse("500");
@@ -1511,34 +1401,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         Derivacion oDeriva = new Derivacion();
                         oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
                         if (oDeriva != null)  /// esta pendiente
-                        {
-                        //    estadoDerivacion = "Pendiente de Derivacion";
-                        //    lblDerivacion.ForeColor = Color.Red;
-                        //}
-                        //else
-                        //{
-                        /* if (oDeriva.Estado == 0) /// pendiente                            
-                         {
-                             estadoDerivacion = "Pendiente de Derivacion";
-                             lblDerivacion.ForeColor = Color.Red;
-                         }
-                         if (oDeriva.Estado == 1) /// enviado
-                             estadoDerivacion = oDetalle.ResultadoCar; //  "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
-                         if (oDeriva.Estado == 2) /// no enviado
-                             estadoDerivacion = oDetalle.ResultadoCar; //" No Derivado. " + oDeriva.Observacion;
-
-                         if (oDeriva.Estado == 4) // --> Pendiente de Derivar
-                          {
-                             estadoDerivacion = oDetalle.ResultadoCar;
-                             lblDerivacion.ForeColor = Color.Red;
-                         }
-                        */
+                        {                        
                             estadoDerivacion = oDetalle.ResultadoCar; //Para todos los estados
                             lblDerivacion.Font.Bold = true;
-
                             if (oDeriva.Resultado != "")
-                                estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado;
-                        //}
+                                estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado;                        
 
                         lblDerivacion.Text = estadoDerivacion;
                         objCellResultado.ColumnSpan = 1;
@@ -1554,29 +1421,27 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //     objCellResultado.ColumnSpan = 5;
                         objCellResultado.Controls.Add(lblSinMuestra);
                     }
-
-
                 }
                 else
                 {
-                    objCellAnalisis.Controls.Add(lbl1);
-
-                     
-
+                    objCellAnalisis.Controls.Add(lbl1);                     
                     if ((oDetalle.IdUsuarioPreValida>0) && (oDetalle.IdUsuarioValida==0))
                             { estado = 2; }
-                    //     string m_idSuperItem = oDetalle.IdItem.IdItem.ToString();
-
-                     
-                  string   s_placaaux = oDetalle.getPlaca();
-                    if (s_placaaux != "")
+                    if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio == 3)
                     {
-                        if (s_placa == "")
-                            s_placa = s_placaaux;
-                        else
-                            s_placa += "-" + s_placaaux;
+                        string s_placaaux = oDetalle.getPlaca();///Caro: ver como evitar recorrer esto cuando solo lo usa un efector
+                        if (s_placaaux != "")
+                        {
+                            // Verificar si ya existe
+                            if (!s_placa.Split('-').Contains(s_placaaux))
+                            {
+                                if (s_placa == "")
+                                    s_placa = s_placaaux;
+                                else
+                                    s_placa += "-" + s_placaaux;
+                            }
+                        }
                     }
-
 
 
                     ///Antes de mostrar el control verifica  si está derivado                    
@@ -1584,7 +1449,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     //   if (oItem.esDerivado(oCon.IdEfector))
                     //if (oDetalle.esDerivado()) //(oItem.esDerivado(oCon.IdEfector))
                     //{
-                        Label lblDerivacion = new Label();
+                    Label lblDerivacion = new Label();
                         lblDerivacion.Font.Italic = true;
                         lblDerivacion.TabIndex = short.Parse("500");
                         //Verifica el estado de la derivacion
@@ -1593,25 +1458,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
                         if (oDeriva != null)  /// esta pendiente
                         {
-                        //    estadoDerivacion = "Pendiente de Derivacion";
-                        //    lblDerivacion.ForeColor = Color.Red;
-                        //}
-                        //else
-                        //{
-                            /*if (oDeriva.Estado == 0) /// pendiente                            
-                            {
-                                estadoDerivacion = oDetalle.ResultadoCar; //"Pendiente de Derivacion";
-                                lblDerivacion.ForeColor = Color.Red;
-                            }
-                            if (oDeriva.Estado == 1) /// enviado
-                                estadoDerivacion = oDetalle.ResultadoCar; //"Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
-                            if (oDeriva.Estado == 2) /// no enviado
-                                estadoDerivacion = oDetalle.ResultadoCar; // " No Derivado. " + oDeriva.Observacion;
-                            if (oDeriva.Estado == 4) // --> Pendiente de Derivar
-                            {
-                                estadoDerivacion = oDetalle.ResultadoCar;
-                                lblDerivacion.ForeColor = Color.Red;
-                            }*/
+                       
                             estadoDerivacion = oDetalle.ResultadoCar; //Para todos los estados
                             lblDerivacion.Font.Bold = true;
 
@@ -1632,8 +1479,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             lblSinMuestra.TabIndex = short.Parse("500");
                             lblSinMuestra.Text = "Sin Muestra";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
                             lblSinMuestra.Font.Italic = true;
-                            lblSinMuestra.ForeColor = Color.Blue;
-                            //     objCellResultado.ColumnSpan = 5;
+                            lblSinMuestra.ForeColor = Color.Blue;                            
                             objCellResultado.Controls.Add(lblSinMuestra);
                         }
                         else
@@ -1642,15 +1488,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             { string s_determinacion = oDetalle.IdSubItem.IdItem.ToString();
                                 string s_idPaciente = oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString();
                                 switch (tiporesultado)//tipoResultado
-                                {
-                                
-
-
+                                {                                
                                     case 4://Checklistbox
                                         {
                                             if (Request["Operacion"].ToString() != "HC")
-                                            {
-                                                ///   Verifica si la determinacion tiene una lista predeterminada de resultados
+                                            {                                                ///   Verifica si la determinacion tiene una lista predeterminada de resultados
                                                 ISession m_session = NHibernateHttpModule.CurrentSession;
                                                 ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
                                                 crit.Add(Expression.Eq("IdItem", oItem));
@@ -1670,7 +1512,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     chk1.ID = "c" + m_idItem.ToString();
                                                     //chk1.ID = "c" + m_idSuperItem +";"+m_idItem.ToString(); 
                                                     chk1.TabIndex = short.Parse(i + 1.ToString());
-
                                                     foreach (ResultadoItem oResultado in resultados)
                                                     {
                                                         ListItem Item = new ListItem();
@@ -1680,20 +1521,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         if (oResultado.ResultadoDefecto)
                                                             m_resultadoDefecto = oResultado.Resultado;
                                                     }
-
                                                     chk1.AutoPostBack = true;
-                                                    chk1.SelectedIndexChanged += new EventHandler(chk1_SelectedIndexChanged);
-
-                                                     
+                                                    chk1.SelectedIndexChanged += new EventHandler(chk1_SelectedIndexChanged);                                                     
                                                     chk1.CssClass = "myList";
-
-
-                                                    Anthem.TextBox txt1 = new Anthem.TextBox();
-                                                    //TextBox txt1 = new TextBox();
-
+                                                    Anthem.TextBox txt1 = new Anthem.TextBox();                                                    
                                                     txt1.ID = m_idItem.ToString();
-                                                    txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones
-                                                    //txt1.ID =m_idSuperItem +";"+ m_idItem.ToString();
+                                                    txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones                                                    
                                                     txt1.TabIndex = short.Parse(i + 1.ToString());
                                                     txt1.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                     txt1.TextMode = TextBoxMode.MultiLine;
@@ -1707,12 +1540,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                                     {
                                                         if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
-                                                        {
+                                                        {   //Caro Performance: se comenta por defecto la busqueda del resultado anterior 
 
-                                                            //Caro Performance: se comenta por defecto la busqueda del resultado anterior 
-
-                                                            string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
-                                                        
+                                                            string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);                                                        
                                                         //        resultadoAnterior =   oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
                                                         //    if (resultadoAnterior != "")
                                                         //{
@@ -1724,8 +1554,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                 olblResultadoAnterior.Font.Size = FontUnit.Point(8);
                                                             olblResultadoAnterior.ForeColor = Color.Green;
                                                             olblResultadoAnterior.Visible = false;
-                                                            olblResultadoAnterior.ID = "ResAnterior"+ s_determinacion;
-                                                            //   olblResultadoAnterior.Width = Unit.Pixel(20);
+                                                            olblResultadoAnterior.ID = "ResAnterior"+ s_determinacion;                                                            
                                                             olblResultadoAnterior.Text = resultadoAnterior;
                                                             olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + s_determinacion + "," + s_idPaciente + ",790,420); return false");
                                                             objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
@@ -1734,11 +1563,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     }
 
                                                     //Boton de desplegar y/o ocultar las opciones predefinidas para elegir.
-                                                    Anthem.ImageButton btnAddDetalle = new Anthem.ImageButton();
-                                                    //ImageButton btnAddDetalle = new ImageButton();
+                                                    Anthem.ImageButton btnAddDetalle = new Anthem.ImageButton();                                                    
                                                     btnAddDetalle.TabIndex = short.Parse("500");
                                                     //btnAddDetalle.AutoUpdateAfterCallBack = true;
-
                                                     btnAddDetalle.ID = "b" + m_idItem.ToString();
                                                     //btnAddDetalle.ID = "b" + m_idSuperItem+";"+ m_idItem.ToString();
                                                     btnAddDetalle.ToolTip = "Desplegar opciones";
@@ -1749,26 +1576,17 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                                                 if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
                                                     {
-                                                    btnAddDetalle.Enabled=false;
-                                                  //      chk1.BackColor = Color.GhostWhite;
-                                                    //    chk1.Enabled = false;
+                                                    btnAddDetalle.Enabled=false;                                                  
                                                         txt1.Enabled = false;
                                                     }
 
                                                     if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
-                                                    {
-                                                    //    chk1.BackColor = Color.GhostWhite;
-                                                      //  chk1.Enabled = false;
+                                                    {                                                    
                                                         btnAddDetalle.Enabled=false;
                                                         txt1.Enabled = false;
                                                     }
-
-
-
-
                                                     objCellResultado.Controls.Add(txt1);
                                                     objCellResultado.Controls.Add(chk1);
-
                                                     objCellResultado.Controls.Add(btnAddDetalle);
                                                     ////Habilitacion de observaciones
                                                     ImageButton btnObservacionDetalle2 = new ImageButton();
@@ -1778,7 +1596,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                                                     if (oDetalle.Observaciones != "")//tiene observaciones
                                                     {
-
                                                         if (oDetalle.IdUsuarioValidaObservacion == 0)
                                                             btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                         else
@@ -1786,14 +1603,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     }
                                                     else
                                                     {
-
                                                         btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
                                                     }
 
                                                     btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
                                                     btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
-
-
                                                     btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
 
                                                     objCellObservaciones.Controls.Add(btnObservacionDetalle2);
@@ -1804,8 +1618,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         ImageButton btnImagen = new ImageButton();
                                                         btnImagen.TabIndex = short.Parse("500");
                                                         btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString(); // Caro Performance
-
-
                                                         if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
                                                         {
                                                             btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
@@ -1824,10 +1636,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                 btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                             }
                                                         }
-
-
-
-
                                                         btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
                                                         objCellImagenes.Controls.Add(btnImagen);
                                                     }
@@ -1873,15 +1681,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 {
                                                     DropDownList ddl1 = new DropDownList();
                                                     ddl1.Width = Unit.Pixel(200);
-                                                    ddl1.ID = m_idItem.ToString();
-                                                    //ddl1.ID = m_idSuperItem + ";" + m_idItem.ToString();
+                                                    ddl1.ID = m_idItem.ToString();                                                    
                                                     ddl1.TabIndex = short.Parse(i + 1.ToString());
-
                                                     ListItem ItemSeleccion = new ListItem();
                                                     ItemSeleccion.Value = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                     ItemSeleccion.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                     ddl1.Items.Add(ItemSeleccion);
-
                                                     foreach (ResultadoItem oResultado in resultados)
                                                     {
                                                         ListItem Item = new ListItem();
@@ -1891,24 +1696,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         if (oResultado.ResultadoDefecto)
                                                             m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
                                                     }
-
                                                     if ((m_resultadoDefecto != "") && (m_conResultado == "False"))
                                                     {
                                                         ddl1.SelectedValue = m_resultadoDefecto;
                                                     }
-
                                                     ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
                                                     ddl1.Attributes.Add("onkeypress", "javascript:return Enter(this, event)");
 
-                                                    ///estad=0 Carga
-                                                    ///estado=1 control
-                                                    ///estado=2 valida
+                                                    ///estad=0 Carga  ///estado=1 control///estado=2 valida
                                                     if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
                                                     {
                                                         ddl1.BackColor = Color.GhostWhite;
                                                         ddl1.Enabled = false;
                                                     }
-
                                                     if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
                                                     {
                                                         ddl1.BackColor = Color.GhostWhite;
@@ -1920,10 +1720,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                                     {
                                                         if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
-                                                        {
-
-
-                                                            //Caro Performance: se comenta por defecto la busqueda del resultado anterior
+                                                        {   //Caro Performance: se comenta por defecto la busqueda del resultado anterior
                                                             string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
                                                             //if (chkMostrarResultadosAnteriores.Checked)
                                                             //    resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
@@ -1933,8 +1730,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                 Label olblResultadoAnterior = new Label();
                                                                 olblResultadoAnterior.TabIndex = short.Parse("500");
                                                                 olblResultadoAnterior.Font.Size = FontUnit.Point(8);
-                                                                olblResultadoAnterior.ToolTip = "Haga clic aquí para ver más datos.";
-                                                                //  olblResultadoAnterior.Font.Bold = true;
+                                                                olblResultadoAnterior.ToolTip = "Haga clic aquí para ver más datos.";                                                                
                                                                 olblResultadoAnterior.ForeColor = Color.Green;
                                                                 olblResultadoAnterior.Visible = false;
                                                                 olblResultadoAnterior.ID = "ResAnterior" + s_determinacion;
@@ -1944,37 +1740,23 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                 objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
                                                             //}
                                                         }
-                                                    }
-
-                                               
-
-
+                                                    }                                               
                                                     ////Otra forma de observacion
                                                     ImageButton btnObservacionDetalle2 = new ImageButton();
                                                     btnObservacionDetalle2.TabIndex = short.Parse("500");
-                                                    btnObservacionDetalle2.ID = "OBS" + i_iddetalleProtocolo.ToString();
-                                                    //btnObservacionDetalle2.ID = "Obs2|" + oDetalle.IdDetalleProtocolo.ToString() + "|" + m_estadoObservacion.ToString();//  m_idItem.ToString();
-
+                                                    btnObservacionDetalle2.ID = "OBS" + i_iddetalleProtocolo.ToString();                                                    
                                                     if (oDetalle.Observaciones != "")//tiene observaciones
                                                     {
-
                                                         if (oDetalle.IdUsuarioValidaObservacion == 0)
                                                             btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                         else
                                                             btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
                                                     }
-                                                    else
-                                                    {
-
-                                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
-                                                    }
-
+                                                    else                                                    
+                                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";                                                    
                                                     btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
-                                                    btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
-                                                    
-                                                    
+                                                    btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");                                                                                                        
                                                     btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() +",'"+Request["Operacion"].ToString()+"'); return false");
-
                                                     objCellObservaciones.Controls.Add(btnObservacionDetalle2);
 
                                                     ////////////////////                                        
@@ -1983,9 +1765,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     { 
                                                     ImageButton btnImagen = new ImageButton();
                                                     btnImagen.TabIndex = short.Parse("500");
-                                                    btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
-
-
+                                                    btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();                                                        
                                                     if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
                                                     {
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
@@ -2004,16 +1784,10 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                     }                                              
-                                                    
-                                                    
-
-
                                                     btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
                                                     objCellImagenes.Controls.Add(btnImagen);
                                                     }
                                                     // fin de imagenes adjuntas
-
-
                                                 }
                                             }
                                             else
@@ -2025,7 +1799,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     olbl.Text = "";
                                                 else
                                                     olbl.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
-
                                                 objCellResultado.Controls.Add(olbl);
                                                 if (oDetalle.Observaciones != "")
                                                 {
@@ -2037,7 +1810,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             }
                                         } //fin case 3
                                         break;
-
                                     case 1: //numerico
                                         {
                                             string expresionControlDecimales = oUtil.ExpresionFormato(int.Parse(m_formatoDecimal));
@@ -2046,36 +1818,26 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             {
                                                 case "0":
                                                     {
-                                                        //expresionControlDecimales = "[-+]?\\d*";
-                                                     //   expresionControlDecimales = "[-+]?\\d+";
                                                         x = decimal.Parse(m_formato0);
                                                     }
                                                     break;
                                                 case "1":
-                                                    {
-                                                        //expresionControlDecimales = "[-+]?\\d*\\.?\\,?\\d{0,1}";
-                                                      //  expresionControlDecimales = "[-+]?\\d+\\.?\\,?\\d{0,1}";
+                                                    {                                                        
                                                         x = decimal.Parse(m_formato1);
                                                     }
                                                     break;
                                                 case "2":
-                                                    {
-                                                        //                                                        expresionControlDecimales = "[-+]?\\d*\\.?\\,?\\d{0,2}";
-                                                     //   expresionControlDecimales = "[-+]?\\d+\\.?\\,?\\d{0,2}";
+                                                    {                                                     
                                                         x = decimal.Parse(m_formato2);
                                                     }
                                                     break;
                                                 case "3":
-                                                    {
-                                                        //expresionControlDecimales = "[-+]?\\d*\\.?\\,?\\d{0,3}";
-                                                      //  expresionControlDecimales = "[-+]?\\d+\\.?\\,?\\d{0,3}";
+                                                    {                                                     
                                                         x = decimal.Parse(m_formato3);
                                                     }
                                                     break;
                                                 case "4":
-                                                    {
-                                                        //expresionControlDecimales = "[-+]?\\d*\\.?\\,?\\d{0,4}";
-                                                     //   expresionControlDecimales = "[-+]?\\d+\\.?\\,?\\d{0,4}";
+                                                    {                                                     
                                                         x = decimal.Parse(m_formato4);
                                                     }
                                                     break;
@@ -2092,15 +1854,10 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 txt1.TabIndex = short.Parse(i + 1.ToString());
                                                 if (m_conResultado == "True") txt1.Text = x.ToString(System.Globalization.CultureInfo.InvariantCulture); 
                                                 if (m_conResultado == "False") txt1.Text = m_resultadoDefecto;
-                                                txt1.Width = Unit.Pixel(60);
-                                              
+                                                txt1.Width = Unit.Pixel(60);                                              
                                                 txt1.CssClass = "form-control input-sm";
-
-
                                                 if (Request["Operacion"].ToString() != "Carga") //validacion
-                                                {
-                                                    // if (VerificaValorReferencia(m_minimoReferencia, m_maximoReferencia, x, m_tipoValorReferencia))
-                                                    
+                                                {                                                    
                                                     if (oDetalle.VerificaValorReferencia(x))
                                                         txt1.ForeColor = Color.Black;
                                                     else
@@ -2109,12 +1866,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         else txt1.ForeColor = Color.Black;
                                                     }
                                                 }
-
-                                               
-
-                                                //  objCellResultado.Controls.Add(imgAceptaValor);
                                                 objCellResultado.Controls.Add(txt1);
-
 
                                                 ///etiqueta de unidad de medida
                                                 Label olblUM = new Label();
@@ -2123,18 +1875,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 olblUM.Text = unMedida;
                                                 objCellResultado.Controls.Add(olblUM);
                                                 olblUM.Visible = false;
-                                                //////////////////////////////////////////////////////
-
-                                             
+                                                //////////////////////////////////////////////////////                                             
                                                 if (oItem.TieneFormula()) //Si el item se calcula por formula se muestra inhabilitado
                                                 {
                                                     chkFormula.Visible = true;
                                                     lblFormula.Visible = true;
-                                                    btnAplicarFormula.Visible = true;
-                                                   
-                                                 
-
-
+                                                    btnAplicarFormula.Visible = true;                                                                                                    
                                                     /// seleccionar la formula a calcular
                                                     CheckBox ochkFormula = new CheckBox();
                                                     ochkFormula.Checked = true;                                                    
@@ -2185,15 +1931,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 oValidaNumero.ControlToValidate = txt1.ID;
                                                 oValidaNumero.Text = "Formato incorrecto";
                                                 oValidaNumero.ValidationGroup = "0";
-                                                objCellResultado.Controls.Add(oValidaNumero);
-
-                                     
+                                                objCellResultado.Controls.Add(oValidaNumero);                                     
                                                 ////Otra forma de observacion
                                                 ImageButton    btnObservacionDetalle2 = new ImageButton();
                                                 btnObservacionDetalle2.TabIndex = short.Parse("500");
                                                 if (oDetalle.Observaciones != "")//tiene observaciones
                                                 {
-
                                                     if (oDetalle.IdUsuarioValidaObservacion == 0)
                                                         btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                     else
@@ -2201,32 +1944,24 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 }
                                                 else
                                                 {
-
                                                     btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
                                                 }
                                                 btnObservacionDetalle2.ID = "OBS" + i_iddetalleProtocolo.ToString();
                                                 btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
                                                 btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
-                                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString()   +",'"+Request["Operacion"].ToString()+"'); return false");
-                                                 
+                                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString()   +",'"+Request["Operacion"].ToString()+"'); return false");                                                 
                                                 objCellObservaciones.Controls.Add(btnObservacionDetalle2);
                                                 
-                                                ////////////////////                                        
-
-
-
                                                 if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
                                                     txt1.Enabled = false;
                                                 }
-
                                                 if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
                                                     txt1.Enabled = false;
                                                 }
-
                                                 ////////////////////                                        
                                                 ///IMAGENES ADJUNTAS
                                                 if (Request["Operacion"].ToString() != "HC")
@@ -2234,9 +1969,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ImageButton btnImagen = new ImageButton();
                                                     btnImagen.TabIndex = short.Parse("500");
                                                     btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
-
-
-
                                                     ///Caro Performance: buscar una sola vez cuantos adjuntos visibles y no visbles tiene
                                                     if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
                                                     {
@@ -2256,10 +1988,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                             btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                     }
-
-
-
-
                                                     btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
                                                     objCellImagenes.Controls.Add(btnImagen);
                                                 }
@@ -2274,7 +2002,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     olbl.Text = "";
                                                 else
                                                     olbl.Text = x.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + unMedida;
-
                                                 //                                                if (VerificaValorReferencia(m_minimoReferencia, m_maximoReferencia, x, m_tipoValorReferencia))
                                                 if (oDetalle.VerificaValorReferencia(x))
                                                     olbl.ForeColor = Color.Black;
@@ -2290,8 +2017,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     if (olbl.Text == "")
                                                         olbl.Text = oDetalle.Observaciones;
                                                     else
-                                                        olbl.Text += Environment.NewLine + oDetalle.Observaciones;
-                                                    //objCellResultado.Controls.Add(olblObservaciones);
+                                                        olbl.Text += Environment.NewLine + oDetalle.Observaciones;                                                    
                                                 }
                                                 objCellResultado.Controls.Add(olbl);
                                             }
@@ -2323,7 +2049,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 txt1.CssClass = "form-control input-sm";
 
                                                 if (m_conResultado == "False") txt1.Text = m_resultadoDefecto;
-
                                                 if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
@@ -2340,8 +2065,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 {
                                                     if (EsNumerico(txt1.Text))
                                                     {
-                                                        decimal x1 = decimal.Parse(txt1.Text.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
-                                                        // if (VerificaValorReferencia(m_minimoReferencia, m_maximoReferencia, x, m_tipoValorReferencia))
+                                                        decimal x1 = decimal.Parse(txt1.Text.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);                                                        
                                                         if (oDetalle.VerificaValorReferencia(x1))
                                                             txt1.ForeColor = Color.Black;
                                                         else
@@ -2369,8 +2093,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ImageButton btnImagen = new ImageButton();
                                                     btnImagen.TabIndex = short.Parse("500");
                                                     btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
-
-
                                                     if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
                                                     {
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
@@ -2389,10 +2111,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                             btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                     }
-
-
-
-
                                                     btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
                                                     objCellImagenes.Controls.Add(btnImagen);
                                                 }
@@ -2400,7 +2118,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             }
                                             else
                                             {
-
                                                 Label olbl = new Label();
                                                 olbl.Font.Name = "Courier";
                                                 olbl.Font.Size = FontUnit.Point(9);
@@ -2410,14 +2127,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     olbl.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                 objCellResultado.Controls.Add(olbl);
                                             }
-
                                             ////////////////////
                                             if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                             {
                                                 if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
-                                                {
-
-                                                    ///Caro Performance: sacar busqueda en modo simplificado
+                                                {                                                    ///Caro Performance: sacar busqueda en modo simplificado
                                                     string resultadoAnterior = ""; // oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
                                                     //if (chkMostrarResultadosAnteriores.Checked)
                                                     //    resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
@@ -2442,7 +2156,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                                         } // fin case 
                                         break;
-
                                 }//fin swicth
 
 
@@ -2481,9 +2194,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         {
                                             if (Request["Operacion"].ToString() == "Valida")
                                             {
-                                                desvalidar = true;
-                                                //if (oDetalle.IdUsuarioValida == int.Parse(Session["idUsuarioValida"].ToString())) desvalidar = true;
-                                                //if (oDetalle.IdUsuarioPreValida == int.Parse(Session["idUsuarioValida"].ToString())) desvalidar = true;
+                                                desvalidar = true;                                              
                                             }
 
                                             if ((m_usuariovalida == "") && (oDetalle.IdUsuarioValidaObservacion > 0))
@@ -2500,24 +2211,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             {
                                                 Usuario oUser = new Usuario();
                                                 oUser = (Usuario)oUser.Get(typeof(Usuario), oDetalle.IdUsuarioPreValida);
-
                                                 lblPersona.Text = "PreVal.: " + oUser.FirmaValidacion + " " + oDetalle.FechaPreValida.ToShortDateString() + " " + oDetalle.FechaPreValida.ToShortTimeString();
                                                 lblPersona.ForeColor = Color.Red;
                                             }
-
-
                                         }
                                         break;
-                                }
-
-
-
-
-
-                                /// 
-                                lblPersona.Font.Size = FontUnit.Point(6);
-                                //lblPersona.Font.Italic = true;
-
+                                }                                
+                                lblPersona.Font.Size = FontUnit.Point(6);                                
                                 if (oDetalle.IdUsuarioImpresion > 0)
                                 {
                                     System.Web.UI.WebControls.Image imgImp = new System.Web.UI.WebControls.Image();
@@ -2530,28 +2230,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 {
                                     CheckBox chk1 = new CheckBox();
                                     chk1.ID = "chk" + Ds.Tables[0].Rows[i].ItemArray[2].ToString();
-                                    if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
-                                    {
-                                        chk1.Visible = false;
-
-                                    }
+                                    if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar                                    
+                                        chk1.Visible = false;                                    
                                     objCellValida.Controls.Add(chk1);
                                 }
 
                                 if (Request["Operacion"].ToString() != "HC")
                                 {
-
                                     Label lblUMedida = new Label();
-
                                     //lblUMedida.ID = "UM"+ m_idItem.ToString();
                                     lblUMedida.Font.Italic = true;
                                     lblUMedida.Font.Size = FontUnit.Point(8);
-
                                     lblUMedida.Text = unMedida;
-
-
                                     objCellUnMedida.Controls.Add(lblUMedida);
-
                                 }
 
 
@@ -2604,9 +2295,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 }*/
 
                 if (Request["idServicio"].ToString()!="6")
-                    { 
-                if ((Request["Operacion"].ToString() == "Valida") && (algovalidado == true)) // si es validacion y tiene algo validado
-                    btnRestringirAcceso.Visible = true;
+                { 
+                    if ((Request["Operacion"].ToString() == "Valida") && (algovalidado == true)) // si es validacion y tiene algo validado
+                        btnRestringirAcceso.Visible = true;
+                        imgPdf.Visible = true;
+                    ///no poner boton imprimir: caro
                 }
                 //else
                 //    btnRestringirAcceso.Visible = false;
@@ -2655,7 +2348,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
 
             string m_ssql = @" SELECT idObservacionResultado , codigo  AS descripcion 
-                                FROM   LAB_ObservacionResultado where idTipoServicio=" +Request["idServicio"].ToString()+" and  baja=0 order by codigo " ;
+                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio=" +Request["idServicio"].ToString()+" and  baja=0 order by codigo " ;
           
 
             if (tipo == "gral")

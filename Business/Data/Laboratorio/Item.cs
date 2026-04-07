@@ -863,7 +863,7 @@ namespace Business.Data.Laboratorio
         public bool VerificaMuestrasAsociadas(int idMuestra)
         {
             bool dev = true;
-            if (this.IdArea.IdTipoServicio.IdTipoServicio == 3) //micro
+            if ((this.IdArea.IdTipoServicio.IdTipoServicio == 3) && (idMuestra>0))//micro: se agrega control que se haya ingresado una muestra
             {
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(ItemMuestra));
