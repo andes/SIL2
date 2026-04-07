@@ -105,7 +105,6 @@ namespace WebLab.Usuarios
             else
                 m_ssql = @"   SELECT idEfector, nombre FROM Sys_Efector e with (nolock) 
 					  where E.idEfector=" + oUser.IdEfector.IdEfector.ToString() + " and exists (select 1 from Sys_UsuarioEfector u with (nolock)  where e.idefector= u.idefector) " +
-                      "  or ( E.idEfector in (select idEfector from Sys_Usuario where idEfectorDestino= " + oUser.IdEfector.IdEfector.ToString() + ")) " +
                       " ORDER BY nombre ";
              
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
@@ -127,14 +126,15 @@ namespace WebLab.Usuarios
         
         private object LeerDatos()
         {
-            string str_condicion = " where username!='adminapi'";
+          
             string m_strSQL = @"SELECT     U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
-case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion
-FROM         Sys_Usuario AS U (nolock) INNER JOIN
+                        case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion
+                        FROM         Sys_Usuario AS U (nolock) INNER JOIN
                       Sys_Perfil AS P (nolock)  ON U.idPerfil = P.idPerfil inner join
 					  Sys_UsuarioEfector UE (nolock)  on Ue.idusuario= U.idUsuario inner join
 					  sys_efector as E (nolock) on Ue.idEfector= E.idEfector
              ";
+            string str_condicion = " where username!='adminapi' ";
 
             if (ddlEfector.SelectedValue != "0")
                 str_condicion += " and E.idEfector=" + ddlEfector.SelectedValue.ToString();
@@ -157,9 +157,20 @@ FROM         Sys_Usuario AS U (nolock) INNER JOIN
            if(chbAdministrador.Checked)
                 str_condicion += " and U.administrador=1";
 
-            m_strSQL += str_condicion + " order by username";
-
-        
+            //Poder ver en el listado de usuarios los usuarios externos del efector logueado
+            if (oUser.IdEfector.IdEfector != 227)
+            {
+                string copia_m_strSQL = m_strSQL;
+                //1- Primer parte del select
+                m_strSQL += str_condicion;
+                //2-Segunda parte del select
+                str_condicion = str_condicion.Replace(" and E.idEfector=" + ddlEfector.SelectedValue.ToString(), ""); //Saco el idEfector porque no sabemos con cual esta logueado el de la salitas
+                m_strSQL += " union " + copia_m_strSQL + str_condicion + " and  U.idEfectorDestino=" + oUser.IdEfector.IdEfector + " and U.idPerfil=15   order by username";
+            }
+            else
+             
+                m_strSQL += str_condicion + " order by username";
+            
 
             DataSet Ds = new DataSet();
             //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
