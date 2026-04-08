@@ -109,14 +109,28 @@ namespace WebLab.Resultados
             IList items = crit.List();
             string pivot = "";
             string sDatos = "";
+            HashSet<string> pivote = new HashSet<string>();
+
             foreach (DetalleProtocolo oDet in items)
             {
-                if (pivot != oDet.IdItem.Nombre)
+                //if (pivot != oDet.IdItem.Nombre) //Debo cambiar la manera que verifica los repetidos,
+                // porque ahora cuando se regenera un subItem el IdDetalleProtocolo no es secuencial
+                // Y en la vista del protocolo se ve "duplicado"
+                if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego sin problemas de duplicados
                 {
-                    if (sDatos == "")
-                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
+                    string estado = "0";
+                    if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioValidaObservacion > 0)) //validado
+                        estado = "2";
                     else
-                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
+                    {
+                        if ((oDet.IdUsuarioResultado > 0) || (oDet.IdUsuarioObservacion > 0) || (oDet.Enviado == 2)) //cargado
+                            estado = "1";
+                    }
+
+                    if (sDatos == "")
+                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
+                    else
+                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
                     //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
                     pivot = oDet.IdItem.Nombre;
                 }
@@ -395,9 +409,50 @@ namespace WebLab.Resultados
                         {
                             if (trajomuestra == "true")
                                 oDetalle.TrajoMuestra = "No";
-                            else
-                                oDetalle.TrajoMuestra = "Si";
+                            else // (trajomuestra == "false"
+                            {
+                                /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                                 * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                                 * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                                 * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                                 */
 
+                               
+                                bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
+                                oDetalle.TrajoMuestra = "Si";
+                                
+                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem && 
+                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio ==3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+                                {
+                                    /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
+                                    * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
+                                    */
+
+                                    //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
+                                    if (!oDetalle.ConResultado)
+                                    { 
+                                        oDetalle.IdUsuarioValida = 0; 
+                                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                    }
+
+                                    //Caso 2: Es derivacion.
+                                    //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
+                                    if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                    {
+                                        oDetalle.IdUsuarioValida = 0;
+                                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                    }
+
+                                    /*  Si es un analisis Compuesto Regenero analisis.
+                                     *  Considero que si el analisis es Derivacion no se debe regenerar
+                                     *  Considero idItem = idSubItem
+                                     */
+
+                                    if ( oItem.IdCategoria == 1 )
+                                        GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
+                                }
+                                
+                            }
                             oDetalle.Save();
                         }
 
@@ -541,10 +596,12 @@ namespace WebLab.Resultados
 
 
 
-        private void GuardarDetallePractica(DetalleProtocolo oDet)
+        private void GuardarDetallePractica(DetalleProtocolo oDet, bool regenera = false)
         {
+            //Alta normal (regenera = false) → el código funciona como antes
+            // Modificación con regeneración(regenera = true) → se omite si es Derivacion para no generar una nueva Derivacion
 
-            if (oDet.VerificarSiEsDerivable(oDet.IdProtocolo.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            if (!regenera && oDet.VerificarSiEsDerivable(oDet.IdProtocolo.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
@@ -737,10 +794,10 @@ namespace WebLab.Resultados
 
         }
 
-       
-		
 		 protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         {
+            string[] bk = TxtDatosCargados.Value.Split(';');
+
             TxtDatosCargados.Value = TxtDatos.Value;
 
             string sDatos = "";
@@ -752,11 +809,19 @@ namespace WebLab.Resultados
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
                 string muestra = fila[2].ToString();
+                string conResultado = "false";
+
+                //Cargo el valor del resultado para no perderlo si da error la validacion
+                if (i < bk.Length && bk.Length > 1)
+                {
+                    string[] filaBk= bk[i].Split('#');
+                    conResultado = filaBk[2].ToString();
+                }
 
                 if (sDatos == "")
-                    sDatos = codigo + "#" + muestra;
+                    sDatos = codigo + "#" + muestra  + "#" + conResultado;
                 else
-                    sDatos += ";" + codigo + "#" + muestra;
+                    sDatos += ";" + codigo + "#" + muestra + "#" + conResultado;
 
             }
 
@@ -781,6 +846,88 @@ namespace WebLab.Resultados
                 else args.IsValid = true;            
             }
         }
+
+        //LAB-192: Bug análisis Repetidos en protocolos. No lo pasamos a produccion porque baja la perfomance del sistema. 
+
+        //private bool VerificarAnalisisContenidos_LAB192()
+        //{
+        //    bool devolver = true;
+        //    try
+        //    {
+        //        //Business.Data.Laboratorio.Protocolo oProtocolo = new Business.Data.Laboratorio.Protocolo();
+        //        //oProtocolo = (Business.Data.Laboratorio.Protocolo)oProtocolo.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+
+        //        string[] tabla = TxtDatos.Value.Split('@');
+        //        string listaCodigo = "";
+        //        var subItemsEnBD = new Dictionary<int, int>();
+
+        //        for (int i = 0; i < tabla.Length - 1; i++)
+        //        {
+        //            string[] fila = tabla[i].Split('#');
+        //            string codigo = fila[1].ToString();
+        //            if (listaCodigo == "")
+        //                listaCodigo = "'" + codigo + "'";
+        //            else
+        //                listaCodigo += ",'" + codigo + "'";
+
+        //            // int i_idItemPractica = 0;
+        //            if (codigo != "")
+        //            {
+
+        //                Item oItem = new Item();
+        //                oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+        //                //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
+        //                if (Request["idProtocolo"] != null)//Caro: unifco instanciacion de protocolo cuando es modificacion 
+        //                {
+        //                    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+        //                    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+
+        //                    if ((oRegistro != null) && (oItem != null))
+        //                    {
+        //                        ISession m_session = NHibernateHttpModule.CurrentSession;
+        //                        ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //                        crit.Add(Expression.Eq("IdItem", oItem));
+        //                        crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+        //                        IList lista = crit.List();
+
+        //                        if (lista.Count == 0)//no esta en la base
+        //                        {
+        //                            devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, subItemsEnBD);
+
+        //                        }
+        //                        else
+        //                        {
+        //                            foreach (DetalleProtocolo oDetalle in lista)
+        //                            {
+        //                                subItemsEnBD[oDetalle.IdSubItem.IdItem] = oDetalle.IdItem.IdItem;
+        //                            }
+
+        //                        }
+        //                    }
+
+        //                }
+        //                else  // no es modificacion
+        //                {
+        //                    devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla);
+        //                }
+
+
+        //            }/// if codigo
+        //            if (!devolver) break;
+        //        }
+
+        //        if ((devolver) && (listaCodigo != ""))
+        //        { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
+
+        //    }
+        //    catch (Exception error)
+        //    {
+        //        this.cvValidacionInput.ErrorMessage = "Ha ocurrido un error. Verifique con el administrador del sistema";
+        //        devolver = false;
+        //    }
+        //    return devolver;
+
+        //}
 
         private bool VerificarAnalisisContenidos()
         {
@@ -853,10 +1000,115 @@ namespace WebLab.Resultados
             return devolver;
 
         }
-		
-		   
-		
-		
+
+        //LAB-192: Bug análisis Repetidos en protocolos. No lo pasamos a produccion porque baja la perfomance del sistema. 
+
+        //private bool VerificaMuestrasAsociadas(string codigo, Item oItem, string[] tabla, Dictionary<int, int> itemsEnBD = null)
+        //{
+        //    bool devolver = true;
+
+        //    // Para laboratorio general ddlMuestra no se carga con valores por eso se evalua que sea distinto de vacio 
+        //    if (!string.IsNullOrEmpty(ddlMuestra.SelectedValue) &&  oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
+        //    {
+
+
+        //        for (int j = 0; j < tabla.Length - 1; j++)
+
+        //        {
+        //            string[] fila2 = tabla[j].Split('#');
+        //            string codigo2 = fila2[1].ToString();
+        //            if ((codigo2 != "") && (codigo != codigo2))
+        //            {
+        //                Item oItem2 = new Item();
+        //                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+
+        //                //MultiEfector: filtro por efector
+        //                ISession m_session = NHibernateHttpModule.CurrentSession;
+        //                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+        //                crit.Add(Expression.Eq("IdItemPractica", oItem));
+        //                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+        //                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+        //                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+
+
+        //                if (oGrupo != null)
+        //                {
+
+        //                    this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+        //                    devolver = false; break;
+
+        //                }
+
+        //                // -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+        //                //Verifico que el codigo cargado tampoco este en mi lista de subItems de la base de datos!
+
+        //                if (itemsEnBD != null)
+        //                {
+        //                    Item oItemExistente = new Item();
+        //                    bool hayConflicto = false;
+        //                    int itemExistente = 0;
+
+        //                    m_session = NHibernateHttpModule.CurrentSession;
+        //                    crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+        //                    crit.Add(Expression.Eq("IdItemPractica", oItem));
+        //                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+        //                    IList detalle = crit.List();
+
+        //                    if (detalle.Count > 0) //Es practica
+        //                    {
+        //                        foreach (PracticaDeterminacion item in detalle)
+        //                        {
+        //                            if (itemsEnBD.ContainsKey(item.IdItemDeterminacion))
+        //                            {
+        //                                itemExistente = itemsEnBD[item.IdItemDeterminacion];
+        //                                hayConflicto = true; break;
+        //                            }
+        //                        }
+        //                    }
+        //                    else //es determinacion simple idItem=idSubitem
+        //                    {
+        //                        if (itemsEnBD.ContainsKey(oItem.IdItem))
+        //                        {
+        //                            itemExistente = itemsEnBD[oItem.IdItem];
+        //                            hayConflicto = true;
+        //                        }
+        //                    }
+
+        //                    if (hayConflicto)
+        //                    {
+        //                        string mensajeerror = "";
+        //                        oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente);//, "Baja", false); //Caro: le saco la condicion de baja porque si fue grabado en la base y despues lo pusieron de baja no lo va a encontrar
+        //                        if (oItemExistente != null)///Caro agrego control de que exista si no va a dar error al usarlo
+        //                        {
+        //                            mensajeerror =
+        //                            "Ha cargado análisis contenidos en otros. Verifique los códigos " +
+        //                            codigo + " y " + oItemExistente.Codigo + "!";
+
+        //                        }
+        //                        else
+        //                            mensajeerror = "Ha cargado análisis contenidos en otros. Verifique los códigos ";
+
+        //                        this.cvValidacionInput.ErrorMessage = mensajeerror;
+        //                        devolver = false;
+        //                    }
+
+        //                }
+        //            }
+
+        //        }////for           
+        //    }
+        //    else
+        //    {
+        //        if (!string.IsNullOrEmpty(ddlMuestra.SelectedValue)) {
+        //            this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+        //            devolver = false; //break;
+        //        }
+        //    }
+
+        //    return devolver;
+        //}
+
         private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
         { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
             Business.Data.Laboratorio.Protocolo oProtocolo = new Business.Data.Laboratorio.Protocolo();
@@ -892,17 +1144,6 @@ namespace WebLab.Resultados
             return devolver;
 
         }
-        
-
-    
-         
-
-
-         
-
-      
-
-
     }
 }
 

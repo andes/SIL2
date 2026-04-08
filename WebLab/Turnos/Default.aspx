@@ -68,156 +68,9 @@
 <table style="width:100%" >
 				
 					 
-				<%--	<tr>
-							<td   >
-                                            DNI/LE/LC:</td>
-						<td align="left" colspan="2">
-                           <input id="txtDni" type="text" runat="server" style="width:100px;"  class="form-control input-sm"  
-                                onblur="valNumero(this)" maxlength="8" tabindex="0" />
-                            <asp:CompareValidator ID="cvDni" runat="server" ControlToValidate="txtDni" 
-                                ErrorMessage="Debe ingresar solo numeros" Operator="DataTypeCheck" 
-                                Type="Integer" ValidationGroup="0"></asp:CompareValidator>
-                        </td>
-						
-					</tr>
-					<tr>
-							<td   >
-                                            Apellido/s:</td>
-						<td align="left" colspan="2">
-                                            <asp:TextBox ID="txtApellido" runat="server" class="form-control input-sm" TabIndex="1" 
-                                                ValidationGroup="1" Width="150px"></asp:TextBox>
-                        </td>
-						
-					</tr>
-					<tr>
-							<td   >
-                                            Nombres/s:</td>
-						<td align="left" colspan="2">
-                                            <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm"  TabIndex="2" 
-                                                Width="216px"></asp:TextBox>
-                        </td>
-						
-					</tr>
-
-                    
-					<tr>
-						<td   >
-                                            Fecha de Nac.:</td>
-						<td align="left" colspan="2">
-                                            <input id="txtFechaNac" runat="server" type="text" maxlength="10" 
-                         onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="3" class="form-control input-sm" 
-                                style="width: 70px"  /></td>
-						
-					</tr>
-				
-					
-					<tr>
-						<td   >
-                                            Sexo:</td>
-						<td align="left" colspan="2">
-                                            <asp:DropDownList ID="ddlSexo" runat="server" TabIndex="4" class="form-control input-sm" >
-                                                <asp:ListItem Value="0" Selected="True">Todos</asp:ListItem>
-                                                <asp:ListItem Value="2">Femenino</asp:ListItem>
-                                                <asp:ListItem Value="3">Masculino</asp:ListItem>
-                                                <asp:ListItem Value="1">Indeterminado</asp:ListItem>
-                                            </asp:DropDownList>
-                        </td>
-						
-					</tr>
-					<tr>
-						<td   colspan="3">
-                                            <hr /></td>
-						
-					</tr>
-					<tr>
-						<td  >
-                                  <asp:LinkButton ID="btnBuscar" runat="server" CssClass="btn btn-info" OnClick="btnBuscar_Click"    Width="100px" >
-                                             <span class="glyphicon glyphicon-search"></span>&nbsp;Buscar</asp:LinkButton>       
-                                        <%--    <asp:Button ID="btnBuscar" runat="server" Text="Buscar" ValidationGroup="0" 
-                                               CssClass="myButton" TabIndex="5" onclick="btnBuscar_Click" />--%>
-                      <%--   </td>
-						<td align="left">
-                                            <asp:CustomValidator ID="cvDatosEntrada" runat="server" 
-                                                ErrorMessage="Debe ingresar al menos un parametro de busqueda" 
-                                                onservervalidate="cvDatosEntrada_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                        </td>
-						
-						<td align="right">
-                                      
-                              <asp:HyperLink ID="HyperLink1"  runat="server"  CssClass="btn btn-danger" Width="150px" 
-                                               ToolTip="Crear un nuevo paciente en el SIPS" Target="_self">Nuevo Paciente</asp:HyperLink> 
-                                               
-                                                 <asp:Button ToolTip="Crear un nuevo paciente "  CssClass="btn btn-primary"
-                                               ID="btnSeleccionarPaciente" Width="150px" runat="server" Text="Nuevo Paciente" 
-                                               OnClientClick="seleccionarPaciente(); return false;" visible="false"
-                                               onclick="btnSeleccionarPaciente_Click" TabIndex="100" 
-                                               UseSubmitBehavior="False" />
-        <br />
-        <asp:HiddenField ID="hfPaciente" runat="server" />
-                                               </td>
-						
-					</tr>
-					<tr>
-						<td   colspan="3">
-                                            &nbsp;</td>
-						
-					</tr>
-					<tr>
-						<td   colspan="3" style="vertical-align: top">
-        <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False" DataKeyNames="idPaciente" CssClass="table table-bordered bs-table"  PageSize="15" 
-                                
-                                
-                                EmptyDataText="No se encontraron pacientes para los parametros de busqueda ingresados" 
-                                onrowcommand="gvLista_RowCommand" onrowdatabound="gvLista_RowDataBound" 
-                                TabIndex="5" 
-                                GridLines="None" onpageindexchanging="gvLista_PageIndexChanging" 
-                               Width="600px">
-           
-
-            <Columns>
-                <asp:TemplateField>
-                            <ItemTemplate>
-                            <asp:ImageButton ID="Editar" runat="server" ImageUrl="~/App_Themes/default/images/editar.jpg" 
-                            ommandName="Editar" />
-                            </ItemTemplate>
-                          
-                               <ItemStyle Width="18px" HorizontalAlign="Center" Height="18px" />
-                          
-                        </asp:TemplateField>
-                <asp:BoundField DataField="dni" HeaderText="DNI" >
-                    <ItemStyle Width="15%" HorizontalAlign="Center" />
-                </asp:BoundField>
-                <asp:BoundField DataField="paciente" HeaderText="Apellidos y Nombres">
-                    <ItemStyle Width="65%" />
-                </asp:BoundField>
-                 <asp:BoundField DataField="sexo" HeaderText="Sexo">
-                     <ItemStyle HorizontalAlign="Center" />
-                </asp:BoundField>
-                 <asp:BoundField DataField="fechaNacimiento" HeaderText="Fecha Nacimiento">
-                     <ItemStyle HorizontalAlign="Center" Width="15%" />
-                </asp:BoundField>
-                 <asp:TemplateField>
-                            <ItemTemplate>
-                            <asp:ImageButton ID="Turno" runat="server" ImageUrl="~/App_Themes/default/images/flecha.jpg" 
-                            ommandName="Turno" />
-                            </ItemTemplate>
-                          
-                               <ItemStyle Width="18px" HorizontalAlign="Center" Height="18px" />
-                          
-                        </asp:TemplateField>
-            </Columns>
-            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" 
-                Font-Names="Arial" Font-Size="8pt" />
-            <EditRowStyle BackColor="#999999" />
-            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-        </asp:GridView>
-                        </td>
-						
-					</tr>--%>
+				<%--<asp:RangeValidator ID="rvSexo" runat="server" 
+                                ControlToValidate="ddlSexo" ErrorMessage="Sexo" MaximumValue="999999" 
+                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>--%>                      <%--		<td rowspan="4" >   </td>--%>
 
 
 
@@ -226,7 +79,7 @@
                                             Tipo de Doc.:
                         </td>
 						<td align="left" colspan="2">
-                                            <asp:DropDownList ID="ddlTipo" runat="server" TabIndex="4" class="form-control input-sm" AutoPostBack="True" OnSelectedIndexChanged="ddlTipo_SelectedIndexChanged">
+                                            <asp:DropDownList ID="ddlTipo" runat="server" class="form-control input-sm" AutoPostBack="True" OnSelectedIndexChanged="ddlTipo_SelectedIndexChanged">
                                                 <asp:ListItem Value="DNI" Selected="True">DNI</asp:ListItem>
                                                 <asp:ListItem Value="T">Temporal</asp:ListItem>
                                              
@@ -241,7 +94,7 @@
                                             Nro. Documento:</td>
 						<td align="left" colspan="2">
                             <input id="txtDni" type="text" runat="server"  class="form-control input-sm"
-                                onblur="valNumeroSinPunto(this)" maxlength="8" tabindex="0" style="width: 100px"/>
+                                onblur="valNumeroSinPunto(this)" maxlength="8" tabindex="1" style="width: 100px"/>
                            
                            
                             <asp:CompareValidator ID="cvDni" runat="server" ControlToValidate="txtDni" 
@@ -254,19 +107,22 @@
 					
 					<tr>
 						<td   style="width: 150px">
-                                            Sexo:<asp:RangeValidator ID="rvSexo" runat="server" 
-                                ControlToValidate="ddlSexo" ErrorMessage="Sexo" MaximumValue="999999" 
-                                MinimumValue="1" Type="Integer" ValidationGroup="0">*</asp:RangeValidator>
+                                            Sexo:
+                                            <%--	<td rowspan="3" >   </td>--%>
                                         </td>
 						<td align="left" colspan="2">
-                                            <asp:DropDownList ID="ddlSexo" runat="server" TabIndex="4" class="form-control input-sm">
+                                            <asp:DropDownList ID="ddlSexo" runat="server" TabIndex="2" class="form-control input-sm">
                                                 <asp:ListItem Value="0" Selected="True">--Seleccione--</asp:ListItem>
                                                 <asp:ListItem Value="2">Femenino</asp:ListItem>
                                                 <asp:ListItem Value="3">Masculino</asp:ListItem>
                                              
                                             </asp:DropDownList>
+                                            <asp:Label ID="lblMensajeSexo" runat="server" Font-Bold="True" ForeColor="#CC3300" Visible="False"></asp:Label>
                         </td>
-				<%--		<td rowspan="4" >   </td>--%>
+                        <%--	<td align="right" >
+        <br />
+        
+        </td>--%>
 					</tr>
 				
 					
@@ -276,7 +132,7 @@
 						<td align="left" colspan="2">
                                             <asp:TextBox ID="txtNumeroAdicional" runat="server" CssClass="form-control input-sm" Enabled="False" TabIndex="3"></asp:TextBox>
                                             <asp:Button ID="btnBuscar" runat="server" Text="Buscar" ValidationGroup="0"  Width="100px"
-                                                CssClass="btn btn-primary" TabIndex="5" onclick="btnBuscar_Click" 
+                                                CssClass="btn btn-primary" TabIndex="4" onclick="btnBuscar_Click" 
                                                 ToolTip="Buscar Persona" />
 
                         </td>
@@ -294,14 +150,14 @@
 						<td  >
                                             Apellidos:</td>
 						<td align="left" >
-                                                          <asp:TextBox ID="txtApellido" runat="server" class="form-control input-sm" TabIndex="7" ToolTip="Ingrese el apellido del paciente" Width="300px"></asp:TextBox>
+                                                          <asp:TextBox ID="txtApellido" runat="server" class="form-control input-sm" TabIndex="5" ToolTip="Ingrese el apellido del paciente" Width="300px"></asp:TextBox>
                         </td>
 						
 					</tr>
 					          <tr>
                                   <td>Nombres:</td>
                                   <td align="left">
-                                      <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm" TabIndex="8" ToolTip="Ingrese el nombre del paciente" Width="300px"></asp:TextBox>
+                                      <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm" TabIndex="6" ToolTip="Ingrese el nombre del paciente" Width="300px"></asp:TextBox>
                                   </td>
                               </tr>
 					<tr>
@@ -309,7 +165,7 @@
                                             DU Madre/Tutor:</td>
 						<td align="left" >
                                             <input title="Ingrese el documento unico del parentesco" id="txtDniMadre" type="text" runat="server"  class="form-control input-sm"
-                                 onblur="valNumero(this)" style="width: 150px" maxlength="8"/>
+                                 onblur="valNumero(this)" style="width: 150px" maxlength="8" tabindex="7"/>
                                             <asp:CustomValidator ID="cvDNIMadre" runat="server" ErrorMessage="Numero " onservervalidate="cvDNIMadre_ServerValidate" ValidationGroup="2">Sólo numeros (sin puntos ni espacios)</asp:CustomValidator>
                         </td>
 						
@@ -318,7 +174,7 @@
 						<td  >
                                             Apellido Madre/Tutor:</td>
 						<td align="left" >
-                                            <asp:TextBox ID="txtApellidoMadre" runat="server" class="form-control input-sm" TabIndex="4" 
+                                            <asp:TextBox ID="txtApellidoMadre" runat="server" class="form-control input-sm" TabIndex="8" 
                                                 Width="300px" ToolTip="Ingrese el apellido del paciente"></asp:TextBox>
                         </td>
 						
@@ -327,14 +183,14 @@
 					          <tr>
                                   <td >Nombres/s Madre/Tutor:</td>
                                   <td align="left">
-                                      <asp:TextBox ID="txtNombreMadre" runat="server" class="form-control input-sm" TabIndex="4" ToolTip="Ingrese el apellido del paciente" Width="300px"></asp:TextBox>
+                                      <asp:TextBox ID="txtNombreMadre" runat="server" class="form-control input-sm" TabIndex="9" ToolTip="Ingrese el apellido del paciente" Width="300px"></asp:TextBox>
                                   </td>
                               </tr>
 				
 					          <tr>
                                   <td>&nbsp;</td>
                                   <td align="left">
-                                      <asp:Button ID="btnBuscarMas" runat="server" CssClass="btn btn-primary" onclick="btnBuscarMas_Click" TabIndex="5" Text="Buscar Adicional" ToolTip="Buscar Persona" ValidationGroup="2" Visible="False" Width="150px" />
+                                      <asp:Button ID="btnBuscarMas" runat="server" CssClass="btn btn-primary" onclick="btnBuscarMas_Click" TabIndex="10" Text="Buscar Adicional" ToolTip="Buscar Persona" ValidationGroup="2" Visible="False" Width="150px" />
                                   </td>
                               </tr>
 				
@@ -354,7 +210,7 @@
                             <asp:Label ID="lblMensaje" runat="server" ForeColor="Blue" Text="Se encontraron los siguientes datos para el dni ingresado:" Visible="False"></asp:Label>
                             <asp:GridView ID="gvLista" runat="server" AllowPaging="True" AutoGenerateColumns="False" CellPadding="1" 
                                 CssClass="table table-bordered bs-table" DataKeyNames="idPaciente" 
-                                EmptyDataText="No se encontraron pacientes para los parametros de busqueda ingresados"  ForeColor="#666666" GridLines="Horizontal" onpageindexchanging="gvLista_PageIndexChanging" onrowcommand="gvLista_RowCommand" onrowdatabound="gvLista_RowDataBound" PageSize="13" Width="100%">
+                                EmptyDataText="No se encontraron pacientes para los parametros de busqueda ingresados"  ForeColor="#666666" GridLines="Horizontal" onpageindexchanging="gvLista_PageIndexChanging" onrowcommand="gvLista_RowCommand" onrowdatabound="gvLista_RowDataBound" PageSize="13" Width="100%" TabIndex="11">
                
                                 <Columns>
                                     <asp:TemplateField>

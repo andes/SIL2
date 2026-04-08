@@ -166,6 +166,15 @@ namespace WebLab {
         protected global::System.Web.UI.WebControls.DropDownList ddlDiagnostico;
         
         /// <summary>
+        /// ddlEnfermedadBase control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEnfermedadBase;
+        
+        /// <summary>
         /// ddlRecordarOrigenProtocolo control.
         /// </summary>
         /// <remarks>
@@ -929,6 +938,24 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCodigoEstablecimientoSISA;
+        
+        /// <summary>
+        /// lnkExcel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkExcel;
+        
+        /// <summary>
+        /// lnkExcelSISAResultados control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkExcelSISAResultados;
         
         /// <summary>
         /// btnReinializacion control.

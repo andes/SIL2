@@ -8,10 +8,10 @@
     <script src="Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>
 
-    <script type="text/javascript">
+  <%--  <script type="text/javascript">
             /** Con esta funcion verificamos que si coloca la Fecha de Hoy, no pueda poner una Hora superior  a la actual */
 
-        document.addEventListener("DOMContentLoaded", function () {
+      document.addEventListener("DOMContentLoaded", function () {
             var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
             var txtHora = document.getElementById('<%= txtHora.ClientID %>');
             var txtEnvio = document.getElementById('<%= hidFechaEnvio.ClientID %>');
@@ -26,10 +26,11 @@
             //console.log(txtEnvio.value)
             var FechaENvioLote = new Date(txtEnvio.value);
             //console.log(FechaENvioLote)
-            txtFecha.max = fechaHoyStr; // Limitar la fecha máxima al día de hoy
-            txtFecha.min = FechaENvioLote.toISOString().split('T')[0];
+           
 
-            if (fechaSeleccionadaStr === fechaHoyStr) {
+                if (fechaSeleccionadaStr === fechaHoyStr) {
+                    txtFecha.max = fechaHoyStr; // Limitar la fecha máxima al día de hoy
+                    txtFecha.min = FechaENvioLote.toISOString().split('T')[0];
                 var horaActual = fechaHoy.getHours().toString().padStart(2, '0') + ":" + fechaHoy.getMinutes().toString().padStart(2, '0');
                 if (txtHora.max !== horaActual) { // Evita sobrescribir si ya está correcto
                     txtHora.max = horaActual; //Si elige la fecha de hoy no puede poner una hora superior a la actual
@@ -44,7 +45,7 @@
         cambioHorario(); //Llamar a la función al cargar la página
         txtFecha.addEventListener("change", cambioHorario); //llamar la funcion para cambiar la hora
         });
-    </script>
+    </script>--%>
 
 </asp:Content>
 
@@ -109,13 +110,13 @@
                                 <tr>
                                     
                                     <td class="">Fecha y Hora:
-                                        <%--<input id="txt_Fecha" runat="server" type="date" class="form-control input-sm" title="Ingrese la fecha de ingreso" />--%>
+                                     <%--   <input id="txtFecha" runat="server" type="date" class="form-control input-sm" title="Ingrese la fecha de ingreso" />--%>
                                         <asp:TextBox runat="server" ID="txtFecha" TextMode="Date" class="form-control input-sm"  />
                                         <input id="txtHora"  runat="server" type="time" class="form-control input-sm" name="txtHora" />
 
-                                        <asp:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+                                       <%-- <asp:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
                                         <asp:RequiredFieldValidator ID="rfvHora" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
-                                        <asp:RangeValidator runat="server" ID="rvFecha" ControlToValidate="txtFecha" />
+                                        <asp:RangeValidator runat="server" ID="rvFecha" ControlToValidate="txtFecha" />--%>
                                         </td>
                                 </tr>
                                 <tr>
@@ -128,12 +129,16 @@
                                         <textarea id="txtObs" runat="server" rows="3" cols="2" class="form-control input-sm" style="width: 600px"></textarea>
                                     </td>
                                 </tr>
-
+                                <tr>
+                                    <td> <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                    ValidationGroup="0" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" ></asp:CustomValidator></td>
+                                     
+                                </tr>
                             </table>
                         </div>
 
                         <div class="panel-footer">
-                            <asp:Button ID="btnRecibirLote" runat="server" OnClick="btn_recibirLote_Click" Text="Guardar" CssClass="btn btn-success" Width="150px" Enabled="true" />
+                            <asp:Button ID="btnRecibirLote" runat="server" OnClick="btn_recibirLote_Click" Text="Guardar" CssClass="btn btn-success" Width="150px" Enabled="true" ValidationGroup="0" />
 
                             <asp:Button ID="btnVolver" runat="server" OnClick="btn_volver_Click" Text="Volver" CssClass="btn btn-primary" Width="150px" Enabled="true" />
                         </div>

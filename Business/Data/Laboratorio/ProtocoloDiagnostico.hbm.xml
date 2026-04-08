@@ -11,6 +11,6 @@
     <!--<property column="idProtocolo" type="Int32" name="IdProtocolo" not-null="true" />
 		<property column="idEfector" type="Int32" name="IdEfector" not-null="true" />-->
 		<property column="idDiagnostico" type="Int32" name="IdDiagnostico" not-null="true" />
-		
+    <property column="tipo" type="String" name="Tipo"   />
 	</class>
 </hibernate-mapping>

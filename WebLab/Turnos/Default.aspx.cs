@@ -81,11 +81,12 @@ namespace WebLab.Turnos
         }
         private void CargarGrilla()
         {
-            string m_sexo = "F";
-            if (ddlSexo.SelectedValue == "2")
-                m_sexo = "F";
-            else
-                m_sexo = "M";
+            string m_sexo = ""; lblMensajeSexo.Visible = false;
+            //string m_sexo = "F";
+            //if (ddlSexo.SelectedValue == "2")
+            //    m_sexo = "F";
+            //else
+            //    m_sexo = "M";
 
 
 
@@ -98,11 +99,21 @@ namespace WebLab.Turnos
 
                 if (gvLista.Rows.Count == 0)
                 {
-                    lblMensaje.Visible = false;
-
-
-                    Response.Redirect("../Protocolos/ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
-
+                    if (ddlSexo.SelectedValue != "0")  // se debe seleccionar el sexo para generar un paciente nuevo
+                    {
+                          m_sexo = "F";
+                        if (ddlSexo.SelectedValue == "2")
+                            m_sexo = "F";
+                        else
+                            m_sexo = "M";
+                        lblMensaje.Visible = false;
+                        Response.Redirect("../Protocolos/ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
+                    }
+                    else
+                    {
+                        lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                        lblMensajeSexo.Visible = true;
+                    }
 
                 }
                 else
@@ -112,28 +123,60 @@ namespace WebLab.Turnos
 
             if ((ddlTipo.SelectedValue == "T"))
             { //temporal
+
+
                 if ((txtDni.Value != "") || (txtNumeroAdicional.Text != ""))
                 {
+
                     gvLista.DataSource = LeerDatos();
                     gvLista.DataBind();
 
 
                     if (gvLista.Rows.Count == 0)
                     {
-                        lblMensaje.Visible = false;
+                        if (ddlSexo.SelectedValue != "0")
+                        {
+                            m_sexo = "F";
+                            if (ddlSexo.SelectedValue == "2")
+                                m_sexo = "F";
+                            else
+                                m_sexo = "M";
+                            lblMensaje.Visible = false;
 
 
-                        Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0" );// + Session["idUrgencia"].ToString());
+                            Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0");// + Session["idUrgencia"].ToString());
+                        }
+                        else
+                        {
 
-
+                            lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                            lblMensajeSexo.Visible = true;
+                        }
                     }
                     else
                         lblMensaje.Visible = true;
                 }
 
                 else
+                {
+                    if (ddlSexo.SelectedValue != "0")
+                    {
+                        m_sexo = "F";
+                        if (ddlSexo.SelectedValue == "2")
+                            m_sexo = "F";
+                        else
+                            m_sexo = "M";
+                        lblMensaje.Visible = false;
+                        Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
+                    }
+                    else
+                    {
 
-                    Response.Redirect("../Protocolos/ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboTurno&idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0"); // + Session["idUrgencia"].ToString());
+                        lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                        lblMensajeSexo.Visible = true;
+                    }
+                }
+               
             }
 
 
@@ -338,9 +381,9 @@ namespace WebLab.Turnos
 
             if (txtApellido.Text != "") str_condicion += " AND (Pa.apellido like '%" + txtApellido.Text + "%')";
             if (txtNombre.Text != "") str_condicion += " AND (Pa.nombre like '%" + txtNombre.Text + "%')";
-            if (txtDniMadre.Value != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and numeroDocumento=" + txtDniMadre.Value + "))";
-            if (txtApellidoMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtApellidoMadre.Text + "))";
-            if (txtNombreMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtNombreMadre.Text + "))";
+            if (txtDniMadre.Value != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and numeroDocumento=" + txtDniMadre.Value + ")";
+            if (txtApellidoMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtApellidoMadre.Text + ")";
+            if (txtNombreMadre.Text != "") str_condicion += " and  exists (select 1 from sys_parentesco Par with (nolock) where Pa.idpaciente=Par.idPaciente and apellido=" + txtNombreMadre.Text + ")";
 
             m_strSQL = " SELECT top 10  Pa.idPaciente,  case when Pa.idestado=2 then convert(varchar,Pa.numeroAdic) + '-T' else convert(varchar,Pa.numeroDocumento)  end as dni,Pa.apellido+ ' ' + Pa.nombre as paciente, convert(varchar(10),Pa.fechaNacimiento,103) as fechaNacimiento, " +
                         " case Pa.idSexo when 1 then 'Ind' when 2 then 'Fem' when 3 then 'Masc' end as sexo, " +

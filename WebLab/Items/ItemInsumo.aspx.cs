@@ -50,6 +50,67 @@ namespace WebLab.Items
 
 
         }
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+
+
+
+
+            if (txtFechaDesde.Value != "")
+
+            {
+                if (DateTime.Parse(txtFechaDesde.Value) > DateTime.Now)
+                {
+                    //TxtDatos.Value = "";
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "La Fecha Desde no puede ser superior a la fecha actual";
+                    return;
+                }
+                else
+                {
+                    //if (DateTime.Parse(txtFechaHasta.Value) < DateTime.Parse(txtFechaDesde.Value))
+                    //{
+                    //    //TxtDatos.Value = "";
+                    //    args.IsValid = false;
+                    //    this.cvValidacionInput.ErrorMessage = "La Fecha desde no puede ser mayor a fecha hasta";
+                    //    return;
+                    //}
+                    //else
+                        args.IsValid = true;
+                }
+            }
+            else args.IsValid = false;
+
+
+
+            //if (txtFechaHasta.Value != "")
+
+            //{
+            //    if (DateTime.Parse(txtFechaHasta.Value) > DateTime.Now)
+            //    {
+            //        //TxtDatos.Value = "";
+            //        args.IsValid = false;
+            //        this.cvValidacionInput.ErrorMessage = "La Fecha Hasta no puede ser superior a la fecha actual";
+            //        return;
+            //    }
+            //    else
+            //    {
+            //        if (DateTime.Parse(txtFechaHasta.Value) < DateTime.Parse(txtFechaDesde.Value))
+            //        {
+            //            //TxtDatos.Value = "";
+            //            args.IsValid = false;
+            //            this.cvValidacionInput.ErrorMessage = "La Fecha desde no puede ser mayor a fecha hasta";
+            //            return;
+            //        }
+            //        else
+            //            args.IsValid = true;
+
+            //    }
+            //}
+            //else
+            //    args.IsValid = false;
+                 
+       }
 
         private void CargarListas()
         {
@@ -234,66 +295,106 @@ namespace WebLab.Items
 
         private void Guardar()
         {
-            foreach (GridViewRow row in gvLista.Rows)
+            if (Page.IsValid)
             {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked == true)
+                foreach (GridViewRow row in gvLista.Rows)
                 {
-                  
-                    ItemEfector oItem = new ItemEfector();
-                    oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
-
-
-                    if (oItem != null)
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked == true)
                     {
 
-                        ISession m_session = NHibernateHttpModule.CurrentSession;
-                        ICriteria crit = m_session.CreateCriteria(typeof(ItemEfector));
-                        crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                        crit.Add(Expression.Eq("IdItem", oItem.IdItem));
-                        IList items = crit.List();
-                        foreach (ItemEfector oResultado in items)
+                        ItemEfector oItem = new ItemEfector();
+                        oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString()));
+
+
+                        if (oItem != null)
                         {
-                            if (oResultado.SinInsumo)
+                            if (oItem.SinInsumo)
                             {
-                                oResultado.SinInsumo = false;
-                                oResultado.IdUsuarioRegistro = oUser;
-                                oResultado.FechaRegistro = DateTime.Now;
-                                oResultado.Save();
-                                
+                                oItem.SinInsumo = false;
+                                oItem.IdUsuarioRegistro = oUser;
+                                oItem.FechaRegistro = DateTime.Now;
+                                oItem.Save();
+
                                 oItem.IdItem.GrabarAuditoriaDetalleItem("Cambia estado", oUser, "Disponible", oUser.IdEfector.Nombre, "");
+
+                                ActualizarProtocolos(oItem.IdItem, "0", oUser);
                             }
                             else
                             {
-                                oResultado.SinInsumo = true;
-                                oResultado.IdUsuarioRegistro = oUser;
-                                oResultado.FechaRegistro = DateTime.Now;
-                                oResultado.Save();
+                                oItem.SinInsumo = true;
+                                oItem.IdUsuarioRegistro = oUser;
+                                oItem.FechaRegistro = DateTime.Now;
+                                oItem.Save();
                                 oItem.IdItem.GrabarAuditoriaDetalleItem("Cambia estado", oUser, "Sin Insumo", oUser.IdEfector.Nombre, "");
 
-                                ActualizarProtocolos(oItem.IdItem);
+                                ActualizarProtocolos(oItem.IdItem, "1", oUser);
                             }
+                            //ISession m_session = NHibernateHttpModule.CurrentSession;
+                            //ICriteria crit = m_session.CreateCriteria(typeof(ItemEfector));
+                            //crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                            //crit.Add(Expression.Eq("IdItem", oItem.IdItem));
+                            //IList items = crit.List();
+                            //foreach (ItemEfector oResultado in items)
+                            //{
+                            //    if (oResultado.SinInsumo)
+                            //    {
+                            //        oResultado.SinInsumo = false;
+                            //        oResultado.IdUsuarioRegistro = oUser;
+                            //        oResultado.FechaRegistro = DateTime.Now;
+                            //        oResultado.Save();
 
-                        } // foreach
+                            //        oItem.IdItem.GrabarAuditoriaDetalleItem("Cambia estado", oUser, "Disponible", oUser.IdEfector.Nombre, "");
 
-                        
-                    }
-                }// chececk
-            }// primero        
+                            //        ActualizarProtocolos(oItem.IdItem, "0", oUser);
+                            //    }
+                            //    else
+                            //    {
+                            //        oResultado.SinInsumo = true;
+                            //        oResultado.IdUsuarioRegistro = oUser;
+                            //        oResultado.FechaRegistro = DateTime.Now;
+                            //        oResultado.Save();
+                            //        oItem.IdItem.GrabarAuditoriaDetalleItem("Cambia estado", oUser, "Sin Insumo", oUser.IdEfector.Nombre, "");
+
+                            //        ActualizarProtocolos(oItem.IdItem, "1", oUser);
+                            //    }
+
+                            //} // foreach
+
+
+                        }
+                    }// chececk
+                }// primero    
+            }    
         }
 
-        private void ActualizarProtocolos(Item  oItem)
+        private void ActualizarProtocolos(Item  oItem, string s_tipo, Usuario oUser)
         {
+            string str_condicion = "";
             string m_strSQL = @" 	select DP.iddetalleprotocolo
 	from lab_detalleprotocolo DP (nolock)
 	inner join       LAb_Protocolo P (nolock) on DP.idprotocolo=p.idprotocolo
-
-
                 where P.baja=0 
                 and P.estado<2 
-                and P.IdEfector=" + oUser.IdEfector.IdEfector.ToString() + @" and P.fecha>getdate()-3
-                and DP.idsubitem="+oItem.IdItem.ToString()+@" 				and DP.idusuariovalida=0				         ";
+                and P.IdEfector=" + oUser.IdEfector.IdEfector.ToString() + @" 
+                and DP.idsubitem=" + oItem.IdItem.ToString() ;
+            if (txtFechaDesde.Value != "")
+            {
+                DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+                str_condicion += " AND P.fecha>= '" + fecha1.ToString("yyyyMMdd") + "'";
+            }
+            //if (txtFechaHasta.Value != "")
+            //{
+            //    DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
+            //    str_condicion += " AND P.fecha<= '" + fecha2.ToString("yyyyMMdd") + "'";
+            //}
 
+            if (s_tipo=="1")  // poner marca sin insumo solo trae los anteriores a tres dias y sin validar
+                str_condicion += @"  	and DP.idusuariovalida=0	   ";
+            //if (s_tipo == "0")  // poner marca disponible es sacar la marca de validado lo de estaba a partir de hoy. 
+            //    str_condicion += @"  	and DP.idusuariovalida>0	   ";
+
+            m_strSQL += str_condicion;
 
             DataSet Ds = new DataSet();
                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -309,29 +410,14 @@ namespace WebLab.Items
                 detalle = (DetalleProtocolo)detalle.Get(typeof(DetalleProtocolo), int.Parse(Ds.Tables[0].Rows[i][0].ToString()));
                 if (detalle != null)
                 {
-                    detalle.GuardarSinInsumo();
+                    if (s_tipo == "1")
+                        detalle.GuardarSinInsumo(oUser);
+                    if (s_tipo == "0")
+                        detalle.GuardarDisponible();
                     ActualizaEstadoProtocolo(detalle.IdProtocolo);
                 }
             }
-
-            //string ssql_Protocolo = @" IdProtocolo in (Select LAb_Protocolo.IdProtocolo 
-            //    From LAb_Protocolo 
-            //    where LAb_Protocolo.baja=0 
-            //    and LAb_Protocolo.estado<2 
-            //    and lab_Protocolo.IdEfector=" + oUser.IdEfector.IdEfector.ToString() + " and Lab_Protocolo.fecha>getdate()-5 )";
-            //critProtocolo.Add(Expression.Sql(ssql_Protocolo));
-            //critProtocolo.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-            //critProtocolo.Add(Expression.Eq("IdSubItem", oItem));
-            ////Protocolo oUltimoProtocolo = (Protocolo)critProtocolo.List;
-
-            //IList detalle = critProtocolo.List();
-
-            //foreach (DetalleProtocolo oResultado in detalle)
-            //{
-            //    if (oResultado.IdUsuarioValida==0)
-            //        oResultado.GuardarSinInsumo();
-
-            //}
+             
         }
 
         private void ActualizaEstadoProtocolo(Protocolo oRegistro)

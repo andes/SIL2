@@ -304,7 +304,7 @@ namespace Business.Data.Laboratorio
                 if (value == null)
                     throw new ArgumentOutOfRangeException("Null value not allowed for Descripcion", value, "null");
 
-                if (value.Length > 500)
+                if (value.Length > 1000)
                     throw new ArgumentOutOfRangeException("Invalid value for Descripcion", value, value.ToString());
 
                 m_isChanged |= (m_observacion != value); m_observacion = value;

@@ -363,14 +363,14 @@ namespace WebLab.Protocolos
         }
         private void CargarGrilla ()
         {
-            string m_sexo = "F";
-            if (ddlSexo.SelectedValue == "2")
-                m_sexo = "F";
+            string m_sexo = ""; lblMensajeSexo.Visible = false; lblMensaje.Visible = false;
+            //if (ddlSexo.SelectedValue == "2")
+            //    m_sexo = "F";
 
-            if (ddlSexo.SelectedValue == "3")
-                m_sexo = "M";
-            if (ddlSexo.SelectedValue == "4")
-                m_sexo = "X";
+            //if (ddlSexo.SelectedValue == "3")
+            //    m_sexo = "M";
+            //if (ddlSexo.SelectedValue == "4")
+            //    m_sexo = "X";
 
 
 
@@ -382,11 +382,22 @@ namespace WebLab.Protocolos
 
                 if (gvLista.Rows.Count == 0)
                 {
-                    lblMensaje.Visible = false;
+                    if (ddlSexo.SelectedValue != "0")  // se debe seleccionar el sexo para generar un paciente nuevo
+                    {
+                        m_sexo = obtenerSexo();                       
+                        lblMensaje.Visible = false;
 
-
-                    Response.Redirect("ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
-
+                        if (Request["Operacion"] != "Modifica")
+                            Response.Redirect("ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+                        else
+                            Response.Redirect("ProcesaRenaper.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
+                    }
+                    else
+                    {
+                        lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                        lblMensajeSexo.Visible = true;
+                        lblMensaje.Visible = false;
+                    }
 
                 }
                 else
@@ -396,31 +407,53 @@ namespace WebLab.Protocolos
 
             if ((ddlTipo.SelectedValue == "T"))
             { //temporal
+
+
                 if ((txtDni.Value != "") || (txtNumeroAdicional.Text != ""))
                 {
                     gvLista.DataSource = LeerDatos();
                     gvLista.DataBind();
-
-
                     if (gvLista.Rows.Count == 0)
                     {
-                        lblMensaje.Visible = false;
+                        if (ddlSexo.SelectedValue != "0")  // se debe seleccionar el sexo para generar un paciente nuevo
+                        {
+                            m_sexo = obtenerSexo();
+                            lblMensaje.Visible = false;
+                            if (Request["Operacion"] != "Modifica")
+                                Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+                            else
+                                Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
+                        }
+                        else
+                        {
 
-
-                        Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
-
-
+                            lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                            lblMensajeSexo.Visible = true;
+                            lblMensaje.Visible = false;
+                        }
                     }
                     else
                         lblMensaje.Visible = true;
                 }
 
                 else
+                {
+                    if (ddlSexo.SelectedValue != "0")  // se debe seleccionar el sexo para generar un paciente nuevo
+                    {
+                        m_sexo = obtenerSexo();
 
-                    Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+
+                        Response.Redirect("ProcesaRenaperT.aspx?Tipo=" + ddlTipo.SelectedValue + "&dni=" + txtDni.Value + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+                    }
+                    else
+                    {
+                        lblMensajeSexo.Text = "Debe ingresar un sexo para generar un paciente nuevo";
+                        lblMensajeSexo.Visible = true;
+                    }
+                }
+
+
             }
-
-
 
 
 
@@ -437,6 +470,17 @@ namespace WebLab.Protocolos
 
         }
 
+        private string obtenerSexo()
+        {
+            string m_sexo="";
+            if (ddlSexo.SelectedValue == "2")
+                m_sexo = "F";
+            if (ddlSexo.SelectedValue == "3")
+                m_sexo = "M";
+            if (ddlSexo.SelectedValue == "4")
+                m_sexo = "X";
+            return m_sexo;
+        }
 
         private object LeerDatos()
         {
@@ -457,8 +501,8 @@ namespace WebLab.Protocolos
             {
                 str_condicion += " and Pa.idEstado in (2)"; // temporal
                 if (txtDni.Value != "") str_condicion += " AND (Pa.numeroDocumento = '" + txtDni.Value.Trim() + "')";
-                if (txtNumeroAdicional.Text != "")  str_condicion +=" and (Pa.numeroAdic like '%" + txtNumeroAdicional.Text.Trim() + @"%'  
-                                                                        or Pa.idPaciente in (select idPaciente from sys_parentesco with (nolock) where numeroDocumento=" + txtNumeroAdicional.Text.Trim()+"))";
+                if (txtNumeroAdicional.Text != "") str_condicion += " and (Pa.numeroAdic like '%" + txtNumeroAdicional.Text.Trim() + @"%')";
+                ///or Pa.idPaciente in (select idPaciente from sys_parentesco with (nolock) where numeroDocumento=" + txtNumeroAdicional.Text.Trim()+"))";  // es incorrecto porque el campo numerodocumento es int y no graba txtNumeroAdicional en sys_parentesco
             }
 
             m_strSQL = " SELECT top 10 Pa.idPaciente,  case when Pa.idestado=2 then convert(varchar,Pa.numeroAdic) + '-T' else convert(varchar,Pa.numeroDocumento)  end as dni,Pa.apellido+ ' ' + Pa.nombre as paciente, convert(varchar(10),Pa.fechaNacimiento,103) as fechaNacimiento, " +

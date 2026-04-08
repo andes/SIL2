@@ -437,7 +437,7 @@ namespace WebLab.Placas {
             oRegistro.Operador = ddlOperador.SelectedItem.Text + " -" + ddlOperador0.SelectedItem.Text;
             oRegistro.Equipo = lblEquipo.Text;
             oRegistro.Fecha =DateTime.Parse( lblFecha.Text);
-
+            oRegistro.IdEfector = oC.IdEfector;
             if (Request["id"] == null)
             {
                 oRegistro.FechaRegistro = DateTime.Now;
@@ -445,7 +445,7 @@ namespace WebLab.Placas {
             }
             oRegistro.Estado = estado;
             oRegistro.Save();
-            if (estado=="C")            oRegistro.GrabarAuditoria("Graba y Cierra", int.Parse(Session["idUsuario"].ToString()), "");
+            if (estado=="C")     oRegistro.GrabarAuditoria("Graba y Cierra", int.Parse(Session["idUsuario"].ToString()), "");
 
 
             //Caro: hago que recorra las determinacoines del tipo de placa
@@ -728,7 +728,7 @@ namespace WebLab.Placas {
                                     oDet.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Vincula a Placa Alplex", int.Parse(Session["idUsuario"].ToString()), "", oRegistro.IdPlaca.ToString());
                                 }
                                 else
-                                { Session["errores"] += "- Protocolo " + value + " ya validado. No es posible incorporar a la placa."; }
+                                { Session["errores"] += "- Protocolo " + value + " ya validado. No es posible incorporar a la placa."; break; }
 
                             }
                         }
@@ -790,7 +790,7 @@ namespace WebLab.Placas {
                                     oDet.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Vincula a Placa Promega", int.Parse(Session["idUsuario"].ToString()), "", oRegistro.IdPlaca.ToString());
                                 }
                                 else
-                                { Session["errores"] += "- Protocolo " + value + "  ya fue validado. No es posible incorporar en la placa"; }
+                                { Session["errores"] += "- Protocolo " + value + "  ya fue validado. No es posible incorporar en la placa"; break; }
 
                             }
                         }

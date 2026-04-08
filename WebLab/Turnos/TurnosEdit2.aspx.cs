@@ -72,11 +72,13 @@ namespace WebLab.Turnos
             if (!Page.IsPostBack)
             {
                 SetToken();
-               VerificaPermisos("Asignacion de turnos");               
-            
+               VerificaPermisos("Asignacion de turnos");
+
 
                 //   chkImprimir.Visible= oC.GeneraComprobanteTurno;
-             
+
+                Session["matricula"] = null;
+                Session["apellidoNombre"] = null;
 
                 if (Request["Modifica"].ToString() == "1")
                 {
@@ -92,33 +94,37 @@ namespace WebLab.Turnos
                 {
                     CargarListas();
                     lblTitulo.Text = "NUEVO TURNO";
-                    DateTime m_fecha =DateTime.Parse(Session["Turno_Fecha"].ToString());
-                    string m_tipoServicio = Session["Turno_IdTipoServicio"].ToString();
-                    string m_hora = Session["Turno_Hora"].ToString();
-                    string m_iditem = Session["idItem"].ToString();
-
-                    lblFecha.Text = m_fecha.ToShortDateString();
-                    lblHora.Text = m_hora;
-                    lblIdTipoServicio.Text = m_tipoServicio;
-                    
-                    TipoServicio oServicio = new TipoServicio();
-                    oServicio = (TipoServicio)oServicio.Get(typeof(TipoServicio), int.Parse(m_tipoServicio));
-
-
-                    if (m_iditem != "0")
+                    if (Session["Turno_Fecha"] != null)
                     {
-                        Item oItem = new Item();
-                        oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));                      
-                        string sDatos = "";                      
-                        sDatos += "#" +oItem.Codigo+ "#" + oItem.Nombre + "@";
-                        TxtDatos.Value = sDatos;
-                    }
+                        DateTime m_fecha = DateTime.Parse(Session["Turno_Fecha"].ToString());
+                        string m_tipoServicio = Session["Turno_IdTipoServicio"].ToString();
+                        string m_hora = Session["Turno_Hora"].ToString();
+                        string m_iditem = Session["idItem"].ToString();
 
-                    if (oServicio!=null)
-                    lblTipoServicio.Text = oServicio.Nombre;
-                 
-                    MostrarPaciente();
-                 
+                        lblFecha.Text = m_fecha.ToShortDateString();
+                        lblHora.Text = m_hora;
+                        lblIdTipoServicio.Text = m_tipoServicio;
+
+                        TipoServicio oServicio = new TipoServicio();
+                        oServicio = (TipoServicio)oServicio.Get(typeof(TipoServicio), int.Parse(m_tipoServicio));
+
+
+                        if (m_iditem != "0")
+                        {
+                            Item oItem = new Item();
+                            oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));
+                            string sDatos = "";
+                            sDatos += "#" + oItem.Codigo + "#" + oItem.Nombre + "@";
+                            TxtDatos.Value = sDatos;
+                        }
+
+                        if (oServicio != null)
+                            lblTipoServicio.Text = oServicio.Nombre;
+
+                        MostrarPaciente();
+                    }
+                    else
+                        Response.Redirect("../FinSesion.aspx", false);
                 }
                 chkImprimir.Visible = false;
                 lnkReimprimirComprobante.Visible = false;
@@ -176,7 +182,7 @@ namespace WebLab.Turnos
                 //txtEspecialista.Text = oRegistro.MatriculaEspecialista;
                 lblObraSocial.Text = oRegistro.NombreObraSocial;
 
-                ddlEspecialista.Items.Insert(0, new ListItem(oRegistro.Especialista, txtEspecialista.Text));
+               // ddlEspecialista.Items.Insert(0, new ListItem(oRegistro.Especialista, txtEspecialista.Text)); --> Duplicada profesional en el combo
                 switch (oRegistro.IdPaciente.IdSexo)
                 {
                     case 1: lblSexo.Text = "Indeterminado"; break;
@@ -249,6 +255,73 @@ namespace WebLab.Turnos
 
 
         }
+        private void BuscarCodigoDiagnostico()
+        {
+            lstDiagnosticos.Items.Clear();
+            if (txtCodigoDiagnostico.Text != "")
+            {
+
+
+
+                if (oC.NomencladorDiagnostico == 0) /// Cie10
+                {
+                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 with (nolock) where tipo='DIAG' and CODIGO like '%" + txtCodigoDiagnostico.Text.Trim() + "%'";
+
+                    DataSet Ds = new DataSet();
+                    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                    adapter.Fill(Ds);
+                    lstDiagnosticos.Items.Clear();
+                    int cantDiag = Ds.Tables[0].Rows.Count;
+                    for (int i = 0; i < cantDiag; i++)
+                    {
+
+                        ListItem oDia = new ListItem();
+                        oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+                        oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+
+                        if (cantDiag == 1) //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                        {
+                            if (!ExisteItem(lstDiagnosticosFinal, oDia.Value))
+                            {
+                                //    lstDiagnosticosFinal.Items.Clear();
+                                lstDiagnosticosFinal.Items.Add(oDia);
+                                lstDiagnosticosFinal.UpdateAfterCallBack = true;
+
+                            }
+                        }
+                    }
+
+
+
+
+                }
+                else /// diagnostico propio
+                {
+                    DiagnosticoP oDiagnostico = new DiagnosticoP();
+                    oDiagnostico = (DiagnosticoP)oDiagnostico.Get(typeof(DiagnosticoP), "Codigo", txtCodigoDiagnostico.Text);
+                    if (oDiagnostico != null)
+                    {
+                        ListItem oDia = new ListItem();
+                        oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                        oDia.Value = oDiagnostico.IdDiagnostico.ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+
+                    }
+                    else
+                        lstDiagnosticos.Items.Clear();
+                }
+
+            }
+            lstDiagnosticos.UpdateAfterCallBack = true;
+
+        }
+        private bool ExisteItem(ListControl lista, string value)
+        {
+            return lista.Items.FindByValue(value) != null;
+        }
 
         private void BuscarDiagnostico()
         {
@@ -256,41 +329,130 @@ namespace WebLab.Turnos
             lstDiagnosticos.Items.Clear();
             if (txtCodigoDiagnostico.Text != "")
             {
-                Cie10 oDiagnostico = new Cie10();
-                oDiagnostico = (Cie10)oDiagnostico.Get(typeof(Cie10), "Codigo", txtCodigoDiagnostico.Text);
-                if (oDiagnostico != null)
-                {
-                    ListItem oDia = new ListItem();
-                    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
-                    oDia.Value = oDiagnostico.Id.ToString();
-                    lstDiagnosticos.Items.Add(oDia);
+                BuscarCodigoDiagnostico();
+                //Cie10 oDiagnostico = new Cie10();
+                //oDiagnostico = (Cie10)oDiagnostico.Get(typeof(Cie10), "Codigo", txtCodigoDiagnostico.Text);
+                //if (oDiagnostico != null)
+                //{
+                //    ListItem oDia = new ListItem();
+                //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                //    oDia.Value = oDiagnostico.Id.ToString();
+                //    lstDiagnosticos.Items.Add(oDia);
+                //    //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                //    //   lstDiagnosticosFinal.Items.Clear();
 
-                }
-                else
-                    lstDiagnosticos.Items.Clear();
+
+                //    // Verificar si ya existe en lstDiagnosticosFinal
+                //    bool existeEnFinal = lstDiagnosticosFinal.Items.Cast<ListItem>()
+                //                              .Any(item => item.Value == oDia.Value);
+
+                //    if (!existeEnFinal)
+                //    {
+                //        lstDiagnosticosFinal.Items.Add(oDia);
+                //        lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                //    }
+                //    //lstDiagnosticosFinal.Items.Add(oDia);
+                //    //lstDiagnosticosFinal.UpdateAfterCallBack = true;
+
+                //}
+                //else
+                //{
+                //    lstDiagnosticos.Items.Clear();
+                //    lstDiagnosticos.UpdateAfterCallBack = true;
+                //}
             }
 
             if (txtNombreDiagnostico.Text != "")
             {
-                lstDiagnosticos.Items.Clear();
-                ISession m_session = NHibernateHttpModule.CurrentSession;
-                ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
-                crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
+                BuscarNombreDiagnostico();
+                //lstDiagnosticos.Items.Clear();
+                //ISession m_session = NHibernateHttpModule.CurrentSession;
+                //ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
+                //crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
 
-                IList items = crit.List();
+                //IList items = crit.List();
 
-                foreach (Cie10 oDiagnostico in items)
-                {
-                    ListItem oDia = new ListItem();
-                    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
-                    oDia.Value = oDiagnostico.Id.ToString();
-                    lstDiagnosticos.Items.Add(oDia);
-                }
+                //foreach (Cie10 oDiagnostico in items)
+                //{
+                //    ListItem oDia = new ListItem();
+                //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                //    oDia.Value = oDiagnostico.Id.ToString();
+                //    lstDiagnosticos.Items.Add(oDia);
+                //    lstDiagnosticos.UpdateAfterCallBack = true;
+                //}
 
 
             }
-            lstDiagnosticos.UpdateAfterCallBack = true;
+         
 
+        }
+
+        private void BuscarNombreDiagnostico()
+        {
+            lstDiagnosticos.Items.Clear();
+            if (txtNombreDiagnostico.Text != "")
+            {
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                if (oC.NomencladorDiagnostico == 0)
+                {
+                    //ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
+                    //crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
+
+                    //IList items = crit.List();
+
+                    //foreach (Cie10 oDiagnostico in items)
+                    //{
+                    //    ListItem oDia = new ListItem();
+                    //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                    //    oDia.Value = oDiagnostico.Id.ToString();
+                    //    lstDiagnosticos.Items.Add(oDia);
+                    //}
+
+
+                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 (nolock) where  tipo='DIAG' and  Nombre like '%" + txtNombreDiagnostico.Text.Trim() + "%' order by Nombre";
+
+                    DataSet Ds = new DataSet();
+                    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                    SqlDataAdapter adapter = new SqlDataAdapter();
+                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                    adapter.Fill(Ds);
+                    lstDiagnosticos.Items.Clear();
+                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+                    {
+
+                        ListItem oDia = new ListItem();
+                        oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+                        oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+
+
+                    }
+
+
+                    lstDiagnosticos.UpdateAfterCallBack = true;
+                }
+
+                else //nomenclador propio
+                {
+                    ICriteria crit1 = m_session.CreateCriteria(typeof(DiagnosticoP));
+
+                    crit1.Add(Expression.InsensitiveLike("Nombre", txtNombreDiagnostico.Text, MatchMode.Anywhere));
+                    crit1.Add(Expression.Eq("Baja", false));
+                    IList items = crit1.List();
+
+                    foreach (DiagnosticoP oDiagnostico in items)
+                    {
+                        ListItem oDia = new ListItem();
+                        oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
+                        oDia.Value = oDiagnostico.IdDiagnostico.ToString();
+                        lstDiagnosticos.Items.Add(oDia);
+                    }
+
+                    lstDiagnosticos.UpdateAfterCallBack = true;
+                }
+
+            }
         }
 
         protected void btnBusquedaFrecuente_Click(object sender, EventArgs e)
@@ -311,7 +473,7 @@ namespace WebLab.Turnos
             string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
 FROM Sys_CIE10 c with (nolock) 
 inner join LAB_ProtocoloDiagnostico p with (nolock)  on c.id = p.idDiagnostico
-where p.idEfector=" + oUser.IdEfector.IdEfector.ToString()+ @"
+where  c.tipo='DIAG' and  p.idEfector=" + oUser.IdEfector.IdEfector.ToString()+ @"
 group by id, codigo, nombre
 ORDER BY cantidad desc";
             oUtil.CargarListBox(lstDiagnosticos, m_ssql, "id", "nombre");
@@ -988,7 +1150,15 @@ ORDER BY cantidad desc";
                         return;
                     }
                     else
-                        args.IsValid = true;
+                    {
+                        if(ddlEspecialista.SelectedValue == "0" && txtEspecialista.Text != "0") //Trajo varios medicos pero elijio "--Seleccionar--"
+                        {
+                            args.IsValid = false;
+                            this.cvValidaPracticas.ErrorMessage = "Debe seleccionar médico solicitante del listado";
+                        }
+                        else
+                            args.IsValid = true;
+                    }
                 }
             }
             else
@@ -1052,12 +1222,12 @@ ORDER BY cantidad desc";
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "")
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //Comentado para que no borre lo que esta cargado dinamicamente
             }
         }
 
@@ -1105,7 +1275,7 @@ ORDER BY cantidad desc";
             {
                 ///Buscar especilista
                 string matricula = txtEspecialista.Text;
-
+                lblErrorMedico.Text = "";
                 if (matricula == "0")
                 {
                     ddlEspecialista.Items.Clear();
@@ -1113,7 +1283,12 @@ ORDER BY cantidad desc";
                 }
                 else
                 {
-                    string s_urlWFC = oC.UrlMatriculacion;
+                    //Con idPerfil=15 no se carga configuracion (porque no existe lab_config) 
+                    //asi que tomamos la misma configuracion que se usa en ProtocoloEdit2
+                    Configuracion oCon = new Configuracion();
+                    oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+
+                    string s_urlWFC = oCon.UrlMatriculacion;
                     string s_url = s_urlWFC + "numeroMatricula=" + matricula;// + "&codigoProfesion=1";
 
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
@@ -1135,33 +1310,71 @@ ORDER BY cantidad desc";
                             for (int i = 0; i < pro.Count; i++)
                             {
                                 espe = pro[i].apellido + " " + pro[i].nombre + " - " + pro[i].profesiones[0].titulo;
-                                //documento = pro[i].documento.ToString();
+
                                 // ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula));
-                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
+                                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe + '#'));
                             }
                             if (pro.Count > 1)
+                            {
                                 ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+
+                                //LAB-119  Seleccion de profesionales solicitantes en dación de turnos filtro por matricula y apellido
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+                                       
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+                                        
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion+1).Trim();
+
+                                       
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+                        }
 
                             lblErrorMedico.Visible = false;
 
-                        }
-                        else
-                        { //error no encontrado}
+                    }
+                    else
+                    { //error no encontrado}
 
 
-                            lblErrorMedico.Text = "Médico no encontrado!!";
-                            lblErrorMedico.Visible = true;
-                            ddlEspecialista.Items.Clear();
-                            ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
+                        lblErrorMedico.Text = "Médico no encontrado!!";
+                        lblErrorMedico.Visible = true;
+                        ddlEspecialista.Items.Clear();
+                        ddlEspecialista.Items.Insert(0, new ListItem("Médico no encontrado", "-1"));
 
-                        }
-                    } // s!=0
-                }// matricula
+                    }
+                    
+                } // s!=0
+                // matricula
             }// try
             catch (Exception ex)
             {
-                ddlEspecialista.Items.Clear();
-                ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
+                //ddlEspecialista.Items.Clear();
+                //ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
+                //Pongo el label para otros errores silenciosos
+                lblErrorMedico.Visible = true;
+                lblErrorMedico.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
             }
 
             ddlEspecialista.UpdateAfterCallBack = true;

@@ -66,9 +66,10 @@
     
   </div>
                     <div class="panel-body">
-                          <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
-                     HeaderText="Debe completar los datos requeridos:" ShowMessageBox="True" 
-                     ValidationGroup="0" ShowSummary="false" />	
+                         <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                                ErrorMessage="Debe completar al menos un analisis" 
+                                    ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
+                                             ></asp:CustomValidator>
 <asp:Panel  runat="server" ID="pnlMuestra" Width="100%" Visible="false">
 					 
                           Muestra: &nbsp; &nbsp; 
@@ -91,7 +92,7 @@
 						
 					
                           
-                            <div id="tab1" style="height: 200px">
+                            <div id="tab1" style="height: 230px">
                    
 
                                  <table style="width:600px;">
@@ -126,10 +127,10 @@
                                              
                             
 						
-                                            <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                           <%-- <asp:CustomValidator ID="cvValidacionInput" runat="server" 
                                                 ErrorMessage="Debe completar al menos un analisis" 
                                     ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
-                                             ></asp:CustomValidator>
+                                             ></asp:CustomValidator>--%>
                                                  
                                 </div>                 
                                       </td>
@@ -219,7 +220,9 @@
                                <div class="panel-footer">	
                                                
 		
-					
+			  <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
+                     HeaderText="Debe completar los datos requeridos:" ShowMessageBox="True" 
+                     ValidationGroup="0" ShowSummary="False" />			
                                         
                                         <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0"  Width="100px" CssClass ="btn btn-primary"
                                                 onclick="btnGuardar_Click"    TabIndex="24" />
@@ -382,6 +385,7 @@
     }
 
     function CargarDatos() {
+        setTimeout(() => { //Tuve que agregar esto, ya que tomaba valores desactualizados del DOM para el valor checked
         var str = '';
         for (var i = 0; i < contadorfilas; i++) {
             var nroFila = document.getElementById('NroFila_' + i);
@@ -393,7 +397,7 @@
         }
         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
 
-
+        }, 0);
     }
 
     function PasarFoco(Fila) {
@@ -532,6 +536,8 @@
             OrdenarDatos();
 
             contadorfilas = contadorfilas - 1;
+            document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+
         }
         else {
 
@@ -567,7 +573,7 @@
                 desde.id = 'Desde_' + pos;
 
                 pos = pos + 1;
-                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.value + '@';
+                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
             }
         }
         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
@@ -612,7 +618,7 @@
         //    alert('entra');
         CrearFila(true);
         var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
-
+      
         if (elvalor != '') {
             var sTabla = elvalor.split(';');
             for (var i = 0; i < (sTabla.length); i++) {
@@ -631,8 +637,11 @@
                 var boton = document.getElementById('boton_' + con);
 
 
-                if (sItem[2] == 'True')
+                if (sItem[2] == '1')
                     document.getElementById('Codigo_' + con).className = 'codigoConResultado';
+
+                if (sItem[2] == '2')///resultado validado
+                    document.getElementById('Codigo_' + con).className = 'codigoConResultadoValidado';
                 desde.checked = sinMuestra;
 
 

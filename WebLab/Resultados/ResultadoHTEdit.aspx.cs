@@ -578,13 +578,12 @@ namespace WebLab.Resultados
                                                         {
                                                             if (oDet.ConResultado == false) // sin resultado
                                                             {
-                                                            if (oItem.ResultadoDefecto != "")
-                                                                ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
+                                                                  if (m_resultadoDefecto!="")///(oItem.ResultadoDefecto != "") //correccion de bug que no mostraba el resultado por defecto.
+                                                                    ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
                                                                 else
                                                                     ddl1.SelectedValue= "0";
                                                             }
                                                             else
-
                                                                 ddl1.SelectedItem.Text = oDet.ResultadoCar;
                                                         }
 
@@ -632,10 +631,10 @@ namespace WebLab.Resultados
                                                 crit.Add(Expression.Eq("IdItem", oItem));
                                             crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); //Multiefector
                                             crit.Add(Expression.Eq("Baja", false));
-                                            crit.AddOrder(Order.Asc("Resultado")); // el orden lo define el usuario
-
-                                            ///Si tiene resultados predeterminados muestra un combo
-                                            IList resultados = crit.List();
+                                       //     crit.AddOrder(Order.Asc("Resultado")); // el orden lo define el usuario
+                                                string m_resultadoDefecto = "";
+                                                ///Si tiene resultados predeterminados muestra un combo
+                                                IList resultados = crit.List();
                                                 if (resultados.Count > 0)
                                                 {
                                                     DropDownList ddl1 = new DropDownList();
@@ -657,6 +656,8 @@ namespace WebLab.Resultados
                                                         ddl1.Items.Add(Item);
                                                         //ddl1.SelectedItem.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                         ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
+                                                        if (oResultado.ResultadoDefecto)
+                                                            m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
 
                                                     }
 
@@ -665,8 +666,10 @@ namespace WebLab.Resultados
                                                     {
                                                         if (oDet.ConResultado == false) // sin resultado
                                                         {
-                                                            if (oItem.ResultadoDefecto != "")
-                                                                ddl1.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
+                                                            //  if (oItem.ResultadoDefecto != "")
+                                                            if (m_resultadoDefecto != "")
+
+                                                                ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
                                                             else
                                                                 ddl1.SelectedValue = "0";
                                                         }

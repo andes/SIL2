@@ -22,6 +22,7 @@ using System.Net.Http;
 using System.Text;
 using System.Net;
 using System.IO;
+using System.Collections.Generic;
 
 namespace WebLab.Resultados
 {
@@ -715,8 +716,781 @@ namespace WebLab.Resultados
         {
           //  Marcar(false);
         }
-
         private void LlenarTabla(string p)
+        {
+            Item oItem = new Item();
+            oItem = (Item)oItem.Get(typeof(Item), int.Parse(p));
+
+
+            bool hiv = oItem.CodificaHiv;
+
+            DataTable dt = getDataSet(oItem.IdItem.ToString());
+            if (dt.Rows.Count > 0)
+            {
+                //lblCantidadRegistros.Text = dt.Rows.Count.ToString() + " protocolos encontrados ";
+
+                TableRow objFila_TITULO = new TableRow();
+                TableCell objCellProtocolo_TITULO = new TableCell();
+                TableCell objCellFecha_TITULO = new TableCell();
+                TableCell objCellPaciente_TITULO = new TableCell();
+                TableCell objCellResultado_TITULO = new TableCell();
+                TableCell objCellResultadoAnterior_TITULO = new TableCell();
+
+                TableCell objCellReferencia_TITULO = new TableCell();
+                TableCell objCellPersona_TITULO = new TableCell(); TableCell objCellValida_TITULO = new TableCell();
+
+                TableCell objCellObservaciones_TITULO = new TableCell();
+
+                Label lblTituloProtocolo = new Label();
+                lblTituloProtocolo.Text = "PROTOCOLO";
+                objCellProtocolo_TITULO.Controls.Add(lblTituloProtocolo);
+
+
+                Label lblTituloFecha = new Label();
+                lblTituloFecha.Text = "FECHA";
+                objCellFecha_TITULO.Controls.Add(lblTituloFecha);
+
+                Label lblTituloPaciente = new Label();
+                lblTituloPaciente.Text = "PACIENTE";
+                objCellPaciente_TITULO.Controls.Add(lblTituloPaciente);
+
+                Label lblTituloResultado = new Label();
+                lblTituloResultado.Text = "RESULTADO";
+                objCellResultado_TITULO.Controls.Add(lblTituloResultado);
+
+                Label lblTituloObservacionesResultado = new Label();
+                lblTituloObservacionesResultado.Text = "OBS.";
+                objCellObservaciones_TITULO.Controls.Add(lblTituloObservacionesResultado);
+
+                Label lblResultadoAnterior = new Label();
+                lblResultadoAnterior.Text = "R.ANTER.";
+                objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
+
+                Label lblTituloReferencia = new Label();
+                lblTituloReferencia.Text = "REFERENCIA|METODO";
+                objCellReferencia_TITULO.Controls.Add(lblTituloReferencia);
+
+                Label lblCargadoPor = new Label();
+                lblCargadoPor.Text = "ESTADO";
+                objCellPersona_TITULO.Controls.Add(lblCargadoPor);
+
+
+                Label lblValida = new Label();
+
+                if (Request["Operacion"].ToString() == "Valida")
+                    lblValida.Text = "VAL";
+
+                objCellValida_TITULO.Controls.Add(lblValida);
+                objFila_TITULO.Cells.Add(objCellProtocolo_TITULO);
+                objFila_TITULO.Cells.Add(objCellFecha_TITULO);
+                objFila_TITULO.Cells.Add(objCellPaciente_TITULO);
+                objFila_TITULO.Cells.Add(objCellResultado_TITULO);
+
+                if (Request["Operacion"].ToString() == "Valida") objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
+                objFila_TITULO.Cells.Add(objCellReferencia_TITULO);
+                objFila_TITULO.Cells.Add(objCellPersona_TITULO);
+
+
+                if (Request["Operacion"].ToString() == "Valida")
+                {
+                    objFila_TITULO.Cells.Add(objCellValida_TITULO);
+                }
+
+                objFila_TITULO.Cells.Add(objCellObservaciones_TITULO);
+                objFila_TITULO.CssClass = "myLabelIzquierda";
+                objFila_TITULO.BackColor = Color.Gainsboro; //.DarkBlue;// "#F2F2FF";
+
+                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
+
+                tContenido.Controls.Add(objFila_TITULO);//.Rows.Add(objRow);    
+
+                ISession session = NHibernateHttpModule.CurrentSession;
+
+                // 🔹 1. IDs de Detalle
+                var listaDetalleIds = dt.AsEnumerable()
+                    .Select(r => r[3])
+                    .Where(x => x != DBNull.Value)
+                    .Select(x => Convert.ToInt32(x))
+                    .Distinct()
+                    .ToList();
+
+                // 🔹 2. Traer TODOS los detalles de una
+                var listaDetallesRaw = session.CreateQuery(
+                    @"FROM DetalleProtocolo dp 
+      JOIN FETCH dp.IdProtocolo 
+      JOIN FETCH dp.IdProtocolo.IdPaciente
+      JOIN FETCH dp.IdSubItem
+      WHERE dp.IdDetalleProtocolo IN (:ids)")
+                    .SetParameterList("ids", listaDetalleIds)
+                    .List();
+
+                var listaDetalles = listaDetallesRaw.Cast<DetalleProtocolo>().ToList();
+
+                // 🔹 3. Indexar detalles
+                var dictDetalles = listaDetalles.ToDictionary(x => x.IdDetalleProtocolo);
+
+                // 🔹 4. Traer resultados UNA sola vez
+                var listaResultadosRaw = session.CreateQuery(
+                    @"FROM ResultadoItem r
+      WHERE r.IdItem = :item
+      AND r.IdEfector = :efector
+      AND r.Baja = :baja")
+                    .SetEntity("item", oItem)
+                    .SetEntity("efector", oUser.IdEfector)
+                    .SetBoolean("baja", false)
+                    .List();
+
+                var listaResultados = listaResultadosRaw.Cast<ResultadoItem>().ToList();
+                var dictResultados = listaResultados
+    .GroupBy(x => x.IdItem.IdItem)
+    .ToDictionary(g => g.Key, g => g.ToList());
+                /*fin del cambio*/
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    string s_valorReferencia = dt.Rows[i].ItemArray[9].ToString();                 
+                    string s_idDetalleProtocolo = dt.Rows[i].ItemArray[3].ToString();
+                    /*   DetalleProtocolo oDetalle = new DetalleProtocolo();
+                       oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(s_idDetalleProtocolo));
+                       */
+                    DetalleProtocolo oDetalle;
+                    if (!dictDetalles.TryGetValue(int.Parse(s_idDetalleProtocolo), out oDetalle))
+                        continue;
+
+                    string s_idProtocolo = oDetalle.IdProtocolo.ToString();
+                    string s_fecha = oDetalle.IdProtocolo.Fecha.ToShortDateString();                    
+                    string s_numero = oDetalle.IdProtocolo.Numero.ToString();
+                    string s_numeroOrigen = oDetalle.IdProtocolo.NumeroOrigen;
+                    if (s_numeroOrigen != "") s_numero = s_numero + "-" + s_numeroOrigen;
+                    string numerodocumento = "";
+                    string apellido = "";
+                    string nombre = "";
+                    string s_paciente = "";
+                    if (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0)
+                    {
+                        if (oDetalle.IdProtocolo.IdPaciente.IdEstado == 2) numerodocumento = "(Temporal)";
+                        else numerodocumento = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
+                        apellido = oDetalle.IdProtocolo.IdPaciente.Apellido.ToUpper();
+                        nombre = oDetalle.IdProtocolo.IdPaciente.Nombre.ToUpper();
+                        s_paciente = "";
+
+
+                        if (hiv) //datosPaciente = " upper(P.sexo+substring(Pac.nombre,1,2)+SUBSTRING(Pac.apellido, 1,2)+REPLACE ( CONVERT(varchar(10), Pac.fechaNacimiento,103),'/','')) ";
+                            s_paciente = oDetalle.IdProtocolo.getCodificaHiv(""); // oDetalle.IdProtocolo.IdPaciente.getSexo().Substring(0, 1) + nombre.Substring(0, 2) + apellido.Substring(0, 2) + oDetalle.IdProtocolo.IdPaciente.FechaNacimiento.ToShortDateString().Replace("/", "");
+                        else
+                            if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio == 4)
+                                s_paciente = oDetalle.IdProtocolo.getDatosParentesco();
+                            else
+                                s_paciente = numerodocumento.ToUpper() + " - " + apellido.ToUpper() + " " + nombre.ToUpper();
+
+                    }
+                    //    string s_embarazada = oDetalle.IdProtocolo.GetDiagnostico();
+                    string m_formato0 = dt.Rows[i].ItemArray[4].ToString();
+                    string m_formato1 = dt.Rows[i].ItemArray[5].ToString();
+                    string m_formato2 = dt.Rows[i].ItemArray[6].ToString();
+                    string m_formato3 = dt.Rows[i].ItemArray[7].ToString();
+                    string m_formato4 = dt.Rows[i].ItemArray[8].ToString();
+                    int estado = 0;
+
+                    if (oDetalle.IdUsuarioValida > 0)
+                        estado = 2;
+
+                    if (oDetalle.IdUsuarioPreValida > 0)
+                        estado = 2;
+
+                    if (oDetalle.IdUsuarioControl > 0)
+                        estado = 2;                    
+                    string m_observacionReferencia = dt.Rows[i].ItemArray[16].ToString();
+
+                    string m_tipoValorReferencia = dt.Rows[i].ItemArray[12].ToString();
+                    string m_metodo = dt.Rows[i].ItemArray[11].ToString();                    
+                    string s_resultadoCar = dt.Rows[i].ItemArray[13].ToString();
+                    string s_conResultado = dt.Rows[i].ItemArray[14].ToString();
+
+                    if (s_conResultado == "False") { s_conResultado = "0"; }
+                    else { s_conResultado = "1"; }
+
+
+                    string s_Validado = "0";
+                    string s_usuario = "";
+
+
+                    if (oDetalle.IdUsuarioValida > 0)                    
+                    {
+                        s_usuario = "Val.: " + dt.Rows[i].ItemArray[18].ToString() + " " + oDetalle.FechaValida.ToShortDateString() + " " + oDetalle.FechaValida.ToShortTimeString();
+                        s_Validado = "2";
+                    }
+                    else
+                    {
+                        if (oDetalle.IdUsuarioPreValida > 0)
+                        {
+                            Usuario oUser = new Usuario();
+                            oUser = (Usuario)oUser.Get(typeof(Usuario), oDetalle.IdUsuarioPreValida);
+
+                            s_usuario = "PreVal.: " + oUser.FirmaValidacion + " " + oDetalle.FechaPreValida.ToShortDateString() + " " + oDetalle.FechaPreValida.ToShortTimeString();
+                            s_Validado = "2";
+                        }
+                        else
+                        {
+                            if (oDetalle.IdUsuarioControl > 0)
+                            //   if (dt.Rows[i].ItemArray[19].ToString() != "")//  usuario control                    
+                            {
+                                s_usuario = "Ctrl: " + dt.Rows[i].ItemArray[19].ToString();
+                                s_Validado = "1";
+                            }
+                            else
+                            {
+                                if (dt.Rows[i].ItemArray[17].ToString() != "")
+                                    s_usuario = "Carg.: " + dt.Rows[i].ItemArray[17].ToString() + " " + oDetalle.FechaResultado.ToShortDateString() + " " + oDetalle.FechaResultado.ToShortTimeString();  /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();                                                                                                                                                                                                                              
+                                else
+                                {
+
+                                    if ((oDetalle.Enviado == 2) && (estado != 1))
+
+                                        s_usuario = "AUTOMÁTICO: " + oDetalle.FechaResultado.ToShortDateString() + " " + oDetalle.FechaResultado.ToShortTimeString();
+                                    else
+                                        s_usuario = "";
+                                }
+                            }
+                        }
+                    }
+
+
+                    TableRow objFila = new TableRow();
+                    TableCell objCellProtocolo = new TableCell();
+                    TableCell objCellFecha = new TableCell();
+                    TableCell objCellPaciente = new TableCell();
+                    TableCell objCellResultado = new TableCell();
+                    TableCell objCellReferencia = new TableCell();
+                    TableCell objCellValida = new TableCell();
+                    TableCell objCellPersona = new TableCell();
+                    TableCell objCellObservaciones = new TableCell();
+                    TableCell objCellResultadoAnterior = new TableCell();
+
+                    Label olblProtocolo = new Label();
+                    olblProtocolo.Font.Name = "Arial";
+                    olblProtocolo.Font.Size = FontUnit.Point(10);
+                    olblProtocolo.Text = s_numero;
+                    olblProtocolo.Font.Bold = true;                    
+                    objCellProtocolo.BackColor = Color.Beige;
+                    objCellProtocolo.Controls.Add(olblProtocolo);
+
+                    Label olblFecha = new Label();
+                    olblFecha.Text = s_fecha;
+                    olblFecha.Font.Name = "Arial";
+                    olblFecha.Font.Size = FontUnit.Point(8);
+                    objCellFecha.Controls.Add(olblFecha);
+
+
+                    Label olblPaciente = new Label();
+                    olblPaciente.Font.Name = "Arial";
+                    olblPaciente.Font.Size = FontUnit.Point(9);
+                    olblPaciente.Text = s_paciente;
+
+                    objCellPaciente.Controls.Add(olblPaciente);                    
+                    if (Request["Operacion"].ToString() == "Valida") /// Solo en la validacion
+                    {
+                        ImageButton btnAddDiagnostico = new ImageButton();
+                        btnAddDiagnostico.TabIndex = short.Parse("500");                        
+                        btnAddDiagnostico.ID = "d" + s_idDetalleProtocolo;
+                        btnAddDiagnostico.ToolTip = "Agregar/quitar Diagnostico del paciente.";
+                        btnAddDiagnostico.ImageUrl = "~/App_Themes/default/images/add.png";                        
+                        btnAddDiagnostico.Attributes.Add("onClick", "javascript: editDiagnostico (" + oDetalle.IdProtocolo.IdProtocolo.ToString() + "); return false");                        
+                        objCellProtocolo.Controls.Add(btnAddDiagnostico);
+                    }
+                    decimal x = 0;
+                    switch (oItem.IdTipoResultado)
+                    {//tipoResultado
+
+                        case 4://Lista predefinida de resultados con seleccion multiple 
+                            {
+                                /*   string m_resultadoDefecto = "";
+                                   ///busqueda de resultado por defecto solo si no tiene resultado cargado
+                                   if (s_conResultado == "0")// sin resultado
+                                   {
+                                       ISession m_session = NHibernateHttpModule.CurrentSession;
+                                       ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                                       crit.Add(Expression.Eq("IdItem", oItem));
+                                       crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                       crit.Add(Expression.Eq("Baja", false));
+                                       ///      crit.AddOrder(Order.Asc("Resultado")); /// el orden lo define el usuario
+                                       ///Si tiene resultados predeterminados muestra un combo
+                                       IList resultados = crit.List();
+                                       foreach (ResultadoItem oResultado in resultados)
+                                       {
+                                           ListItem Item = new ListItem();
+                                           Item.Value = oResultado.IdResultadoItem.ToString();
+                                           Item.Text = oResultado.Resultado;
+
+                                           if (oResultado.ResultadoDefecto)
+                                               m_resultadoDefecto = oResultado.Resultado;
+                                       }
+                                   }
+                                   */
+                                string m_resultadoDefecto = "";
+
+                                // 🔹 Obtener resultados desde memoria (SIN QUERY)
+                                List<ResultadoItem> resultados = null;
+                                dictResultados.TryGetValue(oItem.IdItem, out resultados);
+
+                                ///busqueda de resultado por defecto solo si no tiene resultado cargado
+                                if (s_conResultado == "0" && resultados != null)
+                                {
+                                    foreach (ResultadoItem oResultado in resultados)
+                                    {
+                                        if (oResultado.ResultadoDefecto)
+                                            m_resultadoDefecto = oResultado.Resultado;
+                                    }
+                                }
+
+
+                                TextBox txt1 = new TextBox();
+                                txt1.ID = s_idDetalleProtocolo;
+                                txt1.ReadOnly = true;// no es posible editar como texto, sino que agregar /quitar desde las opciones
+                                txt1.TabIndex = short.Parse(i + 1.ToString());
+                                txt1.Text = s_resultadoCar;
+                                txt1.TextMode = TextBoxMode.MultiLine;
+                                txt1.Width = Unit.Percentage(95);
+                                txt1.Rows = 2;
+                                txt1.MaxLength = 200;
+                                txt1.ToolTip = s_resultadoCar;
+                                //txt1.CssClass = "myTexto";
+                                if (s_conResultado == "0")// sin resultado
+                                    txt1.Text = m_resultadoDefecto;
+
+                                ///agrega boton para seleccionar las opciones
+                                ImageButton btnAddDetalle = new ImageButton();
+                                btnAddDetalle.TabIndex = short.Parse("500");
+                                //btnAddDetalle.AutoUpdateAfterCallBack = true;
+                                btnAddDetalle.ID = "b" + s_idDetalleProtocolo;
+                                btnAddDetalle.ToolTip = "Desplegar opciones";
+                                btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";
+                                //btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDetalle.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                //btnAddDetalle.Click += new ImageClickEventHandler(btnAddDetalle_Click);
+
+                                if (s_Validado != "0")
+                                {
+                                    txt1.BackColor = Color.LightBlue;
+                                    if (Request["Operacion"].ToString() == "Carga")
+                                    {
+                                        txt1.Enabled = false;// btnAddDetalle.Enabled = false; 
+                                    }
+                                }
+
+
+
+                                objCellResultado.Controls.Add(txt1);
+                                objCellResultado.Controls.Add(btnAddDetalle);
+
+                                ////Otra forma de observacion
+                                ImageButton btnObservacionDetalle2 = new ImageButton();
+                                btnObservacionDetalle2.TabIndex = short.Parse("500");
+
+                                btnObservacionDetalle2.ID = "Obs2|" + oDetalle.IdDetalleProtocolo.ToString(); // +"|" + m_estadoObservacion.ToString();//  m_idItem.ToString();
+
+                                if (oDetalle.Observaciones != "")//tiene observaciones
+                                {
+
+                                    if (oDetalle.IdUsuarioValidaObservacion == 0)
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                    else
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                }
+                                else
+                                {
+
+                                    btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
+                                }
+
+                                btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
+                                //  btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
+                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+
+                                objCellObservaciones.Controls.Add(btnObservacionDetalle2);
+
+                            } //fin case 4
+
+                            break;
+
+                        case 3://Lista predefinida de resultados
+                            {
+                                // 🔹 Obtener resultados desde memoria (SIN QUERY)
+                                List<ResultadoItem> resultados = null;
+                                dictResultados.TryGetValue(oItem.IdItem, out resultados);
+
+                                if (resultados != null && resultados.Count > 0)
+                                {
+                                    DropDownList ddl1 = new DropDownList();
+                                    ddl1.ID = s_idDetalleProtocolo;
+
+                                    // 🔹 Item vacío
+                                    ddl1.Items.Add(new ListItem("", "0"));
+
+                                    string m_resultadoDefecto = "";
+
+                                    foreach (ResultadoItem oResultado in resultados)
+                                    {
+                                        ddl1.Items.Add(new ListItem(
+                                            oResultado.Resultado,
+                                            oResultado.IdResultadoItem.ToString()
+                                        ));
+
+                                        if (oResultado.ResultadoDefecto)
+                                            m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
+                                    }
+
+                                    // 🔹 Selección
+                                    if (s_conResultado == "0")// sin resultado
+                                    {
+                                        if (!string.IsNullOrEmpty(m_resultadoDefecto))
+                                            ddl1.SelectedValue = m_resultadoDefecto;
+                                    }
+                                    else
+                                    {
+                                        var itemSel = ddl1.Items.FindByText(s_resultadoCar);
+                                        if (itemSel != null)
+                                            ddl1.SelectedValue = itemSel.Value;
+                                    }
+
+                                    // 🔹 Estado validado
+                                    if (s_Validado != "0")
+                                    {
+                                        ddl1.BackColor = Color.LightBlue;
+
+                                        if (Request["Operacion"].ToString() == "Carga")
+                                            ddl1.Enabled = false;
+                                    }
+
+                                    ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
+
+                                    objCellResultado.Controls.Add(ddl1);
+                                }
+
+
+                                /////////////////Resultado Anterior
+                                if (Request["Operacion"].ToString() == "Valida")
+                                {
+                                    //string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
+                                    //if (resultadoAnterior != "")
+                                    //{
+
+                                    string resultadoAnterior = "";
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);                                    
+                                    olblResultadoAnterior.ForeColor = Color.Green;
+                                    olblResultadoAnterior.Width = Unit.Pixel(20);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+                                    olblResultadoAnterior.ID = "ResAnterior" + oDetalle.IdSubItem.IdItem.ToString() + "_" + oDetalle.IdProtocolo.IdProtocolo.ToString();
+                                    olblResultadoAnterior.ToolTip = "Haga clic aquí para ver más datos.";
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,400); return false");
+
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+
+                                    //}
+                                }
+                                //////////////////////
+                                ////Otra forma de observacion
+                                ImageButton btnObservacionDetalle2 = new ImageButton();
+                                btnObservacionDetalle2.TabIndex = short.Parse("500");
+
+                                btnObservacionDetalle2.ID = "Obs2|" + oDetalle.IdDetalleProtocolo.ToString(); // +"|" + m_estadoObservacion.ToString();//  m_idItem.ToString();
+
+                                if (oDetalle.Observaciones != "")//tiene observaciones
+                                {
+
+                                    if (oDetalle.IdUsuarioValidaObservacion == 0)
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                    else
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                }
+                                else
+                                {
+
+                                    btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
+                                }
+
+                                btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
+                                //  btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
+                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+
+                                objCellObservaciones.Controls.Add(btnObservacionDetalle2);
+
+                                ////////////////////                                        
+
+                            } //fin case 3
+                            break;
+
+                        case 1: //numerico
+                            {
+                                Utility outil = new Utility();
+                                string expresionControlDecimales = outil.ExpresionFormato(oItem.FormatoDecimal);                            
+                              
+                                string valor = "";
+
+                                // 🔹 Unificar lógica (sin 5 cases)
+                                switch (oItem.FormatoDecimal)
+                                {
+                                    case 0: valor = m_formato0; break;
+                                    case 1: valor = m_formato1; break;
+                                    case 2: valor = m_formato2; break;
+                                    case 3: valor = m_formato3; break;
+                                    case 4: valor = m_formato4; break;
+                                }
+
+                                if (!string.IsNullOrEmpty(valor) && outil.EsNumerico(valor))
+                                {
+                                    decimal.TryParse(valor, System.Globalization.NumberStyles.Any,
+                                        System.Globalization.CultureInfo.InvariantCulture, out x);
+                                }
+
+                                TextBox txt1 = new TextBox();
+                                txt1.ID = s_idDetalleProtocolo;
+                                if (s_conResultado == "0")// sin resultado
+                                    txt1.Text = oItem.ResultadoDefecto;
+                                else
+                                    txt1.Text = x.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                                //    txt1.Text = val.Replace(".", "");
+                                txt1.Width = Unit.Pixel(60);
+                                txt1.CssClass = "myTexto";
+                                txt1.Attributes.Add("onkeypress", "javascript:return Enter(this, event)");
+
+                                if (s_Validado != "0")
+                                {
+                                    txt1.BackColor = Color.LightBlue;
+                                    if (Request["Operacion"].ToString() == "Carga")
+                                    { txt1.Enabled = false; }
+                                }
+
+
+
+                                objCellResultado.Controls.Add(txt1);
+
+                                RegularExpressionValidator oValidaNumero = new RegularExpressionValidator();
+                                oValidaNumero.ValidationExpression = expresionControlDecimales;
+                                oValidaNumero.ControlToValidate = txt1.ID;
+                                oValidaNumero.Text = "Formato incorrecto";
+                                oValidaNumero.ValidationGroup = "0";
+
+                                objCellResultado.Controls.Add(oValidaNumero);
+
+                                /////////////////Resultado Anterior
+                                if (Request["Operacion"].ToString() == "Valida")
+                                {
+                                    string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem,true);
+                                                                  /*if (resultadoAnterior != "")
+                                                                  {*/
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                    //olblResultadoAnterior.Font.Bold = true;
+                                    olblResultadoAnterior.ForeColor = Color.Green;
+                                    olblResultadoAnterior.Width = Unit.Pixel(20);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+                                    olblResultadoAnterior.ToolTip = "Haga clic aquí para ver gráfico de evolución.";
+                                    olblResultadoAnterior.ID = "ResAnterior" + oDetalle.IdSubItem.IdItem.ToString() + "_" + oDetalle.IdProtocolo.IdProtocolo.ToString();
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,420); return false");
+
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+
+
+                                    //  }
+                                }
+                                //////////////////////
+                                ////Otra forma de observacion
+                                ImageButton btnObservacionDetalle2 = new ImageButton();
+                                btnObservacionDetalle2.TabIndex = short.Parse("500");
+                                btnObservacionDetalle2.ID = "Obs2|" + oDetalle.IdDetalleProtocolo.ToString();// +"|" + m_estadoObservacion.ToString();//  m_idItem.ToString();
+                                if (oDetalle.Observaciones != "")//tiene observaciones
+                                {
+                                    if (oDetalle.IdUsuarioValidaObservacion == 0)
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                    else
+                                        btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                }
+                                else                                
+                                    btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";                                
+
+                                btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;                                
+                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                objCellObservaciones.Controls.Add(btnObservacionDetalle2);
+                                
+                            }
+                            break;
+                        case 2: //texto
+                            {
+                                TextBox txt1 = new TextBox();
+                                txt1.ID = s_idDetalleProtocolo;
+                                if (s_conResultado == "0")// sin resultado
+                                    txt1.Text = oItem.ResultadoDefecto;
+                                else
+                                {
+                                    if (s_resultadoCar == "")
+                                    {
+                                        string resNum = oDetalle.ResultadoNum.ToString();
+                                        if ((s_resultadoCar == "") && (oDetalle.Enviado == 2) && (oDetalle.IdUsuarioValida == 0) && (oDetalle.IdUsuarioResultado == 0)) // automatico
+                                        {
+                                            if (resNum != "") txt1.Text = resNum.Substring(0, resNum.Length - 2).Replace(",", ".");
+                                        }
+                                        else
+                                            if (oDetalle.Enviado == 2) { if (oDetalle.Observaciones != "") txt1.Text = oDetalle.Observaciones; }
+                                    }
+                                    else
+                                        txt1.Text = s_resultadoCar;
+                                }
+                                txt1.TextMode = TextBoxMode.MultiLine;
+                                txt1.Width = Unit.Percentage(80);
+                                txt1.Rows = 1;
+                                txt1.MaxLength = 200;
+                                txt1.CssClass = "myTexto";
+
+
+                                if (s_Validado != "0")
+                                {
+                                    txt1.BackColor = Color.LightBlue;
+                                    if (Request["Operacion"].ToString() == "Carga")
+                                    { txt1.Enabled = false; }
+                                }
+
+                                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
+
+                                objCellResultado.Controls.Add(txt1);
+
+
+                                /////////////////Resultado Anterior
+                                if (Request["Operacion"].ToString() == "Valida")
+                                {
+                                    string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
+                                                                  //if (resultadoAnterior != "")
+                                                                  //{
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                    //olblResultadoAnterior.Font.Bold = true;
+                                    olblResultadoAnterior.ForeColor = Color.Green;
+                                    olblResultadoAnterior.Width = Unit.Pixel(20);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+                                    olblResultadoAnterior.ToolTip = "Haga clic aquí para ver más datos.";
+                                    olblResultadoAnterior.ID = "ResAnterior" + oDetalle.IdSubItem.IdItem.ToString() + "_" + oDetalle.IdProtocolo.IdProtocolo.ToString();
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,400); return false");
+
+
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+
+                                    // }
+                                }
+                                //////////////////////
+
+                            } // fin case 1
+                            break;
+
+                    }//fin swicth
+
+
+
+
+                    Label lblValoresReferencia = new Label();
+
+                    lblValoresReferencia.ID = "VR" + s_idDetalleProtocolo.ToString();
+                    lblValoresReferencia.Font.Name = "Arial";
+                    lblValoresReferencia.Font.Size = FontUnit.Point(8);
+                    lblValoresReferencia.Font.Italic = true;
+
+
+                    if (s_valorReferencia != "")
+                    {
+                        lblValoresReferencia.Text = s_valorReferencia;
+                        if (m_metodo != "")
+                            lblValoresReferencia.Text += " | " + m_metodo;
+                    }
+                    else
+                        lblValoresReferencia.Text = ""; // oDetalle.CalcularValoresReferencia();
+                                                        ///CARO: posibilidad de cambiar valor de refrencia - presentacion solo en validacion o control
+                    if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                    {
+                        ///if (oDetalle.) si tiene mas de una presentacion
+                        lblValoresReferencia.Attributes.Add("onClick", "javascript:  AnalisisMetodoEdit (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdProtocolo.ToString() + ",790,420); return false");
+                        lblValoresReferencia.ForeColor = Color.Blue;
+                    }
+
+
+                    objCellReferencia.Controls.Add(lblValoresReferencia);
+
+
+                    Label lblPersona = new Label();
+                    lblPersona.Text = s_usuario;
+                    lblPersona.Font.Size = FontUnit.Point(7);
+                    lblPersona.Font.Italic = true;
+
+                    if (s_Validado == "2")
+                    {
+                        lblPersona.ForeColor = Color.Blue; //VALIDADO
+                        if (lblPersona.Text.Substring(0, 3).ToUpper() == "PRE")
+                            lblPersona.ForeColor = Color.Red;
+                    }
+                    if (s_Validado == "1") lblPersona.ForeColor = Color.Green; ///CONTROLADO
+                    if (lblPersona.Text.Length >= 10)
+                    {
+                        if (lblPersona.Text.Substring(0, 10).ToUpper() == "AUTOMÁTICO")
+                            lblPersona.ForeColor = Color.Red;
+                    }
+
+                    if (Request["Operacion"].ToString() == "Valida")
+                    {
+                        CheckBox chk1 = new CheckBox();
+                        chk1.ID = "chk" + s_idDetalleProtocolo;
+                        if ((estado == 2) && (Request["Operacion"].ToString() == "Carga")) //si esta validado y entro a controlar no puedo modificar
+                        {
+                            chk1.Visible = false;
+
+                        }
+                        objCellValida.Controls.Add(chk1);
+                    }
+
+
+
+                    objCellPersona.Controls.Add(lblPersona);
+
+
+                    ///Definir los anchos de las columnas
+                    objCellProtocolo.Width = Unit.Percentage(10);
+                    objCellFecha.Width = Unit.Percentage(5);
+                    objCellPaciente.Width = Unit.Percentage(35);
+                    objCellResultado.Width = Unit.Percentage(20);
+
+                    objCellReferencia.Width = Unit.Percentage(20);
+                    objCellPersona.Width = Unit.Percentage(10);
+
+
+
+                    ///////////////////////
+                    ///agrega a la fila cada una de las celdas
+
+                    objFila.Cells.Add(objCellProtocolo);
+                    objFila.Cells.Add(objCellFecha);
+                    objFila.Cells.Add(objCellPaciente);
+                    objFila.Cells.Add(objCellResultado);
+
+                    if (Request["Operacion"].ToString() == "Valida") objFila.Cells.Add(objCellResultadoAnterior);
+                    objFila.Cells.Add(objCellReferencia);
+                    //objFila.Cells.Add(objCellValoresReferencia);
+                    objFila.Cells.Add(objCellPersona); if (Request["Operacion"].ToString() == "Valida") objFila.Cells.Add(objCellValida);
+                    //objFila.Cells.Add(objCellValida);
+
+                    objFila.Cells.Add(objCellObservaciones);
+
+                    //////
+
+                    Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
+
+                    //'añadimos la fila a la tabla
+                    if (objFila != null)
+                        tContenido.Controls.Add(objFila);//.Rows.Add(objRow);                                
+                }
+            }
+
+
+        }
+        private void LlenarTabla_old(string p)
         {
             Item oItem = new Item();
             oItem = (Item)oItem.Get(typeof(Item), int.Parse(p));
@@ -804,8 +1578,8 @@ namespace WebLab.Resultados
 
                 tContenido.Controls.Add(objFila_TITULO);//.Rows.Add(objRow);    
 
-                
-                
+               
+
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                 

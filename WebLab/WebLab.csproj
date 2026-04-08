@@ -192,6 +192,10 @@
       <HintPath>..\Referencias\MathParser.dll</HintPath>
     </Reference>
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Referencias\NHibernate.dll</HintPath>
@@ -2013,24 +2017,6 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="bootstrap\img\flags%402x.png" />
     <Content Include="bootstrap\img\flags.png" />
-    <Content Include="bootstrap\js\bootstrap-datepicker.es.min.js" />
-    <Content Include="bootstrap\js\bootstrap-datepicker.min.js" />
-    <Content Include="bootstrap\js\bootstrap-datetimepicker.min.js" />
-    <Content Include="bootstrap\js\bootstrap-table-locale-all.min.js" />
-    <Content Include="bootstrap\js\bootstrap-table.min.js" />
-    <Content Include="bootstrap\js\bootstrap.js" />
-    <Content Include="bootstrap\js\bootstrap.min.js" />
-    <Content Include="bootstrap\js\bootstrap3-typeahead.js" />
-    <Content Include="bootstrap\js\intlTelInput.js" />
-    <Content Include="bootstrap\js\jquery-1.12.0.js" />
-    <Content Include="bootstrap\js\jquery-clockpicker.min.js" />
-    <Content Include="bootstrap\js\jquery-ui.js" />
-    <Content Include="bootstrap\js\moment.min.js" />
-    <Content Include="bootstrap\js\pulsate.min.js" />
-    <Content Include="bootstrap\js\select2.full.min.js" />
-    <Content Include="bootstrap\js\utils.js" />
-    <Content Include="bootstrap\js\validar\bootstrap.js" />
-    <Content Include="bootstrap\js\validar\formValidation.js" />
     <Content Include="Calidad\IncidenciaEdit.ascx" />
     <Content Include="Calidad\IncidenciaRecepcionEdit.aspx" />
     <Content Include="Calidad\IncidenciaRecepcionList.aspx" />
@@ -2692,6 +2678,14 @@
     <Content Include="Rutinas\RutinaMuestraEdit.aspx" />
     <Content Include="Rutinas\RutinaBroEdit.aspx" />
     <Content Include="Rutinas\RutinaBroList.aspx" />
+    <Content Include="script\chosen\chosen-sprite%402x.png" />
+    <Content Include="script\chosen\chosen-sprite.png" />
+    <Content Include="script\chosen\chosen.css" />
+    <Content Include="script\chosen\chosen.jquery.js" />
+    <Content Include="script\chosen\chosen.jquery.min.js" />
+    <Content Include="script\chosen\chosen.min.css" />
+    <Content Include="script\chosen\chosen.proto.js" />
+    <Content Include="script\chosen\chosen.proto.min.js" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -2719,6 +2713,7 @@
     <Content Include="script\Resources\jQuery-ui-1.8.18.min.js" />
     <Content Include="script\Resources\jquery-ui-1.8.20.css" />
     <Content Include="script\Resources\jquery.min.js" />
+    <Content Include="script\select2.custom.css" />
     <Content Include="script\ValidaFecha.js" />
     <Content Include="Seguimiento.aspx" />
     <Content Include="seguimientoCovid.ascx" />
@@ -3116,6 +3111,8 @@
     <Content Include="website\SUHI.html" />
     <Content Include="website\terminos.html" />
     <Content Include="website\tesis.html" />
+    <Content Include="script\chosen\composer.json" />
+    <Content Include="script\chosen\LICENSE.md" />
     <None Include="Service References\IntAutenticacion\configuration.svcinfo" />
     <None Include="Service References\IntAutenticacion\configuration91.svcinfo" />
     <None Include="Service References\IntAutorizacion\configuration.svcinfo" />

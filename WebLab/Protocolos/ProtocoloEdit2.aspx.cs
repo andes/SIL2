@@ -141,7 +141,9 @@ namespace WebLab.Protocolos
         {
 
             if (!Page.IsPostBack)
-            {           
+            {
+                Session["matricula"] = ""; //para que lo borre de la sesion al entrar a un nuevo protocolo
+                Session["apellidoNombre"] = null;
                 SetToken();
                 PreventingDoubleSubmit(btnGuardar);
                 if (Session["idUsuario"] != null)
@@ -177,6 +179,11 @@ namespace WebLab.Protocolos
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
 
+                        }
+
+                        if(Request["idPaciente"] != null) //Cambio de paciente
+                        {
+                            HFModificarPaciente.Value = "Si";
                         }
                     }
                     else
@@ -249,7 +256,6 @@ namespace WebLab.Protocolos
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector" )
                             {
-
                                 int numeroProtocolo = int.Parse(Session["numeroProtocolo"].ToString()); 
                                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                                 oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), "Numero", numeroProtocolo);
@@ -790,6 +796,9 @@ namespace WebLab.Protocolos
             oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
             if (oRegistro != null)
             {
+                // si es modificacion no se recuerda analisis
+                chkRecordarPractica.Visible = false;
+                //fin si es modificacion no se recuerda analisis
                 oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));                 
                 if (oRegistro.IdTipoServicio.IdTipoServicio == 6)
                 {
@@ -1025,7 +1034,8 @@ namespace WebLab.Protocolos
 
 
                 MostrarDiagnosticos(oRegistro);
-           
+                //muestra enfermedad base
+                MostrarEnfermedadBase(oRegistro);
 
 
                 //chkRecordarConfiguracion.Checked = false;
@@ -1049,9 +1059,9 @@ namespace WebLab.Protocolos
             {
 
                 string m_strSQL = @"select c.id, c.codigo + ' -' + c.nombre 
-from sys_cie10 c (nolock)
-inner join LAB_ProtocoloDiagnostico pd (nolock) on c.id = pd.idDiagnostico
-where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
+from sys_cie10 c with (nolock)
+inner join LAB_ProtocoloDiagnostico pd with (nolock) on c.id = pd.idDiagnostico
+where  pd.tipo='D' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
@@ -1105,12 +1115,16 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
 
             IList items = crit.List();
-            string pivot = "";
+            string pivot = ""; 
             string sDatos = "";
-           
+            HashSet<string> pivote  = new HashSet<string>();
+
             foreach (DetalleProtocolo oDet in items)
             {
-                if (pivot != oDet.IdItem.Nombre)
+                //Debo cambiar la manera que verifica los repetidos, porque ahora cuando se regenera un subItem el IdDetalleProtocolo no es secuencial
+                //Y en la vista del protocolo se ve "duplicado"
+                //if (pivot != oDet.IdItem.Nombre)
+                if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego porque no hay duplicados
                 {
                     /*if (sDatos == "")
                         sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
@@ -1143,8 +1157,40 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
              
         }
 
+        private void MostrarEnfermedadBase(Protocolo oRegistro)
+        {
 
-      
+            Utility oUtil = new Utility();
+            string m_strSQL = @"select top 1 c.id, c.codigo 
+from sys_cie10 c with (nolock)
+inner join LAB_ProtocoloDiagnostico pd with (nolock) on c.id = pd.idDiagnostico
+where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
+
+                DataSet Ds = new DataSet();
+                SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                SqlDataAdapter adapter = new SqlDataAdapter();
+                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                adapter.Fill(Ds);
+                
+                for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            {
+                if (!oC.HabilitaEnfermedadBase)
+                {
+                    CargarListaEnfermedadesBase();
+
+                }
+                string s_id=Ds.Tables[0].Rows[i][0].ToString();
+                string s_codigo= Ds.Tables[0].Rows[i][1].ToString();
+                ddlEnfermedadBase.SelectedValue = s_id;                
+                txtCodigoEnfermedadBase.Text = s_codigo;
+                txtCodigoEnfermedadBase.UpdateAfterCallBack=true;
+                ddlEnfermedadBase.UpdateAfterCallBack = true;
+
+                         }                
+
+        }
+
+
 
 
 
@@ -1284,30 +1330,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             ddlMuestra.Items.Insert(0, new ListItem("--Seleccione Muestra--", "0"));
-            pnlMuestra.Visible = false;
-
-            //if (int.Parse(Session["idServicio"].ToString()) == 1)
-            //{
-            //    pnlComprobantePaciente.Visible = oC.GeneraComprobanteProtocolo;
-            //    lblImprimeComprobantePaciente.Enabled = oC.GeneraComprobanteProtocolo;
-            //    chkImprimir.Enabled = oC.GeneraComprobanteProtocolo;                                
-            //    ddlImpresora.Enabled = oC.GeneraComprobanteProtocolo;
-            //    lnkReimprimirComprobante.Enabled = oC.GeneraComprobanteProtocolo;
-            //    lnkReimprimirCodigoBarras.Enabled = oC.GeneraComprobanteProtocolo;
-
-            //}
-
-            //if (int.Parse(Session["idServicio"].ToString()) == 3)
-            //{
-            //    pnlComprobantePaciente.Visible = oC.GeneraComprobanteProtocoloMicrobiologia;
-            //    lblImprimeComprobantePaciente.Enabled = oC.GeneraComprobanteProtocoloMicrobiologia;                
-            //    chkImprimir.Enabled = oC.GeneraComprobanteProtocoloMicrobiologia;                
-            //    ddlImpresora.Enabled = oC.GeneraComprobanteProtocoloMicrobiologia;
-            //    lnkReimprimirComprobante.Enabled = oC.GeneraComprobanteProtocoloMicrobiologia;
-            //    lnkReimprimirCodigoBarras.Enabled = oC.GeneraComprobanteProtocoloMicrobiologia;
-            //}
-
-
+            pnlMuestra.Visible = false;         
 
 
             ///Carga de combos de tipos de servicios          
@@ -1317,15 +1340,33 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
             ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos
-            string m_ssql = "SELECT  idSectorServicio,  prefijo + ' - ' + nombre   as nombre FROM LAB_SectorServicio  with (nolock) WHERE (baja = 0) order by nombre";
+            //string m_ssql = "SELECT  idSectorServicio,  prefijo + ' - ' + nombre   as nombre FROM LAB_SectorServicio  with (nolock) WHERE (baja = 0) order by nombre";
+
+            //oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
+            //ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
+            //if (oC.IdSectorDefecto > 0)
+            //{
+            //    ddlSectorServicio.SelectedValue = oC.IdSectorDefecto.ToString();
+            //  //  ddlSectorServicio.Visible = false;
+            //}
+
+            ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos
+            string str_condicion = ")";
+            if ((Request["Operacion"].ToString() == "Modifica") && (Request["idProtocolo"]!=null))
+             str_condicion = "  or exists (select 1 from LAB_Protocolo p WHERE p.idsector  = s.idSectorServicio and idProtocolo = " + Request["idProtocolo"].ToString() + ")) ";
+
+
+            string m_ssql = @"SELECT  s.idSectorServicio,  s.prefijo + ' - ' + s.nombre   as nombre FROM LAB_SectorServicio  S with (nolock) 
+                             WHERE (baja = 0)  
+                             and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector="+oUser.IdEfector.IdEfector.ToString()+@" )" + str_condicion +@" order by nombre";
 
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
-            if (oC.IdSectorDefecto > 0)
+        /*    if (oC.IdSectorDefecto > 0)
             {
                 ddlSectorServicio.SelectedValue = oC.IdSectorDefecto.ToString();
-              //  ddlSectorServicio.Visible = false;
-            }
+                //  ddlSectorServicio.Visible = false;
+            }*/
 
             /////////////////////////////////////////////CODIGO DE BARRAS//////////////////////////////////////////////////////////////////////
             tab3Titulo.Visible = false;
@@ -1445,7 +1486,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 m_ssql += " order by nombre ";
                 oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
                 ddlMuestra.Items.Insert(0, new ListItem("--Seleccione Muestra--", "0"));
-                
+
+                ////Carga de combo de enfermedad base
+                if (oC.HabilitaEnfermedadBase) 
+                {
+                    CargarListaEnfermedadesBase();
+                    
+                }
+                else pnlEnfermedadBase.Visible = false;
 
             }
 
@@ -1559,6 +1607,19 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             oUtil = null;
         }
 
+        private void CargarListaEnfermedadesBase()
+        {
+            Utility oUtil = new Utility();
+            //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            pnlEnfermedadBase.Visible = true;
+            string m_ssql = @"select id as idDiag, nombre + ' - ' + codigo as nombre   from sys_cie10 with (nolock) where tipo='BASE' order by nombre ";
+            oUtil.CargarCombo(ddlEnfermedadBase, m_ssql, "idDiag", "nombre", connReady);
+            ddlEnfermedadBase.Items.Insert(0, new ListItem("--Seleccione Enfermedad Base--", "0"));
+        }
+
         private void IniciarValores(Configuracion oC)
         {
             if (Session["ProtocoloLaboratorio"] != null)
@@ -1654,14 +1715,14 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                     chkRecordarPractica.Checked = true;
                             }
                             break;
-                        case "prácticas":
-                            TxtDatosCargados.Value = s_control[1].ToString(); break;
+                        case "prácticas":   if(Request["idServicio"] == "1") TxtDatosCargados.Value = s_control[1].ToString(); break;
+                        case "prácticasMicro":   if(Request["idServicio"] == "3")  TxtDatosCargados.Value = s_control[1].ToString(); break;
                         //case "ddlImpresora":
                         //    ddlImpresora.SelectedValue = s_control[1].ToString(); break;
 
                         case "ddlImpresoraEtiqueta":
-                            ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
-                    }
+                                    ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
+                                }
                 }
             }
             else
@@ -1743,9 +1804,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
                         /// actualiza al paciente con la ultima obra social guardada: solo en las altas
+                   /*    No es necesario siempre se guarda -1 con el sil2
                         oRegistro.IdPaciente.IdObraSocial = oRegistro.IdObraSocial.IdObraSocial;
                         oRegistro.IdPaciente.FechaUltimaActualizacion = DateTime.Now;
                         oRegistro.IdPaciente.Save();
+                        */
 
                         if (ddlImpresoraEtiqueta.SelectedValue != "0")
                         //   oRegistro.ImprimirCodigoBarras(ddlImpresoraEtiqueta.SelectedItem.Text, int.Parse(Session["idUsuario"].ToString()));
@@ -1765,9 +1828,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         }
 
 
-
-                        /////////////////
-
+                        EnviarEquipo(oRegistro);
 
                         ///Imprimir codigo de barras.
                         //string s_AreasCodigosBarras = getListaAreasCodigoBarras();
@@ -1883,10 +1944,54 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
+        private void EnviarEquipo(Protocolo oRegistro)
+        {
+            /*
+                    Caro: Primer version para enviar de forma automatica (sin intervencion del usuario) muestras el equipo.
+                    En este caso para el equipo REAL: Si el servicio es micro solo para los efectores 205 y 221 (HPN y HEller)
+                    Se debe mejorar para algo mas generico
+                    Se agrega try/cath para que ante cualquier problema no haya inconvenientes con el ingreso de la muestra
+                    */
+
+            try
+            {
+                if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
+                    (oRegistro.IdEfector.IdEfector == 205 || oRegistro.IdEfector.IdEfector == 221))
+                {
+                    using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
+                    {
+
+                        using (SqlCommand cmd = new SqlCommand("dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            // Parámetros del SP
+                            cmd.Parameters.AddWithValue("@idEfector", oRegistro.IdEfector.IdEfector);
+                            cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
+
+                            // Ejecuta sin devolver resultados
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string exception = "";
+                exception = ex.Message + "<br>";
+            }
+        }
+
         private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oRegistroAnterior)
         {
-            Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
-            oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+           
+            DetalleProtocolo dp = new DetalleProtocolo();
+            dp.ActualizarItemsDerivados(oRegistro, oRegistroAnterior, Convert.ToInt32(Request["idLote"]), oUser);
+           
+            //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
+            //oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
+            //Business.Data.Laboratorio.DetalleProtocolo oDetalle = new Business.Data.Laboratorio.DetalleProtocolo();
+            //oDetalle.ActualizoResultado(oRegistro, oRegistroAnterior,Convert.ToInt32(Request["idLote"]));
         }
 
         private string getListaAreasCodigoBarras()
@@ -2317,6 +2422,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 //   if (Request["idSolicitudScreening"] != null) ActualizarSolicitudScreening(Request["idSolicitudScreening"].ToString(),oRegistro);
                 GuardarDiagnosticos(oRegistro);
+                if (oRegistro.IdTipoServicio.IdTipoServicio==3) GuardarEnfermedadBase(oRegistro);
+
                 GuardarDetalle(oRegistro);
                 //GuardarDiagnosticos(oRegistro);
                 this.IncidenciaEdit1.GuardarProtocoloIncidencia(oRegistro);
@@ -2423,6 +2530,63 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             return guardo;
         }
 
+      
+
+
+        private void GuardarEnfermedadBase(Protocolo oRegistro)
+        {
+            if ((ddlEnfermedadBase.SelectedValue != "0")&& (ddlEnfermedadBase.SelectedValue != ""))
+            {
+                int nuevoIdDiagnostico = int.Parse(ddlEnfermedadBase.SelectedValue);
+                string nuevoNombre = ddlEnfermedadBase.SelectedItem.Text;
+                string accion = "Graba";
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+
+                // Buscar si ya existe un registro de enfermedad base
+                ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloDiagnostico));
+                crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+                crit.Add(Expression.Eq("Tipo", "B")); // enfermedad base
+                IList detalleExistente = crit.List();
+
+                if (detalleExistente.Count > 0)
+                {
+                    ProtocoloDiagnostico existente = (ProtocoloDiagnostico)detalleExistente[0];
+
+                    // Verificar si es distinto al seleccionado
+                    if (existente.IdDiagnostico != nuevoIdDiagnostico)
+                    {
+                        // Eliminar el registro anterior
+                        existente.Delete();
+
+                        // Crear el nuevo registro
+                        ProtocoloDiagnostico oDetalle = new ProtocoloDiagnostico();
+                        oDetalle.IdProtocolo = oRegistro;
+                        oDetalle.IdEfector = oRegistro.IdEfector;
+                        oDetalle.IdDiagnostico = nuevoIdDiagnostico;
+                        oDetalle.Tipo = "B";
+                        oDetalle.Save();
+
+                        accion = "Cambia";
+                        oDetalle.IdProtocolo.GrabarAuditoriaDetalleProtocolo(accion, int.Parse(Session["idUsuario"].ToString()), "Enfermedad Base", nuevoNombre);
+                    }
+                    // Si es igual, no hacer nada
+                }
+                else
+                {
+                    // No existe registro previo, crear uno nuevo
+                    ProtocoloDiagnostico oDetalle = new ProtocoloDiagnostico();
+                    oDetalle.IdProtocolo = oRegistro;
+                    oDetalle.IdEfector = oRegistro.IdEfector;
+                    oDetalle.IdDiagnostico = nuevoIdDiagnostico;
+                    oDetalle.Tipo = "B";
+                    oDetalle.Save();
+
+                    oDetalle.IdProtocolo.GrabarAuditoriaDetalleProtocolo(accion, int.Parse(Session["idUsuario"].ToString()), "Enfermedad Base", nuevoNombre);
+                }
+            }
+        }
+
         //private void ActualizarSolicitudScreening(string p, Protocolo oProtocolo)
         //{
         //    SolicitudScreening oRegistro = new SolicitudScreening();
@@ -2478,13 +2642,42 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         s_valores += "@ddlSectorServicio:" + ddlSectorServicio.SelectedValue;            
                     }                                                                                      
+///caro: ver si dejar
+            if (chkRecordarPractica.Checked)
+            {//guardo la sesion de general y microbiologia por si vuelvo a cargar esos tipos de labos, luego en GuardarDetalle se actualizan si el usuario lo cambio
+                if(Session["ProtocoloLaboratorio"] != null)
+                {
+                    string[] arr = Session["ProtocoloLaboratorio"].ToString().Split(("@").ToCharArray());
+                    foreach (string item in arr)
+                    {
+                        string[] s_control = item.Split((":").ToCharArray());
+                        switch (s_control[0].ToString()) {
 
+                            case "prácticas":
+                                string practicas = "@prácticas:" + s_control[1].ToString();
+                                if (Request["idServicio"] == "1") 
+                                    s_valores = s_valores.Replace(practicas, ""); //si es laboratorio general lo borro y lo cargo en GuardarDetalle.
+                                else
+                                        s_valores += practicas; //si no es laboratorio general no quiero perder su session "prácticas"
+                                break;
+
+                            case "prácticasMicro":
+                                string practicasMicro = "@prácticasMicro:" + s_control[1].ToString();
+                                if (Request["idServicio"] != "3") //si no es microbiologia no quiero perder su session "prácticasMicro"
+                                    s_valores += "@prácticasMicro:" + s_control[1].ToString(); 
+                                else
+                                    s_valores = s_valores.Replace(practicasMicro, ""); //si es micro lo borro y lo cargo en GuardarDetalle.
+                                break;
+                        }
+                    }
+                }
+            }
                
             Session["ProtocoloLaboratorio"] = s_valores;
         
         }
 
-        private void GuardarDiagnosticos(Business.Data.Laboratorio.Protocolo oRegistro)
+        private void GuardarDiagnosticos_ant(Business.Data.Laboratorio.Protocolo oRegistro)
         {
             string embarazada = ""; string accion = "Graba";
             //   dtDiagnosticos = (System.Data.DataTable)(Session["Tabla2"]);
@@ -2549,7 +2742,80 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
-        
+        private void GuardarDiagnosticos(Business.Data.Laboratorio.Protocolo oRegistro)
+        {
+            string embarazada = "";
+            string accion = "Graba";
+
+            // Obtener lista de diagnósticos actuales
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloDiagnostico));
+            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+            crit.Add(Expression.Eq("Tipo", "D"));
+            IList detalleActual = crit.List();
+
+            // Crear lista de IDs de los diagnósticos nuevos
+            List<int> listaNueva = new List<int>();
+            for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
+            {
+                listaNueva.Add(int.Parse(lstDiagnosticosFinal.Items[i].Value));
+            }
+
+            // Comparar si hay cambios
+            bool hayCambios = false;
+
+            if (detalleActual.Count != listaNueva.Count)
+                hayCambios = true;
+            else
+            {
+                foreach (ProtocoloDiagnostico oDetalle in detalleActual)
+                {
+                    if (!listaNueva.Contains(oDetalle.IdDiagnostico))
+                    {
+                        hayCambios = true;
+                        break;
+                    }
+                }
+            }
+
+            if (hayCambios)
+            {
+                // Eliminar diagnósticos antiguos
+                foreach (ProtocoloDiagnostico oDetalle in detalleActual)
+                {
+                    oDetalle.Delete();
+                }
+                accion = "Cambia";
+
+                // Guardar los nuevos diagnósticos
+                string listaDx = "";
+                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
+                {
+                    ProtocoloDiagnostico oDetalle = new ProtocoloDiagnostico();
+                    oDetalle.IdProtocolo = oRegistro;
+                    oDetalle.IdEfector = oRegistro.IdEfector;
+                    oDetalle.IdDiagnostico = int.Parse(lstDiagnosticosFinal.Items[i].Value);
+                    oDetalle.Tipo = "D";
+                    oDetalle.Save();
+
+                    string s_diag = lstDiagnosticosFinal.Items[i].Text;
+                    oDetalle.IdProtocolo.GrabarAuditoriaDetalleProtocolo(
+                        accion, int.Parse(Session["idUsuario"].ToString()), "Diagnóstico", s_diag);
+
+                    embarazada = oDetalle.EsEmbarazada();
+
+                    listaDx = listaDx == "" ? lstDiagnosticosFinal.Items[i].Value : listaDx + ";" + lstDiagnosticosFinal.Items[i].Value;
+                }
+
+                if (embarazada == "E")
+                {
+                    oRegistro.Embarazada = "S";
+                    oRegistro.Save();
+                }
+
+                Session["Dx"] = listaDx;
+            }
+        }
 
         private void GuardarDetalle(Business.Data.Laboratorio.Protocolo oRegistro)
         {         
@@ -2677,6 +2943,39 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                     oDetalle.TrajoMuestra = "Si";
                                     oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario);
                                     oDetalle.Save();
+
+                                    /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                                     * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                                     * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                                     * Correcion: si en protocolo se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                                     */
+
+                                    if (oDetalle.IdItem == oDetalle.IdSubItem)
+                                    {
+                                        /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
+                                         * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
+                                         */
+
+                                        //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
+                                        if (!oDetalle.ConResultado)
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+
+                                        //Caso 2: Es derivacion.
+                                        //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
+
+                                        if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+                                        if (oItem.IdCategoria == 1 )
+                                        { 
+                                            GuardarDetallePractica(oDetalle, true);  //regenera=true -->  se omite si es Derivacion para no generar una nueva Derivacion
+                                        } 
+                                    }
                                 }
                             }
 
@@ -2690,7 +2989,17 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             if (Request["Operacion"].ToString() != "Modifica")
             {
                 if (chkRecordarPractica.Checked)
-                    Session["ProtocoloLaboratorio"] += "@prácticas:" + recordar_practicas;
+                {
+                    //actualizo los analisis a recordar por IdTipoServicio
+                    switch (oRegistro.IdTipoServicio.IdTipoServicio)
+                    {
+                        case 1:  Session["ProtocoloLaboratorio"] += "@prácticas:" + recordar_practicas; /*labo general*/ break;
+                        case 3:  Session["ProtocoloLaboratorio"] += "@prácticasMicro:" + recordar_practicas;  /*microbiologia*/ break;
+                    }
+
+                   
+
+                }
             }
 
 
@@ -2857,11 +3166,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
        
 
-        private void GuardarDetallePractica(DetalleProtocolo oDet)
+        private void GuardarDetallePractica(DetalleProtocolo oDet, bool regenera=false)
         {
-
-
-            if (oDet.VerificarSiEsDerivable(oUser.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
+            //Alta normal (regenera = false) --> el código funciona como antes
+            // Modificación con regeneración(regenera = true) --> se omite si es Derivacion para no generar una nueva Derivacion
+            if (!regenera &&  oDet.VerificarSiEsDerivable(oUser.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
                  oDet.IdSubItem = oDet.IdItem;
                             oDet.Save();
@@ -3037,11 +3346,6 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
   
 
-        protected void txtCodigo_TextChanged(object sender, EventArgs e)
-        {
-           
-        }
-
         protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
         {
             ///////Con la selección del item se muestra el codigo
@@ -3127,11 +3431,6 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
        
-
-        protected void txtCodigo_TextChanged1(object sender, EventArgs e)
-        {
-         
-        }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
@@ -3423,7 +3722,10 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //BuscarCodigoDiagnostico();
              
         }
-
+        private bool ExisteItem(ListControl lista, string value)
+        {
+            return lista.Items.FindByValue(value) != null;
+        }
 
         private void BuscarCodigoDiagnostico()
         {
@@ -3435,7 +3737,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (oC.NomencladorDiagnostico == 0) /// Cie10
                 {
-                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 with (nolock) where CODIGO like '%" + txtCodigoDiagnostico.Text.Trim() + "%'";
+                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 with (nolock) where tipo='DIAG' and CODIGO like '%" + txtCodigoDiagnostico.Text.Trim() + "%'";
 
                     DataSet Ds = new DataSet();
                     SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
@@ -3443,7 +3745,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
                     adapter.Fill(Ds);
                     lstDiagnosticos.Items.Clear();
-                    for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+                    int cantDiag = Ds.Tables[0].Rows.Count;
+                    for (int i = 0; i < cantDiag; i++)
                     {
 
                         ListItem oDia = new ListItem();
@@ -3451,15 +3754,22 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
                         lstDiagnosticos.Items.Add(oDia);
 
- 
+                        if (cantDiag == 1) //Si encuentra por codigo un unico diagnsotico se pasa automatico a diagnostico del paciente para evitar mas clic: sug. H. Plottier
+                        {
+                            //    lstDiagnosticosFinal.Items.Clear();
+                            if (!ExisteItem(lstDiagnosticosFinal, oDia.Value))
+                            {
+                                lstDiagnosticosFinal.Items.Add(oDia);
+                                lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                            }
+
+
+                        }
                     }
 
 
-                     
-                       
 
-                     
-                    
+
                 }
                 else /// diagnostico propio
                 {
@@ -3559,7 +3869,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     //}
 
 
-                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 (nolock) where Nombre like '%" + txtNombreDiagnostico.Text.Trim() + "%' order by Nombre";
+                    string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 (nolock) where  tipo='DIAG' and  Nombre like '%" + txtNombreDiagnostico.Text.Trim() + "%' order by Nombre";
 
                     DataSet Ds = new DataSet();
                     SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
@@ -3669,350 +3979,32 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
          
         }
 
-        protected void cvValidacionInput_ServerValidate_vane(object source, ServerValidateEventArgs args)
+        protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
         { 
            
-            string[] bk = TxtDatosCargados.Value.Split(';');
-
-            TxtDatosCargados.Value = TxtDatos.Value;
-
-            string sDatos = "";
-
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();
-                string conResultado = "false";
-
-                //Cargo el valor del resultado para no perderlo si da error la validacion
-                if (i < bk.Length && bk.Length > 1) //TxtDatosCargados en Alta no tiene valores!
-                {
-                    string[] filaBk = bk[i].Split('#');
-                    conResultado = filaBk[2].ToString();
-                }
-                if (sDatos == "")
-                        sDatos = codigo + "#" + muestra + "#" + conResultado;
-                else
-                        sDatos += ";" +  codigo + "#" + muestra + "#" + conResultado;
-
-            }
-
-          
-
-
-            TxtDatosCargados.Value = sDatos;
-            //saco restriccion de forma temporal
-            //if (Request["Operacion"].ToString()!="Modifica")
-            //    if (!VerificarFechaPacienteMuestra())
-            //    {
-            //        TxtDatos.Value = "";
-            //        args.IsValid = false;
-            //        this.cvValidacionInput.ErrorMessage = "No es posible ingresar para la misma fecha, muestra y paciente un nuevo protocolo.";
-            //        return;
-            //    }
-
-            if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
-                args.IsValid = false;
-             
-                return;
-            }
-            else
-            {
-
-              
-
-            ///
-
-            if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
-                {
-
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
-                    return;
-                }
-                else args.IsValid = true;
-
-
-                //validacion Diagnostico
-                if (oC.DiagObligatorio)
-                {if (lstDiagnosticosFinal.Items.Count == 0)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
-                        return;
-                    }
-                }
-
-                ///Validacion de la fecha de protocolo
-                if (txtFecha.Value == "")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
-                    return;
-                }
-                else
-                {
-
-                    if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                        args.IsValid = true;
-                }
-
-
-                if ((ddlSectorServicio.SelectedValue == "0"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar sector";
-                    return;
-                }
-
-                if ((ddlOrigen.SelectedValue == "0"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar Origen";
-                    return;
-                }
-                
-                if ((ddlPrioridad.SelectedValue == "0"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar Prioridad";
-                    return;
-                }
-                
-                if ((ddlMuestra.SelectedValue == "0") && (pnlMuestra.Visible))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar Tipo de Muestra";
-                    return;
-                }
-                /// Valida que debe seleccionar un caracter si es un caso notificable a SISA
-
-
-
-                if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
-                //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar el caracter del protocolo";
-                    return;
-                }
-                // fin valida
-                // validacion si es sospechoso o detctar ingresar fecha de inicio de sintomas
-
-                if (VerificaObligatoriedadFIS()) 
-                {
-                    if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
-                        return;
-                    }
-                }
-                // validacion si es contacto  ingresar fecha de ultimo contacto
-                if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
-                {
-                    
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
-                        return;
-                     
-                }
-                if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
-                    return;
-                }
-                if (ddlOrigen.SelectedValue == "0")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
-                    return;
-                }
-                if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
-                        return;
-                    }
-                         
-
-                    if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
-                    return;
-                }
-
-                ///Validacion de la fecha de la orden
-
-                if (txtFechaOrden.Value == "")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
-                    return;
-                }
-                else
-                {
-                    if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }
-
-
-              
-
-                if (txtFechaTomaMuestra.Value == "")
-                {
-                    TxtDatos.Value = "";
-                    args.IsValid = false;
-                    this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de toma de muestra";
-                    return;
-                }
-                else
-                {
-                    if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Parse(txtFecha.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha del protocolo";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }
-
-
-                /// control de fecha inicio de sintomas
-                /// 
-                
-                if (txtFechaFIS.Value != "")
-               
-                {
-                    if (DateTime.Parse(txtFechaFIS.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La FIS no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFIS.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La FIS no puede ser despues de la fecha de toma de muestra";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }//fin control
-
-
-                /// control de fecha inicio de sintomas
-                /// 
-                
-
-                if (txtFechaFUC.Value != "")
-
-                {
-                    if (DateTime.Parse(txtFechaFUC.Value) > DateTime.Now)
-                    {
-                        TxtDatos.Value = "";
-                        args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "La FUC no puede ser superior a la fecha actual";
-                        return;
-                    }
-                    else
-                    {
-                        if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFUC.Value))
-                        {
-                            TxtDatos.Value = "";
-                            args.IsValid = false;
-                            this.cvValidacionInput.ErrorMessage = "La FUC no puede ser despues de la fecha de toma de muestra";
-                            return;
-                        }
-                        else
-                            args.IsValid = true;
-                    }
-                }//fin control
-
-            }
-        }
-		 
-		 protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        { 
-           
-
-            TxtDatosCargados.Value = TxtDatos.Value;
-
-            string sDatos = "";
-
-              string[] tabla = TxtDatos.Value.Split('@');
-          
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();                
             
-                    if (sDatos == "")
-                        sDatos = codigo + "#" + muestra;
-                    else
-                        sDatos += ";" +  codigo + "#" + muestra;                                                        
+            TxtDatosCargados.Value = TxtDatos.Value;
+
+            string sDatos = "";
+
+              string[] tabla = TxtDatos.Value.Split('@');
+          
+            for (int i = 0; i < tabla.Length - 1; i++)
+            {
+                string[] fila = tabla[i].Split('#');
+
+                string codigo = fila[1].ToString();
+                string tarea = fila[2].ToString();
+                string muestra= fila[3].ToString();
+                string estado = "false";
+             
+                if (tabla.Length > 1) //TxtDatosCargados en Alta no tiene valores!
+                    estado = fila[4].ToString();
+                
+                if (sDatos == "")
+                        sDatos = codigo + "#" + muestra + "#" + estado;
+                else
+                        sDatos += ";" +  codigo + "#" + muestra + "#" + estado;
 
             }
 
@@ -4031,7 +4023,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             //    }
 
             if (!VerificarAnalisisContenidos() )
-            {  TxtDatos.Value = "";
+            {  //TxtDatos.Value = "";
                 args.IsValid = false;
              
                 return;
@@ -4039,11 +4031,11 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             else
             {
 
-              
 
-            ///
 
-            if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@"))
+                ///
+
+                if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@") || (TxtDatos.Value == "1###on#0@") || TxtDatos.Value == "1###false#0@")
                 {
 
                     args.IsValid = false;
@@ -4057,7 +4049,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if (oC.DiagObligatorio)
                 {if (lstDiagnosticosFinal.Items.Count == 0)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar al menos un diagnóstico presuntivo del paciente";
                         return;
@@ -4067,7 +4059,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 ///Validacion de la fecha de protocolo
                 if (txtFecha.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha del protocolo";
                     return;
@@ -4077,7 +4069,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if (DateTime.Parse(txtFecha.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha del protocolo no puede ser superior a la fecha actual";
                         return;
@@ -4089,7 +4081,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlSectorServicio.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar sector";
                     return;
@@ -4097,7 +4089,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if ((ddlOrigen.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Origen";
                     return;
@@ -4105,7 +4097,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlPrioridad.SelectedValue == "0"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Prioridad";
                     return;
@@ -4113,7 +4105,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 
                 if ((ddlMuestra.SelectedValue == "0") && (pnlMuestra.Visible))
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar Tipo de Muestra";
                     return;
@@ -4125,7 +4117,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
                 //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe seleccionar el caracter del protocolo";
                     return;
@@ -4137,7 +4129,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if ((txtFechaFIS.Value == "") && (chkSinFIS.Checked==false))
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
                         return;
@@ -4147,7 +4139,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 if ((ddlCaracter.SelectedValue == "4") && (txtFechaFUC.Value=="") && (chkSinFUC.Checked==false))
                 {
                     
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
                         return;
@@ -4155,21 +4147,21 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 }
                 if ((ddlEspecialista.SelectedValue=="-1") && (oC.MedicoObligatorio))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la mátricula del médico solicitante";
                     return;
                 }
                 if (ddlOrigen.SelectedValue == "0")
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar el origen";
                     return;
                 }
                 if ((oC.IdSectorDefecto== 0) && (ddlSectorServicio.SelectedValue == "0"))
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Debe ingresar el Servicio";
                         return;
@@ -4178,7 +4170,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     if ((lblAlertaObraSocial.Visible) &&  (lblObraSocial.Text == "-"))
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la obra social/financiador";
                     return;
@@ -4188,7 +4180,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (txtFechaOrden.Value == "")
                 {
-                    TxtDatos.Value = "";
+                   // TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de la orden";
                     return;
@@ -4197,7 +4189,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                       // TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha actual";
                         return;
@@ -4206,7 +4198,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaOrden.Value) > DateTime.Parse(txtFecha.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de la orden no puede ser superior a la fecha del protocolo";
                             return;
@@ -4221,7 +4213,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                 if (txtFechaTomaMuestra.Value == "")
                 {
-                    TxtDatos.Value = "";
+                    //TxtDatos.Value = "";
                     args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage = "Debe ingresar la fecha de toma de muestra";
                     return;
@@ -4230,7 +4222,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha actual";
                         return;
@@ -4239,7 +4231,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaTomaMuestra.Value) > DateTime.Parse(txtFecha.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La fecha de toma de muestra no puede ser superior a la fecha del protocolo";
                             return;
@@ -4258,7 +4250,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaFIS.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La FIS no puede ser superior a la fecha actual";
                         return;
@@ -4267,7 +4259,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFIS.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La FIS no puede ser despues de la fecha de toma de muestra";
                             return;
@@ -4287,7 +4279,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 {
                     if (DateTime.Parse(txtFechaFUC.Value) > DateTime.Now)
                     {
-                        TxtDatos.Value = "";
+                        //TxtDatos.Value = "";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "La FUC no puede ser superior a la fecha actual";
                         return;
@@ -4296,7 +4288,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     {
                         if (DateTime.Parse(txtFechaTomaMuestra.Value) < DateTime.Parse(txtFechaFUC.Value))
                         {
-                            TxtDatos.Value = "";
+                            //TxtDatos.Value = "";
                             args.IsValid = false;
                             this.cvValidacionInput.ErrorMessage = "La FUC no puede ser despues de la fecha de toma de muestra";
                             return;
@@ -4306,8 +4298,279 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     }
                 }//fin control
 
+                if (txtEspecialista.Text != "0" && ddlEspecialista.SelectedValue == "0")
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
+                    return;
+                }
             }
         }
+
+        private bool VerificarAnalisisContenidos()
+        {
+            bool devolver = true;
+            string[] tabla = TxtDatos.Value.Split('@');
+            string listaCodigo = "";
+
+            for (int i = 0; i < tabla.Length - 1; i++)
+
+            {
+                string[] fila = tabla[i].Split('#');
+                string codigo = fila[1].ToString();
+                if (listaCodigo == "")
+                    listaCodigo = "'" + codigo + "'";
+                else
+                    listaCodigo += ",'" + codigo + "'";
+
+                int i_idItemPractica = 0;
+                if (codigo != "")
+                {
+
+                    Item oItem = new Item();
+                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+                    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
+                    {
+
+                        i_idItemPractica = oItem.IdItem;
+                        for (int j = 0; j < tabla.Length - 1; j++)
+
+                        {
+                            string[] fila2 = tabla[j].Split('#');
+                            string codigo2 = fila2[1].ToString();
+                            if ((codigo2 != "") && (codigo != codigo2))
+                            {
+                                Item oItem2 = new Item();
+                                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+
+                                //MultiEfector: filtro por efector
+
+
+                                ISession m_session = NHibernateHttpModule.CurrentSession;
+                                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                                crit.Add(Expression.Eq("IdItemPractica", oItem));
+                                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+
+
+                                if (oGrupo != null)
+                                {
+
+                                    this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+                                    devolver = false; break;
+
+                                }
+
+                            }
+
+                        }////for           
+                    }
+                    else
+                    {
+                        this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+                        devolver = false; break;
+
+                    }
+
+                }/// if codigo
+                if (!devolver) break;
+            }
+
+            if ((devolver) && (listaCodigo != ""))
+            { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
+
+            return devolver;
+
+        }
+
+        //LAB-192: Bug análisis Repetidos en protocolos. No lo pasamos a produccion porque baja la perfomance del sistema. 
+
+        //private bool VerificarAnalisisContenidos_LAB192()
+        //{
+        //    bool devolver = true;
+        //    string[] tabla = TxtDatos.Value.Split('@');
+        //    string listaCodigo = "";
+
+        //    var subItemsEnBD = new Dictionary<int, int>();
+        //    //List<Item> subItemsEnDB = new List<Item>();
+
+
+
+        //    for (int i = 0; i < tabla.Length - 1; i++)
+
+        //    {
+        //        string[] fila = tabla[i].Split('#');
+        //        string codigo = fila[1].ToString();
+        //        if (listaCodigo == "")
+        //            listaCodigo = "'" + codigo + "'";
+        //        else
+        //            listaCodigo += ",'" + codigo + "'";
+
+        //        if (codigo != "")
+        //        {
+        //            Item oItem = new Item();
+        //            oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+        //            //1- Si el idItem ya esta en DetalleProtocolo (para los casos de "Modifica" no verifico Analisis)
+        //            // if (Request["Operacion"].ToString() == "Modifica")
+        //            if (Request["idProtocolo"] != null)//Caro: unifco instanciacion de protocolo cuando es modificacion 
+        //            {
+        //                Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
+        //                oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
+        //                //try  //Caro: saco try cath por errores silenciosos 
+        //                //{
+        //                if ((oRegistro != null) && (oItem != null))
+        //                {
+        //                    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //                    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //                    crit.Add(Expression.Eq("IdItem", oItem));
+        //                    crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+        //                    IList lista = crit.List();
+
+        //                    if (lista.Count == 0)//no esta en la base
+        //                    {
+        //                        devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla, subItemsEnBD);
+
+        //                    }
+        //                    else
+        //                    {
+        //                        foreach (DetalleProtocolo oDetalle in lista)
+        //                        {
+        //                            subItemsEnBD[oDetalle.IdSubItem.IdItem] = oDetalle.IdItem.IdItem;
+        //                        }
+
+        //                    }
+        //                }
+        //                //}
+        //                //catch(Exception e) 
+        //                //{
+        //                //    this.cvValidacionInput.ErrorMessage = e.Message;
+        //                //    devolver = false; break;
+        //                //}
+
+        //            }
+        //            else  // no es modificacion
+        //            {
+        //                devolver = VerificaMuestrasAsociadas(codigo, oItem, tabla);
+        //            }
+
+
+        //        }/// if codigo
+        //        if (!devolver) break;
+        //    }
+
+        //    if ((devolver) && (listaCodigo != ""))
+        //    { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
+
+        //    return devolver;
+
+        //}
+
+        //private bool VerificaMuestrasAsociadas(string codigo, Item oItem, string[] tabla, Dictionary<int, int> itemsEnBD = null)
+        //{
+        //    bool devolver = true;
+
+
+        //    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
+        //    {
+
+
+        //        for (int j = 0; j < tabla.Length - 1; j++)
+
+        //        {
+        //            string[] fila2 = tabla[j].Split('#');
+        //            string codigo2 = fila2[1].ToString();
+        //            if ((codigo2 != "") && (codigo != codigo2))
+        //            {
+        //                Item oItem2 = new Item();
+        //                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
+
+        //            //MultiEfector: filtro por efector
+        //            ISession m_session = NHibernateHttpModule.CurrentSession;
+        //                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+        //                crit.Add(Expression.Eq("IdItemPractica", oItem));
+        //                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
+        //                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+        //                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
+
+
+
+        //                if (oGrupo != null)
+        //                {
+
+        //                    this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
+        //                    devolver = false; break;
+
+        //                }
+
+        //                //-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+        //               //Verifico que el codigo cargado tampoco este en mi lista de subItems de la base de datos!
+
+        //                if (itemsEnBD != null)
+        //                {
+        //                    Item oItemExistente = new Item();
+        //                    bool hayConflicto = false;
+        //                    int itemExistente = 0;
+
+        //                    m_session = NHibernateHttpModule.CurrentSession;
+        //                    crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+        //                    crit.Add(Expression.Eq("IdItemPractica", oItem));
+        //                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+        //                    IList detalle = crit.List();
+
+        //                    if (detalle.Count > 0) //Es practica
+        //                    {
+        //                        foreach (PracticaDeterminacion item in detalle)
+        //                        {
+        //                            if (itemsEnBD.ContainsKey(item.IdItemDeterminacion))
+        //                            {
+        //                                itemExistente = itemsEnBD[item.IdItemDeterminacion];
+        //                                hayConflicto = true; break;
+        //                            }
+        //                        }
+        //                    }
+        //                    else //es determinacion simple idItem=idSubitem
+        //                    {
+        //                        if (itemsEnBD.ContainsKey(oItem.IdItem))
+        //                        {
+        //                            itemExistente = itemsEnBD[oItem.IdItem];
+        //                            hayConflicto = true;
+        //                        }
+        //                    }
+
+        //                    if (hayConflicto)
+        //                    {
+        //                        string mensajeerror = "";
+        //                        oItemExistente = (Item)oItemExistente.Get(typeof(Item), "IdItem", itemExistente);//, "Baja", false); //Caro: le saco la condicion de baja porque si fue grabado en la base y despues lo pusieron de baja no lo va a encontrar
+        //                        if (oItemExistente != null)///Caro agrego control de que exista si no va a dar error al usarlo
+        //                        {
+        //                            mensajeerror =
+        //                            "Ha cargado análisis contenidos en otros. Verifique los códigos " +
+        //                            codigo + " y " + oItemExistente.Codigo + "!";
+
+        //                        }
+        //                        else
+        //                            mensajeerror = "Ha cargado análisis contenidos en otros. Verifique los códigos ";
+
+        //                        this.cvValidacionInput.ErrorMessage = mensajeerror;
+        //                        devolver = false;
+        //                    }
+
+        //                }
+        //            }
+
+        //        }////for           
+        //    }
+        //    else
+        //    {
+        //        this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+        //        devolver = false; //break;
+
+        //    }
+
+        //    return devolver;
+        //}
 
         private bool VerificaRequiereCaracter(string sDatos)
         {
@@ -4362,83 +4625,7 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         //}
  
 
-        private bool VerificarAnalisisContenidos()
-        {
-            bool devolver = true;
-            string[] tabla = TxtDatos.Value.Split('@');
-            string listaCodigo = "";
-
-             for (int i = 0; i < tabla.Length - 1; i++)
-            
-            {
-                string[] fila = tabla[i].Split('#');
-                string codigo = fila[1].ToString();
-                if (listaCodigo == "")
-                    listaCodigo = "'" + codigo + "'";
-                else
-                    listaCodigo += ",'" + codigo + "'";
-
-                int i_idItemPractica = 0;
-                if (codigo != "")
-                {
-
-                    Item oItem = new Item();
-                    oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);                 
-                    if (oItem.VerificaMuestrasAsociadas(int.Parse(ddlMuestra.SelectedValue)))
-                    { 
-
-                    i_idItemPractica = oItem.IdItem;
-                        for (int j = 0; j < tabla.Length - 1; j++)
-
-                        {
-                            string[] fila2 = tabla[j].Split('#');
-                            string codigo2 = fila2[1].ToString();
-                            if ((codigo2 != "") && (codigo != codigo2))
-                            {
-                                Item oItem2 = new Item();
-                                oItem2 = (Item)oItem2.Get(typeof(Item), "Codigo", codigo2, "Baja", false);
-
-                                //MultiEfector: filtro por efector
-
-
-                                ISession m_session = NHibernateHttpModule.CurrentSession;
-                                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
-                                crit.Add(Expression.Eq("IdItemPractica", oItem));
-                                crit.Add(Expression.Eq("IdItemDeterminacion", oItem2.IdItem));
-                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                PracticaDeterminacion oGrupo = (PracticaDeterminacion)crit.UniqueResult();
-
-
-
-                                if (oGrupo != null)
-                                {
-
-                                    this.cvValidacionInput.ErrorMessage = "Ha cargado análisis contenidos en otros. Verifique los códigos " + codigo + " y " + codigo2 + "!";
-                                    devolver = false; break;
-
-                                }
-
-                            }
-                        
-                    }////for           
-                    }
-                    else
-                    {
-                        this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
-                        devolver = false; break;
-
-                    }
-
-                }/// if codigo
-                if (!devolver) break;
-            }
-
-            if ((devolver) && (listaCodigo != ""))
-            { devolver = VerificarAnalisisComplejosContenidos(listaCodigo); }
-           
-            return devolver;
-         
-        }
+     
 
         private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
         { ///Este es un segundo nivel de validacion en donde los analisis contenidos no estan directamente sino en diagramas
@@ -4634,7 +4821,8 @@ where pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
 FROM Sys_CIE10 c (nolock)
 inner join LAB_ProtocoloDiagnostico p (nolock) on c.id = p.idDiagnostico
-where p.idEfector=" + oUser.IdEfector.IdEfector.ToString() + @"
+where  c.tipo='DIAG' and 
+p.idEfector=" + oUser.IdEfector.IdEfector.ToString() + @"
 group by id, codigo, nombre
 ORDER BY cantidad desc";
 
@@ -4764,8 +4952,41 @@ ORDER BY cantidad desc";
                                 ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula+ '#' + espe));
                             }
                             if (pro.Count > 1)
+                            {
                                 if (Request["idProtocolo"] == null)
                                 { ddlEspecialista.Items.Insert(0, new ListItem("--Seleccione--", "0")); }
+
+                                #region SelecionProfesional
+                                if (Session["apellidoNombre"] != null)
+                                {
+                                    foreach (ListItem item in ddlEspecialista.Items)
+                                    {
+
+                                        //EJEMPLO DE item.Value:
+                                        //1541#CAVIEZA NAIR AMANCAY - TÉCNICO SUPERIOR EN RADIOLOGIA#
+                                        int positionFinal = item.Value.IndexOf("-");
+                                        if (positionFinal < 0)
+                                            continue; //Es el caso de "--Seleccione--", "0"
+
+                                        string apellidoNombre = item.Value.Substring(0, positionFinal);
+                                        int posicion = apellidoNombre.IndexOf("#");
+
+                                        if (posicion < 0)
+                                            continue;
+
+                                        apellidoNombre = apellidoNombre.Substring(posicion + 1).Trim();
+
+
+                                        if (apellidoNombre.Equals(Session["apellidoNombre"].ToString()))
+                                        {
+                                            ddlEspecialista.SelectedValue = item.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+
 
                             lblErrorMedico.Visible = false;
 
@@ -4796,7 +5017,7 @@ ORDER BY cantidad desc";
 
 
         }
-
+       
         public class Profesiones
         {
             public List<Matricula> matriculacion { get; set; }
@@ -4804,19 +5025,21 @@ ORDER BY cantidad desc";
         }
 
         public class Matricula
-
         {
             public string  matriculaNumero { get; set; }
-           
+            public DateTime fin { get; set; }
+
         }
 
        
-            public class ProfesionalMatriculado
+        public class ProfesionalMatriculado
         {
         //    public int documento { get; set; }
             public string nombre { get; set; }
             public string apellido { get; set; }
+            public string cuit { get; set; }
            public List<Profesiones> profesiones { get; set; }
+            public string id { get; set; } //id que trae de ANDES
             //public string Nombre { get; set; }
             //public string FechaNacimiento { get; set; }
             //public string FechaNac { get; set; }
@@ -4876,13 +5099,16 @@ ORDER BY cantidad desc";
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            if (Session["matricula"] != null)
+            if (Session["matricula"] != null && Session["matricula"].ToString() != "") 
+                //Agregue que sea distinto de vacio porque al Cancelar sin traer matricula,
+                //deja un string vacio, que hacia que entrara al if y buscara nuevamente un medico
+                //haciendo que la ejecucion se extendiera innecesariamente
             {
 
                 txtEspecialista.Text = Session["matricula"].ToString();
                 MostrarMedico();
                
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //No quiero pisar los datos cargados
             }
         }
 
@@ -5335,6 +5561,42 @@ System.Net.ServicePointManager.SecurityProtocol =
             }
         }
 
+        protected void txtCodigoEnfermedadBase_TextChanged(object sender, EventArgs e)
+        {
+
+            try
+            {
+                Cie10 oRegistro = new Cie10();
+                oRegistro = (Cie10)oRegistro.Get(typeof(Cie10), "Codigo", txtCodigoEnfermedadBase.Text );
+                if (oRegistro != null) ddlEnfermedadBase.SelectedValue = oRegistro.Id.ToString();
+                ddlEnfermedadBase.UpdateAfterCallBack = true;
+            }
+            catch (Exception ex)
+            {
+                string exception = "";
+                //while (ex != null)
+                //{
+                exception = ex.Message + "<br>";
+
+                //}
+            }
+        }
+
+        protected void ddlEnfermedadBase_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            mostrarCodigoEnfermedadBase();
+        }
+
+        private void mostrarCodigoEnfermedadBase()
+        {
+            if ((ddlEnfermedadBase.SelectedValue != "0") && (ddlEnfermedadBase.SelectedValue != ""))
+            {
+                Cie10 oRegistro = new Cie10();
+                oRegistro = (Cie10)oRegistro.Get(typeof(Cie10), int.Parse(ddlEnfermedadBase.SelectedValue.ToString()));
+                if (oRegistro != null) txtCodigoEnfermedadBase.Text = oRegistro.Codigo;
+                txtCodigoEnfermedadBase.UpdateAfterCallBack = true;
+            }
+        }
     }
 
 }

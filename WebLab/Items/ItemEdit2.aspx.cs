@@ -1057,15 +1057,17 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 else
                     args.IsValid = true;
             }
-
+            //Caro: se saca el ingreso de observaciones, puede ir sin valor-
             if (rdbRango.Items[3].Selected)///solo observaciones
-            {
-                cvValores.ErrorMessage = "Debe ingresar una observación";
-                if (txtObservaciones.Text == "")
-                    args.IsValid = false;
-                else
-                    args.IsValid = true;
-            }
+                args.IsValid = true;
+            //if (rdbRango.Items[3].Selected)///solo observaciones
+            //{
+            //    cvValores.ErrorMessage = "Debe ingresar una observación";
+            //    if (txtObservaciones.Text == "")
+            //        args.IsValid = false;
+            //    else
+            //        args.IsValid = true;
+            //}
 
         }
 

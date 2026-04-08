@@ -49,6 +49,24 @@ namespace WebLab.Items {
         protected global::Anthem.DropDownList ddlEstado;
         
         /// <summary>
+        /// txtFechaDesde control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
+        
+        /// <summary>
+        /// cvValidacionInput control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
+        
+        /// <summary>
         /// estatus control.
         /// </summary>
         /// <remarks>

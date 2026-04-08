@@ -139,6 +139,33 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.HiddenField HFSexo;
         
         /// <summary>
+        /// HFSelMedico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFSelMedico;
+        
+        /// <summary>
+        /// HFSelRenaper control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFSelRenaper;
+        
+        /// <summary>
+        /// HFModificarPaciente control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFModificarPaciente;
+        
+        /// <summary>
         /// hplModificarPaciente control.
         /// </summary>
         /// <remarks>
@@ -634,24 +661,6 @@ namespace WebLab.Protocolos {
         protected global::Anthem.LinkButton lnkAgregarItem;
         
         /// <summary>
-        /// pnlImpresoraAlta control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlImpresoraAlta;
-        
-        /// <summary>
-        /// ddlImpresoraEtiqueta control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraEtiqueta;
-        
-        /// <summary>
         /// TxtDatosCargados control.
         /// </summary>
         /// <remarks>
@@ -823,6 +832,42 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.CheckBox chkSinFUC;
         
         /// <summary>
+        /// pnlEnfermedadBase control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEnfermedadBase;
+        
+        /// <summary>
+        /// lblEB control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblEB;
+        
+        /// <summary>
+        /// txtCodigoEnfermedadBase control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.TextBox txtCodigoEnfermedadBase;
+        
+        /// <summary>
+        /// ddlEnfermedadBase control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlEnfermedadBase;
+        
+        /// <summary>
         /// pnlEtiquetas control.
         /// </summary>
         /// <remarks>
@@ -911,6 +956,24 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::WebLab.Calidad.IncidenciaEdit IncidenciaEdit1;
+        
+        /// <summary>
+        /// pnlImpresoraAlta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlImpresoraAlta;
+        
+        /// <summary>
+        /// ddlImpresoraEtiqueta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraEtiqueta;
         
         /// <summary>
         /// txtObservacion control.

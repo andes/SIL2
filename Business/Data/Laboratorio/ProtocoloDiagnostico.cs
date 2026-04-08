@@ -19,20 +19,22 @@ namespace Business.Data.Laboratorio
 		private int m_idprotocolodiagnostico; 
 		private Protocolo m_idprotocolo; 
 		private Efector m_idefector; 
-		private int m_iddiagnostico; 		
-		#endregion
+		private int m_iddiagnostico;
+        private string m_tipo;
+        #endregion
 
-		#region Default ( Empty ) Class Constuctor
-		/// <summary>
-		/// default constructor
-		/// </summary>
-		public ProtocoloDiagnostico()
+        #region Default ( Empty ) Class Constuctor
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public ProtocoloDiagnostico()
 		{
 			m_idprotocolodiagnostico = 0; 
 			m_idprotocolo = new Protocolo(); 
 			m_idefector = new Efector(); 
-			m_iddiagnostico = 0; 
-		}
+			m_iddiagnostico = 0;
+            m_tipo = String.Empty;
+        }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -42,13 +44,15 @@ namespace Business.Data.Laboratorio
 		public ProtocoloDiagnostico(
 			Protocolo idprotocolo, 
 			Efector idefector, 
-			int iddiagnostico)
+			int iddiagnostico,
+            string tipo)
 			: this()
 		{
 			m_idprotocolo = idprotocolo;
 			m_idefector = idefector;
 			m_iddiagnostico = iddiagnostico;
-		}
+            m_tipo = tipo;
+        }
 		#endregion // End Required Fields Only Constructor
 
 		#region Public Properties
@@ -108,11 +112,28 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
-			
-		/// <summary>
-		/// Returns whether or not the object has changed it's values.
-		/// </summary>
-		public bool IsChanged
+
+
+        public string Tipo
+        {
+            get { return m_tipo; }
+
+            set
+            {
+                if (value == null)
+                    throw new ArgumentOutOfRangeException("Null value not allowed for m_tipo", value, "null");
+
+                if (value.Length > 10)
+                    throw new ArgumentOutOfRangeException("Invalid value for m_tipo", value, value.ToString());
+
+                m_isChanged |= (m_tipo != value); m_tipo = value;
+            }
+        }
+
+        /// <summary>
+        /// Returns whether or not the object has changed it's values.
+        /// </summary>
+        public bool IsChanged
 		{
 			get { return m_isChanged; }
 		}

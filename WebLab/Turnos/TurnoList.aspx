@@ -78,20 +78,18 @@
                     </tr>
               
                     <tr>
-                        <td align="center">
-                            <br />
+                        <td align="center">                          
                             <asp:Button ID="btnActualizar" runat="server" CssClass="btn btn-primary" onclick="btnActualizar_Click" Text="Actualizar" ValidationGroup="1" Width="100px" />
                         </td>
                         <td align="center">
                             &nbsp;</td>
                     </tr>
-                    <tr>
+                   <tr>
                         <td align="center">
-                            <hr />
-                            <br />
+                            <hr />                            
                         </td>
                         <td align="center">&nbsp;</td>
-                    </tr>
+                    </tr> 
                     <tr>
                         <td align="left">
                             2.- Seleccione Fecha del Turno</td>
