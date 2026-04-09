@@ -1,0 +1,17 @@
+name: Test BaseUrl connectivity
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-baseurl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check BaseUrl availability
+        env:
+          CYPRESS_baseUrl: ${{ secrets.BASE_URL }}
+        run: |
+          echo "Checking BaseUrl connectivity..."
+          curl -s -o /dev/null -w "HTTP status: %{http_code}\n" "$CYPRESS_baseUrl"
