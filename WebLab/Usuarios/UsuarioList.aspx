@@ -14,6 +14,8 @@
         else
             return false;
     }
+
+   
 </script>
 </asp:Content>
 
@@ -103,74 +105,76 @@
                                          <td>&nbsp;</td>
  
                                         </tr>
-                               <tr> <td colspan="2"> 
-                              <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False" 
-                                CellPadding="1" DataKeyNames="idUsuario" 
-                                ForeColor="#333333" onrowcommand="gvLista_RowCommand1" 
-                                onrowdatabound="gvLista_RowDataBound"   Width="100%" 
-                                 EmptyDataText="No hay usuarios creados"  CssClass="table table-bordered bs-table"  GridLines="Horizontal"
-                                  PageSize="50" AllowPaging="true"
-                                  OnPageIndexChanging="gvLista_PageIndexChanging"
-                                  >
-            
-                                <Columns>                
-                                 <asp:BoundField DataField="username" 
-                                        HeaderText="Usuario" >
-                                        <ItemStyle Width="20%" />
-                                    </asp:BoundField>
+                               <tr> 
+                                   <td colspan="2"> 
+                                        <asp:GridView ID="gvLista" runat="server"
+                                            AutoGenerateColumns="False" 
+                                            CellPadding="1" DataKeyNames="idUsuario" 
+                                            ForeColor="#333333" onrowcommand="gvLista_RowCommand1" 
+                                            onrowdatabound="gvLista_RowDataBound"   Width="100%" 
+                                            EmptyDataText="No hay usuarios creados"  CssClass="table table-bordered bs-table"  GridLines="Horizontal"
+                                            PageSize="50"
+                                            AllowPaging="true" OnPageIndexChanging="gvLista_PageIndexChanging" 
+                                            AllowSorting="True" OnSorting="gvLista_Sorting"    >
+                                            <Columns>                
+                                        
+                                                <asp:BoundField DataField="username"  HeaderText="Usuario" SortExpression="username">
+                                                    <ItemStyle Width="20%" />
+                                                </asp:BoundField>
                 
-                                      <asp:BoundField DataField="apellido" HeaderText="Apellido" >
-                                          <ItemStyle Width="20%" />
-                                    </asp:BoundField>
-                                    <asp:BoundField DataField="nombre" HeaderText="Nombre" >
-                                        <ItemStyle Width="20%" />
-                                    </asp:BoundField>
-                                    <asp:BoundField DataField="perfil" HeaderText="Perfil" >
-                        
-                                        <ItemStyle Width="10%" />
-                                    </asp:BoundField>
-                                       <asp:BoundField DataField="Efector" HeaderText="Efector" >
-                        
-                                        <ItemStyle Width="30%" />
-                                    </asp:BoundField>
-                                    <asp:BoundField DataField="habilitado" HeaderText="Activo" />
-                                   <asp:BoundField DataField="tipoAutenticacion" HeaderText="Tipo Autenticacion" >
-                        
-                                        <ItemStyle Width="30%" />
-                                    </asp:BoundField>
-                                    <asp:TemplateField HeaderText="">
-                                                <ItemTemplate>
-                                                <asp:ImageButton ID="Modificar" ToolTip="Modificar" runat="server" ImageUrl="~/App_Themes/default/images/editar.jpg"
-                                                 CommandName="Modificar" />
-                                                </ItemTemplate>
-                          
-                                                <ItemStyle HorizontalAlign="Center" Width="5%" />
-                          
-                                            </asp:TemplateField>
-                                      <asp:TemplateField   HeaderText="Habilitar">
-                                        <ItemTemplate>
-                                            <asp:CheckBox ID="chkStatus" runat="server"  
-                                                AutoPostBack="true" OnCheckedChanged="chkStatus_OnCheckedChanged"  UseSubmitBehavior="false"
-                                                Checked='<%# Convert.ToBoolean(Eval("activo")) %>'
-                                                />
-                                        </ItemTemplate>                    
-                                           <ItemStyle HorizontalAlign="Center" Width="10%" />
-                                    </asp:TemplateField>
-           
-                                </Columns>
-                               <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                                <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
-<%--                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />--%>
-                                  <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
-                                <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
-                                <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
-                                <EditRowStyle BackColor="#999999" />
-                                <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                                                                                <PagerSettings Mode="NumericFirstLast" Position="Top" />
+                                                  <asp:BoundField DataField="apellido" HeaderText="Apellido" SortExpression="apellido">
+                                                      <ItemStyle Width="20%" />
+                                                  </asp:BoundField>
 
-                                
+                                                <asp:BoundField DataField="nombre" HeaderText="Nombre" SortExpression="nombre">
+                                                    <ItemStyle Width="20%" />
+                                                </asp:BoundField>
+
+                                                <asp:BoundField DataField="perfil" HeaderText="Perfil" SortExpression="perfil" >
+                                                    <ItemStyle Width="10%" />
+                                                </asp:BoundField>
+                                                 
+                                                <asp:BoundField DataField="Efector" HeaderText="Efector" SortExpression="Efector" >
+                                                    <ItemStyle Width="30%" />
+                                                </asp:BoundField>
+
+                                                <asp:BoundField DataField="habilitado" HeaderText="Activo" SortExpression="habilitado" />
+
+                                               <asp:BoundField DataField="tipoAutenticacion" HeaderText="Tipo Autenticacion" SortExpression="tipoAutenticacion">
+                                                    <ItemStyle Width="30%" />
+                                                </asp:BoundField>
+
+                                                <asp:TemplateField HeaderText="">
+                                                    <ItemTemplate>
+                                                    <asp:ImageButton ID="Modificar" ToolTip="Modificar" runat="server" ImageUrl="~/App_Themes/default/images/editar.jpg"
+                                                        CommandName="Modificar" />
+                                                    </ItemTemplate>
+                                                    <ItemStyle HorizontalAlign="Center" Width="5%" />
+                                                </asp:TemplateField>
+
+                                                  <asp:TemplateField   HeaderText="Habilitar">
+                                                    <ItemTemplate>
+                                                        <asp:CheckBox ID="chkStatus" runat="server"  
+                                                            AutoPostBack="true" OnCheckedChanged="chkStatus_OnCheckedChanged"  UseSubmitBehavior="false"
+                                                            Checked='<%# Convert.ToBoolean(Eval("activo")) %>'
+                                                            />
+                                                    </ItemTemplate>                    
+                                                       <ItemStyle HorizontalAlign="Center" Width="10%" />
+                                                </asp:TemplateField>
+           
+                                            </Columns>
+                                           <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                                            <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
+            <%--                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />--%>
+                                              <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
+                                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+                                            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
+                                            <EditRowStyle BackColor="#999999" />
+                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+                                           <PagerSettings Mode="NumericFirstLast" Position="Top" />
                                 </asp:GridView>      
-                                      </td> </tr> </table>
+                                      </td> 
+                               </tr> </table>
                               </asp:Panel>
 
        	                    </div>
