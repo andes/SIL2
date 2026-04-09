@@ -1,20 +1,21 @@
-﻿using System;
+﻿using Business;
+using Business.Data;
+using System;
 using System.Collections;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.MobileControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
-using System.Data.SqlClient;
-using Business;
-using System.Text;
-using System.IO;
-using Business.Data;
 
 namespace WebLab.Usuarios
 {
@@ -41,9 +42,6 @@ namespace WebLab.Usuarios
             {
                 if (Session["idUsuario"] != null)
                 {
-                     
-
-               
                     RegistrarScriptConfirmacion();
                     VerificaPermisos("Usuarios");
                     CargarListas();
@@ -124,51 +122,50 @@ namespace WebLab.Usuarios
             CurrentPageLabel.Text = "Página " + (gvLista.PageIndex+1) + " de " + gvLista.PageCount.ToString();
         }
         
-        private object LeerDatos()
+        private DataTable LeerDatos(string tipo="")
         {
-          
-            string m_strSQL = @"SELECT     U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
-                        case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion
-                        FROM         Sys_Usuario AS U (nolock) INNER JOIN
-                      Sys_Perfil AS P (nolock)  ON U.idPerfil = P.idPerfil inner join
-					  Sys_UsuarioEfector UE (nolock)  on Ue.idusuario= U.idUsuario inner join
-					  sys_efector as E (nolock) on Ue.idEfector= E.idEfector
-             ";
-            string str_condicion = " where username!='adminapi' ";
+            string m_strSQL;
+            if (tipo == "excel")
+            {
+                m_strSQL = @"SELECT U.apellido, U.nombre, username, CASE WHEN U.activo = 1 THEN 'Si' ELSE 'No' END AS activo,
+                    firmaValidacion, email, U.telefono, CASE WHEN externo = 1 THEN 'Si' ELSE 'No' END AS externo,
+                    P.nombre AS Perfil, E.nombre AS Efector,tipoAutenticacion as [Tipo Autenticacion] 
+                    FROM Sys_Usuario U WITH (NOLOCK) 
+                    INNER JOIN sys_perfil P WITH (NOLOCK) ON U.idPerfil = P.idPerfil 
+                    INNER JOIN Sys_UsuarioEfector AS UE WITH (NOLOCK) ON UE.idUsuario = U.idUsuario 
+                    INNER JOIN Sys_Efector AS E WITH (NOLOCK) ON E.idEfector = UE.idEfector ";
+            }
+            else
+            {
+                m_strSQL = @"SELECT U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
+                        case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion 
+                        FROM Sys_Usuario U WITH(NOLOCK) 
+                        INNER JOIN sys_perfil P WITH (NOLOCK) ON U.idPerfil = P.idPerfil 
+                        INNER JOIN Sys_UsuarioEfector AS UE WITH (NOLOCK) ON UE.idUsuario = U.idUsuario 
+                        INNER JOIN Sys_Efector AS E WITH (NOLOCK) ON E.idEfector = UE.idEfector ";
+            }
+                 
+            string str_condicion = stringFiltros();
 
-            if (ddlEfector.SelectedValue != "0")
-                str_condicion += " and E.idEfector=" + ddlEfector.SelectedValue.ToString();
-
-            if (ddlPerfil.SelectedValue != "0")
-                str_condicion += " and P.idPerfil=" + ddlPerfil.SelectedValue.ToString();
-            if (ddlTipoAutenticacion.SelectedValue != "0")
-                str_condicion += " and tipoAutenticacion='" + ddlTipoAutenticacion.SelectedValue.ToString()+"'";
-            if (ddlHabilitados.SelectedValue != "0")
-                if(ddlHabilitados.SelectedValue == "1") str_condicion += " and U.activo=1";
-                else str_condicion += " and U.activo=0";
-
-            if (txtUsername.Text != "")
-                str_condicion += " and U.username LIKE '%" + txtUsername.Text + "%'";
-            if (txtNombre.Text != "")
-                str_condicion += " and U.nombre LIKE '%" + txtNombre.Text +"%'";
-            if (txtApellido.Text != "")
-                str_condicion += " and U.apellido LIKE '%" + txtApellido.Text +"%'";
-
-           if(chbAdministrador.Checked)
-                str_condicion += " and U.administrador=1";
 
             //Poder ver en el listado de usuarios los usuarios externos del efector logueado
             if (oUser.IdEfector.IdEfector != 227)
             {
-                string copia_m_strSQL = m_strSQL;
-                //1- Primer parte del select
+                string m_strSQLExterno = m_strSQL;
+                string str_condicion_externo = str_condicion;
+                //1- Primer parte del select se mantiene igual
                 m_strSQL += str_condicion;
-                //2-Segunda parte del select
-                str_condicion = str_condicion.Replace(" and E.idEfector=" + ddlEfector.SelectedValue.ToString(), ""); //Saco el idEfector porque no sabemos con cual esta logueado el de la salitas
-                m_strSQL += " union " + copia_m_strSQL + str_condicion + " and  U.idEfectorDestino=" + oUser.IdEfector.IdEfector + " and U.idPerfil=15   order by username";
+
+                //2-Segunda parte del select cambiamos las condiciones
+                str_condicion_externo = str_condicion_externo.Replace(" and E.idEfector=" + ddlEfector.SelectedValue.ToString(), "");
+                str_condicion_externo +=  " and  U.idEfectorDestino=" + oUser.IdEfector.IdEfector + " and U.idPerfil=15   order by username";
+                m_strSQLExterno += str_condicion_externo;
+
+                m_strSQL += @"
+                    union 
+                            "  + m_strSQLExterno;
             }
             else
-             
                 m_strSQL += str_condicion + " order by username";
             
 
@@ -179,18 +176,46 @@ namespace WebLab.Usuarios
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             CantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
-            
+           
 
             return Ds.Tables[0];
         }
 
+        private string stringFiltros()
+        {
+            string str_condicion = " where username!='adminapi' ";
+
+            if (ddlEfector.SelectedValue != "0")
+                str_condicion += " and E.idEfector=" + ddlEfector.SelectedValue.ToString();
+
+            if (ddlPerfil.SelectedValue != "0")
+                str_condicion += " and P.idPerfil=" + ddlPerfil.SelectedValue.ToString();
+
+            if (ddlTipoAutenticacion.SelectedValue != "0")
+                str_condicion += " and tipoAutenticacion='" + ddlTipoAutenticacion.SelectedValue.ToString() + "'";
+
+            if (ddlHabilitados.SelectedValue != "0")
+                if (ddlHabilitados.SelectedValue == "1") str_condicion += " and U.activo=1";
+                else str_condicion += " and U.activo=0";
+
+            if (txtUsername.Text != "")
+                str_condicion += " and U.username LIKE '%" + txtUsername.Text + "%'";
+
+            if (txtNombre.Text != "")
+                str_condicion += " and U.nombre LIKE '%" + txtNombre.Text + "%'";
+
+            if (txtApellido.Text != "")
+                str_condicion += " and U.apellido LIKE '%" + txtApellido.Text + "%'";
+
+            if (chbAdministrador.Checked)
+                str_condicion += " and U.administrador=1";
+
+            return str_condicion;
+        }
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
             Response.Redirect("UsuarioEdit.aspx");
         }
-
-
-
 
 
         protected void gvLista_RowCommand1(object sender, GridViewCommandEventArgs e)
@@ -204,21 +229,10 @@ namespace WebLab.Usuarios
                 MyURL = "UsuarioEdit.aspx?id=" + e.CommandArgument.ToString();
                 Response.Redirect(MyURL);
             }
-            // Response.Redirect("AreaEdit.aspx?id=" + e.CommandArgument);
           
         }
 
 
-        //private void Eliminar(object p)
-        //{
-        //    Perfil oRegistro = new Perfil();
-        //    oRegistro = (Perfil)oRegistro.Get(typeof(Perfil), int.Parse(p.ToString()));
-        //    Usuario oUser = new Usuario();
-        //    oRegistro.Baja = true;
-        //    oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-        //    oRegistro.FechaRegistro = DateTime.Now;
-        //    oRegistro.Save();
-        //}
 
         protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -232,8 +246,7 @@ namespace WebLab.Usuarios
                 CheckBox chk = (CheckBox)e.Row.FindControl("chkStatus");
                 if (chk != null)
                 {
-                    chk.InputAttributes["onchange"] =
-                "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
+                    chk.InputAttributes["onchange"] = "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
                 }
 
                 if (Permiso == 1)
@@ -282,8 +295,8 @@ namespace WebLab.Usuarios
         protected void lnkExcel_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
-                dataTableAExcel(LeerDatosExcel(),"ListaUsuarios" );
-          
+                dataTableAExcel(LeerDatos("excel"),"ListaUsuarios" );
+
         }
 
         private DataTable LeerDatosExcel()
@@ -401,5 +414,40 @@ namespace WebLab.Usuarios
         {
             CargarGrilla();
         }
+
+       
+        protected void gvLista_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                DataTable dt = LeerDatos();
+                string sortDirection = GetSortDirection(e.SortExpression);
+                dt.DefaultView.Sort = e.SortExpression + " " + sortDirection;
+                gvLista.DataSource = dt;
+                gvLista.DataBind();
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+        private string GetSortDirection(string column)
+        {
+            string sortDirection = "ASC";
+            string sortExpression = ViewState["SortExpression"] as string;
+
+            if (sortExpression != null)
+            {
+                if (sortExpression == column)
+                {
+                    string lastDirection = ViewState["SortDirection"] as string;
+                    if ((lastDirection != null) && (lastDirection == "ASC"))
+                        sortDirection = "DESC";
+                }
+            }
+
+            ViewState["SortDirection"] = sortDirection;
+            ViewState["SortExpression"] = column;
+            return sortDirection;
+        }
+
     }
 }
