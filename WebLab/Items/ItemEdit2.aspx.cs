@@ -209,6 +209,17 @@ namespace WebLab.Items
 
                 ddlPresentacionEfectorDefecto.SelectedValue = oItem.IdPresentacionDefecto.ToString();
 
+                if(oItem.IdPresentacionDefecto == 0)
+                {
+                    lblPresentacionDefecto.Text = "No se ha determinado una presentación por defecto";
+                }
+                else
+                {
+                    ItemPresentacion itemPres = new ItemPresentacion();
+                    itemPres = (ItemPresentacion) itemPres.Get(typeof(ItemPresentacion), oItem.IdPresentacionDefecto);
+                    lblPresentacionDefecto.Text = "Presentacion: "+ itemPres.Codigo + '-' + itemPres.Presentacion + " se aplicará por defecto.";
+                }
+
                 MostrarDatosValoresReferencia();
             }
         }
@@ -1263,7 +1274,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
 
             oRegistro.IdEfector = oEfector;
-            oRegistro.IdItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString())); ;
+            oRegistro.IdItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString())); 
             oRegistro.Sexo = ddlSexo.SelectedValue;
             oRegistro.TodasEdades = true;
             oRegistro.EdadDesde = int.Parse(txtEdadDesde.Value);
@@ -3266,6 +3277,12 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 oItem.IdPresentacionDefecto = pres;
                 oItem.Save();
 
+                ItemPresentacion itemPres = new ItemPresentacion();
+                itemPres = (ItemPresentacion)itemPres.Get(typeof(ItemPresentacion), oItem.IdPresentacionDefecto);
+                lblPresentacionDefecto.Text = "Presentacion: " + itemPres.Codigo + '-' + itemPres.Presentacion + " se aplicará por defecto.";
+                //Ademas actualizo el seleccionable "Presentacion por Defecto
+                ddlPresentacionEfectorDefecto.SelectedValue = pres.ToString();
+                ddlPresentacionEfectorDefecto.UpdateAfterCallBack = true;
             }
         }
 

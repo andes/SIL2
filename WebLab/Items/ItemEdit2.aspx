@@ -829,9 +829,13 @@
                                 <tr>
                                 <td>Presentación por Defecto:</td>
                                 <td colspan="3"><anthem:DropDownList class="form-control input-sm"  ID="ddlPresentacionEfectorDefecto" Width="400px" runat="server"></anthem:DropDownList></td>
-                                <td>  <anthem:Button ID="btnPresentacionDefecto" runat="server" CssClass="btn btn-primary"   TabIndex="9" Text="Guardar" ValidationGroup="1" Width="150px" OnClick="btnPresentacionDefecto_Click"  />
-                            </td>
+                                <td>  <anthem:Button ID="btnPresentacionDefecto" runat="server" CssClass="btn btn-primary"   TabIndex="9" Text="Guardar" ValidationGroup="1" Width="150px" OnClick="btnPresentacionDefecto_Click"  /></td>
+                                
                             </tr>
+                                <tr>
+                                    <td>  &nbsp;</td>
+                                    <td> <anthem:Label  ID="lblPresentacionDefecto" runat="server"  Font-Bold="True"  CssClass="myLabelIzquierdaGde"  ForeColor="Red"  UpdateAfterCallBack="true" />  </td>
+                                </tr>
                             </table>
                         </anthem:Panel>
                         
