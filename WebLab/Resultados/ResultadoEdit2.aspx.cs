@@ -27,6 +27,7 @@ using System.Web.Script.Serialization;
 using System.Text;
 using System.Net;
 using System.Net.Http;
+using System.Collections.Generic;
 
 namespace WebLab.Resultados
 {
@@ -97,7 +98,7 @@ namespace WebLab.Resultados
                 if (Session["idUsuario"] != null)
                 {
                     Inicializar();
-                    CargarListas();
+                //    CargarListas();
 
                 }
                 else
@@ -263,22 +264,15 @@ namespace WebLab.Resultados
                     {
 
                         btnMostrarResultados.Visible = false;
-                        imgDiagnostico.Visible = false;
-                      //  Panel1.ScrollBars = ScrollBars.None;                                        
+                        imgDiagnostico.Visible = false;                      
                         pnlAntibiograma.Visible = false;
-                        pnlMicroOrganismo.Visible = false;
-                        
-                        
-                        //pnlMicroOrganismoHC.Visible = true;
+                        pnlMicroOrganismo.Visible = false;                        
                         pnlAntecedentes.Visible = false;
                         tituloObservaciones.Visible = false;
 
-                        pnlObservacionProtocolo.Visible = false;
-                    //    pnlDiagnostico.Visible = false;
-                     //   tabDiagnostico.Visible = false;
+                        pnlObservacionProtocolo.Visible = false;                    
                         tabAntecedente.Visible = false;
-                        pnlHC.Visible = true;
-                        //pnlResultados.Visible = false;
+                        pnlHC.Visible = true;                        
 
                         chkFormula.Visible = false;
                         btnAplicarFormula.Visible = false;
@@ -288,16 +282,11 @@ namespace WebLab.Resultados
                         else
                          lblTitulo.Text = "CONSULTA DE RESULTADOS"; 
 
-                        pnlReferencia.Visible = true;
-                        //lblTitulo.ForeColor = Color.Black;
+                        pnlReferencia.Visible = true;                        
                         btnGuardar.Visible = false;
                         btnValidarImprimir.Visible = false;
                         btnRestringirAcceso.Visible = false;
-                        rdbImprimir.Visible = false;
-                    
-                        //imgPdf.Visible = true;
-                        //imgImprimir.Visible = true;
-                        //pnlImpresora.Visible = true;
+                        rdbImprimir.Visible = false;                                            
                         btnDesValidar.Visible = false;            
                         lnkMarcar.Visible = false;
                         lnkDesmarcar.Visible = false;
@@ -312,43 +301,17 @@ namespace WebLab.Resultados
                                     hypRegresar.NavigateUrl = "../Informes/historiaClinicafiltro.aspx?Tipo=PacienteCompleto";
                             }
                             else
-
                             hypRegresar.NavigateUrl = "ResultadoBusqueda.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&modo=" + Request["modo"].ToString();
-                          
-
                         }
-
-
                     }
                     break;
             }
         }
 
-        private void CargarListas()
-        {
-           //Utility oUtil = new Utility();        
-           /////////////////Impresoras////////////////////////
-           //string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
-           //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-           //if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
-
-
-           // if (ddlImpresora.Items.Count == 0)
-           // {
-
-           //     pnlImpresora.Visible = false;
-                 
-
-           // }
-           // ///////////////Fin de Impresoras///////////////////
-
-        }
-
+        
         private void CargarListasAntibiogramas()
-        {
-    
-            CargarAntibioticoPractica(ddlPracticaAtb.SelectedValue);
-            
+        {    
+            CargarAntibioticoPractica(ddlPracticaAtb.SelectedValue);            
         }
 
 
@@ -367,16 +330,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             oUtil.CargarCombo(ddlGermen, m_ssql, "idProtocoloGermen", "nombre");
             ddlGermen.Items.Insert(0, new ListItem("--SELECCIONE AISLAMIENTO--", "0"));
 
-
             m_ssql = @"SELECT idMecanismoResistencia, sigla as nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
-            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
-            //ListItem oSinMec = new ListItem();
-            //oSinMec.Value = "-1";
-            //oSinMec.Value = "Sin Mecanismo";
-
-            //chkMecanismoResistencia.Items.Add(oSinMec);
-            //oUtil.CargarCombo(ddlMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
-            //ddlMecanismoResistencia.Items.Insert(0, new ListItem("--SELECCIONE MECANISMO--", "0"));
+            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");            
             
 
         }
@@ -564,48 +519,25 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
            
             
                 string m_strSQL = " Select distinct P.idProtocolo, " +
-                    " P.numero as numero," +
-                    //              " 0 as numero," +
-                                  " convert(varchar(10),P.fecha,103) as fecha"+// ,P.estado , P.fecha as fecha1," +
-                              //    " , prefijosector, numerosector , numerodiario, numeroTipoServicio " +
-                                  " from Lab_Protocolo P with (nolock)" + // +str_condicion;
-                    //" INNER JOIN Lab_Configuracion Con on Con.idEfector= P.idEfector " +
+                    " P.numero as numero," +                    
+                                  " convert(varchar(10),P.fecha,103) as fecha"+// ,P.estado , P.fecha as fecha1," +                              
+                                  " from Lab_Protocolo P with (nolock)" + // +str_condicion;                    
                                   " WHERE P.idProtocolo in (" + Session["Parametros"].ToString() + ")";
 
         
-            if (Request["Operacion"].ToString() == "HC")
-                {
-                 //   if (Request["Tipo"] != null)
-                        m_strSQL += " order by P.idProtocolo desc "; // desde el mas reciente al mas antiguo
-                   // else
-                     //   m_strSQL += " order by P.idProtocolo "; // desde el mas reciente al mas antiguo
-                    //m_strSQL += " order by P.idProtocolo desc "; // desde el mas reciente al mas antiguo.
-                }
-                else
-                {
-                    //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-                    //if (oC.TipoNumeracionProtocolo == 0)
-                        m_strSQL += " order by  numero ";
-                    //if (oC.TipoNumeracionProtocolo == 1)
-                    //    m_strSQL += " order by  numerodiario ";
-                    //if (oC.TipoNumeracionProtocolo == 2)
-                    //    m_strSQL += " order by prefijosector, numerosector ";
-                    //if (oC.TipoNumeracionProtocolo == 3)
-                    //    m_strSQL += " order by numeroTipoServicio ";
-                }
+            if (Request["Operacion"].ToString() == "HC")                                 
+                        m_strSQL += " order by P.idProtocolo desc "; // desde el mas reciente al mas antiguo                                 
+                else                                    
+                        m_strSQL += " order by  numero ";                                 
 
 
-                DataSet Ds = new DataSet();
-            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();            
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
                 adapter.Fill(Ds);
                 gvLista.DataSource = Ds.Tables[0];
-                gvLista.DataBind();
-               // dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);
-
-
+                gvLista.DataBind();               
 
                 if (Ds.Tables[0].Rows.Count > 0)
                 {
@@ -619,73 +551,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 int cantidad = Ds.Tables[0].Rows.Count;
                 if (cantidad == 1) {lnkAnterior.Visible = false; lnkPosterior.Visible = false;}
                 lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " protocolos encontrados"; 
-                Session.Add("Tabla1", dtProtocolo);
-            
-            
+                Session.Add("Tabla1", dtProtocolo);                        
             
         }
 
 
-        //private void CargarGrillaNuevo()
-        //{
-        //    ////Metodo que carga la grilla de Protocolos
-        //    int ultimafila = 0;
-        //    //if (Session["Tabla1"] == null)
-        //    //{
-
-        //        string m_strSQL = " Select distinct P.idProtocolo, " +
-        //            " P.numero as numero," +
-        //            //              " 0 as numero," +
-        //                          " convert(varchar(10),P.fecha,103) as fecha" +// ,P.estado , P.fecha as fecha1," +
-        //            //" prefijosector, numerosector , numerodiario" +
-        //                          " from Lab_Protocolo P " + // +str_condicion;
-        //            //" INNER JOIN Lab_Configuracion Con on Con.idEfector= P.idEfector " +
-        //                          " WHERE P.idProtocolo in (" + Session["Parametros"].ToString() + ")";
-          
-        //        if (Request["Operacion"].ToString() == "HC")
-        //            m_strSQL += " order by P.idProtocolo desc "; // desde el mas reciente al mas antiguo.
-        //        else
-        //        {
-        //            Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-        //            if (oC.TipoNumeracionProtocolo == 0)
-        //                m_strSQL += " order by  idProtocolo ";
-        //            if (oC.TipoNumeracionProtocolo == 1)
-        //                m_strSQL += " order by  numerodiario ";
-        //            if (oC.TipoNumeracionProtocolo == 2)
-        //                m_strSQL += " order by prefijosector, numerosector ";
-        //            if (oC.TipoNumeracionProtocolo == 3)
-        //                m_strSQL += " order by numeroTipoServicio ";
-        //        }
-
-
-        //        DataSet Ds = new DataSet();
-        //        SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-        //        SqlDataAdapter adapter = new SqlDataAdapter();
-        //        adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-        //        adapter.Fill(Ds);
-        //        gvLista.DataSource = Ds.Tables[0];
-        //        gvLista.DataBind();
-        //        //dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);
-                
-
-
-        //        if (Ds.Tables[0].Rows.Count > 0)
-        //        {
-        //            dtProtocolo = Ds.Tables[0];
-        //            ultimafila = Ds.Tables[0].Rows.Count - 1;
-
-        //        }
-              
-        //    CurrentPageIndex = int.Parse(Request["idProtocolo"].ToString());
-        //    CurrentIndexGrilla = int.Parse(Request["Index"].ToString());
-        //    ////CurrentPageIndex = int.Parse(Ds.Tables[0].Rows[CurrentIndexGrilla].ItemArray[0].ToString());
-        //    UltimaPageIndex = ultimafila; // int.Parse(Ds.Tables[0].Rows[ultimafila].ItemArray[0].ToString());
-        //    lblCantidadRegistros.Text =dtProtocolo.Rows.Count.ToString() + " protocolos encontrados";
-
-         
-        //}
-
-
+        
     
 
         private int CurrentPageIndex /* Guardamos el indice de página actual */
@@ -708,22 +579,30 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         private void MuestraDatos(string p)
         {
-            HFOperacion.Value = Request["Operacion"].ToString();
+			/*Se emprolija codigo*/
+            string operacion = Request["Operacion"]?.ToString();
+            bool esValida = operacion == "Valida";
+            bool esCarga = operacion == "Carga";
+            bool esHC = operacion == "HC";
+            HFOperacion.Value = operacion ?? "";
+            //HFOperacion.Value = Request["Operacion"].ToString();
             ///Muestra los datos de encabezado para el protocolo seleccionado
             CargarListasObservaciones("gral");
 
             //Actualiza los datos de los objetos : alta o modificacion .                                        
             Protocolo oRegistro = new Protocolo();
             oRegistro = (Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(p));
-
+            int tipoServicio = oRegistro.IdTipoServicio.IdTipoServicio;
             lblServicio.Text = oRegistro.IdTipoServicio.Nombre.ToUpper();
             //if (Request["Operacion"].ToString() == "HC") { oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString())); }
             
             spanadjunto.Visible = oRegistro.tieneAdjuntoProtocolo();
-            if (Request["Operacion"].ToString() == "Valida") imgAdjunto.Visible = true;
+            //if (Request["Operacion"].ToString() == "Valida")
+            if (esValida)
+                imgAdjunto.Visible = true;
 
             HFIdProtocolo.Value = CurrentPageIndex.ToString();
-            if ((oRegistro.IdTipoServicio.IdTipoServicio == 1) || (oRegistro.IdTipoServicio.IdTipoServicio == 6))//Laboratorio o forense (no se muestran solapas de ais y ATB
+            if ((tipoServicio == 1) || (tipoServicio == 6))//Laboratorio o forense (no se muestran solapas de ais y ATB
             {
                 pnlMicroOrganismo.Visible = false;                
                 pnlAntibiograma.Visible = false;
@@ -732,7 +611,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 hplPesquisa.Visible = false;
             }
 
-            if (oRegistro.IdTipoServicio.IdTipoServicio == 5) //microbiologia de no pacientes
+            if (tipoServicio == 5) //microbiologia de no pacientes
             {
                 pnlPaciente.Visible = false;
                 pnlProducto.Visible = true;
@@ -740,12 +619,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 lblTituloFechaTomaMuestra.Visible = false;
                 btnMostrarResultados.Visible = false;
             }
-            if (oRegistro.IdTipoServicio.IdTipoServicio == 4) //Pesquisa
+            if (tipoServicio == 4) //Pesquisa
             {
                 SolicitudScreening oSolicitud = new SolicitudScreening();
                 oSolicitud = (Business.Data.Laboratorio.SolicitudScreening)oSolicitud.Get(typeof(Business.Data.Laboratorio.SolicitudScreening), "IdProtocolo", oRegistro);
 
-                if (Request["Operacion"].ToString() == "Valida")
+                //  if (Request["Operacion"].ToString() == "Valida")
+                if (esValida)
                 {
                     if (oSolicitud != null)
                     {
@@ -767,7 +647,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 //oTarjeta = (SolicitudScreening)oTarjeta.Get(typeof(SolicitudScreening), "IdProtocolo", oRegistro);
                 if (oSolicitud != null)
                 {
-                    if (Request["Operacion"].ToString() == "HC")
+                    //if (Request["Operacion"].ToString() == "HC")
+                    if (esHC)
                         lblMuestra.Text = "Tarjeta Nro.: " + oSolicitud.NumeroTarjeta.ToString();
                     else
                         lblMuestra.Text = " Nro.: " + oSolicitud.NumeroTarjeta.ToString();
@@ -777,10 +658,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             }
             
 
-                if ((oRegistro.IdTipoServicio.IdTipoServicio == 3)|| (oRegistro.IdTipoServicio.IdTipoServicio == 5)) //Microbiologia
+            if ((tipoServicio == 3)|| (tipoServicio == 5)) //Microbiologia
             {
                 hplPesquisa.Visible = false;
-                if (Request["Operacion"].ToString() == "Valida")
+                //if (Request["Operacion"].ToString() == "Valida")
+                if (esValida)
                 {
                     btnEditarAntibiograma.Visible=false;
                     btnAgregarAntibiogramaValidado.Visible = true;
@@ -793,7 +675,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 }
 
                 if (oRegistro.IdTipoServicio.IdTipoServicio == 3)
-                    lblPlaca.Text = s_placa;
+                    lblPlaca.Text = oRegistro.getPlacas();/// s_placa;
                 else
                     lblPlaca.Visible = false;
                 CargarListasAislamientos();
@@ -838,21 +720,14 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                  
                 CargarGrillaAislamientos();
                 ActualizarVistaAntibiograma(ddlPracticaAtb.SelectedValue);
-                if (Request["Operacion"].ToString() == "HC")
+                //if (Request["Operacion"].ToString() == "HC")
+                if (esHC)
                 {
                     pnlMicroOrganismo.Enabled = false;
                     pnlMicroorganismoHC.Visible = true;
-                }
-             
-
-                
+                }                             
             }
-
-
-
-            //tituloCalidad.Visible = true;
-            //this.IncidenciaEdit1.MostrarDatosdelProtocolo(oRegistro.IdProtocolo);
-
+            
             if (oRegistro.getIncidencias() > 0)
             {
                 inci.Visible = true;
@@ -867,7 +742,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             {
                 case 0:
                     {
-                        if (Request["Operacion"].ToString() == "Carga")  btnActualizarPracticasCarga.Visible = true;// en la carga de edita si el protocolo no tiene validaciones
+                        //if (Request["Operacion"].ToString() == "Carga")
+                            if (esCarga)
+                                btnActualizarPracticasCarga.Visible = true;// en la carga de edita si el protocolo no tiene validaciones
+
+
                         imgEstado.ImageUrl = "~/App_Themes/default/images/rojo.gif";
                         lblEstado1.CssClass = "label label-danger";
                         lblEstado1.Text = "NO PROCESADO";
@@ -880,8 +759,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     { imgEstado.ImageUrl = "~/App_Themes/default/images/amarillo.gif";
                         lblEstado1.CssClass = "label label-warning";
                         lblEstado1.Text = "EN PROCESO";
-
-
                         btnRestringirAcceso.Visible = false;
                     }
                     
@@ -891,10 +768,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         imgEstado.ImageUrl = "~/App_Themes/default/images/verde.gif";
                         lblEstado1.CssClass = "label label-success";
                         lblEstado1.Text = "TERMINADO"; btnRestringirAcceso.Visible = true;
-                        if (Request["Operacion"].ToString() == "Carga")
+                        //if (Request["Operacion"].ToString() == "Carga")
+                        if (esCarga)
                         {
-                     
-                            //btnGuardar.Enabled = false;
                             btnGuardar.Visible = false;
                             chkFormula.Enabled = false;
                             btnAplicarFormula.Enabled = false;
@@ -916,15 +792,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         imgEstado.ImageUrl = "~/App_Themes/default/images/lock.png";
                         lblEstado1.CssClass = "label label-success";
                         lblEstado1.Text = "ACCESO RESTRINGIDO";
-                        if (Request["Operacion"].ToString() == "Carga")
+                        //if (Request["Operacion"].ToString() == "Carga")
+                        if (esCarga)
                         {
-                       
-                            //btnGuardar.Enabled = false;
                             btnGuardar.Visible = false;
                             chkFormula.Enabled = false;
                             btnAplicarFormula.Enabled = false;
                             ////OCULTAR OPCIONES PARA CREAR O ELIMINAR ANTIBIOGRAMAS
-
                             btnGuardarAislamientos.Visible = false;
                             btnAgregarGermen.Visible = false;
 
@@ -956,20 +830,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if ((aisl.Visible) || (anti.Visible)) btnActualizarPracticasCarga.Visible = false;
             ///////////////////////////
             /////Caro: si es carga solo puede cargar aislamientos si no tiene ningun aislamiento/atb validado
-            if ((Request["Operacion"].ToString() == "Carga")) // si es carga y tiene algo validado
-            {
-                //bool aislamientosVal = oRegistro.getTieneAislamientosValidados();
-                //if (!aislamientosVal)
-                //    pnlMicroOrganismo.Enabled = true;
-                //else
-                //    pnlMicroOrganismo.Enabled = false;
-
+            //if ((Request["Operacion"].ToString() == "Carga")) // si es carga y tiene algo validado
+            if (esCarga)
+            {                
                 bool atbVal = oRegistro.getTieneAtbValidados();
-                if (!atbVal)
-                    pnlAntibiograma.Enabled = true;
-                else
-                    pnlAntibiograma.Enabled = false;
-
+                pnlAntibiograma.Enabled = atbVal;
+             
             }
 
             lblUsuario.Text =  oRegistro.IdUsuarioRegistro.Apellido;
@@ -978,14 +844,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             lblFechaRegistro.Text = oRegistro.FechaRegistro.ToShortDateString();
             lblFechaRegistro1.Text = oRegistro.FechaRegistro.ToShortDateString();
 
-            int len = oRegistro.FechaRegistro.ToString().Length - 11;
+            string hora = oRegistro.FechaRegistro.ToString("HH:mm");
+
+            lblHoraRegistro.Text = hora;
+            lblHoraRegistro1.Text = hora;
+
+            /*int len = oRegistro.FechaRegistro.ToString().Length - 11;
             lblHoraRegistro.Text = oRegistro.FechaRegistro.ToString().Substring(11, oRegistro.FechaRegistro.ToString().Length - 11);
             lblHoraRegistro1.Text = oRegistro.FechaRegistro.ToString().Substring(11, oRegistro.FechaRegistro.ToString().Length - 11);
-
+            */
             lblFecha.Text = oRegistro.Fecha.ToShortDateString();
             lblFecha1.Text = oRegistro.Fecha.ToShortDateString();
 
-            if (oRegistro.FechaTomaMuestra.ToShortDateString() == "01/01/1900")
+            if (oRegistro.FechaTomaMuestra.Year == 1900)
                 lblFechaTomaMuestra.Text = "";
             else lblFechaTomaMuestra.Text = oRegistro.FechaTomaMuestra.ToShortDateString();
             lblFechaTomaMuestra1.Text = lblFechaTomaMuestra.Text;
@@ -994,11 +865,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             lblProtocolo1.Text = lblProtocolo.Text;
 
             //hplProtocolo.NavigateUrl = "../Protocolos/ProtocoloEdit2.aspx?idServicio=" + oRegistro.IdTipoServicio.IdTipoServicio.ToString()+ "&Operacion=Modifica&idProtocolo=" +oRegistro.IdProtocolo.ToString();
-
-           
-                lblOrigen.Text = oRegistro.IdOrigen.Nombre;
-             
-
+                      
+            lblOrigen.Text = oRegistro.IdOrigen.Nombre;            
             lblSolicitante.Text = oRegistro.IdEfectorSolicitante.Nombre;
             lblSolicitante2.Text = oRegistro.IdEfectorSolicitante.Nombre;
 
@@ -1024,7 +892,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             ///Datos del Paciente            
             if (oRegistro.IdPaciente.IdEstado==2) lblDni.Text = "(Sin DU Temporal)";            
             else lblDni.Text = oRegistro.IdPaciente.NumeroDocumento.ToString();            
-            if (oRegistro.IdTipoServicio.IdTipoServicio == 4)  //pesquisa neonatal sil1
+            if (tipoServicio == 4)  //pesquisa neonatal sil1
                 lblPaciente.Text = oRegistro.getDatosParentesco();
             else
                 lblPaciente.Text = oRegistro.IdPaciente.Apellido.ToUpper() + " " + oRegistro.IdPaciente.Nombre.ToUpper();
@@ -1039,16 +907,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 case 0: lblEdad.Text += " años"; break;
                 case 1: lblEdad.Text += " meses"; break;
                 case 2: lblEdad.Text += " días"; break;                
-            }
-
-
-      
-
+            }      
             lblNumeroOrigen.Text = oRegistro.NumeroOrigen;
             lblNumeroOrigen1.Text = lblNumeroOrigen.Text;
 
             /////Observaciones en el ingreso de protocolo
-            if (Request["Operacion"].ToString() != "HC")
+            //    if (Request["Operacion"].ToString() != "HC")
+            if (!esHC)
             {
 
                 if (oRegistro.Observacion.Trim() != "")
@@ -1101,7 +966,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 lblObservacionResultado.Visible = true;
                 lblObservacionResultado.Text =" Observaciones: " + oRegistro.ObservacionResultado;
                 }
-            if (Request["Operacion"].ToString() != "HC")
+            //if (Request["Operacion"].ToString() != "HC")
+            if (!esHC)
             {
                 if (oRegistro.ObservacionResultado != "")
                 {
@@ -1132,34 +998,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 }          
         }
 
-        //private int esdeArea()
-        //{
-        //    Usuario oUser = new Usuario();
-
-        //    if (Request["Operacion"].ToString() == "Valida")
-        //        return oUserValida.IdArea;
-        //    else
-        //        return oUser.IdArea;
-
-           
-
-        //}
-
-        //private bool esHemoterapia()
-        //{
-        //    Usuario oUser = new Usuario();
-
-        //    if (Request["Operacion"].ToString() == "Valida")
-
-
-        //        oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
-        //    else
-        //        oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-        //    return oUser.esHemoterapia();
-
-
-        //}
-
+       
 
         private void LlenarTabla(string p)
         {
@@ -1174,10 +1013,20 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 *
                 * Se desactiva EnableViewState en controles dinámicos para evitar persistir estado inválido. 
                 * Los controles Anthem lo mantienen activo porque sus callbacks lo requieren.
-                */
+				
+                Caro 10.04.2026
+				Se trae desde el SP LAB_Resultados si tiene adjunto cada detalle y se evita ir N veces a buscar el dato.								
+                Se saca a caché los detalleprotocolo,resultadospracticas, derivaciones trayendo todos los datos necesarios antes del for para evitar ir N veces a buscar estos datos a la bd.
+            */
+            string s_operacion = Request["Operacion"] ?? "";
+            string s_idArea = Request["idArea"] ?? "0";
+            string s_validado = Request["validado"] ?? "0";
+            string s_idServicio = Request["idServicio"] ?? "0";
+
+
             string m_strSQL = " 1=1 ";                                                       
             if (Request["idArea"].ToString() != "0")   m_strSQL += " and idArea in (" + Request["idArea"].ToString()+")";            
-            if (Request["Operacion"].ToString() == "HC")
+            if (s_operacion == "HC")
             {
                 if (Request["validado"].ToString() == "1") { m_strSQL += " and estado=2 "; }
                 m_strSQL += " order by ordenArea, orden, idDetalleProtocolo ";  //orden de impresion             
@@ -1229,7 +1078,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             lblResultadoAnterior.Text = "R.ANTER.";
             objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
             
-            if (Request["Operacion"].ToString() != "HC")
+            if (s_operacion != "HC")
             {
                 Label lblUM = new Label();
                 lblUM.Text = "UM";
@@ -1239,28 +1088,28 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             lblVR.Text = "VR|METODO";           
             objCellValoresReferencia_TITULO.Controls.Add(lblVR);            
             Label lblValida = new Label();
-            if ((Request["Operacion"].ToString() == "Carga") || (Request["Operacion"].ToString() == "HC")) lblValida.Text = "";
+            if ((s_operacion == "Carga") || (s_operacion == "HC")) lblValida.Text = "";
             else
-            {   if (Request["Operacion"].ToString() == "Valida")  lblValida.Text = "VAL";
-                if (Request["Operacion"].ToString() == "Control") lblValida.Text = "CTRL";
+            {   if (s_operacion == "Valida")  lblValida.Text = "VAL";
+                if (s_operacion == "Control") lblValida.Text = "CTRL";
             }
             objCellValida_TITULO.Controls.Add(lblValida);
             Label lblCargadoPor = new Label();
-            if ((Request["Operacion"].ToString() == "HC")&&(Request["validado"].ToString() == "1"))            
+            if ((s_operacion == "HC")&&(Request["validado"].ToString() == "1"))            
                 lblCargadoPor.Text = "VALIDADO POR";            
             else
                 lblCargadoPor.Text = "ESTADO";            
             objCellPersona_TITULO.Controls.Add(lblCargadoPor);
             
             
-            if (Request["Operacion"].ToString() != "HC")
+            if (s_operacion != "HC")
             {
                 Label lblObservaciones = new Label();
                 lblObservaciones.Text = "OBS.";                           
                 objCellObservaciones_TITULO.Controls.Add(lblObservaciones);
                 objCellObservaciones_TITULO.Width = Unit.Pixel(60);
             }            
-            if (Request["Operacion"].ToString() != "HC")
+            if (s_operacion != "HC")
             {
                 Label lblImagenes = new Label();                lblImagenes.Text = "IMG";              
                 objCellImagenes_TITULO.Controls.Add(lblImagenes);
@@ -1269,17 +1118,17 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             objFila_TITULO.Cells.Add(objCellAnalisis_TITULO);
             objFila_TITULO.Cells.Add(objCellResultado_TITULO);          
 
-            if ((Request["Operacion"].ToString() == "Valida")||  (Request["Operacion"].ToString() == "Control")) objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
-            if (Request["Operacion"].ToString() != "HC") objFila_TITULO.Cells.Add(objCellUnMedida_TITULO);            
+            if ((s_operacion == "Valida")||  (s_operacion == "Control")) objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
+            if (s_operacion != "HC") objFila_TITULO.Cells.Add(objCellUnMedida_TITULO);            
             objFila_TITULO.Cells.Add(objCellValoresReferencia_TITULO);
 
-            if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+            if ((s_operacion == "Valida") || (s_operacion == "Control"))
             {            
                 objFila_TITULO.Cells.Add(objCellValida_TITULO);
             }
             objFila_TITULO.Cells.Add(objCellPersona_TITULO);
             objFila_TITULO.Cells.Add(objCellObservaciones_TITULO);
-            if (Request["Operacion"].ToString() != "HC") objFila_TITULO.Cells.Add(objCellImagenes_TITULO);
+            if (s_operacion != "HC") objFila_TITULO.Cells.Add(objCellImagenes_TITULO);
             objFila_TITULO.CssClass = "myLabelIzquierda";
             objFila_TITULO.BackColor = Color.Gainsboro;
             
@@ -1287,6 +1136,53 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             //'añadimos la fila a la tabla
             if (objFila_TITULO != null)   tContenido.Controls.Add(objFila_TITULO);//.Rows.Add(objRow);    
                                 
+
+            ////Caro PF: Cache de resultado item
+            HashSet<int> idsItems = new HashSet<int>();
+
+            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            {
+                idsItems.Add(int.Parse(Ds.Tables[0].Rows[i]["idItem"].ToString()));
+            }
+            ISession session = NHibernateHttpModule.CurrentSession;
+
+            IList listaResultados = session.CreateCriteria(typeof(ResultadoItem))
+            .Add(Expression.In("IdItem.IdItem", idsItems.ToArray()))
+            .Add(Expression.Eq("IdEfector", oUser.IdEfector))
+            .Add(Expression.Eq("Baja", false))
+            .List();
+
+            var resultadosPorItem = listaResultados
+            .Cast<ResultadoItem>()
+            .GroupBy(r => r.IdItem.IdItem)
+            .ToDictionary(g => g.Key, g => g.ToList());
+            ///fin caro PF: resultadoitem            
+
+            ///CARO PF: traer detalleprotocolos y derivaciones antes del for para no ir a la base N veces
+            var idsDetallesList = Ds.Tables[0].AsEnumerable()
+            .Select(r => r.Field<int>("idDetalleProtocolo"))
+            .ToList();
+
+            var detallesList = session.CreateCriteria(typeof(DetalleProtocolo))
+            .Add(Expression.In("IdDetalleProtocolo", idsDetallesList.ToArray()))
+            .List()
+            .Cast<DetalleProtocolo>()
+            .ToList();
+
+            var detallesDict = detallesList
+                .ToDictionary(d => d.IdDetalleProtocolo);
+
+            // Traer todas las Derivaciones juntas
+            var derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                .CreateAlias("IdDetalleProtocolo", "dp")
+                .Add(Expression.In("dp.IdDetalleProtocolo", idsDetallesList.ToArray()))
+                .List()
+                .Cast<Derivacion>()
+                .ToList();
+
+            var derivacionesDict = derivacionesList
+                .ToDictionary(d => d.IdDetalleProtocolo.IdDetalleProtocolo);
+            /// CARO PF : fin 
 
             for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
             {              
@@ -1317,6 +1213,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 int i_iddetalleProtocolo= int.Parse( Ds.Tables[0].Rows[i].ItemArray[26].ToString());
                 string m_codificaPaciente = Ds.Tables[0].Rows[i].ItemArray[27].ToString();
                 string m_estadoObservacion = Ds.Tables[0].Rows[i].ItemArray[29].ToString();
+                //CARO PF: traigo desde el SP los valores si tiene adjunto o no cada item para evitar las N consultas por cada fila
+                bool tieneAdjuntoNoVisible = Ds.Tables[0].Rows[i]["TieneAdjuntoNoVisible"].ToString() == "1";
+                bool tieneAdjuntoVisible = Ds.Tables[0].Rows[i]["TieneAdjuntoVisible"].ToString() == "1";
                 if (m_codificaPaciente == "True")
                 {
                     lblPaciente.Visible = false;
@@ -1350,7 +1249,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         lbl0.Font.Bold = true;
                         Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(lbl0);
                         objCell.Controls.Add(lbl0);
-                        if (Request["Operacion"].ToString() == "HC")
+                        if (s_operacion == "HC")
                             objCell.ColumnSpan =6;
                         else
                             objCell.ColumnSpan=8;
@@ -1369,8 +1268,20 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 lbl1.ForeColor = Color.Black;
                 lbl1.Font.Size = FontUnit.Point(9);
                 lbl1.EnableViewState = false;
-                DetalleProtocolo oDetalle = new DetalleProtocolo();
+                /*
+				Caro: no va a buscar cada detalle a la bd porque ya los trajo a todos antes 
+				DetalleProtocolo oDetalle = new DetalleProtocolo();
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
+                */
+                var row = Ds.Tables[0].Rows[i];
+                int idDetalle = Convert.ToInt32(row["idDetalleProtocolo"]);
+                
+                DetalleProtocolo oDetalle;
+                detallesDict.TryGetValue(idDetalle, out oDetalle);
+
+                Derivacion oDeriva;
+                derivacionesDict.TryGetValue(idDetalle, out oDeriva);
+                //fin 
                 Item oItem = new Item();
                 oItem = oDetalle.IdSubItem; // (Item)oItem.Get(typeof(Item), m_idItem);
 
@@ -1381,7 +1292,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     TableCell objCellTitulo = new TableCell();
                     lbl1.Font.Bold = true;
                     lbl1.Font.Italic = true;
-                    if (Request["Operacion"].ToString() == "HC")
+                    if (s_operacion == "HC")
                         objCellTitulo.ColumnSpan = 6;
                     else
                         objCellTitulo.ColumnSpan = 8;
@@ -1398,8 +1309,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         lblDerivacion.TabIndex = short.Parse("500");
                         //Verifica el estado de la derivacion
                         string estadoDerivacion = "";
-                        Derivacion oDeriva = new Derivacion();
-                        oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
+                        //Derivacion oDeriva = new Derivacion();
+                        //oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
                         if (oDeriva != null)  /// esta pendiente
                         {                        
                             estadoDerivacion = oDetalle.ResultadoCar; //Para todos los estados
@@ -1429,21 +1340,23 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     objCellAnalisis.Controls.Add(lbl1);                     
                     if ((oDetalle.IdUsuarioPreValida>0) && (oDetalle.IdUsuarioValida==0))
                             { estado = 2; }
-                    if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio == 3)
-                    {
-                        string s_placaaux = oDetalle.getPlaca();///Caro: ver como evitar recorrer esto cuando solo lo usa un efector
-                        if (s_placaaux != "")
-                        {
-                            // Verificar si ya existe
-                            if (!s_placa.Split('-').Contains(s_placaaux))
-                            {
-                                if (s_placa == "")
-                                    s_placa = s_placaaux;
-                                else
-                                    s_placa += "-" + s_placaaux;
-                            }
-                        }
-                    }
+                    /*Caro: evitar ir n veces a buscar las placas: se mueve al encabezado en muestraDaros()*/
+                    //if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio == 3)
+                    //{
+                    //    string s_placaaux = oDetalle.getPlaca();///Caro: ver como evitar recorrer esto cuando solo lo usa un efector
+                    //    if (s_placaaux != "")
+                    //    {
+                    //        // Verificar si ya existe
+                    //        if (!s_placa.Split('-').Contains(s_placaaux))
+                    //        {
+                    //            if (s_placa == "")
+                    //                s_placa = s_placaaux;
+                    //            else
+                    //                s_placa += "-" + s_placaaux;
+                    //        }
+                    //    }
+                    //}
+                    /*fin caro placas*/
 
 
                     ///Antes de mostrar el control verifica  si está derivado                    
@@ -1456,8 +1369,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         lblDerivacion.TabIndex = short.Parse("500");
                         //Verifica el estado de la derivacion
                         string estadoDerivacion = "";
-                        Derivacion oDeriva = new Derivacion();
-                        oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
+                        //Derivacion oDeriva = new Derivacion();
+                        //oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
                         if (oDeriva != null)  /// esta pendiente
                         {
                        
@@ -1496,15 +1409,26 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 {                                
                                     case 4://Checklistbox
                                         {
-                                            if (Request["Operacion"].ToString() != "HC")
+                                            if (s_operacion != "HC")
                                             {                                                ///   Verifica si la determinacion tiene una lista predeterminada de resultados
-                                                ISession m_session = NHibernateHttpModule.CurrentSession;
+											
+											     ///CARO PF: trae los valores del caché previo
+                                                List<ResultadoItem> resultados;
+
+                                                if (!resultadosPorItem.TryGetValue(m_idItem, out resultados))
+                                                {
+                                                    resultados = new List<ResultadoItem>();
+                                                }
+                                                ///fin caro PF
+												
+                                             /*   ISession m_session = NHibernateHttpModule.CurrentSession;
                                                 ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
                                                 crit.Add(Expression.Eq("IdItem", oItem));
                                                 crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
                                                 crit.Add(Expression.Eq("Baja", false));
                                               ///  crit.AddOrder(Order.Asc("Resultado")); ///El orden lo define el usuario
                                                 IList resultados = crit.List();
+*/
                                                 if (resultados.Count > 0)
                                                 {
                                                     Anthem.CheckBoxList chk1 = new Anthem.CheckBoxList();
@@ -1542,7 +1466,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     txt1.ToolTip = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                      if (m_conResultado == "False") txt1.Text = m_resultadoDefecto;
                                                     ////////////////////
-                                                    if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                                                    if ((s_operacion == "Valida") || (s_operacion == "Control"))
                                                     {
                                                         if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
                                                         {   //Caro Performance: se comenta por defecto la busqueda del resultado anterior 
@@ -1575,17 +1499,17 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     //btnAddDetalle.ID = "b" + m_idSuperItem+";"+ m_idItem.ToString();
                                                     btnAddDetalle.ToolTip = "Desplegar opciones";
                                                     btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";
-                                                    //btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
-                                                    //btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDetalle.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    //btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + s_operacion + "'); return false");
+                                                    //btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDetalle.IdDetalleProtocolo.ToString() + ",'" + s_operacion + "'); return false");
                                                     btnAddDetalle.Click += new ImageClickEventHandler(btnAddDetalle_Click);
 
-                                                if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
+                                                if ((estado > 0) && (s_operacion == "Carga")) //si esta controlado o validado pinta la celda
                                                     {
                                                     btnAddDetalle.Enabled=false;                                                  
                                                         txt1.Enabled = false;
                                                     }
 
-                                                    if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
+                                                    if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no puedo modificar
                                                     {                                                    
                                                         btnAddDetalle.Enabled=false;
                                                         txt1.Enabled = false;
@@ -1619,24 +1543,26 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                                                     btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
                                                     btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
-                                                    btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + s_operacion + "'); return false");
 
                                                     objCellObservaciones.Controls.Add(btnObservacionDetalle2);
                                                     ////////////////////                                        
                                                     ///IMAGENES ADJUNTAS
-                                                    if (Request["Operacion"].ToString() != "HC")
+                                                    if (s_operacion != "HC")
                                                     {
                                                         ImageButton btnImagen = new ImageButton();
                                                         btnImagen.TabIndex = short.Parse("500");
                                                         btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString(); // Caro Performance
-                                                        if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                        //if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                        if (tieneAdjuntoNoVisible) //CAro PF: evita un nuevo viaje a bd
                                                         {
                                                             btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                             btnImagen.ToolTip = "Adjunto no imprimible para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                         else
                                                         {
-                                                            if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                        //    if (oDetalle.tieneAdjuntoVisible())
+                                                            if (tieneAdjuntoVisible)
                                                             {
                                                                 btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
                                                                 btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
@@ -1647,7 +1573,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                 btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                             }
                                                         }
-                                                        btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                        btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + s_operacion + "'); return false");
                                                         objCellImagenes.Controls.Add(btnImagen);
                                                     }
                                                     // fin de imagenes adjuntas
@@ -1679,16 +1605,25 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                                     case 3://Lista predefinida de resultados
                                         {
-                                            if (Request["Operacion"].ToString() != "HC")
+                                            if (s_operacion != "HC")
                                             {
                                                 ///Verifica si la determinacion tiene una lista predeterminada de resultados
-                                                ISession m_session = NHibernateHttpModule.CurrentSession;
+												 ///CARO PF: trae los valores del caché previo
+                                                List<ResultadoItem> resultados;
+
+                                                if (!resultadosPorItem.TryGetValue(m_idItem, out resultados))
+                                                {
+                                                    resultados = new List<ResultadoItem>();
+                                                }
+                                                ///fin caro PF
+                                             /*   ISession m_session = NHibernateHttpModule.CurrentSession;
                                                 ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
                                                 crit.Add(Expression.Eq("IdItem", oItem));
                                                 crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
                                                 crit.Add(Expression.Eq("Baja", false));
                                                /// crit.AddOrder(Order.Asc("Resultado"));  //el orden lo define el usuario 
                                                 IList resultados = crit.List();
+					*/
                                                 if (resultados.Count > 0)
                                                 {
                                                     DropDownList ddl1 = new DropDownList();
@@ -1716,12 +1651,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ddl1.Attributes.Add("onkeypress", "javascript:return Enter(this, event)");
 
                                                     ///estad=0 Carga  ///estado=1 control///estado=2 valida
-                                                    if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
+                                                    if ((estado > 0) && (s_operacion == "Carga")) //si esta controlado o validado pinta la celda
                                                     {
                                                         ddl1.BackColor = Color.GhostWhite;
                                                         ddl1.Enabled = false;
                                                     }
-                                                    if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
+                                                    if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no puedo modificar
                                                     {
                                                         ddl1.BackColor = Color.GhostWhite;
                                                         ddl1.Enabled = false;
@@ -1730,7 +1665,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ddl1.EnableViewState = false;
                                                     objCellResultado.Controls.Add(ddl1);
                                                     ////////////////////
-                                                    if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                                                    if ((s_operacion == "Valida") || (s_operacion == "Control"))
                                                     {
                                                         if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
                                                         {   //Caro Performance: se comenta por defecto la busqueda del resultado anterior
@@ -1769,24 +1704,26 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         btnObservacionDetalle2.ImageUrl = "~/App_Themes/default/images/obs_normal.png";                                                    
                                                     btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
                                                     btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");                                                                                                        
-                                                    btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() +",'"+Request["Operacion"].ToString()+"'); return false");
+                                                    btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() +",'"+s_operacion+"'); return false");
                                                     objCellObservaciones.Controls.Add(btnObservacionDetalle2);
 
                                                     ////////////////////                                        
                                                     ///IMAGENES ADJUNTAS
-                                                    if (Request["Operacion"].ToString() != "HC")
+                                                    if (s_operacion != "HC")
                                                     { 
                                                     ImageButton btnImagen = new ImageButton();
                                                     btnImagen.TabIndex = short.Parse("500");
                                                     btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();                                                        
-                                                    if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                    ///if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                    if (tieneAdjuntoNoVisible)
                                                     {
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                         btnImagen.ToolTip = "Adjunto no imprimible para " + lbl1.Text.Replace("&nbsp;", "");
                                                     }
                                                     else
                                                     { 
-                                                        if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                        ///if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                        if (tieneAdjuntoVisible)
                                                         { 
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
                                                         btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
@@ -1797,7 +1734,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                         btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                     }                                              
-                                                    btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + s_operacion + "'); return false");
                                                     objCellImagenes.Controls.Add(btnImagen);
                                                     }
                                                     // fin de imagenes adjuntas
@@ -1830,34 +1767,14 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             //string expresionControlDecimales = "[-+]?\\d*\\.?\\,?\\d{0,2}";
                                             switch (m_formatoDecimal)
                                             {
-                                                case "0":
-                                                    {
-                                                        x = decimal.Parse(m_formato0);
-                                                    }
-                                                    break;
-                                                case "1":
-                                                    {                                                        
-                                                        x = decimal.Parse(m_formato1);
-                                                    }
-                                                    break;
-                                                case "2":
-                                                    {                                                     
-                                                        x = decimal.Parse(m_formato2);
-                                                    }
-                                                    break;
-                                                case "3":
-                                                    {                                                     
-                                                        x = decimal.Parse(m_formato3);
-                                                    }
-                                                    break;
-                                                case "4":
-                                                    {                                                     
-                                                        x = decimal.Parse(m_formato4);
-                                                    }
-                                                    break;
+                                                case "0": x = decimal.Parse(m_formato0); break;
+                                                case "1": x = decimal.Parse(m_formato1); break;
+                                                case "2": x = decimal.Parse(m_formato2); break;
+                                                case "3": x = decimal.Parse(m_formato3); break;
+                                                case "4": x = decimal.Parse(m_formato4); break;
                                             }
 
-                                            if (Request["Operacion"].ToString() != "HC")
+                                            if (s_operacion != "HC")
                                             {
                                                 objCellResultado.CssClass = "CeldaContenedor";
                                                 objCellResultado.Width = Unit.Pixel(150);
@@ -1868,9 +1785,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 txt1.TabIndex = short.Parse(i + 1.ToString());
                                                 if (m_conResultado == "True") txt1.Text = x.ToString(System.Globalization.CultureInfo.InvariantCulture); 
                                                 if (m_conResultado == "False") txt1.Text = m_resultadoDefecto;
-                                                txt1.Width = Unit.Pixel(60);                                              
+                                                txt1.Width = Unit.Pixel(70);                                              
                                                 txt1.CssClass = "form-control input-sm";
-                                                if (Request["Operacion"].ToString() != "Carga") //validacion
+                                                if (s_operacion != "Carga") //validacion
                                                 {                                                    
                                                     if (oDetalle.VerificaValorReferencia(x))
                                                         txt1.ForeColor = Color.Black;
@@ -1910,16 +1827,16 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ochkFormula.Font.Size = FontUnit.Point(7);                                                    
                                                     ochkFormula.ToolTip = "Marcar si quiere calcular la fórmula";
 
-                                                    if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
+                                                    if ((estado > 0) && (s_operacion == "Carga")) //si esta controlado o validado pinta la celda
                                                     ochkFormula.Enabled = false;                                                    
 
-                                                    if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no p
+                                                    if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no p
                                                     ochkFormula.Enabled = false;
                                                     ochkFormula.EnableViewState = false;
                                                     objCellResultado.Controls.Add(ochkFormula);
                                                     
                                                 }
-                                                if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                                                if ((s_operacion == "Valida") || (s_operacion == "Control"))
                                                 {
                                                     if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
                                                     {
@@ -1972,35 +1889,37 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 btnObservacionDetalle2.ID = "OBS" + i_iddetalleProtocolo.ToString();
                                                 btnObservacionDetalle2.AlternateText = oDetalle.Observaciones;
                                                 btnObservacionDetalle2.ToolTip = "Observaciones para " + lbl1.Text.Replace("&nbsp;", "");
-                                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString()   +",'"+Request["Operacion"].ToString()+"'); return false");                                                 
+                                                btnObservacionDetalle2.Attributes.Add("onClick", "javascript: ObservacionEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString()   +",'"+s_operacion+"'); return false");                                                 
                                                 objCellObservaciones.Controls.Add(btnObservacionDetalle2);
                                                 
-                                                if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
+                                                if ((estado > 0) && (s_operacion == "Carga")) //si esta controlado o validado pinta la celda
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
                                                     txt1.Enabled = false;
                                                 }
-                                                if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
+                                                if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no puedo modificar
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
                                                     txt1.Enabled = false;
                                                 }
                                                 ////////////////////                                        
                                                 ///IMAGENES ADJUNTAS
-                                                if (Request["Operacion"].ToString() != "HC")
+                                                if (s_operacion != "HC")
                                                 {
                                                     ImageButton btnImagen = new ImageButton();
                                                     btnImagen.TabIndex = short.Parse("500");
                                                     btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
                                                     ///Caro Performance: buscar una sola vez cuantos adjuntos visibles y no visbles tiene
-                                                    if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                    ///if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                        if (tieneAdjuntoNoVisible)
                                                     {
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                         btnImagen.ToolTip = "Adjunto no imprimible para " + lbl1.Text.Replace("&nbsp;", "");
                                                     }
                                                     else
                                                     {
-                                                        if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                       // if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                       if (tieneAdjuntoVisible)
                                                         {
                                                             btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
                                                             btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
@@ -2011,7 +1930,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                             btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                     }
-                                                    btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + s_operacion + "'); return false");
                                                     objCellImagenes.Controls.Add(btnImagen);
                                                 }
                                                 // fin de imagenes adjuntas
@@ -2050,15 +1969,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         break;
                                     case 2: //texto
                                         {
-                                            if (Request["Operacion"].ToString() != "HC")
+                                            if (s_operacion != "HC")
                                             {
                                                 string resObs = Ds.Tables[0].Rows[i].ItemArray[5].ToString(); 
                                                 string resCar = Ds.Tables[0].Rows[i].ItemArray[4].ToString(); 
                                                 string resNum = Ds.Tables[0].Rows[i].ItemArray[3].ToString();
                                                 TextBox txt1 = new TextBox();
-                                                txt1.ID = m_idItem.ToString();
-                                              //  txt1.ID = m_idSuperItem + ";" + m_idItem.ToString();
-                                               // txt1.Attributes.Add("onkeypress", "javascript:return Enter(this, event)");
+                                                txt1.ID = m_idItem.ToString();                                              
                                                 txt1.TabIndex = short.Parse(i + 1.ToString());
                                                 txt1.Text = resCar;
                                                 if ((resCar == "") &&(oDetalle.Enviado == 2) && (estado != 1)) // automatico
@@ -2073,19 +1990,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 txt1.CssClass = "form-control input-sm";
 
                                                 if (m_conResultado == "False") txt1.Text = m_resultadoDefecto;
-                                                if ((estado > 0) && (Request["Operacion"].ToString() == "Carga")) //si esta controlado o validado pinta la celda
+                                                if ((estado > 0) && (s_operacion == "Carga")) //si esta controlado o validado pinta la celda
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
                                                     txt1.Enabled = false;
                                                 }
 
-                                                if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar
+                                                if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no puedo modificar
                                                 {
                                                     txt1.BackColor = Color.GhostWhite;
                                                     txt1.Enabled = false;
                                                 }
 
-                                                if (Request["Operacion"].ToString() != "Carga") //validacion
+                                                if (s_operacion != "Carga") //validacion
                                                 {
                                                     if (EsNumerico(txt1.Text))
                                                     {
@@ -2113,19 +2030,21 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 //////////////////////////////////////////////////////
                                                 ////////////////////                                        
                                                 ///IMAGENES ADJUNTAS
-                                                if (Request["Operacion"].ToString() != "HC")
+                                                if (s_operacion != "HC")
                                                 {
                                                     ImageButton btnImagen = new ImageButton();
                                                     btnImagen.TabIndex = short.Parse("500");
                                                     btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
-                                                    if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
+                                                    if (tieneAdjuntoNoVisible)
+                                                    //if (oDetalle.tieneAdjuntoNoVisible())//tiene observaciones
                                                     {
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
                                                         btnImagen.ToolTip = "Adjunto no imprimible para " + lbl1.Text.Replace("&nbsp;", "");
                                                     }
                                                     else
                                                     {
-                                                        if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                        if (tieneAdjuntoVisible)
+                                                            ///if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
                                                         {
                                                             btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
                                                             btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
@@ -2136,7 +2055,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                             btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
                                                         }
                                                     }
-                                                    btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + s_operacion + "'); return false");
                                                     objCellImagenes.Controls.Add(btnImagen);
                                                 }
                                                 // fin de imagenes adjuntas
@@ -2154,7 +2073,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 objCellResultado.Controls.Add(olbl);
                                             }
                                             ////////////////////
-                                            if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                                            if ((s_operacion == "Valida") || (s_operacion == "Control"))
                                             {
                                                 if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
                                                 {                                                    ///Caro Performance: sacar busqueda en modo simplificado
@@ -2218,7 +2137,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         break;
                                     case 2: //validado
                                         {
-                                            if (Request["Operacion"].ToString() == "Valida")
+                                            if (s_operacion == "Valida")
                                             {
                                                 desvalidar = true;                                              
                                             }
@@ -2252,16 +2171,16 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 }
                                 objCellPersona.Controls.Add(lblPersona);
 
-                                if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                                if ((s_operacion == "Valida") || (s_operacion == "Control"))
                                 {
                                     CheckBox chk1 = new CheckBox();
                                     chk1.ID = "chk" + Ds.Tables[0].Rows[i].ItemArray[2].ToString();
-                                    if ((estado == 2) && (Request["Operacion"].ToString() == "Control")) //si esta validado y entro a controlar no puedo modificar                                    
+                                    if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no puedo modificar                                    
                                         chk1.Visible = false;                                    
                                     objCellValida.Controls.Add(chk1);
                                 }
 
-                                if (Request["Operacion"].ToString() != "HC")
+                                if (s_operacion != "HC")
                                 {
                                     Label lblUMedida = new Label();
                                     //lblUMedida.ID = "UM"+ m_idItem.ToString();
@@ -2290,7 +2209,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 //else
                                 //    lblValoresReferencia.Text = oDetalle.CalcularValoresReferencia(); ///Caro Performance: el valor de referencia se guarda en la carga de protocolo
                                 ///CARO: posibilidad de cambiar valor de refrencia - presentacion solo en validacion o control
-                                if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
+                                if ((s_operacion == "Valida") || (s_operacion == "Control"))
                                 {
                                     ///if (oDetalle.) si tiene mas de una presentacion
                                     lblValoresReferencia.Attributes.Add("onClick", "javascript:  AnalisisMetodoEdit (" + m_idItem + "," + oDetalle.IdProtocolo.IdProtocolo.ToString() + ",790,420); return false");
@@ -2302,27 +2221,10 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     }
                 }
 
-
-          /*      if ((Request["Operacion"].ToString() == "Carga") && (algovalidado==true)) // si es carga y tiene algo validado
-                {
-                    int cantidadAislamientos = gvAislamientos.Rows.Count;
-                    int cantidadAtb= gvAntiBiograma2.Rows.Count;
-                    if ((cantidadAislamientos == 0) && (cantidadAtb == 0))
-                    {
-                        pnlMicroOrganismo.Enabled = true;
-                        pnlAntibiograma.Enabled = true;
-                    }
-                    else
-                    {
-                        pnlMicroOrganismo.Enabled = false;
-                        pnlAntibiograma.Enabled = false;
-                    }
-
-                }*/
-
+          
                 if (Request["idServicio"].ToString()!="6")
                 { 
-                    if ((Request["Operacion"].ToString() == "Valida") && (algovalidado == true)) // si es validacion y tiene algo validado
+                    if ((s_operacion == "Valida") && (algovalidado == true)) // si es validacion y tiene algo validado
                         btnRestringirAcceso.Visible = true;
                         imgPdf.Visible = true;
                     ///no poner boton imprimir: caro
@@ -2334,18 +2236,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 ///agrega a la fila cada una de las celdas
                 objFila.Cells.Add(objCellAnalisis);
                     objFila.Cells.Add(objCellResultado);
-                    if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control")) objFila.Cells.Add(objCellResultadoAnterior);                
-                    if (Request["Operacion"].ToString() != "HC") objFila.Cells.Add(objCellUnMedida);
+                    if ((s_operacion == "Valida") || (s_operacion == "Control")) objFila.Cells.Add(objCellResultadoAnterior);                
+                    if (s_operacion != "HC") objFila.Cells.Add(objCellUnMedida);
 
                     objFila.Cells.Add(objCellValoresReferencia);
 
-                    if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))  objFila.Cells.Add(objCellValida);
+                    if ((s_operacion == "Valida") || (s_operacion == "Control"))  objFila.Cells.Add(objCellValida);
                     
                     objFila.Cells.Add(objCellPersona);
-                    if (Request["Operacion"].ToString() != "HC")  objFila.Cells.Add(objCellObservaciones);
+                    if (s_operacion != "HC")  objFila.Cells.Add(objCellObservaciones);
 
                 //////
-                if (Request["Operacion"].ToString() != "HC") objFila.Cells.Add(objCellImagenes);
+                if (s_operacion != "HC") objFila.Cells.Add(objCellImagenes);
                 Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
 
                     //'añadimos la fila a la tabla
@@ -2382,19 +2284,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 oUtil.CargarCombo(ddlObsCodificadaGeneral, m_ssql, "idObservacionResultado", "descripcion", connReady);
                 ddlObsCodificadaGeneral.Items.Insert(0, new ListItem("", "0"));
                 ddlObsCodificadaGeneral.UpdateAfterCallBack = true;
-            }
-            
-
+            }            
         }
-
-      
-
-
-
+        
         protected void btnAddDetalle_Click(object sender, EventArgs e)
         {
             Anthem.ImageButton btn1 = (Anthem.ImageButton)sender;
-
 
             //////Guarda las observaciones asociadas a un resultado numerico
             string nombre_control = btn1.ID.Replace("b", "c");
@@ -2403,9 +2298,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             {
                 Anthem.CheckBoxList txtObservacion = (Anthem.CheckBoxList)txt2;
                 if (txtObservacion.Visible)
-                {                    
-                    txtObservacion.Visible = false;
-                }
+                    txtObservacion.Visible = false;                
                 else
                     txtObservacion.Visible = true;
 
@@ -2435,11 +2328,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 Anthem.TextBox txtObservacion = (Anthem.TextBox)txt2;                
                 txtObservacion.Text = val;
                 txtObservacion.UpdateAfterCallBack = true;
-            }
-
-       
-
-
+            }       
         }
    
 
@@ -2494,8 +2383,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         Response.Redirect(sredirect);
                     }
                     else
-
-
                         //if (sredirect=="")
                         Avanzar(0);
             }
@@ -2569,28 +2456,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             
         }
 
-//        protected void btnEliminarIncidencia_Click(object sender, EventArgs e)
-//        {
-//            Protocolo oProtocolo = new Protocolo();
-//            oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-
-//            this.IncidenciaEdit1.EliminarProtocoloIncidencia(oProtocolo);
-//            Avanzar(0);
-//            SetSelectedTab(TabIndex.ONE);
-//}
-        
-
-//        protected void btnGuardarIncidencia_Click(object sender, EventArgs e)
-//        {
-//            Protocolo oProtocolo = new Protocolo();
-//            oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-//            //if (oProtocolo != null)
-//            //{
-//                this.IncidenciaEdit1.GuardarProtocoloIncidencia(oProtocolo);
-//                Avanzar(0);
-//                SetSelectedTab(TabIndex.ONE);
-//            //}
-//        }
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
@@ -3701,159 +3566,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             }
 
         }
-        //private bool GenerarCasoSISA(DetalleProtocolo oDetalle, string res)
-        //{
-        //    System.Net.ServicePointManager.SecurityProtocol =
-        //        System.Net.SecurityProtocolType.Tls12;
-        //    bool generacaso = false;
-        //    string caracter = "";
-        //    string idevento = "";
-        //    string nombreevento = "";
-        //    string idclasificacionmanual = "";
-        //    string nombreclasificacionmanual = "";
-        //    string idgrupoevento = "";
-        //    string nombregrupoevento = "";
-        //    bool seguir = false;
-        //    string m_strSQL = "";
-
-        //    try
-        //    {
-        //        m_strSQL = " select * from LAB_ConfiguracionSISA where idCaracter=  " + oDetalle.IdProtocolo.IdCaracter.ToString() + " and idItem=" + oDetalle.IdSubItem.IdItem.ToString();
-        //        if ((res == "SE DETECTA") && (oDetalle.IdProtocolo.IdCaracter != 2) && (oCon.CodigoCovid == oDetalle.IdSubItem.Codigo))
-        //        {    /// si es positivo y no es controlo de alta se genera un caso sospechoso solo para covid
-
-        //            m_strSQL = " select * from LAB_ConfiguracionSISA where idCaracter=1  and idItem=" + oDetalle.IdSubItem.IdItem.ToString();
-        //        }
-
-
-
-
-        //        // nose notificò antes y es sospechoso o contacto
-
-
-
-        //            DataSet Ds = new DataSet();
-        //            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-        //            SqlDataAdapter adapter = new SqlDataAdapter();
-        //            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-        //            adapter.Fill(Ds);
-
-        //            DataTable dt = Ds.Tables[0];
-
-        //            for (int i = 0; i < dt.Rows.Count; i++)
-        //            {
-        //                caracter = dt.Rows[i][1].ToString();
-        //                idevento = dt.Rows[i][2].ToString();
-        //                nombreevento = dt.Rows[i][3].ToString();
-        //                idclasificacionmanual = dt.Rows[i][4].ToString();
-        //                nombreclasificacionmanual = dt.Rows[i][5].ToString();
-        //                idgrupoevento = dt.Rows[i][6].ToString();
-        //                nombregrupoevento = dt.Rows[i][7].ToString();
-        //            seguir = true;
-        //            break;
-
-        //            }
-
-        //        if (seguir)
-        //        {
-        //            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-        //            string URL = oCon.UrlServicioSISA;
-        //            string s_idestablecimiento = oCon.CodigoEstablecimientoSISA; // "14580562167000"
-        //            string usersisa = ConfigurationManager.AppSettings["usuarioSisa"].ToString();
-        //            string[] a = usersisa.Split(':');
-        //            string s_user = a[0].ToString();
-        //            string s_userpass = a[1].ToString();
-
-        //            string s_sexo = "";
-        //            switch (oDetalle.IdProtocolo.IdPaciente.IdSexo)
-        //            {
-        //                case 1: s_sexo = "I"; break;
-        //                case 2: s_sexo = "F"; break;
-        //                case 3: s_sexo = "M"; break;
-        //            }
-        //            string fn = oDetalle.IdProtocolo.IdPaciente.FechaNacimiento.ToShortDateString().Replace("/", "-");
-
-        //            string fnpapel = oDetalle.IdProtocolo.FechaOrden.ToShortDateString().Replace("/", "-");
-
-
-        //            string numerodocumento = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
-
-        //            string error = "";
-        //            bool hayerror = false;
-
-        //            evento newevento = new evento
-        //            {
-        //                idTipodoc = "1",
-        //                nrodoc = numerodocumento,
-        //                sexo = s_sexo,
-        //                fechaNacimiento = fn,  //"05-06-1989",
-        //                idGrupoEvento = idgrupoevento,
-        //                idEvento = idevento, // "77",
-        //                idEstablecimientoCarga = s_idestablecimiento, //prod: "51580352167442",
-        //                fechaPapel = fnpapel, // "10-12-2019",
-        //                idClasificacionManualCaso = idclasificacionmanual, // "22"
-        //            };
-
-        //            AltaCaso caso = new AltaCaso
-        //            {
-
-        //                usuario = s_user, // "bcpintos",
-        //                clave = s_userpass, // "2398HH6RK6",
-        //                altaEventoCasoNominal = newevento
-        //            };
-
-        //            JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
-        //            string DATA = jsonSerializer.Serialize(caso);
-
-
-
-        //            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
-        //            client.BaseAddress = new System.Uri(URL);
-
-        //            System.Net.Http.HttpContent content = new StringContent(DATA, UTF8Encoding.UTF8, "application/json");
-        //            HttpResponseMessage messge = client.PostAsync(URL, content).Result;
-        //            string description = string.Empty;
-        //            if (messge.IsSuccessStatusCode)
-        //            {
-        //                string result = messge.Content.ReadAsStringAsync().Result;
-        //                description = result;
-        //                RespuestaCaso respuesta_d = jsonSerializer.Deserialize<RespuestaCaso>(description);
-        //                if (respuesta_d.id_caso!="" )                        
-        //                { //  devolver el idcaso para guardar en la base de datos
-        //                    string s_idcaso = respuesta_d.id_caso;
-
-        //                    oDetalle.IdProtocolo.IdCasoSISA = int.Parse(s_idcaso);
-        //                    oDetalle.IdProtocolo.Save();
-        //                    if (respuesta_d.resultado == "OK")
-        //                        oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Genera Caso SISA " + s_idcaso, int.Parse(oUser.IdUsuario.ToString()));
-        //                    else
-        //                        oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Actualiza Caso SISA " + s_idcaso, int.Parse(oUser.IdUsuario.ToString()));
-        //                    generacaso = true;
-
-        //                }
-        //                else
-        //                {
-        //                    generacaso = false;
-        //                    hayerror = true;
-        //                    error = respuesta_d.resultado;
-
-        //                }
-        //            }
-
-
-        //        }
-
-        //    }
-        //    catch
-        //    {
-        //        generacaso = false;
-
-
-        //    }
-        //    return generacaso;
-
-        //}
+        
 
 
         private bool GenerarCasoSISA_V2(DetalleProtocolo oDetalle, string res)
@@ -4238,11 +3951,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                int i_idProtocolo= int.Parse(gvLista.DataKeys[e.Row.RowIndex].Value.ToString());
-                //Protocolo oProtocolo= new Protocolo();
-                //oProtocolo= (Protocolo) oProtocolo.Get(typeof(Protocolo), i_idProtocolo);
-
-                //e.Row.Cells[0].Text = oProtocolo.GetNumero();
+                int i_idProtocolo= int.Parse(gvLista.DataKeys[e.Row.RowIndex].Value.ToString());                
                 ImageButton CmdModificar = (ImageButton)e.Row.Cells[2].Controls[1];
                 CmdModificar.CommandArgument = i_idProtocolo.ToString();
                 CmdModificar.CommandName = "Ingresar";                          
@@ -4375,8 +4084,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));             
-            crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
-          //  crit.Add(Expression.Eq("IdEfector", oProtocolo.IdEfector));
+            crit.Add(Expression.Eq("IdProtocolo", oProtocolo));          
 
             IList detalle = crit.List();
             if (detalle.Count > 0)
@@ -4877,21 +4585,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
                 lblObservacionResultado.Text = txtObservacion.Text;
                 SetSelectedTab(TabIndex.ONE);
             }
-            else Response.Redirect("../FinSesion.aspx", false);
-
-            //string popupScript = "<script language='JavaScript'> alert('Las observaciones se guardaron correctamente')</script>";
-            //Page.RegisterClientScriptBlock("PopupScript", popupScript);
-
-            
-            //CurrentPageIndex = oProtocolo.IdProtocolo;
-            //if (Request["urgencia"] != null)
-            //    Response.Redirect("../resultados/ResultadoEdit2.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + CurrentPageIndex + "&Index=" + CurrentIndexGrilla + "&Parametros=" + oProtocolo.IdProtocolo.ToString() + "&idArea=" + Request["idArea"].ToString() + "&urgencia=1&modo=Normal&validado=" + Request["validado"].ToString());
-
-            //else
-            //    Response.Redirect("../resultados/ResultadoEdit2.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + CurrentPageIndex + "&Index=" + CurrentIndexGrilla + "&Parametros=" + oProtocolo.IdProtocolo.ToString() + "&idArea=" + Request["idArea"].ToString() + "&modo=Normal&validado=" + Request["validado"].ToString());                            
-
-
-
+            else Response.Redirect("../FinSesion.aspx", false);      
         }
         
         protected void btnBorrarObsCodificadaGral_Click(object sender, EventArgs e)
@@ -5446,57 +5140,23 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
 
         private void ActualizarVistaAntibiograma(string i)
         {
-            CargarListaAntibiogramas();
-            
-
-            ///////////////////////////////////////////////////////////////////////////////////////////
-            //int cantidadAntibiogramas=ddlAntibiograma.Items.Count - 1;
-            //lblCantidadAntibiograma.Text = " *" + cantidadAntibiogramas.ToString();
-
-            //DataSet Ds1 = new DataSet();
-            //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            //SqlDataAdapter adapter = new SqlDataAdapter();
-            //adapter.SelectCommand = new SqlCommand(m_ssql, conn);
-            //adapter.Fill(Ds1);           
-            //gvAntibiogramaValida.DataSource = Ds1.Tables[0];
-            //gvAntibiogramaValida.DataBind();
-            /////////////////////////////////////////////////////////////////////////////////////////
-
-
-            DataSet Ds = new DataSet();
-            //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            CargarListaAntibiogramas();            
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura            
+            DataSet Ds = new DataSet();            
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-
-
             cmd.CommandText = "Lab_GetAntibiograma";
-
-
-            //Protocolo oProtocolo = new Protocolo();
-            //oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);
-
-
+            
             cmd.Parameters.Add("@idProtocolo", SqlDbType.NVarChar);
             cmd.Parameters["@idProtocolo"].Value = CurrentPageIndex.ToString();// oProtocolo.IdProtocolo.ToString();
 
             cmd.Parameters.Add("@idItem", SqlDbType.NVarChar);
-            cmd.Parameters["@idItem"].Value = i;
-
-
-         
-        
+            cmd.Parameters["@idItem"].Value = i;                 
             cmd.Connection = conn;
-
-
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-
             da.Fill(Ds);
             
-            //gvAntiBiograma2.DataSource = Ds.Tables[0];
-            //gvAntiBiograma2.DataBind();
-            //gvAntiBiograma2.Visible = true;
-
+            
 
             if (Request["Operacion"].ToString() == "HC")
             {
@@ -5518,28 +5178,15 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                 }
             }
             else
-            {
-                //if (oProtocolo.IdTipoServicio.IdTipoServicio == 3)
-                //{
-                    pnlAntibiograma.Visible = true;
-              //      pnlAntibiogramaHC.Visible = false;
+            {                
+                    pnlAntibiograma.Visible = true;              
                     gvAntiBiograma2.DataSource = Ds.Tables[0];
-                    gvAntiBiograma2.DataBind();
-
-                 
-                    gvAntiBiograma2.Visible = true;
-                //    gvAntiBiogramaHC.Visible = false;
+                    gvAntiBiograma2.DataBind();                 
+                    gvAntiBiograma2.Visible = true;                
 
                     if ((Ds.Tables[0].Rows.Count == 1) && (Ds.Tables[0].Columns.Count == 1)) gvAntiBiograma2.Visible = false;
-                    else { anti.Visible = true; }
-                   // CargarListasAntibiogramas();
-              //  }
-            }
-
-
-           
-
-           
+                    else { anti.Visible = true; }                   
+            }                    
         }
 
         private void CargarListaAntibiogramas()
@@ -5673,14 +5320,11 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
 
                 e.Row.Cells[6].Font.Size = FontUnit.Point(7);
             }
-        }
-
-    
+        }    
        
 
         private void GuardarAntibiograma(bool valida)
         {            
-
             //diferenciar guardar  de validar
             Protocolo oProtocolo = new Protocolo();
             oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);
@@ -5890,7 +5534,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                     //if ((Request["Operacion"] == "Carga") && (oRegistro.IdUsuarioValida == 0))
                     //{
                         oRegistro.Delete();
-                                            oRegistro.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(oUser.IdUsuario.ToString()), "ATB: " + oRegistro.IdGermen.Nombre + "(" + ddlMetodoAntibiograma.SelectedItem.Value + ") - " + oRegistro.IdAntibiotico.Descripcion, oRegistro.Resultado);
+                        oRegistro.IdProtocolo.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(oUser.IdUsuario.ToString()), "ATB: " + oRegistro.IdGermen.Nombre + "(" + ddlMetodoAntibiograma.SelectedItem.Value + ") - " + oRegistro.IdAntibiotico.Descripcion, oRegistro.Resultado);
                     //}
                 }
             

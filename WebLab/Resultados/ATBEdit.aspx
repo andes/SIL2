@@ -50,7 +50,7 @@
            <table >           
                 <tr>
                 <td style="vertical-align: top" class="myLabelIzquierda">
-                    <table width="415" class="auto-style1" >
+                    <table width="90%" class="auto-style1" >
                         <tr>
                             <td class="auto-style6">
                                <asp:Label ID="lblProtocolo" runat="server" Text="Label" Font-Size="16pt"></asp:Label>                               
@@ -91,7 +91,7 @@
                                 <anthem:DropDownList ID="ddlPerfilAntibiotico" runat="server" 
                                     AutoCallBack="True" 
                                     onselectedindexchanged="ddlPerfilAntibiotico_SelectedIndexChanged1" 
-                                    Width="200px" CssClass="myList">
+                                    Width="200px"  >
                                 </anthem:DropDownList>
                             </td>
                         </tr>
@@ -99,7 +99,7 @@
                             <td class="auto-style6">
                                 Antibiótico:</td>
                             <td class="auto-style7">
-                                <anthem:DropDownList ID="ddlAntibiotico" runat="server" Width="200px" CssClass="myList">
+                                <anthem:DropDownList ID="ddlAntibiotico" runat="server" Width="200px"  >
                                     
                                 </anthem:DropDownList>
                                 
@@ -143,7 +143,7 @@
                 
                   <tr>
                       <td  style="vertical-align: top" >
-                          <div  style="width:415px;height:175pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC; background-color: #EFEFEF;"> 
+                          <div  style="width:100%;height:200pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC; background-color: #EFEFEF;"> 
                           <asp:GridView ID="gvAntiobiograma" runat="server" AutoGenerateColumns="False" 
                               CellPadding="3" DataKeyNames="idAntibiograma" Width="400px" 
                               onrowcommand="gvAntiobiograma_RowCommand" 
@@ -175,6 +175,7 @@
                                       </ItemTemplate>
                                       <ItemStyle Height="20px" HorizontalAlign="Center" Width="20px" />
                                   </asp:TemplateField>
+                                   
                               </Columns>
                               <FooterStyle BackColor="White" ForeColor="#000066" />
                               <HeaderStyle BackColor="#006699" Font-Bold="True" ForeColor="White" Font-Size="8pt" Font-Names="Verdana" />

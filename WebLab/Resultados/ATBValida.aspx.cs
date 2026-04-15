@@ -141,6 +141,7 @@ ORDER BY PA.nombre";
          
             /*
              * store nuevo: parametros int grupo, int subgrupo, int etiologia, int anio, string semana, string codigo, string sexo, int id_establecimiento, string usuario_sivila
+             El store trae todos los datos que se necesita para la grilla
              */
 
             cmd.Parameters.Add("@idItem", SqlDbType.Int); cmd.Parameters["@idItem"].Value = s_iditem;
@@ -155,49 +156,7 @@ ORDER BY PA.nombre";
             da.Fill(Ds);
         
             gvAntiobiograma.DataSource = Ds.Tables[0];
-            gvAntiobiograma.DataBind();
-
-   
-            foreach (GridViewRow row in gvAntiobiograma.Rows)
-            {
-                if (row.RowType == DataControlRowType.DataRow)
-                {
-                    Label lbl = (row.Cells[6].FindControl("lblEstado") as Label);
-                    if (lbl!=null)
-                    {
-                        Antibiograma oAtb = new Antibiograma();
-                        oAtb = (Antibiograma)oAtb.Get(typeof(Antibiograma), int.Parse(gvAntiobiograma.DataKeys[row.RowIndex].Value.ToString()));
-
-                        if (oAtb.IdUsuarioRegistro == 0) //enviado por el equipo
-                        {
-                            //lblPersona.Text = "AUTOMÁTICO: " + oDetalle.FechaResultado.ToShortDateString() + " - " + oDetalle.FechaResultado.ToShortTimeString();
-                            lbl.Text = "AUTOMATICO " + oAtb.FechaRegistro.ToShortDateString() + " - " + oAtb.FechaRegistro.ToShortTimeString();
-                            lbl.ForeColor = Color.Red;
-                        }
-                        else
-                        {
-                            Usuario oUser = new Usuario();
-
-                            oUser = (Usuario)oUser.Get(typeof(Usuario), oAtb.IdUsuarioRegistro);
-                            lbl.Text = "Carg.: " + oUser.Apellido + " " + oUser.Nombre + " " + oAtb.FechaRegistro.ToShortDateString() + " " + oAtb.FechaRegistro.ToShortTimeString(); ;
-                            lbl.ForeColor = Color.Black;
-
-                        }
-                        if (oAtb.IdUsuarioValida > 0) //enviado por el equipo
-                        {
-                            Usuario oUser = new Usuario();
-
-                            oUser = (Usuario)oUser.Get(typeof(Usuario), oAtb.IdUsuarioValida);
-                            lbl.Text = "Val.: "+ oUser.FirmaValidacion + " " + oAtb.FechaValida.ToShortDateString() + " " + oAtb.FechaValida.ToShortTimeString();
-                            lbl.ForeColor = Color.Blue;
-                        }
-                        lbl.Font.Size = FontUnit.Point(7);
-                        lbl.Font.Italic = true;
-                       
-                    }
-                }
-            }
-
+            gvAntiobiograma.DataBind();                     
 
 
 
@@ -284,11 +243,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             oRegistro.Resultado = ddlResultado.SelectedValue;                     
             
             oRegistro.Valor = txtValor.Text;
-         
 
+            
             oRegistro.IdUsuarioRegistro = oUser.IdUsuario;
             oRegistro.FechaRegistro = DateTime.Now;
-            oRegistro.IdUsuarioValida = oUser.IdUsuario;
+            oRegistro.IdUsuarioValida = 0;// oUser.IdUsuario; ///en el alta no se graba como validado, se valida cuando se marca la validacion.
             oRegistro.FechaValida = DateTime.Parse("01/01/1900");
             oRegistro.Save();                                
 
@@ -333,15 +292,48 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         protected void gvAntiobiograma_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
+
+            if (e.Row.RowType != DataControlRowType.DataRow)
+                return;
+            
+            DataRowView drv = (DataRowView)e.Row.DataItem;
+
+            string estadoTexto = drv["EstadoTexto"] != DBNull.Value ? drv["EstadoTexto"].ToString() : "";
+            string estadoColor = drv["EstadoColor"] != DBNull.Value ? drv["EstadoColor"].ToString() : "";
+
+            // 🔹 Label estado
+            Label lbl = e.Row.FindControl("lblEstado") as Label;
+            if (lbl != null)
             {
-                ImageButton CmdModificar = (ImageButton)e.Row.Cells[7].Controls[1];
-                CmdModificar.CommandArgument = this.gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString();
+                lbl.Text = estadoTexto;
+
+                switch (estadoColor)
+                {
+                    case "Red":
+                        lbl.ForeColor = Color.Red;
+                        break;
+                    case "Blue":
+                        lbl.ForeColor = Color.Blue;
+                        break;
+                    default:
+                        lbl.ForeColor = Color.Black;
+                        break;
+                }
+
+                lbl.Font.Size = FontUnit.Point(7);
+                lbl.Font.Italic = true;
+            }
+
+           
+            ImageButton CmdModificar = e.Row.FindControl("Eliminar") as ImageButton;
+
+            if (CmdModificar != null)
+            {                
+                CmdModificar.CommandArgument = gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdModificar.CommandName = "Eliminar";
                 CmdModificar.ToolTip = "Eliminar";
-
-            
             }
+            
         }
 
         protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
@@ -428,7 +420,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         /// graba auditoria
                        
                         
-                        oProtocolo.GrabarAuditoriaDetalleProtocolo(operacion, oAtb.IdUsuarioValida, "ATB " + oAtb.NumeroAislamiento.ToString() + " " + oAtb.IdGermen.Nombre + " (" + oAtb.IdMetodologia.ToString() + ") - " + oAtb.IdAntibiotico.Descripcion, oAtb.Resultado);                   
+                        oProtocolo.GrabarAuditoriaDetalleProtocolo(operacion, oAtb.IdUsuarioValida, "ATB " + oAtb.NumeroAislamiento.ToString() + " " + oAtb.IdGermen.Nombre + " (" + lblMetodo.Text + ") - " + oAtb.IdAntibiotico.Descripcion, oAtb.Resultado);                   
                         /// fin de grabar auditoria
                     }
 
