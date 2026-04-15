@@ -1232,8 +1232,8 @@
         $('<iframe src="ATBEdit.aspx?Operacion='+operacion+'&idItem=' + iditem + '&idMetodo='+idMetodo+'&numeroAislamiento='+ numeroAislamiento +'&idGermen='+ idGermen +'&idProtocolo='+idProtocolo+ '" />').dialog({
             title: 'Modificar ATB',
             autoOpen: true,
-            width: 450,
-            height: 500,
+            width: 500,
+            height: 600,
             modal: false,
             resizable: false,
             autoResize: true,

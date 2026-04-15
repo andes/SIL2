@@ -218,7 +218,14 @@
                                       </ItemTemplate>
                                       <ItemStyle Height="20px" HorizontalAlign="Center" Width="20px" />
                                   </asp:TemplateField>
-                                
+                                 <asp:TemplateField Visible="false">
+    <ItemTemplate>
+        <asp:Label ID="lblEstadoTextoHidden" runat="server" 
+            Text='<%# Eval("EstadoTexto") %>' />
+        <asp:Label ID="lblEstadoColorHidden" runat="server" 
+            Text='<%# Eval("EstadoColor") %>' />
+    </ItemTemplate>
+</asp:TemplateField>
                               </Columns>
                               <HeaderStyle BackColor="#CCCCCC" Font-Names="Verdana" Font-Size="8pt" />
                               <RowStyle Font-Names="Verdana" Font-Size="8pt" />

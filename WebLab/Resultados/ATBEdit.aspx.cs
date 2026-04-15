@@ -130,8 +130,16 @@ ORDER BY PA.nombre";
             //lblCantidadAntibiograma.Text = " *" + cantidadAntibiogramas.ToString();
 
             string m_ssql = @" SELECT  ATB.idAntibiograma, A.descripcion, ATB.resultado, ATB.valor, ATB.idMetodologia
+,ATB.idUsuarioRegistro,
+ATB.idUsuarioValida,
+ATB.fechaRegistro,
+UR.apellido + ' ' + UR.nombre as UsuarioRegistro,
+UV.apellido + ' ' + UV.nombre as UsuarioValida
+
 FROM         LAB_Antibiograma AS ATB with (nolock) INNER JOIN
                       LAB_Antibiotico AS A with (nolock) ON ATB.idAntibiotico = A.idAntibiotico
+LEFT JOIN Sys_Usuario UR ON UR.idUsuario = ATB.idUsuarioRegistro
+    LEFT JOIN Sys_Usuario UV ON UV.idUsuario = ATB.idUsuarioValida
 WHERE ATB.numeroAislamiento=" + s_numeroAislamiento +" and  ATB.idMetodologia=" + s_idMetodo + " AND  (ATB.idProtocolo = " + s_idProtocolo + ") AND (ATB.idItem = " + s_iditem + ") AND (ATB.idGermen = " + s_idGermen + ") order by A.descripcion";
             
 
@@ -284,47 +292,97 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         protected void gvAntiobiograma_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                ImageButton CmdModificar = (ImageButton)e.Row.Cells[4].Controls[1];
-                CmdModificar.CommandArgument = this.gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdModificar.CommandName = "Eliminar";
-                CmdModificar.ToolTip = "Eliminar";
+            /*  if (e.Row.RowType == DataControlRowType.DataRow)
+              {
+                  ImageButton CmdModificar = (ImageButton)e.Row.Cells[4].Controls[1];
+                  CmdModificar.CommandArgument = this.gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString();
+                  CmdModificar.CommandName = "Eliminar";
+                  CmdModificar.ToolTip = "Eliminar";
 
-                // si esta validado no se puede eliminar
-                Antibiograma oRegistro = new Antibiograma();
-                oRegistro = (Antibiograma)oRegistro.Get(typeof(Antibiograma), int.Parse(this.gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString()));
-                if ((oRegistro.IdUsuarioValida > 0) && (Request["Operacion"] == "Carga"))
+                  // si esta validado no se puede eliminar
+                  Antibiograma oRegistro = new Antibiograma();
+                  oRegistro = (Antibiograma)oRegistro.Get(typeof(Antibiograma), int.Parse(this.gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString()));
+                  if ((oRegistro.IdUsuarioValida > 0) && (Request["Operacion"] == "Carga"))
+                      CmdModificar.Visible = false;
+                  /////
+                  Label lbl = (e.Row.Cells[3].FindControl("lblEstado") as Label);
+                  if (oRegistro.IdUsuarioRegistro == 0) //enviado por el equipo
+                  {
+                      //lblPersona.Text = "AUTOMÁTICO: " + oDetalle.FechaResultado.ToShortDateString() + " - " + oDetalle.FechaResultado.ToShortTimeString();
+                      lbl.Text = "AUTOMATICO " + oRegistro.FechaRegistro.ToShortDateString() + " - " + oRegistro.FechaRegistro.ToShortTimeString();
+                      lbl.ForeColor = Color.Red;
+                  }
+                  else
+                  {
+                      Usuario oUser = new Usuario();
+
+                      oUser = (Usuario)oUser.Get(typeof(Usuario), oRegistro.IdUsuarioRegistro);
+                      lbl.Text = "Carg.: " + oUser.Apellido + " " + oUser.Nombre;
+                      lbl.ForeColor = Color.Black;
+
+                  }
+                  if (oRegistro.IdUsuarioValida > 0) //enviado por el equipo
+                  {
+                      Usuario oUser = new Usuario();
+
+                      oUser = (Usuario)oUser.Get(typeof(Usuario), oRegistro.IdUsuarioValida);
+                      lbl.Text = "Val.: " + oUser.Apellido + " " + oUser.Nombre;
+                      lbl.ForeColor = Color.Blue;
+                  }
+                  lbl.Font.Size = FontUnit.Point(7);
+                  lbl.Font.Italic = true;
+
+
+              }
+              */
+            if (e.Row.RowType != DataControlRowType.DataRow)
+                return;
+
+            DataRowView drv = (DataRowView)e.Row.DataItem;
+
+            
+            ImageButton CmdModificar = e.Row.FindControl("Eliminar") as ImageButton;
+            CmdModificar.CommandArgument = this.gvAntiobiograma.DataKeys[e.Row.RowIndex].Value.ToString();
+            CmdModificar.CommandName = "Eliminar";
+            CmdModificar.ToolTip = "Eliminar";
+
+
+            if (CmdModificar != null)
+            {
+                int idUsuarioValida = drv["idUsuarioValida"] != DBNull.Value ? Convert.ToInt32(drv["idUsuarioValida"]) : 0;
+
+                if (idUsuarioValida > 0 && Request["Operacion"]?.ToString() == "Carga")
                     CmdModificar.Visible = false;
-                /////
-                Label lbl = (e.Row.Cells[3].FindControl("lblEstado") as Label);
-                if (oRegistro.IdUsuarioRegistro == 0) //enviado por el equipo
+            }
+
+            
+            Label lbl = e.Row.FindControl("lblEstado") as Label;
+
+            if (lbl != null)
+            {
+                int idUsuarioRegistro = drv["idUsuarioRegistro"] != DBNull.Value ? Convert.ToInt32(drv["idUsuarioRegistro"]) : 0;
+                int idUsuarioValida = drv["idUsuarioValida"] != DBNull.Value ? Convert.ToInt32(drv["idUsuarioValida"]) : 0;
+
+                if (idUsuarioRegistro == 0)
                 {
-                    //lblPersona.Text = "AUTOMÁTICO: " + oDetalle.FechaResultado.ToShortDateString() + " - " + oDetalle.FechaResultado.ToShortTimeString();
-                    lbl.Text = "AUTOMATICO " + oRegistro.FechaRegistro.ToShortDateString() + " - " + oRegistro.FechaRegistro.ToShortTimeString();
+                    DateTime fecha = Convert.ToDateTime(drv["fechaRegistro"]);
+                    lbl.Text = "AUTOMATICO " + fecha.ToString("dd/MM/yyyy HH:mm");
                     lbl.ForeColor = Color.Red;
                 }
                 else
                 {
-                    Usuario oUser = new Usuario();
-
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), oRegistro.IdUsuarioRegistro);
-                    lbl.Text = "Carg.: " + oUser.Apellido + " " + oUser.Nombre;
+                    lbl.Text = "Carg.: " + drv["UsuarioRegistro"].ToString();
                     lbl.ForeColor = Color.Black;
-
                 }
-                if (oRegistro.IdUsuarioValida > 0) //enviado por el equipo
-                {
-                    Usuario oUser = new Usuario();
 
-                    oUser = (Usuario)oUser.Get(typeof(Usuario), oRegistro.IdUsuarioValida);
-                    lbl.Text = "Val.: " + oUser.Apellido + " " + oUser.Nombre;
+                if (idUsuarioValida > 0)
+                {
+                    lbl.Text = "Val.: " + drv["UsuarioValida"].ToString();
                     lbl.ForeColor = Color.Blue;
                 }
+
                 lbl.Font.Size = FontUnit.Point(7);
                 lbl.Font.Italic = true;
-
-                  
             }
         }
 

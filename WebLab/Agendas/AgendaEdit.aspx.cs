@@ -287,10 +287,12 @@ namespace WebLab.Agendas
             {
                 TipoServicio tp = new TipoServicio();
                 tp = (TipoServicio)tp.Get(typeof(TipoServicio), "IdTipoServicio", cboTipoServicio.SelectedValue);
+
+                Efector oefectorSol = new Efector();
+                oefectorSol = (Efector)oefectorSol.Get(typeof(Efector), "IdEfector", ddlEfector.SelectedValue);
+
                 DateTime fDesde = Convert.ToDateTime(txtFechaDesde.Value);
                 DateTime fHasta = Convert.ToDateTime(txtFechaHasta.Value);
-                Efector  oefectorSol = new Efector();
-                oefectorSol = (Efector)oefectorSol.Get(typeof(Efector), "IdEfector", ddlEfector.SelectedValue);
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(Agenda));

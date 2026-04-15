@@ -1041,13 +1041,13 @@ case when PD.iddiagnostico is null then 'No' else 'Si' end as embarazada, I1.nom
 
 FROM LAB_DetalleProtocolo AS DP  
 INNER JOIN LAB_Protocolo AS P ON DP.idProtocolo = P.idProtocolo  
-INNER JOIN LAB_Item AS I ON DP.idItem = I.idItem  
+---INNER JOIN LAB_Item AS I ON DP.idItem = I.idItem  
 inner join lab_item as I1 on Dp.idsubitem= I1.iditem
 INNER JOIN Sys_Paciente AS Pa ON P.idPaciente = Pa.idPaciente 
 left JOIN vta_LAB_Embarazadas AS PD ON PD.idProtocolo = P.idProtocolo  
 
 WHERE dp.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "')  and P.idtiposervicio=3 " +
-   " and I1.idtiporesultado=3 and resultadocar<>'' and idusuariovalida>0   " + m_strCondicion + " order by P.idprotocolo ,P.fecha  ";
+   " and I1.idtiporesultado in (3,4) and resultadocar<>'' and idusuariovalida>0   " + m_strCondicion + " order by P.idprotocolo ,P.fecha  ";
 
             }
 

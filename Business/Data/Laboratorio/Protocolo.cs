@@ -489,28 +489,31 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
 
         public string getPlacas()
         {
-            DetalleProtocolo oDetalle = new DetalleProtocolo();
-            oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo),"IdProtocolo", this);
-
-
             string s_placa = "";
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocoloPlaca));
+            string m_strSQL = @" select distinct idPlaca 
+from LAB_DetalleProtocoloPlaca DPP
+inner join lab_detalleprotocolo DP on DPP.iddetalleprotocolo = DP.iddetalleprotocolo
+  where DP.idprotocolo = " + this.IdProtocolo.ToString();
 
-            crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle.IdDetalleProtocolo));
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
 
-            IList lista = crit.List();
-            foreach (DetalleProtocoloPlaca oDetalle1 in lista)
-            {
-                Placa oP = new Placa();
-                oP = (Placa)oP.Get(typeof(Placa), oDetalle1.IdPlaca);
-                if (!oP.Baja)
+            DataTable dt = Ds.Tables[0];            
+
+           for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
                 {
-                    if (s_placa == "")
-                        s_placa = oDetalle1.IdPlaca.ToString();
-                    else
-                        s_placa += "-" + oDetalle1.IdPlaca.ToString();
+                
+                string s_placaaux = Ds.Tables[0].Rows[i]["idPlaca"].ToString();
+
+                if (s_placa == "")
+                    s_placa = s_placaaux;
+                else
+                    s_placa += "-" + s_placaaux;
                 }
-            }
+
             return s_placa;
 
 
@@ -2207,7 +2210,8 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                                 ///evaluar si la condicion de determinacion habilita el calculo de la formula
                             }
 
-                            /*   if (idraza == 1)  // si es afro
+
+                               if (idraza == 1)  // si es afro
                                {
                                    if (idraza == oDet.IdProtocolo.IdPaciente.IdRaza)
                                        sicalcula = true;
@@ -2221,13 +2225,13 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                                    else
                                        sicalcula = false;
                                }
-                               */
-                            if ((idraza == 1) && (oDet.IdProtocolo.IdPaciente.IdRaza != 1))
+                             
+                         /*   if ((idraza == 1) && (oDet.IdProtocolo.IdPaciente.IdRaza != 1))
                                 sicalcula = false;
 
                             if ((idraza == 0) && (oDet.IdProtocolo.IdPaciente.IdRaza == 1))
                                 sicalcula = false;
-
+                                */
                         }
 
                         if (sicalcula)
