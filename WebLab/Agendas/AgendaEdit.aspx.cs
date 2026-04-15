@@ -280,5 +280,38 @@ namespace WebLab.Agendas
             }
 
         }
+
+        protected void customValidadorGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (oUser != null)
+            {
+                TipoServicio tp = new TipoServicio();
+                tp = (TipoServicio)tp.Get(typeof(TipoServicio), "IdTipoServicio", cboTipoServicio.SelectedValue);
+                DateTime fDesde = Convert.ToDateTime(txtFechaDesde.Value);
+                DateTime fHasta = Convert.ToDateTime(txtFechaHasta.Value);
+                Efector  oefectorSol = new Efector();
+                oefectorSol = (Efector)oefectorSol.Get(typeof(Efector), "IdEfector", ddlEfector.SelectedValue);
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Agenda));
+                crit.Add(Expression.Eq("IdEfector", oCon.IdEfector));
+                crit.Add(Expression.Eq("IdEfectorSolicitante", oefectorSol));
+                crit.Add(Expression.Eq("IdTipoServicio", tp));
+                crit.Add(Expression.Eq("IdItem", ddlItem.SelectedValue));
+                crit.Add(Expression.Le("FechaDesde", fHasta));
+                crit.Add(Expression.Ge("FechaHasta", fDesde));
+                crit.Add(Expression.Eq("Baja", false));
+                if (Request["id"] != null) //Sacar el id de la agenda si es modificacion
+                    crit.Add(Expression.Not(Expression.Eq("IdAgenda", int.Parse(Request["id"]))));
+
+                IList items = crit.List();
+
+                if (items.Count > 0)
+                {
+                    args.IsValid = false;
+                    this.customValidadorGeneral.ErrorMessage = "Existe superposición de fechas con otra agenda";
+                }
+            }
+        }
     }
 }
