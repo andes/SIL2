@@ -45,6 +45,17 @@ namespace WebLab.Usuarios
                     RegistrarScriptConfirmacion();
                     VerificaPermisos("Usuarios");
                     CargarListas();
+                    
+
+                    if (Request["idEfector"] != null) ddlEfector.SelectedValue = Request["idEfector"].ToString();
+                    if (Request["idPerfil"] != null) ddlPerfil.SelectedValue = Request["idPerfil"].ToString();
+                    if (Request["tipoAutenticacion"] != null) ddlTipoAutenticacion.SelectedValue = Request["tipoAutenticacion"].ToString();
+                    if (Request["nombre"] != null) txtNombre.Text = Request["nombre"].ToString();
+                    if (Request["habilitados"] != null) ddlHabilitados.SelectedValue = Request["habilitados"].ToString();
+                    if (Request["username"] != null) txtUsername.Text = Request["username"].ToString();
+                    if (Request["apellido"] != null) txtApellido.Text = Request["apellido"].ToString();
+                    if (Request["administrador"] != null) chbAdministrador.Checked = bool.Parse(Request["administrador"].ToString());
+
                     CargarGrilla();
                     if (oUser.IdEfector.IdEfector == 227) /// nivel central
                     {
@@ -214,19 +225,25 @@ namespace WebLab.Usuarios
         }
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("UsuarioEdit.aspx");
+            string filtro = parametrosFiltros();
+            Response.Redirect("UsuarioEdit.aspx" + "?" + filtro);
         }
-
+        
+        private string parametrosFiltros()
+        {
+            return @"idEfector=" + ddlEfector.SelectedValue.ToString()+ "&idPerfil=" + ddlPerfil.SelectedValue.ToString()+ "&tipoAutenticacion=" + ddlTipoAutenticacion.SelectedValue.ToString()
+                + "&habilitados=" + ddlHabilitados.SelectedValue.ToString() + "&username=" + txtUsername.Text + "&nombre=" + txtNombre.Text + "&apellido=" + txtApellido.Text + "&administrador=" + chbAdministrador.Checked.ToString();
+        }
 
         protected void gvLista_RowCommand1(object sender, GridViewCommandEventArgs e)
         {
            
-
+            string filtro = parametrosFiltros();
             if (e.CommandName == "Modificar")
             {
                 string MyURL;
 
-                MyURL = "UsuarioEdit.aspx?id=" + e.CommandArgument.ToString();
+                MyURL = "UsuarioEdit.aspx?id=" + e.CommandArgument.ToString() + "&" + filtro;
                 Response.Redirect(MyURL);
             }
           
