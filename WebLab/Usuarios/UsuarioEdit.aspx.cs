@@ -44,17 +44,13 @@ namespace WebLab.Usuarios
             {
                 if (Session["idUsuario"] != null)
                 {
-
-
                     VerificaPermisos("Usuarios");
-                CargarListas();
-                if (Request["id"] != null)
-                    MostrarDatos();
-                else
-                    MostrarEfectores(); 
-
-
-            
+                    CargarListas();
+                    if (Request["id"] != null)
+                        MostrarDatos();
+                    else
+                        MostrarEfectores();
+                    
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
             }
@@ -611,22 +607,10 @@ namespace WebLab.Usuarios
                 {
 
                     case "Eliminar":
-                        if (chkAdministrador.Checked)
-                        {
-                            ScriptManager.RegisterClientScriptBlock(
-                               this,
-                               this.GetType(),
-                               "Eliminar",
-                               "alert('No se puede eliminar el efector.');",
-                               true
-                           );
-
-                        }
-                        else
+                        if (!chkAdministrador.Checked || e.CommandArgument.ToString() != "227")     
                         {
                             EliminarEfector(e.CommandArgument);
                             MostrarEfectores();
-
                         }
                         break;
 
