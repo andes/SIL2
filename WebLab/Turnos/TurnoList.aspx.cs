@@ -254,29 +254,35 @@ namespace WebLab.Turnos
 
                // ISession m_session = NHibernateHttpModule.CurrentSession;
                 string m_ssql = @"Select  AD.HoraDesde, AD.HoraHasta, AD.TipoTurno, AD.Frecuencia, AD.LimiteTurnos, A.IdEfectorSolicitante,
-                                    (SELECT count(idTurno) AS cantTurnos 
-                                       FROM LAB_Turno AS T  (nolock)
-                                                WHERE (T.baja = 0) AND T.fecha='" + fecha.ToString("yyyyMMdd") + @"'
-                                                and T.idEfector= A.IdEfector and T.idEfectorSolicitante= A.idEfectorSolicitante
-			                                    AND T.idTipoServicio=" + ddlTipoServicio.SelectedValue + @" AND T.IdItem="+ ddlItem.SelectedValue+
-                                    @") as TurnosDados
-                                    FROM LAB_Agenda A with (nolock)
-                                inner join LAB_AgendaDia AD with (nolock) on AD.idAgenda = A.idAgenda ";
-               
-                string condicion_ssql = "";
-                if (oUser.IdPerfil.IdPerfil == 15)
-                    condicion_ssql = " WHERE A.Baja=0 AND A.IdTipoServicio=" + ddlTipoServicio.SelectedValue +
-                                " and IdEfectorSolicitante = " + oUser.IdEfector.IdEfector.ToString() +
-                               " AND  A.FechaDesde<='" + fecha.ToString("yyyyMMdd") + "'" +
-                               " AND  A.FechaHasta>='" + fecha.ToString("yyyyMMdd") + "'" + m_ssqlItem + m_ssqlDia;
+                                  ISNULL(Turnos.TurnosDados, 0) as TurnosDados
+                                FROM LAB_Agenda A with (nolock)
+                                inner join LAB_AgendaDia AD with (nolock) on AD.idAgenda = A.idAgenda 
+                                LEFT JOIN (
+                                        SELECT 
+                                            idEfector, 
+                                            idEfectorSolicitante, 
+                                            idTipoServicio, 
+                                            IdItem,
+                                            COUNT(idTurno) as TurnosDados
+                                        FROM LAB_Turno WITH (NOLOCK)
+                                        WHERE baja = 0 AND fecha = '" + fecha.ToString("yyyyMMdd")+ @"'
+                                        GROUP BY idEfector, idEfectorSolicitante, idTipoServicio, IdItem
+                                    ) Turnos ON 
+                                        Turnos.idEfector = A.IdEfector AND
+                                        Turnos.idEfectorSolicitante = A.IdEfectorSolicitante AND
+                                        Turnos.idTipoServicio = A.IdTipoServicio AND
+                                        Turnos.IdItem = A.IdItem
+                                WHERE A.Baja=0
+                                 AND A.IdTipoServicio=" + ddlTipoServicio.SelectedValue +
+                                " AND  A.FechaDesde<='" + fecha.ToString("yyyyMMdd") + "'" +
+                                " AND  A.FechaHasta>='" + fecha.ToString("yyyyMMdd") + "'" + m_ssqlItem + m_ssqlDia;
 
+                if (oUser.IdPerfil.IdPerfil == 15)
+                    m_ssql += "  and IdEfectorSolicitante = " + oUser.IdEfector.IdEfector.ToString();
                 else //Traigo el labo y sus relacionados
-                     condicion_ssql = " WHERE A.Baja=0 AND A.IdTipoServicio=" + ddlTipoServicio.SelectedValue +
-                                   " and A.IdEfector = " + oCon.IdEfector.IdEfector.ToString() +
-                                  " AND  A.FechaDesde<='" + fecha.ToString("yyyyMMdd") + "'" +
-                                  " AND  A.FechaHasta>='" + fecha.ToString("yyyyMMdd") + "'" + m_ssqlItem + m_ssqlDia;
+                    m_ssql += " and A.IdEfector = " + oCon.IdEfector.IdEfector.ToString();
+                                
                 
-                m_ssql += condicion_ssql ;
                 DataSet Ds = new DataSet();
                 SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
                 SqlDataAdapter adapter = new SqlDataAdapter();
@@ -329,11 +335,15 @@ namespace WebLab.Turnos
                     }
                     else
                     {
-                        lblLimiteTurnos.Text = "0";
-                        lblTurnosDisponibles.Text = "0";
-                        lblTurnosDados.Text = "0";
-                        lblMensajeSolicitante.Text = "No existe agenda para el Efector Solicitante";
-                        lblMensajeSolicitante.Visible = true;
+                        if(idEfectorSolicitante.ToString() != oUser.IdEfector.IdEfector.ToString())
+                        {
+                            lblLimiteTurnos.Text = "0";
+                            lblTurnosDisponibles.Text = "0";
+                            lblTurnosDados.Text = "0";
+                            lblMensajeSolicitante.Text = "No existe agenda para el Efector Solicitante";
+                            lblMensajeSolicitante.Visible = true;
+                        }
+                       
                     }
                    
                 }
@@ -341,49 +351,7 @@ namespace WebLab.Turnos
                     result = false;
 
             }
-            /* IQuery q = m_session.CreateQuery(m_ssql); IList lista = q.List();
-             if (lista.Count > 0)
-             {
-
-                 foreach (Agenda oAgenda in lista)
-                 {
-                    fechaDesde = oAgenda.FechaDesde;
-                    fechaHasta = oAgenda.FechaHasta;
-                     ICriteria crit = m_session.CreateCriteria(typeof(AgendaDia));
-                     crit.Add(Expression.Eq("IdAgenda", oAgenda));
-                     crit.Add(Expression.Eq("Dia", dia));
-
-                     IList listaDias = crit.List();
-                     if (listaDias.Count > 0)
-                     {
-                         foreach (AgendaDia oAgendaDia in listaDias)
-                         {
-                             result = true;
-                             lblHorario.Text = "Horario de Atención: " + oAgendaDia.HoraDesde + " - " + oAgendaDia.HoraHasta;
-                             lblHoraTurno.Text = CalcularHorarioDisponible(oAgendaDia.TipoTurno, oAgendaDia.Frecuencia, oAgendaDia.HoraDesde);
-                             if (oAgendaDia.LimiteTurnos == 0)
-                             {
-                                 lblLimiteTurnos.Text = "Sin límite de turnos";
-                                 lblTurnosDisponibles.Text = "0";
-                             }
-                             else
-                             {
-                                 lblLimiteTurnos.Text = oAgendaDia.LimiteTurnos.ToString();
-                                 int turnos_dados = int.Parse(lblTurnosDados.Text);
-                                 lblTurnosDisponibles.Text = (oAgendaDia.LimiteTurnos - turnos_dados).ToString();
-                             }
-
-                         }
-                         break;
-                     }
-                     else
-                         result = false;
-                 }
-        }
-        else
-                result = false;
-        }
-       else result = false;*/
+         
 
             return result;
         }
