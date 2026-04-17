@@ -163,15 +163,15 @@
                                                 </asp:TemplateField>
            
                                             </Columns>
-                                           <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                                            <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
-            <%--                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />--%>
-                                              <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
+                                            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+                                            <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" CssClass="GridPager" />
                                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
                                             <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
                                             <EditRowStyle BackColor="#999999" />
-                                            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
-                                           <PagerSettings Mode="NumericFirstLast" Position="Top" />
+                                            <PagerSettings Mode="NumericFirstLast" Position="Top" />
+                                            <RowStyle Font-Size="12px" />
+                                            <AlternatingRowStyle Font-Size="12px" BackColor="White" ForeColor="#284775" />
+
                                 </asp:GridView>      
                                       </td> 
                                </tr> </table>
