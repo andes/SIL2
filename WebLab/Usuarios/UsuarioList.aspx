@@ -73,7 +73,7 @@
                                        <asp:ListItem Value="2" Text="Deshabilitados"></asp:ListItem>
                                     </asp:DropDownList></td>
                                 
-                                <td> <asp:CheckBox ID="chbAdministrador" Text="Solo Administradores" runat="server" OnCheckedChanged="chbAdministrador_CheckedChanged" AutoPostBack="true" /></td>
+                                <td> <asp:CheckBox ID="chbAdministrador" Text="Solo Administradores" Visible="false" runat="server" OnCheckedChanged="chbAdministrador_CheckedChanged" AutoPostBack="true" /></td>
                             </tr>
         
                             <tr>
