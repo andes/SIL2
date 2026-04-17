@@ -253,7 +253,7 @@ namespace WebLab
                             Session["SIL"] = "1";
 
                             if (oUser.RequiereCambioPass)
-                                Response.Redirect("~/Usuarios/PasswordEdit2.aspx?idUsuario=" + oUser.IdUsuario.ToString(), false);
+                                Response.Redirect("~/Usuarios/PasswordEdit2.aspx?idUsuario=" + oUser.IdUsuario.ToString() +"&Desde=loginSil", false);
 
                             else
                             {
