@@ -4947,6 +4947,12 @@
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Horizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo2Horizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
