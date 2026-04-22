@@ -44,17 +44,13 @@ namespace WebLab.Usuarios
             {
                 if (Session["idUsuario"] != null)
                 {
-
-
                     VerificaPermisos("Usuarios");
-                CargarListas();
-                if (Request["id"] != null)
-                    MostrarDatos();
-                else
-                    MostrarEfectores(); 
-
-
-            
+                    CargarListas();
+                    if (Request["id"] != null)
+                        MostrarDatos();
+                    else
+                        MostrarEfectores();
+                    
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
             }
@@ -151,6 +147,8 @@ namespace WebLab.Usuarios
                 ddlPerfil.SelectedValue = "2";
                 btnAgregarEfector.Enabled = false;
                 lblMensajeEfector.Visible = false; lblMensajeEfector.UpdateAfterCallBack = true;
+                ddlEfector3.ClearSelection();
+                agregarEfectorAdmin();
 
             }
             else
@@ -166,6 +164,20 @@ namespace WebLab.Usuarios
 
         }
 
+        private void agregarEfectorAdmin()
+        {
+            DataTable dt = ViewState["efectores"] as DataTable;
+            if (dt != null)
+            {
+                //Si no esta Subsecretaria de salud lo agrego 
+                ddlEfector3.Items.FindByValue("227").Selected = true;
+                if (puedeAgregarEfector(dt))
+                {
+                    AgregarEfector();
+                }
+            }
+            MostrarEfectores();
+        }
 
         private void Guardar(Usuario oRegistro)
         {
@@ -264,7 +276,8 @@ namespace WebLab.Usuarios
 
         protected void btnRegresar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("UsuarioList.aspx");
+            string parametros = this.parametros();
+            Response.Redirect("UsuarioList.aspx?" + parametros, false);
         }
 
         protected void btnGuardar_Click1(object sender, EventArgs e)
@@ -285,11 +298,18 @@ namespace WebLab.Usuarios
                 //    Response.Redirect("UsuarioList.aspx", false);
                 //else
                 //    Response.Redirect("UsuarioEdit.aspx", false);
-
-                Response.Redirect("UsuarioList.aspx", false);
+                string parametros = this.parametros();
+                Response.Redirect("UsuarioList.aspx?" + parametros, false);
             }
         }
+        private string parametros()
+        {
+            string m_parametroFiltro = "idEfector=" + Request["idEfector"].ToString() + "&idPerfil=" + Request["idPerfil"].ToString() + "&tipoAutenticacion=" + Request["tipoAutenticacion"].ToString() +
+            "&habilitados=" + Request["habilitados"].ToString() + "&username=" + Request["username"].ToString() + "&nombre=" + Request["nombre"].ToString()
+            + "&apellido=" + Request["apellido"].ToString() + "&administrador=" + Request["administrador"].ToString()   ;
+            return m_parametroFiltro;
 
+        }
         protected void chkAdministrador_CheckedChanged(object sender, EventArgs e)
         {
             habilitarAdministrador();
@@ -587,11 +607,14 @@ namespace WebLab.Usuarios
                 {
 
                     case "Eliminar":
-                        EliminarEfector(e.CommandArgument);
-                        MostrarEfectores();
+                        if (!chkAdministrador.Checked || e.CommandArgument.ToString() != "227")     
+                        {
+                            EliminarEfector(e.CommandArgument);
+                            MostrarEfectores();
+                        }
                         break;
+
                 }
-               
             }
         }
        
@@ -604,23 +627,27 @@ namespace WebLab.Usuarios
             }
         }
        
+        private bool puedeAgregarEfector(DataTable dt)
+        {
+            bool puedeAgregar = true;
+            DataRow efectorEncontrado = null;
+
+            if (dt != null && dt.Rows.Count > 0)
+                efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); //Verifica si ya fue agregado el efctor
+
+            if (efectorEncontrado != null) puedeAgregar = false;
+
+            return puedeAgregar;
+        }
 
         private void AgregarEfector()
         {
             lblMensajeEfector.Visible = false;
             if (ddlEfector3.SelectedValue != "0")
             {
-                bool puedeAgregar = true;
+                DataTable dt = ViewState["efectores"] as DataTable; 
 
-                DataTable dt = ViewState["efectores"] as DataTable; DataRow efectorEncontrado = null;
-
-                if (dt != null && dt.Rows.Count > 0) 
-                    efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); //Verifica si ya fue agregado el efctor
-
-                if (efectorEncontrado != null) puedeAgregar = false;
-                
-
-                if (puedeAgregar)
+                if (puedeAgregarEfector(dt))
                 {
                     dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue);
                     ViewState["efectores"] = dt;
@@ -681,7 +708,12 @@ namespace WebLab.Usuarios
                     //solo genero auditoria la primera vez que vincula el efector
                     if (!yaTieneAuditoriaVincula.Contains(idEfector))
                         oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
+
+                    //actualizo el viewstate con los nuevos ID
+                    row[0] = oRegistro.IdUsuarioEfector;
+                   
                 }
+                ViewState["efectores"] = dt;
             }
         }
         private void MostrarEfectores()
@@ -757,6 +789,19 @@ namespace WebLab.Usuarios
                 DataRow efectorEliminar = dt.Rows.Find(idEfector); //Lo busco para eliminarlo
                 dt.Rows.Remove(efectorEliminar);
                 ViewState["efectores"] = dt;
+
+                //Luego de borrar un efector y me queda uno solo actualizo el idEfector de sys_usuario, porque si no hacen "Guardar" no se actualiza
+                if (dt.Rows.Count == 1 && Request["id"] != null)
+                {
+                    int idEfectorNuevo = int.Parse((ViewState["efectores"] as DataTable).Rows[0]["idEfector"].ToString()); //Tomo el primero de la grilla
+                    Efector oEfector = new Efector();
+                    oEfector = (Efector)oEfector.Get(typeof(Efector), idEfectorNuevo);
+                    
+                    Usuario oRegistro = new Usuario();
+                    oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Request["id"]));
+                    oRegistro.IdEfector = oEfector;
+                    oRegistro.Save();
+                }
             }
           
         }

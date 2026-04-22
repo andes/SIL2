@@ -139,11 +139,17 @@ namespace WebLab.Usuarios
             {
                 Usuario oRegistro = new Usuario();
                 oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                if (oRegistro.Externo)                 
+                if (oRegistro.Externo)
 
                     Response.Redirect("~/Consulta/Historiaclinicafiltro.aspx", false);
                 else
-                    Response.Redirect("../Default.aspx", false);
+                    if (Request["Desde"] != null && Request["Desde"].ToString() == "loginSil")
+                    { 
+                        Session["idUsuarioAux"] = oRegistro.IdUsuario.ToString(); 
+                        Response.Redirect("../LoginEfector.aspx", false);
+                    }
+                    else
+                        Response.Redirect("../Default.aspx", false);
                 
             }
 

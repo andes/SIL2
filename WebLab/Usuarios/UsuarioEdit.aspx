@@ -289,7 +289,7 @@
             <tr>
                 <td>
                      <asp:LinkButton ID="lnkRegresar" runat="server" CssClass="myLink" 
-                                                PostBackUrl="UsuarioList.aspx" CausesValidation="False">Regresar</asp:LinkButton></td>
+                                                onclick="btnRegresar_Click" CausesValidation="False">Regresar</asp:LinkButton></td>
                 <td align="right" style="width: 497px">
                     <asp:Button ID="btnGuardar" runat="server" Text="Grabar" 
                         onclick="btnGuardar_Click1" CssClass="btn btn-primary" Width="100px" ValidationGroup="0" />
@@ -381,7 +381,7 @@
             </tr>
             <tr>
                 <td>
-                     <asp:LinkButton ID="lnkRegresar1" runat="server" CssClass="myLink"   PostBackUrl="UsuarioList.aspx" CausesValidation="False">Regresar</asp:LinkButton></td>
+                     <asp:LinkButton ID="lnkRegresar1" runat="server" CssClass="myLink"  onclick="btnRegresar_Click" CausesValidation="False">Regresar</asp:LinkButton></td>
                  
             </tr>
         </table>

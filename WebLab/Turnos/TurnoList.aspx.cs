@@ -561,7 +561,20 @@ INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.
             }
 
             CargarTurnos();
-            CargarGrilla();
+            if (oUser.IdPerfil.IdPerfil != 15)
+                CargarGrilla();
+
+            else
+            { //Si es Administrativo externo, verifico que se haya cargado ddlEfectorSolicitante que lo hace verificando la existencia de la agenda para el efector solicitante
+                if (ddlEfectorSolicitante.SelectedValue == "")
+                {
+                    lblMensaje.Visible = true;
+                    lblMensaje.Text = "No existe agenda para el Efector Solicitante";
+                }
+                else CargarGrilla();
+            }
+
+
             PintarReferencias(); int turno_dispo =int.Parse( lblTurnosDisponibles.Text);
             if (cldTurno.SelectedDate.Date < DateTime.Now.Date)
                 btnNuevo.Visible = false;
