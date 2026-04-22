@@ -71,7 +71,7 @@ namespace WebLab
                 oUser = (Usuario)oUser.Get(typeof(Usuario), i_idusuario);
                 if (MostrarTerminosCondiciones(oUser))
                 {
-                    Session["usuarioPendienteAceptacion"] = oUser;
+                    Session["usuarioPendienteAceptacion"] = i_idusuario;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "$('#modalTerminosCondiciones').modal('show');", true);
                     return;
                 }
@@ -343,7 +343,15 @@ namespace WebLab
         }
         protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)
         {
-            Usuario oUser = (Usuario) Session["usuarioPendienteAceptacion"];
+            if(Session["usuarioPendienteAceptacion"] == null)
+            {
+                Response.Redirect("Logout.aspx", true);
+                return;
+            }
+
+            int i_idusuario = int.Parse(Session["usuarioPendienteAceptacion"].ToString());
+            Usuario oUser = new Usuario();
+            oUser = (Usuario)oUser.Get(typeof(Usuario), i_idusuario);
 
             if (oUser != null)
             {
@@ -388,7 +396,7 @@ namespace WebLab
             }
             else
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "error", "alert('❌ No hay dias definidos para los terminos y condiciones');", true);
+               // ScriptManager.RegisterStartupScript(this, this.GetType(), "error", "alert('❌ No hay dias definidos para los terminos y condiciones');", true);
                 return true; 
             }
             
