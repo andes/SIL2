@@ -8,7 +8,7 @@
     <many-to-one name="IdProtocolo" column="idProtocolo" class="Business.Data.Laboratorio.Protocolo,Business" />
     <!--<many-to-one name="IdItem" column="idItem" class="Business.Data.Laboratorio.Item,Business" />-->
     <property column="idItem" type="Int32" name="IdItem" not-null="true" />
-
+    <property column="numeroAislamiento" type="Int32" name="NumeroAislamiento" not-null="true" />
     <many-to-one name="IdGermen" column="idGermen" class="Business.Data.Laboratorio.Germen,Business" />
     <property column="idMetodologia" type="Int32" name="IdMetodologia" not-null="true" />
 

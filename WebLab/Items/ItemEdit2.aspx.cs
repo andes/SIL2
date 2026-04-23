@@ -1274,7 +1274,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
 
             oRegistro.IdEfector = oEfector;
-            oRegistro.IdItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString())); 
+            oRegistro.IdItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString())); ;
             oRegistro.Sexo = ddlSexo.SelectedValue;
             oRegistro.TodasEdades = true;
             oRegistro.EdadDesde = int.Parse(txtEdadDesde.Value);

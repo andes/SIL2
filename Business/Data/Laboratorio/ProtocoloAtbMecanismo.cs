@@ -18,6 +18,7 @@ namespace Business.Data.Laboratorio
 
         private int m_idProtocoloAtbMecanismo;
         private Protocolo m_idprotocolo;
+        private int m_numeroaislamiento;
         private int m_idmetodologia;
         private int m_iditem;
         private Germen m_idgermen;
@@ -40,6 +41,7 @@ namespace Business.Data.Laboratorio
             m_idprotocolo = new Protocolo();
             m_idgermen = new Germen();
             m_idmetodologia = 0;
+            m_numeroaislamiento = 0;
             m_iditem = 0;
             m_idmecanismo = new MecanismoResistencia();
              
@@ -54,6 +56,7 @@ namespace Business.Data.Laboratorio
             Protocolo idprotocolo,
             Germen idgermen,
             int  idmetodologia,
+            int numeroaislamiento,
             int iditem,
             MecanismoResistencia idmecanismo
             )
@@ -61,6 +64,7 @@ namespace Business.Data.Laboratorio
         {
             m_idprotocolo = idprotocolo;
             m_idgermen = idgermen;
+            m_numeroaislamiento = numeroaislamiento;
             m_idmetodologia =  idmetodologia;
             m_iditem = iditem;
             m_idmecanismo =  idmecanismo;
@@ -96,6 +100,18 @@ namespace Business.Data.Laboratorio
             {
                 m_isChanged |= (m_iditem != value);
                 m_iditem = value;
+            }
+
+        }
+
+
+        public int NumeroAislamiento
+        {
+            get { return m_numeroaislamiento; }
+            set
+            {
+                m_isChanged |= (m_numeroaislamiento != value);
+                m_numeroaislamiento = value;
             }
 
         }

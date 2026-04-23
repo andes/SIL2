@@ -99,7 +99,7 @@
       </ol>
 
       <p>
-        Ante incumplimiento de estas obligaciones debe saber que puede tener consecuencias legales. Asimismo, desde el Ministerio de Salud se procederá a:
+      <strong>  Ante incumplimiento de estas obligaciones debe saber que puede tener consecuencias legales.</strong> Asimismo, desde el Ministerio de Salud se procederá a:
       </p>
 
       <ul>

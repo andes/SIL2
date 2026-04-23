@@ -1520,17 +1520,21 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
 
-
-
-            m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock) ";
-            oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
-            ddlCaracter.Items.Insert(0, new ListItem("--Seleccione Caracteristica--", "0"));
-
-            if ((ddlCaracter.Items.Count > 1) && (oUser.IdEfector.IdEfector==228) )///Se agrega control exclusivo para Laboratorio Central
+            if (Session["idServicio"].ToString() == "3")///Se agrega para todos los efectores y solo para servicio microbiologia
             {
-                lblCaracterSisa.Visible = true;
-                ddlCaracter.Visible = true;
+                m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock) ";
+                oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
+                ddlCaracter.Items.Insert(0, new ListItem("--Seleccione Caracteristica--", "0"));
+
+                //if ((ddlCaracter.Items.Count > 1) && (oUser.IdEfector.IdEfector==228) )///Se agrega control exclusivo para Laboratorio Central
+                if (ddlCaracter.Items.Count > 1) ///Se agrega para todos los efectores y solo para servicio microbiologia
+                {
+                    lblCaracterSisa.Visible = true;
+                    ddlCaracter.Visible = true;
+                }
             }
+            else
+                ddlCaracter.Items.Insert(0, new ListItem("", "0"));
             ////////////////////////////Carga de combos de ObraSocial//////////////////////////////////////////
             //m_ssql = "SELECT idObraSocial,  nombre AS nombre FROM Sys_ObraSocial order by idObraSocial ";          
             //oUtil.CargarCombo(ddlObraSocial, m_ssql, "idObraSocial", "nombre");
@@ -1721,8 +1725,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         //    ddlImpresora.SelectedValue = s_control[1].ToString(); break;
 
                         case "ddlImpresoraEtiqueta":
-                                    ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
-                                }
+                            ddlImpresoraEtiqueta.SelectedValue = s_control[1].ToString(); break;
+                    }
                 }
             }
             else
@@ -4031,9 +4035,9 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             else
             {
 
+              
 
-
-                ///
+            ///
 
                 if ((TxtDatos.Value == "") || (TxtDatos.Value == "1###on@") || (TxtDatos.Value == "1###on#0@") || TxtDatos.Value == "1###false#0@")
                 {
@@ -4607,7 +4611,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             string[] arrfis = oC.FISCaracter.Split((",").ToCharArray());
             foreach (string item in arrfis)
             {
-                if (item == ddlCaracter.SelectedValue)
+                if ((item == ddlCaracter.SelectedValue)  && (ddlCaracter.SelectedValue!="")) 
                 { obligafis = true; break; }
             }
             return obligafis;

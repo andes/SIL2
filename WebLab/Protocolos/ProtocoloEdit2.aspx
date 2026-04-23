@@ -454,11 +454,11 @@
                             </asp:Panel>
 						</td>
 <td   align="right" >  
-   <label class = "label label-danger" runat="server" visible="false" id="lblCaracterSisa"> Caracter SISA: </label>
+   <label class = "label label-danger" runat="server" visible="false" id="lblCaracterSisa"> Caracter SNVS: </label>
 					                
     </td>
                                        <td colspan="1" class="myLabelIzquierda"><anthem:DropDownList Visible="false" ID="ddlCaracter" runat="server" 
-                                ToolTip="Seleccione el caracter" TabIndex="14" Width="150px" class="form-control input-sm">
+                                ToolTip="Seleccione el caracter" TabIndex="14" Width="200px" class="form-control input-sm">
                             </anthem:DropDownList></td>
                                         <td colspan="1" align="right" >
                                       <label class = "label label-danger" id="lblNroHisopado" visible="false" runat="server">     Nro. Hisopado</label></td>
@@ -1232,7 +1232,7 @@
                 OrdenarDatos();
 
                 contadorfilas = contadorfilas - 1;
-                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas;
+                document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = contadorfilas; //para no perder el valor luego de un postback
             }
             else {
 
@@ -1266,7 +1266,6 @@
                     var desde = document.getElementById('Desde_' + i);
                     desde.name = 'Desde_' + pos;
                     desde.id = 'Desde_' + pos;
-                    
                     var estado = 0;
 
                     if (cod != null) { //si no es la ultima fila
