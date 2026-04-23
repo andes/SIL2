@@ -2017,6 +2017,24 @@
     <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="bootstrap\img\flags%402x.png" />
     <Content Include="bootstrap\img\flags.png" />
+    <Content Include="bootstrap\js\bootstrap-datepicker.es.min.js" />
+    <Content Include="bootstrap\js\bootstrap-datepicker.min.js" />
+    <Content Include="bootstrap\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="bootstrap\js\bootstrap-table-locale-all.min.js" />
+    <Content Include="bootstrap\js\bootstrap-table.min.js" />
+    <Content Include="bootstrap\js\bootstrap.js" />
+    <Content Include="bootstrap\js\bootstrap.min.js" />
+    <Content Include="bootstrap\js\bootstrap3-typeahead.js" />
+    <Content Include="bootstrap\js\intlTelInput.js" />
+    <Content Include="bootstrap\js\jquery-1.12.0.js" />
+    <Content Include="bootstrap\js\jquery-clockpicker.min.js" />
+    <Content Include="bootstrap\js\jquery-ui.js" />
+    <Content Include="bootstrap\js\moment.min.js" />
+    <Content Include="bootstrap\js\pulsate.min.js" />
+    <Content Include="bootstrap\js\select2.full.min.js" />
+    <Content Include="bootstrap\js\utils.js" />
+    <Content Include="bootstrap\js\validar\bootstrap.js" />
+    <Content Include="bootstrap\js\validar\formValidation.js" />
     <Content Include="Calidad\IncidenciaEdit.ascx" />
     <Content Include="Calidad\IncidenciaRecepcionEdit.aspx" />
     <Content Include="Calidad\IncidenciaRecepcionList.aspx" />
@@ -2106,6 +2124,7 @@
     <Content Include="Estadisticas\ReportePorResultadoSivila.aspx" />
     <Content Include="Estadisticas\ReportePorResultadoTexto.aspx" />
     <Content Include="Estadisticas\ResultadoDefault.aspx" />
+    <Content Include="Estadisticas\ResultadosaSisa.aspx" />
     <Content Include="Estadisticas\SinDatos.aspx" />
     <Content Include="Estadisticas\Turnos.aspx" />
     <Content Include="Global.asax" />
@@ -2128,13 +2147,9 @@
     <Content Include="menu.aspx" />
     <Content Include="MarcaEquipo\MarcaEdit.aspx" />
     <Content Include="MarcaEquipo\MarcaList.aspx" />
-    <Content Include="MetodosForense\MetodoForenseEdit.aspx" />
-    <Content Include="MetodosForense\MetodoForenseList.aspx" />
     <Content Include="NomencladorF\NomencladorForenseEdit.aspx" />
     <Content Include="NomencladorF\NomencladorForenseList.aspx" />
     <Content Include="Pacientes\PacienteEdit2.aspx" />
-    <Content Include="ParentescosAlegados\ParentescoAlegadoEdit.aspx" />
-    <Content Include="ParentescosAlegados\ParentescoAlegadoList.aspx" />
     <Content Include="PeticionElectronica\Default.aspx" />
     <Content Include="PeticionElectronica\PeticionEdit.aspx" />
     <Content Include="PeticionElectronica\PeticionEstado.ascx" />
@@ -2713,7 +2728,6 @@
     <Content Include="script\Resources\jQuery-ui-1.8.18.min.js" />
     <Content Include="script\Resources\jquery-ui-1.8.20.css" />
     <Content Include="script\Resources\jquery.min.js" />
-    <Content Include="script\select2.custom.css" />
     <Content Include="script\ValidaFecha.js" />
     <Content Include="Seguimiento.aspx" />
     <Content Include="seguimientoCovid.ascx" />
@@ -4840,6 +4854,13 @@
     <Compile Include="Estadisticas\ResultadoDefault.aspx.designer.cs">
       <DependentUpon>ResultadoDefault.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Estadisticas\ResultadosaSisa.aspx.cs">
+      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Estadisticas\ResultadosaSisa.aspx.designer.cs">
+      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Estadisticas\SinDatos.aspx.cs">
       <DependentUpon>SinDatos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4902,10 +4923,10 @@
       <DependentUpon>Consulta.aspx</DependentUpon>
     </Compile>
     <Compile Include="Informes\ControlDerivacion.cs">
-      <DependentUpon>ControlDerivacion.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
-      <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
+      <DependentUpon>ControlDerivacion.rpt</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Informes\DerivacionLote.cs">
       <DependentUpon>DerivacionLote.rpt</DependentUpon>
@@ -5017,20 +5038,6 @@
       <DependentUpon>MarcaList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="MetodosForense\MetodoForenseEdit.aspx.cs">
-      <DependentUpon>MetodoForenseEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="MetodosForense\MetodoForenseEdit.aspx.designer.cs">
-      <DependentUpon>MetodoForenseEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="MetodosForense\MetodoForenseList.aspx.cs">
-      <DependentUpon>MetodoForenseList.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="MetodosForense\MetodoForenseList.aspx.designer.cs">
-      <DependentUpon>MetodoForenseList.aspx</DependentUpon>
-    </Compile>
     <Compile Include="NomencladorF\NomencladorForenseEdit.aspx.cs">
       <DependentUpon>NomencladorForenseEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5051,20 +5058,6 @@
     </Compile>
     <Compile Include="Pacientes\PacienteEdit2.aspx.designer.cs">
       <DependentUpon>PacienteEdit2.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ParentescosAlegados\ParentescoAlegadoEdit.aspx.cs">
-      <DependentUpon>ParentescoAlegadoEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ParentescosAlegados\ParentescoAlegadoEdit.aspx.designer.cs">
-      <DependentUpon>ParentescoAlegadoEdit.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ParentescosAlegados\ParentescoAlegadoList.aspx.cs">
-      <DependentUpon>ParentescoAlegadoList.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ParentescosAlegados\ParentescoAlegadoList.aspx.designer.cs">
-      <DependentUpon>ParentescoAlegadoList.aspx</DependentUpon>
     </Compile>
     <Compile Include="PeticionElectronica\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -6828,13 +6821,13 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Consentimiento1.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Informes\CrystalReport1.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>CrystalReport1.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Informes\ControlDerivacion.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>ControlDerivacion.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\CrystalReport1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>CrystalReport1.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\DerivacionLote.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

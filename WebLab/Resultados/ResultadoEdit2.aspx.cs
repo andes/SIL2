@@ -834,8 +834,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if (esCarga)
             {                
                 bool atbVal = oRegistro.getTieneAtbValidados();
-                pnlAntibiograma.Enabled = atbVal;
-             
+                if (atbVal)
+                    pnlAntibiograma.Enabled = false;
+                else
+                    pnlAntibiograma.Enabled = true;
+
             }
 
             lblUsuario.Text =  oRegistro.IdUsuarioRegistro.Apellido;
@@ -5386,7 +5389,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
 
                 }
 
-                GuardarMecanismo(oProtocolo, oGermen.IdGermen, int.Parse(rdbMetodologiaAntibiograma.SelectedValue), int.Parse(ddlPracticaAtb.SelectedValue));
+                GuardarMecanismo(oProtocolo, oGermen.IdGermen, int.Parse(rdbMetodologiaAntibiograma.SelectedValue), int.Parse(ddlPracticaAtb.SelectedValue), oGermen.NumeroAislamiento);
             }
             else
             {
@@ -5398,7 +5401,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                
         }
 
-        private void GuardarMecanismo(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem)
+        private void GuardarMecanismo(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem, int numeroaislamiento)
         {
             
             for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
@@ -5413,8 +5416,9 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                         oRegistro.IdProtocolo = oProtocolo;
                         oRegistro.IdGermen = oGermen;
                         oRegistro.IdMetodologia = idmetodologia;
+                        oRegistro.NumeroAislamiento = numeroaislamiento;
                         oRegistro.IdItem = iditem;
-                        oRegistro.IdMecanismoResistencia = oM;
+                        oRegistro.IdMecanismoResistencia = oM;                        
                         oRegistro.Save();
                         oProtocolo.GrabarAuditoriaDetalleProtocolo("Graba", oUser.IdUsuario, "ATB: " + oGermen.Nombre + "- Mecanismo", oM.Nombre);
                     }
@@ -5545,6 +5549,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
             crit2.Add(Expression.Eq("IdGermen", oGermen));
             crit2.Add(Expression.Eq("IdItem", int.Parse(ddlPracticaAtb.SelectedValue)));
             crit2.Add(Expression.Eq("IdMetodologia", int.Parse(ddlMetodoAntibiograma.SelectedValue)));
+            crit2.Add(Expression.Eq("NumeroAislamiento", int.Parse(s_numeroaislamiento)));
 
             IList lista2 = crit2.List();
 

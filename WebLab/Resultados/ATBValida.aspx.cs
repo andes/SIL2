@@ -54,14 +54,14 @@ namespace WebLab.Resultados
 
                 CargarPerfilAntibiotico();
                 CargarListaAntibiotico();
-                CargarMecanismos(oProtocolo, oGermen, oItem, int.Parse(s_idMetodo));
+                CargarMecanismos(oProtocolo, oGermen, oItem, int.Parse(s_idMetodo), int.Parse(s_numeroAislamiento));
                 ActualizarVistaAntibiograma();
 
             }
           
         }
 
-        private void CargarMecanismos(Protocolo oProtocolo, Germen oGermen, Item oItem, int v)
+        private void CargarMecanismos(Protocolo oProtocolo, Germen oGermen, Item oItem, int v, int n)
         {
             Utility oUtil = new Utility();
             string m_ssql = @"SELECT idMecanismoResistencia, sigla as nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
@@ -79,6 +79,7 @@ namespace WebLab.Resultados
                 ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloAtbMecanismo));
             crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+            crit.Add(Expression.Eq("NumeroAislamiento", n));
             crit.Add(Expression.Eq("IdMetodologia", v));
             crit.Add(Expression.Eq("IdGermen", oGermen));
             crit.Add(Expression.Eq("IdItem", oItem.IdItem));
@@ -490,7 +491,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 Germen oGermen = new Germen();
                 oGermen = (Germen)oGermen.Get(typeof(Germen), int.Parse(s_idGermen));
                 if ((oProtocolo!=null) && (oGermen!= null))
-                    GuardarMecanismo(oProtocolo, oGermen, int.Parse(s_idMetodo), int.Parse(s_iditem));
+                    GuardarMecanismo(oProtocolo, oGermen, int.Parse(s_idMetodo), int.Parse(s_iditem), int.Parse(s_numeroAislamiento));
 
                 lblMensajeMecanismo.Visible = true;
                 lblMensajeMecanismo.Text = "Mecanismos actualizados";
@@ -502,7 +503,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             }
         }
 
-        private void GuardarMecanismo(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem)
+        private void GuardarMecanismo(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem, int n)
         {
             try
             { 
@@ -525,6 +526,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         crit2.Add(Expression.Eq("IdGermen", oGermen));
                         crit2.Add(Expression.Eq("IdItem", iditem));
                         crit2.Add(Expression.Eq("IdMetodologia", idmetodologia));
+                        crit2.Add(Expression.Eq("NumeroAislamiento", n));
                         crit2.Add(Expression.Eq("IdMecanismoResistencia", oM));
 
                         IList lista2 = crit2.List();
@@ -535,6 +537,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             oRegistro.IdProtocolo = oProtocolo;
                             oRegistro.IdGermen = oGermen;
                             oRegistro.IdMetodologia = idmetodologia;
+                            oRegistro.NumeroAislamiento = n;
                             oRegistro.IdItem = iditem;
                             oRegistro.IdMecanismoResistencia = oM;
                             oRegistro.Save();
