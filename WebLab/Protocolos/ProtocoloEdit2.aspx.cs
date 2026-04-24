@@ -1593,6 +1593,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         ddlOrigen.SelectedValue = oC.IdOrigenUrgencia.ToString(); //Origen: Guardia
                         ddlSectorServicio.SelectedValue = oC.IdSectorUrgencia.ToString(); // sector de urgencia
                         ddlPrioridad.SelectedValue = "2"; // Prioridad: Urgencia
+                        chkRecordarPractica.Visible = false;
                     }
                     else
                     {
