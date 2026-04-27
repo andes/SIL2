@@ -24,7 +24,9 @@ namespace Business.Data.Laboratorio
 		private string m_accion; 
 		private string m_username; 
 		 
-		private int m_idusuarioregistro; 		
+		private int m_idusuarioregistro;
+		private string m_valorNuevo;
+		private string m_valorAnterior;
 		#endregion
 
 		#region Default ( Empty ) Class Constuctor
@@ -193,7 +195,29 @@ namespace Business.Data.Laboratorio
 		{
 			get { return m_isChanged; }
 		}
-				
-		#endregion 
+		public string ValorNuevo
+		{
+			get { return m_valorNuevo; }
+			set
+			{
+				if (value != null && value.Length > 50)
+					throw new ArgumentOutOfRangeException("Invalid value for Valor Nuevo", value, value.ToString());
+
+				m_isChanged |= (m_valorNuevo != value); m_valorNuevo = value;
+			}
+		}
+
+		public string ValorAnterior
+		{
+			get { return m_valorAnterior; }
+			set
+			{
+				if (value != null && value.Length > 50)
+					throw new ArgumentOutOfRangeException("Invalid value for Valor Anterior", value, value.ToString());
+
+				m_isChanged |= (m_valorAnterior != value); m_valorAnterior = value;
+			}
+		}
+		#endregion
 	}
 }
