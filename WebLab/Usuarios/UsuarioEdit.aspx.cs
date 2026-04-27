@@ -53,11 +53,11 @@ namespace WebLab.Usuarios
                     if (Request["id"] != null)
                         MostrarDatos();
                     else
-                    {
+                    { 
                         MostrarEfectores();
                         btnAuditoria.Visible = false;
                     }
-
+                    
                 }
             }
             else Response.Redirect("../FinSesion.aspx", false);
