@@ -12,7 +12,7 @@
      <script src="../script/jquery.min.js" type="text/javascript"></script>  
                   <script src="../script/jquery-ui.min.js" type="text/javascript"></script> 
 
-
+    ❌
     <script type="text/javascript" src="../script/Mascara.js"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>   
   
@@ -843,6 +843,7 @@
 
                         <tr>
                             <td colspan="4">
+                                <asp:Literal runat="server" Text="<strong>Linea 1</strong><i>Linea 2</i>"></asp:Literal>
                                 <h4>V.R de Pacientes
                                 </h4> 
                                 <anthem:GridView ID="gvListaVR" runat="server" AutoGenerateColumns="False" AutoUpdateAfterCallBack="True" BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px" CellPadding="0" CssClass="table table-bordered bs-table" DataKeyNames="idValorReferencia" EmptyDataText="No hay valores de referencia cargados para la determinación" Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal" onrowcommand="gvListaVR_RowCommand1" onrowdatabound="gvListaVR_RowDataBound" TabIndex="9" Width="100%" UpdateAfterCallBack="True">
@@ -866,10 +867,15 @@
                                         <asp:BoundField DataField="maximo" HeaderText="Valor Maximo">
                                        
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="observacion" HeaderText="Observaciones">
+                                        <%--<asp:BoundField DataField="observacion" HeaderText="Observaciones">--%>
                                         
-                                        </asp:BoundField>
-                                        <asp:TemplateField HeaderText="">
+                                        <%--</asp:BoundField>--%>
+                                        <asp:TemplateField HeaderText="Observaciones">
+                                            <ItemTemplate>
+                                                <%# Eval("observacion") %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+                                       <asp:TemplateField HeaderText="">
                                             <ItemTemplate>
                                                 <asp:ImageButton ID="Eliminar" runat="server" CommandName="Eliminar" ImageUrl="~/App_Themes/default/images/eliminar.jpg" OnClientClick="return PreguntoEliminar();" />
                                             </ItemTemplate>
