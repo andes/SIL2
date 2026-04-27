@@ -12,6 +12,7 @@
 		<property column="accion" type="String" name="Accion" not-null="true" length="400" />
 		 
 		<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
-		
+    <property column="valorAnterior" type="String" name="ValorAnterior" length="50" />
+    <property column="valorNuevo" type="String" name="ValorNuevo" length="50" />
 	</class>
 </hibernate-mapping>
