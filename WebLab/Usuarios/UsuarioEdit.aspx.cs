@@ -365,7 +365,7 @@ namespace WebLab.Usuarios
                     encabezado3.Value = "Auditoria de Usuario";
 
 
-                    oCr.Report.FileName = "../Informes/AuditoriaProtocolo.rpt";
+                    oCr.Report.FileName = "../Informes/AuditoriaUser.rpt";
                     oCr.ReportDocument.SetDataSource(dtAuditoria);
                     oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
                     oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
@@ -403,12 +403,15 @@ namespace WebLab.Usuarios
             //}
 
 
-            m_strSQL = @"  SELECT  A.username  AS numero, P.apellido as username, A.fecha AS fecha, A.hora, A.accion, '' as analisis, '' as valor, '' as valorAnterior
+            m_strSQL = @"  SELECT P.username + ' - '+ P.apellido + ' ' + P.nombre as numero ,
+                                P.apellido as username, A.fecha AS fecha, A.hora, A.accion,
+                                '' as analisis, '' as valor, '' as valorAnterior
                             FROM         	 LAB_Auditoriausuario AS A (nolock)   
                             inner join  sys_usuario P (nolock) on P.idusuario= A.idusuarioregistro
                             where  A.idusuario= " + Request["id"].ToString()
                             + @" union 
-	                        SELECT  P.username  AS numero, P.apellido as username, L.fecha AS fecha,
+	                        SELECT  P.username + ' - '+ P.apellido + ' ' + P.nombre as numero , 
+                               P.apellido as username, L.fecha AS fecha,
                                     Format(L.fecha, 'hh:mm:ss') as hora, 'Acepto Terminos y Condiciones', '' as analisis, '' as valor, '' as valorAnterior
                             FROM         	 LAB_LogAccesoTerminosCondiciones AS L (nolock)   
                             inner join  sys_usuario P (nolock) on P.idusuario= L.idUsuario

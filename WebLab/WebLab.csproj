@@ -2124,7 +2124,6 @@
     <Content Include="Estadisticas\ReportePorResultadoSivila.aspx" />
     <Content Include="Estadisticas\ReportePorResultadoTexto.aspx" />
     <Content Include="Estadisticas\ResultadoDefault.aspx" />
-    <Content Include="Estadisticas\ResultadosaSisa.aspx" />
     <Content Include="Estadisticas\SinDatos.aspx" />
     <Content Include="Estadisticas\Turnos.aspx" />
     <Content Include="Global.asax" />
@@ -4854,13 +4853,6 @@
     <Compile Include="Estadisticas\ResultadoDefault.aspx.designer.cs">
       <DependentUpon>ResultadoDefault.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Estadisticas\ResultadosaSisa.aspx.cs">
-      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Estadisticas\ResultadosaSisa.aspx.designer.cs">
-      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Estadisticas\SinDatos.aspx.cs">
       <DependentUpon>SinDatos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4898,6 +4890,12 @@
     </Compile>
     <Compile Include="Informes\AuditoriaLote.cs">
       <DependentUpon>AuditoriaLote.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Informes\AuditoriaUser.cs">
+      <DependentUpon>AuditoriaUser.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
@@ -6808,6 +6806,10 @@
     <EmbeddedResource Include="Informes\AuditoriaLote.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>AuditoriaLote.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\AuditoriaUser.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>AuditoriaUser.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\AuditoriaProtocolo.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
