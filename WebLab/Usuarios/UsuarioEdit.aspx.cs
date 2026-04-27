@@ -49,7 +49,10 @@ namespace WebLab.Usuarios
                     if (Request["id"] != null)
                         MostrarDatos();
                     else
+                    { 
                         MostrarEfectores();
+                        btnAuditoria.Visible = false;
+                    }
                     
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
@@ -109,6 +112,7 @@ namespace WebLab.Usuarios
             txtUsername.Text = oRegistro.Username;
             chkRequiereContrasenia.Checked = oRegistro.RequiereCambioPass;
             txtPassword.Enabled = false;
+            txtPassword.Visible = false;
             chkActivo.Checked = oRegistro.Activo;
             ddlPerfil.SelectedValue = oRegistro.IdPerfil.IdPerfil.ToString();
             //ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
@@ -388,7 +392,7 @@ namespace WebLab.Usuarios
         {
             string m_strSQL = "";
 
-            string m_strCondicion = "";
+            //string m_strCondicion = "";
 
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
@@ -400,9 +404,15 @@ namespace WebLab.Usuarios
 
 
             m_strSQL = @"  SELECT  A.username  AS numero, P.apellido as username, A.fecha AS fecha, A.hora, A.accion, '' as analisis, '' as valor, '' as valorAnterior
-    FROM         	 LAB_Auditoriausuario AS A (nolock)   
-    inner join  sys_usuario P (nolock) on P.idusuario= A.idusuarioregistro
-    where  A.idusuario= " + Request["id"].ToString() + @" ORDER BY A.idAuditoriausuario";
+                            FROM         	 LAB_Auditoriausuario AS A (nolock)   
+                            inner join  sys_usuario P (nolock) on P.idusuario= A.idusuarioregistro
+                            where  A.idusuario= " + Request["id"].ToString()
+                            + @" union 
+	                        SELECT  P.username  AS numero, P.apellido as username, L.fecha AS fecha,
+                                    Format(L.fecha, 'hh:mm:ss') as hora, 'Acepto Terminos y Condiciones', '' as analisis, '' as valor, '' as valorAnterior
+                            FROM         	 LAB_LogAccesoTerminosCondiciones AS L (nolock)   
+                            inner join  sys_usuario P (nolock) on P.idusuario= L.idUsuario
+	                        where  P.idusuario=" + Request["id"].ToString() + " ORDER BY fecha";
 
             DataSet Ds1 = new DataSet();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
@@ -435,7 +445,7 @@ namespace WebLab.Usuarios
         protected void customValidacionGeneral_ServerValidate(object source, ServerValidateEventArgs args)
         {
 
-            if (Request["id"] == null) // alta
+            //if (Request["id"] == null) // Validar tambien en modificacion
             {
 
                 Usuario oRegistro = new Usuario();
