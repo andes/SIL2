@@ -53,11 +53,11 @@ namespace WebLab.Usuarios
                     if (Request["id"] != null)
                         MostrarDatos();
                     else
-                    { 
+                    {
                         MostrarEfectores();
                         btnAuditoria.Visible = false;
                     }
-                    
+
                 }
             }
             else Response.Redirect("../FinSesion.aspx", false);
@@ -628,61 +628,77 @@ namespace WebLab.Usuarios
             Usuario oAuditor = new Usuario();
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-            int idUsuario = oRegistro.IdUsuario;
-            if (oRegistro.Nombre != txtNombre.Text)
-                oAuditor.GrabaAuditoria("Modifica Nombre", idUsuario, oRegistro.Username, oRegistro.Nombre, txtNombre.Text);
+            string accion = "Crea";
            
-            if (oRegistro.Apellido != txtApellido.Text)
-                oAuditor.GrabaAuditoria("Modifica Apellido", idUsuario, oRegistro.Username, oRegistro.Apellido, txtApellido.Text);
-           
-            if (oRegistro.FirmaValidacion != txtFirmaValidacion.Text)
-                oAuditor.GrabaAuditoria("Modifica Firma Validacion", idUsuario, oRegistro.Username, oRegistro.FirmaValidacion, txtFirmaValidacion.Text);
-           
-            if (oRegistro.Email != email.Value.ToString())
-                oAuditor.GrabaAuditoria("Modifica Email", idUsuario, oRegistro.Username, oRegistro.Email, email.Value);
-           
-            if (oRegistro.Telefono != txtTelefono.Text)
-                oAuditor.GrabaAuditoria("Modifica Telefono", idUsuario, oRegistro.Username, oRegistro.Telefono, txtTelefono.Text);
-           
-            if (oRegistro.TipoAutenticacion.Trim() != ddlTipoAutenticacion.SelectedValue)
-                oAuditor.GrabaAuditoria("Modifica Tipo Autenticacion", idUsuario, oRegistro.Username, oRegistro.TipoAutenticacion, ddlTipoAutenticacion.SelectedValue);
-            
-            if (oRegistro.Username != txtUsername.Text)
-                oAuditor.GrabaAuditoria("Modifica Username", idUsuario, oRegistro.Username, oRegistro.Username, txtUsername.Text);
-           
-            if (oRegistro.Administrador != chkAdministrador.Checked)
-                oAuditor.GrabaAuditoria("Modifica Administrador", idUsuario, oRegistro.Username, oRegistro.Administrador ? "Si" : "No", chkAdministrador.Checked ? "Si" : "No");
-           
-            if (oRegistro.IdArea.ToString() != ddlArea.SelectedValue)
+            if (Request["id"] != null) 
             {
-                string nombreArea = "";
-                if (oRegistro.IdArea != 0)
-                {
-                    Area oArea = new Area();
-                    oArea = (Area)oArea.Get(typeof(Area), oRegistro.IdArea);
-                    nombreArea = oArea.Nombre;
-                }
-                else nombreArea = "Todas";
-
-                oAuditor.GrabaAuditoria("Modifica Area", idUsuario, oRegistro.Username, nombreArea, ddlArea.SelectedItem.Text);
+                accion = "Modifica";
+                if ((oRegistro.Activo == true) && (chkActivo.Checked == false))
+                    accion = "Inhabilita";
+                if ((oRegistro.Activo == false) && (chkActivo.Checked == true))
+                    accion = "Habilita";
             }
+            //Auditoria accion
+            oAuditor.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
 
-            if (oRegistro.IdPerfil.IdPerfil.ToString() != ddlPerfil.SelectedValue)
-                oAuditor.GrabaAuditoria("Modifica Perfil", idUsuario, oRegistro.Username, oRegistro.IdPerfil.Nombre, ddlPerfil.SelectedItem.Text);
-
-            if (ddlEfectorDestino.SelectedValue != "" && oRegistro.IdEfectorDestino.IdEfector.ToString() != ddlEfectorDestino.SelectedValue)
-                oAuditor.GrabaAuditoria("Modifica Laboratorio Destino", idUsuario, oRegistro.Username, oRegistro.IdEfectorDestino.Nombre, ddlEfectorDestino.SelectedItem.Text);
-
-            if (oRegistro.Activo != chkActivo.Checked)
-                oAuditor.GrabaAuditoria("Modifica Activo", idUsuario, oRegistro.Username, oRegistro.Activo ? "Si":"No", chkActivo.Checked ? "Si":"No");
+            //Auditoria cambio de valores del usuario
+            if (Request["id"] != null)
+            {
+                
+                if (oRegistro.Nombre != txtNombre.Text)
+                    oAuditor.GrabaAuditoria("Modifica Nombre", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Nombre, txtNombre.Text);
+           
+                if (oRegistro.Apellido != txtApellido.Text)
+                    oAuditor.GrabaAuditoria("Modifica Apellido", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Apellido, txtApellido.Text);
+           
+                if (oRegistro.FirmaValidacion != txtFirmaValidacion.Text)
+                    oAuditor.GrabaAuditoria("Modifica Firma Validacion", oRegistro.IdUsuario, oRegistro.Username, oRegistro.FirmaValidacion, txtFirmaValidacion.Text);
+           
+                if (oRegistro.Email != email.Value.ToString())
+                    oAuditor.GrabaAuditoria("Modifica Email", oRegistro.IdUsuario   , oRegistro.Username, oRegistro.Email, email.Value);
+           
+                if (oRegistro.Telefono != txtTelefono.Text)
+                    oAuditor.GrabaAuditoria("Modifica Telefono", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Telefono, txtTelefono.Text);
+           
+                if (oRegistro.TipoAutenticacion.Trim() != ddlTipoAutenticacion.SelectedValue)
+                    oAuditor.GrabaAuditoria("Modifica Tipo Autenticacion", oRegistro.IdUsuario, oRegistro.Username, oRegistro.TipoAutenticacion, ddlTipoAutenticacion.SelectedValue);
             
-            if (oRegistro.Externo != chkExterno.Checked)
-                oAuditor.GrabaAuditoria("Modifica Externo", idUsuario, oRegistro.Username, oRegistro.Externo ? "Si":"No", chkExterno.Checked ? "Si":"No");
+                if (oRegistro.Username != txtUsername.Text)
+                    oAuditor.GrabaAuditoria("Modifica Username", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Username, txtUsername.Text);
+           
+                if (oRegistro.Administrador != chkAdministrador.Checked)
+                    oAuditor.GrabaAuditoria("Modifica Administrador", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Administrador ? "Si" : "No", chkAdministrador.Checked ? "Si" : "No");
+           
+                if (oRegistro.IdArea.ToString() != ddlArea.SelectedValue)
+                {
+                    string nombreArea = "";
+                    if (oRegistro.IdArea != 0)
+                    {
+                        Area oArea = new Area();
+                        oArea = (Area)oArea.Get(typeof(Area), oRegistro.IdArea);
+                        nombreArea = oArea.Nombre;
+                    }
+                    else nombreArea = "Todas";
 
-             if (oRegistro.RequiereCambioPass != chkRequiereContrasenia.Checked)
-                oAuditor.GrabaAuditoria("Modifica Requiere Contraseña", idUsuario, oRegistro.Username, oRegistro.RequiereCambioPass ? "Si":"No", chkRequiereContrasenia.Checked ? "Si":"No");
+                    oAuditor.GrabaAuditoria("Modifica Area", oRegistro.IdUsuario, oRegistro.Username, nombreArea, ddlArea.SelectedItem.Text);
+                }
 
+                if (oRegistro.IdPerfil.IdPerfil.ToString() != ddlPerfil.SelectedValue)
+                    oAuditor.GrabaAuditoria("Modifica Perfil", oRegistro.IdUsuario, oRegistro.Username, oRegistro.IdPerfil.Nombre, ddlPerfil.SelectedItem.Text);
+
+                if (ddlEfectorDestino.SelectedValue != "" && oRegistro.IdEfectorDestino.IdEfector.ToString() != ddlEfectorDestino.SelectedValue)
+                    oAuditor.GrabaAuditoria("Modifica Laboratorio Destino", oRegistro.IdUsuario, oRegistro.Username, oRegistro.IdEfectorDestino.Nombre, ddlEfectorDestino.SelectedItem.Text);
+
+                if (oRegistro.Activo != chkActivo.Checked)
+                    oAuditor.GrabaAuditoria("Modifica Activo", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Activo ? "Si":"No", chkActivo.Checked ? "Si":"No");
             
+                if (oRegistro.Externo != chkExterno.Checked)
+                    oAuditor.GrabaAuditoria("Modifica Externo", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Externo ? "Si":"No", chkExterno.Checked ? "Si":"No");
+
+                 if (oRegistro.RequiereCambioPass != chkRequiereContrasenia.Checked)
+                    oAuditor.GrabaAuditoria("Modifica Requiere Contraseña", oRegistro.IdUsuario, oRegistro.Username, oRegistro.RequiereCambioPass ? "Si":"No", chkRequiereContrasenia.Checked ? "Si":"No");
+
+                }
         }
         #endregion
 
