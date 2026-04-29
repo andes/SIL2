@@ -2124,7 +2124,6 @@
     <Content Include="Estadisticas\ReportePorResultadoSivila.aspx" />
     <Content Include="Estadisticas\ReportePorResultadoTexto.aspx" />
     <Content Include="Estadisticas\ResultadoDefault.aspx" />
-    <Content Include="Estadisticas\ResultadosaSisa.aspx" />
     <Content Include="Estadisticas\SinDatos.aspx" />
     <Content Include="Estadisticas\Turnos.aspx" />
     <Content Include="Global.asax" />
@@ -4854,13 +4853,6 @@
     <Compile Include="Estadisticas\ResultadoDefault.aspx.designer.cs">
       <DependentUpon>ResultadoDefault.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Estadisticas\ResultadosaSisa.aspx.cs">
-      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Estadisticas\ResultadosaSisa.aspx.designer.cs">
-      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Estadisticas\SinDatos.aspx.cs">
       <DependentUpon>SinDatos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4946,6 +4938,12 @@
     </Compile>
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Horizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo2Horizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
