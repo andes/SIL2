@@ -881,6 +881,7 @@ namespace Business
 
         public static void ExportDataTableToXlsx(DataTable dataTable, string filename)
         {
+            //Version final 29/4/26
             // ⚠️ Si usas EPPlus v5.x o superior, descomenta esta línea:
             // OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
@@ -925,8 +926,9 @@ namespace Business
                             }
 
                             // Detectar fechas
-                            if (valor is DateTime dt)
+                            if (valor != null && valor.GetType() == typeof(DateTime))
                             {
+                                DateTime dt = (DateTime)valor;
                                 worksheet.Cells[filaExcel, colExcel].Value = dt;
                                 worksheet.Cells[filaExcel, colExcel].Style.Numberformat.Format = "dd/MM/yyyy";
                                 continue;
