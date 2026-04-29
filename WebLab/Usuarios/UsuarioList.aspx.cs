@@ -118,9 +118,14 @@ namespace WebLab.Usuarios
              
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
             if   (nivelcentral)
-               ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
+               ddlEfector.Items.Insert(0, new ListItem("--Seleccione un efector--", "0"));
 
-            m_ssql = @"SELECT idPerfil, nombre FROM Sys_Perfil with (nolock) ORDER BY nombre";
+            m_ssql = @"SELECT distinct P.idperfil, P.nombre FROM sys_usuario AS U with (nolock) 
+                            INNER JOIN Sys_Perfil AS P with (nolock)  ON P.idPerfil=U.idPerfil
+                      where U.idperfil in (select idusuario FROM Sys_UsuarioEfector WHERE idefector=" + oUser.IdEfector.IdEfector.ToString() + @")
+                    --incluir Admin externo
+                    or P.idPerfil in (SELECT idperfil FROM Sys_Usuario WHERE idEfectorDestino=" + oUser.IdEfector.IdEfector.ToString() + @" AND activo=1)
+                    ORDER BY nombre";
             oUtil.CargarCombo(ddlPerfil, m_ssql, "idPerfil", "nombre");
             ddlPerfil.Items.Insert(0, new ListItem("Todos", "0"));
 

@@ -380,6 +380,13 @@ namespace WebLab
 
         private bool MostrarTerminosCondiciones(Usuario oUser)
         {
+            /*
+             PARAMETRIZACION:
+             Cantidad X de dias
+                > 0 --> Muestra "Terminos y Condiciones" dado X dias
+               == 0 --> Muestra Siempre "Terminos y Condiciones"
+                < 0 --> NO muestra "Terminos y Condiciones"
+             */
             int dias = Convert.ToInt32(ConfigurationManager.AppSettings["DiasTerminosCondiciones"]);
             if(dias > 0)
             {
@@ -396,8 +403,8 @@ namespace WebLab
             }
             else
             {
-               // ScriptManager.RegisterStartupScript(this, this.GetType(), "error", "alert('❌ No hay dias definidos para los terminos y condiciones');", true);
-                return true; 
+               if(dias == 0) return true;
+                else return false;
             }
             
           
