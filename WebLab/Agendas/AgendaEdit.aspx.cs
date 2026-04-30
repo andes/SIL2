@@ -1,7 +1,14 @@
-﻿using System;
+﻿using Business;
+using Business.Data;
+using Business.Data.Laboratorio;
+using NHibernate;
+using NHibernate.Expression;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -10,12 +17,6 @@ using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
-using Business;
-using Business.Data.Laboratorio;
-using Business.Data;
-using NHibernate;
-using NHibernate.Expression;
-using System.Data.SqlClient;
 
 namespace WebLab.Agendas
 {
@@ -72,8 +73,16 @@ namespace WebLab.Agendas
             {
                 ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString();
                 cboTipoServicio.SelectedValue = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
+                
                 txtFechaDesde.Value = oRegistro.FechaDesde.ToShortDateString();
                 txtFechaHasta.Value = oRegistro.FechaHasta.ToShortDateString();
+
+                //Por defecto los items se los carga con cboTipoServicio.SelectedValue = 1
+                //Por eso cuando el item no es LABORATORIO no trae la Practica porque no es de tipo 1
+                if (cboTipoServicio.SelectedValue != "1")
+                {
+                    CargarItems(); //Lo recargo con el cboTipoServicio de la agenda
+                }
                 ddlItem.SelectedValue = oRegistro.IdItem.ToString();
 
                 AgendaDia oItem = new AgendaDia();
@@ -306,6 +315,23 @@ namespace WebLab.Agendas
                 if (Request["id"] != null) //Sacar el id de la agenda si es modificacion
                     crit.Add(Expression.Not(Expression.Eq("IdAgenda", int.Parse(Request["id"]))));
 
+                // validar días seleccionados
+                List<int> diasSeleccionados = new List<int>();
+                for (int i=0; i<cklDias.Items.Count; i++)
+                {
+                    if (cklDias.Items[i].Selected) diasSeleccionados.Add(i + 1);
+                }
+                
+                string dias = string.Join(",", diasSeleccionados);
+
+                crit.Add(Expression.Sql(
+                    @"exists (
+                        select 1
+                        from LAB_AgendaDia D
+                        where D.idAgenda = {alias}.idAgenda
+                        and D.dia in (" + dias + @")
+                    )"
+                 ));
                 IList items = crit.List();
 
                 if (items.Count > 0)
