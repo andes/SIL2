@@ -24,7 +24,7 @@
 				<td colspan="2" >
                     <asp:DropDownList ID="ddlTipoServicio" runat="server" class="form-control input-sm" 
                         ToolTip="Seleccione el servicio" AutoPostBack="True" 
-                        onselectedindexchanged="ddlTipoServicio_SelectedIndexChanged">
+                        onselectedindexchanged="ddlTipoServicio_SelectedIndexChanged" tabindex="1">
                     </asp:DropDownList>
                             </td>
 
@@ -32,12 +32,12 @@
                 <td colspan="2" >
                     <asp:DropDownList ID="ddlEfectorSolicitante" runat="server" class="form-control input-sm" 
                         ToolTip="Seleccione un efector" AutoPostBack="True" 
-                        onselectedindexchanged="ddlEfectorSolicitante_SelectedIndexChanged">
+                        onselectedindexchanged="ddlEfectorSolicitante_SelectedIndexChanged" tabindex="2">
                     </asp:DropDownList>
                             </td>
 				<td align="right" style="width: 134px" >
                                     <asp:Button ID="btnAgregar" runat="server" onclick="btnAgregar_Click" 
-                                        Text="Agregar" Font-Size="10pt"  CssClass="btn btn-primary" Width="100px" />
+                                        Text="Agregar" Font-Size="10pt"  CssClass="btn btn-primary" Width="100px" tabindex="3"/>
                 </td>
 			</tr>
 			

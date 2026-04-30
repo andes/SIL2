@@ -153,7 +153,8 @@ namespace WebLab.Agendas
 	                    ") or (E.idEfector= " + oUser.IdEfector.IdEfector.ToString() + @") order by nombre ";
            
             oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre");
-            ddlEfectorSolicitante.Items.Insert(0, new ListItem("Todos", "0"));
+            if(ddlEfectorSolicitante.Items.Count > 1)
+                ddlEfectorSolicitante.Items.Insert(0, new ListItem("Todos", "0"));
 
             m_ssql = null;
             oUtil = null;
