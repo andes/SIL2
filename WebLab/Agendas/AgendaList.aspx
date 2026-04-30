@@ -35,6 +35,14 @@
                         onselectedindexchanged="ddlEfectorSolicitante_SelectedIndexChanged" tabindex="2">
                     </asp:DropDownList>
                             </td>
+
+                <td class="myLabelIzquierda" style="width: 120px" >    Efector Solicitante:</td>
+                <td colspan="2" >
+                    <asp:DropDownList ID="ddlEfectorSolicitante" runat="server" class="form-control input-sm" 
+                        ToolTip="Seleccione un efector" AutoPostBack="True" 
+                        onselectedindexchanged="ddlEfectorSolicitante_SelectedIndexChanged">
+                    </asp:DropDownList>
+                            </td>
 				<td align="right" style="width: 134px" >
                                     <asp:Button ID="btnAgregar" runat="server" onclick="btnAgregar_Click" 
                                         Text="Agregar" Font-Size="10pt"  CssClass="btn btn-primary" Width="100px" tabindex="3"/>
