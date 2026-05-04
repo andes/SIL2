@@ -3649,71 +3649,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
-        //private void CargarSolicitantesInternos()
-        //{
-        //    Utility oUtil = new Utility();      
-        //    ///Carga de combos de Medicos Solicitantes
-        //   string  m_ssql = "SELECT idProfesional, apellido + ' ' + nombre AS nombre FROM Sys_Profesional ORDER BY apellido, nombre ";
-        //    oUtil.CargarCombo(ddlEspecialista, m_ssql, "idProfesional", "nombre");
-        //    ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
-        //    ddlEspecialista.UpdateAfterCallBack = true;
-        //    //imgCrearSolicitante.Visible = false;
-        //    //imgCrearSolicitante.UpdateAfterCallBack = true;
-        //}
-
-        //private void CargarSolicitantesExternos(string m_solicitante)
-        //{
-        //    Utility oUtil = new Utility();            
-
-        //    ///Carga de combos de solicitantes expertos
-        //    string m_ssql = "select idSolicitanteExterno, apellido + ', ' + nombre as nombre from Lab_SolicitanteExterno where baja=0 order by apellido, nombre";
-        //    oUtil.CargarCombo(ddlEspecialista, m_ssql, "idSolicitanteExterno", "nombre");
-        //    ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
-        //    if (m_solicitante != "")                ddlEspecialista.SelectedValue = m_solicitante;
-        //    ddlEspecialista.UpdateAfterCallBack = true;
-        //    //imgCrearSolicitante.Visible = true;
-        //    //imgCrearSolicitante.UpdateAfterCallBack = true;
-        //}
-
-        //protected void btnGuardarSolicitante_Click(object sender, EventArgs e)
-        //{
-        //    if (Page.IsValid)
-        //    {
-        //        GuardarSolicitanteExterno();
-
-        //        LimpiarDatosSolicitante();
-        //        //Panel1.Visible = false;
-        //        //Panel1.UpdateAfterCallBack = true;
-        //    }
-        //}
-
-        //private void GuardarSolicitanteExterno()
-        //{
-        //    Usuario oUser = new Usuario();
-        //    SolicitanteExterno oRegistro = new SolicitanteExterno();
-        //    Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-        //    oRegistro.IdEfector = oC.IdEfector;
-        //    oRegistro.Matricula = txtMatricula.Text;
-        //    oRegistro.Apellido = txtApellidoSolicitante.Text;
-        //    oRegistro.Nombre = txtNombreSolicitante.Text;
-        //    oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-        //    oRegistro.FechaRegistro = DateTime.Now;
-        //    oRegistro.Save();
-        //    CargarSolicitantesExternos(oRegistro.IdSolicitanteExterno.ToString());
-        //}
-
-        //protected void btnCancelarSolicitante_Click(object sender, EventArgs e)
-        //{
-        //    LimpiarDatosSolicitante();
-
-        //}
-
-        //private void LimpiarDatosSolicitante()
-        //{
-        //    txtMatricula.Text = "";
-        //    txtApellidoSolicitante.Text = "";
-        //    txtNombreSolicitante.Text = "";
-        //}
+  
 
         protected void gvLista_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3859,18 +3795,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 if (oC.NomencladorDiagnostico == 0)
                 {
-                    //ICriteria crit = m_session.CreateCriteria(typeof(Cie10));
-                    //crit.Add(Expression.Sql(" Nombre like '%" + txtNombreDiagnostico.Text + "%' order by Nombre"));
-
-                    //IList items = crit.List();
-
-                    //foreach (Cie10 oDiagnostico in items)
-                    //{
-                    //    ListItem oDia = new ListItem();
-                    //    oDia.Text = oDiagnostico.Codigo + " - " + oDiagnostico.Nombre;
-                    //    oDia.Value = oDiagnostico.Id.ToString();
-                    //    lstDiagnosticos.Items.Add(oDia);
-                    //}
+                     
 
 
                     string m_strSQL = @"select id, codigo + ' -' + nombre from sys_cie10 (nolock) where  tipo='DIAG' and  Nombre like '%" + txtNombreDiagnostico.Text.Trim() + "%' order by Nombre";
@@ -4618,17 +4543,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
-        //private bool VerificarFechaPacienteMuestra()
-        //{
-        //    Paciente oPaciente = new Paciente();
-        //    oPaciente = (Paciente)oPaciente.Get(typeof(Paciente), int.Parse(HFIdPaciente.Value));
-
-        //    string tieneingreso = oPaciente.GetFechaProtocolosReciente(Request["idServicio"].ToString(),ddlMuestra.SelectedValue);
-        //    if (tieneingreso==txtFecha.Value) return false;
-        //    else return true;
-        //}
- 
-
+       
      
 
         private bool VerificarAnalisisComplejosContenidos(string listaCodigo)
@@ -4666,17 +4581,6 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
 
-        //protected void lnkReimprimirComprobante_Click(object sender, EventArgs e)
-        //{
-        //    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-        //    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));            
-
-        //    ////Imprimir Comprobante para el paciente
-        //    Imprimir(oRegistro);
-
-
-
-        //}
 
         protected void lnkReimprimirCodigoBarras_Click(object sender, EventArgs e)
         {
@@ -4752,15 +4656,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                     }
                 }
-            }
-                //if (avance == 1)
-                //{
-                //    ProtocoloNuevo = ProtocoloActual+1;
-                //}
-                //else  //retrocede                        
-                //    ProtocoloNuevo = ProtocoloActual - 1;
-
-            
+            }                           
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));

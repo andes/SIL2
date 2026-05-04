@@ -336,8 +336,11 @@
                             <asp:Label ID="lblDiagnostico" runat="server" Text=""  Font-Bold="True" 
                                 Font-Size="10pt"  ></asp:Label>                                                                                                               
                         </td>
-                        <td rowspan="2">
-                            <asp:Label ID="lblNroSISA" runat="server" class="label label-success" Font-Size="14px" Text="Label" Visible="true"></asp:Label>
+                        <td rowspan="2"> 
+                          
+                           <h5> <asp:Label  ID="lblCovid" runat="server" Font-Bold="True" Visible="false" ></asp:Label>&nbsp;</h5>  
+                              <asp:Label ID="lblNroSISA" runat="server" class="label label-success" Font-Size="12px" Text="Label" Visible="true"></asp:Label>  
+						   
                              </td>
 					</tr>
 						
@@ -354,6 +357,8 @@
                                 ></asp:Label> 
 						   
                             </td>
+                            	 
+                       
 					</tr>
 					</table>
                         </div>
@@ -368,10 +373,10 @@
                             <div >  
                   
                             
-                            <asp:Panel ID="pnlHC" runat="server" > 
+                         <%--   <asp:Panel ID="pnlHC" runat="server" > 
                   
                             </asp:Panel>
-						 
+						 --%>
 
    
         
@@ -380,7 +385,7 @@
         	<tr>
 						
 						<td  colspan="3" style="vertical-align: top">  
-                             <h4> <asp:Label  ID="lblCovid" runat="server" Visible="false" ></asp:Label>&nbsp;</h4>  
+                          
                              <h4> <asp:Label  ID="lblMuestra" runat="server" ></asp:Label></h4>  
                         <asp:Label CssClass="myLabelIzquierdaGde" ForeColor="Red" ID="lblEstadoProtocolo" Visible="false" runat="server" ></asp:Label>
 						     <asp:Panel ID="Panel1" runat="server"  Width="100%" BackColor="#F2F2F2"  > 
@@ -448,8 +453,8 @@
                                                                <asp:DropDownList ID="ddlItem" runat="server">
                                                                </asp:DropDownList>
                                                               
-                                                                <asp:Button ID="btnVerAntecendente" runat="server"  CssClass="myButtonGrisLittle"
-                                                                   onclick="btnVerAntecendente_Click" Text="Ver Antecedentes" Width="120px" />
+                                                             <%--   <asp:Button ID="btnVerAntecendente" runat="server"  CssClass="myButtonGrisLittle"
+                                                                   onclick="btnVerAntecendente_Click" Text="Ver Antecedentes" Width="120px" />--%>
                                                            </td>
                                                        </tr>
                                                        <tr>

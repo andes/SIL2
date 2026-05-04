@@ -124,11 +124,11 @@ namespace WebLab.Informes
 
             string m_ssql = @"	select idusuario, apellido + ' ' +nombre  as nombre 
                     from sys_usuario u with (nolock)
-                    where activo = 1
+                    where activo = 1 and username <>'adminapi'
                     and exists (select 1 from sys_usuarioefector e (nolock) where e.idusuario = u.idusuario and e.idEfector = " + oUser.IdEfector.IdEfector.ToString() + @") order by apellido, nombre";
             if (oUser.Administrador)
             {
-                m_ssql = @"	select idusuario, apellido + ' ' +nombre  as nombre  from sys_usuario u with (nolock) where activo = 1 order by apellido, nombre";
+                m_ssql = @"	select idusuario, apellido + ' ' +nombre  as nombre  from sys_usuario u with (nolock) where activo = 1  and username <>'adminapi' order by apellido, nombre";
             }
             oUtil.CargarCombo(ddlUsuario, m_ssql, "idusuario", "nombre", connReady);
             oUtil.CargarCombo(ddlUsuario2, m_ssql, "idusuario", "nombre", connReady);

@@ -188,46 +188,20 @@ namespace WebLab.ControlResultados
                 string m_parametro = " P.idTipoServicio=" + ddlServicio.SelectedValue;
                 m_parametro += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
                 m_parametro += " and P.idEfector =" + oUser.IdEfector.IdEfector.ToString();
-                //if (ddlArea.SelectedValue != "0") m_parametro += " AND i.idArea=" + ddlArea.SelectedValue;
-
-
-                //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-                //switch (oCon.TipoNumeracionProtocolo)// busqueda con autonumerico
-                //{
-                //    case 0:
-                //        {
+             
                             if (txtProtocoloDesde.Value != "") m_parametro += " And P.numero>=" + int.Parse(txtProtocoloDesde.Value);
                             if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numero<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //    case 1:
-                //        {
-                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroDiario>=" + int.Parse(txtProtocoloDesde.Value);
-                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroDiario<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //    case 2:
-                //        {
-                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroSector>=" + int.Parse(txtProtocoloDesde.Value);
-                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroSector<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-
-                //    case 3:
-                //        {
-                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroTipoServicio>=" + int.Parse(txtProtocoloDesde.Value);
-                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroTipoServicio<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //}
+              
 
 
                 if (ddlEfector.SelectedValue != "0") m_parametro += " AND P.idEfectorSolicitante=" + ddlEfector.SelectedValue;
                 if (ddlOrigen.SelectedValue != "0") m_parametro += " AND P.idOrigen=" + ddlOrigen.SelectedValue;
                 if (ddlPrioridad.SelectedValue != "0") m_parametro += " AND P.idPrioridad=" + ddlPrioridad.SelectedValue;
 
-            //    if (ddlSectorServicio.SelectedValue != "0") m_parametro += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
-
+          
                 m_parametro += " AND P.idSector in (" + getListaSectores() + ")";
                 string m_orden = " order by  P.numero ";
-                //string operacion = "Carga";
-                // string modoCarga = "HT";
+              
 
                 if (chkRecordarFiltro.Checked) AlmacenarSesion();
 

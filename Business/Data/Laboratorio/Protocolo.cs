@@ -11,6 +11,8 @@ using MathParser;
 using System.IO;
 using System.Drawing;
 using QRCoder;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Business.Data.Laboratorio
 {
@@ -1116,6 +1118,120 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             }
 
         }
+        public class ResultadoAnteriorDTO
+        {
+            public int IdSubItem { get; set; }
+            public string Resultado { get; set; }
+        }
+
+        public Dictionary<int, string> ObtenerResultadosAnteriores(string conexion)
+        {
+            int idPaciente = this.IdPaciente.IdPaciente;
+            int idProtocoloActual = this.IdProtocolo;
+            Dictionary<int, string> diccionario =
+                new Dictionary<int, string>();
+
+            string sql = @"
+    SELECT
+        dp.IdSubItem,
+        dp.ResultadoCar,
+        dp.ResultadoNum,
+        dp.FormatoValida,
+        dp.UnidadMedida
+    FROM LAB_DetalleProtocolo dp
+    INNER JOIN LAB_Protocolo p
+        ON p.IdProtocolo = dp.IdProtocolo
+    INNER JOIN
+    (
+        SELECT
+            dp2.IdSubItem,
+            MAX(dp2.IdDetalleProtocolo) IdDetalle
+        FROM LAB_DetalleProtocolo dp2
+        INNER JOIN LAB_Protocolo p2
+            ON p2.IdProtocolo = dp2.IdProtocolo
+        WHERE p2.IdPaciente = @idPaciente
+          AND p2.Baja = 0
+          AND p2.Estado > 0
+          AND p2.IdProtocolo < @idProtocoloActual
+          AND dp2.IdUsuarioValida > 0
+        GROUP BY dp2.IdSubItem
+    ) ult
+        ON ult.IdDetalle = dp.IdDetalleProtocolo
+    ";
+
+            Utility oUtil = new Utility();
+
+            using (SqlConnection conn =
+                new SqlConnection(conexion
+                ))
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@idPaciente", idPaciente);
+                    cmd.Parameters.AddWithValue("@idProtocoloActual", idProtocoloActual);
+
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            int idSubItem =
+                                Convert.ToInt32(dr["IdSubItem"]);
+
+                            string resultado = "";
+
+                            string resultadoCar =
+                                dr["ResultadoCar"] != DBNull.Value
+                                ? dr["ResultadoCar"].ToString().Trim()
+                                : "";
+
+                            if (resultadoCar == "")
+                            {
+                                decimal resultadoNum =
+                                    dr["ResultadoNum"] != DBNull.Value
+                                    ? Convert.ToDecimal(dr["ResultadoNum"])
+                                    : 0;
+
+                                string formatoValida =
+                                    dr["FormatoValida"] != DBNull.Value
+                                    ? dr["FormatoValida"].ToString()
+                                    : "0";
+
+                                string unidadMedida =
+                                    dr["UnidadMedida"] != DBNull.Value
+                                    ? dr["UnidadMedida"].ToString()
+                                    : "";
+
+                                string formato =
+                                    oUtil.Formato(formatoValida);
+
+                                resultado =
+                                    resultadoNum.ToString(
+                                        formato,
+                                        System.Globalization.CultureInfo.InvariantCulture);
+
+                                if (unidadMedida != "")
+                                    resultado += " " + unidadMedida;
+                            }
+                            else
+                            {
+                                resultado =
+                                    resultadoCar.Length > 10
+                                    ? resultadoCar.Substring(0, 10)
+                                    : resultadoCar;
+                            }
+
+                            if (!diccionario.ContainsKey(idSubItem))
+                                diccionario.Add(idSubItem, resultado);
+                        }
+                    }
+                }
+            }
+
+            return diccionario;
+        }
+
         /// <summary>
         /// Returns whether or not the object has changed it's values.
         /// </summary>
@@ -1252,13 +1368,11 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
         }
         public bool tieneAdjuntoProtocolo()
         {
-            ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloAnexo));
-        
+            ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloAnexo));        
             crit.Add(Expression.Eq("IdProtocolo", this));
             crit.Add(Expression.Eq("IdDetalleProtocolo", 0));
             IList lista = crit.List();
             if (lista.Count > 0)
-
                 return true;
             else
 
@@ -2161,8 +2275,9 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             {
                 crit.Add(Expression.Eq("ConResultado",false));
             }
+           
 
-            IList lista = crit.List();
+                        IList lista = crit.List();
  
             //if (lista.Count > 0)
             //{
@@ -2176,7 +2291,8 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                 if (oItem.SinInsumo) continue;
 
                 /*fin control insumo */
-                    ICriteria critFormula = m_session.CreateCriteria(typeof(Formula));
+
+                ICriteria critFormula = m_session.CreateCriteria(typeof(Formula));
                     critFormula.Add(Expression.Eq("IdItem", oDet.IdSubItem));
                     critFormula.Add(Expression.Eq("IdTipoFormula", 1));
                     critFormula.Add(Expression.Eq("Baja", false));
@@ -2751,33 +2867,57 @@ where a.idprotocolo=" + this.IdProtocolo.ToString()+
 
         public string GetPracticasPedidas()
         {
-            string s_practicas = "";
-            DetalleProtocolo oDetalle = new DetalleProtocolo();
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", this));
-            crit.Add(Expression.Eq("Informable", true));
-            crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
+            /* string s_practicas = "";
+             DetalleProtocolo oDetalle = new DetalleProtocolo();
+             ISession m_session = NHibernateHttpModule.CurrentSession;
+             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+             crit.Add(Expression.Eq("IdProtocolo", this));
+             crit.Add(Expression.Eq("Informable", true));
+             crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
 
-            IList items = crit.List();
-            string pivot = "";
-            string sDatos = "";
-            foreach (DetalleProtocolo oDet in items)
+             IList items = crit.List();
+             string pivot = "";
+             string sDatos = "";
+             foreach (DetalleProtocolo oDet in items)
+             {
+                 if (pivot != oDet.IdItem.Nombre)
+                 {
+                     if (sDatos == "")
+                         sDatos = oDet.IdItem.Nombre;
+                     else
+                         sDatos += " - " + oDet.IdItem.Nombre;
+                     //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
+                     pivot = oDet.IdItem.Nombre;
+                 }
+
+             }
+
+             s_practicas = sDatos;
+             return s_practicas;
+             */
+            ISession session = NHibernateHttpModule.CurrentSession;
+
+            IList practicas = session.CreateQuery(@"
+        select distinct i.Nombre
+        from DetalleProtocolo dp
+        inner join dp.IdItem i
+        where dp.IdProtocolo = :protocolo
+        and dp.Informable = 1
+        order by i.Nombre")
+                .SetEntity("protocolo", this)
+                .List();
+
+            string resultado = "";
+
+            foreach (object item in practicas)
             {
-                if (pivot != oDet.IdItem.Nombre)
-                {
-                    if (sDatos == "")
-                        sDatos = oDet.IdItem.Nombre;
-                    else
-                        sDatos += " - " + oDet.IdItem.Nombre;
-                    //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
-                    pivot = oDet.IdItem.Nombre;
-                }
-
+                if (resultado == "")
+                    resultado = item.ToString();
+                else
+                    resultado += " - " + item.ToString();
             }
 
-            s_practicas = sDatos;
-            return s_practicas;
+            return resultado;
         }
 
         public void ActualizarNumeroDesdeID()

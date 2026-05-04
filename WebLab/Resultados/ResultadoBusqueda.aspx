@@ -349,7 +349,7 @@
 						<td colspan="4">
 
 
-                       <h4>     <label class = "label label-danger" runat="server" visible="false" id="lblCaracterSisa" style="vertical-align: top"> Caracter-CoVid19: </label></h4>
+                       <h4>     <label class = "label label-danger" runat="server" visible="false" id="lblCaracterSisa" style="vertical-align: top"> Caracter-SNVS: </label></h4>
 					                <br />
     
                                             <asp:CheckBoxList ID="chkCaracterCovid" runat="server" RepeatDirection="Vertical" RepeatColumns="4">
