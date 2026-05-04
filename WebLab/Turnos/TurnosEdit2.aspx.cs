@@ -500,9 +500,22 @@ ORDER BY cantidad desc";
             //oUtil.CargarCombo(ddlDiagnostico, m_ssql, "id", "nombre");
             //ddlDiagnostico.Items.Insert(0, new ListItem("", "0"));
 
-          string  m_ssql = "SELECT  idSectorServicio,  prefijo + ' - ' + nombre   as nombre FROM LAB_SectorServicio with (nolock)  WHERE (baja = 0) order by nombre";
+            //string  m_ssql = "SELECT  idSectorServicio,  prefijo + ' - ' + nombre   as nombre FROM LAB_SectorServicio with (nolock)  WHERE (baja = 0) order by nombre";
+            //  oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre");
+            //  ddlSectorServicio.Items.Insert(0, new ListItem("-SIN IDENTIFICAR-", "0"));
+
+            string str_condicion = ")";
+            if (  (Request["Modifica"].ToString() == "1") && (Request["idTurno"] != null))
+                str_condicion = "  or exists (select 1 from LAB_Turno p WHERE p.idsector  = s.idSectorServicio and idTurno = " + Request["idTurno"].ToString() + ")) ";
+
+
+
+            string m_ssql = @"SELECT  s.idSectorServicio,  s.prefijo + ' - ' + s.nombre   as nombre FROM LAB_SectorServicio  S with (nolock) 
+                             WHERE (baja = 0)  
+                             and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector=" + oUser.IdEfector.IdEfector.ToString() + @" )" + str_condicion + @" order by nombre";
+
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre");
-            ddlSectorServicio.Items.Insert(0, new ListItem("-SIN IDENTIFICAR-", "0"));
+            ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
 
 
             //m_ssql = "SELECT idProfesional, apellido + ' ' + nombre AS nombre FROM Sys_Profesional   ORDER BY apellido, nombre ";

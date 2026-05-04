@@ -88,11 +88,7 @@ namespace WebLab.Resultados
             }       
         }
 
-        //protected void Page_UnLoad(object sender, EventArgs e)
-        //{  
-        //    oCr.Dispose();
-        //}
-
+       
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -115,7 +111,7 @@ namespace WebLab.Resultados
            
             pnlAntecedentes.Visible = false;
                     
-            pnlHC.Visible = true;
+         //   pnlHC.Visible = true;
             if (Session["validado"].ToString() == "1")
                 lblTitulo.Text = "HISTORIAL DE RESULTADOS";
             else
@@ -206,14 +202,9 @@ namespace WebLab.Resultados
             
             if (Request["Operacion"].ToString() == "HC")
                 m_strSQL += " order by idProtocolo desc "; // desde el mas reciente al mas antiguo.
-            else
-            {
-              //  Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-                //if (oC.TipoNumeracionProtocolo == 0)
-                    m_strSQL += " order by  idProtocolo ";
-                //if (oC.TipoNumeracionProtocolo == 1) m_strSQL += " order by  numerodiario ";
-                //if (oC.TipoNumeracionProtocolo == 2) m_strSQL += " order by prefijosector, numerosector ";
-            }
+            else                      
+                m_strSQL += " order by  idProtocolo ";
+              
     
 
             DataSet Ds = new DataSet();
@@ -273,18 +264,16 @@ namespace WebLab.Resultados
 
             if (oRegistro != null)
             {
-                //Configuracion oCon = new Configuracion();
-                //oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
-                //Image1.= oRegistro.getQRResultados(oCon);
-
+                
                 HFIdProtocolo.Value = p;
                 //Actualiza los datos de los objetos : alta o modificacion .                                        
                 lblEfector.Text = oRegistro.IdEfector.Nombre;
                 oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));
-                if (oRegistro.tieneAdjuntoProtocoloVisible())
-                { imgAdjunto.Visible = true; spanadjunto.Visible = true; }
-                else
-                { imgAdjunto.Visible = false; spanadjunto.Visible = false; }
+
+            
+                bool tieneAdjunto = oRegistro.tieneAdjuntoProtocoloVisible();
+                imgAdjunto.Visible = tieneAdjunto;
+                spanadjunto.Visible = tieneAdjunto;
 
 
                 if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) || (oRegistro.IdTipoServicio.IdTipoServicio == 5)) //Microbiologia
@@ -313,7 +302,7 @@ namespace WebLab.Resultados
                     lblCovid.Visible = true;
                     Caracter oCaracter = new Caracter();
                     oCaracter = (Caracter)oCaracter.Get(typeof(Caracter), oRegistro.IdCaracter);
-                    lblCovid.Text = "Clasificación Covid-19: " + oCaracter.Nombre;
+                    lblCovid.Text = "Clasificación SNVS: " + oCaracter.Nombre;
 
                     if (oRegistro.FechaInicioSintomas.Year != 1900)
                         lblCovid.Text = lblCovid.Text + " - F. Inicio Síntomas: " + oRegistro.FechaInicioSintomas.ToShortDateString();
@@ -368,28 +357,17 @@ namespace WebLab.Resultados
 
                 lblUsuario.Text = oRegistro.IdUsuarioRegistro.Apellido;
                 lblFechaRegistro.Text = oRegistro.FechaRegistro.ToShortDateString() + " " + oRegistro.FechaRegistro.ToShortTimeString();
-                //int len = oRegistro.FechaRegistro.ToString().Length - 11;
-                //lblHoraRegistro.Text = oRegistro.FechaRegistro.ToString().Substring(11, oRegistro.FechaRegistro.ToString().Length - 11);
+                
                 lblFecha.Text = oRegistro.Fecha.ToShortDateString();
                 lblProtocolo.Text = oRegistro.Numero.ToString();
 
-                //hplProtocolo.NavigateUrl = "../Protocolos/ProtocoloEdit2.aspx?idServicio=" + oRegistro.IdTipoServicio.IdTipoServicio.ToString()+ "&Operacion=Modifica&idProtocolo=" +oRegistro.IdProtocolo.ToString();
-
-                //if (oRegistro.IdEfector == oRegistro.IdEfectorSolicitante)
-                lblOrigen.Text = oRegistro.IdOrigen.Nombre;
+                                lblOrigen.Text = oRegistro.IdOrigen.Nombre;
                 //else
                 lblSolicitante.Text = oRegistro.IdEfectorSolicitante.Nombre;
                 if (oRegistro.MatriculaEspecialista != "-1")
                     lblMedico.Text = oRegistro.Especialista + " MP:" + oRegistro.MatriculaEspecialista;
-
-                //lblPrioridad.Text = oRegistro.IdPrioridad.Nombre;
-                //    if (oRegistro.IdPrioridad.Nombre == "URGENTE")
-                //    {
-                //        lblPrioridad.ForeColor = Color.Red;
-                //        lblPrioridad.Font.Bold = true;
-                //    }
-
-                //lblSector.Text = oRegistro.IdSector.Nombre;
+                               
+                
                 if (oRegistro.Sala != "") lblOrigen.Text += " Sala: " + oRegistro.Sala;
                 if (oRegistro.Cama != "") lblOrigen.Text += " Cama: " + oRegistro.Cama;
 
@@ -448,14 +426,12 @@ namespace WebLab.Resultados
            
 
         }
-
-
-
+       
 
         private void LlenarTabla(string p)
         {
-            //  SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;           
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            string conexion = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;            
+            SqlConnection conn = new SqlConnection(conexion); ///Performance: conexion de solo lectura
             DataSet Ds = new DataSet();            
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -467,13 +443,8 @@ namespace WebLab.Resultados
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
 
-            da.Fill(Ds);
-
-          
-            //int cantidadResultadosValidados = Ds.Tables[0].Rows.Count;
-            //if (cantidadResultadosValidados > 0)
-            
-            //{
+            da.Fill(Ds);          
+        
                 string s = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
 
 
@@ -544,26 +515,12 @@ namespace WebLab.Resultados
                 else
                     lblCargadoPor.Text = "ESTADO";
 
-                objCellPersona_TITULO.Controls.Add(lblCargadoPor);
-
-
-                /////observaciones
-                //if (Request["Operacion"].ToString() == "Valida")
-                //{
-                
-
+                objCellPersona_TITULO.Controls.Add(lblCargadoPor);                             
                 objFila_TITULO.Cells.Add(objCellAnalisis_TITULO);
-                objFila_TITULO.Cells.Add(objCellResultado_TITULO);
-            
-
-                
-
-                objFila_TITULO.Cells.Add(objCellValoresReferencia_TITULO);
-
-                
+                objFila_TITULO.Cells.Add(objCellResultado_TITULO);                            
+                objFila_TITULO.Cells.Add(objCellValoresReferencia_TITULO);                
                 objFila_TITULO.Cells.Add(objCellPersona_TITULO);
                 objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
-
                 objFila_TITULO.CssClass = "myLabelIzquierda";
                 objFila_TITULO.BackColor = Color.Gainsboro;
 
@@ -576,7 +533,41 @@ namespace WebLab.Resultados
 
                 int tablas = Ds.Tables.Count;
                 if (tablas > 0)
-                { 
+                {
+
+                ////Caro PF: Cache de resultado item
+               
+                ISession session = NHibernateHttpModule.CurrentSession;             
+                ///CARO PF: traer detalleprotocolos y derivaciones antes del for para no ir a la base N veces
+                var idsDetallesList = Ds.Tables[0].AsEnumerable()
+                .Select(r => r.Field<int>("idDetalleProtocolo"))
+                .ToList();
+
+                var detallesList = session.CreateCriteria(typeof(DetalleProtocolo))
+                .Add(Expression.In("IdDetalleProtocolo", idsDetallesList.ToArray()))
+                .List()
+                .Cast<DetalleProtocolo>()
+                .ToList();
+
+                var detallesDict = detallesList
+                    .ToDictionary(d => d.IdDetalleProtocolo);
+
+                // Traer todas las Derivaciones juntas
+                var derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                    .CreateAlias("IdDetalleProtocolo", "dp")
+                    .Add(Expression.In("dp.IdDetalleProtocolo", idsDetallesList.ToArray()))
+                    .List()
+                    .Cast<Derivacion>()
+                    .ToList();
+
+                var derivacionesDict = derivacionesList
+                    .ToDictionary(d => d.IdDetalleProtocolo.IdDetalleProtocolo);
+                /// CARO PF : fin 
+
+                Protocolo oRegistro = new Protocolo();
+                oRegistro = (Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(p));              
+                var resultadosAnteriores = oRegistro.ObtenerResultadosAnteriores(conexion);
+    
                 for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
                 {
                     //decimal m_minimoReferencia=-1;
@@ -630,35 +621,24 @@ namespace WebLab.Resultados
                     TableCell objCellPersona = new TableCell();
                     TableCell objCellObservaciones = new TableCell();
 
-
                     decimal x = 0;
-
-
 
                     if (m_area != pivot_Area) ///poner titulo del area
                     {
                         TableRow objRow = new TableRow();
                         TableCell objCell = new TableCell();
-                        Label lbl0 = new Label();
-                        //lbl0.ForeColor = Color
+                        Label lbl0 = new Label();                    
                         lbl0.Text = m_area.ToUpper();
                         lbl0.TabIndex = short.Parse("500");
                         lbl0.Font.Bold = true;
 
-
                         Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(lbl0);
                         objCell.Controls.Add(lbl0);
-                        //if (Request["Operacion"].ToString() == "HC")
-                        //    objCell.ColumnSpan = 8;
-                        //else
                         objCell.ColumnSpan = 8;
-
                         objRow.BackColor = Color.Beige;
                         objRow.HorizontalAlign = HorizontalAlign.Center;
-                        objRow.Cells.Add(objCell);
-                        //         objRow.CssClass = "myLabelIzquierda";
+                        objRow.Cells.Add(objCell);                        
                         tContenido.Controls.Add(objRow);
-
                         pivot_Area = m_area;
                     }
 
@@ -691,20 +671,14 @@ namespace WebLab.Resultados
                             lblSinMuestra.TabIndex = short.Parse("500");
                             lblSinMuestra.Text = "Sin Muestra";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
                             lblSinMuestra.Font.Italic = true;
-                            lblSinMuestra.ForeColor = Color.Blue;
-                            //     objCellResultado.ColumnSpan = 5;
+                            lblSinMuestra.ForeColor = Color.Blue;                        
                             objCellResultado.Controls.Add(lblSinMuestra);
                         }
                     }
-
-
-
                     Label lbl1 = new Label();
                     if (m_hijo == m_titulo) lbl1.Text = m_hijo;
                     else lbl1.Text = "&nbsp;&nbsp;&nbsp;" + m_hijo;
-
-
-
+                    
                     lbl1.TabIndex = short.Parse("500");
                     lbl1.ForeColor = Color.Black;
                     lbl1.Font.Size = FontUnit.Point(9);
@@ -717,6 +691,21 @@ namespace WebLab.Resultados
 
                     objCellAnalisis.Controls.Add(lbl1);
 
+
+                  /*  var row = Ds.Tables[0].Rows[i];
+                    int idDetalle = Convert.ToInt32(row["idDetalleProtocolo"]);
+                    */
+                    DetalleProtocolo oDetalle;
+                    detallesDict.TryGetValue(i_iddetalleProtocolo, out oDetalle);
+
+                    Derivacion oDeriva;
+                    derivacionesDict.TryGetValue(i_iddetalleProtocolo, out oDeriva);
+                    //fin 
+                    Item oItem = new Item();
+                    oItem = oDetalle.IdSubItem; // (Item)oItem.Get(typeof(Item), m_idItem);
+
+
+                    /*antes /
                     DetalleProtocolo oDetalle = new DetalleProtocolo();
                     oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
 
@@ -725,7 +714,7 @@ namespace WebLab.Resultados
 
                     //DetalleProtocolo oDetalle = new DetalleProtocolo();
                     //oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-
+                    fin antes*/
 
                   //  bool es_Bacteriologia = false;
                     string observacionesDetalle = "";
@@ -733,11 +722,12 @@ namespace WebLab.Resultados
                     /// 
                     observacionesDetalle = oDetalle.Observaciones;
                 //    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
+
+                    /*antes
                     Derivacion oDeriva = new Derivacion();
                     oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
-                    if (oDeriva != null)  /// esta pendiente
-                                       
-                    //if (oItem.IdEfectorDerivacion != oItem.IdEfector) //es derivado
+                    fin antes*/
+                    if (oDeriva != null)  /// esta pendiente                                                           
                     {
                         Label lblDerivacion = new Label();
                         lblDerivacion.Font.Italic = true;
@@ -745,41 +735,11 @@ namespace WebLab.Resultados
                         //Verifica el estado de la derivacion
                         string estadoDerivacion = "";
 
-                        //if (i_iddetalleProtocolo != 0)
-                        //{
-                        //    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                        //    oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-
-
-
-                        //    observacionesDetalle = oDetalle.Observaciones;
-                        //    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
-                        //    Derivacion oDeriva = new Derivacion();
-                        //    oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
-                        //    if (oDeriva == null)  /// esta pendiente
-                        //    {
-                        //        estadoDerivacion = "Pendiente de Derivacion";
-                        //        lblDerivacion.ForeColor = Color.Red;
-                        //    }
-                        //    else
-                        //    {
-                        /* if (oDeriva.Estado == 0) /// pendiente                            
-                         {
-                             estadoDerivacion = "Pendiente de Derivacion";
-                             lblDerivacion.ForeColor = Color.Red;
-                         }
-                         if (oDeriva.Estado == 1) /// enviado
-                             estadoDerivacion = oDetalle.ResultadoCar; //  "Derivado: " + oItem.GetEfectorDerivacion(oCon.IdEfector);
-                         if (oDeriva.Estado == 2) /// no enviado
-                             estadoDerivacion = oDetalle.ResultadoCar; //" No Derivado. " + oDeriva.Observacion;
-                         lblDerivacion.Font.Bold = true;*/
+                   
                         estadoDerivacion = oDetalle.ResultadoCar;
                         if (oDeriva.Resultado != "")
                             estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado;
-
-                        //}
-
-                    //}
+                        
                         lblDerivacion.Text = estadoDerivacion;
                         
                         objCellResultado.ColumnSpan = 1;
@@ -810,9 +770,7 @@ namespace WebLab.Resultados
                                             //if (Request["Operacion"].ToString() != "HC")
                                             if (m_conResultado!= "False")
                                             {
-                                            //    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                                            //    oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-
+                                            
                                                 Anthem.GridView Gd1 = new Anthem.GridView();
                                                 Gd1.ID = m_idItem.ToString();
                                                 ProtocoloLuminex oFusion = new ProtocoloLuminex();
@@ -846,11 +804,8 @@ namespace WebLab.Resultados
 
                                             if (i_iddetalleProtocolo != 0) 
                                             {
-                                                if (i_iddetalleProtocolo != 9999999)
-                                                {
-                                                    //DetalleProtocolo oDetalle = new DetalleProtocolo();
-                                                    //oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-
+                                                //if (i_iddetalleProtocolo != 9999999)
+                                                //{                                            
                                                     m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
                                                     if (Observaciones != "")
                                                     {
@@ -874,31 +829,32 @@ namespace WebLab.Resultados
 
                                                     if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
                                                     { 
-                                                    string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
-                                                    if (resultadoAnterior != "")
-                                                    {
+                                                    //string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+
+                                                        string resultadoAnterior = "";
+
+                                                        if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
+                                                        {
+                                                            resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
+                                                        }
+
+                                                        if (resultadoAnterior != "")
+                                                         {
                                                         hayAntecedente = true;
                                                         Label olblResultadoAnterior = new Label();
                                                         olblResultadoAnterior.TabIndex = short.Parse("500");
                                                         olblResultadoAnterior.Font.Size = FontUnit.Point(8);
                                                         olblResultadoAnterior.CssClass = "myLittleLink";
                                                         olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,540); return false");
-                                                        olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";
-                                                        //olblResultadoAnterior.ForeColor = Color.Green;
-                                                        olblResultadoAnterior.Width = Unit.Pixel(20);
+                                                        olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";                                                        
+                                                        olblResultadoAnterior.Width = Unit.Pixel(30);
                                                         olblResultadoAnterior.Text = resultadoAnterior;
-
                                                      
                                                         objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
                                                    
-                                                        //Button oB = new Button();
-                                                        //oB.Text = "R.ANT";
-                                                        //oB.OnClientClick = "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + "); return false";
-                                                        //objCellResultadoAnterior.Controls.Add(oB);
-                                                    }
+                                                         }
 
-                                                    }
-                                                    // if (VerificaValorReferencia(m_minimoReferencia, m_maximoReferencia, x, m_tipoValorReferencia))
+                                                    }                                                    
                                                     if (oDetalle.VerificaValorReferencia(x))
                                                         olbl.ForeColor = Color.Black;
                                                     else
@@ -924,7 +880,7 @@ namespace WebLab.Resultados
                                                   
 
 
-                                                        if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
+                                                        if (oDetalle.tieneAdjuntoVisible())//Caro: falta mejorar esto
                                                         {
                                                         imgAdj = true;
                                                             btnImagen.TabIndex = short.Parse("500");
@@ -942,22 +898,15 @@ namespace WebLab.Resultados
 
 
 
-                                                }
+                                                //}
 
                                             }
                                             objCellResultado.Controls.Add(olbl);
                                             if (imgAdj)objCellResultado.Controls.Add(btnImagen);
                                             ///etiqueta de unidad de medida
-                                            Label olblUM = new Label();
-                                            
-
-                                            //     olblUM.ID = "UM" + m_idItem.ToString();
+                                            Label olblUM = new Label();                                                                                        
                                             olblUM.Font.Size = FontUnit.Point(7);
-                                            olblUM.Text = unMedida;
-
-                                            
-                                           
-                             
+                                            olblUM.Text = unMedida;                                                                                                                    
                                                 
                                             objCellResultado.Controls.Add(olblUM);
                                             olblUM.Visible = false;
@@ -986,11 +935,7 @@ namespace WebLab.Resultados
 
                                             }
 
-                                            ///IMAGENES ADJUNTAS                                              
-
-
-
-                                           
+                                            ///IMAGENES ADJUNTAS                                                                                         
 
                                             // fin de imagenes adjuntas
 
@@ -998,15 +943,22 @@ namespace WebLab.Resultados
                                         
                                             if ((i_iddetalleProtocolo != 0) )
                                             {
-                                                if (i_iddetalleProtocolo != 9999999)
-                                                {
+                                                //if (i_iddetalleProtocolo != 9999999)
+                                                //{
                                                     //DetalleProtocolo oDetalle = new DetalleProtocolo();
                                                     //oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
 
                                                     m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
                                                     if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
                                                     {
-                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                        //string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                        string resultadoAnterior = "";
+
+                                                        if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
+                                                        {
+                                                            resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
+                                                        }
+
                                                         if (resultadoAnterior != "")
                                                         {
                                                             hayAntecedente = true;
@@ -1017,32 +969,25 @@ namespace WebLab.Resultados
                                                             olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,450); return false");
                                                             olblResultadoAnterior.ToolTip = "Haga clic aqui para ver más datos.";
                                                             //olblResultadoAnterior.ForeColor = Color.Green;
-                                                            olblResultadoAnterior.Width = Unit.Pixel(20);
+                                                            olblResultadoAnterior.Width = Unit.Pixel(30);
                                                             olblResultadoAnterior.Text = resultadoAnterior;
-
                                                             objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
-                                                            //Button oB = new Button();
-                                                            //oB.Text = "R.ANT";
-                                                            //oB.OnClientClick = "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + "); return false";
-                                                            //objCellResultadoAnterior.Controls.Add(oB);
+                                                           
                                                         }
                                                     }
 
                                                     if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
-                                                    {
-                                                        //   ImageButton btnImagen = new ImageButton();
+                                                    {                                                        
                                                         btnImagen.TabIndex = short.Parse("500");
                                                         btnImagen.ID = "IMG" + oDetalle.IdDetalleProtocolo.ToString();
                                                         btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
-
                                                         btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
-
 
                                                         btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
                                                         objCellResultado.Controls.Add(btnImagen);
                                                     }
                                                 }
-                                            }
+                                            //}
 
                                         } // fin case 1
                                         break;
@@ -1050,39 +995,26 @@ namespace WebLab.Resultados
 
                                 }//fin swicth
 
-
-
-                                Label lblPersona = new Label();
-                                //    lblPersona.TabIndex = short.Parse("500");
-                                lblPersona.Text = m_usuariovalida; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();      
-
-
+                                Label lblPersona = new Label();                                
+                                lblPersona.Text = m_usuariovalida; 
 
                                 /// 
                                 lblPersona.Font.Size = FontUnit.Point(7);
                                 lblPersona.Font.Italic = true;
                                 lblPersona.Text = m_usuariovalida ;
-
-                                objCellPersona.Controls.Add(lblPersona);
-
-                                
+                                objCellPersona.Controls.Add(lblPersona);                                
                             }
 
 
-                            Label lblValoresReferencia = new Label();
-
-                            //     lblValoresReferencia.ID = "VR" + m_idItem.ToString();
+                            Label lblValoresReferencia = new Label();                            
                             lblValoresReferencia.Font.Italic = true;
                             lblValoresReferencia.Font.Size = FontUnit.Point(8);
                             if (valorReferencia != "")
                             {// muestra el valor guardado 
                                 lblValoresReferencia.Text = valorReferencia;
-                                if (m_metodo != "")
-                                    // lblValoresReferencia.Text += " |Método:" + m_metodo;
+                                if (m_metodo != "")                            
                                     lblValoresReferencia.Text += Environment.NewLine + m_metodo;
-                            }
-                            //else
-                            //    lblValoresReferencia.Text = oDetalle.CalcularValoresReferencia();                                                                                      
+                            }                            
 
                             objCellValoresReferencia.Controls.Add(lblValoresReferencia);
                         }
@@ -1091,30 +1023,21 @@ namespace WebLab.Resultados
 
                     ///Definir los anchos de las columnas
                     objCellAnalisis.Width = Unit.Percentage(30);
-                    objCellResultado.Width = Unit.Percentage(30);
+                    objCellResultado.Width = Unit.Percentage(25);
                     objCellValoresReferencia.Width = Unit.Percentage(20);
                     //            objCellValida.Width = Unit.Percentage(5);
-                    objCellPersona.Width = Unit.Percentage(20);
-
+                    objCellPersona.Width = Unit.Percentage(15);
+                    objCellResultadoAnterior.Width = Unit.Percentage(10);
 
 
                     ///////////////////////
                     ///agrega a la fila cada una de las celdas
                     objFila.Cells.Add(objCellAnalisis);
-                    objFila.Cells.Add(objCellResultado);
-                    
-                    //if (Request["Operacion"].ToString() != "HC") objFila.Cells.Add(objCellUnMedida);
-
-                    objFila.Cells.Add(objCellValoresReferencia);
-
-                    //if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control")) objFila.Cells.Add(objCellValida);
-
+                    objFila.Cells.Add(objCellResultado);                                        
+                    objFila.Cells.Add(objCellValoresReferencia);                    
                     objFila.Cells.Add(objCellPersona);
-
                     objFila.Cells.Add(objCellResultadoAnterior);
-                    //if (Request["Operacion"].ToString() != "HC") objFila.Cells.Add(objCellObservaciones);
-
-                    //////
+                                        //////
                     Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
 
                     //'añadimos la fila a la tabla
@@ -1142,11 +1065,7 @@ namespace WebLab.Resultados
 
             da.Fill(Ds);
 
-
-            //int cantidadResultadosValidados = Ds.Tables[0].Rows.Count;
-            //if (cantidadResultadosValidados > 0)
-
-            //{
+            
             string s = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
 
 
@@ -1196,43 +1115,13 @@ namespace WebLab.Resultados
           
                 for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
                 {
-                    //decimal m_minimoReferencia=-1;
-                    //decimal m_maximoReferencia=-1;
-                  //  string valorReferencia = Ds.Tables[0].Rows[i].ItemArray[11].ToString();
-                 //   int m_idItem = int.Parse(Ds.Tables[0].Rows[i].ItemArray[2].ToString());
-               //     int m_idMecanismo = int.Parse(Ds.Tables[0].Rows[i].ItemArray[3].ToString());
-                    //   string unMedida = Ds.Tables[0].Rows[i].ItemArray[8].ToString();
-                    //    string Observaciones = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
+                  
                     int tiporesultado = (int.Parse(Ds.Tables[0].Rows[i].ItemArray[4].ToString()));
-              //      int tipodeterminacion = int.Parse(Ds.Tables[0].Rows[i].ItemArray[6].ToString());
-                //    int estado = int.Parse(Ds.Tables[0].Rows[i].ItemArray[9].ToString());
-                 //   string m_metodo = Ds.Tables[0].Rows[i].ItemArray[10].ToString();
-
-                //    string m_observacionReferencia = Ds.Tables[0].Rows[i].ItemArray[13].ToString();
-                //    string m_usuarioCarga = Ds.Tables[0].Rows[i].ItemArray[14].ToString();
-                //    string m_trajoMuestra = Ds.Tables[0].Rows[i].ItemArray[15].ToString();
-                 //   string m_tipoValorReferencia = Ds.Tables[0].Rows[i].ItemArray[16].ToString();
-                //    string m_conResultado = Ds.Tables[0].Rows[i].ItemArray[17].ToString();
-                 //   string m_formatoDecimal = Ds.Tables[0].Rows[i].ItemArray[18].ToString();
-                    //string m_formato0 = Ds.Tables[0].Rows[i].ItemArray[19].ToString();
-                    //string m_formato1 = Ds.Tables[0].Rows[i].ItemArray[20].ToString();
-                    //string m_formato2 = Ds.Tables[0].Rows[i].ItemArray[21].ToString();
-                    //string m_formato3 = Ds.Tables[0].Rows[i].ItemArray[22].ToString();
-                    //string m_formato4 = Ds.Tables[0].Rows[i].ItemArray[23].ToString();
-                    //string m_resultadoDefecto = Ds.Tables[0].Rows[i].ItemArray[24].ToString();
-              //      string m_usuariocontrol = Ds.Tables[0].Rows[i].ItemArray[25].ToString();
+            
                     string m_usuariovalida = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
-                  //  int i_iddetalleProtocolo = int.Parse(Ds.Tables[0].Rows[i].ItemArray[26].ToString());
-                    //string m_codificaPaciente = Ds.Tables[0].Rows[i].ItemArray[27].ToString();
-
-               //     string m_estadoObservacion = Ds.Tables[0].Rows[i].ItemArray[29].ToString();
+                
                     string m_area = "ATB";//Ds.Tables[0].Rows[i].ItemArray[30].ToString();
-
-                    //if (m_codificaPaciente == "True")
-                    //{
-                    //    lblPaciente.Visible = false;
-                    //    lblCodigoPaciente.Visible = true;
-                    //}
+ 
 
 
                     m_hijo = Ds.Tables[0].Rows[i].ItemArray[2].ToString();
@@ -1257,24 +1146,19 @@ namespace WebLab.Resultados
                     {
                         TableRow objRow = new TableRow();
                         TableCell objCell = new TableCell();
-                        Label lbl0 = new Label();
-                        //lbl0.ForeColor = Color
+                        Label lbl0 = new Label();                        
                         lbl0.Text = m_area.ToUpper();
                         lbl0.TabIndex = short.Parse("500");
                         lbl0.Font.Bold = true;
 
 
                         Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(lbl0);
-                        objCell.Controls.Add(lbl0);
-                        //if (Request["Operacion"].ToString() == "HC")
-                        //    objCell.ColumnSpan = 8;
-                        //else
+                        objCell.Controls.Add(lbl0);                        
                         objCell.ColumnSpan = 8;
 
                         objRow.BackColor = Color.Beige;
                         objRow.HorizontalAlign = HorizontalAlign.Center;
-                        objRow.Cells.Add(objCell);
-                        //         objRow.CssClass = "myLabelIzquierda";
+                        objRow.Cells.Add(objCell);                        
                         tContenido.Controls.Add(objRow);
 
                         pivot_Area = m_area;
@@ -1317,45 +1201,26 @@ namespace WebLab.Resultados
                     lbl1.TabIndex = short.Parse("500");
                     lbl1.ForeColor = Color.Black;
                     lbl1.Font.Size = FontUnit.Point(9);
-                    //if (tipodeterminacion != 0)
-                    //{
+                    
                         lbl1.Font.Bold = true;
                         lbl1.Font.Italic = true;
                         objCellAnalisis.ColumnSpan = 1;
-                    //}
+                    
 
                     objCellAnalisis.Controls.Add(lbl1);
 
-              
-                            //if (tipodeterminacion == 0) // si es una determinacion simple
-                            //{
                               
 
                                             Label olbl = new Label();
                                             olbl.Font.Bold = true;
                                             olbl.Font.Size = FontUnit.Point(9);
-                                            //if (m_conResultado == "0")
-                                            //    olbl.Text = "";
-                                            //else
                                                 olbl.Text = Ds.Tables[0].Rows[i].ItemArray[3].ToString();
-
-                                            //if (Observaciones != "")
-                                            //{
-                                            //    if (olbl.Text == "")
-                                            //        olbl.Text += Observaciones;
-                                            //    else
-                                            //        olbl.Text += Environment.NewLine + " " + Observaciones;
-
-                                            //}
 
                                           
 
                                             objCellResultado.Controls.Add(olbl);
 
-
-                        //DetalleProtocolo oDetalle = new DetalleProtocolo();
-                        //oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-
+                    
                         m_usuariovalida += " "; //+ fefecha validad
                                                     
                                            
@@ -1364,8 +1229,7 @@ namespace WebLab.Resultados
 
 
 
-                                Label lblPersona = new Label();
-                                //    lblPersona.TabIndex = short.Parse("500");
+                                Label lblPersona = new Label();                                
                                 lblPersona.Text = m_usuariovalida; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();      
 
 
@@ -1378,27 +1242,7 @@ namespace WebLab.Resultados
                                 objCellPersona.Controls.Add(lblPersona);
 
 
-                          
-
-                        ///no se usa valor referencia con los ATB
-                            //Label lblValoresReferencia = new Label();
-
-                            ////     lblValoresReferencia.ID = "VR" + m_idItem.ToString();
-                            //lblValoresReferencia.Font.Italic = true;
-                            //lblValoresReferencia.Font.Size = FontUnit.Point(8);
-                            //if (valorReferencia != "")
-                            //{// muestra el valor guardado 
-                            //    lblValoresReferencia.Text = valorReferencia;
-                            //    if (m_metodo != "")
-                            //        // lblValoresReferencia.Text += " |Método:" + m_metodo;
-                            //        lblValoresReferencia.Text += Environment.NewLine + m_metodo;
-                            //}
-                            ////else
-                            ////    lblValoresReferencia.Text = oDetalle.CalcularValoresReferencia();                                                                                      
-
-                            //objCellValoresReferencia.Controls.Add(lblValoresReferencia);
-                        //}
-                    
+                           
 
 
                     ///Definir los anchos de las columnas
@@ -1447,10 +1291,6 @@ namespace WebLab.Resultados
                 Configuracion oCon = new Configuracion();
                 oCon = (Configuracion)oCon.Get(typeof(Configuracion),"IdEfector", oProtocolo.IdEfector);
 
-            //    CrystalReportSource oCr = new CrystalReportSource();
-            //oCr.Report.FileName = "";
-            //oCr.CacheDuration =10000;
-            //oCr.EnableCaching = true;
 
             string parametroPaciente = "";
             string parametroProtocolo = "";
@@ -1672,7 +1512,7 @@ namespace WebLab.Resultados
 
 
                 string idProtocolo= this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                string s_detalle = e.Row.Cells[0].Text + ": " + getDetalleProtocolo(idProtocolo);
+                string s_detalle = e.Row.Cells[0].Text;// + ": " + getDetalleProtocolo(idProtocolo);
 
                 e.Row.Cells[0].ToolTip = s_detalle;
                 e.Row.Cells[1].ToolTip = s_detalle;
@@ -1699,22 +1539,7 @@ namespace WebLab.Resultados
             throw new NotImplementedException();
         }
 
-        private bool estaVisibleControl(string idarea)
-        {
-            bool visible=true;
-            //if (HidArea.Value == "0")
-            //    visible = true;
-            //else
-            //{
-            //    if (idarea == HidArea.Value)
-            //        visible = true;
-            //    else
-            //        visible = false;
-            //}
-            return visible;
-
-        }
-
+      
      
      
 
@@ -1784,84 +1609,8 @@ namespace WebLab.Resultados
 
 
       
-        protected void lnkMarcar_Click(object sender, EventArgs e)
-        {
-
-            Marcar(true);
-
-        }
-
-        private void Marcar(bool p)
-        {
-
-            CheckBox chk;
-             
-
-            if (Page.Master != null)
-            {
-                foreach (Control control in Page.Master.Controls)
-                {
-                    if (control is HtmlForm)
-                    {
-                        foreach (Control controlform in control.Controls)
-                        {
-                            if (controlform is ContentPlaceHolder)
-                            {
-                                foreach (Control control1 in controlform.Controls)
-                                {
-                                    if (control1 is Panel)
-                                        foreach (Control control2 in control1.Controls)
-                                        {
-                                            if (control2 is Table)
-                                                foreach (Control control3 in control2.Controls)
-                                                {
-
-                                                    if (control3 is TableRow)
-                                                        foreach (Control control4 in control3.Controls)
-                                                        {
-
-                                                            if (control4 is TableCell)
-                                                                foreach (Control control5 in control4.Controls)
-                                                                {
-
-                                                                    if (control5 is CheckBox)
-                                                                    {
-                                                                        chk = (CheckBox)control5;
-                                                                        chk.Checked = p;
-                                                                        
-                                                                    
-                                                                    
-                                                                    }
-
-                                                                    
-                                                                }
-                                                        }
-                                                }
-                                        }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
-
-        protected void lnkDesmarcar_Click(object sender, EventArgs e)
-        {
-            Marcar(false);
-        }
-
-        protected void btnVerAntecendente_Click(object sender, EventArgs e)
-        {
-            //if (ddlItem.SelectedValue != "0")
-            //{
-            //    Protocolo oProtocolo = new Protocolo();
-            //    oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-            //    CargarGrillaAntecedentes(oProtocolo);
-            //    SetSelectedTab(TabIndex.THREE);
-            //}
-        }
+  
+      
 
  
 
@@ -1887,35 +1636,35 @@ namespace WebLab.Resultados
         }
 
 
-        private string getDetalleProtocolo(string idProtocolo)
-        {
-            string dev = ""; int i = 0;
-            Protocolo oRegistro = new Protocolo();
-            oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), int.Parse(idProtocolo));
+        //private string getDetalleProtocolo(string idProtocolo)
+        //{
+        //    string dev = ""; int i = 0;
+        //    Protocolo oRegistro = new Protocolo();
+        //    oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), int.Parse(idProtocolo));
 
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-            IList items = crit.List();
-            foreach (DetalleProtocolo oDet in items)
-            {
-                i += 1;
-                if (dev == "")
-                    dev = oDet.IdItem.Nombre;
-                else
-                {
-                    if (dev.IndexOf(oDet.IdItem.Nombre) == -1)
-                        dev = dev + " - " + oDet.IdItem.Nombre;
-                }
-            }
-            //return i.ToString() + ": " + dev;
-            return  dev;
-        }
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //    crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+        //    IList items = crit.List();
+        //    foreach (DetalleProtocolo oDet in items)
+        //    {
+        //        i += 1;
+        //        if (dev == "")
+        //            dev = oDet.IdItem.Nombre;
+        //        else
+        //        {
+        //            if (dev.IndexOf(oDet.IdItem.Nombre) == -1)
+        //                dev = dev + " - " + oDet.IdItem.Nombre;
+        //        }
+        //    }
+        //    //return i.ToString() + ": " + dev;
+        //    return  dev;
+        //}
 
-        protected void btnArchivos_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("../Protocolos/ProtocoloAdjuntar.aspx?idProtocolo=" + Session["idProtocolo"].ToString()+"&desde=resultado");
-        }
+        //protected void btnArchivos_Click(object sender, EventArgs e)
+        //{
+        //    Response.Redirect("../Protocolos/ProtocoloAdjuntar.aspx?idProtocolo=" + Session["idProtocolo"].ToString()+"&desde=resultado");
+        //}
 
         protected void imgPdf_Click(object sender, EventArgs e)
         {

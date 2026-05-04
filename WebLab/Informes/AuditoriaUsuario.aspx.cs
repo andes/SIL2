@@ -68,7 +68,7 @@ namespace WebLab.Informes
         {
             Utility oUtil = new Utility();
             ///Carga de combos de tipos de servicios
-            string m_ssql = "select idusuario, apellido + ' ' +nombre  as nombre from sys_usuario   order by apellido, nombre";
+            string m_ssql = "select idusuario, apellido + ' ' +nombre  as nombre from sys_usuario where username<>'adminapi'  order by apellido, nombre";
             oUtil.CargarCombo(ddlUsuarioModificado, m_ssql, "idusuario", "nombre");
             oUtil.CargarCombo(ddlUsuarioABM, m_ssql, "idusuario", "nombre");
 

@@ -12,7 +12,7 @@ using System.IO;
 using System.Web.Script.Serialization;
 using Business.Data;
 using NHibernate;
-using Business.Data.Laboratorio; 
+using Business.Data.Laboratorio;
 using NHibernate.Expression;
 using System.Collections;
 using System.Data;
@@ -24,6 +24,7 @@ using System.Net.Mail;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography;
+using Newtonsoft.Json;
 
 namespace WebLab.Protocolos
 {
@@ -280,7 +281,8 @@ string mensaje = ex.ToString();
                         if (!conOK)// si no funcionó la conexion con renaper se fija se está activado MPI
                             if (oCon.ConectaMPI)
                             {
-                                conOK = SolicitarServicioMPI();
+                                //    conOK = SolicitarServicioMPI();
+                                conOK = ConectarMPIXRoad();
                                 if (!conOK)
                                     HabilitaCargaManual();
                             }
@@ -289,7 +291,8 @@ string mensaje = ex.ToString();
                     {
                         if (oCon.ConectaMPI)
                         {
-                            conOK = SolicitarServicioMPI();
+                            conOK = ConectarMPIXRoad();
+                            ///conOK = SolicitarServicioMPI();
                             if (!conOK)
                                 HabilitaCargaManual();
                         }
@@ -767,6 +770,158 @@ string mensaje = ex.ToString();
             return ok;
         }
 
+        private bool ConectarMPIXRoad()
+        {
+            bool ok = false;
+            try
+            {
+                string tipo = "MPI";
+                imgAndes.Visible = false;
+                imgRenaper.Visible = false; lblFechaDomicilio.Visible = false;
+                GrabarLogAcceso(tipo, Request["dni"].ToString());
+
+                long nrodocumento = long.Parse(Request["dni"].ToString());
+            //    string sexo = Request["sexo"].ToString();
+
+                string rutaCert = ConfigurationManager.AppSettings["RutaCert"].ToString();
+                string BaseUrl = "https://xroadss.andes.gob.ar/r1/OPTIC/GOB/GOB00008/GP-SALUD/MPI";///ConfigurationManager.AppSettings["BaseUrlXroad"].ToString();
+                string Serv = "?identifier=http://www.renaper.gob.ar;";// GP-RENAPER/WS_RENAPER_DOCUMENTO/";
+                string clie = "OPTIC/GOB/GOB00008/GP-SALUD";//ConfigurationManager.AppSettings["ClienteXroad"].ToString();//"OPTIC/GOB/GOB00008/GP-SALUD/MPI";//
+                string param = nrodocumento.ToString(); ///+ "/" + sexo.ToUpper();
+                string host = BaseUrl + Serv + param;
+
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.ServerCertificateValidationCallback = (snder, cert, chain, error) => true;
+             //   ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(host);
+
+                //certificado
+                X509Certificate certificate = new X509Certificate(rutaCert, "", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet
+                  | X509KeyStorageFlags.PersistKeySet);
+
+                req.ClientCertificates = new X509CertificateCollection() { certificate };
+                req.ContentType = "application/json";
+                req.AllowAutoRedirect = true;
+                req.Timeout = 10 * 1000;
+                req.Method = "GET";
+                req.Headers.Add("X-Road-Client", clie);
+
+                
+
+
+                using (WebResponse response = req.GetResponse())
+                {
+                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                    using (Stream strReader = response.GetResponseStream())
+                    {
+
+                        using (StreamReader objReader = new StreamReader(strReader))
+                        {
+
+                            string responseBody = objReader.ReadToEnd();
+ 
+                                var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
+                                var resultado2 = lista?.FirstOrDefault();
+
+                                if (resultado2 != null)
+                                {
+                                    lblValidador.Visible = true;
+                                    lblValidador.Text = "Paciente VALIDADO POR " + tipo;
+                                    ok = true;
+
+                                    txtDNI.Text = Request["dni"]?.ToString();
+
+                                    // Nombre y apellido
+                                    var nombreData = resultado2.Name?.FirstOrDefault();
+                                    txtApellido.Text = nombreData?.Family?.FirstOrDefault()?.ToUpper() ?? "";
+                                    txtNombre.Text = string.Join(" ", nombreData?.Given ?? new List<string>()).ToUpper();
+
+                                    // Fecha nacimiento
+                                    txtFechaNacimiento.Value = resultado2.BirthDate.ToString("dd/MM/yyyy");
+
+                                    // Domicilio (toma el primero)
+                                    var direccion = resultado2.Address?.FirstOrDefault();
+
+                                    txtCalle.Value = direccion?.Line?.FirstOrDefault() ?? "SIN DATOS";
+                                    txtCiudad.Value = string.IsNullOrEmpty(direccion?.City) ? "SIN DATOS" : direccion.City;
+                                    txtProvincia.Value = string.IsNullOrEmpty(direccion?.State) ? "SIN DATOS" : direccion.State;
+                                    txtPais.Value = string.IsNullOrEmpty(direccion?.Country) ? "SIN DATOS" : direccion.Country;
+                                    txtCodigoPostal.Value = string.IsNullOrEmpty(direccion?.PostalCode) ? "SIN DATOS" : direccion.PostalCode;
+
+                                    // CUIL
+                                    txtCuil.Value = resultado2.Identifier?
+                                        .FirstOrDefault(x => x.System.Contains("cuil"))?.Value ?? "";
+
+                                    // Campos que ya no existen en este JSON
+                                    txtBarrio.Value = "SIN DATOS";
+                                    fallecimiento.Text = "";
+                                    fechaDomicilio.Text = "";
+
+                                    txtTelefono.Value = resultado2.Telecom?
+                                        .Where(x => x.System == "phone")
+                                        .OrderBy(x => x.Rank)
+                                        .FirstOrDefault()
+                                        ?.Value ?? "SIN DATOS";
+
+                                    var sexo = resultado2.Gender?.ToLower();
+
+                                    if (sexo == "female")
+                                    {
+                                        txtSexo.Value = "FEMENINO";
+                                        ddlSexo.SelectedValue = "2";
+                                    }
+                                    else if (sexo == "male")
+                                    {
+                                        txtSexo.Value = "MASCULINO";
+                                        ddlSexo.SelectedValue = "3";
+                                    }
+                                    else if (sexo == "other")
+                                    {
+                                        txtSexo.Value = "X";
+                                        ddlSexo.SelectedValue = "0";
+                                    }
+                                    else
+                                    {
+                                        txtSexo.Value = "SIN DATOS";
+                                        ddlSexo.SelectedValue = "0";
+                                    }
+                                    /// traer al paciente si no es nuevo, es modificacion
+                                    int id = Convert.ToInt32(Request.QueryString["id"]);
+                                    //datos del Paciente           
+                                    Paciente pac = new Paciente();
+                                    if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
+                                    txtTelefono.Value = pac.InformacionContacto;
+                              
+                                
+                                }
+                                else
+                                    ok = false;
+                                   
+                           
+
+                        }
+                        response.Close();
+                    }
+                     
+                }
+
+
+            }
+            catch (WebException ex)
+            {
+                ok = false;
+                string mensaje = ex.ToString();
+
+            }
+            
+
+            return ok;
+
+        }
+
         public void GrabarLogAcceso(string servicio, string dni)
         {
             try
@@ -792,6 +947,83 @@ INSERT INTO LAB_LogAccesoServicio
             { }
         }
 
+        public class ResultadoMPIModel
+        {
+            [JsonProperty("resourceType")]
+            public string ResourceType { get; set; }
+
+            [JsonProperty("identifier")]
+            public List<IdentifierRenaper> Identifier { get; set; }
+
+            [JsonProperty("active")]
+            public bool Active { get; set; }
+
+            [JsonProperty("name")]
+            public List<NameRenaper> Name { get; set; }
+
+            [JsonProperty("telecom")]
+            public List<TelecomRenaper> Telecom { get; set; }
+
+            [JsonProperty("gender")]
+            public string Gender { get; set; }
+
+            [JsonProperty("birthDate")]
+            public DateTime BirthDate { get; set; }
+
+            [JsonProperty("address")]
+            public List<AddressRenaper> Address { get; set; }
+        }
+        public class IdentifierRenaper
+        {
+            [JsonProperty("system")]
+            public string System { get; set; }
+
+            [JsonProperty("value")]
+            public string Value { get; set; }
+        }
+        public class NameRenaper
+        {
+            [JsonProperty("use")]
+            public string Use { get; set; }
+
+            [JsonProperty("text")]
+            public string Text { get; set; }
+
+            [JsonProperty("family")]
+            public List<string> Family { get; set; }
+
+            [JsonProperty("given")]
+            public List<string> Given { get; set; }
+        }
+        public class TelecomRenaper
+        {
+            [JsonProperty("system")]
+            public string System { get; set; } // phone, email
+
+            [JsonProperty("value")]
+            public string Value { get; set; }
+
+            [JsonProperty("rank")]
+            public int Rank { get; set; }
+        }
+        public class AddressRenaper
+        {
+            [JsonProperty("line")]
+            public List<string> Line { get; set; }
+
+            [JsonProperty("city")]
+            public string City { get; set; }
+
+            [JsonProperty("state")]
+            public string State { get; set; }
+
+            [JsonProperty("postalCode")]
+            public string PostalCode { get; set; }
+
+            [JsonProperty("country")]
+            public string Country { get; set; }
+        }
+
         protected void btnConfirmar_Click(object sender, EventArgs e)
         {
             if (validadatos())
@@ -799,15 +1031,10 @@ INSERT INTO LAB_LogAccesoServicio
             {
                 if (validamail())
                 {
-                    //Configuracion oC = new Configuracion();
-
-                    //oC = (Configuracion)oC.Get(typeof(Configuracion), 1); // "IdEfector", oUser.IdEfector);
-
+                    
 
                     Utility oUtil = new Utility();
-                    ////instancio el usuario
-                    //Usuario us = new Usuario();
-                    //us = (Usuario)us.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                 
 
                     int id = Convert.ToInt32(Request.QueryString["id"]);
                     //datos del Paciente           

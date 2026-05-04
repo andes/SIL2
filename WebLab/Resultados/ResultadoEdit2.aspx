@@ -728,7 +728,7 @@
                             <RowStyle BackColor="White" ForeColor="#333333" />
                             <Columns>
                                 <asp:BoundField DataField="item" HeaderText="" />
-                                <asp:BoundField DataField="numeroAislamiento" HeaderText="Nro.Cepa" />
+                                <asp:BoundField DataField="numeroAislamiento" HeaderText="Nro.Aisl." />
                                 <asp:BoundField DataField="germen" HeaderText="Aislamiento" />
                                 <asp:TemplateField HeaderText="">
                                     <ItemTemplate>

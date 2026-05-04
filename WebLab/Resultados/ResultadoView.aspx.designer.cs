@@ -283,6 +283,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Label lblDiagnostico;
         
         /// <summary>
+        /// lblCovid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCovid;
+        
+        /// <summary>
         /// lblNroSISA control.
         /// </summary>
         /// <remarks>
@@ -308,24 +317,6 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
-        
-        /// <summary>
-        /// pnlHC control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlHC;
-        
-        /// <summary>
-        /// lblCovid control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblCovid;
         
         /// <summary>
         /// lblMuestra control.
@@ -434,15 +425,6 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlItem;
-        
-        /// <summary>
-        /// btnVerAntecendente control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnVerAntecendente;
         
         /// <summary>
         /// gvAntecedente control.

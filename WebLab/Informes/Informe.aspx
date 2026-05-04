@@ -271,7 +271,7 @@
 
                                        <td   colspan="3"  >
                                           <hr />
-                                             <h4>     <label id="lblCaracterCovid" runat="server" class = "label label-danger"> Caracter-CoVid19: </label></h4>
+                                             <h4>     <label id="lblCaracterCovid" runat="server" class = "label label-danger"> Caracter-SNVS: </label></h4>
 					                
                                             
                                            <asp:CheckBoxList ID="chkCaracterCovid" runat="server" RepeatDirection="Vertical" RepeatColumns="4">

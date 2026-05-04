@@ -18,15 +18,19 @@ namespace WebLab.Usuarios
         protected void Page_PreInit(object sender, EventArgs e)
         {
             Usuario oUser = new Usuario();
+            if (Session["idUsuario"]!= null)
             oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
+            else Response.Redirect("../FinSesion.aspx", false);
+            /*     //Caro: Adaptacion multiefector - correccion que no estaba funcionando el cambio de clave de validacion.
             Configuracion oC = new Configuracion();
-            oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-            if (oUser.IdEfector != oC.IdEfector) // es externo
-            {
-                this.MasterPageFile = "~/PeticionElectronica/SitePE.master";
+                 oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+                 if (oUser.IdEfector != oC.IdEfector) // es externo
+                 {
+                     this.MasterPageFile = "~/PeticionElectronica/SitePE.master";
 
-            }
+                 }
+                 */
 
         }
         protected void Page_Load(object sender, EventArgs e)
@@ -35,13 +39,13 @@ namespace WebLab.Usuarios
             {
                 Usuario oUser = new Usuario();
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-                Configuracion oC = new Configuracion();
+                //Caro: Adaptacion multiefector - correccion que no estaba funcionando el cambio de clave de validacion.
+         /*       Configuracion oC = new Configuracion();
                 oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
                 if (oUser.IdEfector != oC.IdEfector) // es externo
                     VerificaPermisos("Validacion Externo");
 
-                else
+                else*/
                     VerificaPermisos("Validacion");
            
                 if (Request["id"] != null)

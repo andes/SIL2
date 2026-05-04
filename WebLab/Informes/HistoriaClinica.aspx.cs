@@ -24,17 +24,26 @@ namespace WebLab.Informes
     public partial class HistoriaClinica : System.Web.UI.Page
     {
         Paciente oPaciente = new Paciente();
-
+        Configuracion oCon = new Configuracion();
         public CrystalReportSource oCr = new CrystalReportSource();
-        
+        public Usuario oUser = new Usuario();
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
             oCr.Report.FileName = "";
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
+            if (Session["idUsuario"] != null)
+            {
 
-        }  
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+            }
+            else
+                Response.Redirect("SinDatos.aspx", false);
+
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -131,7 +140,8 @@ namespace WebLab.Informes
         private DataTable LlenarDatos()
         {               
             DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            string conexion = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
+            SqlConnection conn = new SqlConnection(conexion); ///Performance: conexion de solo lectura
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
@@ -186,16 +196,25 @@ namespace WebLab.Informes
             dt =LlenarDatos();
             if (dt.Rows.Count > 0)
             {
-                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+                ///   Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+                string enc1 = "SUBSECRETARIA DE SALUD";
+                string enc2 = "SISTEMA INFORMATICO PROVINCIAL DE LABORATORIO";
+                string enc3 = "";
+                if (oUser.IdEfector.IdEfector != 227)
+                {
+                    enc1= oCon.EncabezadoLinea1;
+                    enc2 = oCon.EncabezadoLinea2;
+                    enc3 = oCon.EncabezadoLinea3;
+                }
 
                 ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
-                encabezado1.Value = oCon.EncabezadoLinea1;
+                encabezado1.Value = enc1;// oCon.EncabezadoLinea1;
 
                 ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
-                encabezado2.Value = oCon.EncabezadoLinea2;
+                encabezado2.Value = enc2; // oCon.EncabezadoLinea2;
 
                 ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
-                encabezado3.Value = oCon.EncabezadoLinea3;
+                encabezado3.Value = enc3;// oCon.EncabezadoLinea3;
 
                 ParameterDiscreteValue encabezado4 = new ParameterDiscreteValue();
                 encabezado4.Value = lblAnalisis.Text;
@@ -244,15 +263,7 @@ namespace WebLab.Informes
                 oCr.DataBind();
 
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, "Historial_Resultados.pdf");
-                //MemoryStream oStream; // using System.IO
-                //oStream = (MemoryStream)oCr.ReportDocument.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                //Response.Clear();
-                //Response.Buffer = true;
-                //Response.ContentType = "application/pdf";
-                //Response.AddHeader("Content-Disposition", "attachment;filename=Historial_Resultados.pdf");
-
-                //Response.BinaryWrite(oStream.ToArray());
-                //Response.End();                       
+                             
             }
             else
                 Response.Redirect("SinDatos.aspx", false);

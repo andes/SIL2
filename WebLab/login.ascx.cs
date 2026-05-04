@@ -44,10 +44,10 @@ namespace WebLab
 
                 else
                 {
-                    if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
+                    //if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
 
 
-                        Salud.Security.SSO.SSOHelper.RedirectToSSOPage("Logout.aspx?relogin=1", "login.aspx");
+                    //    Salud.Security.SSO.SSOHelper.RedirectToSSOPage("Logout.aspx?relogin=1", "login.aspx");
                 }
                 }
             //}
@@ -199,30 +199,28 @@ namespace WebLab
         }
 
 
-     
-   
+
+
         private bool VerificarSiTienePermisodeValidar(string user, string m_url)
         {
-            bool b_permiso = false;
+
             string m_strSQL = @" SELECT   P.permiso, M.objeto, M.url, U.username
             FROM         Sys_Menu AS M INNER JOIN
             Sys_Permiso AS P ON M.idMenu = P.idMenu INNER JOIN
             Sys_Usuario AS U ON P.idPerfil = U.idPerfil
-            WHERE     (M.url = '" + m_url + "') AND (U.username = '" + user + "') AND (P.permiso = 2) and  (U.activo=1 ) ";
+            WHERE     (M.url = @url) AND (U.username = @username) AND (P.permiso = 2) and  (U.activo=1 ) ";
 
-            using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura           
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
             {
-                DataSet Ds = new DataSet();
+                cmd.Parameters.AddWithValue("@url", m_url);
+                cmd.Parameters.AddWithValue("@username", user);
 
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
+                conn.Open();
 
-                DataTable dtPermisos = Ds.Tables[0];
+                var result = cmd.ExecuteScalar();
 
-                if (dtPermisos.Rows.Count > 0) b_permiso = true;
-                conn.Close();
-                return b_permiso;
+                return result != null;
             }
         }
     }
