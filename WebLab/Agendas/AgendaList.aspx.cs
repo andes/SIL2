@@ -41,7 +41,10 @@ namespace WebLab.Agendas
                     
                     CargarListas();
                     CargarGrilla();
-                
+                if (oUser.IdEfector.IdEfector == 227)
+                    btnAgregar.Visible = false;
+
+
             }
         }
         private int Permiso /*el permiso */
@@ -79,8 +82,11 @@ namespace WebLab.Agendas
         {
             //Usuario oUser = new Usuario();
             //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-          
-            string m_condicion = " and A.idEfector = "  + oUser.IdEfector.IdEfector.ToString();
+
+            string m_condicion="";
+            
+            if (oUser.IdEfector.IdEfector != 227)
+                m_condicion = " and A.idEfector = "  + oUser.IdEfector.IdEfector.ToString();
             if (ddlTipoServicio.SelectedValue != "0") m_condicion += " and A.idTipoServicio=" + ddlTipoServicio.SelectedValue;
             if (ddlEfectorSolicitante.SelectedValue != "0") m_condicion += " and A.idEfectorSolicitante=" + ddlEfectorSolicitante.SelectedValue;
 
@@ -146,11 +152,19 @@ namespace WebLab.Agendas
             ddlTipoServicio.Items.Insert(0, new ListItem("Todos", "0"));
 
             ////////////Carga de combos de Efector
-            m_ssql = @"SELECT idEfector, nombre FROM sys_Efector  E (nolock) 
+            if (oUser.IdEfector.IdEfector == 227)
+            {
+                m_ssql = @"SELECT idEfector, nombre FROM sys_Efector  E (nolock) 
+                            where idEfector in  (select distinct D.idEfectorSolicitante from LAB_Agenda D  (nolock)
+					                            where D.baja =0) 
+                            order by nombre ";
+            }
+            else
+                m_ssql = @"SELECT idEfector, nombre FROM sys_Efector  E (nolock) 
                     where idEfector in  (select distinct R.idefectorRel from LAB_EfectorRelacionado R (nolock) 
 				                    inner join LAB_Agenda D  (nolock) ON D.idEfectorSolicitante=R.idefectorRel and D.idEfector=R.idEfector
 				                    where D.baja =0 and  R.idefector = " + oUser.IdEfector.IdEfector.ToString() +
-	                    ") or (E.idEfector= " + oUser.IdEfector.IdEfector.ToString() + @") order by nombre ";
+                            ") or (E.idEfector= " + oUser.IdEfector.IdEfector.ToString() + @") order by nombre ";
            
             oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre");
             if(ddlEfectorSolicitante.Items.Count > 1)
