@@ -4948,6 +4948,18 @@
     <Compile Include="Informes\PacientesList.aspx.designer.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\PlanillaDetalladaTurno.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PlanillaDetalladaTurno.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\PlanillaTurno.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PlanillaTurno.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\ResultadosporServicio.aspx.cs">
       <DependentUpon>ResultadosporServicio.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

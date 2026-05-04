@@ -3491,6 +3491,8 @@ namespace WebLab.App_Data {
             
             private global::System.Data.DataColumn columnmedicoSolicitante;
             
+            private global::System.Data.DataColumn columnefector;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public turnoDataTable() {
@@ -3638,6 +3640,14 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn efectorColumn {
+                get {
+                    return this.columnefector;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -3673,7 +3683,7 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public turnoRow AddturnoRow(string fecha, string hora, string numeroDocumento, string paciente, string recomendacion, string servicio, string idTurno, string item, string apellido, string nombre, string sexo, string fechaNacimiento, string informacionContacto, string medicoSolicitante) {
+            public turnoRow AddturnoRow(string fecha, string hora, string numeroDocumento, string paciente, string recomendacion, string servicio, string idTurno, string item, string apellido, string nombre, string sexo, string fechaNacimiento, string informacionContacto, string medicoSolicitante, string efector) {
                 turnoRow rowturnoRow = ((turnoRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         fecha,
@@ -3689,7 +3699,8 @@ namespace WebLab.App_Data {
                         sexo,
                         fechaNacimiento,
                         informacionContacto,
-                        medicoSolicitante};
+                        medicoSolicitante,
+                        efector};
                 rowturnoRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowturnoRow);
                 return rowturnoRow;
@@ -3726,6 +3737,7 @@ namespace WebLab.App_Data {
                 this.columnfechaNacimiento = base.Columns["fechaNacimiento"];
                 this.columninformacionContacto = base.Columns["informacionContacto"];
                 this.columnmedicoSolicitante = base.Columns["medicoSolicitante"];
+                this.columnefector = base.Columns["efector"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3759,6 +3771,8 @@ namespace WebLab.App_Data {
                 base.Columns.Add(this.columninformacionContacto);
                 this.columnmedicoSolicitante = new global::System.Data.DataColumn("medicoSolicitante", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnmedicoSolicitante);
+                this.columnefector = new global::System.Data.DataColumn("efector", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnefector);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -12072,6 +12086,22 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string efector {
+                get {
+                    try {
+                        return ((string)(this[this.tableturno.efectorColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'efector\' in table \'turno\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableturno.efectorColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public bool IsfechaNull() {
                 return this.IsNull(this.tableturno.fechaColumn);
             }
@@ -12236,6 +12266,18 @@ namespace WebLab.App_Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetmedicoSolicitanteNull() {
                 this[this.tableturno.medicoSolicitanteColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsefectorNull() {
+                return this.IsNull(this.tableturno.efectorColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetefectorNull() {
+                this[this.tableturno.efectorColumn] = global::System.Convert.DBNull;
             }
         }
         
