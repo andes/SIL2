@@ -62,58 +62,63 @@ namespace WebLab.Turnos
         }
 
         protected void Page_Load(object sender, EventArgs e)
-        {      
-            if (!Page.IsPostBack)
-            {              
-                if (Request["tipo"]!=null)
-                    Session["tipo"] = Request["tipo"].ToString();
+        {
 
-                if (Session["tipo"].ToString() == "recepcion")
+            if (Session["idUsuario"] != null)
+            {
+                if (!Page.IsPostBack)
                 {
-                    VerificaPermisos("Pacientes con turno");
-                    //pnlDerecho.BackColor = Color.White;                    
-                    lblTitulo.Text = "PLANILLA DIARIA" ;
-                    lblSubTitulo.Text = "Recepción de Pacientes con Turno";
-                    lblSubTitulo.Visible = true;
-                    cldTurno.SelectedDate = DateTime.Now;
-                    cldTurno.TodaysDate = DateTime.Now;
-                    cldTurno.VisibleDate = DateTime.Now;
-                    MostrarUltimoProtocolo();
-                  //  btnNuevo.Visible = true;
-                }
-                else
-                {
-                    string labo = "";
-                    if (oUser.IdPerfil.IdPerfil == 15)
+                    if (Request["tipo"] != null)
+                        Session["tipo"] = Request["tipo"].ToString();
+
+                    if (Session["tipo"].ToString() == "recepcion")
                     {
-                        labo = oUser.IdEfectorDestino.Nombre;
-                        lnkProtocolo.Visible = false; /// no es posible registrar pacientes sin turno
+                        VerificaPermisos("Pacientes con turno");
+                        //pnlDerecho.BackColor = Color.White;                    
+                        lblTitulo.Text = "PLANILLA DIARIA";
+                        lblSubTitulo.Text = "Recepción de Pacientes con Turno";
+                        lblSubTitulo.Visible = true;
+                        cldTurno.SelectedDate = DateTime.Now;
+                        cldTurno.TodaysDate = DateTime.Now;
+                        cldTurno.VisibleDate = DateTime.Now;
+                        MostrarUltimoProtocolo();
+                        //  btnNuevo.Visible = true;
                     }
-
                     else
-                        labo = oUser.IdEfector.Nombre;
-                    VerificaPermisos("Asignacion de turnos");
-                    lblTitulo.Text = "TURNOS PARA " + labo.ToUpper();
-                    cldTurno.SelectedDate = DateTime.Now.AddDays(1);
-                    cldTurno.VisibleDate = DateTime.Now.AddDays(1);
-                    cldTurno.TodaysDate = DateTime.Now.AddDays(1);
+                    {
+                        string labo = "";
+                        if (oUser.IdPerfil.IdPerfil == 15)
+                        {
+                            labo = oUser.IdEfectorDestino.Nombre;
+                            lnkProtocolo.Visible = false; /// no es posible registrar pacientes sin turno
+                        }
 
-                    imgServicioView.Visible = true;
-                    imgServicioView.Attributes.Add("onClick", "javascript: CalendarioView (" + ddlTipoServicio.SelectedValue + "," + ddlItem.SelectedValue + "); return false");
-     
+                        else
+                            labo = oUser.IdEfector.Nombre;
+                        VerificaPermisos("Asignacion de turnos");
+                        lblTitulo.Text = "TURNOS PARA " + labo.ToUpper();
+                        cldTurno.SelectedDate = DateTime.Now.AddDays(1);
+                        cldTurno.VisibleDate = DateTime.Now.AddDays(1);
+                        cldTurno.TodaysDate = DateTime.Now.AddDays(1);
+
+                        imgServicioView.Visible = true;
+                        imgServicioView.Attributes.Add("onClick", "javascript: CalendarioView (" + ddlTipoServicio.SelectedValue + "," + ddlItem.SelectedValue + "); return false");
+
+                    }
+                    CargarListas();
+                    //VerificarAgenda();
+                    //IdentificarDiasNoHabiles();
+
+
+                    Actualizar();
+
+
+                    //  if (Session["tipo"].ToString() == "recepcion") btnNuevo.Visible = false;
+
+
                 }
-                CargarListas();
-                //VerificarAgenda();
-                //IdentificarDiasNoHabiles();
-               
-                
-                Actualizar();
-               
-                
-          //  if (Session["tipo"].ToString() == "recepcion") btnNuevo.Visible = false;
-                
-                    
             }
+             else Response.Redirect("../FinSesion.aspx", false);
 
         }
         protected void Page_Unload(object sender, EventArgs e)
@@ -448,7 +453,8 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
 
 
             m_ssql = @"SELECT distinct I.idItem, I.nombre FROM  LAB_Agenda A with (nolock)
-INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_filtro; //and A.fechaDesde>='" + fecha.ToString("yyyyMMdd") + "'";
+                    INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_filtro
+                    + " and idTipoServicio="+ddlTipoServicio.SelectedValue; //and A.fechaDesde>='" + fecha.ToString("yyyyMMdd") + "'";
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
             ddlItem.Items.Insert(0, new ListItem("--Seleccione práctica--", "0"));
             if (Session["idItem"] != null) ddlItem.SelectedValue = Session["idItem"].ToString();
@@ -596,9 +602,12 @@ INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.
             if (Session["tipo"].ToString() != "recepcion") ///Sólo para asignacion de turnos
             {
                 if (ddlItem.SelectedValue != "0") { imgCalendarioView.Visible = true; imgCalendarioView.Attributes.Add("onClick", "javascript: CalendarioView (" + ddlTipoServicio.SelectedValue + "," + ddlItem.SelectedValue + "); return false"); }
-                else imgCalendarioView.Visible = false;
+                else
+                {
+                    imgCalendarioView.Visible = false;
 
-                imgServicioView.Attributes.Add("onClick", "javascript: CalendarioView (" + ddlTipoServicio.SelectedValue + ",0); return false");
+                    imgServicioView.Attributes.Add("onClick", "javascript: CalendarioView (" + ddlTipoServicio.SelectedValue + ",0); return false");
+                }
             }
 
             CargarTurnos();
@@ -637,6 +646,20 @@ INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.
 
         protected void ddlTipoServicio_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //Se debe actualizar los items cuando se cambia de servicio
+            Utility oUtil = new Utility();
+
+            string m_filtro = "and idEfectorSolicitante= " + oUser.IdEfector.IdEfector.ToString(); //si es generacion solo puede ver agendas de su efector
+            if (Request["tipo"] == "recepcion")  //los turnos que asiganron todos
+                m_filtro = "and A.idEfector = " + oCon.IdEfector.IdEfector.ToString();
+
+            string m_ssql = @"SELECT distinct I.idItem, I.nombre FROM  LAB_Agenda A with (nolock)
+                    INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_filtro
+                   + " and idTipoServicio=" + ddlTipoServicio.SelectedValue; 
+            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
+            ddlItem.Items.Insert(0, new ListItem("--Seleccione práctica--", "0"));
+           
+
             Actualizar();
         }
 
@@ -1059,6 +1082,11 @@ INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.
         }
 
         protected void ddlEfectorSolicitante_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Actualizar();
+        }
+
+        protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
         {
             Actualizar();
         }

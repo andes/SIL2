@@ -69,7 +69,7 @@
                     </tr>
                     <tr>
                         <td align="left">
-                            <asp:DropDownList ID="ddlItem" runat="server" AutoPostBack="True" class="form-control input-sm" onselectedindexchanged="ddlTipoServicio_SelectedIndexChanged" Width="200px">
+                            <asp:DropDownList ID="ddlItem" runat="server" AutoPostBack="True" class="form-control input-sm" onselectedindexchanged="ddlItem_SelectedIndexChanged" Width="200px">
                             </asp:DropDownList>
                             <asp:ImageButton ID="imgCalendarioView" runat="server" ImageUrl="~/App_Themes/default/images/zoom.png" ToolTip="Próximos días habilitados" Visible="false" />
                         </td>
