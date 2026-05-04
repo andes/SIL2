@@ -149,7 +149,9 @@
               
                      <asp:Label ID="lblMensaje" 
                                 runat="server" ForeColor="#CC3300" 
-                    Font-Bold="True"></asp:Label>              <asp:Label ID="lblHoraTurno" runat="server" 
+                    Font-Bold="True"></asp:Label> 
+                 <asp:Label ID="lblMensajeSolicitante"  runat="server" ForeColor="#CC3300"  Font-Bold="True"></asp:Label>
+                <asp:Label ID="lblHoraTurno" runat="server" 
                     Font-Bold="True" Visible="False"></asp:Label>
             <table width="100%" >
             <tr>
