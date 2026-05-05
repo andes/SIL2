@@ -278,7 +278,7 @@ namespace WebLab.Turnos
                                 " AND  A.FechaHasta>='" + fecha.ToString("yyyyMMdd") + "'" + m_ssqlItem + m_ssqlDia;
 
                 if (oUser.IdPerfil.IdPerfil == 15)
-                    m_ssql += "  and IdEfectorSolicitante = " + oUser.IdEfector.IdEfector.ToString();
+                    m_ssql += "  and A.IdEfectorSolicitante = " + oUser.IdEfector.IdEfector.ToString();
                 else //Traigo el labo y sus relacionados
                     m_ssql += " and A.IdEfector = " + oCon.IdEfector.IdEfector.ToString();
                                 
