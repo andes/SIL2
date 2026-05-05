@@ -96,14 +96,6 @@ namespace WebLab.Usuarios
             m_ssql = @" SELECT idArea, nombre FROM LAB_Area  (nolock) where baja=0  ORDER BY nombre ";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
             ddlArea.Items.Insert(0, new ListItem("Todas", "0"));
-
-            //if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
-            //{
-            //    chkRequiereContrasenia.Checked = false;
-            //    chkRequiereContrasenia.Visible = false;
-            //}
-
-            
         }
 
         #region Datos Generales
@@ -161,6 +153,7 @@ namespace WebLab.Usuarios
                 lblMensajeEfector.Visible = false; lblMensajeEfector.UpdateAfterCallBack = true;
                 ddlEfector3.ClearSelection();
                 agregarEfectorAdmin();
+                ddlPerfil_SelectedIndexChanged(null,null); //si antes era Admin externo queda visible
 
             }
             else
@@ -168,6 +161,7 @@ namespace WebLab.Usuarios
                 ddlArea.Enabled = true;
                 ddlPerfil.Enabled = true;
                 btnAgregarEfector.Enabled = true;
+                ddlPerfil_SelectedIndexChanged(null, null);
             }
 
             ddlArea.UpdateAfterCallBack = true;
@@ -274,10 +268,6 @@ namespace WebLab.Usuarios
 
                 Guardar(oRegistro);
 
-                //if (Request["id"] != null)
-                //    Response.Redirect("UsuarioList.aspx", false);
-                //else
-                //    Response.Redirect("UsuarioEdit.aspx", false);
                 string parametros = this.parametros();
                 Response.Redirect("UsuarioList.aspx?" + parametros, false);
             }
@@ -368,15 +358,8 @@ namespace WebLab.Usuarios
         {
             string m_strSQL = "";
 
-            //string m_strCondicion = "";
-
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
-
-            //if (!oUser.Administrador)
-            //{
-            //    m_strCondicion = " and P.idefector=" + oUser.IdEfector.IdEfector.ToString();
-            //}
 
             //Agregamos la auditoria de aceptacion de terminos y condiciones
 
