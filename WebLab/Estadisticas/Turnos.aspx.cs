@@ -115,6 +115,20 @@ namespace WebLab.Estadisticas
             {
                 m_ssql = "select  E.idEfector, E.nombre  from sys_efector E  (nolock) where E.idEfector= " + oUser.IdEfector.IdEfector.ToString();
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
+
+                m_ssql = @" SELECT distinct e.idEfector,E.nombre as efector
+                             FROM  LAB_Agenda A (nolock) 
+                             INNER JOIN sys_Efector E (nolock) on E.idEfector=A.idEfectorSolicitante
+                            where A.baja=0 and a.idEfector<>" + oUser.IdEfector.IdEfector.ToString()+ " and a.idEfectorSolicitante=" + oUser.IdEfector.IdEfector.ToString();
+                oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre", connReady);
+                if (ddlEfectorSolicitante.Items.Count > 0)
+                {
+                    ddlEfectorSolicitante.Visible = true;lblEfectorSolicitante.Visible = true;
+                }
+                else
+                {
+                    ddlEfectorSolicitante.Visible = false;lblEfectorSolicitante.Visible = false;
+                }
             }
 
             
