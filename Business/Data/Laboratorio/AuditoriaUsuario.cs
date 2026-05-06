@@ -200,7 +200,7 @@ namespace Business.Data.Laboratorio
 			get { return m_valorNuevo; }
 			set
 			{
-				if (value != null && value.Length > 100)
+				if (value != null && value.Length > 500)
 					throw new ArgumentOutOfRangeException("Invalid value for Valor Nuevo", value, value.ToString());
 
 				m_isChanged |= (m_valorNuevo != value); m_valorNuevo = value;
@@ -212,7 +212,7 @@ namespace Business.Data.Laboratorio
 			get { return m_valorAnterior; }
 			set
 			{
-				if (value != null && value.Length > 100)
+				if (value != null && value.Length > 500)
 					throw new ArgumentOutOfRangeException("Invalid value for Valor Anterior", value, value.ToString());
 
 				m_isChanged |= (m_valorAnterior != value); m_valorAnterior = value;
