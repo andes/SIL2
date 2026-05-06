@@ -363,19 +363,21 @@ namespace WebLab.Usuarios
 
             //Agregamos la auditoria de aceptacion de terminos y condiciones
 
-            m_strSQL = @"  SELECT P.username + ' - '+ P.apellido + ' ' + P.nombre as numero ,
-                                P.apellido as username, A.fecha AS fecha, A.hora, A.accion,
+            m_strSQL = @"  SELECT  U.username + ' - '+ U.apellido + ' ' + U.nombre as numero ,
+                                P.apellido as username,A.fecha AS fecha, A.hora, A.accion,
                                 '' as analisis, isnull(valorNuevo,'') as valor, isnull(valorAnterior,'') as valorAnterior
                             FROM         	 LAB_Auditoriausuario AS A (nolock)   
                             inner join  sys_usuario P (nolock) on P.idusuario= A.idusuarioregistro
+                            inner join Sys_Usuario U (nolock) on U.idusuario= A.idUsuario
                             where  A.idusuario= " + Request["id"].ToString()
                             + @" union 
-	                        SELECT  P.username + ' - '+ P.apellido + ' ' + P.nombre as numero , 
+	                        SELECT   U.username + ' - '+ U.apellido + ' ' + U.nombre as numero, 
                                P.apellido as username, L.fecha AS fecha,
                                     Format(L.fecha, 'hh:mm:ss') as hora, 'Acepto Terminos y Condiciones', '' as analisis, '' as valor, '' as valorAnterior
                             FROM         	 LAB_LogAccesoTerminosCondiciones AS L (nolock)   
                             inner join  sys_usuario P (nolock) on P.idusuario= L.idUsuario
-	                        where  P.idusuario=" + Request["id"].ToString() + " ORDER BY fecha";
+                            inner join Sys_Usuario U (nolock) on U.idusuario= P.idUsuario
+	                        where  P.idusuario=" + Request["id"].ToString() + " ORDER BY fecha desc";
 
             DataSet Ds1 = new DataSet();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
@@ -517,12 +519,13 @@ namespace WebLab.Usuarios
                 //Por defecto la contraseña es el username
                 txtPassword.Enabled = false;
                 rfvPassword.Enabled = false;
+                btnBlanquear.Visible = false;
             }
             else
             {
                 chkRequiereContrasenia.Enabled = true;
                 chkExterno.Enabled = true;
-
+                btnBlanquear.Visible = true;
                 //Se puede poner una contraseña
                 if (Request["id"] == null){ txtPassword.Enabled = true; rfvPassword.Enabled = true; }
                 else
