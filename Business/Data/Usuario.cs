@@ -4,6 +4,7 @@ insert license info here
 using Business.Data.Laboratorio;
 using System;
 using System.Collections;
+using System.Data.SqlClient;
 
 namespace Business.Data
 {
@@ -227,7 +228,7 @@ namespace Business.Data
 		}
        
 
-        public void GrabaAuditoria(string accion, int iduser, string username, string valorAnterior="", string valorNuevo="")
+        public int GrabaAuditoria(string accion, int iduser, string username, string valorAnterior="", string valorNuevo="")
         {
             AuditoriaUsuario  oRegistro = new AuditoriaUsuario();
             oRegistro.IdUsuario = iduser; // usuario afectado que esta modificando, consultando , etc.
@@ -240,7 +241,7 @@ namespace Business.Data
             oRegistro.ValorAnterior = valorAnterior;
             oRegistro.ValorNuevo = valorNuevo;
             oRegistro.Save();
-
+            return oRegistro.IdAuditoriaUsuario;
 
         }
 
@@ -476,6 +477,20 @@ namespace Business.Data
                 m_fechaTerminosCondiciones = value;
             }
 
+        }
+
+        public void EliminarAuditoria(int idAuditoriaConsulta, SqlConnection conn)
+        {
+            //AuditoriaUsuario oRegistro = new AuditoriaUsuario();
+            //oRegistro = (AuditoriaUsuario) oRegistro.Get(typeof(AuditoriaUsuario), "IdAuditoriaUsuario", idAuditoriaConsulta);
+            //oRegistro.Delete();
+
+            SqlCommand cmd = new SqlCommand(
+                "DELETE FROM LAB_AuditoriaUsuario WHERE IdAuditoriaUsuario = @id",
+                conn);
+
+            cmd.Parameters.AddWithValue("@id", idAuditoriaConsulta);
+            cmd.ExecuteNonQuery();
         }
     }
 }
