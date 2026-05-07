@@ -479,18 +479,5 @@ namespace Business.Data
 
         }
 
-        public void EliminarAuditoria(int idAuditoriaConsulta, SqlConnection conn)
-        {
-            //AuditoriaUsuario oRegistro = new AuditoriaUsuario();
-            //oRegistro = (AuditoriaUsuario) oRegistro.Get(typeof(AuditoriaUsuario), "IdAuditoriaUsuario", idAuditoriaConsulta);
-            //oRegistro.Delete();
-
-            SqlCommand cmd = new SqlCommand(
-                "DELETE FROM LAB_AuditoriaUsuario WHERE IdAuditoriaUsuario = @id",
-                conn);
-
-            cmd.Parameters.AddWithValue("@id", idAuditoriaConsulta);
-            cmd.ExecuteNonQuery();
-        }
     }
 }
