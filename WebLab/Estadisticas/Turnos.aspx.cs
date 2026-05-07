@@ -117,6 +117,7 @@ namespace WebLab.Estadisticas
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             }
 
+            
 
             m_ssql = null;
             oUtil = null;
@@ -363,6 +364,37 @@ namespace WebLab.Estadisticas
         protected void btnDescargarDetallado_Click(object sender, EventArgs e)
         {
 
+        }
+
+        protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(ddlEfector.SelectedIndex != 0)
+            {
+                Utility oUtil = new Utility();
+                string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+                string m_ssql = "";
+                m_ssql = @" SELECT distinct e.idEfector,E.nombre as nombre
+                             FROM  LAB_Agenda A (nolock) 
+                             INNER JOIN sys_Efector E (nolock) on E.idEfector=A.idEfectorSolicitante
+                            where A.baja=0 and a.idEfector=" + ddlEfector.SelectedValue +
+                            " and a.idEfectorSolicitante<>" + ddlEfector.SelectedValue;
+                oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre", connReady);
+                if (ddlEfectorSolicitante.Items.Count > 0)
+                {
+                    ddlEfectorSolicitante.Visible = true; lblEfectorSolicitante.Visible = true;
+                }
+                else
+                {
+                    ddlEfectorSolicitante.Visible = false; lblEfectorSolicitante.Visible = false;
+                }
+            }
+            else
+            {
+                ddlEfectorSolicitante.Visible = false; lblEfectorSolicitante.Visible = false;
+                ddlEfectorSolicitante.SelectedIndex = 0;
+            }
+            
         }
     }
 }
