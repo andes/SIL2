@@ -630,20 +630,6 @@ namespace WebLab.Usuarios
             Usuario oAuditor = new Usuario();
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-
-
-            //ahora se genera una auditoria por cada modificacion
-            //if (Request["id"] != null) 
-            //{
-            //    //accion = "Modifica"; ahora se genera una auditoria por cada modificacion
-            //    if ((oRegistro.Activo == true) && (chkActivo.Checked == false))
-            //        accion = "Inhabilita"; //lo hace Modifica Activo
-            //    if ((oRegistro.Activo == false) && (chkActivo.Checked == true))
-            //        accion = "Habilita"; //lo hace Modifica Activo
-            //}
-            //Auditoria accion
-            //Auditor.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
-
             if (Request["id"] == null)
             {
                 oAuditor.GrabaAuditoria("Crea", oRegistro.IdUsuario, oRegistro.Username);
