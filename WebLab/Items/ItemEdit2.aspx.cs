@@ -21,7 +21,7 @@ using CrystalDecisions.CrystalReports;
 using CrystalDecisions.Web;
 using CrystalDecisions.Shared;
 using System.Drawing;
-
+using Microsoft.Security.Application;
 namespace WebLab.Items
 {
     public partial class ItemEdit2 : System.Web.UI.Page
@@ -226,11 +226,11 @@ namespace WebLab.Items
 
         protected void Page_Unload(object sender, EventArgs e)
         {
-            if (this.oCr.ReportDocument != null)
-            {
-                this.oCr.ReportDocument.Close();
-                this.oCr.ReportDocument.Dispose();
-            }
+        //    if (this.oCr.ReportDocument != null)
+        //    {
+        //        this.oCr.ReportDocument.Close();
+        //        this.oCr.ReportDocument.Dispose();
+        //    }
         }
 
         ///************************************Inicio de Recomendaciones para el pacientes        ********************//
@@ -1290,7 +1290,12 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-            oRegistro.Observacion = this.txtObservaciones.Text;
+            //oRegistro.Observacion = this.txtObservaciones.Text;
+            string html = Request.Unvalidated[editor1.UniqueID];
+            // convertir saltos a HTML
+            html = html.Replace(Environment.NewLine, "<br />")
+                       .Replace("\n", "<br />");
+            oRegistro.Observacion = Sanitizer.GetSafeHtmlFragment(html);
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
             oRegistro.IdPresentacion = int.Parse(ddlPresentacionItem.SelectedValue);
@@ -1331,7 +1336,10 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-            oRegistro.Observacion = this.txtObservaciones.Text;
+            //oRegistro.Observacion = this.txtObservaciones.Text;
+            string html = Request.Unvalidated["editor1"];
+            oRegistro.Observacion = Sanitizer.GetSafeHtmlFragment(html);
+
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1390,7 +1398,9 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text;
+                    //oRegistro.Observacion = this.txtObservaciones.Text;
+                    string html = Request.Unvalidated["editor1"];
+                    oRegistro.Observacion = Sanitizer.GetSafeHtmlFragment(html);
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1450,7 +1460,10 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text;
+                    //oRegistro.Observacion = this.txtObservaciones.Text;
+                    string html = Request.Unvalidated["editor1"];
+                    oRegistro.Observacion = Sanitizer.GetSafeHtmlFragment(html);
+
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 

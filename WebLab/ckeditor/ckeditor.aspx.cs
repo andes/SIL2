@@ -13,5 +13,15 @@ namespace WebLab.ckeditor
         {
 
         }
+
+        protected void Unnamed_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void Unnamed_Click1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

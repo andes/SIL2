@@ -12,7 +12,7 @@
      <script src="../script/jquery.min.js" type="text/javascript"></script>  
                   <script src="../script/jquery-ui.min.js" type="text/javascript"></script> 
 
-    ❌
+     <script src="../ckeditor/Basic/ckeditor.js" type="text/javascript"></script>
     <script type="text/javascript" src="../script/Mascara.js"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>   
   
@@ -37,8 +37,23 @@
         }
     </style>
    
-  
-   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            CKEDITOR.config.versionCheck = false;
+            
+
+            CKEDITOR.replace('<%= editor1.ClientID %>', {
+                toolbar: []
+            });
+        });
+        function sincronizarEditor() {
+
+            for (instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].updateElement();
+            }
+
+        }
+    </script>
     </asp:Content>
  
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
@@ -794,7 +809,10 @@
                         <tr>
                             <td class="control-label" style="vertical-align: top">Observaciones:</td>
                             <td colspan="2">
-                                <asp:TextBox ID="txtObservaciones" runat="server" class="form-control input-sm" MaxLength="300" Rows="3" TabIndex="8" TextMode="MultiLine" Width="500px" />
+                                <asp:TextBox Visible="false" ID="txtObservaciones" runat="server" class="form-control input-sm" MaxLength="300" Rows="3" TabIndex="8" TextMode="MultiLine" Width="500px" />
+                                 <textarea name="editor1" id="editor1" rows="4" cols="60" runat="server">
+               
+            </textarea>
                                 <br />
                                 <anthem:CustomValidator ID="cvObservaciones" runat="server" ClientValidationFunction="VerificaLargo" ControlToValidate="txtObservaciones" ErrorMessage="El límite del campo Observaciones es de 4000 caracteres. Verifique." Font-Names="Arial" Font-Size="8pt" ValidationGroup="1">El límite es de 4000 caracteres. Verifique.</anthem:CustomValidator>
                                 <anthem:CustomValidator ID="cvValores" runat="server" ErrorMessage="Debe ingresar los valores (minimo y maximo) o una observación" Font-Size="8pt" onservervalidate="cvValores_ServerValidate" ValidateEmptyText="True" ValidationGroup="1"></anthem:CustomValidator>
@@ -807,7 +825,7 @@
                             </tr>
                         <tr>
                             <td align="right" colspan="3">
-                                <anthem:Button ID="btGuardarVR" runat="server" CssClass="btn btn-primary" onclick="btnGuardarVR_Click" TabIndex="9" Text="Agregar a Lista" ValidationGroup="1" Width="150px" />
+                                <anthem:Button ID="btGuardarVR" runat="server" CssClass="btn btn-primary" onclick="btnGuardarVR_Click" TabIndex="9" Text="Agregar a Lista" ValidationGroup="1" Width="150px" OnClientClick="sincronizarEditor();"  />
                             </td>
                         </tr>
                         <tr>
@@ -843,7 +861,7 @@
 
                         <tr>
                             <td colspan="4">
-                                <asp:Literal runat="server" Text="<strong>Linea 1</strong><i>Linea 2</i>"></asp:Literal>
+                               <%-- <asp:Literal runat="server" Text="<strong>Linea 1</strong><i>Linea 2</i>"></asp:Literal>--%>
                                 <h4>V.R de Pacientes
                                 </h4> 
                                 <anthem:GridView ID="gvListaVR" runat="server" AutoGenerateColumns="False" AutoUpdateAfterCallBack="True" BorderColor="#3A93D2" BorderStyle="Solid" BorderWidth="1px" CellPadding="0" CssClass="table table-bordered bs-table" DataKeyNames="idValorReferencia" EmptyDataText="No hay valores de referencia cargados para la determinación" Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal" onrowcommand="gvListaVR_RowCommand1" onrowdatabound="gvListaVR_RowDataBound" TabIndex="9" Width="100%" UpdateAfterCallBack="True">
