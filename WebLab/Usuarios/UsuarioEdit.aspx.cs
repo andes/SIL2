@@ -623,61 +623,6 @@ namespace WebLab.Usuarios
 
                 }
 
-        private void guardarAuditoria(Usuario oRegistro)
-        {
-            bool huboCambios = false;
-
-            Usuario oAuditor = new Usuario();
-            oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
-            if (Request["id"] == null)
-            {
-                oAuditor.GrabaAuditoria("Crea", oRegistro.IdUsuario, oRegistro.Username);
-            }
-            else   //Auditoria cambio de valores del usuario
-            {
-
-                if (oRegistro.Nombre != txtNombre.Text)
-                { oAuditor.GrabaAuditoria("Modifica Nombre", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Nombre, txtNombre.Text);  }
-
-                if (oRegistro.Apellido != txtApellido.Text)
-                { oAuditor.GrabaAuditoria("Modifica Apellido", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Apellido, txtApellido.Text);  }
-
-
-                if (oRegistro.FirmaValidacion != txtFirmaValidacion.Text)
-                { oAuditor.GrabaAuditoria("Modifica Firma Validacion", oRegistro.IdUsuario, oRegistro.Username, oRegistro.FirmaValidacion, txtFirmaValidacion.Text);  }
-
-                if (oRegistro.Email != email.Value.ToString())
-                { oAuditor.GrabaAuditoria("Modifica Email", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Email, email.Value);  }
-
-                if (oRegistro.Telefono != txtTelefono.Text)
-                { oAuditor.GrabaAuditoria("Modifica Telefono", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Telefono, txtTelefono.Text);  }
-
-                if (oRegistro.TipoAutenticacion.Trim() != ddlTipoAutenticacion.SelectedValue)
-                { oAuditor.GrabaAuditoria("Modifica Tipo Autenticacion", oRegistro.IdUsuario, oRegistro.Username, oRegistro.TipoAutenticacion, ddlTipoAutenticacion.SelectedValue);  }
-
-                if (oRegistro.Username != txtUsername.Text)
-                { oAuditor.GrabaAuditoria("Modifica Username", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Username, txtUsername.Text);  }
-
-                if (oRegistro.Administrador != chkAdministrador.Checked)
-                { oAuditor.GrabaAuditoria("Modifica Administrador", oRegistro.IdUsuario, oRegistro.Username, oRegistro.Administrador ? "Si" : "No", chkAdministrador.Checked ? "Si" : "No");  }
-
-                if (oRegistro.IdArea.ToString() != ddlArea.SelectedValue)
-                {
-                    string nombreArea = "";
-                    if (oRegistro.IdArea != 0)
-                    {
-                        Area oArea = new Area();
-                        oArea = (Area)oArea.Get(typeof(Area), oRegistro.IdArea);
-                        nombreArea = oArea.Nombre;
-                    }
-                    else nombreArea = "Todas";
-
-                    oAuditor.GrabaAuditoria("Modifica Area", oRegistro.IdUsuario, oRegistro.Username, nombreArea, ddlArea.SelectedItem.Text);
-                    
-
-                }
-
                 if (oRegistro.IdPerfil.IdPerfil.ToString() != ddlPerfil.SelectedValue)
                 { oAuditor.GrabaAuditoria("Modifica Perfil", oRegistro.IdUsuario, oRegistro.Username, oRegistro.IdPerfil.Nombre, ddlPerfil.SelectedItem.Text);  }
 
