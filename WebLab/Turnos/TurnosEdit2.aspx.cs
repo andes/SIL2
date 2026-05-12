@@ -508,11 +508,17 @@ ORDER BY cantidad desc";
             if (  (Request["Modifica"].ToString() == "1") && (Request["idTurno"] != null))
                 str_condicion = "  or exists (select 1 from LAB_Turno p WHERE p.idsector  = s.idSectorServicio and idTurno = " + Request["idTurno"].ToString() + ")) ";
 
+            //Carga del combo de determinaciones
+            string s_idEfector = oUser.IdEfector.IdEfector.ToString();
 
+            if (oUser.IdPerfil.IdPerfil.ToString() == "15")
+            {
+                s_idEfector = oUser.IdEfectorDestino.IdEfector.ToString();
+            }
 
             string m_ssql = @"SELECT  s.idSectorServicio,  s.prefijo + ' - ' + s.nombre   as nombre FROM LAB_SectorServicio  S with (nolock) 
                              WHERE (baja = 0)  
-                             and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector=" + oUser.IdEfector.IdEfector.ToString() + @" )" + str_condicion + @" order by nombre";
+                             and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector="+ s_idEfector + @" )" + str_condicion + @" order by nombre";
 
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre");
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
@@ -522,13 +528,7 @@ ORDER BY cantidad desc";
             //oUtil.CargarCombo(ddlEspecialista, m_ssql, "idProfesional", "nombre");
             //ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
 
-            //Carga del combo de determinaciones
-            string s_idEfector = oUser.IdEfector.IdEfector.ToString();
-
-            if (oUser.IdPerfil.IdPerfil.ToString() == "15")
-            {
-                s_idEfector = oUser.IdEfectorDestino.IdEfector.ToString();
-            }
+         
 
             m_ssql = @"SELECT I.idItem as idItem, I.codigo as codigo, I.nombre as nombre, I.nombre + ' - ' + I.codigo as nombreLargo 
                         FROM Lab_item I   with (nolock) 

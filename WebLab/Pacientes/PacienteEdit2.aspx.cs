@@ -80,13 +80,7 @@ namespace WebLab.Pacientes
                     {
                         try
                         {
-                            //IntAutenticacion.AutenticacionClient cliente =
-                            // new IntAutenticacion.AutenticacionClient();
-
-                            //TicketUsuario = cliente.LoginPecas(SistemaCliente, PasswordSistemaCliente);
-
-                            //if (TicketUsuario != "")
-                            //{
+                           
                             if (oCon.ConectaRenaper)
                             {
 

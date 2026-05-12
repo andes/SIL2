@@ -26,13 +26,9 @@ namespace WebLab.Estadisticas
         public Configuracion oC = new Configuracion();
         public CrystalReportSource oCr = new CrystalReportSource();
         public Usuario oUser = new Usuario();
+ 
 
-        int suma1 = 0;
-        int suma2 = 0;
-        int suma3 = 0; int suma4 = 0; int suma5 = 0; int suma6 = 0; int suma7 = 0; int suma8 = 0; int suma9 = 0; int suma10 = 0; int suma11 = 0;
-        int suma12 = 0; int suma13 = 0; int suma14 = 0; int suma15 = 0;
-
-
+        int[] sumas = new int[15];
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -199,11 +195,9 @@ namespace WebLab.Estadisticas
         {
 
 
-            try
-            {
-             
-
-                if ((e.Row.RowType == DataControlRowType.DataRow))
+            //try
+            //{
+            if ((e.Row.RowType == DataControlRowType.DataRow))
                 {
 
                     ImageButton CmdPdf = (ImageButton)e.Row.Cells[16].Controls[1];
@@ -215,49 +209,37 @@ namespace WebLab.Estadisticas
                     CmdExcel.CommandArgument = ddlAnalisis.SelectedValue + "~" + e.Row.Cells[0].Text; ///Codigo1 + ";" + codigo2
                     CmdExcel.CommandName = "EXCEL";
                     CmdExcel.ToolTip = "Ver Pacientes";
+          
+                for (int i = 1; i <= 15; i++)
+                {
+                    int valor = 0;
+                    string texto = e.Row.Cells[i].Text.Replace("&nbsp;", "").Trim();
 
-
-                    if (e.Row.Cells[1].Text != "&nbsp;") suma1 += int.Parse(e.Row.Cells[1].Text);                    
-                    if (e.Row.Cells[2].Text != "&nbsp;") suma2 += int.Parse(e.Row.Cells[2].Text);                    
-                    if (e.Row.Cells[3].Text != "&nbsp;") suma3 += int.Parse(e.Row.Cells[3].Text);
-                    if (e.Row.Cells[4].Text != "&nbsp;") suma4 += int.Parse(e.Row.Cells[4].Text);
-                    if (e.Row.Cells[5].Text != "&nbsp;") suma5 += int.Parse(e.Row.Cells[5].Text);
-                    if (e.Row.Cells[6].Text != "&nbsp;") suma6 += int.Parse(e.Row.Cells[6].Text);
-                    if (e.Row.Cells[7].Text != "&nbsp;") suma7 += int.Parse(e.Row.Cells[7].Text);
-                    if (e.Row.Cells[8].Text != "&nbsp;") suma8 += int.Parse(e.Row.Cells[8].Text);
-                    if (e.Row.Cells[9].Text != "&nbsp;") suma9 += int.Parse(e.Row.Cells[9].Text);
-                    if (e.Row.Cells[10].Text != "&nbsp;") suma10 += int.Parse(e.Row.Cells[10].Text);
-                    if (e.Row.Cells[11].Text != "&nbsp;") suma11 += int.Parse(e.Row.Cells[11].Text);
-                    if (e.Row.Cells[11].Text != "&nbsp;") suma12 += int.Parse(e.Row.Cells[12].Text);
-                    if (e.Row.Cells[11].Text != "&nbsp;") suma13 += int.Parse(e.Row.Cells[13].Text);
-                    if (e.Row.Cells[11].Text != "&nbsp;") suma14 += int.Parse(e.Row.Cells[14].Text);
-                    if (e.Row.Cells[11].Text != "&nbsp;") suma15 += int.Parse(e.Row.Cells[15].Text);
-
+                    if (int.TryParse(texto, out valor))
+                    {
+                        sumas[i - 1] += valor;
+                    }
                 }
+
+             
+            }
+
+          
+        
                 if (e.Row.RowType == DataControlRowType.Footer)
                 {
                     e.Row.Cells[0].Text = "TOTAL CASOS";
-                    e.Row.Cells[1].Text = suma1.ToString();
-                    e.Row.Cells[2].Text = suma2.ToString();
-                    e.Row.Cells[3].Text = suma3.ToString();
-                    e.Row.Cells[4].Text = suma4.ToString();
-                    e.Row.Cells[5].Text = suma5.ToString();
-                    e.Row.Cells[6].Text = suma6.ToString();
-                    e.Row.Cells[7].Text = suma7.ToString();
-                    e.Row.Cells[8].Text = suma8.ToString();
-                    e.Row.Cells[9].Text = suma9.ToString();
-                    e.Row.Cells[10].Text = suma10.ToString();
-                    e.Row.Cells[11].Text = suma11.ToString();
-                    e.Row.Cells[12].Text = suma12.ToString();
-                    e.Row.Cells[13].Text = suma13.ToString();
-                    e.Row.Cells[14].Text = suma14.ToString();
-                    e.Row.Cells[15].Text = suma15.ToString();
-
+                for (int i = 1; i <= 15; i++)
+                {
+                    e.Row.Cells[i].Text = sumas[i - 1].ToString();
                 }
+              
 
             }
-            catch
-            { }
+
+            //}
+            //catch
+            //{ }
 
         }
 
@@ -547,16 +529,8 @@ CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS [Fecha Nacimiento],    d.calle 
             ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
             if (ddlEfector.SelectedValue=="0")
             {
-              
-
-
-                //ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
-                encabezado1.Value ="Subsecretaria de Salud";
-
-                //ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
-                encabezado2.Value = "Laboratorios";
-
-                //ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+                encabezado1.Value ="Subsecretaria de Salud";             
+                encabezado2.Value = "Laboratorios";                
                 encabezado3.Value = "";
             }
             else
@@ -566,13 +540,12 @@ CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS [Fecha Nacimiento],    d.calle 
 
                 Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oEfector);
 
-                //ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
-                encabezado1.Value = oCon.EncabezadoLinea1;
+                           encabezado1.Value = oCon.EncabezadoLinea1;
 
-                //ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+                
                 encabezado2.Value = oCon.EncabezadoLinea2;
 
-                //ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+                
                 encabezado3.Value = oCon.EncabezadoLinea3;
 
 
@@ -640,7 +613,7 @@ CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS [Fecha Nacimiento],    d.calle 
             }
             catch (Exception ex)
             {
-                string exception = "";
+               // string exception = "";
                 //while (ex != null)
                 //{
                 //    exception = ex.Message + "<br>";
