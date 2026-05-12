@@ -201,7 +201,7 @@ namespace WebLab.Estadisticas
             int prom = 0;
             
 
-            if (Session["Agrupado"].ToString() == "0") columnas = 4;
+            if (Session["Agrupado"].ToString() == "0") columnas = 6;
             if (Session["Agrupado"].ToString() == "1") columnas = 2;
           
             for (int j=1; j<columnas;j++)

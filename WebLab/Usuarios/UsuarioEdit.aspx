@@ -204,7 +204,7 @@
                 <td style="width: 497px"><asp:CustomValidator ID="customValidacionGeneral1" runat="server" ErrorMessage="Usuario no puede contener letras ni caracteres especiales" OnServerValidate="customValidacionGeneral1_ServerValidate1" ValidationGroup="0"></asp:CustomValidator></td></tr>
             <tr>
                 <td  style="width: 93px">
-                    Contraseña:</td>
+                   <asp:Label Text="Contraseña:" runat="server" ID="lblPassword"></asp:Label></td>
                 <td style="width: 497px"  >
                     <asp:TextBox ID="txtPassword" runat="server" Width="350px" TextMode="Password" 
                       class="form-control input-sm" MaxLength="50"></asp:TextBox>

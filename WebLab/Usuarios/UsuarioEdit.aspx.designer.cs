@@ -141,6 +141,15 @@ namespace WebLab.Usuarios
         protected global::System.Web.UI.WebControls.CustomValidator customValidacionGeneral1;
 
         /// <summary>
+        /// Control lblPassword.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPassword;
+
+        /// <summary>
         /// Control txtPassword.
         /// </summary>
         /// <remarks>

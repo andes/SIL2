@@ -118,9 +118,38 @@ namespace WebLab.Usuarios
              
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
             if   (nivelcentral)
-               ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
+               ddlEfector.Items.Insert(0, new ListItem("--Seleccione un efector--", "0"));
 
-            m_ssql = @"SELECT idPerfil, nombre FROM Sys_Perfil with (nolock) ORDER BY nombre";
+            if (nivelcentral)
+                m_ssql = @"SELECT idPerfil, nombre FROM Sys_Perfil with (nolock) ORDER BY nombre";
+            else
+                m_ssql = @"SELECT DISTINCT
+                            U.idPerfil,
+                            P.nombre
+                        FROM Sys_Usuario U
+                        INNER JOIN Sys_Perfil P ON P.idPerfil = U.idPerfil
+                        WHERE U.idUsuario IN (
+                            SELECT idUsuario
+                            FROM Sys_UsuarioEfector
+                            WHERE idEfector = " + oUser.IdEfector.IdEfector.ToString() + @"
+                        )
+                        UNION
+
+                        SELECT
+                            P.idPerfil,
+                            P.nombre
+                        FROM Sys_Perfil P WITH (NOLOCK)
+                        WHERE P.idPerfil = 15
+                        AND EXISTS (
+                            SELECT 1
+                            FROM Sys_Usuario U WITH (NOLOCK)
+                            WHERE U.idEfector <> " + oUser.IdEfector.IdEfector.ToString() + @"
+                              AND U.idEfectorDestino = " + oUser.IdEfector.IdEfector.ToString() + @"
+                              AND U.activo = 1
+                              AND U.idPerfil = 15
+                        )
+
+                        ORDER BY P.nombre";
             oUtil.CargarCombo(ddlPerfil, m_ssql, "idPerfil", "nombre");
             ddlPerfil.Items.Insert(0, new ListItem("Todos", "0"));
 

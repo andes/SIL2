@@ -4,6 +4,7 @@ insert license info here
 using Business.Data.Laboratorio;
 using System;
 using System.Collections;
+using System.Data.SqlClient;
 
 namespace Business.Data
 {
@@ -225,8 +226,9 @@ namespace Business.Data
 				m_isChanged |= (m_nombre != value); m_nombre = value;
 			}
 		}
+       
 
-        public void GrabaAuditoria(string accion, int iduser, string username)
+        public int GrabaAuditoria(string accion, int iduser, string username, string valorAnterior="", string valorNuevo="")
         {
             AuditoriaUsuario  oRegistro = new AuditoriaUsuario();
             oRegistro.IdUsuario = iduser; // usuario afectado que esta modificando, consultando , etc.
@@ -236,8 +238,10 @@ namespace Business.Data
             oRegistro.Hora = DateTime.Now.ToLongTimeString();
 
             oRegistro.IdUsuarioRegistro = this.IdUsuario; //usuario que realiza la accion
+            oRegistro.ValorAnterior = valorAnterior;
+            oRegistro.ValorNuevo = valorNuevo;
             oRegistro.Save();
-
+            return oRegistro.IdAuditoriaUsuario;
 
         }
 
@@ -474,5 +478,6 @@ namespace Business.Data
             }
 
         }
+
     }
 }
