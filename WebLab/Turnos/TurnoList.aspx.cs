@@ -852,7 +852,21 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
-            Actualizar();
+            {
+                lblMensajeBusqueda.Visible = false;
+                if (rdbBusqueda.Items[0].Selected) // DNI
+                {
+                    long dni;
+                    if (!long.TryParse(txtPaciente.Text, out dni))
+                    {
+                        lblMensajeBusqueda.Visible = true;
+                        lblMensajeBusqueda.Text = "El DNI ingresado no es válido";
+                        return;
+                    }
+                }
+
+                Actualizar(); 
+            }
         }
 
         protected void cldTurno_DayRender(object sender, DayRenderEventArgs e)
