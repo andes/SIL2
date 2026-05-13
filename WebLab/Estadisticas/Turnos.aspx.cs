@@ -392,11 +392,12 @@ namespace WebLab.Estadisticas
             string m_ssql = @" SELECT distinct e.idEfector,E.nombre as nombre
                              FROM  LAB_Agenda A (nolock) 
                              INNER JOIN sys_Efector E (nolock) on E.idEfector=A.idEfectorSolicitante
-                            where A.baja=0 and a.idEfector=" + oUser.IdEfector.IdEfector.ToString() + " and a.idEfectorSolicitante<>" + oUser.IdEfector.IdEfector.ToString();
+                            where A.baja=0 and a.idEfector=" + ddlEfector.SelectedValue.ToString() + " and a.idEfectorSolicitante<>" + ddlEfector.SelectedValue.ToString();
             oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre", connReady);
-            ddlEfectorSolicitante.Items.Insert(0, new ListItem("--TODOS--", "0"));
+            
             if (ddlEfectorSolicitante.Items.Count > 0)
             {
+                ddlEfectorSolicitante.Items.Insert(0, new ListItem("--TODOS--", "0"));
                 ddlEfectorSolicitante.Visible = true; lblEfectorSolicitante.Visible = true;
             }
             else
