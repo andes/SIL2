@@ -1161,14 +1161,29 @@ namespace Business
 
         private static void ExcelCompletarFilas(ExcelWorksheet ws, TableCell cell, int fila, int col, Color? encabezadoColor = null, Color? fontColor = null)
         {
-            // (2) Decodificar texto HTML
-            var texto = HttpUtility.HtmlDecode(cell.Text);
+            
             // (1) Detectar si es número
+            // Detectar números por TryParse
             double numero;
+            var texto = cell.Text.ToString().Trim();
+
+            System.Globalization.CultureInfo cultura;
+
+            // Si tiene coma, usar cultura con coma decimal
+            if (texto.Contains(","))
+            {
+                cultura = System.Globalization.CultureInfo.GetCultureInfo("es-ES");
+            }
+            else
+            {
+                // Si tiene punto, usar cultura con punto decimal
+                cultura = System.Globalization.CultureInfo.InvariantCulture;
+            }
+
             bool esNumero = double.TryParse(
                 texto,
                 System.Globalization.NumberStyles.Any,
-                System.Globalization.CultureInfo.GetCultureInfo("es-ES"), // Usar una cultura que use la coma como separador decimal
+                cultura,
                 out numero
             );
 
@@ -1178,8 +1193,27 @@ namespace Business
             }
             else
             {
-                ws.Cells[fila, col].Value = texto;
+                ws.Cells[fila, col].Value = HttpUtility.HtmlDecode(cell.Text);
             }
+
+            //formato de numero segun cantidad de decimales
+            string separador = texto.Contains(",") ? "," : ".";
+
+            int decimales = 0;
+
+            if (texto.Contains(separador))
+            {
+                decimales = texto.Split(separador[0])[1].Length;
+            }
+
+            string formato = "0";
+
+            if (decimales > 0)
+            {
+                formato += "." + new string('0', decimales);
+            }
+
+            ws.Cells[fila, col].Style.Numberformat.Format = formato;
 
             // Aplicar colores si existen
 
