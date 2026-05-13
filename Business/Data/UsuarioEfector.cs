@@ -19,27 +19,32 @@ namespace Business.Data
         private int m_idusuarioefector;
         private Usuario m_idusuario; 
 		private Efector m_idefector; 
-		
 		private bool m_activo;
-       
+		private int m_idPerfil;
+		private int m_idEfectorDestino;
+		private int m_idArea;
+		private int m_idUsuarioRegistro;
+		private DateTime m_fechaRegistro;
 
-        #endregion
 
-        #region Default ( Empty ) Class Constuctor
-        /// <summary>
-        /// default constructor
-        /// </summary>
-        public UsuarioEfector()
+		#endregion
+
+		#region Default ( Empty ) Class Constuctor
+		/// <summary>
+		/// default constructor
+		/// </summary>
+		public UsuarioEfector()
 		{
             m_idusuarioefector = 0;
             m_idusuario = new Usuario(); 
 			m_idefector = new Efector(); 
-			
 			m_activo = false;
-          
-
-
-        }
+			m_idPerfil = 0;
+			m_idEfectorDestino = 0;
+			m_idArea = 0;
+			m_idUsuarioRegistro = 0;
+			m_fechaRegistro = DateTime.MinValue;
+		}
 
         
         #endregion // End of Default ( Empty ) Class Constuctor
@@ -49,12 +54,11 @@ namespace Business.Data
         /// required (not null) fields only constructor
         /// </summary>
         public UsuarioEfector(
-			bool activo)
+			bool activo)			
 			: this()
         {
             m_idusuario = new Usuario();
             m_idefector = new Efector();
-			 
 			m_activo = activo;
            
 
@@ -113,6 +117,60 @@ namespace Business.Data
 			}
 
 		}
+		public int IdPerfil
+		{
+			get { return m_idPerfil; }
+			set
+			{
+				m_isChanged |= (m_idPerfil != value );
+				m_idPerfil = value;
+			}
+
+		}
+
+		public int IdEfectorDestino
+		{
+			get { return m_idEfectorDestino; }
+			set
+			{
+				m_isChanged |= (m_idEfectorDestino != value );
+				m_idEfectorDestino = value;
+			}
+
+		}
+		
+		public int IdArea
+		{
+			get { return m_idArea; }
+			set
+			{
+				m_isChanged |= (m_idArea != value );
+				m_idArea = value;
+			}
+
+		}
+		
+		public int IdUsuarioRegistro
+		{
+			get { return m_idUsuarioRegistro; }
+			set
+			{
+				m_isChanged |= (m_idUsuarioRegistro != value );
+				m_idUsuarioRegistro = value;
+			}
+
+		}
+		
+		public DateTime FechaRegistro
+		{
+			get { return m_fechaRegistro; }
+			set
+			{
+				m_isChanged |= (m_fechaRegistro != value );
+				m_fechaRegistro = value;
+			}
+
+		}
 
  
 		public bool IsChanged
@@ -123,19 +181,5 @@ namespace Business.Data
         #endregion
 
 
-        #region Metodos
-
-
-        #endregion
-
-        //public bool esHemoterapia()
-        //{
-        //     var index=this.IdPerfil.Nombre.ToUpper().IndexOf("HEMOTERAPIA");
-        //     if (index > -1) return true;
-        //     else return false;
-
-        //}
-        
-        
     }
 }

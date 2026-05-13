@@ -221,42 +221,8 @@
                     <anthem:checkbox ID="chkAdministrador" runat="server" Text="SI" AutoCallBack="True" onclick="habilitarListaEfectores();" OnCheckedChanged="chkAdministrador_CheckedChanged" />
                 </td>
             </tr>
-           <%-- <tr>
-                <td class="auto-style1">
-                    Efector</td>
-                <td class="auto-style2"  >
-                     <anthem:dropdownlist ID="ddlEfector" runat="server" Width="300px" class="form-control input-sm">
-                    </anthem:dropdownlist>
-                     <anthem:rangevalidator ID="rvEfector" runat="server" ControlToValidate="ddlEfector" 
-                        ErrorMessage="Efector" MaximumValue="999999" MinimumValue="1" Type="Integer" 
-                        ValidationGroup="0">*</anthem:rangevalidator>
-                </td>
-            </tr>--%>
-            <tr>
-                <td  style="width: 93px">
-                    Area/Laboratorio:</td>
-                <td style="width: 497px"  >
-                     <anthem:dropdownlist ID="ddlArea" runat="server" Width="200px" class="form-control input-sm">
-                     </anthem:dropdownlist>
-                </td>
-            </tr>
-            <tr>
-                <td  style="width: 93px">
-                    Perfil:</td>
-                <td style="width: 497px"  >
-                      <anthem:dropdownlist ID="ddlPerfil" runat="server" CssClass="form-control input-sm" AutoCallBack="True" OnSelectedIndexChanged="ddlPerfil_SelectedIndexChanged" >
-                       </anthem:dropdownlist>
-                      <anthem:rangevalidator ID="rvPerfil" runat="server" ControlToValidate="ddlPerfil" 
-                        ErrorMessage="Perfil" MaximumValue="999999" MinimumValue="1" Type="Integer" 
-                        ValidationGroup="0">*  </anthem:rangevalidator>
-                     <anthem:dropdownlist ID="ddlEfectorDestino" runat="server" Width="200px" class="form-control input-sm" Visible="False">
-                    </anthem:dropdownlist>
-                     <anthem:rangevalidator ID="rvEfectorDestino" runat="server" ControlToValidate="ddlEfectorDestino" 
-                        ErrorMessage="Efector Destino - Laboratorio" MaximumValue="999999" MinimumValue="1" Type="Integer" 
-                        ValidationGroup="0" Enabled="False">*</anthem:rangevalidator>
-                </td>
-            </tr>
-            <tr>
+         
+           <tr>
                 <td  style="width: 93px">
                     Activo:</td>
                 <td style="width: 497px"  >
@@ -322,20 +288,51 @@
                </div>
 
            <div id="tab2" class="tab_content" style="border: 1px solid #C0C0C0">
-       <div class="panel-body">	
-           <table>
-            <tr>
-                <td colspan="2">
-                                         
-                   <%--  <anthem:dropdownlist ID="ddlEfector2" runat="server" Width="200px" class="form-control input-sm">
-                    </anthem:dropdownlist> --%>
+           <div class="panel-body">	
+               <table>
+                    <tr>
+                         <td  style="width: 93px">Efector:</td>
+                        <td  style="width: 497px" >
+                             <asp:DropDownList   ID="ddlEfector3" runat="server"    Width="200px"> </asp:DropDownList>
 
-                    <asp:DropDownList   ID="ddlEfector3" runat="server"    Width="200px"> </asp:DropDownList>
+                        </td>
+                    </tr>
+                    <tr>
+                            <td  style="width: 93px">Area/Laboratorio:</td>
+                            <td style="width: 497px"  >
+                                 <anthem:dropdownlist ID="ddlArea" runat="server" Width="250px" class="form-control input-sm">
+                                 </anthem:dropdownlist>
+                            </td>
+                    </tr>
+                     <tr>
+                        <td  style="width: 93px">
+                            Perfil:</td>
+                        <td style="width: 497px"  >
+                              <anthem:dropdownlist ID="ddlPerfil" runat="server" CssClass="form-control input-sm"  Width="250px" AutoCallBack="True" OnSelectedIndexChanged="ddlPerfil_SelectedIndexChanged" >
+                               </anthem:dropdownlist>
+                              <anthem:rangevalidator ID="rvPerfil" runat="server" ControlToValidate="ddlPerfil" 
+                                ErrorMessage="Perfil" MaximumValue="999999" MinimumValue="1" Type="Integer" 
+                                ValidationGroup="0">*  </anthem:rangevalidator>
+                            
+                        </td>
+                    </tr>
+                   <tr>
+                       <td style="width: 93px"> <anthem:label runat="server" ID="lblEfectorDestino" Text="Efector Destino:"> </anthem:label></td>
+                       <td style="width: 497px">
+                            <anthem:dropdownlist ID="ddlEfectorDestino" runat="server" Width="250px" class="form-control input-sm" Visible="False">
+                            </anthem:dropdownlist>
+                             <anthem:rangevalidator ID="rvEfectorDestino" runat="server" ControlToValidate="ddlEfectorDestino" 
+                                ErrorMessage="Efector Destino - Laboratorio" MaximumValue="999999" MinimumValue="1" Type="Integer" 
+                                ValidationGroup="0" Enabled="False">*</anthem:rangevalidator>
+                       </td>
+                   </tr>
+               
+                       
+                   <tr> <td></td><td></td>
+                       <td >
+                        <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" />
 
-                    <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" />
-
-                  
-                </td>
+                    </td>
              
             </tr>
              <tr>
@@ -343,9 +340,11 @@
                      <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
                  </td>
              </tr>
-          
+          <tr>
+              <td><hr/></td><td><hr/></td>
+          </tr>
             <tr>
-                <td >
+                <td  colspan="3">
                         <anthem:GridView ID="gvListaEfector" runat="server" AutoGenerateColumns="False" 
                             DataKeyNames="idEfector" Font-Size="12pt" Width="100%"
                             ForeColor="#333333" EmptyDataText="Agregue al menos un efector"
@@ -354,19 +353,25 @@
                             GridLines="Horizontal" OnRowCommand="gvListaEfector_RowCommand" OnRowDataBound="gvListaEfector_RowDataBound">
                             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                             <Columns>
-                               <asp:BoundField DataField="nombre" 
-                                    HeaderText="Efector" >
-                                    <ItemStyle Width="90%" />
-                                </asp:BoundField>
+                               <asp:BoundField DataField="nombre"   HeaderText="Efector" >
+                                    <ItemStyle Width="30%" />
+                                </asp:BoundField> 
+                                <asp:BoundField DataField="Area"  HeaderText="Area" >
+                                    <ItemStyle Width="25%" />
+                                </asp:BoundField>  
+                                <asp:BoundField DataField="Perfil"  HeaderText="Perfil" >
+                                    <ItemStyle Width="20%" />
+                                </asp:BoundField> 
+                                <asp:BoundField DataField="Efector Destino"   HeaderText="Laboratorio Destino" >
+                                    <ItemStyle Width="50%" />
+                                </asp:BoundField> 
                               <asp:TemplateField HeaderText="">
-                                            <ItemTemplate>
-                                            <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg" 
-                                                CommandName="Eliminar" />
-                                            </ItemTemplate>
-                          
-                                               <ItemStyle Width="5%" HorizontalAlign="Center" />
-                          
-                                        </asp:TemplateField>
+                                    <ItemTemplate>
+                                    <asp:ImageButton ID="Eliminar" runat="server" ImageUrl="~/App_Themes/default/images/eliminar.jpg" 
+                                        CommandName="Eliminar" />
+                                    </ItemTemplate>
+                                        <ItemStyle Width="5%" HorizontalAlign="Center" />
+                                 </asp:TemplateField>
                             </Columns>
                             <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
