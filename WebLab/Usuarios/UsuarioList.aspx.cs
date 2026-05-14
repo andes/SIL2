@@ -171,8 +171,8 @@ namespace WebLab.Usuarios
                     firmaValidacion, email, U.telefono, CASE WHEN externo = 1 THEN 'Si' ELSE 'No' END AS externo,
                     P.nombre AS Perfil, E.nombre AS Efector,tipoAutenticacion as [Tipo Autenticacion] 
                     FROM Sys_Usuario U WITH (NOLOCK) 
-                    INNER JOIN sys_perfil P WITH (NOLOCK) ON U.idPerfil = P.idPerfil 
                     INNER JOIN Sys_UsuarioEfector AS UE WITH (NOLOCK) ON UE.idUsuario = U.idUsuario 
+                    INNER JOIN sys_perfil P WITH (NOLOCK) ON UE.idPerfil = P.idPerfil 
                     INNER JOIN Sys_Efector AS E WITH (NOLOCK) ON E.idEfector = UE.idEfector ";
             }
             else
@@ -180,8 +180,8 @@ namespace WebLab.Usuarios
                 m_strSQL = @"SELECT U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
                         case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion 
                         FROM Sys_Usuario U WITH(NOLOCK) 
-                        INNER JOIN sys_perfil P WITH (NOLOCK) ON U.idPerfil = P.idPerfil 
                         INNER JOIN Sys_UsuarioEfector AS UE WITH (NOLOCK) ON UE.idUsuario = U.idUsuario 
+                        INNER JOIN sys_perfil P WITH (NOLOCK) ON UE.idPerfil = P.idPerfil 
                         INNER JOIN Sys_Efector AS E WITH (NOLOCK) ON E.idEfector = UE.idEfector ";
             }
                  

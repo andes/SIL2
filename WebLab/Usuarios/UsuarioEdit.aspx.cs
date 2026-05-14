@@ -29,9 +29,6 @@ namespace WebLab.Usuarios
         public Configuracion oC = new Configuracion();
         CrystalReportSource oCr = new CrystalReportSource();
 
-
-
-
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -122,16 +119,16 @@ namespace WebLab.Usuarios
             txtPassword.Visible = false;
             lblPassword.Visible = false;
             chkActivo.Checked = oRegistro.Activo;
-            ddlPerfil.SelectedValue = oRegistro.IdPerfil.IdPerfil.ToString();
+            //ddlPerfil.SelectedValue = oRegistro.IdPerfil.IdPerfil.ToString(); --> Se muestra en grilla tab Efector
             //ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
             //ddlEfector.Enabled = false;
-            if (ddlPerfil.SelectedValue == "15")
-            {
-                CargarEfectorLabo();
-                ddlEfectorDestino.SelectedValue = oRegistro.IdEfectorDestino.IdEfector.ToString();
-            }
+            //if (ddlPerfil.SelectedValue == "15") --> Se muestra en grilla  tab Efector
+            //{
+            //    CargarEfectorLabo();
+            //    ddlEfectorDestino.SelectedValue = oRegistro.IdEfectorDestino.IdEfector.ToString();
+            //}
 
-            ddlArea.SelectedValue = oRegistro.IdArea.ToString();
+            //ddlArea.SelectedValue = oRegistro.IdArea.ToString();--> Se muestra en grilla tab Efector
             chkExterno.Checked = oRegistro.Externo;
             rfvPassword.Enabled = false;
             email.Value = oRegistro.Email;
@@ -456,6 +453,7 @@ namespace WebLab.Usuarios
                 lblEfectorDestino.Visible = false;
             }
             ddlEfectorDestino.UpdateAfterCallBack = true;
+            lblEfectorDestino.UpdateAfterCallBack = true;
         }
 
         private void CargarEfectorLabo()
@@ -474,6 +472,7 @@ namespace WebLab.Usuarios
             rvEfectorDestino.Enabled = true;
             rvEfectorDestino.UpdateAfterCallBack = true;
             lblEfectorDestino.Visible = true;
+            lblEfectorDestino.UpdateAfterCallBack = true;
         }
 
         protected void customValidacionGeneral0_ServerValidate(object source, ServerValidateEventArgs args)
@@ -707,29 +706,31 @@ namespace WebLab.Usuarios
         private void AgregarEfector()
         {
             lblMensajeEfector.Visible = false;
-            if (ddlEfector3.SelectedValue != "0")
+           
+            DataTable dt = ViewState["efectores"] as DataTable;
+
+            if (puedeAgregarEfector(dt))
             {
-                DataTable dt = ViewState["efectores"] as DataTable; 
+                string efectorDestino = (ddlEfectorDestino.SelectedItem != null ) ? ddlEfectorDestino.SelectedItem.Text : ddlEfector3.SelectedItem.Text ;
+                int efDestino = (ddlEfectorDestino.SelectedItem != null ) ? int.Parse( ddlEfectorDestino.SelectedValue.ToString()) : int.Parse( ddlEfector3.SelectedValue);
 
-                if (puedeAgregarEfector(dt))
+                dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue, ddlArea.SelectedItem.Text, ddlArea.SelectedValue, ddlPerfil.SelectedItem.Text, ddlPerfil.SelectedValue, efectorDestino, efDestino);
+                ViewState["efectores"] = dt;
+                //Si el usuario existe lo guarda en la base, sino lo deja en el viewstate para guardarlo cuando se guarde el usuario
+                if (Request["id"] != null)
                 {
-                    dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue, ddlArea.SelectedItem.Text, ddlArea.SelectedValue, ddlPerfil.SelectedItem.Text, ddlPerfil.SelectedValue, ddlEfectorDestino.SelectedItem.Text, ddlEfectorDestino.SelectedValue);
-                    ViewState["efectores"] = dt;
-                    //Si el usuario existe lo guarda en la base, sino lo deja en el viewstate para guardarlo cuando se guarde el usuario
-                    if (Request["id"] != null)
-                    {
-                        Usuario oUsuario = new Usuario();
-                        oUsuario = (Usuario)oUsuario.Get(typeof(Usuario), int.Parse(Request["id"]));
-                        GuardarEfectores(oUsuario);
-                    }
-                }
-                else
-                {
-                    lblMensajeEfector.Visible = true;
-                    lblMensajeEfector.Text = "Alerta: Efector ya ingresado para el usuario.";
-
+                    Usuario oUsuario = new Usuario();
+                    oUsuario = (Usuario)oUsuario.Get(typeof(Usuario), int.Parse(Request["id"]));
+                    GuardarEfectores(oUsuario);
                 }
             }
+            else
+            {
+                lblMensajeEfector.Visible = true;
+                lblMensajeEfector.Text = "Alerta: Efector ya ingresado para el usuario.";
+
+            }
+
             lblMensajeEfector.UpdateAfterCallBack = true;
         }
 
@@ -770,11 +771,13 @@ namespace WebLab.Usuarios
                     oRegistro.IdPerfil = int.Parse(row["idPerfil"].ToString());
                     oRegistro.IdArea = int.Parse(row["idArea"].ToString());
                     oRegistro.IdEfectorDestino = int.Parse(row["idEfectorDestino"].ToString());
+                    oRegistro.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+                    oRegistro.FechaRegistro = DateTime.Now;
                     oRegistro.Save();
                     
                     //solo genero auditoria la primera vez que vincula el efector
                     if (!yaTieneAuditoriaVincula.Contains(idEfector))
-                        oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre +" Perfil:" + row["Perfil"].ToString() + " Area:" + row["Area"].ToString(), oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username);
+                        oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username, "", "Perfil:" + row["Perfil"].ToString() + " Area:" + row["Area"].ToString());
 
                     //actualizo el viewstate con los nuevos ID
                     row[0] = oRegistro.IdUsuarioEfector;
@@ -859,7 +862,7 @@ namespace WebLab.Usuarios
 
                             Usuario oAuditor = new Usuario();
                             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                            oAuditor.GrabaAuditoria("DesVincula " + s_efector.TrimStart().TrimEnd() + " Perfil:" + oPerfil.Nombre + " Area:" + nombreArea, int.Parse(Request["id"].ToString()), s_username);
+                            oAuditor.GrabaAuditoria("DesVincula " + s_efector.TrimStart().TrimEnd(), int.Parse(Request["id"].ToString()), s_username, "Perfil:" + oPerfil.Nombre + " Area:" + nombreArea, "");
                         }
                     } //else: esta solo en la visualizacion pero no en la base de datos
                     
