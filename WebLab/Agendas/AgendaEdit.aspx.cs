@@ -323,22 +323,30 @@ namespace WebLab.Agendas
                 }
                 
                 string dias = string.Join(",", diasSeleccionados);
+                if (dias != "") { 
+                    crit.Add(Expression.Sql(
+                        @"exists (
+                            select 1
+                            from LAB_AgendaDia D
+                            where D.idAgenda = {alias}.idAgenda
+                            and D.dia in (" + dias + @")
+                        )"
+                     ));
+                    IList items = crit.List();
 
-                crit.Add(Expression.Sql(
-                    @"exists (
-                        select 1
-                        from LAB_AgendaDia D
-                        where D.idAgenda = {alias}.idAgenda
-                        and D.dia in (" + dias + @")
-                    )"
-                 ));
-                IList items = crit.List();
-
-                if (items.Count > 0)
+                    if (items.Count > 0)
+                    {
+                        args.IsValid = false;
+                        this.customValidadorGeneral.ErrorMessage = "Existe superposición de fechas con otra agenda";
+                    }
+                }
+                else
                 {
                     args.IsValid = false;
-                    this.customValidadorGeneral.ErrorMessage = "Existe superposición de fechas con otra agenda";
+                    this.customValidadorGeneral.ErrorMessage = "Error ingrese dias de atencion";
+
                 }
+                
             }
         }
     }

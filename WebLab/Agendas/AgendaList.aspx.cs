@@ -111,7 +111,7 @@ namespace WebLab.Agendas
 			                                    when D2.dia = 4 then 'Jueves' 
 			                                    when D2.dia = 5 then 'Viernes' 
 			                                    when D2.dia = 6 then 'Sabado' 
-			                                    when D2.dia = 7 then 'Domingo' 
+			                                    when D2.dia = 0 then 'Domingo' 
 			
 			                                    end
                                                 FROM LAB_AgendaDia D2 (NOLOCK)

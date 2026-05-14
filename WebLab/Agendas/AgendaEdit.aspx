@@ -141,7 +141,7 @@
                                     <asp:ListItem Value="1">Dias habiles</asp:ListItem>
                                 </Items>
                             </anthem:RadioButtonList>
-                                        
+                                 </td>       
 					</tr>
 					<tr>
 						<td>&nbsp;</td>
@@ -158,7 +158,7 @@
                                     <asp:ListItem Value="0">Domingo</asp:ListItem>
                                 </Items>
                             </anthem:CheckBoxList>
-                                        
+                                  </td>            
 					</tr>
 					<tr>
 						<td  >Hora Desde:<span style="font-weight:bold"><asp:RequiredFieldValidator 
