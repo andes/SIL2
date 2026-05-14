@@ -293,14 +293,21 @@
                     <tr>
                          <td  style="width: 93px">Efector:</td>
                         <td  style="width: 497px" >
-                             <asp:DropDownList   ID="ddlEfector3" runat="server"    Width="200px"> </asp:DropDownList>
-
+                             <asp:DropDownList   ID="ddlEfector3" runat="server" ValidationGroup="1"   Width="200px"> </asp:DropDownList>
+                            <asp:RequiredFieldValidator
+                                ID="rfvEfector3"
+                                runat="server"
+                                ControlToValidate="ddlEfector3"
+                                InitialValue="0"
+                                ErrorMessage="Seleccione un efector"
+                                ValidationGroup="1">*
+                            </asp:RequiredFieldValidator>
                         </td>
                     </tr>
                     <tr>
                             <td  style="width: 93px">Area/Laboratorio:</td>
                             <td style="width: 497px"  >
-                                 <anthem:dropdownlist ID="ddlArea" runat="server" Width="250px" class="form-control input-sm">
+                                 <anthem:dropdownlist ID="ddlArea" runat="server" Width="250px" class="form-control input-sm" ValidationGroup="1">
                                  </anthem:dropdownlist>
                             </td>
                     </tr>
@@ -308,11 +315,11 @@
                         <td  style="width: 93px">
                             Perfil:</td>
                         <td style="width: 497px"  >
-                              <anthem:dropdownlist ID="ddlPerfil" runat="server" CssClass="form-control input-sm"  Width="250px" AutoCallBack="True" OnSelectedIndexChanged="ddlPerfil_SelectedIndexChanged" >
+                              <anthem:dropdownlist ID="ddlPerfil" runat="server" CssClass="form-control input-sm"  Width="250px" AutoCallBack="True" OnSelectedIndexChanged="ddlPerfil_SelectedIndexChanged" ValidationGroup="1">
                                </anthem:dropdownlist>
                               <anthem:rangevalidator ID="rvPerfil" runat="server" ControlToValidate="ddlPerfil" 
                                 ErrorMessage="Perfil" MaximumValue="999999" MinimumValue="1" Type="Integer" 
-                                ValidationGroup="0">*  </anthem:rangevalidator>
+                                ValidationGroup="1">*  </anthem:rangevalidator>
                             
                         </td>
                     </tr>
@@ -323,20 +330,20 @@
                             </anthem:dropdownlist>
                              <anthem:rangevalidator ID="rvEfectorDestino" runat="server" ControlToValidate="ddlEfectorDestino" 
                                 ErrorMessage="Efector Destino - Laboratorio" MaximumValue="999999" MinimumValue="1" Type="Integer" 
-                                ValidationGroup="0" Enabled="False">*</anthem:rangevalidator>
+                                ValidationGroup="1" Enabled="False">*</anthem:rangevalidator>
                        </td>
                    </tr>
                
                        
                    <tr> <td></td><td></td>
                        <td >
-                        <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" />
+                        <anthem:Button ID="btnAgregarEfector" runat="server" Text="Agregar"   onclick="btnAgregarEfector_Click" CssClass="btn btn-primary" Width="100px" ValidationGroup="1" />
 
                     </td>
              
             </tr>
              <tr>
-                 <td>
+                 <td colspan="2">
                      <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
                  </td>
              </tr>
