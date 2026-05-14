@@ -1,10 +1,15 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UsuarioList.aspx.cs" Inherits="WebLab.Usuarios.UsuarioList" MasterPageFile="~/Site1.Master" %>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+<!-- CSS -->
+<link href="../script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../script/chosen/chosen.css" />
 
-  <link type="text/css" rel="stylesheet" href="../script/jquery-ui-1.7.1.custom.css" />
- <script type="text/javascript" src="../script/jquery.min.js"></script>
- <script type="text/javascript" src="../script/jquery-ui.min.js"></script>
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../script/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../script/chosen/chosen.jquery.js" type="text/javascript"></script>
+
 <script type="text/javascript" language="javascript">
 
 
@@ -15,6 +20,25 @@
             return false;
     }
 
+    function inicializarChosen() {
+
+        var select = $('#<%= ddlEfector.ClientID %>');
+
+        if (select.data('chosen')) {
+            select.chosen('destroy'); //El destroy evita que Anthem duplique la lista después de un callback.
+        }
+
+        //convierte el select en un dropdown Chosen
+        select.chosen({
+            width: "300px",
+            search_contains: true,
+            no_results_text: "No se encontraron resultados:"
+        });
+    }
+
+    $(document).ready(function () {
+        inicializarChosen();
+    });
    
 </script>
 </asp:Content>
