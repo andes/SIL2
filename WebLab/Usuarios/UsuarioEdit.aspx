@@ -196,7 +196,7 @@
                         MaxLength="50"></asp:TextBox>
                     <asp:RequiredFieldValidator ID="rfvUsuario" runat="server" 
                         ControlToValidate="txtUsername" ErrorMessage="Usuario" ValidationGroup="0">*</asp:RequiredFieldValidator>
-                    <asp:CustomValidator ID="customValidacionGeneral" runat="server" ErrorMessage="Usuario Existente" OnServerValidate="customValidacionGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                    <asp:CustomValidator ID="customValidacionGeneral" runat="server" ErrorMessage="Error usuario existente" OnServerValidate="customValidacionGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                     <asp:CustomValidator ID="customValidacionGeneral0" runat="server" ErrorMessage="" OnServerValidate="customValidacionGeneral0_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                 </td>
             </tr>
@@ -324,7 +324,7 @@
                         </td>
                     </tr>
                    <tr>
-                       <td style="width: 93px"> <anthem:label runat="server" ID="lblEfectorDestino" Text="Efector Destino:"> </anthem:label></td>
+                       <td style="width: 93px"> <anthem:label runat="server" ID="lblEfectorDestino" Text="Efector Destino:" Visible="false"> </anthem:label></td>
                        <td style="width: 497px">
                             <anthem:dropdownlist ID="ddlEfectorDestino" runat="server" Width="250px" class="form-control input-sm" Visible="False">
                             </anthem:dropdownlist>
@@ -369,7 +369,7 @@
                                 <asp:BoundField DataField="Perfil"  HeaderText="Perfil" >
                                     <ItemStyle Width="20%" />
                                 </asp:BoundField> 
-                                <asp:BoundField DataField="Efector Destino"   HeaderText="Laboratorio Destino" >
+                                <asp:BoundField DataField="EfectorDestino"   HeaderText="Laboratorio Destino" >
                                     <ItemStyle Width="50%" />
                                 </asp:BoundField> 
                               <asp:TemplateField HeaderText="">

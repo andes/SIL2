@@ -294,7 +294,7 @@ namespace WebLab.Usuarios
         {
             if (Request["id"] != null)
             {
-                string m_strSQL = @"    SELECT IR.idUsuarioEfector, R.nombre as nombre , R.idEfector, isnull(A.nombre,'Todas') AS Area, Ir.idArea, P.nombre AS Perfil, P.idPerfil, dest.nombre as [Efector Destino], IR.idEfectorDestino
+                string m_strSQL = @"    SELECT IR.idUsuarioEfector, R.nombre as nombre , R.idEfector, isnull(A.nombre,'Todas') AS Area, Ir.idArea, P.nombre AS Perfil, P.idPerfil, dest.nombre as EfectorDestino, IR.idEfectorDestino
                                     FROM Sys_UsuarioEfector IR (nolock) 
                                     INNER JOIN sys_efector R (nolock) ON R.idEfector=IR.idEfector 
                                     LEFT JOIN LAB_Area A (nolock)  ON A.idArea = IR.idArea
@@ -418,22 +418,18 @@ namespace WebLab.Usuarios
 
         protected void customValidacionGeneral_ServerValidate(object source, ServerValidateEventArgs args)
         {
-
-            //if (Request["id"] == null) // Validar tambien en modificacion
+            Usuario oRegistro = new Usuario();
+            oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), "Username", txtUsername.Text.Trim());
+            if (oRegistro != null)
             {
-
-                Usuario oRegistro = new Usuario();
-
-                oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), "Username", txtUsername.Text.Trim());
-                if (oRegistro != null)
+                if (Request["id"] != null)
                 {
-                    if (Request["id"] != null)
-                        if (oRegistro.IdUsuario != int.Parse(Request["id"])) //que no compare el username del que estoy modificando
-                             args.IsValid = false;
-
-                    return;
-
+                    if (oRegistro.IdUsuario != int.Parse(Request["id"])) //que no compare el username del que estoy modificando
+                        args.IsValid = false;
                 }
+                else args.IsValid = false;
+
+                return;
 
             }
         }
