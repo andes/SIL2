@@ -319,7 +319,7 @@ namespace WebLab.Agendas
                 List<int> diasSeleccionados = new List<int>();
                 for (int i=0; i<cklDias.Items.Count; i++)
                 {
-                    if (cklDias.Items[i].Selected) diasSeleccionados.Add(i + 1);
+                    if (cklDias.Items[i].Selected) diasSeleccionados.Add(int.Parse(cklDias.Items[i].Value));
                 }
                 
                 string dias = string.Join(",", diasSeleccionados);
