@@ -4935,10 +4935,112 @@
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Horizontal1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1Horizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Microbiologia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1Microbiologia.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1MicrobiologiaHorizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1MicrobiologiaHorizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Pesquisa.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1Pesquisa.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Horizontal.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HTrabajoProtocolo2Horizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Microbiologia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo2Microbiologia.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2MicrobiologiaHorizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo2MicrobiologiaHorizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Horizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3Horizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Microbiologia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3Microbiologia.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3MicrobiologiaHorizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3MicrobiologiaHorizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3PesquisaHorizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3PesquisaHorizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo4.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Horizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo4Horizontal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Microbiologia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo4Microbiologia.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4MicrobiologiaHorizontal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo4MicrobiologiaHorizontal.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
@@ -6825,18 +6927,6 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DerivacionLote.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis1.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoAnalisis1.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis2.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoAnalisis2.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis3.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoAnalisis3.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo1.cs</LastGenOutput>
@@ -6964,54 +7054,6 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4PesquisaHorizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4PesquisaHorizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra1.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1Horizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra1Horizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1Microbiologia.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra1Microbiologia.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1MicrobiologiaHorizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra1MicrobiologiaHorizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra2.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2Horizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra2Horizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2Microbiologia.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra2Microbiologia.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2MicrobiologiaHorizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra2MicrobiologiaHorizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra3.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3Horizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra3Horizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3Microbiologia.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra3Microbiologia.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3MicrobiologiaHorizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocoloLetra3MicrobiologiaHorizontal.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\Repositorio.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
