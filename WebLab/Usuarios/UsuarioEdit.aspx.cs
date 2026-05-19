@@ -438,16 +438,19 @@ namespace WebLab.Usuarios
         {
             rvEfectorDestino.Enabled = false;
             ddlEfectorDestino.Visible = false;
+            lblEfectorDestino.Visible = false;
             if (ddlPerfil.SelectedValue == "15")
             {
                 CargarEfectorLabo();
             }
             else
             {
-                
-                ddlEfectorDestino.SelectedValue = ddlEfector3.SelectedValue;
-                lblEfectorDestino.Visible = false;
+                if (ddlEfectorDestino.Items.FindByValue(ddlEfector3.SelectedValue.ToString()) != null)//si existe el efector seleccionado se carga en destino
+                    ddlEfectorDestino.SelectedValue = ddlEfector3.SelectedValue;
+                else
+                    ddlEfectorDestino.SelectedValue = "0"; 
             }
+           
             ddlEfectorDestino.UpdateAfterCallBack = true;
             lblEfectorDestino.UpdateAfterCallBack = true;
         }
@@ -707,7 +710,12 @@ namespace WebLab.Usuarios
 
             if (puedeAgregarEfector(dt))
             {
-                string efectorDestino = (ddlEfectorDestino.SelectedItem != null ) ? ddlEfectorDestino.SelectedItem.Text : ddlEfector3.SelectedItem.Text ;
+                string efectorDestino = "";
+                if (ddlEfectorDestino.SelectedItem != null && ddlEfectorDestino.SelectedValue != "0")
+                    efectorDestino=ddlEfectorDestino.SelectedItem.Text;
+                else
+                    efectorDestino= ddlEfector3.SelectedItem.Text ;
+
                 int efDestino = (ddlEfectorDestino.SelectedItem != null ) ? int.Parse( ddlEfectorDestino.SelectedValue.ToString()) : int.Parse( ddlEfector3.SelectedValue);
 
                 dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue, ddlArea.SelectedItem.Text, ddlArea.SelectedValue, ddlPerfil.SelectedItem.Text, ddlPerfil.SelectedValue, efectorDestino, efDestino);
