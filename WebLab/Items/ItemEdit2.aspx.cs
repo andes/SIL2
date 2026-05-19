@@ -51,12 +51,13 @@ namespace WebLab.Items
         }
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            oCr.CacheDuration = 0;
-            oCr.EnableCaching = false;
-            //oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
             if (Session["idUsuario"] != null)
+            { 
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-            //     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1, "IdEfector", oEfector);
+                oCr.Report.FileName = "";
+                oCr.CacheDuration = 0;
+                oCr.EnableCaching = false;
+            }
             else
                 Response.Redirect("../FinSesion.aspx", false);
 
@@ -1294,8 +1295,9 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-             
-            oRegistro.Observacion =   this.txtObservaciones.Text;
+            //oRegistro.Observacion = this.txtObservaciones.Text;
+
+            oRegistro.Observacion = SanitizarHTML();
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
             oRegistro.IdPresentacion = int.Parse(ddlPresentacionItem.SelectedValue);
@@ -1336,7 +1338,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-            oRegistro.Observacion = this.txtObservaciones.Text;
+            //oRegistro.Observacion = this.txtObservaciones.Text;
+            oRegistro.Observacion = SanitizarHTML();
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1395,7 +1398,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text;
+                    //oRegistro.Observacion = this.txtObservaciones.Text;
+                    oRegistro.Observacion = SanitizarHTML();
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1455,7 +1459,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text;
+                    //oRegistro.Observacion = this.txtObservaciones.Text;
+                    oRegistro.Observacion = SanitizarHTML();
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 
@@ -3429,6 +3434,16 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 itemEfector.Save();
             }
 
+        private string SanitizarHTML()
+        {
+            Utility utility = new Utility();
+            return utility.SanitizarHTML(Server, hfHtml.Value);
+        }
+
+        protected void cvObservaciones_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            Utility utility = new Utility();
+            args.IsValid = (utility.SanitizarHTML(Server, hfHtml.Value)).Length <= 4000;
         }
     }
 }
