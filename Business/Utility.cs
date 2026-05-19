@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 //using Sql.Data
 
 using System.Security.Cryptography;
+using Microsoft.Security.Application;
 using OfficeOpenXml;
 using System.Drawing;
 using OfficeOpenXml.Style;
@@ -1132,8 +1133,42 @@ namespace Business
                     // 2.2) Escribir filas del footer
                     // ================================
 
-                    GridViewRow filaFooter =  grid.FooterRow;
-                    col = 1;
+
+        #endregion
+
+        #region textoEnriquecido
+
+        /// <summary>
+        /// Sanitiza un texto HTML para eliminar contenido potencialmente peligroso.
+        /// </summary>
+        /// <param name="server">
+        /// Instancia de <see cref="HttpServerUtility"/> utilizada para decodificar el contenido HTML.
+        /// </param>
+        /// <param name="texto">
+        /// Texto HTML recibido desde el cliente.
+        /// </param>
+        /// <returns>
+        /// Devuelve el HTML sanitizado y seguro para almacenar o mostrar.
+        /// </returns>
+
+        public string SanitizarHTML(HttpServerUtility server,string texto)
+        {
+            // Leer HTML sin que ASP.NET lo bloquee
+            string html = server.UrlDecode(texto);
+            // Sanitizar
+            string limpio = Sanitizer.GetSafeHtmlFragment(html);
+
+            return limpio;
+        }
+
+        public string PasarHTMLaPlano(HttpServerUtility server,string texto)
+        {
+            string html = server.UrlDecode(texto);
+
+            string textoPlano = Regex.Replace(html, "<.*?>", string.Empty);
+
+            return HttpUtility.HtmlDecode(textoPlano).Trim();
+        }
 
                     if (tieneValores(filaFooter.Cells))
                     {

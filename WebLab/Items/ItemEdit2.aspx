@@ -1,26 +1,23 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ItemEdit2.aspx.cs" Inherits="WebLab.Items.ItemEdit2" MasterPageFile="~/Site1.Master" %>
-
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
-<%--<%@ Register assembly="CrystalDecisions.Web, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304" namespace="CrystalDecisions.Web" tagprefix="CR" %>
---%>
 
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
     <link href="../script/jquery-ui-1.8.1.custom.css" rel="stylesheet" type="text/css" />
- 
-
      <script src="../script/jquery.min.js" type="text/javascript"></script>  
-                  <script src="../script/jquery-ui.min.js" type="text/javascript"></script> 
-
-
+     <script src="../script/jquery-ui.min.js" type="text/javascript"></script> 
     <script type="text/javascript" src="../script/Mascara.js"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>   
-  
-
     <link rel="stylesheet" type="text/css" href ="../script/moverfilas/moverfilas.css" />
-<script type="text/javascript" src="../script/moverfilas/codigo.js"></script>
-<script type="text/javascript">
-  $(function() {
+    <script type="text/javascript" src="../script/moverfilas/codigo.js"></script>
+
+    <!-- CKEDITOR -->
+    <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+     <script type="text/javascript" src="../ckeditor/ckeditor-webforms.js"></script>
+
+    <script type="text/javascript">
+
+        $(function() {
 
                  $("#tabContainer").tabs();
                         var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
@@ -36,7 +33,20 @@
     }
 </script>
    
-  
+       <!-- CKEDITOR -->
+      <script type="text/javascript">
+          // Se debe enviar un textarea (sin name ni runat) y un hidden donde se guarda el html para enviar el contenido encodeado
+          // toolbar: [] ==> esta vacio para no mostrar la barra del text editor
+
+          $(document).ready(function () {
+              CKEditorWebForms.init(
+                'editor1',
+                '<%= hfHtml.ClientID %>',{ toolbar: []}
+            );
+
+        });
+
+      </script>
    
     <style type="text/css">
         .auto-style1 {
@@ -472,21 +482,8 @@
                                     </td>
                                 </tr>
                                 	</tr>
-                            <%--    <tr>
-                                    <td class="control-label" >
-                                        Factor Producción:</td>
-                                    <td>
-                                        <anthem:Label ID="lblFactorProduccion" runat="server" Text="" Font-Bold="True" 
-                                            ForeColor="#333333"></anthem:Label> 
-                                    </td>
-                                </tr>--%>
                             </table>
         
-        <%--</div>
-
-              </div>
-                               </div>
-           </div>--%>
         </td>
 						
 					</tr>
@@ -820,9 +817,11 @@
                         <tr>
                             <td class="control-label" style="vertical-align: top">Observaciones:</td>
                             <td colspan="2">
-                                <asp:TextBox ID="txtObservaciones" runat="server" class="form-control input-sm" MaxLength="300" Rows="3" TabIndex="8" TextMode="MultiLine" Width="500px" />
+                              <%--  <asp:TextBox ID="txtObservaciones" runat="server" class="form-control input-sm" MaxLength="300" Rows="3" TabIndex="8" TextMode="MultiLine" Width="500px" />--%>
+                                  <textarea id="editor1" rows="2" cols="50" width="500px" ></textarea>
+                                <asp:HiddenField ID="hfHtml" runat="server" />
                                 <br />
-                                <anthem:CustomValidator ID="cvObservaciones" runat="server" ClientValidationFunction="VerificaLargo" ControlToValidate="txtObservaciones" ErrorMessage="El límite del campo Observaciones es de 4000 caracteres. Verifique." Font-Names="Arial" Font-Size="8pt" ValidationGroup="1">El límite es de 4000 caracteres. Verifique.</anthem:CustomValidator>
+                                <anthem:CustomValidator ID="cvObservaciones" runat="server" OnServerValidate="cvObservaciones_ServerValidate" ClientValidationFunction="VerificaLargo"  ErrorMessage="El límite del campo Observaciones es de 4000 caracteres. Verifique." Font-Names="Arial" Font-Size="8pt" ValidationGroup="1">El límite es de 4000 caracteres. Verifique.</anthem:CustomValidator>
                                 <anthem:CustomValidator ID="cvValores" runat="server" ErrorMessage="Debe ingresar los valores (minimo y maximo) o una observación" Font-Size="8pt" onservervalidate="cvValores_ServerValidate" ValidateEmptyText="True" ValidationGroup="1"></anthem:CustomValidator>
                             </td>
                         </tr>
@@ -833,7 +832,7 @@
                             </tr>
                         <tr>
                             <td align="right" colspan="3">
-                                <anthem:Button ID="btGuardarVR" runat="server" CssClass="btn btn-primary" onclick="btnGuardarVR_Click" TabIndex="9" Text="Agregar a Lista" ValidationGroup="1" Width="150px" />
+                                <anthem:Button ID="btGuardarVR" runat="server" CssClass="btn btn-primary"  onclick="btnGuardarVR_Click" TabIndex="9" Text="Agregar a Lista" ValidationGroup="1" Width="150px" />
                             </td>
                         </tr>
                         <tr>
@@ -892,9 +891,13 @@
                                         <asp:BoundField DataField="maximo" HeaderText="Valor Maximo">
                                        
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="observacion" HeaderText="Observaciones">
-                                        
-                                        </asp:BoundField>
+                                    
+                                        <asp:TemplateField HeaderText="Observaciones">
+                                            <ItemTemplate>
+                                                <%# Eval("observacion") %>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
+
                                         <asp:TemplateField HeaderText="">
                                             <ItemTemplate>
                                                 <asp:ImageButton ID="Eliminar" runat="server" CommandName="Eliminar" ImageUrl="~/App_Themes/default/images/eliminar.jpg" OnClientClick="return PreguntoEliminar();" />
@@ -1334,25 +1337,7 @@
                             &nbsp;</td>
 					</tr>
                   
-    <%--<tr>
-						<td class="myLabelDerechaGde" colspan="2" >
-
-                            Si el analisis crresponde una <b>Prueba de Screening Neonatal</b>; marque que se deben 
-                            solicitar datos adicionales al paciente: Hora de nacimiento, Peso al nacer y 
-                            Semana de gestación.</td>
-					</tr>
-<tr>
-						<td class="myLabelDerechaGde" colspan="2" >
-
-                            &nbsp;</td>
-					</tr>
-<tr>
-						<td class="myLabelDerechaGde" colspan="2" >
-
-    <asp:CheckBox ID="chkIsScreening" runat="server" CssClass="control-label" 
-        Text="Solicitar Datos Adicionales del Paciente" />
-                        </td>
-					</tr>--%>
+    
 <tr>
 						<td >
                             &nbsp;</td>
