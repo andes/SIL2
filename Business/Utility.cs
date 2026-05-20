@@ -1172,6 +1172,8 @@ namespace Business
             string html = server.UrlDecode(texto);
             // Sanitizar
             string limpio = Sanitizer.GetSafeHtmlFragment(html);
+            //Después del sanitizado, decodificá entidades HTML:
+            limpio = HttpUtility.HtmlDecode(limpio);
 
             return limpio;
         }
