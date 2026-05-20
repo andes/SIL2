@@ -130,11 +130,24 @@
                         if (hf) {
 
                             hf.value = encodeURIComponent(data);
+                            return hf.value;
                         }
                     }
                 }
             }
 
+
+            if (typeof Anthem_FireCallBackEvent === 'function') {
+
+                var oldFire = Anthem_FireCallBackEvent;
+
+                Anthem_FireCallBackEvent = function () {
+
+                    protegerCKEditor();
+
+                    return oldFire.apply(this, arguments);
+                };
+            }
 
             /**
             * Hook submit tradicional WebForms.
