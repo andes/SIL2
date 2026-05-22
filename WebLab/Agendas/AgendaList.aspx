@@ -24,12 +24,21 @@
 				<td colspan="2" >
                     <asp:DropDownList ID="ddlTipoServicio" runat="server" class="form-control input-sm" 
                         ToolTip="Seleccione el servicio" AutoPostBack="True" 
-                        onselectedindexchanged="ddlTipoServicio_SelectedIndexChanged">
+                        onselectedindexchanged="ddlTipoServicio_SelectedIndexChanged" tabindex="1">
                     </asp:DropDownList>
                             </td>
+
+                <td class="myLabelIzquierda" style="width: 120px" >    Efector Solicitante:</td>
+                <td colspan="2" >
+                    <asp:DropDownList ID="ddlEfectorSolicitante" runat="server" class="form-control input-sm" 
+                        ToolTip="Seleccione un efector" AutoPostBack="True" 
+                        onselectedindexchanged="ddlEfectorSolicitante_SelectedIndexChanged" tabindex="2">
+                    </asp:DropDownList>
+                            </td>
+
 				<td align="right" style="width: 134px" >
                                     <asp:Button ID="btnAgregar" runat="server" onclick="btnAgregar_Click" 
-                                        Text="Agregar" Font-Size="10pt"  CssClass="btn btn-primary" Width="100px" />
+                                        Text="Agregar" Font-Size="10pt"  CssClass="btn btn-primary" Width="100px" tabindex="3"/>
                 </td>
 			</tr>
 			
@@ -59,6 +68,12 @@
               
                 </asp:BoundField>
                 <asp:BoundField DataField="fechahasta" HeaderText="Fecha Hasta">
+                    
+                </asp:BoundField>
+                <asp:BoundField DataField="dias" HeaderText="Dias de la Agenda">
+                    
+                </asp:BoundField>
+                <asp:BoundField DataField="limiteTurnos" HeaderText="Cantidad de Turnos" >
                     
                 </asp:BoundField>
                   <asp:BoundField DataField="usuario" HeaderText="Usuario" />

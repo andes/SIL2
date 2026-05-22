@@ -376,31 +376,32 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcelTipoMuestra()
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            Utility.ExportGridViewToExcel(gvTipoMuestra, "NoPaciente_TipoMuestra");
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            gvTipoMuestra.EnableViewState = false;
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //gvTipoMuestra.EnableViewState = false;
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false;
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false;
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize();
-            page.Controls.Add(form);
-            form.Controls.Add(gvTipoMuestra);
-            page.RenderControl(htw);
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize();
+            //page.Controls.Add(form);
+            //form.Controls.Add(gvTipoMuestra);
+            //page.RenderControl(htw);
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=NoPaciente_TipoMuestra.xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename=NoPaciente_TipoMuestra.xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
 
         protected void ddlAnalisis_SelectedIndexChanged(object sender, EventArgs e)
@@ -448,31 +449,32 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcelResultados()
         {
-            StringBuilder sb = new StringBuilder();
-            StringWriter sw = new StringWriter(sb);
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
+            Utility.ExportGridViewToExcel(gvResultado, "NoPaciente_Resultado");
+            //StringBuilder sb = new StringBuilder();
+            //StringWriter sw = new StringWriter(sb);
+            //HtmlTextWriter htw = new HtmlTextWriter(sw);
 
-            Page page = new Page();
-            HtmlForm form = new HtmlForm();
-            gvResultado.EnableViewState = false;
+            //Page page = new Page();
+            //HtmlForm form = new HtmlForm();
+            //gvResultado.EnableViewState = false;
 
-            // Deshabilitar la validación de eventos, sólo asp.net 2
-            page.EnableEventValidation = false;
+            //// Deshabilitar la validación de eventos, sólo asp.net 2
+            //page.EnableEventValidation = false;
 
-            // Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            page.DesignerInitialize();
-            page.Controls.Add(form);
-            form.Controls.Add(gvResultado);
-            page.RenderControl(htw);
+            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
+            //page.DesignerInitialize();
+            //page.Controls.Add(form);
+            //form.Controls.Add(gvResultado);
+            //page.RenderControl(htw);
 
-            Response.Clear();
-            Response.Buffer = true;
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.AddHeader("Content-Disposition", "attachment;filename=_Resultado.xls");
-            Response.Charset = "UTF-8";
-            Response.ContentEncoding = Encoding.Default;
-            Response.Write(sb.ToString());
-            Response.End();
+            //Response.Clear();
+            //Response.Buffer = true;
+            //Response.ContentType = "application/vnd.ms-excel";
+            //Response.AddHeader("Content-Disposition", "attachment;filename=_Resultado.xls");
+            //Response.Charset = "UTF-8";
+            //Response.ContentEncoding = Encoding.Default;
+            //Response.Write(sb.ToString());
+            //Response.End();
         }
 
         protected void gvTipoMuestra_RowDataBound(object sender, GridViewRowEventArgs e)

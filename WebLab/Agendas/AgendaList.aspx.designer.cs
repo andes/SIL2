@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Agendas {
-    
-    
-    public partial class AgendaList {
-        
+namespace WebLab.Agendas
+{
+
+
+    public partial class AgendaList
+    {
+
         /// <summary>
         /// ddlTipoServicio control.
         /// </summary>
@@ -20,7 +22,16 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoServicio;
-        
+
+        /// <summary>
+        /// ddlEfectorSolicitante control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEfectorSolicitante;
+
         /// <summary>
         /// btnAgregar control.
         /// </summary>
@@ -29,7 +40,7 @@ namespace WebLab.Agendas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAgregar;
-        
+
         /// <summary>
         /// gvLista control.
         /// </summary>

@@ -142,7 +142,7 @@ namespace WebLab.Usuarios
             habilitarAdministrador();
             Usuario oAuditor = new Usuario();
             oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-            ViewState["idAuditoriaConsulta"] = oAuditor.GrabaAuditoria("Consulta", oRegistro.IdUsuario, oRegistro.Username);
+            oAuditor.GrabaAuditoria("Consulta", oRegistro.IdUsuario, oRegistro.Username);
             MostrarEfectores();
 
             ddlTipoAutenticacion.SelectedValue =  oRegistro.TipoAutenticacion.Trim();
