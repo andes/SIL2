@@ -73,16 +73,23 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                 <p>Fecha Validacion Desde:<input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
                         style="width: 120px"  onblur="valFecha(this)" 
                         onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  /></p>
+                <p>Tipo FFEE:   <asp:DropDownList ID="ddlTipoFicha" runat="server" TabIndex="1" class="form-control input-sm" AutoPostBack="True" Font-Bold="True" Font-Size="12pt" OnSelectedIndexChanged="ddlTipoFicha_SelectedIndexChanged">                                            
+                                             
+                                            </asp:DropDownList>                                 
+
+                                 
+                               </p>
                   <p> Evento SISA:  <asp:DropDownList ID="ddlItem" runat="server" class="form-control input-sm" OnSelectedIndexChanged="ddlItem_SelectedIndexChanged" AutoPostBack="True" Font-Bold="True" Font-Size="12pt" >
                 </asp:DropDownList>
 
-   Resultado: <asp:DropDownList ID="ddlResultado" runat="server" 
-                                ToolTip="Seleccione el resultado a informar" TabIndex="1" class="form-control input-sm" Font-Bold="True" Font-Size="12pt" AutoPostBack="True" OnSelectedIndexChanged="ddlResultado_SelectedIndexChanged"  >
-                            </asp:DropDownList>
 
-                      <asp:RangeValidator ID="rvItem" runat="server" ControlToValidate="ddlItem" ErrorMessage="RangeValidator" MaximumValue="99999999" MinimumValue="1" Type="Integer" ValidationGroup="0">Debe seleccionar un evento</asp:RangeValidator>
+                      <asp:RangeValidator ID="rvItem" runat="server" ControlToValidate="ddlItem" ErrorMessage="RangeValidator" MaximumValue="99999999" MinimumValue="1" Type="Integer" ValidationGroup="0" Enabled="False">Debe seleccionar un evento</asp:RangeValidator>
 
                 </p>
+                <p>
+   Resultado: <asp:DropDownList ID="ddlResultado" runat="server" 
+                                ToolTip="Seleccione el resultado a informar" TabIndex="1" class="form-control input-sm" Font-Bold="True" Font-Size="12pt" AutoPostBack="True" OnSelectedIndexChanged="ddlResultado_SelectedIndexChanged"  >
+                            </asp:DropDownList></p>
                 <p> 
                     <asp:RadioButtonList ID="rdbEstado" runat="server" RepeatDirection="Horizontal">
                         <asp:ListItem Selected="True" Value="0">Pendientes de Enviar</asp:ListItem>
@@ -139,6 +146,7 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
 
                       <input id="HidGrupoEvento" type="hidden" runat="server" />
                     <input id="HidClasificacionManual" type="hidden" runat="server" />
+                           <input id="HidFicha" type="hidden" runat="server" />
 
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
    
@@ -237,6 +245,93 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                   <asp:BoundField DataField="idgrupoevento" HeaderText="idgrupoevento" />                 
                 <asp:BoundField DataField="idclasificacionmanual" HeaderText="idclasificacionmanual" />                 
                
+            </Columns>
+                <HeaderStyle BackColor="#CCCCCC" ForeColor="Black" Font-Bold="True" />
+             <EmptyDataRowStyle Font-Bold="True" ForeColor="#FF3300" />
+
+         </asp:GridView>
+
+                            <br />
+         <asp:GridView ID="gvListaFicha" runat="server" AutoGenerateColumns="False"
+                DataKeyNames="idDetalleProtocolo" CssClass="table table-bordered bs-table"  Font-Names="Arial" Font-Size="10pt"
+                EmptyDataText="No se encontraron resultados para incorporar"  Font-Bold="True">
+            <Columns>
+                <asp:TemplateField HeaderText="Sel." >
+                    <ItemTemplate>
+                    <asp:CheckBox ID="CheckBox2" runat="server" EnableViewState="true" />
+                    </ItemTemplate>
+                    <ItemStyle Width="5%" 
+                    HorizontalAlign="Center" />
+                </asp:TemplateField>
+                <asp:BoundField DataField="numero"   HeaderText="Numero" >
+               
+                <ItemStyle Width="10%" />
+               
+                </asp:BoundField>
+                <asp:BoundField DataField="dni" HeaderText="DNI" >
+            
+                <ItemStyle Width="10%" />
+            
+                </asp:BoundField>
+                
+                
+                <asp:BoundField DataField="apellido" HeaderText="Apellido" >
+                
+                
+                  <ItemStyle Width="15%" />
+                </asp:BoundField>
+                
+                
+                  <asp:BoundField DataField="nombre" HeaderText="Nombre"  >
+                      
+                <ItemStyle Width="20%" />
+                </asp:BoundField>
+                
+                        
+         
+                        
+                <asp:BoundField DataField="resultadoCar" HeaderText="Resultado SIL" >
+                
+                        
+         
+                        
+                <ItemStyle Width="20%" />
+                </asp:BoundField>
+                
+                        
+         
+                        
+                <asp:BoundField DataField="fechatoma" HeaderText="Fecha Toma" >
+                        
+                <ItemStyle Width="10%" />
+                </asp:BoundField>
+                        
+                <asp:BoundField DataField="nombreDet" HeaderText="Determinacion" >
+                <ItemStyle Width="10%" />
+                </asp:BoundField>
+                <asp:BoundField DataField="IdMuestraSISA"  HeaderText="idM" >
+            
+                <ItemStyle Width="2%" />
+            
+                </asp:BoundField>
+                <asp:BoundField DataField="idTipoMuestraSISA" HeaderText="idTM" >
+            
+                <ItemStyle Width="2%" />
+            
+                </asp:BoundField>               
+                             
+                <asp:BoundField DataField="IdPruebaSISA"  HeaderText="IdP" >
+            
+                <ItemStyle Width="2%" />
+            
+                </asp:BoundField>
+                <asp:BoundField DataField="idTipoPruebaSISA" HeaderText="idTP" />
+                  <asp:BoundField DataField="idResultadoSISA" HeaderText="idREs" />
+                      
+                  <asp:BoundField DataField="idcasosisa" HeaderText="idCasoSisa" />
+                <asp:BoundField DataField="iditem" HeaderText="idDetSIL" />                 
+                <asp:BoundField DataField="idFicha" HeaderText="idFicha" />                 
+         
             </Columns>
                 <HeaderStyle BackColor="#CCCCCC" ForeColor="Black" Font-Bold="True" />
              <EmptyDataRowStyle Font-Bold="True" ForeColor="#FF3300" />

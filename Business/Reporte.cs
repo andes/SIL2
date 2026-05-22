@@ -119,11 +119,11 @@ namespace Business
         //    items.Add(newItem.GenerateItem(cantidad, item, price));
         //}
 
-        public void AddTotal(string name, string price)
-        {
-            OrderTotal newTotal = new OrderTotal('?');
-            totales.Add(newTotal.GenerateTotal(name, price));
-        }
+        //public void AddTotal(string name, string price)
+        //{
+        //    OrderTotal newTotal = new OrderTotal('?');
+        //    totales.Add(newTotal.GenerateTotal(name, price));
+        //}
 
         public void AddFooterLine(string line)
         {

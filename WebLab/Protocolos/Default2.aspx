@@ -207,7 +207,9 @@
 
                              
                             <asp:Label ID="lblMensaje" runat="server" ForeColor="Blue" Text="Se encontraron los siguientes datos para el dni ingresado:" Visible="False"></asp:Label>
-                            <asp:GridView ID="gvLista" runat="server" AllowPaging="True" AutoGenerateColumns="False" CellPadding="1" CssClass="table table-bordered bs-table" DataKeyNames="idPaciente" EmptyDataText="No se encontraron pacientes para los parametros de busqueda ingresados" Font-Size="9pt" ForeColor="#666666" GridLines="Horizontal" onpageindexchanging="gvLista_PageIndexChanging" onrowcommand="gvLista_RowCommand" onrowdatabound="gvLista_RowDataBound" PageSize="13" Width="100%">
+                            <asp:GridView ID="gvLista" runat="server" AllowPaging="True" AutoGenerateColumns="False" CellPadding="1" CssClass="table table-bordered bs-table" 
+                                DataKeyNames="idPaciente" EmptyDataText="No se encontraron pacientes para los parametros de busqueda ingresados" 
+                                Font-Size="9pt" ForeColor="#666666" GridLines="Horizontal" onpageindexchanging="gvLista_PageIndexChanging" onrowcommand="gvLista_RowCommand" onrowdatabound="gvLista_RowDataBound" PageSize="13" Width="100%">
                <%--<RowStyle BackColor="#F7F6F3" ForeColor="Black" Font-Names="Arial" 
                 Font-Size="8pt" />--%>
                                 <Columns>

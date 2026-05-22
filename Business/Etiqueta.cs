@@ -22,13 +22,13 @@ namespace Business
         private Image headerImage = null;
 
         int count = 1;
-
+        private float margenDerecho = 0;
         int maxChar = 35;
         int maxCharDescription = 20;
 
         int imageHeight = 0;
 
-        float leftMargin = 2;//2;///estaba en 20--Cambio para plottier
+        float leftMargin = 2;//2;///estaba en 20--Cambio para centenario=20, para los demas es 2
         float leftMarginSdaEtiqueta = 61;
         float topMargin = 1; //estaba en 2
 
@@ -129,11 +129,11 @@ namespace Business
         //    items.Add(newItem.GenerateItem(cantidad, item, price));
         //}
 
-        public void AddTotal(string name, string price)
-        {
-            OrderTotal newTotal = new OrderTotal('?');
-            totales.Add(newTotal.GenerateTotal(name, price));
-        }
+        //public void AddTotal(string name, string price)
+        //{
+        //    OrderTotal newTotal = new OrderTotal('?');
+        //    totales.Add(newTotal.GenerateTotal(name, price));
+        //}
 
         public void AddFooterLine(string line)
         {
@@ -202,8 +202,8 @@ namespace Business
         {
             e.Graphics.PageUnit = GraphicsUnit.Millimeter;
             gfx = e.Graphics;
-
-        //    DrawImage();
+            gfx.TranslateTransform(margenDerecho, 0);
+            //    DrawImage();
             DrawHeader();
             DrawSubHeader();
             DrawSubHeaderNegrita();
@@ -219,8 +219,9 @@ namespace Business
             //}
         }
 
-        public void PrintTicket2(string equipo, string fuente, string tipoEtiqueta )
+        public void PrintTicket2(string equipo, string fuente, string tipoEtiqueta ,float margen)
         {
+            margenDerecho = margen;
             printFont = new Font(fontName, fontSize, FontStyle.Bold);
             printFontPequeño = new Font(fontName, 5, FontStyle.Bold);
             //fuenteBarCode ="Code39";
@@ -238,8 +239,11 @@ namespace Business
             
         }
 
+      
+
         private void DrawSubHeaderNegrita()
         {
+            
             foreach (string header in subHeaderLinesNegrita)
             {
                 Font printFont_Area= new Font(fontName, 6, FontStyle.Bold);
@@ -261,6 +265,7 @@ namespace Business
 
         private void DrawImage()
         {
+            
             if (headerImage != null)
             {
                 try
@@ -277,6 +282,7 @@ namespace Business
 
         private void DrawHeader()
         {
+            
             foreach (string header in headerLines)
             {
 
@@ -309,6 +315,7 @@ namespace Business
 
         private void DrawSubHeader()
         {
+            
             foreach (string header in subHeaderLines)
             {
 
@@ -329,6 +336,7 @@ namespace Business
 
         private void DrawCodigoBarras()
         {
+            
             foreach (string subHeader in subCodigoBarras)
             {
                 
@@ -354,6 +362,7 @@ namespace Business
      
         private void DrawFooter()
         {
+            
             foreach (string footer in footerLines)
             {
                
@@ -409,6 +418,7 @@ namespace Business
 
         private void DrawEspacio()
         {
+            
             line = "";
             Font printFontLineaEspacio = new Font(fontName, 1, FontStyle.Regular);
             gfx.DrawString(line, printFontLineaEspacio, myBrush, leftMargin, YPosition(1), new StringFormat());
@@ -420,30 +430,5 @@ namespace Business
     }
 
  
-    public class OrderTotal
-    {
-        char[] delimitador = new char[] { '?' };
-
-        public OrderTotal(char delimit)
-        {
-            delimitador = new char[] { delimit };
-        }
-
-        public string GetTotalName(string totalItem)
-        {
-            string[] delimitado = totalItem.Split(delimitador);
-            return delimitado[0];
-        }
-
-        public string GetTotalCantidad(string totalItem)
-        {
-            string[] delimitado = totalItem.Split(delimitador);
-            return delimitado[1];
-        }
-
-        public string GenerateTotal(string totalName, string price)
-        {
-            return totalName + delimitador[0] + price;
-        }
-    }
+   
 }
