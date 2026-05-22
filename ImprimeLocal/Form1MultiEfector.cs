@@ -25,13 +25,13 @@ namespace ImprimeLocal
 {
     public partial class Form1MultiEfector : Form
     {
+        private bool _procesandoEtiquetas = false;
         delegate void SetTextCallback(string text);
         public Form1MultiEfector()
         {
             InitializeComponent();
 
             foreach (String strPrinter in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
-
             {
                 comboBoximp.Items.Add(strPrinter);
 
@@ -43,7 +43,7 @@ namespace ImprimeLocal
             string cantidadForense = ConfigurationManager.AppSettings["cantidadForense"];
             lblIdEfector.Text = ConfigurationManager.AppSettings["idEfector"].ToString();
 
-
+            string margenDerecho =    ConfigurationManager.AppSettings["margenDerecho"];
             comboBoximp.Text = miValor;
             nupLaboratorio.Value = decimal.Parse(cantidadLaboratorio);
             nupMicrobiologia.Value = decimal.Parse(cantidadMicrobiologia);
@@ -60,7 +60,7 @@ namespace ImprimeLocal
                 textBox1.Enabled = false;
                 btnImprimir.Enabled = false;
                 timer1.Enabled = true;
-                timer1.Interval = 5000; // 5 segundos
+                timer1.Interval = 3000; // 3 segundos
                 timer1.Start();
             }
             //    chkModoAutomatico.Checked = true;
@@ -113,19 +113,334 @@ namespace ImprimeLocal
                 SetTextCallback d = new SetTextCallback(SetText);
                 this.Invoke(d, new object[] { text });
             }
-            else txtmensajes.Text = DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " " + text; ;
+            else txtmensajes.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")+  " " + text; ;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            label10.Text = DateTime.Now.ToLongTimeString();
+          ///  label10.Text = DateTime.Now.ToLongTimeString();
             //   BuscarProtocolo2();
             //  BuscarProtocoloADemanda();
 
 
-            BuscarProtocoloconAPI(); //CARO
+            // BuscarProtocoloconAPI(); //llamada para efector con una sola impresora, version anterior
+            if (_procesandoEtiquetas)
+                return;
+
+            try
+            {
+                _procesandoEtiquetas = true;
+                timer1.Enabled = false;
+
+                label10.Text = DateTime.Now.ToLongTimeString();
+
+                BuscarProtocoloconAPI_V2();
+            }
+            finally
+            {
+                _procesandoEtiquetas = false;
+                timer1.Enabled = true;
+            }
 
         }
+
+        private void BuscarProtocoloconAPI_V2()
+        {
+            try
+            {
+                System.Net.ServicePointManager.SecurityProtocol =
+                    System.Net.SecurityProtocolType.Tls12;
+
+                string s_impre = comboBoximp.Text.Trim();
+
+                if (string.IsNullOrEmpty(s_impre))
+                    return;
+
+                string URL = ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString();
+                URL += "executeSP?nombre=LAB_GetGeneraEtiquetaV2&parametros="
+                    + lblIdEfector.Text + "|" + s_impre;
+
+                string s_token = ConfigurationManager.AppSettings["tokenAPI"].ToString();
+
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+
+                request.Timeout = 30000;
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Headers.Add("Authorization", "Bearer " + s_token);
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                {
+                    string json = reader.ReadToEnd();
+
+                    if (string.IsNullOrWhiteSpace(json))
+                        return;
+
+                    JavaScriptSerializer js = new JavaScriptSerializer();
+
+                    object obj = js.DeserializeObject(json);
+
+                    if (obj == null)
+                        return;
+
+                    object[] resultado = obj as object[];
+
+                    if (resultado == null || resultado.Length == 0)
+                        return;
+
+                    Dictionary<string, object> bloque =
+                        resultado[0] as Dictionary<string, object>;
+
+                    if (bloque == null)
+                        return;
+
+                    if (!bloque.ContainsKey("Data"))
+                        return;
+
+                    object[] data =
+                        bloque["Data"] as object[];
+
+                    if (data == null || data.Length == 0)
+                    {
+                        SetText("No hay etiquetas pendientes para imprimir en la impresora: " + s_impre);
+                        return;
+                    }
+
+                    //Convertir Data a JSON
+                    string jsonData = js.Serialize(data);
+
+                    DataTable t = GetJSONToDataTableUsingMethod(jsonData);
+
+                    if (t == null || t.Rows.Count == 0)
+                        return;
+
+                    SetText("Encontró " + t.Rows.Count.ToString() + " etiquetas pendientes");
+
+                    foreach (DataRow item in t.Rows)
+                    {
+                        try
+                        {
+                            Business.Etiqueta ticket = new Business.Etiqueta();
+
+                            string reg_area = Convert.ToString(item["area"]);
+                            string reg_numero = Convert.ToString(item["numeroP"]);
+                            string reg_Fecha = Convert.ToString(item["fecha"]);
+                            string reg_Origen = Convert.ToString(item["origen"]);
+                            string reg_Sector = Convert.ToString(item["sector"]);
+                            string reg_NumeroOrigen = Convert.ToString(item["numeroOrigen"]);
+                            string reg_NumeroDocumento = Convert.ToString(item["numeroDocumento"]);
+                            string reg_apellido = Convert.ToString(item["apellido"]);
+                            string reg_sexo = Convert.ToString(item["sexo"]);
+                            string reg_edad = Convert.ToString(item["edad"]);
+                            string reg_FIS = Convert.ToString(item["NumeroOrigen2"]);
+                            string sTipoEtiqueta = Convert.ToString(item["tipoEtiqueta"]);
+                            string sFuenteBarCode = Convert.ToString(item["FuenteBarCode"]);
+
+                            ticket.TipoEtiqueta = sTipoEtiqueta;
+
+                            if (!string.IsNullOrEmpty(reg_Origen) &&
+                                reg_Origen.Length > 11)
+                            {
+                                reg_Origen = reg_Origen.Substring(0, 10);
+                            }
+
+                            ticket.AddHeaderLine(reg_apellido.ToUpper());
+
+                            ticket.AddSubHeaderLine(
+                                reg_sexo + " " +
+                                reg_edad + " " +
+                                reg_NumeroDocumento + " " +
+                                reg_Fecha + " " +
+                                reg_FIS
+                            );
+
+                            if (!string.IsNullOrEmpty(reg_area))
+                            {
+                                if (string.IsNullOrEmpty(reg_FIS))
+                                {
+                                    ticket.AddSubHeaderLineNegrita(
+                                        reg_area + " - " + reg_NumeroOrigen
+                                    );
+                                }
+                                else
+                                {
+                                    ticket.AddSubHeaderLineNegrita(
+                                        reg_area + " - " +
+                                        reg_NumeroOrigen +
+                                        "/HIS:" + reg_FIS
+                                    );
+                                }
+                            }
+
+                            ticket.AddCodigoBarras(reg_numero, sFuenteBarCode);
+
+                            ticket.AddFooterLine(reg_numero);
+                            float margen = (float)nmMargenDerecho.Value;
+                            ticket.PrintTicket2(
+                                s_impre,
+                                sFuenteBarCode,
+                                sTipoEtiqueta, margen
+                            );
+
+                            SetText("Etiqueta " + reg_numero + " enviada a impresora");
+                        }
+                        catch (Exception exEtiqueta)
+                        {
+                            SetText("Error imprimiendo etiqueta: " + exEtiqueta.Message);
+                        }
+                    }
+                }
+            }
+            catch (WebException ex)
+            {
+                SetText(
+                    "Error al conectarse a " +
+                    ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString() +
+                    " - " + ex.Message
+                );
+            }
+            catch (Exception ex)
+            {
+                SetText("Error: " + ex.Message);
+            }
+        }
+
+        //private void BuscarProtocoloconAPI_V2_old()
+        //{
+        //    try
+        //    {
+        //        SetText("Buscando etiquetas pendientes de imprimir...");
+
+        //        System.Net.ServicePointManager.SecurityProtocol =
+        //            System.Net.SecurityProtocolType.Tls12;
+
+        //        string s_impre = comboBoximp.Text.Trim();
+
+        //        string URL = ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString();
+        //        URL += "executeSP?nombre=LAB_GetGeneraEtiquetaV2&parametros="
+        //            + lblIdEfector.Text + "|" + s_impre;
+
+        //        string s_token = ConfigurationManager.AppSettings["tokenAPI"].ToString();
+
+        //        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+
+        //        request.Timeout = -1;
+        //        request.Method = "GET";
+        //        request.ContentType = "application/json";
+        //        request.Headers.Add("Authorization", "Bearer " + s_token);
+
+        //        using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+        //        using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+        //        {
+        //            string json = reader.ReadToEnd();
+
+        //            if (string.IsNullOrWhiteSpace(json) || json == "0" || json == "[]" ||   json.Trim() == "{}")
+        //            {
+        //                SetText("NO encontró etiquetas pendientes de imprimir");
+        //                return;
+        //            }
+
+        //            DataTable t = GetJSONToDataTableUsingMethod(json);
+
+        //            if (t == null || t.Rows.Count == 0)
+        //            {
+        //                SetText("NO encontró etiquetas pendientes de imprimir");
+        //                return;
+        //            }
+
+        //            SetText("Encontró " + t.Rows.Count.ToString() + " etiquetas pendientes de imprimir");
+
+
+                  
+
+        //            foreach (DataRow item in t.Rows)
+        //            {
+        //                try
+        //                {
+        //                    ///   Business.Etiqueta ticket = new Business.Etiqueta();
+        //                    Business.Etiqueta ticket;
+
+                           
+        //                        ticket = new Business.Etiqueta();
+                           
+
+
+        //                    string reg_area = item["area"].ToString();
+        //                    string reg_numero = item["numeroP"].ToString();
+        //                    string reg_Fecha = item["fecha"].ToString();
+        //                    string reg_Origen = item["origen"].ToString();
+        //                    string reg_Sector = item["sector"].ToString();
+        //                    string reg_NumeroOrigen = item["numeroOrigen"].ToString();
+        //                    string reg_NumeroDocumento = item["numeroDocumento"].ToString();
+        //                    string reg_apellido = item["apellido"].ToString();
+        //                    string reg_sexo = item["sexo"].ToString();
+        //                    string reg_edad = item["edad"].ToString();
+        //                    string reg_FIS = item["NumeroOrigen2"].ToString();
+        //                    string sTipoEtiqueta = item["tipoEtiqueta"].ToString();
+        //                    string sFuenteBarCode = item["FuenteBarCode"].ToString();
+
+        //                    ticket.TipoEtiqueta = sTipoEtiqueta;
+
+        //                    if (reg_Origen.Length > 11)
+        //                        reg_Origen = reg_Origen.Substring(0, 10);
+
+        //                    ticket.AddHeaderLine(reg_apellido.ToUpper());
+
+        //                    ticket.AddSubHeaderLine(
+        //                        reg_sexo + " " +
+        //                        reg_edad + " " +
+        //                        reg_NumeroDocumento + " " +
+        //                        reg_Fecha + " " +
+        //                        reg_FIS
+        //                    );
+
+        //                    if (!string.IsNullOrEmpty(reg_area))
+        //                    {
+        //                        if (string.IsNullOrEmpty(reg_FIS))
+        //                            ticket.AddSubHeaderLineNegrita(
+        //                                reg_area + " - " + reg_NumeroOrigen
+        //                            );
+        //                        else
+        //                            ticket.AddSubHeaderLineNegrita(
+        //                                reg_area + " - " +
+        //                                reg_NumeroOrigen +
+        //                                "/HIS:" + reg_FIS
+        //                            );
+        //                    }
+
+        //                    ticket.AddCodigoBarras(reg_numero, sFuenteBarCode);
+
+        //                    ticket.AddFooterLine(reg_numero);
+
+        //                    ticket.PrintTicket2(
+        //                        s_impre,
+        //                        sFuenteBarCode,
+        //                        sTipoEtiqueta
+        //                    );
+
+        //                    SetText("Etiqueta " + reg_numero + " enviada a impresora");
+        //                }
+        //                catch (Exception exEtiqueta)
+        //                {
+        //                    SetText("Error imprimiendo etiqueta: " + exEtiqueta.Message);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (WebException ex)
+        //    {
+        //        SetText(
+        //            "Error al conectarse a " +
+        //            ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString() +
+        //            " - " + ex.Message
+        //        );
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        SetText("Error: " + ex.Message);
+        //    }
+        //}
 
         private void BuscarProtocoloconAPI()
         {
@@ -170,7 +485,7 @@ namespace ImprimeLocal
                 if (body != "")
                 {
                     SetText("encontró etiquetas pendientes de imprimir");
-                    TraerEtiquetasAPI();
+                    TraerEtiquetasAPI(s_impre);
                 }
                 else
                     SetText("NO encontró etiquetas pendientes de imprimir");
@@ -185,7 +500,7 @@ namespace ImprimeLocal
             }
         }
 
-        private void TraerEtiquetasAPI()
+        private void TraerEtiquetasAPI(string s_impre)
         {
             try
             {
@@ -193,7 +508,7 @@ namespace ImprimeLocal
            System.Net.SecurityProtocolType.Tls12;
 
                 string URL = ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString();
-                URL = URL + "GetDBdata?nombre=GetEtiquetaImpresa&parametros=idEfector:" + lblIdEfector.Text;
+                URL = URL + "GetDBdata?nombre=GetEtiquetaImpresa&parametros=idEfector:" + lblIdEfector.Text + " and impresora:" + s_impre;
                 string s_token = ConfigurationManager.AppSettings["tokenAPI"].ToString();
                 //    string s_token = ConfigurationManager.AppSettings["tokenffeeandes"].ToString();
 
@@ -223,7 +538,6 @@ namespace ImprimeLocal
                  
                     foreach (DataRow item in t.Rows)
                     {
-                      
                         Business.Etiqueta ticket = new Business.Etiqueta();
 
                         ///Desde acá impresion de archivos
@@ -283,7 +597,9 @@ namespace ImprimeLocal
                         string equipo = comboBoximp.Text;   //config.AppSettings.Settings["impresora"].Value;
 
 
-                        ticket.PrintTicket2(equipo, sFuenteBarCode, sTipoEtiqueta);
+                        //ticket.PrintTicket2(equipo, sFuenteBarCode, sTipoEtiqueta);
+
+                        ticket.PrintTicket2(equipo, sFuenteBarCode, sTipoEtiqueta, 0);
                         SetText("Etiqueta " + reg_numero + " enviada a impresora");
                     }
                 }
@@ -741,7 +1057,7 @@ namespace ImprimeLocal
                 string equipo = comboBoximp.Text;   //config.AppSettings.Settings["impresora"].Value;
            
 
-                ticket.PrintTicket2(equipo, sFuenteBarCode, oC.TipoEtiqueta);
+                ticket.PrintTicket2(equipo, sFuenteBarCode, oC.TipoEtiqueta,0);
                 /////fin de impresion de archivos
             }
 
@@ -1050,7 +1366,7 @@ namespace ImprimeLocal
                 System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 string equipo = comboBoximp.Text;   //config.AppSettings.Settings["impresora"].Value;
              
-                ticket.PrintTicket2(equipo, sFuenteBarCode, oC.TipoEtiqueta);
+                ticket.PrintTicket2(equipo, sFuenteBarCode, oC.TipoEtiqueta,0);
                
                 /////fin de impresion de archivos
             }
@@ -1252,6 +1568,22 @@ where p.baja=0 and p.estado=0 and p.idEfectorsolicitante = " + ddlEfector.Select
         private void label21_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void nmMargenDerecho_ValueChanged(object sender, EventArgs e)
+        {
+             
+                Configuration config =
+                    ConfigurationManager.OpenExeConfiguration(
+                        ConfigurationUserLevel.None);
+
+                config.AppSettings.Settings["margenDerecho"].Value =
+                    nmMargenDerecho.Value.ToString();
+
+                config.Save(ConfigurationSaveMode.Modified);
+
+                ConfigurationManager.RefreshSection("appSettings");
+             
         }
 
         //private void timer2_Tick(object sender, EventArgs e)

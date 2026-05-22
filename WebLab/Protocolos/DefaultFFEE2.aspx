@@ -139,7 +139,7 @@
                                         <asp:Button ID="btnBuscar" runat="server" Text="Aceptar" ValidationGroup="0"  Width="100px"
                                                 CssClass="btn btn-danger" TabIndex="2" onclick="btnBuscar_Click" 
                                                 ToolTip="Buscar FFEE" />
-                            <br />
+                            <br /><asp:HiddenField ID="hfListaFFEE" runat="server" />
                                             <asp:CustomValidator ID="cvValidacionInput" runat="server" 
                                                 ErrorMessage="Debe completar al menos un analisis" 
                                     ValidationGroup="0" Font-Size="12pt" OnServerValidate="cvValidacionInput_ServerValidate"  
@@ -150,6 +150,32 @@
                             <input id="hdIdPaciente" type="hidden" runat="server" />
                              <asp:Label ID="lblMensaje" runat="server" ForeColor="Red" Text="Se encontraron los siguientes datos para el dni ingresado:" Visible="False"></asp:Label>
                           
+                            <asp:GridView ID="gvFichas" runat="server" 
+    AutoGenerateColumns="false" CellPadding="1"
+    OnRowCommand="gvFichas_RowCommand"
+    CssClass="table table-bordered bs-table" Font-Size="9pt" ForeColor="#666666" GridLines="Horizontal">
+
+    <Columns>
+         <asp:BoundField DataField="Paciente_documento" HeaderText="Documento" />
+        <asp:BoundField DataField="Paciente_apellido" HeaderText="Apellido" />
+        <asp:BoundField DataField="Paciente_nombre" HeaderText="Nombre" />
+       
+        <asp:BoundField DataField="fecha" HeaderText="Fecha" />
+<asp:TemplateField>
+    <ItemTemplate>
+
+        <asp:Button ID="btnRecibir"
+            runat="server"
+            Text="Recibir" class="btn btn-primary" Width="100px"
+            CommandName="recibir"
+            CommandArgument='<%# Container.DataItemIndex %>' />
+
+    </ItemTemplate>
+</asp:TemplateField>
+
+    </Columns>
+   <HeaderStyle BackColor="#3A93D2" Font-Bold="False" ForeColor="White" />
+</asp:GridView>
                                        </div>
                      </div> 
                                

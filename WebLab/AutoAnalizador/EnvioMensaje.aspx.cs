@@ -78,7 +78,7 @@ namespace WebLab.AutoAnalizador
                     ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloEnvio));
                     crit.Add(Expression.Eq("Equipo", "Metrolab"));
                     crit.Add(Expression.Eq("IdEfector", oUser.IdEfector.IdEfector));
-                    
+                    crit.AddOrder(Order.Asc("NumeroProtocolo"));  //se agrega ordenamiento 
                     IList detalle = crit.List();
                     if (detalle.Count > 0)
                     {

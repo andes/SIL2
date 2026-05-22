@@ -15,11 +15,23 @@ using Business;
 using Business.Data.AutoAnalizador;
 using NHibernate;
 using NHibernate.Expression;
+using Business.Data;
 
 namespace WebLab.AutoAnalizador.SysmexXN1000
 {
     public partial class ConfiguracionEdit : System.Web.UI.Page
     {
+        Usuario oUser = new Usuario();
+
+        protected void Page_PreInit(object sender, EventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+            //     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1, "IdEfector", oEfector);
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -71,9 +83,10 @@ namespace WebLab.AutoAnalizador.SysmexXN1000
         private void CargarCombos()
         {
             Utility oUtil = new Utility();
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             string m_ssql = "select idArea, nombre from Lab_Area where baja=0 and idtiposervicio=1 order by nombre";
-            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
+            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
 
             CargarItem();
 
@@ -85,12 +98,14 @@ namespace WebLab.AutoAnalizador.SysmexXN1000
         private void CargarItem()
         {
             Utility oUtil = new Utility();
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
             ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
             string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item 
-                where baja=0 AND idEfector=idEfectorDerivacion and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
+                where baja=0   and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
                        " order by nombre";
 
-            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
+            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
             ddlItem.Items.Insert(0, new ListItem("Seleccione Item", "0"));
             ddlItem.UpdateAfterCallBack = true;
         }
@@ -171,6 +186,18 @@ namespace WebLab.AutoAnalizador.SysmexXN1000
                 CmdEliminar.ToolTip = "Eliminar";
 
 
+                CheckBox chkStatus = (CheckBox)e.Row.Cells[3].Controls[1];
+                if (oUser.IdEfector.IdEfector == 227)
+                {
+                    CmdEliminar.Visible = true;
+                    chkStatus.Visible = true;
+
+                }
+                else
+                {
+                    CmdEliminar.Visible = false;
+                    chkStatus.Enabled = false;
+                }
 
 
 

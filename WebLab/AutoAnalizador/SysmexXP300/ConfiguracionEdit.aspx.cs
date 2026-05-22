@@ -106,7 +106,7 @@ namespace WebLab.AutoAnalizador.SysmexXP300
             Utility oUtil = new Utility();
             ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
             string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item 
-                where baja=0 AND idEfector=idEfectorDerivacion and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
+                where baja=0 and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
                        " order by nombre";
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 

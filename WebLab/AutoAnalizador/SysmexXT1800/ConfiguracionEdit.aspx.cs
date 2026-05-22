@@ -87,7 +87,7 @@ namespace WebLab.AutoAnalizador.SysmexXT1800
             Utility oUtil = new Utility();
             ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
             string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item 
-                where baja=0 AND idEfector=idEfectorDerivacion and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
+                where baja=0 and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
                        " order by nombre";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");

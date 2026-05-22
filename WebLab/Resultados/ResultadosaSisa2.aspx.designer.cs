@@ -31,6 +31,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
         
         /// <summary>
+        /// ddlTipoFicha control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoFicha;
+        
+        /// <summary>
         /// ddlItem control.
         /// </summary>
         /// <remarks>
@@ -40,15 +49,6 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.DropDownList ddlItem;
         
         /// <summary>
-        /// ddlResultado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlResultado;
-        
-        /// <summary>
         /// rvItem control.
         /// </summary>
         /// <remarks>
@@ -56,6 +56,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvItem;
+        
+        /// <summary>
+        /// ddlResultado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlResultado;
         
         /// <summary>
         /// rdbEstado control.
@@ -211,6 +220,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidClasificacionManual;
         
         /// <summary>
+        /// HidFicha control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden HidFicha;
+        
+        /// <summary>
         /// btnSISA control.
         /// </summary>
         /// <remarks>
@@ -227,6 +245,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvLista;
+        
+        /// <summary>
+        /// gvListaFicha control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvListaFicha;
         
         /// <summary>
         /// btnNoInformarSISA control.

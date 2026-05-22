@@ -342,17 +342,14 @@ namespace WebLab.Protocolos
 
             Business.Data.Laboratorio.Ficha oRegistro = new Business.Data.Laboratorio.Ficha();
             oRegistro = (Business.Data.Laboratorio.Ficha)oRegistro.Get(typeof(Business.Data.Laboratorio.Ficha), "IdFicha", idFicha);
-            //oRegistro.GrabarAuditoriaProtocolo("Consulta", int.Parse(Session["idUsuario"].ToString()));
+            
             if (oRegistro != null)
             {
                 hplActualizarPaciente.Visible = false;
                 hplModificarPaciente.Visible = false;
-
-                //        oRegistro.IdEfector = oC.IdEfector;
+                
                 SectorServicio oSector = new SectorServicio();
                 oSector = BuscarSectorDefecto();
-
-
 
                 lblTitulo.Visible = false;
                 txtFecha.Value = DateTime.Now.ToShortDateString();
@@ -367,16 +364,13 @@ namespace WebLab.Protocolos
                 ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); SelectedEfector();
                 ddlOrigen.SelectedValue =  oRegistro.IdOrigen.ToString();
                 ddlSectorServicio.SelectedValue =  oSector.IdSectorServicio.ToString();// oRegistro.IdSector.IdSectorServicio.ToString(); //ver el servicio 
-                ddlPrioridad.SelectedValue = "1";// oRegistro.IdPrioridad.IdPrioridad.ToString();
-                                                 //if (oRegistro.IdTipoServicio.IdTipoServicio == 3) ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
-
+                ddlPrioridad.SelectedValue = "1";// oRegistro.IdPrioridad.IdPrioridad.ToString();                                                 
 
                 txtEspecialista.Text = "9999";//oRegistro.MatriculaEspecialista;
                 string espe = oRegistro.Solicitante;
                 string matricula = "9999" + '#' + oRegistro.Solicitante;  //oRegistro.MatriculaEspecialista + '#' + oRegistro.Especialista;
                 //      MostrarMedico();
-                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));
-                //if ((matricula == oRegistro.MatriculaEspecialista) && (oRegistro.Especialista== apellidoynombre))
+                ddlEspecialista.Items.Insert(0, new ListItem(espe, matricula + '#' + espe));                
                 ddlEspecialista.SelectedValue = "9999" + '#' + oRegistro.Solicitante;
                 ddlEspecialista.UpdateAfterCallBack = true;
 
@@ -392,11 +386,19 @@ namespace WebLab.Protocolos
                 CargarDiagnosticoFicha(oRegistro.TipoFicha);
 
                 ////caracteres segun laborotorio central
-                string idCar = BuscarCaracter(oRegistro.Clasificacion);
-                if (oRegistro.TipoFicha == "UMA") idCar = "26";
 
-                ddlCaracter.SelectedValue =  idCar;
+                if (oRegistro.TipoFicha == "virosis_respiratoria")
+                    ddlCaracter.Enabled = false;
+                else
+                {
+                    string idCar = BuscarCaracter(oRegistro.Clasificacion);
+                    if (oRegistro.TipoFicha == "UMA") idCar = "26";
 
+                    ddlCaracter.SelectedValue = idCar;
+                }
+
+
+              
 
             }
 
@@ -1853,6 +1855,18 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             }
                         }
 
+                        if (Request["Operacion"].ToString() == "AltaFFEE")
+                        {
+
+                            string idFicha = Request["idFicha"].ToString();
+                            GuardarProtocoloFicha(oRegistro, idFicha);
+
+
+
+                        }
+
+
+
                     }
 
                     //////////////////////////
@@ -1907,15 +1921,15 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         }
                         else
                         {
-                            if (Request["Operacion"].ToString() == "AltaTurno")
-                                Response.Redirect("../turnos/Turnolist.aspx?ultimoProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
+                            if (Request["Operacion"].ToString() == "AltaFFEE")
+                                Response.Redirect("DefaultFFEE2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0", false); 
                             else
                             {
-                                //       if (Request["Operacion"].ToString() == "AltaPeticion")
-                                //         Response.Redirect("../PeticionElectronica/PeticionList.aspx", false);
-                                //   else
-                                //   {
-                                if (Session["idServicio"].ToString() == "3") { Session["idUrgencia"] = "0"; }
+                                if (Request["Operacion"].ToString() == "AltaPeticion")
+                                    Response.Redirect("../PeticionElectronica/PeticionList.aspx", false);
+                                else
+                                {
+                                    if (Session["idServicio"].ToString() == "3") { Session["idUrgencia"] = "0"; }
                                 if (Session["idUrgencia"] != null)
                                 {
                                     switch (Session["idUrgencia"].ToString())
@@ -1934,7 +1948,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                 }
                                 else
                                     Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0", false);
-                                //   }
+                                    }
                             }
                         }
                     }
@@ -1949,43 +1963,142 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
+        private void GuardarProtocoloFicha(
+      Protocolo oRegistro,
+      string idFicha)
+        {
+            Business.Data.Laboratorio.Ficha oRegistroFFEE =
+                new Business.Data.Laboratorio.Ficha();
+
+            oRegistroFFEE =
+                (Business.Data.Laboratorio.Ficha)
+                oRegistroFFEE.Get(
+                    typeof(Business.Data.Laboratorio.Ficha),
+                    "IdFicha",
+                    idFicha
+                );
+
+            SqlConnection conn =
+                (SqlConnection)
+                NHibernateHttpModule.CurrentSession.Connection;
+
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+
+            string query = @"
+        INSERT INTO LAB_ProtocoloFicha
+        (
+            idProtocolo,
+            idEfector,
+            idTipoFicha,
+            idFicha
+        )
+        VALUES
+        (
+            @idProtocolo,
+            @idEfector,
+            @idTipoFicha,
+            @idFicha
+        )";
+
+            SqlCommand cmd = new SqlCommand(query, conn);
+
+            cmd.Parameters.AddWithValue(
+                "@idProtocolo",
+                oRegistro.IdProtocolo);
+
+            cmd.Parameters.AddWithValue(
+                "@idEfector",
+                oUser.IdEfector.IdEfector);
+
+            cmd.Parameters.AddWithValue(
+                "@idTipoFicha",
+                oRegistroFFEE.TipoFicha);
+
+            cmd.Parameters.AddWithValue(
+                "@idFicha",
+                idFicha);
+
+            cmd.ExecuteNonQuery();
+        }
         private void EnviarEquipo(Protocolo oRegistro)
         {
-            /*
-                    Caro: Primer version para enviar de forma automatica (sin intervencion del usuario) muestras el equipo.
-                    En este caso para el equipo REAL: Si el servicio es micro solo para los efectores 205 y 221 (HPN y HEller)
-                    Se debe mejorar para algo mas generico
-                    Se agrega try/cath para que ante cualquier problema no haya inconvenientes con el ingreso de la muestra
-                    */
-
             try
             {
                 if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
-                    (oRegistro.IdEfector.IdEfector == 205 || oRegistro.IdEfector.IdEfector == 221))
+                    (oRegistro.IdEfector.IdEfector == 205 ||
+                     oRegistro.IdEfector.IdEfector == 221))
                 {
-                    using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
+                    SqlConnection conn =
+                        (SqlConnection)
+                        NHibernateHttpModule
+                        .CurrentSession.Connection;
+
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
+
+                    using (SqlCommand cmd =
+                        new SqlCommand(
+                            "dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL",
+                            conn))
                     {
+                        cmd.CommandType =
+                            CommandType.StoredProcedure;
 
-                        using (SqlCommand cmd = new SqlCommand("dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL", conn))
-                        {
-                            cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue(
+                            "@idEfector",
+                            oRegistro.IdEfector.IdEfector);
 
-                            // Parámetros del SP
-                            cmd.Parameters.AddWithValue("@idEfector", oRegistro.IdEfector.IdEfector);
-                            cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
+                        cmd.Parameters.AddWithValue(
+                            "@idProtocolo",
+                            oRegistro.IdProtocolo);
 
-                            // Ejecuta sin devolver resultados
-                            cmd.ExecuteNonQuery();
-                        }
+                        cmd.ExecuteNonQuery();
                     }
                 }
             }
             catch (Exception ex)
             {
-                string exception = "";
-                exception = ex.Message + "<br>";
+                string exception = ex.Message;
             }
         }
+        //private void EnviarEquipo(Protocolo oRegistro)
+        //{
+        //    /*
+        //            Caro: Primer version para enviar de forma automatica (sin intervencion del usuario) muestras el equipo.
+        //            En este caso para el equipo REAL: Si el servicio es micro solo para los efectores 205 y 221 (HPN y HEller)
+        //            Se debe mejorar para algo mas generico
+        //            Se agrega try/cath para que ante cualquier problema no haya inconvenientes con el ingreso de la muestra
+        //            */
+
+        //    try
+        //    {
+        //        if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
+        //            (oRegistro.IdEfector.IdEfector == 205 || oRegistro.IdEfector.IdEfector == 221))
+        //        {
+        //            using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
+        //            {
+
+        //                using (SqlCommand cmd = new SqlCommand("dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL", conn))
+        //                {
+        //                    cmd.CommandType = CommandType.StoredProcedure;
+
+        //                    // Parámetros del SP
+        //                    cmd.Parameters.AddWithValue("@idEfector", oRegistro.IdEfector.IdEfector);
+        //                    cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
+
+        //                    // Ejecuta sin devolver resultados
+        //                    cmd.ExecuteNonQuery();
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        string exception = "";
+        //        exception = ex.Message + "<br>";
+        //    }
+        //}
 
         private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oRegistroAnterior)
         {
@@ -2409,7 +2522,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     oRegistroFFEE = (Business.Data.Laboratorio.Ficha)oRegistroFFEE.Get(typeof(Business.Data.Laboratorio.Ficha), "IdFicha", idFicha);
                     if (oRegistroFFEE != null)
                         if (oRegistroFFEE.IdCasoSnvs!="")
-                            if (oUtil.EsNumerico(oRegistroFFEE.IdCasoSnvs))
+                            if (oUtil.EsNumerico(oRegistroFFEE.IdCasoSnvs.Trim())) 
                                 oRegistro.IdCasoSISA =int.Parse(oRegistroFFEE.IdCasoSnvs);
 
                 }
@@ -3454,11 +3567,6 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                         case "Derivacion": Response.Redirect("Derivacion.aspx?idServicio="+Session["idServicio"].ToString(), false); break;
                     }
                     
-                    
-                    //if (Request["Control"] != null)
-                    //    Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control");
-                    //else
-                    //    Response.Redirect("ProtocoloList.aspx?idServicio="+ Session["idServicio"].ToString()+"&Tipo=Lista");
                 }
             }
             else
@@ -3480,12 +3588,19 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             else
                             {
                                 if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") //Se piso en un merge..
-                                        Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString() + "&idLote=" + Request["idLote"]);
-
-                                if (Session["idUrgencia"].ToString() != "0")
-                                    Response.Redirect("Default2.aspx?idServicio=1&idUrgencia=" + Session["idUrgencia"].ToString(), false);
+                                    Response.Redirect("DerivacionMultiEfectorLote.aspx?idServicio=" + Session["idServicio"].ToString() + "&idLote=" + Request["idLote"]);
                                 else
-                                    Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString(), false);
+                                {
+                                    if (Request["Operacion"].ToString() == "AltaFFEE") //Se piso en un merge..
+                                        Response.Redirect("DefaultFFEE2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=0", false);
+                                    else
+                                    {
+                                        if (Session["idUrgencia"].ToString() != "0")
+                                            Response.Redirect("Default2.aspx?idServicio=1&idUrgencia=" + Session["idUrgencia"].ToString(), false);
+                                        else
+                                            Response.Redirect("Default2.aspx?idServicio=" + Session["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString(), false);
+                                    }
+                                }
                             }
                         }
                     }
@@ -3521,14 +3636,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     if (codigos == "")
                         codigos = oDetalle.IdItem.Codigo;
                     else
-                        codigos += ";" + oDetalle.IdItem.Codigo;
-
-                  
-
-                    //ddlRutina.SelectedValue = "0";
-                    //ddlRutina.UpdateAfterCallBack = true;
-
-
+                        codigos += ";" + oDetalle.IdItem.Codigo;                    
                 }
                 txtCodigosRutina.Text = codigos;
                 txtCodigosRutina.UpdateAfterCallBack = true;
