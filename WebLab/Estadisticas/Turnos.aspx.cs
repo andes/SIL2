@@ -230,23 +230,7 @@ namespace WebLab.Estadisticas
             return Ds.Tables[0];
         }
 
-        //private string CreateChart1(DataTable dataTable)
-        //{
-        //    string strXML = "<graph caption='Asistencias de turnos dados' subCaption='' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='2' showNames='1'>";
-
-        //    if (dataTable.Rows.Count > 0)
-        //    {
-        //        for (int i = 0; i < dataTable.Rows.Count-1; i++)
-        //        {
-        //            strXML += "<set name='" + dataTable.Rows[i][0].ToString() + "' value='" + dataTable.Rows[i][1].ToString() + "' />";
-        //        }
-        //    }            
-
-
-        //    strXML += "</graph>";
-
-        //    return FusionCharts.RenderChart("../FusionCharts/FCF_Pie3D.swf", "", strXML, "Sales", "400", "200", false, false);
-        //}
+       
 
         protected void imgPdf_Click(object sender, ImageClickEventArgs e)
         {
@@ -255,32 +239,18 @@ namespace WebLab.Estadisticas
 
         private void ExportarExcel()
         {
-            Utility.ExportDataTableToXlsx(getDatosEstadisticos("G"), "estadistica_turnos");
-            //StringBuilder sb = new StringBuilder();
-            //StringWriter sw = new StringWriter(sb);
-            //HtmlTextWriter htw = new HtmlTextWriter(sw);
+            DataTable dt = getDatosEstadisticos("G");
+            string encabezado="";
+            if (oUser.IdEfector.IdEfector != 227)
+            {
+                if (int.Parse(ddlEfectorSolicitante.SelectedValue) != 0)
+                    encabezado = ddlEfectorSolicitante.SelectedItem.Text;
+                else 
+                    encabezado =  ddlEfector.SelectedItem.Text;
+            }
+            Utility.ExportDataTableToXlsx(dt, "estadistica_turnos", encabezado);
 
-            //Page page = new Page();
-            //HtmlForm form = new HtmlForm();
-            //gvLista.EnableViewState = false;
-
-            //// Deshabilitar la validación de eventos, sólo asp.net 2
-            //page.EnableEventValidation = false;
-
-            //// Realiza las inicializaciones de la instancia de la clase Page que requieran los diseñadores RAD.
-            //page.DesignerInitialize();
-            //page.Controls.Add(form);
-            //form.Controls.Add(gvLista);
-            //page.RenderControl(htw);
-
-            //Response.Clear();
-            //Response.Buffer = true;
-            //Response.ContentType = "application/vnd.ms-excel";
-            //Response.AddHeader("Content-Disposition", "attachment;filename=estadistica_turnos.xls");
-            //Response.Charset = "UTF-8";
-            //Response.ContentEncoding = Encoding.Default;
-            //Response.Write(sb.ToString());
-            //Response.End();
+           
         }
         private void MostrarPDF()
         {

@@ -879,7 +879,7 @@ namespace Business
 
         #region Excel
 
-        public static void ExportDataTableToXlsx(DataTable dataTable, string filename)
+        public static void ExportDataTableToXlsx(DataTable dataTable, string filename, string header="")
         {
             //Version final 29/4/26
             // ⚠️ Si usas EPPlus v5.x o superior, descomenta esta línea:
@@ -890,26 +890,43 @@ namespace Business
 
                 HttpResponse response = HttpContext.Current.Response;
 
-               //  Color finalBackColor  = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
-               // Color fontColor = Color.White
+                //  Color finalBackColor  = ColorTranslator.FromHtml("#2b3e4c"); //azul-neuquen
+                // Color fontColor = Color.White
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // Crear una nueva hoja de trabajo
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(filename);
 
+
+                    int filaInicioTabla = string.IsNullOrWhiteSpace(header) ? 1 : 2;
+
                     // Cargar la DataTable en la hoja de trabajo. 'true' incluye los encabezados.
-                    worksheet.Cells["A1"].LoadFromDataTable(dataTable, true);
+                    worksheet.Cells[filaInicioTabla, 1].LoadFromDataTable(dataTable, true);
 
                     int colCount = dataTable.Columns.Count;
+
+                    // Header
+                    if (!string.IsNullOrWhiteSpace(header))
+                    {
+                        worksheet.Cells[1, 1].Value = header;
+
+                        // combinar columnas
+                        worksheet.Cells[1, 1, 1, colCount+1].Merge = true;
+
+                        // estilo
+                        worksheet.Cells[1, 1, 1, colCount].Style.Font.Bold = true;
+                        worksheet.Cells[1, 1, 1, colCount].Style.Font.Size = 14;
+                        worksheet.Cells[1, 1, 1, colCount].Style.HorizontalAlignment =  ExcelHorizontalAlignment.Center;
+                    }
 
                     // --- ENCABEZADOS ---
                     for (int c = 0; c < colCount; c++)
                     {
-                        worksheet.Cells[1, c + 1].Value = dataTable.Columns[c].ColumnName;
+                        worksheet.Cells[filaInicioTabla, c + 1].Value = dataTable.Columns[c].ColumnName;
                     }
 
                     // --- DATOS ---
-                    int filaExcel = 2;
+                    int filaExcel = filaInicioTabla +1 ;
 
                     foreach (DataRow row in dataTable.Rows)
                     {
@@ -996,7 +1013,7 @@ namespace Business
                     //int colCount = dataTable.Columns.Count;
 
                     // Rango del encabezado: Desde A1 hasta el final de la primera fila
-                    using (var range = worksheet.Cells[1, 1, 1, colCount])
+                    using (var range = worksheet.Cells[filaInicioTabla, 1, filaInicioTabla, colCount])
                     {
                         ExcelEstilo(range);
                     }
@@ -1005,7 +1022,8 @@ namespace Business
                     worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
 
                     //Todas las celdas
-                    var range2 = worksheet.Cells[1, 1, rowCount+1, colCount]; //row+1 asi cuenta la fila del encabezado.
+                    int ultimaFila = rowCount + filaInicioTabla;
+                    var range2 = worksheet.Cells[filaInicioTabla, 1, ultimaFila, colCount]; //row+1 asi cuenta la fila del encabezado.
                     ExcelBordes(range2);
                     // --- CONFIGURAR RESPUESTA HTTP ---
                     response.Clear();
