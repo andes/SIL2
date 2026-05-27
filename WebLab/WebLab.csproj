@@ -2688,6 +2688,7 @@
     <Content Include="Rutinas\RutinaMuestraEdit.aspx" />
     <Content Include="Rutinas\RutinaBroEdit.aspx" />
     <Content Include="Rutinas\RutinaBroList.aspx" />
+    <Content Include="script\chart\chart.js" />
     <Content Include="script\chosen\chosen-sprite%402x.png" />
     <Content Include="script\chosen\chosen-sprite.png" />
     <Content Include="script\chosen\chosen.css" />
