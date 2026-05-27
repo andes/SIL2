@@ -4959,6 +4959,12 @@
       <DependentUpon>HTrabajoProtocolo1MicrobiologiaHorizontal.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1MicrobiologiaHorizontalSA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1MicrobiologiaHorizontalSA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Pesquisa.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
