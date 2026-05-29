@@ -187,11 +187,11 @@
             </Columns>
             <PagerSettings Mode="NumericFirstLast" PageButtonCount="20" Position="Top" />
             <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-            <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" 
-                BorderColor="White" VerticalAlign="Top" />
-                
-               
-      
+            <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right"  
+			BorderColor="White" VerticalAlign="Top" CssClass="GridPager"/>
+			
+			
+			
             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
             <HeaderStyle BackColor="#3A93D2" Font-Bold="False" ForeColor="White" 
                 />

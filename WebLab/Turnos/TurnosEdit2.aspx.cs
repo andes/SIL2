@@ -1180,7 +1180,7 @@ ORDER BY cantidad desc";
 
         private string VerificarLimiteTurnosPorPracticas()
         {
-            string practica="";
+            string practica = "";
             string[] tabla = TxtDatos.Value.Split('@');
 
 
@@ -1193,38 +1193,51 @@ ORDER BY cantidad desc";
                 {
                     Item oItem = new Item();
                     oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
-                    if (oItem!=null)
+
+                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                    ICriteria crit = m_session.CreateCriteria(typeof(ItemEfector));
+                    crit.Add(Expression.Eq("IdItem", oItem));
+                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino));//El límite es por laboratorio
+
+                    IList items = crit.List();
+
+
+                    foreach (ItemEfector itemEfector in items) //tiene que traer uno solo
                     {
-                        if (oItem.LimiteTurnosDia < 0) ///-1 no se puede dar turnos.
+                        if (itemEfector.LimiteTurnosDia < 0) ///-1 no se puede dar turnos.
                         { practica = oItem.Nombre; break; }
 
-                        if (oItem.LimiteTurnosDia > 0)
+                        if (itemEfector.LimiteTurnosDia > 0)
                         {
                             int cantidadDados = 0;
-                            ISession m_session = NHibernateHttpModule.CurrentSession;
-                            ICriteria crit = m_session.CreateCriteria(typeof(Turno));
-                            crit.Add(Expression.Eq("Fecha",  DateTime.Parse(lblFecha.Text)));
+                            m_session = NHibernateHttpModule.CurrentSession;
+                            crit = m_session.CreateCriteria(typeof(Turno));
+                            crit.Add(Expression.Eq("Fecha", DateTime.Parse(lblFecha.Text)));
                             crit.Add(Expression.Eq("Baja", false));
-                            crit.Add(Expression.Eq("IdEfector",oUser.IdEfector));
+                            crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino)); 
 
                             IList detalle = crit.List();
                             foreach (Turno oTurno in detalle)
                             {
-                              //  ISession m_session = NHibernateHttpModule.CurrentSession;
+                                //  ISession m_session = NHibernateHttpModule.CurrentSession;
                                 ICriteria crit2 = m_session.CreateCriteria(typeof(TurnoItem));
                                 crit2.Add(Expression.Eq("IdTurno", oTurno));
                                 crit2.Add(Expression.Eq("IdItem", oItem));
-                                
+
 
                                 IList detalle2 = crit2.List();
-                                cantidadDados += detalle2.Count;                                                                   
+                                cantidadDados += detalle2.Count;
 
                             }
-                            if (cantidadDados >= oItem.LimiteTurnosDia) { practica =oItem.Nombre; break; }
-                        }                      
-                    }                      
-                }/// fin codigo
+                            if (cantidadDados >= itemEfector.LimiteTurnosDia) { practica = oItem.Nombre; break; }
+                        }
+                    }
+
+
+                }
             }/// fin foreach
+
+
             return practica;
 
         }
