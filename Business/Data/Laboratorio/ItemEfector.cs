@@ -33,6 +33,7 @@ namespace Business.Data.Laboratorio
         private int m_idpresentacion;
         private String m_resultadoDefecto;
 
+        private int m_limiteturnosdia;
 
         #endregion
 
@@ -44,8 +45,9 @@ namespace Business.Data.Laboratorio
 		{
             m_iditemEfector = 0;
             m_iditem = new Item();
-            m_idefector = new Efector(); 
-		 
+            m_idefector = new Efector();
+            m_limiteturnosdia = 0;
+
             m_idefectorderivacion = new Efector(); 
 		 
             m_disponible = true;
@@ -249,10 +251,16 @@ namespace Business.Data.Laboratorio
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        public int LimiteTurnosDia
+        {
+            get { return m_limiteturnosdia; }
+            set
+            {
+                m_isChanged |= (m_limiteturnosdia != value);
+                m_limiteturnosdia = value;
+            }
 
+        }
 
         /// <summary>
         /// Returns whether or not the object has changed it's values.

@@ -48,7 +48,6 @@ namespace Business.Data.Laboratorio
         private bool m_disponible;
         private bool m_codificahiv;
         private int m_multiplicador;
-        private int m_limiteturnosdia;
         private bool m_etiquetaadicional;
         private bool m_informable;
         private bool m_requierecaracter;
@@ -93,7 +92,6 @@ namespace Business.Data.Laboratorio
             m_codificahiv = false;
             m_disponible = true;
             m_multiplicador = 1;
-            m_limiteturnosdia = 0;
             m_etiquetaadicional = false;
             m_informable = true;
             m_requierecaracter = false;
@@ -462,16 +460,7 @@ namespace Business.Data.Laboratorio
 
         }
 
-        public int LimiteTurnosDia
-        {
-            get { return m_limiteturnosdia; }
-            set
-            {
-                m_isChanged |= (m_limiteturnosdia != value);
-                m_limiteturnosdia = value;
-            }
-
-        }
+        
 
 
         /// <summary>
