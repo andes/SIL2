@@ -3393,21 +3393,12 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             crit.Add(Expression.Eq("IdItem", oReg));
 
             if (oUser.IdEfector.IdEfector != 227)
-            {
                 crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-            }
 
             IList items = crit.List();
-
-            bool auditoriaGrabada = false;
-
             foreach (ItemEfector itemEfector in items)
             {
-                if (!auditoriaGrabada && txtLimite.Value.ToString() != itemEfector.LimiteTurnosDia.ToString())
-                { 
-                    oReg.GrabarAuditoriaDetalleItem(accion, oUser, "Limite de turnos", txtLimite.Value.ToString(), itemEfector.LimiteTurnosDia.ToString());
-                    auditoriaGrabada = true;
-                }
+                oReg.GrabarAuditoriaDetalleItem(accion, oUser,  "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(),"");
                 itemEfector.LimiteTurnosDia = int.Parse(txtLimite.Value.ToString());
                 itemEfector.Save();
             }
