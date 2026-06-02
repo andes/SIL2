@@ -331,9 +331,15 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             ddlGermen.Items.Insert(0, new ListItem("--SELECCIONE AISLAMIENTO--", "0"));
 
             m_ssql = @"SELECT idMecanismoResistencia, sigla as nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
-            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");            
-            
+            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
 
+             m_ssql = @"SELECT idMetodoAntibiograma, codigo FROM LAB_MetodoAntibiograma WHERE baja=0";
+            oUtil.CargarRadioButton(rdbMetodologiaAntibiograma, m_ssql, "idMetodoAntibiograma", "codigo");
+            rdbMetodologiaAntibiograma.SelectedValue = "0";
+
+
+            oUtil.CargarCombo(ddlMetodoAntibiograma, m_ssql, "idMetodoAntibiograma", "codigo");
+            ddlMetodoAntibiograma.SelectedValue = "0";
         }
 
 
@@ -681,7 +687,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 CargarListasAislamientos();
                 CargarListaAntibiotico();
                 CargarListasAntibiogramas();
-                
 
                 if (oRegistro.IdMuestra > 0)
                 {
@@ -5812,5 +5817,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
 
             
         }
+
+        
     }
 }

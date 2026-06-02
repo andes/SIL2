@@ -156,6 +156,7 @@
     <Compile Include="Data\Laboratorio\LoteDerivacion.cs" />
     <Compile Include="Data\Laboratorio\Marca.cs" />
     <Compile Include="Data\Laboratorio\MecanismoResistencia.cs" />
+    <Compile Include="Data\Laboratorio\MetodoAntibiograma.cs" />
     <Compile Include="Data\Laboratorio\MuestraEfector.cs" />
     <Compile Include="Data\Laboratorio\Area.cs">
       <SubType>Code</SubType>
@@ -325,6 +326,7 @@
     <Content Include="bin\Debug\Iesi.Collections.dll" />
     <Content Include="bin\Debug\log4net.dll" />
     <Content Include="bin\Debug\NHibernate.dll" />
+    <EmbeddedResource Include="Data\Laboratorio\MetodoAntibiograma.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\LogAccesoTerminosCondiciones.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\MecanismoResistencia.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ProtocoloAtbMecanismo.hbm.xml" />
