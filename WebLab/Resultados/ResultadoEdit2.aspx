@@ -808,10 +808,10 @@
                         ErrorMessage="*" MaximumValue="9999999" MinimumValue="1" Type="Integer" 
                         ValidationGroup="A"></asp:RangeValidator>
 
-                  <asp:RadioButtonList CssClass="myLabelIzquierda"   onselectedindexchanged="rdbMetodologiaAntibiograma_SelectedIndexChanged"   Width="180px" ID="rdbMetodologiaAntibiograma" RepeatDirection="Horizontal"  runat="server">
-                     <asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
+                  <asp:RadioButtonList CssClass="myLabelIzquierda"   onselectedindexchanged="rdbMetodologiaAntibiograma_SelectedIndexChanged"   Width="360px" ID="rdbMetodologiaAntibiograma" RepeatDirection="Horizontal"  runat="server">
+                     <%--<asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
                                 <asp:ListItem Value="1">CIM</asp:ListItem>
-                                <asp:ListItem Value="2">Etest</asp:ListItem>
+                                <asp:ListItem Value="2">Etest</asp:ListItem>--%>
                     </asp:RadioButtonList>
                     <asp:CheckBoxList ID="chkMecanismoResistencia" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
                    <%-- <asp:DropDownList class="form-control input-sm"  ID="ddlMecanismoResistencia" runat="server" Width="280px">  </asp:DropDownList>--%>
@@ -893,9 +893,9 @@
                               
                                    ATB:
                                         <asp:DropDownList AutoPostBack="true" Width="100px" onselectedindexchanged="ddlMetodoAntibiograma_SelectedIndexChanged" ID="ddlMetodoAntibiograma" runat="server" class="form-control input-sm"> 
-         <asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
+         <%--<asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
          <asp:ListItem Value="1">CIM</asp:ListItem>
-         <asp:ListItem Value="2">Etest</asp:ListItem>         
+         <asp:ListItem Value="2">Etest</asp:ListItem>  --%>       
         </asp:DropDownList>
                         
                         <asp:DropDownList Width="250px" ID="ddlAntibiograma" runat="server" AutoPostBack="true"  onselectedindexchanged="ddlAntibiograma_SelectedIndexChanged" class="form-control input-sm">

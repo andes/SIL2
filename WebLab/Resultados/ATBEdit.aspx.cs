@@ -30,12 +30,11 @@ namespace WebLab.Resultados
                 string s_idGermen = Request["idGermen"].ToString();
                 string s_idMetodo= Request["idMetodo"].ToString();
                 string s_numeroAislamiento = Request["numeroAislamiento"].ToString();
-                switch (int.Parse(s_idMetodo))
-                {
-                    case 0: lblMetodo.Text = "Disco"; break;
-                    case 1: lblMetodo.Text = "CIM"; break;
-                    case 2: lblMetodo.Text = "eTest"; break;
-                }
+
+                MetodoAntibiograma oMetodo = new MetodoAntibiograma();
+                oMetodo = (MetodoAntibiograma)oMetodo.Get(typeof(MetodoAntibiograma), int.Parse(s_idMetodo));
+                lblMetodo.Text = oMetodo.Codigo;
+
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
                 lblProtocolo.Text = oProtocolo.Numero.ToString();//.GetNumero();

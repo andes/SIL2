@@ -57,7 +57,8 @@
                             </td>
                             <td bgcolor="#E8E8E8" class="auto-style7">
                                    <asp:Label ID="lblGermen" runat="server" Text="Label"></asp:Label>
-                            &nbsp;<asp:Label ID="lblMetodo" runat="server" Text="Label"></asp:Label>
+                            &nbsp;(<asp:Label ID="lblMetodo" runat="server" Text="Label"></asp:Label>
+                                )
                                 <asp:Label ID="lblIdMetodo" runat="server" Text="Label" Visible="False"></asp:Label>
                                  &nbsp;( <asp:Label ID="lblPractica" runat="server" Text="Label"></asp:Label>
                             &nbsp;) </td>
