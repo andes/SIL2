@@ -152,9 +152,9 @@ namespace WebLab.Turnos
         {
             //  DateTime fecha = DateTime.Parse(cldTurno.SelectedDate.ToShortDateString());
             string m_strSQL = @"SELECT idTurno AS idturno, hora FROM LAB_Turno AS T (nolock)
-                               WHERE(T.baja = 0) AND T.fecha = '" + fecha.ToString("yyyyMMdd") + "'  AND T.IdItem = " + Request["idItem"].ToString();
+                               WHERE(T.baja = 0) AND T.fecha = '" + fecha.ToString("yyyyMMdd") + "'  AND T.IdItem = " + Request["idItem"].ToString()+  " AND T.IdTipoServicio=" + Request["idTipoServicio"].ToString();
 
-                if (oUser.IdPerfil.IdPerfil != 15)
+            if (oUser.IdPerfil.IdPerfil != 15)
                      m_strSQL += @" and T.idEfector=" + oUser.IdEfector.IdEfector.ToString() +" and T.idEfectorSolicitante= " + oCon.IdEfector.IdEfector.ToString() +" ORDER BY idturno DESC ";
                 
                 else m_strSQL += @"  and T.idEfector=" + oUser.IdEfectorDestino.IdEfector.ToString() + " and T.idEfectorSolicitante= " + oUser.IdEfector.IdEfector.ToString() + " ORDER BY idturno DESC ";

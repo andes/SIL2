@@ -1201,13 +1201,13 @@ ORDER BY cantidad desc";
                         crit.Add(Expression.Eq("IdItem", oItem));
 
                         if(oUser.IdPerfil.IdPerfil == 15)
-                            crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino));//El límite es por laboratorio
+                            crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino));//en idEfectorDestino esta el laboratorio
                         else
                             crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
 
-                        IList items = crit.List();
+                        ItemEfector itemEfector = (ItemEfector)crit.UniqueResult();
 
-                        foreach (ItemEfector itemEfector in items) 
+                        if(itemEfector != null)
                         {
                             if (itemEfector.LimiteTurnosDia < 0) ///-1 no se puede dar turnos.
                             { practica = oItem.Nombre; break; }
@@ -1216,11 +1216,18 @@ ORDER BY cantidad desc";
                             {
                                 int cantidadDados = 0;
                                 m_session = NHibernateHttpModule.CurrentSession;
+
                                 crit = m_session.CreateCriteria(typeof(Turno));
                                 crit.Add(Expression.Eq("Fecha", DateTime.Parse(lblFecha.Text)));
                                 crit.Add(Expression.Eq("Baja", false));
-                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino));
 
+                                // En Turnos.IdEfector se guardar el laboratorio que realiza la práctica
+                                if (oUser.IdPerfil.IdPerfil == 15)  
+                                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino)); //Para externo, en IdEFectorDestino se guarda el laboratorio que realiza la práctica
+                                else
+                                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); //En los demas perfiles en IdEfector es el laboratorio que realiza la práctica
+
+                                //Obtengo todos los turnos que tienen esa practica
                                 IList detalle = crit.List();
                                 foreach (Turno oTurno in detalle)
                                 {
