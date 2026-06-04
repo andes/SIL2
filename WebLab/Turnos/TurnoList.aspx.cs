@@ -486,10 +486,10 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             
             DateTime fecha = DateTime.Parse(cldTurno.SelectedDate.ToShortDateString());        
             string m_Condicion="";
-            if (txtPaciente.Text!="")
+            if (txtPaciente.Text!="") 
             {
-                if (rdbBusqueda.Items[0].Selected)//DNI
-                    m_Condicion  = " and P.numeroDocumento=" + txtPaciente.Text ;
+                if (rdbBusqueda.Items[0].Selected && ValidaDNIPaciente())//DNI //SI no es valido el filtro, no se agrega en la consulta sql asi continua el postback
+                    m_Condicion  = " and P.numeroDocumento=" + txtPaciente.Text ; 
                 if (rdbBusqueda.Items[1].Selected)//Apellido
                     m_Condicion  = " and P.apellido like '%" + txtPaciente.Text+"%'" ;
                 if (rdbBusqueda.Items[2].Selected)//Apellido
@@ -598,7 +598,7 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
         }
 
         private void Actualizar()
-        {
+        {   
             //Session["tipo"] = Request["tipo"];
             if (Session["tipo"].ToString() != "recepcion") ///Sólo para asignacion de turnos
             {
@@ -631,13 +631,13 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
                 btnNuevo.Visible = false;
             else
                 if (lblMensaje.Visible)
-                    btnNuevo.Visible = false;
-                else
+                btnNuevo.Visible = false;
+            else
                     if (turno_dispo<=0)
-                        btnNuevo.Visible = false;
-                    else
+                btnNuevo.Visible = false;
+            else
                         if (Permiso == 1) btnNuevo.Visible = false;
-                        else btnNuevo.Visible = true;
+            else btnNuevo.Visible = true;
 
 
             Session["Turno_Fecha"] = cldTurno.SelectedDate;
@@ -853,22 +853,27 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
         {
             if (Page.IsValid)
             {
-                lblMensajeBusqueda.Visible = false;
-                if (rdbBusqueda.Items[0].Selected) // DNI
-                {
-                    long dni;
-                    if (!long.TryParse(txtPaciente.Text, out dni))
-                    {
-                        lblMensajeBusqueda.Visible = true;
-                        lblMensajeBusqueda.Text = "El DNI ingresado no es válido";
-                        return;
-                    }
-                }
-
+               
                 Actualizar(); 
             }
         }
 
+        private bool ValidaDNIPaciente()
+        {
+            if (rdbBusqueda.Items[0].Selected) // DNI
+            {
+                long dni;
+                if (txtPaciente.Text != "" && !long.TryParse(txtPaciente.Text, out dni))
+                {
+                    //lblMensajeBusqueda.Visible = true;
+                    //lblMensajeBusqueda.Text = "Ingresar solo numeros en DNI";
+                    cvNumeroDesde.IsValid = false;
+                    return false;
+                }
+                    else return true;
+            }
+            else return true;
+        }
         protected void cldTurno_DayRender(object sender, DayRenderEventArgs e)
         {
             //if ((e.Day.Date.Day < DateTime.Now.Day) || (e.Day.Date.Month < DateTime.Now.Month))

@@ -230,11 +230,11 @@
                         <td>   <asp:LinkButton ID="btnBuscar" runat="server" CssClass="btn btn-info" OnClick="btnBuscar_Click"    Width="100px" >
                                              <span class="glyphicon glyphicon-search"></span>&nbsp;Buscar</asp:LinkButton>      </td>
                         </tr>
-                    <tr>
+                    <%--<tr> > --> esta CustomValidator ID=cvNumeroDesde para mostrar el mensaje de error por dni
                         <td>
                             <asp:Label ID="lblMensajeBusqueda" runat="server" ForeColor="Red" Visible="false"></asp:Label>
                         </td>
-                    </tr>
+                    </tr>--%>
 
              </table>
                 
