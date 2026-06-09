@@ -23,6 +23,7 @@
     <property column="sininsumo" type="Boolean" name="SinInsumo" not-null="true" />
     <property column="idPresentacionDefecto" type="Int32" name="IdPresentacionDefecto" not-null="true" />    
     <property column="resultadoDefecto" type="String" name="ResultadoDefecto" not-null="true" length="200" />
+    <property column="limiteTurnosDia" type="Int32" name="LimiteTurnosDia" not-null="true" />
 
   </class>
 </hibernate-mapping>

@@ -69,7 +69,7 @@
                     </tr>
                     <tr>
                         <td align="left">
-                            <asp:DropDownList ID="ddlItem" runat="server" AutoPostBack="True" class="form-control input-sm" onselectedindexchanged="ddlTipoServicio_SelectedIndexChanged" Width="200px">
+                            <asp:DropDownList ID="ddlItem" runat="server" AutoPostBack="True" class="form-control input-sm" onselectedindexchanged="ddlItem_SelectedIndexChanged" Width="200px">
                             </asp:DropDownList>
                             <asp:ImageButton ID="imgCalendarioView" runat="server" ImageUrl="~/App_Themes/default/images/zoom.png" ToolTip="Próximos días habilitados" Visible="false" />
                         </td>
@@ -230,6 +230,11 @@
                         <td>   <asp:LinkButton ID="btnBuscar" runat="server" CssClass="btn btn-info" OnClick="btnBuscar_Click"    Width="100px" >
                                              <span class="glyphicon glyphicon-search"></span>&nbsp;Buscar</asp:LinkButton>      </td>
                         </tr>
+                    <%--<tr> > --> esta CustomValidator ID=cvNumeroDesde para mostrar el mensaje de error por dni
+                        <td>
+                            <asp:Label ID="lblMensajeBusqueda" runat="server" ForeColor="Red" Visible="false"></asp:Label>
+                        </td>
+                    </tr>--%>
 
              </table>
                 

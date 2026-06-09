@@ -51,12 +51,21 @@
 					   <tr>
 						<td class="myLabelIzquierda" >Efector:</td>
 						<td >
-                            <asp:DropDownList ID="ddlEfector" runat="server" 
+                            <asp:DropDownList ID="ddlEfector" runat="server" OnSelectedIndexChanged="ddlEfector_SelectedIndexChanged" AutoPostBack="true"
                                 ToolTip="Seleccione el efector" TabIndex="9" Width="250px" class="form-control input-sm">
                             </asp:DropDownList>
                                         
                                             </td>
 					</tr>
+                     <tr>
+                         <td class="myLabelIzquierda">
+                             <asp:Label ID="lblEfectorSolicitante" Text="Efector Solicitante:" runat="server" Visible="false" /> </td>
+                         <td>
+                                <asp:DropDownList ID="ddlEfectorSolicitante" runat="server" 
+                                    ToolTip="Seleccione el efector solicitante" TabIndex="10" Width="250px" class="form-control input-sm"  Visible="false">
+                                </asp:DropDownList>
+                         </td>
+                     </tr>
 					<tr>
 						<td class="myLabelIzquierda">Fecha Desde:</td>
 						<td>

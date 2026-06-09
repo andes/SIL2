@@ -20,13 +20,22 @@
     <link rel="stylesheet" type="text/css" href ="../script/moverfilas/moverfilas.css" />
 <script type="text/javascript" src="../script/moverfilas/codigo.js"></script>
 <script type="text/javascript">
-  $(function() {
 
-                 $("#tabContainer").tabs();
-                        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
+    $(function() {
+
+        $("#tabContainer").tabs();
+        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
                       
-                        $("#tabContainer").tabs({ selected: currTab });
-             });
+        $("#tabContainer").tabs({ selected: currTab });
+    });
+
+    function confirmarLimiteTurnos() {
+        var idEfector = $("#<%= HFEfector.ClientID %>").val();
+        if (idEfector == 227) {
+            if (confirm('El cambio se aplicará a todos los efectores ¿Está seguro de continuar?')) { return true; }
+            else {  return false; }
+        } else { return true; }
+    }
 </script>
    
   
@@ -49,7 +58,7 @@
  <div align="left" style="width: 1200px" class="form-inline"  >
   
 <table align="center" width="1000px">
-
+    <asp:HiddenField ID="HFEfector" runat="server" />
 <tr>
 <td colspan="4" > 
        <div class="panel panel-default">
@@ -1378,9 +1387,10 @@
         <table>
                <tr>
 						<td class="mytituloGris" >&nbsp;</td>
-						<td class="mytituloGris" colspan="2" >TURNOS<hr />
-</td></tr>
-<tr>
+						<td class="mytituloGris" colspan="2" >TURNOS<hr /> </td>
+
+               </tr>
+               <tr>
 						<td class="control-label" >
 
                             &nbsp;</td>
@@ -1388,11 +1398,20 @@
 
                          Límite de Turnos por Día:&nbsp;&nbsp;  <input id="txtLimite" runat="server" type="text" maxlength="3" 
                           style="width: 40px"  onblur="valNumero(this)" tabindex="4" class="form-control input-sm"
-                                title="Ingrese el limite de turnos" />&nbsp;<asp:RequiredFieldValidator 
-                                ID="rfvLimite" runat="server" 
+                                title="Ingrese el limite de turnos" />&nbsp;
+                            <asp:RequiredFieldValidator  ID="rfvLimite" runat="server" 
                           ControlToValidate="txtLimite" ErrorMessage="Limite de turnos" 
                                 ValidationGroup="0">*</asp:RequiredFieldValidator> &nbsp;<p class="myLabelLitlle">Colocar 0 para especificar sin limites de turnos.<br /> Colocar -1 para NO permitir la dación de turnos para esta práctica.</p> </td>
-					</tr>
+						
+			</tr>
+            <tr> 
+                        <td class="control-label" > &nbsp;</td>
+                        <td class="control-label" align="right">
+                        <asp:Button ID="btnGuardarLimiteTurno" runat="server" OnClientClick=" return confirmarLimiteTurnos();" onclick="btnGuardarLimiteTurno_Click" Text="Guardar"  enabled="false"
+                            CssClass="btn btn-primary" Width="100px" tabindex="5"  ToolTip="Hacer clic aqui para guardar" />
+
+    </td></tr>
+           
         </table>
 
         </div>

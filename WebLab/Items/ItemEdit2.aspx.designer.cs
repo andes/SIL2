@@ -24,6 +24,15 @@ namespace WebLab.Items
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
 
         /// <summary>
+        /// HFEfector control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFEfector;
+
+        /// <summary>
         /// txtEfector control.
         /// </summary>
         /// <remarks>
@@ -1174,6 +1183,15 @@ namespace WebLab.Items
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvLimite;
+
+        /// <summary>
+        /// btnGuardarLimiteTurno control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardarLimiteTurno;
 
         /// <summary>
         /// lnkRegresar control.

@@ -44,7 +44,6 @@
 
 
     <property column="codigoNomenclador" type="String" name="CodigoNomenclador" not-null="true" length="255" />
-    <property column="limiteTurnosDia" type="Int32" name="LimiteTurnosDia" not-null="true" />
 
     <property column="etiquetaAdicional" type="Boolean" name="EtiquetaAdicional" not-null="true" />
   		<property column="informable" type="Boolean" name="Informable" not-null="true" />

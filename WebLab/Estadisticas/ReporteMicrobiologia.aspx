@@ -1,27 +1,19 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReporteMicrobiologia.aspx.cs" Inherits="WebLab.Estadisticas.ReporteMicrobiologia" MasterPageFile="~/Site1.Master" ValidateRequest="false"%>
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
+
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+<link href="../script/Resources/jquery-ui-1.8.20.css"
+      rel="stylesheet" type="text/css" />
 
-    <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
+<script src="../script/jquery.min.js"></script>
 
+<script src="../script/Resources/jQuery-ui-1.8.18.min.js"></script>
 
+<script src="../script/jquery.ui.datepicker-es.js"></script>
 
-  <script type="text/javascript"      src="../script/jquery.min.js"></script> 
-  <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
-    
-      <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
-      
-  
-
-                   <script type="text/javascript">
-
-
-    
-
-
-     
-                 
-
+   
+    <script type="text/javascript">
+        
 	$(function() {
 		$("#<%=txtFechaDesde.ClientID %>").datepicker({
 			showOn: 'button',
@@ -61,13 +53,13 @@ $(function () {
             width: 89%;
         }
             
-.myTexto
-{
-	border: 1px solid #808080; /*font-weight: bold;*/
+        .myTexto
+        {
+	        border: 1px solid #808080; /*font-weight: bold;*/
 	
-	background-color: #FCFCFC;
+	        background-color: #FCFCFC;
 
-}
+        }
 
 
 
@@ -91,6 +83,7 @@ $(function () {
 
     </style>
 </asp:Content>
+
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server"> 
  
  <asp:HiddenField runat="server" ID="HFCurrTabIndex"  /> 
@@ -214,7 +207,7 @@ $(function () {
     <li><a href="#tab4"><b>Resultados</b></a></li>                              
     <li><a href="#tab2"><b>Aislamientos</b></a></li>  
     <li><a href="#tab3"><b>Antibióticos</b></a></li>  
-                                 <li><a href="#tab5"><b>Mecanismos Resistencia</b></a></li>  
+    <li><a href="#tab5"><b>Mecanismos Resistencia</b></a></li>  
     
 </ul>                          
 
@@ -226,9 +219,7 @@ $(function () {
                           Font-Bold="True" Text="Label"></asp:Label>
                   </td>
                   <td align="right">
-                     <asp:ImageButton ID="imgPdf" runat="server" 
-            ImageUrl="~/App_Themes/default/images/pdf.jpg" 
-            ToolTip="Exportar a Pdf" onclick="imgPdf_Click" Visible="False" />
+                 
 &nbsp;
         &nbsp;
         </td>
@@ -239,6 +230,7 @@ $(function () {
                   <asp:HiddenField ID="HFTipoMuestra" runat="server" />
                   <asp:HiddenField ID="HFMicroorganismo" runat="server" />
                   <asp:HiddenField ID="HFResistencia" runat="server" />
+                  <asp:HiddenField ID="HFMecanismosResistencia" runat="server" />
                         <table style="width:100%;">
               
               <tr>
@@ -357,11 +349,6 @@ $(function () {
                                 <td align="left" class="myLabelIzquierda">
                                 <asp:ImageButton ToolTip="Ver grafico de tortas" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png"  OnClientClick="verGrafico('torta'); return false;"                       />
                                  &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  OnClientClick="verGrafico('barra'); return false;"                       />
-                                 <%--<asp:Button ID="btnVerGraficoTipoMuestra"  runat="server" Text="Ver Grafico" CssClass="myButtonGris" Width="100px"  
-                       OnClientClick="verGrafico(); return false;"                       />
-                                    <asp:Button ID="btnGraficoTipMuestra" runat="server" 
-                                        onclick="btnGraficoTipMuestra_Click" Text="Ver Gráfico" />--%>
-                              
                                 </td>
                                 <td align="right" class="myLabelIzquierda">
                                           Exportar lista de Pacientes
@@ -425,10 +412,6 @@ $(function () {
                                         &nbsp;&nbsp;
                                         <asp:ImageButton ID="btnGraficoMicroorganismos2" runat="server" ToolTip="Ver grafico de barras"
                                         OnClientClick="verGraficoMicroorganismo('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
-                                
-                                    <%--<asp:Button ID="btnGraficoMicroorganismos" runat="server" CssClass="myButtonGris" Width="100px"  
-
-                                        OnClientClick="verGraficoMicroorganismo(); return false;" Text="Ver Gráfico" />--%>
                                 </td>
 
                             </tr>
@@ -930,6 +913,7 @@ $(function () {
 
 
                        <div  id="tab5" >   
+                        
                         <table style="width:100%;">
               
               <tr>
@@ -966,15 +950,11 @@ $(function () {
                                 </td>
 
                                 <td align="right">
-                                <asp:ImageButton ID="ImageButton1" runat="server" ToolTip="Ver grafico de tortas"
-                                        OnClientClick="verGraficoMicroorganismo('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
+                                <asp:ImageButton ID="btnVerGraficoMecanismosRessitencia" runat="server" ToolTip="Ver grafico de tortas" Visible="false"
+                                        OnClientClick="verGraficoMecanismosResistencia('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
                                         &nbsp;&nbsp;
-                                        <asp:ImageButton ID="ImageButton2" runat="server" ToolTip="Ver grafico de barras"
-                                        OnClientClick="verGraficoMicroorganismo('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
-                                
-                                    <%--<asp:Button ID="btnGraficoMicroorganismos" runat="server" CssClass="myButtonGris" Width="100px"  
-
-                                        OnClientClick="verGraficoMicroorganismo(); return false;" Text="Ver Gráfico" />--%>
+                                        <asp:ImageButton ID="btnVerGraficoMecanismosRessitencia2" runat="server" ToolTip="Ver grafico de barras" Visible="false"
+                                        OnClientClick="verGraficoMecanismosResistencia('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
                                 </td>
 
                             </tr>
@@ -1115,23 +1095,21 @@ $(function () {
                             </tr>
                          </table>
                     </div>   
-                    </div>  <%----tabContainer--%>
+                    </div> 
                      
       </asp:Panel>
          </div>
     </div>
            </div>
   
-    <script src="../script/Resources/jquery.min.js" type="text/javascript"></script>
- <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />   
-    <script src="../script/Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
+   
 <script language="javascript" type="text/javascript">
 
     var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
     var valoresMicroorganismo = $("#<%= HFMicroorganismo.ClientID %>").val();
     var valoresResistencia = $("#<%= HFResistencia.ClientID %>").val();
-   
-
+    var valoresMecanismos = $("#<%= HFMecanismosResistencia.ClientID %>").val();
+    
     function verGrafico(tipoGrafico) {
         var dom = document.domain;
         var domArray = dom.split('.');
@@ -1229,9 +1207,41 @@ $(function () {
             }
         }).width(900);
     }
-    </script>
+
+    function verGraficoMecanismosResistencia(tipoGrafico) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+        
+        var $this = $(this);
+        $('<iframe src="Grafico.aspx?valores=' + valoresMecanismos + '&tipo=4&tipoGrafico=' + tipoGrafico + '" />').dialog({
+            title: 'Mecanismos Resistencia',
+            autoOpen: true,
+            width: 900,
+            height: 600,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(900);
+    }
+
+</script>
 
   
-    </div>
-    </div>
+   
 </asp:Content>
