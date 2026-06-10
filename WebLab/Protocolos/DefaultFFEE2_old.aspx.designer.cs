@@ -7,244 +7,180 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Agendas
-{
-
-
-    public partial class AgendaEdit
-    {
-
-        /// <summary>
-        /// customValidadorGeneral control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator customValidadorGeneral;
-        /// <summary>
-        /// rvTipoServicio control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvTipoServicio;
+namespace WebLab.Protocolos {
+    
+    
+    public partial class DefaultFFEE2_old {
         
         /// <summary>
-        /// cboTipoServicio control.
+        /// pnlTitulo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList cboTipoServicio;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTitulo;
         
         /// <summary>
-        /// ddlItem control.
+        /// lblTituloLista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlItem;
+        protected global::System.Web.UI.WebControls.Label lblTituloLista;
         
         /// <summary>
-        /// rvEfector control.
+        /// ProtocoloList1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvEfector;
+        protected global::WebLab.Protocolos.ProtocoloList1 ProtocoloList1;
         
         /// <summary>
-        /// ddlEfector control.
+        /// pnlTitulo2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.DropDownList ddlEfector;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTitulo2;
         
         /// <summary>
-        /// rfvFechaDesde control.
+        /// lblTitulo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaDesde;
+        protected global::System.Web.UI.WebControls.Label lblTitulo;
         
         /// <summary>
-        /// txtFechaDesde control.
+        /// lblServicio control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
+        protected global::System.Web.UI.WebControls.Label lblServicio;
         
         /// <summary>
-        /// rfvFechaHasta control.
+        /// lblMensajeOK control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFechaHasta;
+        protected global::System.Web.UI.WebControls.Label lblMensajeOK;
         
         /// <summary>
-        /// txtFechaHasta control.
+        /// txtDni control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtDni;
         
         /// <summary>
-        /// rfvLimite control.
+        /// cvDni control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvLimite;
+        protected global::System.Web.UI.WebControls.CompareValidator cvDni;
         
         /// <summary>
-        /// txtLimite control.
+        /// txtCodigo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtLimite;
+        protected global::System.Web.UI.WebControls.TextBox txtCodigo;
         
         /// <summary>
-        /// cvDias control.
+        /// ddlTipoFicha control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvDias;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipoFicha;
         
         /// <summary>
-        /// rdbTipoDias control.
+        /// ddlImpresora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.RadioButtonList rdbTipoDias;
+        protected global::System.Web.UI.WebControls.DropDownList ddlImpresora;
         
         /// <summary>
-        /// cklDias control.
+        /// btnBuscar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.CheckBoxList cklDias;
+        protected global::System.Web.UI.WebControls.Button btnBuscar;
         
         /// <summary>
-        /// rfvHoraDesde control.
+        /// cvValidacionInput control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHoraDesde;
+        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
         
         /// <summary>
-        /// txtHoraDesde control.
+        /// hdEfectores control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtHoraDesde;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdEfectores;
         
         /// <summary>
-        /// rfvHoraHasta control.
+        /// hdTipoMuestra control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHoraHasta;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdTipoMuestra;
         
         /// <summary>
-        /// txtHoraHasta control.
+        /// hdCaracteres control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtHoraHasta;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdCaracteres;
         
         /// <summary>
-        /// rdbHorarioTurno control.
+        /// hdIdPaciente control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.RadioButtonList rdbHorarioTurno;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hdIdPaciente;
         
         /// <summary>
-        /// rfvFrecuencia control.
+        /// lblMensaje control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.RequiredFieldValidator rfvFrecuencia;
-        
-        /// <summary>
-        /// txtFrecuenciaTurno control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFrecuenciaTurno;
-        
-        /// <summary>
-        /// vs control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ValidationSummary vs;
-        
-        /// <summary>
-        /// lnkRegresar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkRegresar;
-        
-        /// <summary>
-        /// btnGuardar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
-        /// <summary>
-        /// CompareValidator1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CompareValidator CompareValidator1;
+        protected global::System.Web.UI.WebControls.Label lblMensaje;
     }
 }

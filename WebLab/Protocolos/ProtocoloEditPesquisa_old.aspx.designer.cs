@@ -10,7 +10,7 @@
 namespace WebLab.Protocolos {
     
     
-    public partial class ProtocoloEditPesquisa {
+    public partial class ProtocoloEditPesquisa_old {
         
         /// <summary>
         /// pnlLista control.
@@ -19,7 +19,7 @@ namespace WebLab.Protocolos {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlLista;
+        protected global::System.Web.UI.WebControls.Panel pnlLista;
         
         /// <summary>
         /// gvLista control.
@@ -31,76 +31,22 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.GridView gvLista;
         
         /// <summary>
-        /// lblServicio control.
+        /// pnlActualiza control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblServicio;
+        protected global::System.Web.UI.WebControls.Panel pnlActualiza;
         
         /// <summary>
-        /// pnlNavegacion control.
+        /// lblTitulo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNavegacion;
-        
-        /// <summary>
-        /// lblEstado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEstado;
-        
-        /// <summary>
-        /// lnkAnterior control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkAnterior;
-        
-        /// <summary>
-        /// lnkSiguiente control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkSiguiente;
-        
-        /// <summary>
-        /// pnlTitulo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTitulo;
-        
-        /// <summary>
-        /// pnlPaciente control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlPaciente;
-        
-        /// <summary>
-        /// logoRenaper control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlImage logoRenaper;
+        protected global::System.Web.UI.WebControls.Label lblTitulo;
         
         /// <summary>
         /// lblPaciente control.
@@ -112,58 +58,22 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.Label lblPaciente;
         
         /// <summary>
-        /// HFIdPaciente control.
+        /// lblUsuario control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HFIdPaciente;
+        protected global::System.Web.UI.WebControls.Label lblUsuario;
         
         /// <summary>
-        /// HFNumeroDocumento control.
+        /// lblEstado control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HFNumeroDocumento;
-        
-        /// <summary>
-        /// HFSexo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HFSexo;
-        
-        /// <summary>
-        /// HFSelMedico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HFSelMedico;
-        
-        /// <summary>
-        /// HFSelRenaper control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HFSelRenaper;
-        
-        /// <summary>
-        /// HFModificarPaciente control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField HFModificarPaciente;
+        protected global::System.Web.UI.WebControls.Label lblEstado;
         
         /// <summary>
         /// hplModificarPaciente control.
@@ -184,166 +94,58 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.HyperLink hplActualizarPaciente;
         
         /// <summary>
-        /// lblAlertaProtocolo control.
+        /// pnlNavegacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAlertaProtocolo;
+        protected global::System.Web.UI.WebControls.Panel pnlNavegacion;
         
         /// <summary>
-        /// pnlNumero control.
+        /// lnkAnterior control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNumero;
+        protected global::System.Web.UI.WebControls.LinkButton lnkAnterior;
         
         /// <summary>
-        /// lblTitulo control.
+        /// lnkSiguiente control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTitulo;
+        protected global::System.Web.UI.WebControls.LinkButton lnkSiguiente;
         
         /// <summary>
-        /// lblUsuario control.
+        /// pnlNuevo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUsuario;
+        protected global::System.Web.UI.WebControls.Panel pnlNuevo;
         
         /// <summary>
-        /// btnNotificarSISA control.
+        /// lblPacienteNuevo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNotificarSISA;
+        protected global::System.Web.UI.WebControls.Label lblPacienteNuevo;
         
         /// <summary>
-        /// lblNroSISA control.
+        /// lblServicio control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNroSISA;
-        
-        /// <summary>
-        /// spanadjunto control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanadjunto;
-        
-        /// <summary>
-        /// lblAdjunto control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAdjunto;
-        
-        /// <summary>
-        /// lblFechaNacimiento control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblFechaNacimiento;
-        
-        /// <summary>
-        /// lblEdad control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEdad;
-        
-        /// <summary>
-        /// lblUnidadEdad control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUnidadEdad;
-        
-        /// <summary>
-        /// lblSexo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSexo;
-        
-        /// <summary>
-        /// lnkValidarRenaper control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkValidarRenaper;
-        
-        /// <summary>
-        /// lblObraSocial control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblObraSocial;
-        
-        /// <summary>
-        /// btnSelObraSocial control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnSelObraSocial;
-        
-        /// <summary>
-        /// lblAlertaObraSocial control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblAlertaObraSocial;
-        
-        /// <summary>
-        /// txtTelefono control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTelefono;
-        
-        /// <summary>
-        /// cvValidacionInput control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
+        protected global::System.Web.UI.WebControls.Label lblServicio;
         
         /// <summary>
         /// lblIdPaciente control.
@@ -373,15 +175,6 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaOrden;
         
         /// <summary>
-        /// txtFechaTomaMuestra control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaTomaMuestra;
-        
-        /// <summary>
         /// txtNumeroOrigen control.
         /// </summary>
         /// <remarks>
@@ -400,15 +193,6 @@ namespace WebLab.Protocolos {
         protected global::Anthem.DropDownList ddlEfector;
         
         /// <summary>
-        /// txtEspecialista control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.TextBox txtEspecialista;
-        
-        /// <summary>
         /// ddlEspecialista control.
         /// </summary>
         /// <remarks>
@@ -418,13 +202,22 @@ namespace WebLab.Protocolos {
         protected global::Anthem.DropDownList ddlEspecialista;
         
         /// <summary>
-        /// LinkButton1 control.
+        /// cvNumeroDesde control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
+        protected global::System.Web.UI.WebControls.CustomValidator cvNumeroDesde;
+        
+        /// <summary>
+        /// rvOrigen control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvOrigen;
         
         /// <summary>
         /// ddlOrigen control.
@@ -445,6 +238,15 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.DropDownList ddlSectorServicio;
         
         /// <summary>
+        /// rvSectorServicio control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvSectorServicio;
+        
+        /// <summary>
         /// ddlPrioridad control.
         /// </summary>
         /// <remarks>
@@ -454,13 +256,13 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.DropDownList ddlPrioridad;
         
         /// <summary>
-        /// lblSalaCama control.
+        /// rvPrioridad control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSalaCama;
+        protected global::System.Web.UI.WebControls.RangeValidator rvPrioridad;
         
         /// <summary>
         /// txtSala control.
@@ -508,85 +310,22 @@ namespace WebLab.Protocolos {
         protected global::Anthem.DropDownList ddlMuestra;
         
         /// <summary>
-        /// lblCaracterSisa control.
+        /// rvMuestra control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblCaracterSisa;
+        protected global::Anthem.RangeValidator rvMuestra;
         
         /// <summary>
-        /// ddlCaracter control.
+        /// tabAnalisis control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.DropDownList ddlCaracter;
-        
-        /// <summary>
-        /// lblNroHisopado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblNroHisopado;
-        
-        /// <summary>
-        /// txtNumeroOrigen2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumeroOrigen2;
-        
-        /// <summary>
-        /// lblErrorMedico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblErrorMedico;
-        
-        /// <summary>
-        /// diag control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlImage diag;
-        
-        /// <summary>
-        /// tab3Titulo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab3Titulo;
-        
-        /// <summary>
-        /// tituloCalidad control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloCalidad;
-        
-        /// <summary>
-        /// inci control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlImage inci;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor tabAnalisis;
         
         /// <summary>
         /// PesquisaNeonatal1 control.
@@ -634,13 +373,22 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtTareas;
         
         /// <summary>
-        /// CodOS control.
+        /// cvValidacionInput control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden CodOS;
+        protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
+        
+        /// <summary>
+        /// tab11 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab11;
         
         /// <summary>
         /// txtCodigoDiagnostico control.
@@ -679,15 +427,6 @@ namespace WebLab.Protocolos {
         protected global::Anthem.Button btnBusquedaFrecuente;
         
         /// <summary>
-        /// btnRecordarDiagnostico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Button btnRecordarDiagnostico;
-        
-        /// <summary>
         /// lstDiagnosticos control.
         /// </summary>
         /// <remarks>
@@ -695,15 +434,6 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.ListBox lstDiagnosticos;
-        
-        /// <summary>
-        /// lblMensajeDiagnostico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblMensajeDiagnostico;
         
         /// <summary>
         /// btnAgregarDiagnostico control.
@@ -715,15 +445,6 @@ namespace WebLab.Protocolos {
         protected global::Anthem.ImageButton btnAgregarDiagnostico;
         
         /// <summary>
-        /// lstDiagnosticosFinal control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.ListBox lstDiagnosticosFinal;
-        
-        /// <summary>
         /// btnSacarDiagnostico control.
         /// </summary>
         /// <remarks>
@@ -733,103 +454,58 @@ namespace WebLab.Protocolos {
         protected global::Anthem.ImageButton btnSacarDiagnostico;
         
         /// <summary>
-        /// lblFechaFIS control.
+        /// lstDiagnosticosFinal control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.Label lblFechaFIS;
+        protected global::Anthem.ListBox lstDiagnosticosFinal;
         
         /// <summary>
-        /// txtFechaFIS control.
+        /// lblImprimeComprobantePaciente control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaFIS;
+        protected global::System.Web.UI.WebControls.Label lblImprimeComprobantePaciente;
         
         /// <summary>
-        /// chkSinFIS control.
+        /// chkImprimir control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkSinFIS;
+        protected global::System.Web.UI.WebControls.CheckBox chkImprimir;
         
         /// <summary>
-        /// Label1 control.
+        /// ddlImpresora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.Label Label1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlImpresora;
         
         /// <summary>
-        /// txtFechaFUC control.
+        /// lnkReimprimirComprobante control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaFUC;
+        protected global::Anthem.LinkButton lnkReimprimirComprobante;
         
         /// <summary>
-        /// chkSinFUC control.
+        /// lblImprimeCodigoBarras control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkSinFUC;
-        
-        /// <summary>
-        /// pnlEnfermedadBase control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlEnfermedadBase;
-        
-        /// <summary>
-        /// lblEB control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblEB;
-        
-        /// <summary>
-        /// txtCodigoEnfermedadBase control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.TextBox txtCodigoEnfermedadBase;
-        
-        /// <summary>
-        /// ddlEnfermedadBase control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.DropDownList ddlEnfermedadBase;
-        
-        /// <summary>
-        /// pnlEtiquetas control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlEtiquetas;
+        protected global::System.Web.UI.WebControls.Label lblImprimeCodigoBarras;
         
         /// <summary>
         /// rdbSeleccionarAreasEtiquetas control.
@@ -841,6 +517,24 @@ namespace WebLab.Protocolos {
         protected global::Anthem.RadioButtonList rdbSeleccionarAreasEtiquetas;
         
         /// <summary>
+        /// ddlImpresoraEtiqueta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraEtiqueta;
+        
+        /// <summary>
+        /// lnkReimprimirCodigoBarras control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.LinkButton lnkReimprimirCodigoBarras;
+        
+        /// <summary>
         /// chkAreaCodigoBarra control.
         /// </summary>
         /// <remarks>
@@ -850,40 +544,13 @@ namespace WebLab.Protocolos {
         protected global::Anthem.CheckBoxList chkAreaCodigoBarra;
         
         /// <summary>
-        /// ddlImpresora2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.DropDownList ddlImpresora2;
-        
-        /// <summary>
-        /// btnReimprimirCodigoBarras control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Button btnReimprimirCodigoBarras;
-        
-        /// <summary>
-        /// lblMensajeImpresion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblMensajeImpresion;
-        
-        /// <summary>
         /// chkRecordarConfiguracion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.CheckBox chkRecordarConfiguracion;
+        protected global::System.Web.UI.WebControls.CheckBox chkRecordarConfiguracion;
         
         /// <summary>
         /// chkCodificaPaciente control.
@@ -892,43 +559,7 @@ namespace WebLab.Protocolos {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.CheckBox chkCodificaPaciente;
-        
-        /// <summary>
-        /// pnlIncidencia control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlIncidencia;
-        
-        /// <summary>
-        /// IncidenciaEdit1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::WebLab.Calidad.IncidenciaEdit IncidenciaEdit1;
-        
-        /// <summary>
-        /// pnlImpresoraAlta control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlImpresoraAlta;
-        
-        /// <summary>
-        /// ddlImpresoraEtiqueta control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraEtiqueta;
+        protected global::System.Web.UI.WebControls.CheckBox chkCodificaPaciente;
         
         /// <summary>
         /// txtObservacion control.
@@ -940,22 +571,13 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.TextBox txtObservacion;
         
         /// <summary>
-        /// chkNotificar control.
+        /// btnCancelar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkNotificar;
-        
-        /// <summary>
-        /// hidToken control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
+        protected global::System.Web.UI.WebControls.Button btnCancelar;
         
         /// <summary>
         /// txtCodigo control.
@@ -976,15 +598,6 @@ namespace WebLab.Protocolos {
         protected global::Anthem.TextBox txtCodigosRutina;
         
         /// <summary>
-        /// btnCancelar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelar;
-        
-        /// <summary>
         /// btnGuardar control.
         /// </summary>
         /// <remarks>
@@ -992,6 +605,15 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
+        
+        /// <summary>
+        /// hidToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
         
         /// <summary>
         /// ValidationSummary1 control.

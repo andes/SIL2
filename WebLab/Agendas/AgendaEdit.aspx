@@ -52,7 +52,8 @@
 				<div class="panel-body">   
 
 				 <table >
-				 <tr>
+				 
+					<tr>
                    <td colspan="2">
                        <asp:CustomValidator ID="customValidadorGeneral" runat="server" OnServerValidate="customValidadorGeneral_ServerValidate" ValidationGroup="0" ></asp:CustomValidator>
                    </td>

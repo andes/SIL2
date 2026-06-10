@@ -30,6 +30,7 @@ namespace Business.Data.Laboratorio
         private string m_identificadorlabo;
         private string m_clasificacion;
         private string m_idCasoSnvs;
+        private string m_idEvento;
 
         private DateTime m_fecha ;
         private DateTime m_fechasintoma;
@@ -62,6 +63,7 @@ namespace Business.Data.Laboratorio
             m_fecha = DateTime.MinValue;
             m_idTipoMuestra = 0;
             m_idorigen = 0;
+            m_idEvento = String.Empty;
         }
 
       
@@ -89,6 +91,8 @@ namespace Business.Data.Laboratorio
             DateTime fechatoma,
             int idTipoMuestra,
             string idCasoSnvs,
+            string idEvento,
+
             int idorigen 
              )
 			: this()
@@ -104,6 +108,7 @@ namespace Business.Data.Laboratorio
             m_idCasoSnvs = idCasoSnvs;
             m_idTipoMuestra = idTipoMuestra;
             m_idorigen = idorigen;
+            m_idEvento = idEvento;
 
         }
 		#endregion // End Required Fields Only Constructor
@@ -254,6 +259,16 @@ namespace Business.Data.Laboratorio
             {
                 m_isChanged |= (m_idCasoSnvs != value);
                 m_idCasoSnvs = value;
+            }
+        }
+
+        public string IdEvento
+        {
+            get { return m_idEvento; }
+            set
+            {
+                m_isChanged |= (m_idEvento != value);
+                m_idEvento = value;
             }
         }
         public string Clasificacion

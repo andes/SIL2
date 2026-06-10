@@ -263,6 +263,7 @@ namespace WebLab.Estadisticas
                 
             return  s_valores;
         }
+
         private DataTable MostrarDatos(string s_tipo)
         {
             DataSet Ds = new DataSet();
@@ -362,7 +363,10 @@ namespace WebLab.Estadisticas
             
             
 
-          }
+        }
+
+
+ 
 
         protected void lnkRegresar_Click(object sender, EventArgs e)
         {
@@ -435,14 +439,21 @@ namespace WebLab.Estadisticas
           
         }
 
+
+
+
+
         protected void imgExcel_Click(object sender, ImageClickEventArgs e)
         {
+
             ExportarExcelTipoMuestra();
+
         }
 
         private void ExportarExcelTipoMuestra()
         {
             Utility.ExportGridViewToExcel(gvTipoMuestra, ddlAnalisis.SelectedItem.Text + "_TipoMuestra");
+          
         }
         
  
@@ -460,6 +471,7 @@ namespace WebLab.Estadisticas
         private void ExportarExcelMicroorganismos()
         {
             Utility.ExportGridViewToExcel(gvMicroorganismos, ddlAnalisis.SelectedItem.Text + "_Microorganismos");
+         
         }
 
         protected void imgExcel1_Click(object sender, ImageClickEventArgs e)
@@ -470,6 +482,7 @@ namespace WebLab.Estadisticas
         private void ExportarExcelAntibioticos()
         {
             Utility.ExportGridViewToExcel(gvAntibiotico, ddlAnalisis.SelectedItem.Text + "_Antibiotico");
+         
         }
 
         protected void imgExcel2_Click(object sender, ImageClickEventArgs e)
@@ -480,6 +493,7 @@ namespace WebLab.Estadisticas
         private void ExportarExcelResultados()
         {
             Utility.ExportGridViewToExcel(gvResultado, ddlAnalisis.SelectedItem.Text + "_Resultado");
+          
         }
 
         protected void gvTipoMuestra_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -565,6 +579,7 @@ namespace WebLab.Estadisticas
          
         }
 
+
         protected void gvAntibiotico_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Resistencia")
@@ -591,6 +606,9 @@ namespace WebLab.Estadisticas
 
             }
         }
+
+        
+        
         
         protected void gvAntibiotico_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -652,6 +670,11 @@ namespace WebLab.Estadisticas
 
         protected void btnBuscarAntibioticos_Click(object sender, EventArgs e)
         {
+         
+
+
+            
+
             DataTable dt = MostrarDatos("Antibiotico");
 
 
@@ -664,10 +687,14 @@ namespace WebLab.Estadisticas
 
         }
 
+     
+
         protected void btnVerParametro_Click(object sender, EventArgs e)
         {
             MostrarDatos("Parametro");
         }
+
+     
 
         protected void gvAntibioticoResistencia_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -731,6 +758,7 @@ namespace WebLab.Estadisticas
 
         protected void btnDescargarDetallePacientes_Click(object sender, EventArgs e)
         {
+           
             Utility.ExportDataTableToXlsx(GetDataPacientes("General"), ddlAnalisis.SelectedItem.Text + "_Pacientes");
            
         }
@@ -739,7 +767,6 @@ namespace WebLab.Estadisticas
         {
           
         }
-
 
         private DataTable GetDataPacientes(string tipo)
         {
@@ -847,6 +874,7 @@ WHERE ATB.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
               AND aM2.idItem = aM.idItem
               AND aM2.idGermen = aM.idGermen
               AND aM2.idMetodologia = aM.idMetodologia
+              and aM2.numeroAislamiento = aM.numeroAislamiento
             FOR XML PATH(''), TYPE
         ).value('.', 'NVARCHAR(MAX)'), 1, 2, '')
     FROM lab_ProtocoloAtbMecanismo aM
@@ -874,6 +902,7 @@ INNER JOIN lab_ProtocoloAtbMecanismo aM
     AND aM.idItem = ANT.idItem
     AND aM.idGermen = ANT.idGermen
     AND aM.idMetodologia = ANT.idMetodologia
+    AND aM.numeroAislamiento = ANT.numeroAislamiento
 INNER JOIN Mecanismos Mec
     ON Mec.idProtocolo = aM.idProtocolo
     AND Mec.idItem = aM.idItem
@@ -896,9 +925,11 @@ WHERE ANT.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
             return data;
         }
 
+      
 
         protected void imgExcelResultadoPacientes_Click1(object sender, ImageClickEventArgs e)
         {
+            
            Utility.ExportDataTableToXlsx(GetDataPacientes("Resultado"), ddlAnalisis.SelectedItem.Text + "_Resultados");
         }
 
@@ -911,11 +942,13 @@ WHERE ANT.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
 
         protected void imgExcelDetallePacientesAislamientos_Click(object sender, ImageClickEventArgs e)
         {
+           
             Utility.ExportDataTableToXlsx(GetDataPacientes("Aislamiento"), ddlAnalisis.SelectedItem.Text + "_Pacientes");
         }
 
         protected void imgExcelDetalleAtb_Click(object sender, ImageClickEventArgs e)
         {
+            
             Utility.ExportDataTableToXlsx(GetDataPacientes("ATB"), ddlAnalisis.SelectedItem.Text);
         }
 

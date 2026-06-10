@@ -134,6 +134,7 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
         private string m_matriculaespecialista;
         private int m_codos;
         private int m_idcasosisa;
+        private int m_ideventosisa;
         private DateTime m_fechainiciosintomas;
         private DateTime m_fechaultimocontacto;
         private bool m_notificarresultado;
@@ -191,6 +192,7 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
        m_matriculaespecialista = String.Empty;
             m_codos = 0;
             m_idcasosisa = 0;
+            m_ideventosisa = 0;
             m_ipcarga = String.Empty;
             m_impre= String.Empty;
 
@@ -258,6 +260,7 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
       string  matriculaespecialista ,
       int codos,
       int idcasosisa,
+      int ideventosisa,
       string ipcarga,
             string impre,
 
@@ -306,6 +309,7 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
             m_matriculaespecialista = matriculaespecialista;
             m_codos = codos;
             m_idcasosisa = idcasosisa;
+            m_ideventosisa = ideventosisa;
             m_ipcarga = ipcarga;
             m_impre = impre;
             m_fechainiciosintomas = fechainiciosintomas;
@@ -337,6 +341,17 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
             {
                 m_isChanged |= (m_idcasosisa != value);
                 m_idcasosisa = value;
+            }
+
+        }
+
+        public int IdEvento
+        {
+            get { return m_ideventosisa; }
+            set
+            {
+                m_isChanged |= (m_ideventosisa != value);
+                m_ideventosisa = value;
             }
 
         }

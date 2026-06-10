@@ -28,6 +28,19 @@
                     
 
   
+    <style type="text/css">
+        .auto-style1 {
+            height: 30px;
+        }
+    </style>
+
+  
+
+
+
+                    
+
+  
     </asp:Content>
 
 
@@ -72,7 +85,7 @@
                 <tr>
               
 
-                <td align="left">  
+                <td align="left" class="auto-style1">  
                
                
 
@@ -89,7 +102,7 @@
                
 
         </td>
-                <td align="right">   
+                <td align="right" class="auto-style1">   
                   
                
 

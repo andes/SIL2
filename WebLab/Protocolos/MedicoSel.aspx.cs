@@ -63,6 +63,7 @@ namespace WebLab.Protocolos
                 lblErrorAPI.Visible = true;
                 lblErrorAPI.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
             }
+            //}
 
 
         }

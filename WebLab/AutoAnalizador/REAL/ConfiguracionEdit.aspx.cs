@@ -24,7 +24,7 @@ namespace WebLab.AutoAnalizador.REAL
     public partial class ConfiguracionEdit : System.Web.UI.Page
     {
         Usuario oUser = new Usuario();
-
+        Utility oUtil;
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -260,8 +260,9 @@ namespace WebLab.AutoAnalizador.REAL
 
         protected void btnExcel_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
-                dataTableAExcel(LeerDatosExcel(), "REAL_SIL");
+            DataTable tabla = LeerDatosExcel();
+            Utility.ExportDataTableToXlsx(tabla, "REAL_SIL");
+            
         }
 
 

@@ -11,12 +11,12 @@
             var txtNumeroLote = document.getElementById('<%= txtNumeroLote.ClientID %>');
             //console.log(txtNumeroLote);
             var num = txtNumeroLote.value;
-              //console.log(num);
+            //console.log(num);
             num = num.replace(/\D/g, '');
             //console.log(num);
             $("#<%=txtNumeroLote.ClientID%>").val(num);
         }
-      
+
     </script>
 
 </asp:Content>

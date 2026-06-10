@@ -228,7 +228,7 @@ namespace Business.Data
 		}
        
 
-        public void GrabaAuditoria(string accion, int iduser, string username, string valorAnterior="", string valorNuevo="")
+        public int GrabaAuditoria(string accion, int iduser, string username, string valorAnterior="", string valorNuevo="")
         {
             AuditoriaUsuario  oRegistro = new AuditoriaUsuario();
             oRegistro.IdUsuario = iduser; // usuario afectado que esta modificando, consultando , etc.
@@ -241,7 +241,7 @@ namespace Business.Data
             oRegistro.ValorAnterior = valorAnterior;
             oRegistro.ValorNuevo = valorNuevo;
             oRegistro.Save();
-            
+            return oRegistro.IdAuditoriaUsuario;
 
         }
 

@@ -1868,10 +1868,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
 
                     }
-
-                    //////////////////////////
-
-                    //                EnviarProtocoloEquipo_DescargaManual();///Pone el protocolo en la tabla 
+                    
 
                     if ((Request["Operacion"].ToString() == "AltaPeticion") && (Request["idPeticion"] != null))
                         ActualizarPeticion(Request["idPeticion"].ToString(), oRegistro);
@@ -2062,43 +2059,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 string exception = ex.Message;
             }
         }
-        //private void EnviarEquipo(Protocolo oRegistro)
-        //{
-        //    /*
-        //            Caro: Primer version para enviar de forma automatica (sin intervencion del usuario) muestras el equipo.
-        //            En este caso para el equipo REAL: Si el servicio es micro solo para los efectores 205 y 221 (HPN y HEller)
-        //            Se debe mejorar para algo mas generico
-        //            Se agrega try/cath para que ante cualquier problema no haya inconvenientes con el ingreso de la muestra
-        //            */
-
-        //    try
-        //    {
-        //        if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
-        //            (oRegistro.IdEfector.IdEfector == 205 || oRegistro.IdEfector.IdEfector == 221))
-        //        {
-        //            using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
-        //            {
-
-        //                using (SqlCommand cmd = new SqlCommand("dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL", conn))
-        //                {
-        //                    cmd.CommandType = CommandType.StoredProcedure;
-
-        //                    // Parámetros del SP
-        //                    cmd.Parameters.AddWithValue("@idEfector", oRegistro.IdEfector.IdEfector);
-        //                    cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
-
-        //                    // Ejecuta sin devolver resultados
-        //                    cmd.ExecuteNonQuery();
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        string exception = "";
-        //        exception = ex.Message + "<br>";
-        //    }
-        //}
+      
 
         private void ActualizarEstadoDerivacion(Protocolo oRegistro, Protocolo oRegistroAnterior)
         {
@@ -2514,18 +2475,26 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 oRegistro.Especialista = apellidoynombre; // ddlEspecialista.SelectedItem.Text;
                 oRegistro.MatriculaEspecialista = matricula; // ddlEspecialista.SelectedValue;
 
-                if (Request["idFicha"] != null)
+
+                ///Caro: se saca que se grabe el evento svns cuando se ingresa la muestra, se recuperará el valor al momento de interoperar resultados
+            /*    if (Request["idFicha"] != null)
                 {
                     string idFicha = Request["idFicha"].ToString();
 
                     Business.Data.Laboratorio.Ficha oRegistroFFEE = new Business.Data.Laboratorio.Ficha();
                     oRegistroFFEE = (Business.Data.Laboratorio.Ficha)oRegistroFFEE.Get(typeof(Business.Data.Laboratorio.Ficha), "IdFicha", idFicha);
                     if (oRegistroFFEE != null)
-                        if (oRegistroFFEE.IdCasoSnvs!="")
-                            if (oUtil.EsNumerico(oRegistroFFEE.IdCasoSnvs.Trim())) 
-                                oRegistro.IdCasoSISA =int.Parse(oRegistroFFEE.IdCasoSnvs);
+                    {
+                        if (oRegistroFFEE.IdCasoSnvs != "")
+                            if (oUtil.EsNumerico(oRegistroFFEE.IdCasoSnvs.Trim()))
+                                oRegistro.IdCasoSISA = int.Parse(oRegistroFFEE.IdCasoSnvs);
 
+                        if (oRegistroFFEE.IdEvento != "")
+                            if (oUtil.EsNumerico(oRegistroFFEE.IdEvento.Trim()))
+                                oRegistro.IdEvento = int.Parse(oRegistroFFEE.IdEvento);
+                    }
                 }
+                */
 
                 oRegistro.Save();
                 oRegistro.ActualizarNumeroDesdeID();

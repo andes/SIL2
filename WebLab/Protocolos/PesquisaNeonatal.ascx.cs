@@ -274,7 +274,7 @@ namespace WebLab.Protocolos
             m_ssql = " SELECT idMotivoRepeticionScreening,  descripcion  FROM LAB_MotivoRepeticionScreening  ";
             oUtil.CargarCombo(ddlMotivoRepeticion, m_ssql, "idMotivoRepeticionScreening", "descripcion");
             ddlMotivoRepeticion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
-            
+
             m_ssql = " SELECT idEfector,  nombre  FROM Sys_efector order by nombre ";
             oUtil.CargarCombo(ddlLugarControl, m_ssql, "idEfector", "nombre");
             ddlLugarControl.Items.Insert(0, new ListItem("--Seleccione--", "0"));     

@@ -123,8 +123,8 @@ namespace ImprimeLocal
             //  BuscarProtocoloADemanda();
 
 
-            // BuscarProtocoloconAPI(); //llamada para efector con una sola impresora, version anterior
-            if (_procesandoEtiquetas)
+          //   BuscarProtocoloconAPI(); //llamada para efector con una sola impresora, version anterior
+           if (_procesandoEtiquetas)
                 return;
 
             try
@@ -508,7 +508,7 @@ namespace ImprimeLocal
            System.Net.SecurityProtocolType.Tls12;
 
                 string URL = ConfigurationManager.AppSettings["urlAPILaboratorio"].ToString();
-                URL = URL + "GetDBdata?nombre=GetEtiquetaImpresa&parametros=idEfector:" + lblIdEfector.Text + " and impresora:" + s_impre;
+                URL = URL + "GetDBdata?nombre=GetEtiquetaImpresa&parametros=idEfector:" + lblIdEfector.Text;// + " and impresora:" + s_impre;
                 string s_token = ConfigurationManager.AppSettings["tokenAPI"].ToString();
                 //    string s_token = ConfigurationManager.AppSettings["tokenffeeandes"].ToString();
 

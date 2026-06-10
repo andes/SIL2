@@ -255,7 +255,7 @@ namespace WebLab.Estadisticas
            
 
             cmd.Parameters.Add("@idAnalisis", SqlDbType.NVarChar);
-            cmd.Parameters["@idAnalisis"].Value =int.Parse( ddlAnalisis.SelectedValue);
+            cmd.Parameters["@idAnalisis"].Value =int.Parse( ddlAnalisis.SelectedValue); 
             
             cmd.Parameters.Add("@diagnostico", SqlDbType.NVarChar);
             cmd.Parameters["@diagnostico"].Value = getListaDiagnostico();
