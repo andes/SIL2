@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace WebLab.Protocolos
 {
-    public partial class DefaultFFEE2  : System.Web.UI.Page
+    public partial class DefaultFFEE2_old : System.Web.UI.Page
     {
        
         public Configuracion oC = new Configuracion();
@@ -193,12 +193,10 @@ namespace WebLab.Protocolos
                     HttpWebResponse response = request.GetResponse() as HttpWebResponse;
                     StreamReader reader = new StreamReader(response.GetResponseStream());
                     string body = reader.ReadToEnd();
-               //     body = body.Replace("[", "").Replace("]", "");
-
+                    body = body.Replace("[", "").Replace("]", "");
                     if (body != "")
                     {
                         String bodyLimpio = body.Replace("'", "''");
-
                     /*LAB_FichaElectronica: Log de que se recibio la ficha*/
                     SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
                         string query = @" INSERT INTO [dbo].[LAB_FichaElectronica]
@@ -210,72 +208,50 @@ namespace WebLab.Protocolos
                         try
                         {
                         body = Regex.Replace(body, @"T\d{2}:\d{2}:\d{2}\.\d+Z", "");
+                        FFEE respuesta_d = jsonSerializer.Deserialize<FFEE>(body);
 
-                        List<FFEE> lista = jsonSerializer.Deserialize<List<FFEE>>(body);
+                        
 
-                        ///FFEE respuesta_d = jsonSerializer.Deserialize<FFEE>(body);
-                        if (lista != null && lista.Count > 0)
-                        {
-                            // guardar JSON en hiddenfield
-                            hfListaFFEE.Value = body;
-
-                            if (lista.Count == 1)
-                            {
-                                FFEE respuesta_d = lista[0];
-
-                                string errores =
-                                    Validacion(respuesta_d);
-
+                        //if (respuesta_d.identificadorpcr == s_codigo)
+                        //{
+                        string errores = Validacion(respuesta_d);
                                 if (errores == "")
                                 {
-                                    bool ok =
-                                        GuardaFicha(respuesta_d);
 
-                                    if (ok)
-                                    {
-                                        ProcesaFicha(respuesta_d);
+                                bool ok=  GuardaFicha(respuesta_d);
+                                        if (ok)
+                                        {
+                                            ProcesaFicha(respuesta_d);
+                                            Session["Etiquetadora"] = ddlImpresora.SelectedValue;
+                                        }
+                                        else
+                            {
+                                //lblMensaje.Text ="No se han configurado determinaciones para el tipo de ficha y servicio. Consulte con el Administrador";
+                                lblMensaje.Text = "Hubo un error no esperado en la recepcion de la ficha. Consulte con el Administrador";
+                                lblMensaje.Visible = true;
+                            }
 
-                                        Session["Etiquetadora"] =
-                                            ddlImpresora.SelectedValue;
-                                    }
-                                }
+                        }
                                 else
                                 {
                                     lblMensaje.Text = errores;
                                     lblMensaje.Visible = true;
                                 }
-                            }
-                            else
-                            {
-                                gvFichas.DataSource = lista;
-                                gvFichas.DataBind();
 
-                                gvFichas.Visible = true;
+                            //}
 
-                                lblMensaje.Text =
-                                    "Se encontraron varias fichas";
-
-                                lblMensaje.Visible = true;
-                            }
                         }
-                        else
+                        catch (Exception ex1)
                         {
-                            lblMensaje.Text =
-                                "No se encontraron fichas";
-
-                            lblMensaje.Visible = true;
+                        if (ex1.InnerException != null)
+                            lblMensaje.Text = "Error al procesar la ficha " + ex1.Message.ToString();
+                        else
+                            lblMensaje.Text = "Error al procesar la ficha .Consulte con Administrador";
+                        lblMensaje.Visible = true;
                         }
 
-                    }
-                    catch (Exception ex1)
-                    {
-                        lblMensaje.Text =
-                            "Error al procesar la ficha: " +
-                            ex1.Message;
 
-                        lblMensaje.Visible = true;
                     }
-                }
                     else
                     {
                         lblMensaje.Text = "Ficha no encontrada ";
@@ -294,80 +270,6 @@ namespace WebLab.Protocolos
                 lblMensaje.Visible = true;
             }
         }
-
-
-        protected void gvFichas_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "recibir")
-            {
-                try
-                {
-                    int index = Convert.ToInt32(e.CommandArgument);
-
-                    if (hfListaFFEE.Value != "")
-                    {
-                        JavaScriptSerializer jsonSerializer =
-                            new JavaScriptSerializer();
-
-                        List<FFEE> lista =
-                            jsonSerializer.Deserialize<List<FFEE>>(
-                                hfListaFFEE.Value
-                            );
-
-                        if (lista != null && lista.Count > index)
-                        {
-                            FFEE ficha = lista[index];
-
-                            string errores = Validacion(ficha);
-
-                            if (errores == "")
-                            {
-                                bool ok = GuardaFicha(ficha);
-
-                                if (ok)
-                                {
-                                    ProcesaFicha(ficha);
-
-                                    Session["Etiquetadora"] =
-                                        ddlImpresora.SelectedValue;
-
-                                    lblMensaje.Text =
-                                        "Ficha recibida correctamente";
-                                }
-                                else
-                                {
-                                    lblMensaje.Text =
-                                        "Error al guardar la ficha";
-                                }
-                            }
-                            else
-                            {
-                                lblMensaje.Text = errores;
-                            }
-                        }
-                        else
-                        {
-                            lblMensaje.Text =
-                                "No se encontró la ficha seleccionada";
-                        }
-                    }
-                    else
-                    {
-                        lblMensaje.Text =
-                            "La lista de fichas está vacía";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    lblMensaje.Text =
-                        "Error al procesar la ficha: " +
-                        ex.Message;
-                }
-
-                lblMensaje.Visible = true;
-            }
-        }
-
 
         private string ControlCodigo()
         {
@@ -745,9 +647,6 @@ namespace WebLab.Protocolos
                 oRegistro.IdUsuarioRegistro = oUser.IdUsuario;
                 if (respuesta_d.idCasoSnvs != null)
                     oRegistro.IdCasoSnvs = respuesta_d.idCasoSnvs;
-
-                if (respuesta_d.idEvento != null)
-                    oRegistro.IdEvento = respuesta_d.idEvento;
 
                 if ((respuesta_d.tipomuestra != null) || (respuesta_d.tipomuestra != ""))
                 {
@@ -1433,45 +1332,45 @@ namespace WebLab.Protocolos
           
         }
 
-        //public string GetPuco(int numeroDocumento)
-        //{
-        //    string connetionString = null;
-        //    SqlConnection connection;
-        //    SqlCommand command;
-        //    string sql = null;
-        //    string codigo = "";
-        //    string nombre = "";
-        //    connetionString = ConfigurationManager.ConnectionStrings["Puco"].ConnectionString;
+        public string GetPuco(int numeroDocumento)
+        {
+            string connetionString = null;
+            SqlConnection connection;
+            SqlCommand command;
+            string sql = null;
+            string codigo = "";
+            string nombre = "";
+            connetionString = ConfigurationManager.ConnectionStrings["Puco"].ConnectionString;
 
-        //    ; // "Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password";
-        //    sql = @"select S.nombre, S.cod_os as os from pd_puco P with (nolock) 
-        //        inner join obras_sociales S with (nolock) on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
+            ; // "Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password";
+            sql = @"select S.nombre, S.cod_os as os from pd_puco P with (nolock) 
+                inner join obras_sociales S with (nolock) on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
 
-        //    connection = new SqlConnection(connetionString);
-        //    try
-        //    {
-        //        SqlDataReader rdr = null;
-        //        connection.Open();
-        //        command = new SqlCommand(sql, connection);
-        //        rdr = command.ExecuteReader();
+            connection = new SqlConnection(connetionString);
+            try
+            {
+                SqlDataReader rdr = null;
+                connection.Open();
+                command = new SqlCommand(sql, connection);
+                rdr = command.ExecuteReader();
 
-        //        while (rdr.Read())
-        //        {
-        //            nombre = rdr[0].ToString();
-        //            codigo = rdr[1].ToString();
-        //        }
-        //        if (nombre == "") nombre = "Sin obra social"; // sin obra social
-        //        else nombre = nombre + "&" + codigo;
-        //        command.Dispose();
-        //        connection.Close();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        nombre = "Sin obra social&0";
-        //    }
+                while (rdr.Read())
+                {
+                    nombre = rdr[0].ToString();
+                    codigo = rdr[1].ToString();
+                }
+                if (nombre == "") nombre = "Sin obra social"; // sin obra social
+                else nombre = nombre + "&" + codigo;
+                command.Dispose();
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                nombre = "Sin obra social&0";
+            }
 
-        //    return nombre;
-        //}
+            return nombre;
+        }
         public class TipoFFEEs
         {
 
@@ -1484,8 +1383,7 @@ namespace WebLab.Protocolos
             public string id { get; set; }
             public string nombre { get; set; }
         }
-     
-        public class FFEE
+            public class FFEE
         {
             public string _id { get; set; }
             public string identificadorpcr { get; set; }
@@ -1539,9 +1437,6 @@ namespace WebLab.Protocolos
             public string Tipo_ficha { get; set; }
 
             public string idCasoSnvs { get; set; }
-
-            public string idEvento { get; set; }
-            public string idGrupo { get; set; }
 
 
             public string derivacionovr { get; set; }

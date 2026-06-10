@@ -66,7 +66,7 @@ namespace WebLab.Items
             {
                 if (Session["idUsuario"] != null)
                 {
-
+                    
                     VerificaPermisos("Analisis");
                     CargarListas();
                     if (Request["id"] != null)
@@ -79,7 +79,7 @@ namespace WebLab.Items
                             if (oItem.IdTipoResultado != 0)
                                 MostrarDatosValoresReferencia();
                             if ((oItem.Tipo=="P") && (oItem.IdTipoResultado ==0))
-                                MostrarDatosDiagrama();
+                            MostrarDatosDiagrama();
                             if (oItem.IdTipoResultado >= 2) //si no es numerico muestra los predefinidos
                                 MostrarDatosResultadosPredefinidos(oItem);
                             MostrarDatosRecomendaciones();
@@ -222,7 +222,6 @@ namespace WebLab.Items
                     itemPres = (ItemPresentacion) itemPres.Get(typeof(ItemPresentacion), oItem.IdPresentacionDefecto);
                     lblPresentacionDefecto.Text = "Presentacion: "+ itemPres.Codigo + '-' + itemPres.Presentacion + " se aplicará por defecto.";
                 }
-
                 MostrarDatosValoresReferencia();
             }
         }
@@ -281,7 +280,7 @@ namespace WebLab.Items
             Item oItem = new Item();
 
             Recomendacion oRec = new Recomendacion();
-
+            
             oRegistro.IdItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
             oRegistro.IdRecomendacion = (Recomendacion)oRec.Get(typeof(Recomendacion), int.Parse(ddlRecomendacion.SelectedValue));
             oRegistro.Save();
@@ -327,7 +326,7 @@ namespace WebLab.Items
         ///******************************************Inicio de Resultados Predefinidos***************************************************//
         private void MostrarDatosResultadosPredefinidos(Item oItem)
         {
-
+         
             if (oItem != null)
             {
                 //lblItem.Text = oItem.Codigo + " - " + oItem.Nombre;
@@ -386,7 +385,32 @@ namespace WebLab.Items
             //gvLista.DataBind();
         }
 
-       
+        //private object LeerDatosRP()
+        //{
+        //    string m_strSQL = " SELECT idResultadoItem, resultado" +
+        //                      " FROM LAB_ResultadoItem " +
+        //                      " WHERE (baja = 0) and idItem=" + Request["id"].ToString() +
+        //                      " ORDER BY idResultadoItem"; // SE PONE EL ORDEN EN QUE SE FUE AGREGANDO
+
+        //    DataSet Ds = new DataSet();
+        //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        //    SqlDataAdapter adapter = new SqlDataAdapter();
+        //    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+        //    adapter.Fill(Ds);
+
+
+
+        //    return Ds.Tables[0];
+        //}
+
+        //protected void btnAgregar_Click(object sender, EventArgs e)
+        //{
+        //    if (Page.IsValid)
+        //    {
+        //        Guardar();
+        //       // CargarGrilla();
+        //    }
+        //}
 
         private void GuardarRP()
         {
@@ -1268,7 +1292,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-            oRegistro.Observacion = this.txtObservaciones.Text;
+             
+            oRegistro.Observacion =   this.txtObservaciones.Text;
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
             oRegistro.IdPresentacion = int.Parse(ddlPresentacionItem.SelectedValue);
@@ -1413,11 +1438,11 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
                     oRegistro.IdEfector = olabo.IdEfector; // oEfector;
                     oRegistro.IdItem = oItem; // (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString())); ;
-                    /*    oRegistro.Sexo = ddlSexo.SelectedValue;
-                        oRegistro.TodasEdades = true;
-                        oRegistro.EdadDesde = int.Parse(txtEdadDesde.Value);
-                        oRegistro.EdadHasta = int.Parse(txtEdadHasta.Value);
-                        oRegistro.UnidadEdad = int.Parse(ddlUnidadEdad.SelectedValue);*/
+                                              /*    oRegistro.Sexo = ddlSexo.SelectedValue;
+                                                  oRegistro.TodasEdades = true;
+                                                  oRegistro.EdadDesde = int.Parse(txtEdadDesde.Value);
+                                                  oRegistro.EdadHasta = int.Parse(txtEdadHasta.Value);
+                                                  oRegistro.UnidadEdad = int.Parse(ddlUnidadEdad.SelectedValue);*/
                     oRegistro.IdMetodo = int.Parse(ddlMetodo.SelectedValue);
 
                     if (rdbRango.Items[0].Selected) oRegistro.TipoValor = 0;
@@ -1625,7 +1650,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
         private void MostrarDatos(Item oItem)
         {
             // Muestra datos del item principal
-
+           
             //Item oRegistro = new Item();
             //oRegistro = (Item)oRegistro.Get(typeof(Item), int.Parse(Request["id"].ToString()));
             lblItemVR.Text = oItem.Codigo + " - " + oItem.Nombre;
@@ -1644,14 +1669,14 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             {
                 //   tabMuestra.Visible = true;
                 btnAgregarMuestra.Visible = true;
-
+                
 
             }
             else
             {
                 //    tabMuestra.Visible = false;
                 btnAgregarMuestra.Visible = false;
-
+                
             }
 
             if (oItem.Tipo == "P") rdbTipo.Items[0].Selected = true;
@@ -1721,7 +1746,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 txtValorDefecto.Text = "";
                 txtValorDefecto.Enabled = false;
             }
-
+            
 
             if ((oItem.ValorMinimo != -1) && (oItem.ValorMaximo != -1))
             {
@@ -1808,19 +1833,19 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
         }
 
-
+       
         private void CargarGrillaAutoanalizadores()
         {
             DataSet Ds = new DataSet();
             //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandType = CommandType.StoredProcedure;          
 
-            cmd.CommandText = "lab_GetEquipoItem";
+            cmd.CommandText = "lab_GetEquipoItem";           
 
             cmd.Parameters.Add("@idItemBuscar", SqlDbType.Int);
-            cmd.Parameters["@idItemBuscar"].Value = Request["id"].ToString();
+            cmd.Parameters["@idItemBuscar"].Value = Request["id"].ToString();              
             cmd.Connection = conn;
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -1829,7 +1854,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
             gvAutoAnalizadores.DataSource = Ds.Tables[0];
             gvAutoAnalizadores.DataBind();
-            ///  lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+          ///  lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
             conn.Close();
             //}
         }
@@ -2125,39 +2150,39 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 {
                     string m_accion = "Alta";
 
-                    Item oReg = new Item();
-                    if (Request["id"] != null)
-                    {
-                        oReg = (Item)oReg.Get(typeof(Item), int.Parse(Request["id"].ToString()));
-                        m_accion = "Modifica";
-                    }
-                    Guardar(oReg, m_accion);
+                Item oReg = new Item();
+                if (Request["id"] != null)
+                {
+                    oReg = (Item)oReg.Get(typeof(Item), int.Parse(Request["id"].ToString()));
+                    m_accion = "Modifica";
+                }
+                Guardar(oReg, m_accion);
 
-                    if (Request["id"] == null)  // es nueva determinacion==> debe replicar en LAB_ItemEfector
-                    {
-                        GuardarNuevoTodosEfectores(oReg);
-                    }
+                if (Request["id"] == null)  // es nueva determinacion==> debe replicar en LAB_ItemEfector
+                {
+                    GuardarNuevoTodosEfectores(oReg);
+                }
 
-                    string m_parametroFiltro = "&Codigo=" + Request["Codigo"].ToString() + "&Nombre=" + Request["Nombre"].ToString() + "&Servicio=" + Request["Servicio"].ToString() +
-    "&Area=" + Request["Area"].ToString() + "&Orden=" + Request["Orden"].ToString() + "&idEfector=" + Request["idEfector"].ToString();
+                string m_parametroFiltro = "&Codigo=" + Request["Codigo"].ToString() + "&Nombre=" + Request["Nombre"].ToString() + "&Servicio=" + Request["Servicio"].ToString() +
+"&Area=" + Request["Area"].ToString() + "&Orden=" + Request["Orden"].ToString() + "&idEfector=" + Request["idEfector"].ToString();
 
-                    if (Request["id"] != null) //Modificacion
-                    {
-                        // Response.Redirect ("javascript:history.go(-3);");
-                        //   Response.Redirect("ItemList.aspx", false);
-                        string popupScript = "<script language='JavaScript'> alert('Los datos se guardaron correctamente'); </script>";
-                        Page.RegisterStartupScript("PopupScript", popupScript);
-                        Response.Redirect("ItemEdit2.aspx?id=" + oReg.IdItem + m_parametroFiltro, false);
-                    }
-                    else //Nuevo
-                    {
+                if (Request["id"] != null) //Modificacion
+                {
+                    // Response.Redirect ("javascript:history.go(-3);");
+                    //   Response.Redirect("ItemList.aspx", false);
+                    string popupScript = "<script language='JavaScript'> alert('Los datos se guardaron correctamente'); </script>";
+                    Page.RegisterStartupScript("PopupScript", popupScript);
+                    Response.Redirect("ItemEdit2.aspx?id=" + oReg.IdItem + m_parametroFiltro, false);
+                }
+                else //Nuevo
+                {
 
                         Response.Redirect("ItemEdit2.aspx?id=" + oReg.IdItem + m_parametroFiltro, false);
                     }
 
                 }
             }
-
+        
             else
                 Response.Redirect("../FinSesion.aspx", false);
         }
@@ -2185,7 +2210,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 oRegistro.Save();
 
             }
-            
+
         }
 
         private void Guardar(Item oRegistro, string m_accion)
@@ -2194,7 +2219,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             Efector oEfector = new Efector();
             Usuario oUser = new Usuario();
 
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+             oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
             oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
 
@@ -2570,14 +2595,14 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 {
                     ddlItemNomenclador.SelectedValue = oItem.Codigo;
                     lblValorNomenclador.Text = oItem.Ug.ToString();//.ValMod.ToString();
-                                                                   //     lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
+               //     lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
                     lblMensaje.Visible = false;
                 }
                 else
                 {
                     ddlItemNomenclador.SelectedValue = "0";
                     lblValorNomenclador.Text = "";
-                    //    lblFactorProduccion.Text = "";
+                //    lblFactorProduccion.Text = "";
                     if (txtCodigoNomenclador.Text != "")
                         lblMensaje.Visible = true;
                 }
@@ -2588,7 +2613,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             }
             ddlItemNomenclador.UpdateAfterCallBack = true;
             lblValorNomenclador.UpdateAfterCallBack = true;
-            //     lblFactorProduccion.UpdateAfterCallBack = true;
+       //     lblFactorProduccion.UpdateAfterCallBack = true;
             lblMensaje.UpdateAfterCallBack = true;
         }
 
@@ -2602,18 +2627,18 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 oItem = (Nomenclador)oItem.Get(typeof(Nomenclador), ddlItemNomenclador.SelectedValue);
                 txtCodigoNomenclador.Text = oItem.Codigo;
                 lblValorNomenclador.Text = oItem.Ug.ToString();
-                //   lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
+             //   lblFactorProduccion.Text = oItem.FactorProduccion.ToString();
             }
             else
             {
                 txtCodigoNomenclador.Text = "";
                 lblValorNomenclador.Text = "";
-                //     lblFactorProduccion.Text = "";
+           //     lblFactorProduccion.Text = "";
 
             }
             txtCodigoNomenclador.UpdateAfterCallBack = true;
             lblValorNomenclador.UpdateAfterCallBack = true;
-            //      lblFactorProduccion.UpdateAfterCallBack = true;
+      //      lblFactorProduccion.UpdateAfterCallBack = true;
 
         }
 
@@ -2820,7 +2845,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     else
                         oResultado.ResultadoDefecto = false;
                     oResultado.Save();
-
+                    
                 }
                 lblMensajeRpD.Text = "El resultado por defecto ha sido guardado";
                 lblMensajeRpD.Visible = true;
@@ -2833,16 +2858,16 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             string valor = "";
             if (Request["id"] != null)
             {
-
-                Item oItem = new Item();
+                
+                  Item oItem = new Item();
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
                 if (oItem != null)
                 {
                     if (oItem.EtiquetaAdicional != chkEtiquetaAdicional.Checked)
-                    {
-                        if (chkEtiquetaAdicional.Checked)
+                    { 
+                            if (chkEtiquetaAdicional.Checked)
                             valor += "Cambiar Marca a imprimir Etiqueta Adicional";
-                        else
+                            else
                             valor += "Cambiar Marca a NO imprimir  Etiqueta Adicional";
                     }
 
@@ -2857,8 +2882,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     oItem.EtiquetaAdicional = chkEtiquetaAdicional.Checked;
                     //oItem.IsScreeening = chkIsScreening.Checked;
                     oItem.Save();
-
                     
+                
                     oItem.GrabarAuditoriaDetalleItem("Guardar", oUser, "Mas Opciones", valor, "");
                 }
             }
@@ -2907,7 +2932,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
         }
 
         private DataTable GetDataSetAuditoria()
-        {
+        {                        
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             
@@ -3126,9 +3151,9 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     CmdEliminar.Visible = false;
                 }
                 if (Request["idEfector"].ToString() == "227")
-
+                
                     CmdEliminar.Visible = true;
-
+                 
                 else
                     CmdEliminar.Visible = false;
             }
@@ -3295,7 +3320,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                 CargarGrillaMuestras();
 
 
-
+                
             }
         }
 
@@ -3346,9 +3371,8 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
 
 
-            }
         }
-
+        }
         protected void btnGuardarLimiteTurno_Click(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)

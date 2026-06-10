@@ -20,15 +20,13 @@
     <link rel="stylesheet" type="text/css" href ="../script/moverfilas/moverfilas.css" />
 <script type="text/javascript" src="../script/moverfilas/codigo.js"></script>
 <script type="text/javascript">
+  $(function() {
 
-    $(function() {
-
-        $("#tabContainer").tabs();
-        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
+                 $("#tabContainer").tabs();
+                        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
                       
-        $("#tabContainer").tabs({ selected: currTab });
-    });
-
+                        $("#tabContainer").tabs({ selected: currTab });
+             });
     function confirmarLimiteTurnos() {
         var idEfector = $("#<%= HFEfector.ClientID %>").val();
         if (idEfector == 227) {
@@ -81,6 +79,7 @@
  <li><a href="#tab6">Mas opciones</a></li>
      <li><a href="#tab9">Turnos</a></li>
      <li><a href="#tab10">AutoAnalizadores</a></li>
+     <li><a href="#tab11">Observaciones Resultados</a></li>
 </ul>
 
     <div id="tab1" class="tab_content" style="border: 1px solid #C0C0C0">
@@ -631,7 +630,25 @@
                         </tr>
                         </table>
                         </div>
-    
+    <%--	<div id="tab11" class="tab_content" style="border: 1px solid #C0C0C0">
+                        <table>
+ <tr>
+                            <td class="control-label" style="vertical-align: top">Observaciones a Informar:</td>
+                            <td colspan="2">
+                                <asp:TextBox ID="txtObservacionesResultados" runat="server" class="form-control input-sm" MaxLength="300" Rows="5" TabIndex="8" TextMode="MultiLine" Width="500px" />
+                                <br />
+                                <asp:CustomValidator ID="cvObservacionesResultados" runat="server" ClientValidationFunction="VerificaLargo" ControlToValidate="txtObservacionesResultados" ErrorMessage="El límite del campo Observaciones es de 4000 caracteres. Verifique." Font-Names="Arial" Font-Size="8pt" ValidationGroup="20">El límite es de 4000 caracteres. Verifique.</asp:CustomValidator>
+                                
+                            </td>
+                        </tr>
+                            <tr>
+                                <td colspan="3">
+                                      <asp:Button ID="btnGuardarObservacionesResultados" runat="server" CssClass="btn btn-primary" Text="Guardar en todos los efectores" ValidationGroup="20" Width="250px" OnClick="btnGuardarObservacionesResultados_Click"   />
+                                </td>
+
+                            </tr>
+                            </table>
+            </div>--%>
     				<div id="tab8"   class="tab_content" style="border: 1px solid #C0C0C0">
                            <asp:Label ID="lblMensajeMuestra1" runat="server"    ForeColor="Red">Sección habilitada para Servicio Microbiologia</asp:Label>
                         <table>
@@ -1390,7 +1407,7 @@
 						<td class="mytituloGris" colspan="2" >TURNOS<hr /> </td>
 
                </tr>
-               <tr>
+<tr>
 						<td class="control-label" >
 
                             &nbsp;</td>
@@ -1403,7 +1420,7 @@
                           ControlToValidate="txtLimite" ErrorMessage="Limite de turnos" 
                                 ValidationGroup="0">*</asp:RequiredFieldValidator> &nbsp;<p class="myLabelLitlle">Colocar 0 para especificar sin limites de turnos.<br /> Colocar -1 para NO permitir la dación de turnos para esta práctica.</p> </td>
 						
-			</tr>
+					</tr>
             <tr> 
                         <td class="control-label" > &nbsp;</td>
                         <td class="control-label" align="right">
@@ -1411,7 +1428,6 @@
                             CssClass="btn btn-primary" Width="100px" tabindex="5"  ToolTip="Hacer clic aqui para guardar" />
 
     </td></tr>
-           
         </table>
 
         </div>

@@ -3,26 +3,17 @@
 
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+    
+     <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
 
-<script type="text/javascript" src="../script/Mascara.js"></script>
-    <script type="text/javascript" src="../script/ValidaFecha.js"></script>      
-    <%--<script src="../script/jquery.min.js" type="text/javascript"></script>--%>
- <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />   
- 
-                  <script src="jquery.min.js" type="text/javascript"></script>  
-                  <script src="jquery-ui.min.js" type="text/javascript"></script> 
-
-                    
+  <script type="text/javascript"      src="../script/jquery.min.js"></script> 
+  <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
+    
       <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
       
+      
        <script type="text/javascript">     
-         
-        
-         $(function () {
-             
-                 $("#tabContainer").tabs();                        
-                $("#tabContainer").tabs({ selected: 0 });
-             });                         
+                              
           
             
          $(function() {
@@ -71,9 +62,9 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
               
           
                 <p>Fecha Validacion Desde:<input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
-                        style="width: 120px"  onblur="valFecha(this)" 
+                        style="width: 100px"  onblur="valFecha(this)" 
                         onkeyup="mascara(this,'/',patron,true)" tabindex="1" class="form-control input-sm"  /></p>
-                <p>Tipo FFEE:   <asp:DropDownList ID="ddlTipoFicha" runat="server" TabIndex="1" class="form-control input-sm" AutoPostBack="True" Font-Bold="True" Font-Size="12pt" OnSelectedIndexChanged="ddlTipoFicha_SelectedIndexChanged">                                            
+                <p>Tipo FFEE:   <asp:DropDownList ID="ddlTipoFicha" runat="server" TabIndex="1" class="form-control input-sm" Font-Bold="True" Font-Size="12pt" OnSelectedIndexChanged="ddlTipoFicha_SelectedIndexChanged" AutoPostBack="True">                                            
                                              
                                             </asp:DropDownList>                                 
 
@@ -110,7 +101,7 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                <asp:Label ID="estatus" runat="server" 
                     Style="color:red"></asp:Label>
 
-                <asp:Button ID="btnDescargarExcelControl"  runat="server" Text="Descargar Excel Control" OnClick="btnDescargarExcelControl_Click"  CssClass="btn btn-success" Width="150px" Visible="False" />
+              <%--  <asp:Button ID="btnDescargarExcelControl"  runat="server" Text="Descargar Excel Control" OnClick="btnDescargarExcelControl_Click"  CssClass="btn btn-success" Width="150px" Visible="False" />--%>
             </div>
             <hr />
                 </td></tr>
@@ -309,23 +300,6 @@ Efector:               <asp:DropDownList ID="ddlEfector" runat="server" class="f
                 <asp:BoundField DataField="nombreDet" HeaderText="Determinacion" >
                 <ItemStyle Width="10%" />
                 </asp:BoundField>
-                <asp:BoundField DataField="IdMuestraSISA"  HeaderText="idM" >
-            
-                <ItemStyle Width="2%" />
-            
-                </asp:BoundField>
-                <asp:BoundField DataField="idTipoMuestraSISA" HeaderText="idTM" >
-            
-                <ItemStyle Width="2%" />
-            
-                </asp:BoundField>               
-                             
-                <asp:BoundField DataField="IdPruebaSISA"  HeaderText="IdP" >
-            
-                <ItemStyle Width="2%" />
-            
-                </asp:BoundField>
-                <asp:BoundField DataField="idTipoPruebaSISA" HeaderText="idTP" />
                   <asp:BoundField DataField="idResultadoSISA" HeaderText="idREs" />
                       
                   <asp:BoundField DataField="idcasosisa" HeaderText="idCasoSisa" />

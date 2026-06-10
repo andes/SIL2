@@ -25,6 +25,7 @@
     <property column="idTipoMuestra" type="Int32" name="IdTipoMuestra" not-null="true" />
     <property column="idOrigen" type="Int32" name="IdOrigen" not-null="true" />
 
+    <property column="idEvento" type="String" name="IdEvento" not-null="true" length="50" />
     <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />
 		 
 	</class>

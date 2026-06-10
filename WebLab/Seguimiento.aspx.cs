@@ -43,35 +43,35 @@ namespace WebLab
                 if (Session["idUsuario"] != null)
                 {
 
-                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof(Item));
-                    crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-                    //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-                    Item oItem = (Item)crit.UniqueResult();
+                    //ISession m_session = NHibernateHttpModule.CurrentSession;
+                    //ICriteria crit = m_session.CreateCriteria(typeof(Item));
+                    //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
+                    ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
+                    //Item oItem = (Item)crit.UniqueResult();
 
-                    if (oItem != null)
-                    {
+                    //if (oItem != null)
+                    //{
 
                         txtFechaDesde.Value = DateTime.Now.ToShortDateString();
                         txtFechaHasta.Value = DateTime.Now.ToShortDateString();
                         CargarListas();
-                        DataTable dtMuestras = MostrarDatos(oItem);
-                        if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
-                        {
-                            gvPacientes.DataSource = dtMuestras;
-                            gvPacientes.DataBind();
-                            gvPacientes.Visible = true;
-                            GridView1.Visible = false;
-                        }
-                        else
-                        {
+                    //DataTable dtMuestras = MostrarDatos();// (oItem);
+                    //    if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
+                    //    {
+                    //        gvPacientes.DataSource = dtMuestras;
+                    //        gvPacientes.DataBind();
+                    //        gvPacientes.Visible = true;
+                    //        GridView1.Visible = false;
+                    //    }
+                    //    else
+                    //    {
 
-                            GridView1.DataSource = dtMuestras;
-                            GridView1.DataBind();
-                            gvPacientes.Visible = false;
-                            GridView1.Visible = true;
-                        }
-                    }
+                    //        GridView1.DataSource = dtMuestras;
+                    //        GridView1.DataBind();
+                    //        gvPacientes.Visible = false;
+                    //        GridView1.Visible = true;
+                    //    }
+                    //}
                 }
                 else Response.Redirect("FinSesion.aspx", false);
             }
@@ -126,7 +126,7 @@ namespace WebLab
             }
             else Response.Redirect("../FinSesion.aspx", false);
         }
-        private DataTable MostrarDatos( Item oItem)
+        private DataTable MostrarDatos ()//( Item oItem)
         {
              
 
@@ -185,6 +185,7 @@ else convert(varchar(10), IR.fechaTomaMuestra, 103) end as [F. Toma Muestra],
 M.nombre as Muestra, IR.numeroOrigen2,
 IR.Especialista AS [Solicitante] ,
 dP.fechavalida as [F. Resultado],
+I.nombre as [Determinacion],
 case when  Dp.idUsuarioValida>0 then upper(dp.resultadoCar)  else 'EN PROCESO' end   AS 'Resultado' ,
 case when  Dp.idUsuarioValida>0 then upper(ltrim(dp.observaciones + ' '+ ir.observacionesResultados)) else '' end as Observaciones
  from		
@@ -196,21 +197,24 @@ INNER JOIN LAB_Muestra as M with (nolock) on M.idMuestra= IR.idMuestra
  left join lab_caracter as Ca with (nolock) on Ca.idCaracter= IR.idcaracter
 inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitante
 inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
-    
+    inner join lab_item I on I.iditem = DP.idsubitem
+inner join lab_Param Pa on Pa.parstr= I.codigo and Pa.idparam=2
 where  DP.idsubitem in ( " + GetDeterminaciones() +") "+ m_strSQLCondicion + @"
-and  ir.baja=0  
-
+and  ir.baja=0 
 ";
 
 
-                if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
-                    m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
-from (" + m_strSQL + @" AND IR.IDPACIENTE>-1)x
+            if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
+                m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
+from (" + m_strSQL + @"  AND IR.IDPACIENTE>-1)x
 group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
   [Fecha Nacimiento], [Sexo]";
-                else
-            m_strSQL += " order by ir.numero";
-                DataSet Ds = new DataSet();
+            else
+
+                m_strSQL = m_strSQL+ @" order by ir.numero, Pa.parnum ";
+
+
+                                DataSet Ds = new DataSet();
                 SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
@@ -247,15 +251,15 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
             try
             {
 
-                ISession m_session = NHibernateHttpModule.CurrentSession;
-                ICriteria crit = m_session.CreateCriteria(typeof(Item));
-                crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-                //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-                Item oItem = (Item)crit.UniqueResult();
+                //ISession m_session = NHibernateHttpModule.CurrentSession;
+                //ICriteria crit = m_session.CreateCriteria(typeof(Item));
+                //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
+                ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
+                //Item oItem = (Item)crit.UniqueResult();
 
-                if (oItem != null)
-                {
-                    DataTable tabla = MostrarDatos(oItem);
+                //if (oItem != null)
+                //{
+                    DataTable tabla = MostrarDatosExcel();// (oItem);
                     if (tabla.Rows.Count > 0)
                     {
                         //StringBuilder sb = new StringBuilder();
@@ -272,23 +276,10 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
                         }
                         dg.DataBind();
                         Utility.GenerarColumnasGrid(dg, dg.DataSource as DataTable);
-                        Utility.ExportGridViewToExcel(dg, "Seguimiento_" + DateTime.Now.ToShortDateString());
-                        //pagina.EnableEventValidation = false;
-                        //pagina.DesignerInitialize();
-                        //pagina.Controls.Add(form);
-                        //form.Controls.Add(dg);
-                        //pagina.RenderControl(htw);
-                        //Response.Clear();
-                        //Response.Buffer = true;
-                        ////Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                        //Response.ContentType = "application/vnd.ms-excel";
-                        //Response.AddHeader("Content-Disposition", "attachment;filename=Seguimiento_" + DateTime.Now.ToShortDateString() + ".xls");
-                        //Response.Charset = "UTF-8";
-                        //Response.ContentEncoding = Encoding.Default;
-                        //Response.Write(sb.ToString());
-                        //Response.End();
+                        Utility.ExportGridViewToExcel(dg, "Seguimiento_Respiratorios" + DateTime.Now.ToShortDateString());
+                      
                     }
-                }
+                //}
             }
 
             catch
@@ -303,17 +294,116 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
 
 }
 
+        private DataTable MostrarDatosExcel()//( Item oItem)
+        {
+
+
+            // d.calle as [Calle], d.numero as [Nro.],d.departamento as [Depto], d.cpostal as [CP], d.barrio as Barrio,d.municipio as Municipio,
+            string m_strSQLCondicion = " 1=1 ";
+
+            m_strSQLCondicion = " and Ir.idEfector=" + oUser.IdEfector.IdEfector.ToString();
+            //DateTime fecha = DateTime.Parse(txtFechaDesde.Value);
+            if (txtFechaDesde.Value != "")
+            {
+                DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+                m_strSQLCondicion += " AND ir.fecharegistro >= '" + fecha1.ToString("yyyyMMdd") + "'";
+
+            }
+
+            if (txtFechaHasta.Value != "")
+            {
+                DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value).AddDays(1);
+                m_strSQLCondicion += " AND ir.fecharegistro < '" + fecha2.ToString("yyyyMMdd") + "'";
+
+            }
+            if (ddlCaracter.SelectedValue != "0")
+                m_strSQLCondicion += " AND ir.idCaracter=" + ddlCaracter.SelectedValue;
+
+            if ((int.Parse(rdbOpcion.SelectedValue) == 2) || (int.Parse(rdbOpcion.SelectedValue) == 4))  //pacientes positivos
+                m_strSQLCondicion += " and (dp.resultadoCar like 'SE DETECT%'   )";
+
+            if (ddlResultado.SelectedValue != "0")
+                m_strSQLCondicion += " and dp.resultadoCar='" + ddlResultado.SelectedValue + "'  and Dp.idUsuarioValida>0";
+
+
+            if (int.Parse(rdbOpcion.SelectedValue) == 3) // pendiente de resultado
+                m_strSQLCondicion += " and dp.idUsuarioValida=0 ";
+            if (int.Parse(rdbOpcion.SelectedValue) == 5) // muestra con resultado/procesado
+                m_strSQLCondicion += @" and dp.idUsuarioValida>0 AND dp.resultadoCar NOT like '%SIN MUESTRA%' 
+AND dp.resultadoCar NOT like '%MUESTRA DERIVADA%'";
+
+            string m_strSQL = @"  select  ir.fecharegistro as [Fecha Registro], 
+IR.numero as [Protocolo], 
+IR.numeroOrigen as [Origen],
+convert(varchar(100),e.nombre) as [Efector Procedencia],   
+ca.nombre as [Caracter],
+pac.Apellido , 
+pac.nombre as [Nombre],
+case when ir.idpaciente=-1 then '' else case when pac.idEstado = 2 then 'SIN DNI'  else 'DNI' end end as [Tipo Doc.],
+case when ir.idpaciente=-1 then 0 else case when pac.idEstado = 2 then 0 ELSE pac.numeroDocumento END end as [Nro. Documento],
+case when ir.idpaciente=-1 then '' else convert(varchar(10),pac.fechaNacimiento,103) end as [Fecha Nacimiento], 
+case when ir.idpaciente=-1 then 0 else IR.edad end as [Edad],
+case IR.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end as [amd],
+case when ir.idpaciente=-1 then '' else IR.sexo end as [Sexo],
+IR.nombreObraSocial as [Obra Social],
+ Pac.informacioncontacto as [Telefono],
+substring(O.nombre,1,3) as [Amb/Int.], 
+case when convert(varchar(10), IR.fechaTomaMuestra, 103)='01/01/1900' then '' 
+else convert(varchar(10), IR.fechaTomaMuestra, 103) end as [F. Toma Muestra],
+M.nombre as Muestra, IR.numeroOrigen2,
+IR.Especialista AS [Solicitante] ,
+dP.fechavalida as [F. Resultado],
+I.nombre as [Determinacion],
+case when  Dp.idUsuarioValida>0  then upper(dp.resultadoCar)  else  case when DP.informable=1 then 'EN PROCESO' else  upper(dp.resultadoCar) end end   AS 'Resultado' ,
+case when  Dp.idUsuarioValida>0 then upper(ltrim(dp.observaciones + ' '+ ir.observacionesResultados)) else '' end as Observaciones
+ from		
+LAB_protocolo as IR with (nolock)
+inner JOIN   Sys_Paciente AS Pac with (nolock) ON IR.idPaciente = Pac.idPaciente 
+inner JOIN Lab_Origen O with (nolock) on O.idOrigen= IR.idOrigen
+inner JOIN LAB_SectorServicio S with (nolock) on S.idSectorServicio= IR.idSector
+INNER JOIN LAB_Muestra as M with (nolock) on M.idMuestra= IR.idMuestra
+ left join lab_caracter as Ca with (nolock) on Ca.idCaracter= IR.idcaracter
+inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitante
+inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
+inner join lab_item I on I.iditem = DP.idsubitem
+
+inner join lab_Param Pa on Pa.parstr= I.codigo and Pa.idparam=2
+where  DP.idsubitem in ( " + GetDeterminaciones() + ") " + m_strSQLCondicion + @"
+and  ir.baja=0  
+";
+
+
+            if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
+                m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
+from (" + m_strSQL + @" AND IR.IDPACIENTE>-1)x
+group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
+  [Fecha Nacimiento], [Sexo]";
+            else
+
+                m_strSQL = m_strSQL + @" order by ir.numero, pa.parnum";
+
+
+                            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            lblCantidad.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+            return Ds.Tables[0];
+
+        }
+
         protected void rdbOpcion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Item));
-            crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-            //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            Item oItem = (Item)crit.UniqueResult();
+            //ISession m_session = NHibernateHttpModule.CurrentSession;
+            //ICriteria crit = m_session.CreateCriteria(typeof(Item));
+            //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
+            ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
+            //Item oItem = (Item)crit.UniqueResult();
 
-            if (oItem != null)
-            {
-                DataTable dtMuestras = MostrarDatos(oItem);
+            //if (oItem != null)
+            //{
+            DataTable dtMuestras = MostrarDatos();// (oItem);
                 if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
                 {
                     gvPacientes.DataSource = dtMuestras;
@@ -330,20 +420,20 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
                     GridView1.Visible = true;
                 }
 
-            }
+            //}
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Item));
-            crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-            //crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            Item oItem = (Item)crit.UniqueResult();
+            //ISession m_session = NHibernateHttpModule.CurrentSession;
+            //ICriteria crit = m_session.CreateCriteria(typeof(Item));
+            //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
+            ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
+            //Item oItem = (Item)crit.UniqueResult();
 
-            if (oItem != null)
-            {
-                DataTable dtMuestras = MostrarDatos(oItem);
+            //if (oItem != null)
+            //{
+            DataTable dtMuestras = MostrarDatos();// (oItem);
                 if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
                 {
                     gvPacientes.DataSource = dtMuestras;
@@ -359,7 +449,7 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
                     gvPacientes.Visible = false;
                     GridView1.Visible = true;
                 }
-            }
+            //}
 
         }
 

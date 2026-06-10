@@ -24,16 +24,23 @@ namespace WebLab.Efectores
         {
 
             //MiltiEfector: Filtra para configuracion del efector del usuario
+            if (Session["idUsuario"] != null)
 
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+            else Response.Redirect("../FinSesion.aspx", false); 
 
         }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
-                VerificaPermisos("Efector");
-                CargarGrilla();
+                if (Session["idUsuario"] != null)
+                {
+                    VerificaPermisos("Efector");
+                    CargarGrilla();
+                }
+                else Response.Redirect("../FinSesion.aspx", false);
             }
         }
 

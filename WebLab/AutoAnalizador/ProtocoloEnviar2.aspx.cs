@@ -89,8 +89,13 @@ namespace WebLab.AutoAnalizador
                             lblTituloEquipo.Text = "INCAA - Diconex QUIMICA".ToUpper();
                         }
                         break;
+                    case "REAL":
+                        {
+                            VerificaPermisos("REAL - Envío de datos");
+                            lblTituloEquipo.Text = "REAL  - Envío de datos".ToUpper();
+                        }
+                        break;
 
-                    
                 }
                 CargarGrilla();          
                 
@@ -271,7 +276,12 @@ namespace WebLab.AutoAnalizador
            
             foreach (DetalleProtocolo oDetalle in lista)
             {
-             
+                if (m_Equipo == "REAL")
+                {
+                    EnviarEquipo(oProtocolo);
+
+                    return;
+                }
                 marcarenviado = false;
                     if (m_Equipo == "Mindray")
                     {
@@ -641,11 +651,12 @@ namespace WebLab.AutoAnalizador
 
                 }
                 string m_urgente = "N";  if (oProtocolo.IdPrioridad.IdPrioridad == 2) m_urgente = "Y";
-              
+               
 
 
-                //////INSERTAR LOS ANALISIS EN LA TABLA TEMPORAL LAB_TempProtocoloEnvio
-                ProtocoloEnvio oRegistro = new ProtocoloEnvio();
+
+                    //////INSERTAR LOS ANALISIS EN LA TABLA TEMPORAL LAB_TempProtocoloEnvio
+                    ProtocoloEnvio oRegistro = new ProtocoloEnvio();
                 oRegistro.IdMuestra = IdMuestra;
                 oRegistro.IdEfector = oUser.IdEfector.IdEfector;
                 oRegistro.NumeroProtocolo = numero;
@@ -664,6 +675,49 @@ namespace WebLab.AutoAnalizador
 
         }
 
+
+
+        private void EnviarEquipo(Protocolo oRegistro)
+        {
+            try
+            {
+                if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
+                    (oRegistro.IdEfector.IdEfector == 205 ||
+                     oRegistro.IdEfector.IdEfector == 221))
+                {
+                    SqlConnection conn =
+                        (SqlConnection)
+                        NHibernateHttpModule
+                        .CurrentSession.Connection;
+
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
+
+                    using (SqlCommand cmd =
+                        new SqlCommand(
+                            "dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL",
+                            conn))
+                    {
+                        cmd.CommandType =
+                            CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue(
+                            "@idEfector",
+                            oRegistro.IdEfector.IdEfector);
+
+                        cmd.Parameters.AddWithValue(
+                            "@idProtocolo",
+                            oRegistro.IdProtocolo);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string exception = ex.Message;
+            }
+        }
         private void LimpiarTablaTemporal()
         {
             ISession m_session = NHibernateHttpModule.CurrentSession;

@@ -73,10 +73,8 @@ namespace WebLab.Agendas
             {
                 ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString();
                 cboTipoServicio.SelectedValue = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
-                
                 txtFechaDesde.Value = oRegistro.FechaDesde.ToShortDateString();
                 txtFechaHasta.Value = oRegistro.FechaHasta.ToShortDateString();
-
                 //Por defecto los items se los carga con cboTipoServicio.SelectedValue = 1
                 //Por eso cuando el item no es LABORATORIO no trae la Practica porque no es de tipo 1
                 if (cboTipoServicio.SelectedValue != "1")
@@ -289,7 +287,6 @@ namespace WebLab.Agendas
             }
 
         }
-
         protected void customValidadorGeneral_ServerValidate(object source, ServerValidateEventArgs args)
         {
             if (oUser != null)

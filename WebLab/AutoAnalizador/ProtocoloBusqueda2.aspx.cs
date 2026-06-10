@@ -88,6 +88,16 @@ namespace WebLab.AutoAnalizador
                             lblTituloEquipo.Text = "Cobas C311".ToUpper();
                         }
                         break;
+
+                    case "REAL":
+                        {
+                            VerificaPermisos("REAL - Envío de datos");
+                            lblTituloEquipo.Text = "REAL".ToUpper();
+                            lblEstado.Visible = false;
+                            rdbEstado.Visible = false;
+                            chkLimpiarTemporal.Visible = false;
+                        }
+                        break;
                 }
                 CargarPagina();
             }
@@ -142,6 +152,11 @@ namespace WebLab.AutoAnalizador
             if (Request["Equipo"].ToString() == "CobasC311")
             {
                 pnlMindray.Visible = true; imgEquipo.Visible = false;
+            }
+
+            if (Request["Equipo"].ToString() == "REAL")
+            {
+                pnlMindray.Visible = false; imgEquipo.Visible = false;
             }
             //   txtCantidad.Value = "50";
 
@@ -211,6 +226,8 @@ namespace WebLab.AutoAnalizador
                 ddlTipoMuestra.Enabled = true;
               
             }
+
+        
 
             if (Request["Equipo"].ToString() == "CobasC311")
             {

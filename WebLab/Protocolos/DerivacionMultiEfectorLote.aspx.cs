@@ -56,7 +56,6 @@ namespace WebLab.Protocolos
                 txtNumeroLote.Focus();
 
             }
-           
         }
         private void VerificaPermisos(string sObjeto)
         {

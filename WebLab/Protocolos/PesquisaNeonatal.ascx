@@ -1,6 +1,13 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="PesquisaNeonatal.ascx.cs" Inherits="WebLab.Protocolos.PesquisaNeonatal" %>
 
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
+
+    <link rel="stylesheet" href="../App_Themes/default/style.css"  />
+    <script type="text/javascript" src='<%= ResolveUrl("~/script/jquery-1.9.1.js") %>' ></script>
+<script type="text/javascript" src ='<%= ResolveUrl("~/script/jquery-ui.js") %>' ></script>
+    <script  type="text/javascript" src='<%= ResolveUrl("~/script/jquery.ui.datepicker-es.js") %>'  ></script>   
+    <link href='<%= ResolveUrl("~/Services/css/redmond/jquery.ui.all.css") %>' rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href='<%= ResolveUrl("~/script/jquery-ui.css") %>'  />
   <script type="text/javascript">
       $(function () {
           $("#<%=txtFechaExtraccion.ClientID %>").datepicker({
@@ -72,14 +79,14 @@ Apellido Materno:<asp:RequiredFieldValidator
                </asp:DropDownList>
         </td>
           <td class="myLabel">
-            Solicitante Externo:</td>
+            Solicitante:</td>
           <td class="myLabel" colspan="2">
             <asp:Label ID="lblMedicoSolicitante"  runat="server" Text=""></asp:Label></td>
      <td class="myLabel">
            Nro. Tarjeta Cartón:</td>
           <td class="myLabel">
-              <asp:TextBox  class="myTexto" MaxLength="8"  ID="txtNumeroTarjeta" runat="server" 
-                  Width="60px" TabIndex="105"></asp:TextBox>
+              <asp:TextBox  class="form-control input-sm" MaxLength="8"  ID="txtNumeroTarjeta" runat="server" 
+                  Width="100px" TabIndex="105"></asp:TextBox>
 
         </td>
         
@@ -105,8 +112,8 @@ Apellido Materno:<asp:RequiredFieldValidator
             Hora de Nacimiento:</td>
         <td class="myLabelIzquierda">
                      <input id="txtHoraNacimiento" runat="server" type="text" maxlength="5" 
-                        style="width: 40px"   onblur="valHora(this)"              
-                        onkeyup="mascara(this,':',patron,true)" tabindex="106" class="myTexto" 
+                        style="width: 80px"   onblur="valHora(this)"              
+                        onkeyup="mascara(this,':',patron,true)" tabindex="106" class="form-control input-sm" 
                                 title="Ingrese la hora de nacimiento"  /><asp:RequiredFieldValidator 
                          ID="rfHoraNacimiento" runat="server" ErrorMessage="Hora Nacimiento" 
                          ValidationGroup="0" ControlToValidate="txtHoraNacimiento">*</asp:RequiredFieldValidator>
@@ -115,7 +122,7 @@ Apellido Materno:<asp:RequiredFieldValidator
             Edad Gestacional (sem.):</td>
         <td class="myLabelIzquierda">
                       <input id="txtEdadGestacional" runat="server" type="text" maxlength="2" 
-                          style="width: 30px"  onblur="valNumeroSinPunto(this)" tabindex="107" class="myTexto" 
+                          style="width: 80px"  onblur="valNumeroSinPunto(this)" tabindex="107" class="form-control input-sm" 
                                 title="Ingrese la edad gestacional en semanas" /><asp:RequiredFieldValidator 
                          ID="rfEdadGestacional" runat="server" ErrorMessage="Edad Gestacional" 
                           ValidationGroup="0" ControlToValidate="txtEdadGestacional">*</asp:RequiredFieldValidator>
@@ -124,7 +131,7 @@ Apellido Materno:<asp:RequiredFieldValidator
             Peso (gr.):</td>
         <td class="myLabelIzquierda">
                       <input id="txtPeso" runat="server" type="text" maxlength="4"  
-                          style="width: 40px"  onblur="valNumeroSinPunto(this)" tabindex="108" class="myTexto" 
+                          style="width: 80px"  onblur="valNumeroSinPunto(this)" tabindex="108" class="form-control input-sm" 
                                 title="Ingrese el peso" /><asp:RequiredFieldValidator 
                          ID="rfPeso" runat="server" ErrorMessage="Peso" ValidationGroup="0" 
                           ControlToValidate="txtPeso">*</asp:RequiredFieldValidator>
@@ -141,12 +148,12 @@ Apellido Materno:<asp:RequiredFieldValidator
         </td>
         <td class="myLabelIzquierda">
                     <input id="txtFechaExtraccion" runat="server" type="text" maxlength="10" 
-                        style="width: 80px"  onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="109" class="myTexto" 
+                        style="width: 120px"  onblur="valFecha(this)" 
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="109" class="form-control input-sm" 
                                 title="Ingrese la fecha de extracción de la muestra"  /><input 
                    id="txtHoraExtraccion" runat="server" type="text" maxlength="5" 
-                        style="width: 40px"   onblur="valHora(this)"              
-                        onkeyup="mascara(this,':',patron,true)" tabindex="110" class="myTexto" 
+                        style="width: 80px"   onblur="valHora(this)"              
+                        onkeyup="mascara(this,':',patron,true)" tabindex="110" class="form-control input-sm" 
                                 title="Ingrese la hora de extracción de la muestra"  /></td>
        <td class="myLabel">
             Primera Muestra:<asp:RequiredFieldValidator 
@@ -166,7 +173,7 @@ Apellido Materno:<asp:RequiredFieldValidator
      <td class="myLabel">
             Motivo Repetición:</td>
         <td class="myLabelIzquierda">
-        <anthem:DropDownList ID="ddlMotivoRepeticion" runat="server" TabIndex="112">
+        <anthem:DropDownList ID="ddlMotivoRepeticion" Width="160px" runat="server" CssClass="form-control input-sm" TabIndex="112">
         </anthem:DropDownList>
             
         </td>
@@ -284,7 +291,7 @@ Apellido Materno:<asp:RequiredFieldValidator
        <td class="myLabel">
             Antecedentes Maternos:</td>
         <td colspan="5" class="myLabel">
-            <asp:TextBox ID="txtAntecedenteMaterno" runat="server" TabIndex="121" class="myTexto" 
+            <asp:TextBox ID="txtAntecedenteMaterno" runat="server" TabIndex="121" class="form-control input-sm" 
                 Width="600px"></asp:TextBox>
         </td>
     </tr>

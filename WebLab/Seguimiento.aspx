@@ -78,7 +78,7 @@
                   <strong>   Hasta: </strong>  <input id="txtFechaHasta" runat="server" type="text" class="form-control input-sm"  maxlength="10"   style="width: 100px; "  onblur="valFecha(this)"  
                         onkeyup="mascara(this,'/',patron,true)" tabindex="0"/>
 
-                        <asp:RadioButtonList ID="rdbOpcion" runat="server"    RepeatDirection="Horizontal" OnSelectedIndexChanged="rdbOpcion_SelectedIndexChanged" AutoPostBack="True">
+                        <asp:RadioButtonList ID="rdbOpcion" runat="server"    RepeatDirection="Horizontal" >
                   <asp:ListItem Selected="True"  Value="0">Muestras Ingresadas</asp:ListItem>
                  <asp:ListItem Value="3">Muestras Pendientes de Resultados</asp:ListItem>
                   <asp:ListItem Value="4">Muestras Positivas</asp:ListItem>
@@ -145,6 +145,7 @@
                 
                <asp:BoundField DataField="Obra Social" HeaderText="Obra Social" />
                                       <asp:BoundField DataField="F. Resultado" HeaderText="F. Resultado" />
+                                                 <asp:BoundField DataField="Determinacion" HeaderText="Determinacion" />
      
                 <asp:BoundField DataField="Resultado" HeaderText="Resultado" />
                 <asp:BoundField DataField="Observaciones" HeaderText="Observaciones" />

@@ -32,8 +32,8 @@ namespace Business.Data.Laboratorio
         private bool m_sininsumo;
         private int m_idpresentacion;
         private String m_resultadoDefecto;
-
         private int m_limiteturnosdia;
+
 
         #endregion
 
@@ -57,6 +57,7 @@ namespace Business.Data.Laboratorio
             m_sininsumo = false;
             m_idpresentacion = 0;
             m_resultadoDefecto= String.Empty;
+        //    m_resultadoObservacion = String.Empty;
             //m_isscreening = false;
         }
 		#endregion // End of Default ( Empty ) Class Constuctor
@@ -79,7 +80,8 @@ namespace Business.Data.Laboratorio
             bool informable ,
              bool   sininsumo ,
              int  idpresentacion,
-             string resultadoDefecto
+             string resultadoDefecto,
+            string resultadoObservacion
             )
 			: this()
 		{
@@ -97,6 +99,7 @@ namespace Business.Data.Laboratorio
             m_sininsumo = sininsumo;
             m_idpresentacion = idpresentacion;
             m_resultadoDefecto = resultadoDefecto;
+            //m_resultadoObservacion = resultadoObservacion;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -141,7 +144,21 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
+        //public string ResultadoObservacion
+        //{
+        //    get { return m_resultadoObservacion; }
 
+        //    set
+        //    {
+        //        if (value == null)
+        //            throw new ArgumentOutOfRangeException("Null value not allowed for m_resultadoObservacion", value, "null");
+
+        //        if (value.Length > 4000)
+        //            throw new ArgumentOutOfRangeException("Invalid value for m_resultadoObservacion", value, value.ToString());
+
+        //        m_isChanged |= (m_resultadoObservacion != value); m_resultadoObservacion = value;
+        //    }
+        //}
 
         public string ResultadoDefecto
         {

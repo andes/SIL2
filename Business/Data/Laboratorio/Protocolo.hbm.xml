@@ -80,6 +80,7 @@
 
     <property column="cod_os" type="Int32" name="CodOs" not-null="true" />
 <property column="idCasoSISA" type="Int32" name="IdCasoSISA" not-null="true" />
+    <property column="idEventoSnvs" type="Int32" name="IdEvento" not-null="true" />
   
 	<property column="ipCarga" type="String" name="IpCarga" length="50" />
     <property column="impres" type="String" name="Impres" length="150" />

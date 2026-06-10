@@ -52,6 +52,7 @@ namespace WebLab.Estadisticas
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             }
 
+
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -70,11 +71,9 @@ namespace WebLab.Estadisticas
                     //    MostrarReporteGeneral();
                     if (Session["informe"].ToString() == "PorResultado")
                         MostrarInformePorResultado("Pantalla");
-
                 }
-
+               
             }
-          
         }
         protected void Page_Unload(object sender, EventArgs e)
         {
@@ -467,7 +466,7 @@ namespace WebLab.Estadisticas
                 case "8": cmd.CommandText = "LAB_EstadisticaPorSector"; break;
                 case "9": cmd.CommandText = "LAB_EstadisticaRankingDia"; break;
                 case "10": cmd.CommandText = "LAB_EstadisticaPorHorario"; break;
-               // menu falta case 11!!!!!
+
             }
 
 
@@ -543,10 +542,10 @@ namespace WebLab.Estadisticas
 
             
             
+              
 
-
-            if (lblTipo.Text == "5") Ds.Tables[0].Rows.Add();
-          
+                if (lblTipo.Text == "5") Ds.Tables[0].Rows.Add();
+            
             return Ds.Tables[0];
         }
 
@@ -893,7 +892,5 @@ namespace WebLab.Estadisticas
             }
             
         }
-
-       
     }
 }

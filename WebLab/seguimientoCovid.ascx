@@ -31,7 +31,7 @@
 <div  id="pnlSeguimiento" runat="server">
                <div   class="panel panel-default">
    <div class="panel-heading"> 
-       Panel Seguimiento Coronavirus (COVID-19) - Vigilancia Genómica
+       Panel Seguimiento Respiratorios - Vigilancia Genómica
         </div>
          	<div class="panel-body" >  
                         <div class="row">

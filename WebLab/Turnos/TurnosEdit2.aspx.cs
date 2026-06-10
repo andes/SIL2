@@ -523,7 +523,6 @@ ORDER BY cantidad desc";
             oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre");
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
 
-
             //m_ssql = "SELECT idProfesional, apellido + ' ' + nombre AS nombre FROM Sys_Profesional   ORDER BY apellido, nombre ";
             //oUtil.CargarCombo(ddlEspecialista, m_ssql, "idProfesional", "nombre");
             //ddlEspecialista.Items.Insert(0, new ListItem("No identificado", "0"));
