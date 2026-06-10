@@ -50,8 +50,20 @@
 		            buttonImage: 'App_Themes/default/images/calend1.jpg',
 		            buttonImageOnly: true
 		        });
-	        });
-          </script>
+         });
+
+         function seleccionarTodos(seleccionar) {
+             var items = document.getElementById('<%= chkItem.ClientID %>'); //Se traen los elementos
+            
+             var checkboxes = items.querySelectorAll("input[type='checkbox']"); //se extrae el checkbox
+
+             checkboxes.forEach(function (chk) {
+                 console.log(chk)
+                     chk.checked = seleccionar;
+                 
+             });
+         }
+     </script>
 
    </asp:Content>
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server"> 
@@ -66,8 +78,13 @@
               <asp:Label ID="lblError" runat="server" Text="Label" Visible="false"></asp:Label>
                  
                    <div class="form-group" >
-
+                        
             <asp:CheckBoxList ID="chkItem" runat="server" RepeatDirection="Horizontal" Font-Size="14pt" OnSelectedIndexChanged="chkItem_SelectedIndexChanged" RepeatColumns="6"></asp:CheckBoxList>
+                       <div class="mylabelizquierda" >Seleccionar:                                           
+                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  OnClientClick="seleccionarTodos(true); return false;">Todos</asp:LinkButton>&nbsp;
+                            <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"    OnClientClick="seleccionarTodos(false); return false;" >Ninguno</asp:LinkButton>
+                                &nbsp;&nbsp;
+                                </div>
                        </div>
                     <hr />
                    <div class="form-group" >
