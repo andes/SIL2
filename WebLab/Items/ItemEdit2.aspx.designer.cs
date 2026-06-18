@@ -744,13 +744,13 @@ namespace WebLab.Items
         protected global::Anthem.RegularExpressionValidator RegularExpressionValidator2;
 
         /// <summary>
-        /// txtObservaciones control.
+        /// hfHtml control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObservaciones;
+        protected global::System.Web.UI.WebControls.HiddenField hfHtml;
 
         /// <summary>
         /// cvObservaciones control.
