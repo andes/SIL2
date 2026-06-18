@@ -177,51 +177,6 @@ namespace WebLab.Usuarios
         protected global::Anthem.CheckBox chkAdministrador;
 
         /// <summary>
-        /// Control ddlArea.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::Anthem.DropDownList ddlArea;
-
-        /// <summary>
-        /// Control ddlPerfil.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::Anthem.DropDownList ddlPerfil;
-
-        /// <summary>
-        /// Control rvPerfil.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::Anthem.RangeValidator rvPerfil;
-
-        /// <summary>
-        /// Control ddlEfectorDestino.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::Anthem.DropDownList ddlEfectorDestino;
-
-        /// <summary>
-        /// Control rvEfectorDestino.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::Anthem.RangeValidator rvEfectorDestino;
-
-        /// <summary>
         /// Control chkActivo.
         /// </summary>
         /// <remarks>
@@ -319,6 +274,69 @@ namespace WebLab.Usuarios
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEfector3;
+
+        /// <summary>
+        /// Control rfvEfector3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvEfector3;
+
+        /// <summary>
+        /// Control ddlArea.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlArea;
+
+        /// <summary>
+        /// Control ddlPerfil.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlPerfil;
+
+        /// <summary>
+        /// Control rvPerfil.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.RangeValidator rvPerfil;
+
+        /// <summary>
+        /// Control lblEfectorDestino.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.Label lblEfectorDestino;
+
+        /// <summary>
+        /// Control ddlEfectorDestino.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.DropDownList ddlEfectorDestino;
+
+        /// <summary>
+        /// Control rvEfectorDestino.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.RangeValidator rvEfectorDestino;
 
         /// <summary>
         /// Control btnAgregarEfector.

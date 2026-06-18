@@ -8,12 +8,11 @@
     
     <many-to-one name="IdEfector" column="idEfector" class="Business.Data.Efector,Business" />
     <many-to-one name="IdUsuario" column="idUsuario" class="Business.Data.Usuario,Business" />
-    
-	 
 		<property column="activo" type="Boolean" name="Activo" not-null="true" />
-
-    
-
-    <!--<property column="matricula" type="String" name="Matricula" length="50" />-->
+    <property column="idPerfil" type="Int32" name="IdPerfil" />
+    <property column="idArea" type="Int32" name="IdArea" />
+    <property column="idEfectorDestino" type="Int32" name="IdEfectorDestino" />
+    <property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" />
+    <property column="fechaRegistro" type="DateTime" name="FechaRegistro"  />
 	</class>
 </hibernate-mapping>
