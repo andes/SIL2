@@ -331,9 +331,15 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             ddlGermen.Items.Insert(0, new ListItem("--SELECCIONE AISLAMIENTO--", "0"));
 
             m_ssql = @"SELECT idMecanismoResistencia, sigla as nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
-            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");            
-            
+            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
 
+            //Carga dinamica de Metodos de ATB
+             m_ssql = @"SELECT idMetodoAntibiograma, codigo FROM LAB_MetodoAntibiograma WHERE baja=0";
+            //Cambiamos radio button rdbMetodologiaAntibiograma por ddlMetodologiaATB
+            oUtil.CargarCombo(ddlMetodologiaATB, m_ssql, "idMetodoAntibiograma", "codigo");
+            ddlMetodologiaATB.SelectedValue = "0";
+            oUtil.CargarCombo(ddlMetodoAntibiograma, m_ssql, "idMetodoAntibiograma", "codigo");
+            ddlMetodoAntibiograma.SelectedValue = "0";
         }
 
 
@@ -681,7 +687,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 CargarListasAislamientos();
                 CargarListaAntibiotico();
                 CargarListasAntibiogramas();
-                
 
                 if (oRegistro.IdMuestra > 0)
                 {
@@ -5360,7 +5365,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                         oRegistro.IdAntibiotico = oAntibiotico;
 
 
-                        oRegistro.IdMetodologia = int.Parse(rdbMetodologiaAntibiograma.SelectedValue);
+                        oRegistro.IdMetodologia = int.Parse(ddlMetodologiaATB.SelectedValue);
                         oRegistro.Resultado = ddl.SelectedValue;
 
                     //    oRegistro.IdMecanismoResistencia = int.Parse(ddlMecanismoResistencia.SelectedValue);
@@ -5380,16 +5385,16 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
                             oRegistro.FechaValida = DateTime.Now;
                         }
                         oRegistro.Save();
-                       
 
-                        oProtocolo.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()), "ATB " + oRegistro.NumeroAislamiento.ToString() + " " + oRegistro.IdGermen.Nombre + " (" + rdbMetodologiaAntibiograma.SelectedItem.Text + ") - " + oRegistro.IdAntibiotico.Descripcion, oRegistro.Resultado);
+                        //cambiamos rdbMetodologiaAntibiograma por ddlMetodologiaATB
+                        oProtocolo.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()), "ATB " + oRegistro.NumeroAislamiento.ToString() + " " + oRegistro.IdGermen.Nombre + " (" + ddlMetodologiaATB.SelectedItem.Text + ") - " + oRegistro.IdAntibiotico.Descripcion, oRegistro.Resultado);
 
 
                     }
 
                 }
 
-                GuardarMecanismo(oProtocolo, oGermen.IdGermen, int.Parse(rdbMetodologiaAntibiograma.SelectedValue), int.Parse(ddlPracticaAtb.SelectedValue), oGermen.NumeroAislamiento);
+                GuardarMecanismo(oProtocolo, oGermen.IdGermen, int.Parse(ddlMetodologiaATB.SelectedValue), int.Parse(ddlPracticaAtb.SelectedValue), oGermen.NumeroAislamiento);
             }
             else
             {
@@ -5437,7 +5442,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
             crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
             crit.Add(Expression.Eq("IdGermen", oGermen.IdGermen));
             crit.Add(Expression.Eq("IdItem", int.Parse(ddlPracticaAtb.SelectedValue)));
-            crit.Add(Expression.Eq("IdMetodologia", int.Parse(rdbMetodologiaAntibiograma.SelectedValue)));
+            crit.Add(Expression.Eq("IdMetodologia", int.Parse(ddlMetodologiaATB.SelectedValue)));
             crit.Add(Expression.Eq("NumeroAislamiento", oGermen.NumeroAislamiento));
          //   crit.Add(Expression.Eq("IdMecanismoResistencia", int.Parse(ddlMecanismoResistencia.SelectedValue)));
 
@@ -5812,5 +5817,7 @@ WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
 
             
         }
+
+        
     }
 }

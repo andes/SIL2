@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Resultados {
-    
-    
-    public partial class ResultadoEdit2 {
-        
+namespace WebLab.Resultados
+{
+
+
+    public partial class ResultadoEdit2
+    {
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// lblServicio control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblServicio;
-        
+
         /// <summary>
         /// HdidEventoSISA control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden HdidEventoSISA;
-        
+
         /// <summary>
         /// lblCantidadRegistros control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCantidadRegistros;
-        
+
         /// <summary>
         /// gvLista control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvLista;
-        
+
         /// <summary>
         /// hypRegresar control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hypRegresar;
-        
+
         /// <summary>
         /// btnActualizar control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton btnActualizar;
-        
+
         /// <summary>
         /// lnkAnterior control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkAnterior;
-        
+
         /// <summary>
         /// lnkPosterior control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkPosterior;
-        
+
         /// <summary>
         /// pnlPaciente control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlPaciente;
-        
+
         /// <summary>
         /// lblDni control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDni;
-        
+
         /// <summary>
         /// imgEstado control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgEstado;
-        
+
         /// <summary>
         /// lblProtocolo control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblProtocolo;
-        
+
         /// <summary>
         /// lblFecha control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFecha;
-        
+
         /// <summary>
         /// lblPaciente control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPaciente;
-        
+
         /// <summary>
         /// lblCodigoPaciente control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCodigoPaciente;
-        
+
         /// <summary>
         /// lblNumeroOrigen control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNumeroOrigen;
-        
+
         /// <summary>
         /// lblFechaTomaMuestra control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaTomaMuestra;
-        
+
         /// <summary>
         /// lblSexo control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSexo;
-        
+
         /// <summary>
         /// lblOrigen control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblOrigen;
-        
+
         /// <summary>
         /// lblSector control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSector;
-        
+
         /// <summary>
         /// lblFechaNacimiento control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaNacimiento;
-        
+
         /// <summary>
         /// lblEdad control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEdad;
-        
+
         /// <summary>
         /// lblPrioridad control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPrioridad;
-        
+
         /// <summary>
         /// lblUsuario control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUsuario;
-        
+
         /// <summary>
         /// lblSolicitante control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSolicitante;
-        
+
         /// <summary>
         /// lblMedico control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMedico;
-        
+
         /// <summary>
         /// lblFechaRegistro control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaRegistro;
-        
+
         /// <summary>
         /// lblHoraRegistro control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblHoraRegistro;
-        
+
         /// <summary>
         /// imgDiagnostico control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgDiagnostico;
-        
+
         /// <summary>
         /// lblDiagnostico control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDiagnostico;
-        
+
         /// <summary>
         /// lblCovid control.
         /// </summary>
@@ -299,7 +301,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCovid;
-        
+
         /// <summary>
         /// pnlObservaciones control.
         /// </summary>
@@ -308,7 +310,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlObservaciones;
-        
+
         /// <summary>
         /// lblObservacion control.
         /// </summary>
@@ -317,7 +319,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblObservacion;
-        
+
         /// <summary>
         /// lblPlaca control.
         /// </summary>
@@ -326,7 +328,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPlaca;
-        
+
         /// <summary>
         /// pnlProducto control.
         /// </summary>
@@ -335,7 +337,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlProducto;
-        
+
         /// <summary>
         /// lblProtocolo1 control.
         /// </summary>
@@ -344,7 +346,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblProtocolo1;
-        
+
         /// <summary>
         /// lblEstado1 control.
         /// </summary>
@@ -353,7 +355,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEstado1;
-        
+
         /// <summary>
         /// lblDescripcionProducto control.
         /// </summary>
@@ -362,7 +364,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDescripcionProducto;
-        
+
         /// <summary>
         /// lblFecha1 control.
         /// </summary>
@@ -371,7 +373,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFecha1;
-        
+
         /// <summary>
         /// lblConservacion control.
         /// </summary>
@@ -380,7 +382,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblConservacion;
-        
+
         /// <summary>
         /// lblTituloFechaTomaMuestra control.
         /// </summary>
@@ -389,7 +391,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTituloFechaTomaMuestra;
-        
+
         /// <summary>
         /// lblFechaTomaMuestra1 control.
         /// </summary>
@@ -398,7 +400,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaTomaMuestra1;
-        
+
         /// <summary>
         /// lblNumeroOrigen1 control.
         /// </summary>
@@ -407,7 +409,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNumeroOrigen1;
-        
+
         /// <summary>
         /// lblUsuario1 control.
         /// </summary>
@@ -416,7 +418,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUsuario1;
-        
+
         /// <summary>
         /// lblSolicitante2 control.
         /// </summary>
@@ -425,7 +427,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSolicitante2;
-        
+
         /// <summary>
         /// lblSector1 control.
         /// </summary>
@@ -434,7 +436,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSector1;
-        
+
         /// <summary>
         /// lblFechaRegistro1 control.
         /// </summary>
@@ -443,7 +445,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaRegistro1;
-        
+
         /// <summary>
         /// lblHoraRegistro1 control.
         /// </summary>
@@ -452,7 +454,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblHoraRegistro1;
-        
+
         /// <summary>
         /// lblObservacion1 control.
         /// </summary>
@@ -461,7 +463,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblObservacion1;
-        
+
         /// <summary>
         /// spanadjunto control.
         /// </summary>
@@ -470,7 +472,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanadjunto;
-        
+
         /// <summary>
         /// lblAdjunto control.
         /// </summary>
@@ -479,7 +481,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAdjunto;
-        
+
         /// <summary>
         /// HFCurrTabIndex control.
         /// </summary>
@@ -488,7 +490,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
-        
+
         /// <summary>
         /// HFIdItem control.
         /// </summary>
@@ -497,7 +499,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFIdItem;
-        
+
         /// <summary>
         /// HFIdGermen control.
         /// </summary>
@@ -506,7 +508,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFIdGermen;
-        
+
         /// <summary>
         /// HFIdMetodo control.
         /// </summary>
@@ -515,7 +517,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFIdMetodo;
-        
+
         /// <summary>
         /// HFIdProtocolo control.
         /// </summary>
@@ -524,7 +526,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFIdProtocolo;
-        
+
         /// <summary>
         /// HFNumeroAislamiento control.
         /// </summary>
@@ -533,7 +535,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFNumeroAislamiento;
-        
+
         /// <summary>
         /// HFOperacion control.
         /// </summary>
@@ -542,7 +544,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFOperacion;
-        
+
         /// <summary>
         /// pnlResultados control.
         /// </summary>
@@ -551,7 +553,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlResultados;
-        
+
         /// <summary>
         /// tituloMicroOrganismo control.
         /// </summary>
@@ -560,7 +562,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloMicroOrganismo;
-        
+
         /// <summary>
         /// aisl control.
         /// </summary>
@@ -569,7 +571,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage aisl;
-        
+
         /// <summary>
         /// tituloAntibiograma control.
         /// </summary>
@@ -578,7 +580,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloAntibiograma;
-        
+
         /// <summary>
         /// anti control.
         /// </summary>
@@ -587,7 +589,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage anti;
-        
+
         /// <summary>
         /// tituloObservaciones control.
         /// </summary>
@@ -596,7 +598,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloObservaciones;
-        
+
         /// <summary>
         /// tituloAntecedente control.
         /// </summary>
@@ -605,7 +607,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloAntecedente;
-        
+
         /// <summary>
         /// tabAntecedente control.
         /// </summary>
@@ -614,7 +616,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor tabAntecedente;
-        
+
         /// <summary>
         /// pnlHC control.
         /// </summary>
@@ -623,7 +625,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlHC;
-        
+
         /// <summary>
         /// btnMostrarResultados control.
         /// </summary>
@@ -632,7 +634,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnMostrarResultados;
-        
+
         /// <summary>
         /// lblSinResultados control.
         /// </summary>
@@ -641,7 +643,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSinResultados;
-        
+
         /// <summary>
         /// tieneInci control.
         /// </summary>
@@ -650,7 +652,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor tieneInci;
-        
+
         /// <summary>
         /// inci control.
         /// </summary>
@@ -659,7 +661,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage inci;
-        
+
         /// <summary>
         /// hplPesquisa control.
         /// </summary>
@@ -668,7 +670,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hplPesquisa;
-        
+
         /// <summary>
         /// lblAlertaMicrobiologia control.
         /// </summary>
@@ -677,7 +679,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAlertaMicrobiologia;
-        
+
         /// <summary>
         /// imgPesquisa control.
         /// </summary>
@@ -686,7 +688,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgPesquisa;
-        
+
         /// <summary>
         /// lblMuestra control.
         /// </summary>
@@ -695,7 +697,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMuestra;
-        
+
         /// <summary>
         /// cvValidaControles control.
         /// </summary>
@@ -704,7 +706,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvValidaControles;
-        
+
         /// <summary>
         /// btnAceptarValorFueraLimite control.
         /// </summary>
@@ -713,7 +715,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAceptarValorFueraLimite;
-        
+
         /// <summary>
         /// lblIdValorFueraLimite control.
         /// </summary>
@@ -722,7 +724,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblIdValorFueraLimite;
-        
+
         /// <summary>
         /// lblIdValorFueraLimite1 control.
         /// </summary>
@@ -731,7 +733,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblIdValorFueraLimite1;
-        
+
         /// <summary>
         /// btnActualizarPracticasCarga control.
         /// </summary>
@@ -740,7 +742,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnActualizarPracticasCarga;
-        
+
         /// <summary>
         /// lnkMarcar control.
         /// </summary>
@@ -749,7 +751,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputButton lnkMarcar;
-        
+
         /// <summary>
         /// lnkDesmarcar control.
         /// </summary>
@@ -758,7 +760,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputButton lnkDesmarcar;
-        
+
         /// <summary>
         /// Panel1 control.
         /// </summary>
@@ -767,7 +769,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel1;
-        
+
         /// <summary>
         /// tContenido control.
         /// </summary>
@@ -776,7 +778,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Table tContenido;
-        
+
         /// <summary>
         /// lblObservacionResultado control.
         /// </summary>
@@ -785,7 +787,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblObservacionResultado;
-        
+
         /// <summary>
         /// btnAplicarFormula control.
         /// </summary>
@@ -794,7 +796,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAplicarFormula;
-        
+
         /// <summary>
         /// chkFormula control.
         /// </summary>
@@ -803,7 +805,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkFormula;
-        
+
         /// <summary>
         /// lblFormula control.
         /// </summary>
@@ -812,7 +814,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFormula;
-        
+
         /// <summary>
         /// pnlReferencia control.
         /// </summary>
@@ -821,7 +823,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlReferencia;
-        
+
         /// <summary>
         /// chkCerrarSinResultados control.
         /// </summary>
@@ -830,7 +832,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCerrarSinResultados;
-        
+
         /// <summary>
         /// chkWhonet control.
         /// </summary>
@@ -839,7 +841,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkWhonet;
-        
+
         /// <summary>
         /// rdbImprimir control.
         /// </summary>
@@ -848,7 +850,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbImprimir;
-        
+
         /// <summary>
         /// btnValidarImprimir control.
         /// </summary>
@@ -857,7 +859,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarImprimir;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>
@@ -866,7 +868,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
+
         /// <summary>
         /// btnRestringirAcceso control.
         /// </summary>
@@ -875,7 +877,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnRestringirAcceso;
-        
+
         /// <summary>
         /// btnDeshacerRestringirAcceso control.
         /// </summary>
@@ -884,7 +886,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnDeshacerRestringirAcceso;
-        
+
         /// <summary>
         /// btnDesValidar control.
         /// </summary>
@@ -893,7 +895,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnDesValidar;
-        
+
         /// <summary>
         /// btnValidarPendienteImprimir control.
         /// </summary>
@@ -902,7 +904,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarPendienteImprimir;
-        
+
         /// <summary>
         /// btnValidarPendiente control.
         /// </summary>
@@ -911,7 +913,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarPendiente;
-        
+
         /// <summary>
         /// imgPdf control.
         /// </summary>
@@ -920,7 +922,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton imgPdf;
-        
+
         /// <summary>
         /// imgAdjunto control.
         /// </summary>
@@ -929,7 +931,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton imgAdjunto;
-        
+
         /// <summary>
         /// pnlMicroOrganismo control.
         /// </summary>
@@ -938,7 +940,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlMicroOrganismo;
-        
+
         /// <summary>
         /// ddlPracticaAislamiento control.
         /// </summary>
@@ -947,7 +949,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPracticaAislamiento;
-        
+
         /// <summary>
         /// rvPracticaAislamiento control.
         /// </summary>
@@ -956,7 +958,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvPracticaAislamiento;
-        
+
         /// <summary>
         /// txtCodigoMicroorganismo control.
         /// </summary>
@@ -965,7 +967,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigoMicroorganismo;
-        
+
         /// <summary>
         /// ddlAislamiento control.
         /// </summary>
@@ -974,7 +976,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlAislamiento;
-        
+
         /// <summary>
         /// rvAislamiento control.
         /// </summary>
@@ -983,7 +985,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvAislamiento;
-        
+
         /// <summary>
         /// btnAgregarGermen control.
         /// </summary>
@@ -992,7 +994,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAgregarGermen;
-        
+
         /// <summary>
         /// lnkMarcarAislamiento control.
         /// </summary>
@@ -1001,7 +1003,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkMarcarAislamiento;
-        
+
         /// <summary>
         /// lnkDesMarcarAislamiento control.
         /// </summary>
@@ -1010,7 +1012,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDesMarcarAislamiento;
-        
+
         /// <summary>
         /// gvAislamientos control.
         /// </summary>
@@ -1019,7 +1021,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvAislamientos;
-        
+
         /// <summary>
         /// btnGuardarAislamientos control.
         /// </summary>
@@ -1028,7 +1030,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardarAislamientos;
-        
+
         /// <summary>
         /// pnlMicroorganismoHC control.
         /// </summary>
@@ -1037,7 +1039,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlMicroorganismoHC;
-        
+
         /// <summary>
         /// gvAislamientosHC control.
         /// </summary>
@@ -1046,7 +1048,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvAislamientosHC;
-        
+
         /// <summary>
         /// pnlAntibiograma control.
         /// </summary>
@@ -1055,7 +1057,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlAntibiograma;
-        
+
         /// <summary>
         /// ddlPracticaAtb control.
         /// </summary>
@@ -1064,7 +1066,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPracticaAtb;
-        
+
         /// <summary>
         /// ddlGermen control.
         /// </summary>
@@ -1073,7 +1075,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGermen;
-        
+
         /// <summary>
         /// rvGermen control.
         /// </summary>
@@ -1082,16 +1084,16 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvGermen;
-        
+
         /// <summary>
-        /// rdbMetodologiaAntibiograma control.
+        /// ddlMetodologiaATB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButtonList rdbMetodologiaAntibiograma;
-        
+        protected global::System.Web.UI.WebControls.DropDownList ddlMetodologiaATB;
+
         /// <summary>
         /// chkMecanismoResistencia control.
         /// </summary>
@@ -1100,7 +1102,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList chkMecanismoResistencia;
-        
+
         /// <summary>
         /// ddlPerfilAntibiotico control.
         /// </summary>
@@ -1109,7 +1111,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlPerfilAntibiotico;
-        
+
         /// <summary>
         /// gvAntiobiograma control.
         /// </summary>
@@ -1118,7 +1120,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvAntiobiograma;
-        
+
         /// <summary>
         /// btnAgregarAntibiograma control.
         /// </summary>
@@ -1127,7 +1129,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAgregarAntibiograma;
-        
+
         /// <summary>
         /// btnAgregarAntibiogramaValidado control.
         /// </summary>
@@ -1136,7 +1138,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAgregarAntibiogramaValidado;
-        
+
         /// <summary>
         /// ddlMetodoAntibiograma control.
         /// </summary>
@@ -1145,7 +1147,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMetodoAntibiograma;
-        
+
         /// <summary>
         /// ddlAntibiograma control.
         /// </summary>
@@ -1154,7 +1156,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAntibiograma;
-        
+
         /// <summary>
         /// rvAntibiograma control.
         /// </summary>
@@ -1163,7 +1165,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvAntibiograma;
-        
+
         /// <summary>
         /// btnEliminarAntibiograma control.
         /// </summary>
@@ -1172,7 +1174,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEliminarAntibiograma;
-        
+
         /// <summary>
         /// btnEditarAntibiograma control.
         /// </summary>
@@ -1181,7 +1183,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnEditarAntibiograma;
-        
+
         /// <summary>
         /// btnValidarAntibiograma control.
         /// </summary>
@@ -1190,7 +1192,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarAntibiograma;
-        
+
         /// <summary>
         /// btnActualizarAntibiograma control.
         /// </summary>
@@ -1199,7 +1201,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnActualizarAntibiograma;
-        
+
         /// <summary>
         /// gvAntiBiograma2 control.
         /// </summary>
@@ -1208,7 +1210,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvAntiBiograma2;
-        
+
         /// <summary>
         /// btnValidarTodosAntibiogramas control.
         /// </summary>
@@ -1217,7 +1219,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarTodosAntibiogramas;
-        
+
         /// <summary>
         /// btnValidarTodosAntibiogramasPendientes control.
         /// </summary>
@@ -1226,7 +1228,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnValidarTodosAntibiogramasPendientes;
-        
+
         /// <summary>
         /// pnlAntibiogramaHC control.
         /// </summary>
@@ -1235,7 +1237,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlAntibiogramaHC;
-        
+
         /// <summary>
         /// gvAntiBiogramaHC control.
         /// </summary>
@@ -1244,7 +1246,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvAntiBiogramaHC;
-        
+
         /// <summary>
         /// pnlObservacionProtocolo control.
         /// </summary>
@@ -1253,7 +1255,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlObservacionProtocolo;
-        
+
         /// <summary>
         /// ddlObsCodificadaGeneral control.
         /// </summary>
@@ -1262,7 +1264,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlObsCodificadaGeneral;
-        
+
         /// <summary>
         /// btnAgregar control.
         /// </summary>
@@ -1271,7 +1273,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnAgregar;
-        
+
         /// <summary>
         /// txtObservacion control.
         /// </summary>
@@ -1280,7 +1282,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtObservacion;
-        
+
         /// <summary>
         /// btnBorrarObservaciones control.
         /// </summary>
@@ -1289,7 +1291,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnBorrarObservaciones;
-        
+
         /// <summary>
         /// btnGuardarObservaciones control.
         /// </summary>
@@ -1298,7 +1300,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardarObservaciones;
-        
+
         /// <summary>
         /// pnlAntecedentes control.
         /// </summary>
@@ -1307,7 +1309,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlAntecedentes;
-        
+
         /// <summary>
         /// btnIncidencia control.
         /// </summary>
@@ -1316,7 +1318,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnIncidencia;
-        
+
         /// <summary>
         /// btnActualizarPracticas control.
         /// </summary>
@@ -1325,7 +1327,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnActualizarPracticas;
-        
+
         /// <summary>
         /// divAntecedentes control.
         /// </summary>
@@ -1334,7 +1336,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divAntecedentes;
-        
+
         /// <summary>
         /// lblAntecedentes control.
         /// </summary>
@@ -1343,7 +1345,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAntecedentes;
-        
+
         /// <summary>
         /// btnAntecedente control.
         /// </summary>
@@ -1352,7 +1354,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAntecedente;
-        
+
         /// <summary>
         /// Button4 control.
         /// </summary>

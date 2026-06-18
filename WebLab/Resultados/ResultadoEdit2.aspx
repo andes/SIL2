@@ -645,7 +645,8 @@
                                 onclick="btnValidarPendiente_Click" Visible="false" ValidationGroup="0" Width="150px" TabIndex="600" />  
 
                                  &nbsp; 
-           <asp:LinkButton ID="imgPdf" runat="server" CssClass="btn btn-info" ForeColor="White" Text="Buscar" OnClick="imgPdf_Click" Width="140px" Visible="False" ></asp:LinkButton>
+           <asp:LinkButton ID="imgPdf" runat="server" CssClass="btn btn-info" ForeColor="White" Text="Buscar" OnClick="imgPdf_Click" Width="140px" >
+                                             <span class="glyphicon glyphicon-download-alt"></span>&nbsp;Descargar PDF</asp:LinkButton>
 
            <asp:LinkButton ID="imgAdjunto" runat="server" CssClass="btn btn-info" Text="Adjuntar Archivos" ForeColor="White" Width="165px" 
                OnClientClick="AdjuntoProtocoloEdit(); return false;"  Visible="False"></asp:LinkButton>
@@ -807,12 +808,15 @@
                &nbsp;<asp:RangeValidator ID="rvGermen" runat="server" ControlToValidate="ddlGermen" 
                         ErrorMessage="*" MaximumValue="9999999" MinimumValue="1" Type="Integer" 
                         ValidationGroup="A"></asp:RangeValidator>
-
-                  <asp:RadioButtonList CssClass="myLabelIzquierda"   onselectedindexchanged="rdbMetodologiaAntibiograma_SelectedIndexChanged"   Width="180px" ID="rdbMetodologiaAntibiograma" RepeatDirection="Horizontal"  runat="server">
-                     <asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
+                     
+              <%-- cambiamos control     <asp:RadioButtonList CssClass="myLabelIzquierda"   onselectedindexchanged="rdbMetodologiaAntibiograma_SelectedIndexChanged" visible="false"  Width="360px" ID="rdbMetodologiaAntibiograma" RepeatDirection="Horizontal"  runat="server">
+                    <%-- <asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
                                 <asp:ListItem Value="1">CIM</asp:ListItem>
                                 <asp:ListItem Value="2">Etest</asp:ListItem>
-                    </asp:RadioButtonList>
+                    </asp:RadioButtonList>--%>
+
+                    <asp:DropDownList ID="ddlMetodologiaATB" runat="server" Width="280px"  CssClass="form-control input-sm"  />  
+                   
                     <asp:CheckBoxList ID="chkMecanismoResistencia" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
                    <%-- <asp:DropDownList class="form-control input-sm"  ID="ddlMecanismoResistencia" runat="server" Width="280px">  </asp:DropDownList>--%>
                &nbsp;  
@@ -893,9 +897,9 @@
                               
                                    ATB:
                                         <asp:DropDownList AutoPostBack="true" Width="100px" onselectedindexchanged="ddlMetodoAntibiograma_SelectedIndexChanged" ID="ddlMetodoAntibiograma" runat="server" class="form-control input-sm"> 
-         <asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
+         <%--<asp:ListItem Selected="True" Value="0">Disco</asp:ListItem>
          <asp:ListItem Value="1">CIM</asp:ListItem>
-         <asp:ListItem Value="2">Etest</asp:ListItem>         
+         <asp:ListItem Value="2">Etest</asp:ListItem>  --%>       
         </asp:DropDownList>
                         
                         <asp:DropDownList Width="250px" ID="ddlAntibiograma" runat="server" AutoPostBack="true"  onselectedindexchanged="ddlAntibiograma_SelectedIndexChanged" class="form-control input-sm">
