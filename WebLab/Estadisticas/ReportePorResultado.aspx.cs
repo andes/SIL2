@@ -166,6 +166,8 @@ namespace WebLab.Estadisticas
             {
                 lblAnalisis.Text = ddlAnalisis.SelectedItem.Text;
                 pnlResultado.Visible = true;
+                btnVerGraficoTipoMuestra.Visible = true;
+                btnVerGraficoTipoMuestra2.Visible = true;
             }
         }
 
@@ -178,9 +180,9 @@ namespace WebLab.Estadisticas
                 string s_nombre = gvEstadistica.Rows[i].Cells[0].Text.Replace(";", "");
                 s_nombre = s_nombre.Replace("&#", "");
                 if (s_valores == "")
-                    s_valores = "name='" + s_nombre + "' value='" + gvEstadistica.Rows[i].Cells[1].Text + "'";
+                    s_valores =  s_nombre + "|" + gvEstadistica.Rows[i].Cells[1].Text;
                 else
-                    s_valores += ";" + "name='" + s_nombre + "' value='" + gvEstadistica.Rows[i].Cells[1].Text + "'";
+                    s_valores += ";" +  s_nombre + "|" + gvEstadistica.Rows[i].Cells[1].Text;
             }
 
             return s_valores;
