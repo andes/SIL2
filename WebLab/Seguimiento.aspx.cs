@@ -433,7 +433,9 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
 
             //if (oItem != null)
             //{
-            DataTable dtMuestras = MostrarDatos();// (oItem);
+            if (Page.IsValid)
+            {
+                DataTable dtMuestras = MostrarDatos();// (oItem);
                 if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
                 {
                     gvPacientes.DataSource = dtMuestras;
@@ -449,7 +451,10 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
                     gvPacientes.Visible = false;
                     GridView1.Visible = true;
                 }
-            //}
+                //}
+            }
+            
+
 
         }
 
@@ -492,7 +497,8 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
 
         protected void chkItem_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CargarResultados();
+            if (HayItemSeleccionado())
+                CargarResultados();
         }
 
         private void CargarResultados()
@@ -503,6 +509,27 @@ where iditem in (" + GetDeterminaciones() + @")
 and idEfector="+ oUser.IdEfector.IdEfector.ToString() +" order by resultadocar";
             oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
             ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
+        }
+
+        private bool HayItemSeleccionado()
+        {
+            bool haySeleccionados = false;
+
+            foreach (ListItem item in chkItem.Items)
+            {
+                if (item.Selected)
+                {
+                    haySeleccionados = true;
+                    break;
+                }
+            }
+            return haySeleccionados;
+        }
+
+        protected void cvItem_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (HayItemSeleccionado()) args.IsValid = true;
+            else args.IsValid = false;
         }
     }
   

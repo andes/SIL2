@@ -84,6 +84,8 @@
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  OnClientClick="seleccionarTodos(true); return false;">Todos</asp:LinkButton>&nbsp;
                             <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"    OnClientClick="seleccionarTodos(false); return false;" >Ninguno</asp:LinkButton>
                                 &nbsp;&nbsp;
+                            <br /><asp:CustomValidator ID="cvItem" runat="server" OnServerValidate="cvItem_ServerValidate" ErrorMessage="Debe seleccionar al menos una determinación del Panel Respiratorio"></asp:CustomValidator>
+
                                 </div>
                        </div>
                     <hr />
@@ -122,7 +124,6 @@
                         <div class="form-group" > 
                         <asp:Button ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" Text="Buscar"  CssClass="btn btn-danger" Width="100px"/>
                              <asp:Button ID="btnExcel" runat="server" OnClick="btnExcel_Click" Text="Exportar Excel"  CssClass="btn btn-danger" Width="150px"/>
-         
              </div>
                  
              
