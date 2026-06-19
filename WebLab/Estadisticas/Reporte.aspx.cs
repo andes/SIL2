@@ -20,6 +20,7 @@ using CrystalDecisions.Web;
 using System.Text;
 using Business.Data;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
@@ -37,7 +38,18 @@ namespace WebLab.Estadisticas
         int col1 = 0;
         Usuario oUser = new Usuario();
 
-      
+        public string LabelsJson { get; set; }
+        public string DatosJson { get; set; }
+        public string TipoGrafico { get; set; }
+        public string TituloJson { get; set; }
+        public string TooltipsJson { get; set; }  
+        public string Subtitulo { get; set; }
+
+        public string LabelsJson2 { get; set; }
+        public string DatosJson2 { get; set; }
+        public string TipoGrafico2 { get; set; }
+        public string TituloJson2 { get; set; }
+        public string TooltipsJson2 { get; set; }
 
 
         protected void Page_PreInit(object sender, EventArgs e)
@@ -87,8 +99,7 @@ namespace WebLab.Estadisticas
         {
             bool mostrarGrafico1 = true;
             bool mostrarGrafico2 = true;
-           
-        
+
 
             string s_titulo = "";
             string s_tituloChart = "";
@@ -157,16 +168,18 @@ namespace WebLab.Estadisticas
 
 
             if (mostrarGrafico1)
-            {              
-                     FCLiteral.Text = CreateChart1(s_tituloChart, "Por Origen");              
+            {
+                 CreateChart1(s_tituloChart, "Por Origen");
             }
 
-                /// Grafico 2
+            /// Grafico 2
             if (mostrarGrafico2)
-            {             
-                FCLiteral0.Text = CreateChart2(s_tituloChart);            
+            {
+               CreateChart2(s_tituloChart);            
             }
 
+            if (!mostrarGrafico1 && !mostrarGrafico2)
+                pnlGrafico.Visible = false;
 
             if (Session["idEfector"].ToString() != "0")
             {
@@ -569,64 +582,66 @@ namespace WebLab.Estadisticas
                 Response.Redirect("PorResultado.aspx", false);
 
         }
-        private string CreateChart1(string s_titulo, string s_tipo)
+        private void CreateChart1(string s_titulo, string s_tipo)
         {
-
-            DataTable dt = new DataTable();
-            dt = GetDatosEstadistica("CH1");
-            
-       
-
-            string strXML = "<graph caption='"+s_titulo+"' subCaption='"+ s_tipo+"' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";            
-
-            if (dt.Rows.Count > 0)
-            {
-                for (int i=0;i<dt.Rows.Count;i++)
-                {
-                    strXML += "<set name='" + dt.Rows[i][0].ToString() + "' value='" + dt.Rows[i][1].ToString() + "' />";                  
-                }
-            }
-            else
-                Response.Redirect("SinDatos.aspx?Desde=GeneralFiltro.aspx", false);
-
-
-            strXML += "</graph>";
-            
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Pie3D.swf", "", strXML, "Sales", "600", "250", false, false);
-
-
-         
-
-        }
-
-        private string CreateChart2(string s_titulo)
-        {
-
-          
-
-            DataTable dt = new DataTable();
-            dt = GetDatosEstadistica("CH2");
-            string strXML = "<graph caption='"+s_titulo+"'  showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
-
+            DataTable dt =  GetDatosEstadistica("CH1");
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
             if (dt.Rows.Count > 0)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    strXML += "<set name='" + dt.Rows[i][0].ToString() + "' value='" + dt.Rows[i][1].ToString() + "' />";
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
                 }
             }
             else
                 Response.Redirect("SinDatos.aspx?Desde=GeneralFiltro.aspx", false);
 
-            strXML += "</graph>";
+            //return ChartHelper.GenerarGrafico(datos, "chart1", s_titulo + s_tipo, "pie");
+           
 
-            if (Session["tipo"].ToString() != "9")
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Pie3D.swf", "", strXML, "Sales1", "600", "250", false, true);
-            else
-                return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales2", "600", "250", false, true);
 
+            var js = new JavaScriptSerializer();
+
+            LabelsJson = js.Serialize(labels);
+            DatosJson = js.Serialize(datos);
+            TipoGrafico = js.Serialize("pie");
+            TituloJson = js.Serialize(s_titulo);
+            Subtitulo = js.Serialize(s_tipo);
 
         }
+
+        private void CreateChart2(string s_titulo)
+        {
+            string tipo = string.Empty;
+            DataTable dt  = GetDatosEstadistica("CH2");
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+            else
+                Response.Redirect("SinDatos.aspx?Desde=GeneralFiltro.aspx", false);
+
+            if (Session["tipo"].ToString() != "9") tipo = "pie";
+            else tipo = "bar";
+
+            //return ChartHelper.GenerarGrafico(datos, "chart2", s_titulo, tipo);
+
+            var js = new JavaScriptSerializer();
+
+            LabelsJson2 = js.Serialize(labels);
+            DatosJson2 = js.Serialize(datos);
+            TipoGrafico2 = js.Serialize(tipo);
+            TituloJson2 = js.Serialize(s_titulo);
+        }
+
 
         protected void gvEstadistica_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -892,5 +907,34 @@ namespace WebLab.Estadisticas
             }
             
         }
+
+        private void mostrarGraficoNuevo(string titulo, string valores, string tipo)
+        {
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            string[] arr = valores.Split(';');
+
+            foreach (string item in arr)
+            {
+                string[] items = item.Split('|');
+
+                string label = items[0];
+                int valor = int.Parse(items[1]);
+
+                labels.Add(label);
+                datos.Add(valor);
+            }
+            
+
+
+            var js = new JavaScriptSerializer();
+
+            LabelsJson = js.Serialize(labels);
+            DatosJson = js.Serialize(datos);
+            TipoGrafico = js.Serialize(tipo);
+            TituloJson = js.Serialize(titulo);
+        }
+
+
     }
 }
