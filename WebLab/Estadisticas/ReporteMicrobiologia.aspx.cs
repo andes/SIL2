@@ -52,7 +52,7 @@ namespace WebLab.Estadisticas
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -66,7 +66,7 @@ namespace WebLab.Estadisticas
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] == null)
-                    Response.Redirect("logout.aspx", false);
+                    Response.Redirect("../FinSesion.aspx", false);
                 else
                 {
                     VerificaPermisos("De Microbiologia");

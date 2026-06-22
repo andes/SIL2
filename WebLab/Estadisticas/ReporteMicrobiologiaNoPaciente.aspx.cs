@@ -51,7 +51,7 @@ namespace WebLab.Estadisticas
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));

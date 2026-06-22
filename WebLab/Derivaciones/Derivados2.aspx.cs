@@ -209,7 +209,7 @@ namespace WebLab.Derivaciones
         private void CargarItem()
         {
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 if (ddlEfector.SelectedValue != "0")
