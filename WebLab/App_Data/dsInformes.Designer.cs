@@ -3972,6 +3972,8 @@ namespace WebLab.App_Data {
             
             private global::System.Data.DataColumn _column_55_a_64_;
             
+            private global::System.Data.DataColumn _column_12_a_23_meses_;
+            
             private global::System.Data.DataColumn _column_65_a_74_;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4273,6 +4275,14 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn @__12_a_23_meses_Column {
+                get {
+                    return this._column_12_a_23_meses_;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn @__65_a_74_Column {
                 get {
                     return this._column_65_a_74_;
@@ -4350,6 +4360,7 @@ namespace WebLab.App_Data {
                         int @__6_a_11_meses_, 
                         int @__20_a_24_, 
                         int @__55_a_64_, 
+                        int @__12_a_23_meses_, 
                         int @__65_a_74_) {
                 estadisticaRow rowestadisticaRow = ((estadisticaRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
@@ -4386,6 +4397,7 @@ namespace WebLab.App_Data {
                         @__6_a_11_meses_,
                         @__20_a_24_,
                         @__55_a_64_,
+                        @__12_a_23_meses_,
                         @__65_a_74_};
                 rowestadisticaRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowestadisticaRow);
@@ -4442,6 +4454,7 @@ namespace WebLab.App_Data {
                 this._column_6_a_11_meses_ = base.Columns["[6 a 11 meses]"];
                 this._column_20_a_24_ = base.Columns["[20 a 24]"];
                 this._column_55_a_64_ = base.Columns["[55 a 64]"];
+                this._column_12_a_23_meses_ = base.Columns["[12 a 23 meses]"];
                 this._column_65_a_74_ = base.Columns["[65 a 74]"];
             }
             
@@ -4542,6 +4555,10 @@ namespace WebLab.App_Data {
                 this._column_55_a_64_.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_column_55_a_64_");
                 this._column_55_a_64_.ExtendedProperties.Add("Generator_UserColumnName", "[55 a 64]");
                 base.Columns.Add(this._column_55_a_64_);
+                this._column_12_a_23_meses_ = new global::System.Data.DataColumn("[12 a 23 meses]", typeof(int), null, global::System.Data.MappingType.Element);
+                this._column_12_a_23_meses_.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_column_12_a_23_meses_");
+                this._column_12_a_23_meses_.ExtendedProperties.Add("Generator_UserColumnName", "[12 a 23 meses]");
+                base.Columns.Add(this._column_12_a_23_meses_);
                 this._column_65_a_74_ = new global::System.Data.DataColumn("[65 a 74]", typeof(int), null, global::System.Data.MappingType.Element);
                 this._column_65_a_74_.ExtendedProperties.Add("Generator_ColumnVarNameInTable", "_column_65_a_74_");
                 this._column_65_a_74_.ExtendedProperties.Add("Generator_UserColumnName", "[65 a 74]");
@@ -12825,6 +12842,22 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public int @__12_a_23_meses_ {
+                get {
+                    try {
+                        return ((int)(this[this.tableestadistica.@__12_a_23_meses_Column]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'[12 a 23 meses]\' in table \'estadistica\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableestadistica.@__12_a_23_meses_Column] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public int @__65_a_74_ {
                 get {
                     try {
@@ -13233,6 +13266,18 @@ namespace WebLab.App_Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void Set__55_a_64_Null() {
                 this[this.tableestadistica.@__55_a_64_Column] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool Is__12_a_23_meses_Null() {
+                return this.IsNull(this.tableestadistica.@__12_a_23_meses_Column);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void Set__12_a_23_meses_Null() {
+                this[this.tableestadistica.@__12_a_23_meses_Column] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
