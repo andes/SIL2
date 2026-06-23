@@ -190,7 +190,7 @@ $(function () {
               <div  id="tab0" >   
              <asp:HiddenField ID="HFTipoMuestra" runat="server" />
                   <asp:HiddenField ID="HFMicroorganismo" runat="server" />
-                  <asp:HiddenField ID="HFResistencia" runat="server" />
+                  <asp:HiddenField ID="HFResistencia" runat="server" /> 
                         <table style="width:100%;">
               
               <tr>
@@ -221,14 +221,9 @@ $(function () {
                                     &nbsp;</td>
                             </tr>
                             <tr>
-                                <td align="left"  >
+                                <td  align="left" class="myLabelIzquierda" >
                                 <asp:ImageButton ToolTip="Ver grafico de tortas" Visible="false" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png"  OnClientClick="verGrafico('torta'); return false;"                       />
                                  &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" Visible="false" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  OnClientClick="verGrafico('barra'); return false;"                       />
-                                 <%--<asp:Button ID="btnVerGraficoTipoMuestra"  runat="server" Text="Ver Grafico" CssClass="myButtonGris" Width="100px"  
-                       OnClientClick="verGrafico(); return false;"                       />
-                                    <asp:Button ID="btnGraficoTipMuestra" runat="server" 
-                                        onclick="btnGraficoTipMuestra_Click" Text="Ver Gráfico" />--%>
-                              
                                 </td>
                                 <td align="right"  >
                                           &nbsp;</td>
@@ -289,25 +284,13 @@ $(function () {
                   </td>
                   </tr>
                   
-                        
-                            <tr>
-                                <td align="left">
-                                   
-                                    &nbsp;</td>
-
-                                <td align="right">
-                                <asp:ImageButton ID="btnGraficoMicroorganismos" runat="server" ToolTip="Ver grafico de tortas" Visible="false"
-                                        OnClientClick="verGraficoMicroorganismo('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
-                                        &nbsp;&nbsp;
-                                        <asp:ImageButton ID="btnGraficoMicroorganismos2" runat="server" ToolTip="Ver grafico de barras" Visible="false"
-                                        OnClientClick="verGraficoMicroorganismo('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
-                                
-                                    <%--<asp:Button ID="btnGraficoMicroorganismos" runat="server" CssClass="myButtonGris" Width="100px"  
-
-                                        OnClientClick="verGraficoMicroorganismo(); return false;" Text="Ver Gráfico" />--%>
-                                </td>
-
-                            </tr>
+                        <tr>
+                             <td align="right">
+                                      <asp:ImageButton ID="btnGraficoResistencia" runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  Visible="false"
+                                          OnClientClick="verGraficoResistencia(); return false;" />
+                                  </td>
+                        </tr>
+                       
                             <tr>
                                 <td align="left" colspan="2">
                                     
@@ -326,17 +309,11 @@ $(function () {
                                    
                                 </td>
                             </tr>
+                           
                             <tr>
-                                  <td align="left">
-                                      &nbsp;</td>
-                                  <td align="right">
-                                      <asp:ImageButton ID="btnGraficoResistencia" runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  Visible="false"
-                                          OnClientClick="verGraficoResistencia(); return false;" />
-                                  </td>
-                            </tr>
-                            <tr>
-                                <td align="right"   colspan="2">
-                                    <asp:ImageButton ID="imgExcel2" runat="server" ImageUrl="~/App_Themes/default/images/excelPeq.gif" onclick="imgExcel2_Click" ToolTip="Exportar a Excel Lista de Resultados" />
+                               
+                                <td align="right"  colspan="2" >
+                                    <asp:ImageButton ID="imgExcel2" runat="server" ImageUrl="~/App_Themes/default/images/excelPeq.gif" onclick="imgExcel2_Click" ToolTip="Exportar a Excel Lista de Resultados"  />
                                     Exportar a Excel
                                     </td>
                             </tr>
@@ -384,7 +361,22 @@ $(function () {
                   </td>
                   </tr>
                  
+                                 <tr>
+                                <td align="left">
+                                   
+                                    &nbsp;</td>
 
+                                <td align="right">
+                                <asp:ImageButton ID="btnGraficoMicroorganismos" runat="server" ToolTip="Ver grafico de tortas" Visible="false"
+                                        OnClientClick="verGraficoMicroorganismo('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
+                                        &nbsp;&nbsp;
+                                        <asp:ImageButton ID="btnGraficoMicroorganismos2" runat="server" ToolTip="Ver grafico de barras" Visible="false"
+                                        OnClientClick="verGraficoMicroorganismo('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
+                                
+                               
+                                </td>
+
+                            </tr>
                         
                            
                             <tr>
@@ -517,7 +509,7 @@ $(function () {
 
        
         var $this = $(this);
-        $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2" />').dialog({
+        $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2&tipoGrafico=barra" />').dialog({
             title: 'Resistencia en ATB',
             autoOpen: true,
             width:900,
@@ -531,7 +523,7 @@ $(function () {
             }
         }).width(900);
     }
-    </script>
+</script>
 
   
     </div>

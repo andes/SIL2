@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Estadisticas {
-    
-    
-    public partial class ReporteMicrobiologiaNoPaciente {
-        
+namespace WebLab.Estadisticas
+{
+
+
+    public partial class ReporteMicrobiologiaNoPaciente
+    {
+
         /// <summary>
         /// HFCurrTabIndex control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-        
+
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-        
+
         /// <summary>
         /// btnGenerar control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGenerar;
-        
+
         /// <summary>
         /// ChckOrigen control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList ChckOrigen;
-        
+
         /// <summary>
         /// pnlResultado control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlResultado;
-        
+
         /// <summary>
         /// imgPdf control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgPdf;
-        
+
         /// <summary>
         /// HFTipoMuestra control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFTipoMuestra;
-        
+
         /// <summary>
         /// HFMicroorganismo control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFMicroorganismo;
-        
+
         /// <summary>
         /// HFResistencia control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFResistencia;
-        
+
         /// <summary>
         /// gvTipoMuestra control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvTipoMuestra;
-        
+
         /// <summary>
         /// btnVerGraficoTipoMuestra control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton btnVerGraficoTipoMuestra;
-        
+
         /// <summary>
         /// btnVerGraficoTipoMuestra2 control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton btnVerGraficoTipoMuestra2;
-        
+
         /// <summary>
         /// gvSolicitante control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.GridView gvSolicitante;
-        
+
         /// <summary>
         /// ddlAnalisis control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAnalisis;
-        
+
         /// <summary>
         /// btnBuscarAislamiento control.
         /// </summary>
@@ -164,34 +166,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBuscarAislamiento;
-        
-        /// <summary>
-        /// btnGraficoMicroorganismos control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnGraficoMicroorganismos;
-        
-        /// <summary>
-        /// btnGraficoMicroorganismos2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton btnGraficoMicroorganismos2;
-        
-        /// <summary>
-        /// gvResultado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvResultado;
-        
+
         /// <summary>
         /// btnGraficoResistencia control.
         /// </summary>
@@ -200,7 +175,16 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton btnGraficoResistencia;
-        
+
+        /// <summary>
+        /// gvResultado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvResultado;
+
         /// <summary>
         /// imgExcel2 control.
         /// </summary>
@@ -209,7 +193,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgExcel2;
-        
+
         /// <summary>
         /// ddlTipoMuestra control.
         /// </summary>
@@ -218,7 +202,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoMuestra;
-        
+
         /// <summary>
         /// Button1 control.
         /// </summary>
@@ -227,7 +211,25 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Button1;
-        
+
+        /// <summary>
+        /// btnGraficoMicroorganismos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnGraficoMicroorganismos;
+
+        /// <summary>
+        /// btnGraficoMicroorganismos2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnGraficoMicroorganismos2;
+
         /// <summary>
         /// gvMicroorganismos control.
         /// </summary>

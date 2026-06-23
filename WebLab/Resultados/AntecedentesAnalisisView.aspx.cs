@@ -14,6 +14,7 @@ using Business.Data;
 using CrystalDecisions.Shared;
 using System.IO;
 using System.Configuration;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Resultados
 {
@@ -21,7 +22,12 @@ namespace WebLab.Resultados
     {
       
         Protocolo oProtocolo = new Protocolo();
-
+        public string LabelsJson { get; set; }
+        public string DatosJson { get; set; }
+        public string TipoGrafico { get; set; }
+        public string TituloJson { get; set; }
+        public string TooltipsJson { get; set; }
+        public string minimo { get; set; }
         public CrystalReportSource oCr = new CrystalReportSource();
 
         public Usuario oUser = new Usuario();
@@ -67,7 +73,7 @@ namespace WebLab.Resultados
                             if (coincideUnidadMedida(dt))
                             {
                                 string valorminimo = Math.Round(oItem.ValorMinimo, 0).ToString();
-                                FCLiteral.Text = CreateChart(dt, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
+                                 CreateChart(dt, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
                             }
                         }
                     }
@@ -102,19 +108,19 @@ namespace WebLab.Resultados
 
         }
 
-        private string CreateChart(DataTable dt, string nombre, string valorminino)
-        {
-            string strXML = "<graph caption='" + nombre.ToUpper() + "'  xAxisName='Protocolo' yAxisMinValue='" + valorminino + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
-                " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
+        //private string CreateChart(DataTable dt, string nombre, string valorminino)
+        //{
+        //    string strXML = "<graph caption='" + nombre.ToUpper() + "'  xAxisName='Protocolo' yAxisMinValue='" + valorminino + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
+        //        " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
                         
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",", ".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
-            }           
+        //    for (int i = 0; i < dt.Rows.Count; i++)
+        //    {
+        //        strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",", ".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
+        //    }           
 
-            strXML += "</graph>";
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "700", "250", false, false);
-        }
+        //    strXML += "</graph>";
+        //    return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "700", "250", false, false);
+        //}
 
 
         protected void imgPdf_Click(object sender, ImageClickEventArgs e)
@@ -220,5 +226,29 @@ namespace WebLab.Resultados
             return Ds.Tables[0];
         }
 
+        private void CreateChart(DataTable dt, string nombre, string valorminino)
+        {
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+         
+
+
+
+            var js = new JavaScriptSerializer();
+
+            LabelsJson = js.Serialize(labels);
+            DatosJson = js.Serialize(datos);
+            TipoGrafico = js.Serialize("line");
+            TituloJson = js.Serialize(nombre);
+            minimo = js.Serialize(valorminino);
+        }
     }
 }
