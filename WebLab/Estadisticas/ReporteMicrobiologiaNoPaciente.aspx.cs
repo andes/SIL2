@@ -147,6 +147,7 @@ namespace WebLab.Estadisticas
 
         private void MostrarReporteGeneral()
         {
+            // Solapa Tipo de Muestras
             DataTable dtTipoMuestra = MostrarDatos("Tipo de Muestra");
 
             DataTable dtMicroorganismo = MostrarDatos("Aislamiento");
@@ -154,15 +155,14 @@ namespace WebLab.Estadisticas
             gvTipoMuestra.DataSource =dtTipoMuestra;
             gvTipoMuestra.DataBind();
 
-            HFTipoMuestra.Value = getValoresTipoMuestra();
 
             DataTable dtOrigen = MostrarDatos("Origen");
          
 
             gvSolicitante.DataSource = dtOrigen;
             gvSolicitante.DataBind();
-
-            HFTipoMuestra.Value = getValoresTipoMuestra();
+            
+          //  HFTipoMuestra.Value = getValoresTipoMuestra(); linea duplicada 
 
             //////////////////////Solapa microorganismos
             ddlTipoMuestra.DataTextField = "Tipo Muestra";
@@ -175,15 +175,56 @@ namespace WebLab.Estadisticas
             gvMicroorganismos.DataSource = dtMicroorganismo;
             gvMicroorganismos.DataBind();
 
-            //HFMicroorganismo.Value = getValoresMicroorganismos();
+            
             //gvMicroorganismos.Visible = true;
             //lblFiltroMicroorganismo.Text = "Tipo de Muestra: " + ddlTipoMuestra.SelectedItem.Text + " - ATB: " + ddlATB.SelectedValue;
 
+            if(dtTipoMuestra.Rows.Count > 0)  // Graficos solapa Tipo de Muestras
+            {
+                HFTipoMuestra.Value = getValoresTipoMuestra();
+                btnVerGraficoTipoMuestra.Visible = true;
+                btnVerGraficoTipoMuestra2.Visible = true;
+            }
+            else
+            {
+                HFTipoMuestra.Value = "";
+                btnVerGraficoTipoMuestra.Visible = false;
+                btnVerGraficoTipoMuestra2.Visible = false;
 
+            }
+
+            if(dtMicroorganismo.Rows.Count > 0) // Graficos solapa Aislamiento
+            {
+                HFMicroorganismo.Value = getValoresMicroorganismos();
+                btnGraficoMicroorganismos.Visible = true;
+                btnGraficoMicroorganismos2.Visible = true;
+            }
+            else
+            {
+                HFMicroorganismo.Value = "";
+               btnGraficoMicroorganismos.Visible = false;
+               btnGraficoMicroorganismos2.Visible = false;
+            }
+
+           
         }
 
+        private string getValoresMicroorganismos()
+        {
+            string s_valores = "";
 
+            for (int i = 0; i < gvSolicitante.Rows.Count; i++)
+            {
+                string s_nombre = gvSolicitante.Rows[i].Cells[0].Text.Replace(";", "");
+                s_nombre = s_nombre.Replace("&#", "");
+                if (s_valores == "")
+                    s_valores = s_nombre + "|" + gvSolicitante.Rows[i].Cells[1].Text;
+                else
+                    s_valores += ";" + s_nombre + "|" + gvSolicitante.Rows[i].Cells[1].Text;
+            }
 
+            return s_valores;
+        }
 
         private string getValoresTipoMuestra()
         {
@@ -194,9 +235,9 @@ namespace WebLab.Estadisticas
                     string s_nombre = gvTipoMuestra.Rows[i].Cells[0].Text.Replace(";", "");
                     s_nombre = s_nombre.Replace("&#", "");
                     if (s_valores=="")
-                        s_valores = "name='" + s_nombre + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "'";
+                        s_valores =  s_nombre + "|" + gvTipoMuestra.Rows[i].Cells[1].Text;
                     else
-                        s_valores += ";" + "name='" + s_nombre + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "'";
+                        s_valores += ";" + s_nombre + "|" + gvTipoMuestra.Rows[i].Cells[1].Text ;
                 }
                 
             return  s_valores;
@@ -539,14 +580,37 @@ namespace WebLab.Estadisticas
 
         protected void btnBuscarAislamiento_Click(object sender, EventArgs e)
         {
-           
+           //Solapa resultados
             DataTable dt = MostrarDatos("Resultados");
 
             gvResultado.DataSource =dt;
             gvResultado.DataBind();
-          
-            
 
+            if (dt.Rows.Count > 0)
+            {
+                string s_valores = "";
+                //Utility u = new Utility();
+                for (int i = 0; i < gvResultado.Rows.Count; i++)
+                {
+                    string s_nombre = gvResultado.Rows[i].Cells[1].Text.Replace(";", "");
+                    //s_nombre = u.
+                    if (s_valores == "")
+                        s_valores = s_nombre + "|" + gvResultado.Rows[i].Cells[2].Text;
+                    else
+                        s_valores += ";" + s_nombre + "|" + gvResultado.Rows[i].Cells[2].Text;
+                }
+
+                HFResistencia.Value = s_valores;
+                btnGraficoResistencia.Visible = true;
+            }
+            else
+            { 
+                btnGraficoResistencia.Visible = false;
+                HFResistencia.Value = "";
+            }
+
+            
+        
             SetSelectedTab(TabIndex.TWO);
             
         }
@@ -624,7 +688,11 @@ namespace WebLab.Estadisticas
 
             gvMicroorganismos.DataSource = dt;
             gvMicroorganismos.DataBind();
-            //HFMicroorganismo.Value = getValoresMicroorganismos();
+            if(dt.Rows.Count > 0)
+            {
+                HFMicroorganismo.Value = getValoresMicroorganismos();
+
+            }
             SetSelectedTab(TabIndex.THREE);
         }
     }

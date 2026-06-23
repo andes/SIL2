@@ -450,13 +450,15 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
                 ddlEfectorSolicitante.Items.Insert(0, new ListItem("--Todos--", "0"));
             }
 
-
-            m_ssql = @"SELECT distinct I.idItem, I.nombre FROM  LAB_Agenda A with (nolock)
+            if (ddlTipoServicio.Items.Count > 0) //25.06.2026. Si no existe agenda previa no carga ddlTipoServicio
+            {
+                m_ssql = @"SELECT distinct I.idItem, I.nombre FROM  LAB_Agenda A with (nolock)
                     INNER JOIN LAB_Item I with (nolock) ON A.idItem = I.idItem where A.baja=0 and I.baja=0  " + m_filtro
-                    + " and idTipoServicio="+ddlTipoServicio.SelectedValue; //and A.fechaDesde>='" + fecha.ToString("yyyyMMdd") + "'";
-            oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
-            ddlItem.Items.Insert(0, new ListItem("--Seleccione práctica--", "0"));
-            if (Session["idItem"] != null) ddlItem.SelectedValue = Session["idItem"].ToString();
+                        + " and idTipoServicio=" + ddlTipoServicio.SelectedValue; //and A.fechaDesde>='" + fecha.ToString("yyyyMMdd") + "'";
+                oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
+                ddlItem.Items.Insert(0, new ListItem("--Seleccione práctica--", "0"));
+                if (Session["idItem"] != null) ddlItem.SelectedValue = Session["idItem"].ToString();
+            }
 
             m_ssql = null;
             oUtil = null;
@@ -505,8 +507,8 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
                 case "Sin Protocolo": m_Condicion += " and T.idProtocolo=0"; break;
                 case "Turnos Eliminados": m_Condicion += " and T.baja=1"; break;
             }
-            //if (ddlItem.SelectedValue != "0") 
-            m_Condicion +=  " AND T.IdItem=" + ddlItem.SelectedValue ;
+            if (ddlItem.Items.Count > 0) //23.06.2026 Si no existe agenda previa no carga ddlItem
+                m_Condicion +=  " AND T.IdItem=" + ddlItem.SelectedValue ;
             if (ddlEfectorSolicitante.SelectedValue!="0")
                 m_Condicion += " AND T.IdEfectorSolicitante=" + ddlEfectorSolicitante.SelectedValue;
 
