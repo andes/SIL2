@@ -46,11 +46,11 @@ namespace WebLab.Resultados
         }
         protected void Page_Unload(object sender, EventArgs e)
         {
-            if (this.oCr.ReportDocument != null)
-            {
-                this.oCr.ReportDocument.Close();
-                this.oCr.ReportDocument.Dispose();
-            }
+            //if (this.oCr.ReportDocument != null)
+            //{
+            //    this.oCr.ReportDocument.Close();
+            //    this.oCr.ReportDocument.Dispose();
+            //}
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -73,7 +73,7 @@ namespace WebLab.Resultados
                             if (coincideUnidadMedida(dt))
                             {
                                 string valorminimo = Math.Round(oItem.ValorMinimo, 0).ToString();
-                                 CreateChart(dt, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
+                                 CreateChart(dt, oItem.Nombre, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
                             }
                         }
                     }
@@ -226,16 +226,28 @@ namespace WebLab.Resultados
             return Ds.Tables[0];
         }
 
-        private void CreateChart(DataTable dt, string nombre, string valorminino)
+        private void CreateChart(DataTable dt, string analisis,string titulo, string valorminino)
         {
             List<string> labels = new List<string>();
-            List<int> datos = new List<int>();
+            List<decimal> datos = new List<decimal>();
+            List<string> datosString = new List<string>();
             if (dt.Rows.Count > 0)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    labels.Add(dt.Rows[i][0].ToString());
-                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                    labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
+                    if (int.Parse(dt.Rows[i][9].ToString()) == 1) //Valor del analisis en formato decimal
+                    {
+                        decimal.TryParse(
+                                dt.Rows[i][4].ToString(),
+                                System.Globalization.NumberStyles.Any,
+                                System.Globalization.CultureInfo.InvariantCulture,
+                                out decimal numero
+                            );
+                        datos.Add(numero);
+                    }
+                    else
+                        datosString.Add(dt.Rows[i][4].ToString());
                 }
             }
          
@@ -245,9 +257,9 @@ namespace WebLab.Resultados
             var js = new JavaScriptSerializer();
 
             LabelsJson = js.Serialize(labels);
-            DatosJson = js.Serialize(datos);
+            if(datos.Count >0) DatosJson = js.Serialize(datos); else DatosJson = js.Serialize(datosString);
             TipoGrafico = js.Serialize("line");
-            TituloJson = js.Serialize(nombre);
+            TituloJson = js.Serialize(titulo);
             minimo = js.Serialize(valorminino);
         }
     }
