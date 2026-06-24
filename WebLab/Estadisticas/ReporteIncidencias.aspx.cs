@@ -15,6 +15,7 @@ using InfoSoftGlobal;
 using Business.Data.Laboratorio;
 using Business.Data;
 using System.Configuration;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
@@ -25,6 +26,21 @@ namespace WebLab.Estadisticas
         public Usuario oUser = new Usuario();
 
         int suma1 = 0; int suma2 = 0;
+
+        #region grafico
+        public string LabelsJson { get; set; }
+        public string DatosJson { get; set; }
+        public string TipoGrafico { get; set; }
+        public string TituloJson { get; set; }
+        public string TooltipsJson { get; set; }
+        public string Subtitulo { get; set; }
+
+        public string LabelsJson2 { get; set; }
+        public string DatosJson2 { get; set; }
+        public string TipoGrafico2 { get; set; }
+        public string TituloJson2 { get; set; }
+        public string TooltipsJson2 { get; set; }
+        #endregion
         protected void Page_PreInit(object sender, EventArgs e)
         {
             //oCr.CacheDuration = 0;
@@ -118,16 +134,14 @@ namespace WebLab.Estadisticas
 
             if (dt1.Rows.Count > 0)
             {
-                //Literal1.Text = mostrarGrafico(dt1, "", "grafico1");
-             //  Literal2.Text = mostrarGrafico1(dt1, "Muestras recibidas por efector");
+                mostrarGrafico(dt1, "Muestras recibidas por efector");
             }
             DataTable dt2 = LeerIncidencias("1");
             gvProtocolos.DataSource = dt2;
             gvProtocolos.DataBind();
             if (dt2.Rows.Count > 0)
             {
-                //Literal2.Text = mostrarGrafico(dt2, "", "grafico2");
-                //  Literal2.Text = mostrarGrafico1(dt1, "Muestras recibidas por efector");
+                 mostrarGrafico(dt2,"Muestras recibidas por efector");
             }
             if ((GridView1.Rows.Count > 0) || (gvProtocolos.Rows.Count > 0))
             {
@@ -140,14 +154,33 @@ namespace WebLab.Estadisticas
                 pnlMensaje.Visible = true;
             }
         }
-        private string mostrarGrafico(DataTable dt1, string s_titulo, string id)
+        private void mostrarGrafico(DataTable dt, string s_titulo)
         {
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf"; 
-            string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='20'  decimalPrecision='0' showNames='1'>";
-            for (int i = 0; i < dt1.Rows.Count; i++)
-                strXML += "<set name='" + dt1.Rows[i][0].ToString().Replace("\r\n", "") + "' value='" + dt1.Rows[i][1].ToString() + "' />";//.Substring(2, 4)
-            strXML += "</graph>";
-            return FusionCharts.RenderChart(s_tipografico, "2", strXML, id, "500", "300", false, false);
+            //string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+            //string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='20'  decimalPrecision='0' showNames='1'>";
+            //for (int i = 0; i < dt1.Rows.Count; i++)
+            //    strXML += "<set name='" + dt1.Rows[i][0].ToString().Replace("\r\n", "") + "' value='" + dt1.Rows[i][1].ToString() + "' />";//.Substring(2, 4)
+            //strXML += "</graph>";
+            //return FusionCharts.RenderChart(s_tipografico, "2", strXML, id, "500", "300", false, false);
+
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+           
+            var js = new JavaScriptSerializer();
+
+            LabelsJson = js.Serialize(labels);
+            DatosJson = js.Serialize(datos);
+            TipoGrafico = js.Serialize("pie");
+            TituloJson = js.Serialize(s_titulo);
+
         }     
         private DataTable LeerIncidencias(string s_tipo)
         {

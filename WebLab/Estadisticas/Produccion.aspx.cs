@@ -161,10 +161,10 @@ namespace WebLab.Estadisticas
         {
             DataTable dt   = GetDataSet();
 
-              gvEstadistica.DataSource = dt;
-                gvEstadistica.DataBind();
-
-            Utility.ExportGridViewToExcel(gvEstadistica, "estadisticaProduccionTotal");
+              //gvEstadistica.DataSource = dt;
+              //  gvEstadistica.DataBind();
+            Utility.ExportDataTableToXlsx(dt, "estadisticaProduccionTotal");
+            //Utility.ExportGridViewToExcel(gvEstadistica, "estadisticaProduccionTotal");
                /* StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
                 HtmlTextWriter htw = new HtmlTextWriter(sw);

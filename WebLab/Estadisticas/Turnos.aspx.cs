@@ -19,6 +19,8 @@ using System.IO;
 using CrystalDecisions.Web;
 using System.Text;
 using Business.Data;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
@@ -29,8 +31,14 @@ namespace WebLab.Estadisticas
         public Configuracion oCon = new Configuracion();
         public Usuario oUser = new Usuario();
 
-
-
+        #region grafico
+        public string LabelsJson { get; set; }
+        public string DatosJson { get; set; }
+        public string TipoGrafico { get; set; }
+        public string TituloJson { get; set; }
+        public string TooltipsJson { get; set; }
+        public string Subtitulo { get; set; }
+        #endregion
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -173,7 +181,7 @@ namespace WebLab.Estadisticas
                 gvLista.DataSource = dt;
                 gvLista.DataBind();
 
-               // FCLiteral.Text = CreateChart1(dt);
+               CreateChart1(dt);
             }
             else
             {
@@ -395,6 +403,28 @@ namespace WebLab.Estadisticas
 
                 
             
+        }
+
+        private void CreateChart1(DataTable dt)
+        {
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+
+
+            var js = new JavaScriptSerializer();
+
+            LabelsJson = js.Serialize(labels);
+            DatosJson = js.Serialize(datos);
+            TipoGrafico = js.Serialize("pie");
+            TituloJson = js.Serialize("Asistencias de turnos dados");
         }
     }
 }
