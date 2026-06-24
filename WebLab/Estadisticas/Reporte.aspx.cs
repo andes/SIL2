@@ -38,6 +38,7 @@ namespace WebLab.Estadisticas
         int col1 = 0;
         Usuario oUser = new Usuario();
 
+        #region grafico
         public string LabelsJson { get; set; }
         public string DatosJson { get; set; }
         public string TipoGrafico { get; set; }
@@ -50,7 +51,7 @@ namespace WebLab.Estadisticas
         public string TipoGrafico2 { get; set; }
         public string TituloJson2 { get; set; }
         public string TooltipsJson2 { get; set; }
-
+        #endregion
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -158,8 +159,9 @@ namespace WebLab.Estadisticas
                         gvEstadistica.ShowFooter = false;
                     }
                     break;
+                    //Me falta le case 11  <asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
             }
-         
+
             lblFiltro.Text= Session["fechaDesde"].ToString() + " - " + Session["fechaHasta"].ToString()+ " " + s_tituloAdicional;
             
             if (Session["grafico"].ToString() == "1") pnlGrafico.Visible = false;
@@ -479,7 +481,7 @@ namespace WebLab.Estadisticas
                 case "8": cmd.CommandText = "LAB_EstadisticaPorSector"; break;
                 case "9": cmd.CommandText = "LAB_EstadisticaRankingDia"; break;
                 case "10": cmd.CommandText = "LAB_EstadisticaPorHorario"; break;
-
+                    // falta el case 11...<asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
             }
 
 
@@ -582,6 +584,8 @@ namespace WebLab.Estadisticas
                 Response.Redirect("PorResultado.aspx", false);
 
         }
+
+        #region grafico2
         private void CreateChart1(string s_titulo, string s_tipo)
         {
             DataTable dt =  GetDatosEstadistica("CH1");
@@ -641,6 +645,7 @@ namespace WebLab.Estadisticas
             TipoGrafico2 = js.Serialize(tipo);
             TituloJson2 = js.Serialize(s_titulo);
         }
+        #endregion
 
 
         protected void gvEstadistica_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -907,34 +912,5 @@ namespace WebLab.Estadisticas
             }
             
         }
-
-        private void mostrarGraficoNuevo(string titulo, string valores, string tipo)
-        {
-            List<string> labels = new List<string>();
-            List<int> datos = new List<int>();
-            string[] arr = valores.Split(';');
-
-            foreach (string item in arr)
-            {
-                string[] items = item.Split('|');
-
-                string label = items[0];
-                int valor = int.Parse(items[1]);
-
-                labels.Add(label);
-                datos.Add(valor);
-            }
-            
-
-
-            var js = new JavaScriptSerializer();
-
-            LabelsJson = js.Serialize(labels);
-            DatosJson = js.Serialize(datos);
-            TipoGrafico = js.Serialize(tipo);
-            TituloJson = js.Serialize(titulo);
-        }
-
-
     }
 }

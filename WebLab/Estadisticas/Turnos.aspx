@@ -10,7 +10,7 @@
   <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
     
       <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
-      
+        <script type="text/javascript" src="../script/chart/chart.js"></script>
       <script type="text/javascript"> 
      
 
@@ -124,6 +124,12 @@
                                 Visible="False">
                                  <table style="width:100%;">
                                      <tr>
+                                           <td>
+                                         <%--    <asp:Literal ID="FCLiteral" runat="server"></asp:Literal>--%>
+                                             <canvas id="miGrafico"></canvas>
+                                         </td>
+                                     </tr>
+                                     <tr>
                                          <td style="vertical-align: top">
                                              <asp:GridView ID="gvLista" runat="server" CellPadding="4" ForeColor="#333333" CssClass="table table-bordered bs-table"  Width="100%"  GridLines="None">
                                                  <RowStyle BackColor="#EFF3FB" />
@@ -135,9 +141,7 @@
                                                  <AlternatingRowStyle BackColor="White" />
                                              </asp:GridView>
                                          </td>
-                                         <td>
-                                         <%--    <asp:Literal ID="FCLiteral" runat="server"></asp:Literal>--%>
-                                         </td>
+                                       
                                      </tr>
                                      <tr>
                                          <td colspan="2">
@@ -167,5 +171,95 @@
        </div>
 
       </div>
- 
+    <script type="text/javascript">
+
+        function arrayVacio(arr) {
+            if (!Array.isArray(arr) || arr.length === 0) {
+                return true;
+            }
+
+            return arr.every(elemento => elemento === 0);
+        }
+
+        const ctx = document.getElementById('miGrafico');
+
+
+        var labels = <%= string.IsNullOrEmpty(LabelsJson) ? "[]" : LabelsJson %>;
+        var datos = <%= string.IsNullOrEmpty(DatosJson) ? "[]" : DatosJson %>;
+       
+        if (arrayVacio(datos)) {
+            document.getElementById('miGrafico').style.display = 'none';
+        }
+        else {
+
+            var tipo = <%= string.IsNullOrEmpty(TipoGrafico) ? "\"pie\"" : TipoGrafico %>;
+                var titulo = <%= string.IsNullOrEmpty(TituloJson) ? "\"\"" : TituloJson %>;
+                var subtitulo = <%= string.IsNullOrEmpty(Subtitulo) ? "\"\"" : Subtitulo %>;
+
+                var colores = [
+                    '#1E88E5', // azul
+                    '#E53935', // rojo
+                    '#43A047', // verde
+                    '#FB8C00', // naranja
+                    '#8E24AA', // violeta
+                    '#00ACC1', // cyan
+                    '#FDD835', // amarillo
+                    '#6D4C41', // marron
+                    '#3949AB', // indigo
+                    '#D81B60', // rosa fuerte
+                    '#7CB342', // verde lima
+                    '#5E35B1', // violeta oscuro
+                    '#00897B', // teal
+                    '#EF6C00', // naranja oscuro
+                    '#C0CA33', // lima
+                    '#546E7A', // gris azulado
+                    '#8D6E63', // cafe claro
+                    '#EC407A', // rosa
+                    '#26A69A', // verde agua
+                    '#7E57C2', // lavanda
+                    '#FFA726', // naranja claro
+                    '#66BB6A', // verde claro
+                    '#29B6F6', // celeste
+                    '#FF7043', // coral
+                    '#9CCC65', // verde pastel
+                    '#AB47BC', // purpura
+                    '#26C6DA', // turquesa
+                    '#FFCA28', // amarillo fuerte
+                    '#BDBDBD', // gris
+                    '#8BC34A'  // verde manzana
+                ];
+
+                var opciones = {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: titulo
+                        },
+                        subtitle: {
+                            display: true,
+                            text: subtitulo
+                        }
+                    }
+                };
+
+
+
+                new Chart(ctx, {
+                    type: tipo,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: titulo,
+                            data: datos,
+                            backgroundColor: colores.slice(0, datos.length) //usa solamente la cantidad necesaria,evita repeticiones, y mantiene sincronizados labels ↔ colores.
+                        }]
+                    },
+                    options: opciones
+                });
+
+        }
+
+    </script>
+
+   
  </asp:Content>
