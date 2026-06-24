@@ -22,82 +22,7 @@
             }
      
   </script>                  
-    <script type="text/javascript">
-        const ctx = document.getElementById('miGrafico');
-
-
-        var labels = <%= string.IsNullOrEmpty(LabelsJson) ? "[]" : LabelsJson %>;
-        var datos = <%= string.IsNullOrEmpty(DatosJson) ? "[]" : DatosJson %>;
-
-        if (!datos || datos.length === 0) {
-            document.getElementById('miGrafico').style.display = 'none';
-        }
-        else {
-
-                var tipo = <%= string.IsNullOrEmpty(TipoGrafico) ? "\"pie\"" : TipoGrafico %>;
-                var titulo = <%= string.IsNullOrEmpty(TituloJson) ? "\"\"" : TituloJson %>;
-                var valorMinimo =  <%= string.IsNullOrEmpty(minimo) ? "\"\"" : minimo %>;
-                var colores = [
-                    '#1E88E5', // azul
-                    '#E53935', // rojo
-                    '#43A047', // verde
-                    '#FB8C00', // naranja
-                    '#8E24AA', // violeta
-                    '#00ACC1', // cyan
-                    '#FDD835', // amarillo
-                    '#6D4C41', // marron
-                    '#3949AB', // indigo
-                    '#D81B60', // rosa fuerte
-                    '#7CB342', // verde lima
-                    '#5E35B1', // violeta oscuro
-                    '#00897B', // teal
-                    '#EF6C00', // naranja oscuro
-                    '#C0CA33', // lima
-                    '#546E7A', // gris azulado
-                    '#8D6E63', // cafe claro
-                    '#EC407A', // rosa
-                    '#26A69A', // verde agua
-                    '#7E57C2', // lavanda
-                    '#FFA726', // naranja claro
-                    '#66BB6A', // verde claro
-                    '#29B6F6', // celeste
-                    '#FF7043', // coral
-                    '#9CCC65', // verde pastel
-                    '#AB47BC', // purpura
-                    '#26C6DA', // turquesa
-                    '#FFCA28', // amarillo fuerte
-                    '#BDBDBD', // gris
-                    '#8BC34A'  // verde manzana
-                ];
-
-                var opciones = {   plugins: { } };
-
-                if (valorMinimo !== null && valorMinimo !== undefined) {
-                    opciones.scales = {
-                        y: {
-                            min: valorMinimo
-                        }
-                    };
-                }
-                new Chart(ctx, {
-                    type: tipo,
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: titulo,
-                            data: datos,
-                            backgroundColor: colores.slice(0, datos.length) //usa solamente la cantidad necesaria,evita repeticiones, y mantiene sincronizados labels ↔ colores.
-                        }]
-                    },
-                    options: opciones
-                });
-
-            }
-
-    </script>
-
-
- 
+   
 </head>
 
 <body> 
@@ -119,7 +44,7 @@
                <asp:Panel ID="pnlGrafico" runat="server">
                      <hr />
 
-                   <div >
+                   <div style="width:450px; height:450px">
                         <canvas  id="miGrafico" ></canvas> 
                   </div>
              </asp:Panel>     
@@ -156,7 +81,63 @@
              </div>
     </div>
                                                
-    
+     <script type="text/javascript">
+         const ctx = document.getElementById('miGrafico');
+
+
+         var labels = <%= string.IsNullOrEmpty(LabelsJson) ? "[]" : LabelsJson %>;
+         var datos = <%= string.IsNullOrEmpty(DatosJson) ? "[]" : DatosJson %>;
+
+         if (!datos || datos.length === 0) {
+             document.getElementById('miGrafico').style.display = 'none';
+         }
+         else {
+
+             var tipo = <%= string.IsNullOrEmpty(TipoGrafico) ? "\"pie\"" : TipoGrafico %>;
+                var titulo = <%= string.IsNullOrEmpty(TituloJson) ? "\"\"" : TituloJson %>;
+                var valorMinimo =  <%= string.IsNullOrEmpty(minimo) ? "\"\"" : minimo %>;
+            
+             var opciones = { plugins: {} };
+
+             if (valorMinimo !== null && valorMinimo !== undefined) {
+                 opciones.scales = {
+                     x: {
+                         title: {
+                             display:true, text: 'Protocolo'
+                         }
+                     },
+                     y: {
+                         min: valorMinimo,
+                         ticks: {
+                             callback: function (value) { return Number(value).toFixed(2);} //para que tenga solo dos decimales despues de la coma
+                         },
+                         title: {
+                             display: true, text: 'Resultado'
+                         }
+                     }
+                 };
+             }
+             console.log(ctx);
+             console.log(document.getElementById('miGrafico'));
+             new Chart(ctx, {
+                 type: tipo,
+                 data: {
+                     labels: labels,
+                     datasets: [{
+                         label: titulo,
+                         data: datos,
+                         backgroundColor:'#1E88E5' //siempre el mismo color
+                     }]
+                 },
+                 options: opciones
+             });
+
+         }
+
+     </script>
+
+
+ 
   
     </form> 
      </div>
