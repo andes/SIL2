@@ -46,11 +46,11 @@ namespace WebLab.Resultados
         }
         protected void Page_Unload(object sender, EventArgs e)
         {
-            //if (this.oCr.ReportDocument != null)
-            //{
-            //    this.oCr.ReportDocument.Close();
-            //    this.oCr.ReportDocument.Dispose();
-            //}
+            if (this.oCr.ReportDocument != null)
+            {
+                this.oCr.ReportDocument.Close();
+                this.oCr.ReportDocument.Dispose();
+            }
         }
         protected void Page_Load(object sender, EventArgs e)
         {
