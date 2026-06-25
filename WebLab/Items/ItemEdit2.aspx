@@ -22,10 +22,10 @@
 <script type="text/javascript">
   $(function() {
 
-                 $("#tabContainer").tabs();
-                        var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
-                      
-                        $("#tabContainer").tabs({ selected: currTab });
+    $("#tabContainer").tabs();
+    var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
+    $("#tabContainer").tabs('select', parseInt(currTab)); // Cuando usamos jQuery UI 1.8.1 tenemos que usar el metodo 'select'
+
              });
     function confirmarLimiteTurnos() {
         var idEfector = $("#<%= HFEfector.ClientID %>").val();
@@ -34,7 +34,7 @@
             else {  return false; }
         } else { return true; }
     }
-</script>
+    </script>
    
   
    
@@ -683,7 +683,7 @@
                                     Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal" 
                                    
                                     TabIndex="9" Width="100%"  
-                                       UpdateAfterCallBack="True" OnRowDataBound="gvMuestraItem_RowDataBound" OnRowCommand="gvMuestraItem_RowCommand">
+                                        UpdateAfterCallBack="True" OnRowDataBound="gvMuestraItem_RowDataBound" OnRowCommand="gvMuestraItem_RowCommand">
                                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
                                     <Columns>                                        
                                         <asp:BoundField DataField="muestra" HeaderText="Muestra">                                        
