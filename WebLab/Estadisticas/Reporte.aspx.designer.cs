@@ -69,6 +69,24 @@ namespace WebLab.Estadisticas
         protected global::System.Web.UI.WebControls.Panel pnlGrafico;
 
         /// <summary>
+        /// miGrafico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico;
+
+        /// <summary>
+        /// miGrafico10 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico10;
+
+        /// <summary>
         /// lblInforme control.
         /// </summary>
         /// <remarks>

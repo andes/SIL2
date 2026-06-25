@@ -37,22 +37,6 @@ namespace WebLab.Estadisticas
 
         int col1 = 0;
         Usuario oUser = new Usuario();
-
-        #region grafico
-        public string LabelsJson { get; set; }
-        public string DatosJson { get; set; }
-        public string TipoGrafico { get; set; }
-        public string TituloJson { get; set; }
-        public string TooltipsJson { get; set; }  
-        public string Subtitulo { get; set; }
-
-        public string LabelsJson2 { get; set; }
-        public string DatosJson2 { get; set; }
-        public string TipoGrafico2 { get; set; }
-        public string TituloJson2 { get; set; }
-        public string TooltipsJson2 { get; set; }
-        #endregion
-
         protected void Page_PreInit(object sender, EventArgs e)
         {
             oCr.Report.FileName = "";
@@ -608,11 +592,11 @@ namespace WebLab.Estadisticas
 
             var js = new JavaScriptSerializer();
 
-            LabelsJson = js.Serialize(labels);
-            DatosJson = js.Serialize(datos);
-            TipoGrafico = js.Serialize("pie");
-            TituloJson = js.Serialize(s_titulo);
-            Subtitulo = js.Serialize(s_tipo);
+            miGrafico.LabelsJson = js.Serialize(labels);
+            miGrafico.DatosJson = js.Serialize(datos);
+            miGrafico.TipoGrafico = js.Serialize("pie");
+            miGrafico.TituloJson = js.Serialize(s_titulo);
+            miGrafico.Subtitulo = js.Serialize(s_tipo);
 
         }
 
@@ -640,10 +624,10 @@ namespace WebLab.Estadisticas
 
             var js = new JavaScriptSerializer();
 
-            LabelsJson2 = js.Serialize(labels);
-            DatosJson2 = js.Serialize(datos);
-            TipoGrafico2 = js.Serialize(tipo);
-            TituloJson2 = js.Serialize(s_titulo);
+            miGrafico10.LabelsJson = js.Serialize(labels);
+            miGrafico10.DatosJson = js.Serialize(datos);
+            miGrafico10.TipoGrafico = js.Serialize(tipo);
+            miGrafico10.TituloJson = js.Serialize(s_titulo);
         }
         #endregion
 

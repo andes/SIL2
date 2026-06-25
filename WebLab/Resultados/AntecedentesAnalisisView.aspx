@@ -1,14 +1,14 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AntecedentesAnalisisView.aspx.cs" Inherits="WebLab.Resultados.AntecedentesAnalisisView" %>
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>       
   
      <link rel="stylesheet" type="text/css" href="../App_Themes/default/style.css" />
      <link rel="stylesheet" type="text/css" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" />
      <script src="../bootstrap-3.3.7-dist/js/jquery.min.js"></script>  
-     <script type="text/javascript" src="../script/chart/chart.js"></script>
+    
 
       <script type="text/javascript">
 
@@ -44,10 +44,11 @@
                <asp:Panel ID="pnlGrafico" runat="server">
                      <hr />
 
-                   <div style="width:450px; height:450px">
-                        <canvas  id="miGrafico" ></canvas> 
+                   <div style="width:auto; height:auto">
+                          <uc:GraficoChart ID="miGrafico" runat="server" /> 
                   </div>
-             </asp:Panel>     
+             </asp:Panel>  
+             <hr />
               <div>
                 <asp:GridView ID="gvHistorico" runat="server" AutoGenerateColumns="False" 
                      DataKeyNames="idProtocolo" Width="100%"  EmptyDataText="No se encontraron datos para los filtros de búsqueda ingresados"  
@@ -80,65 +81,6 @@
                 </asp:GridView>
              </div>
     </div>
-                                               
-     <script type="text/javascript">
-         const ctx = document.getElementById('miGrafico');
-
-
-         var labels = <%= string.IsNullOrEmpty(LabelsJson) ? "[]" : LabelsJson %>;
-         var datos = <%= string.IsNullOrEmpty(DatosJson) ? "[]" : DatosJson %>;
-
-         if (!datos || datos.length === 0) {
-             document.getElementById('miGrafico').style.display = 'none';
-         }
-         else {
-
-             var tipo = <%= string.IsNullOrEmpty(TipoGrafico) ? "\"pie\"" : TipoGrafico %>;
-                var titulo = <%= string.IsNullOrEmpty(TituloJson) ? "\"\"" : TituloJson %>;
-                var valorMinimo =  <%= string.IsNullOrEmpty(minimo) ? "\"\"" : minimo %>;
-            
-             var opciones = { plugins: {} };
-
-             if (valorMinimo !== null && valorMinimo !== undefined) {
-                 opciones.scales = {
-                     x: {
-                         title: {
-                             display:true, text: 'Protocolo'
-                         }
-                     },
-                     y: {
-                         min: valorMinimo,
-                         ticks: {
-                             callback: function (value) { return Number(value).toFixed(2);} //para que tenga solo dos decimales despues de la coma
-                         },
-                         title: {
-                             display: true, text: 'Resultado'
-                         }
-                     }
-                 };
-             }
-             console.log(ctx);
-             console.log(document.getElementById('miGrafico'));
-             new Chart(ctx, {
-                 type: tipo,
-                 data: {
-                     labels: labels,
-                     datasets: [{
-                         label: titulo,
-                         data: datos,
-                         backgroundColor:'#1E88E5' //siempre el mismo color
-                     }]
-                 },
-                 options: opciones
-             });
-
-         }
-
-     </script>
-
-
- 
-  
     </form> 
      </div>
 </body>

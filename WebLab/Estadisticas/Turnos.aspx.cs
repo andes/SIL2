@@ -31,14 +31,7 @@ namespace WebLab.Estadisticas
         public Configuracion oCon = new Configuracion();
         public Usuario oUser = new Usuario();
 
-        #region grafico
-        public string LabelsJson { get; set; }
-        public string DatosJson { get; set; }
-        public string TipoGrafico { get; set; }
-        public string TituloJson { get; set; }
-        public string TooltipsJson { get; set; }
-        public string Subtitulo { get; set; }
-        #endregion
+       
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -421,10 +414,10 @@ namespace WebLab.Estadisticas
 
             var js = new JavaScriptSerializer();
 
-            LabelsJson = js.Serialize(labels);
-            DatosJson = js.Serialize(datos);
-            TipoGrafico = js.Serialize("pie");
-            TituloJson = js.Serialize("Asistencias de turnos dados");
+            chartTurnos.LabelsJson = js.Serialize(labels);
+            chartTurnos.DatosJson = js.Serialize(datos);
+            chartTurnos.TipoGrafico = js.Serialize("pie");
+            chartTurnos.TituloJson = js.Serialize("Asistencias de turnos dados");
         }
     }
 }

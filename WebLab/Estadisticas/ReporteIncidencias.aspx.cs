@@ -26,21 +26,6 @@ namespace WebLab.Estadisticas
         public Usuario oUser = new Usuario();
 
         int suma1 = 0; int suma2 = 0;
-
-        #region grafico
-        public string LabelsJson { get; set; }
-        public string DatosJson { get; set; }
-        public string TipoGrafico { get; set; }
-        public string TituloJson { get; set; }
-        public string TooltipsJson { get; set; }
-        public string Subtitulo { get; set; }
-
-        public string LabelsJson2 { get; set; }
-        public string DatosJson2 { get; set; }
-        public string TipoGrafico2 { get; set; }
-        public string TituloJson2 { get; set; }
-        public string TooltipsJson2 { get; set; }
-        #endregion
         protected void Page_PreInit(object sender, EventArgs e)
         {
             //oCr.CacheDuration = 0;
@@ -134,14 +119,14 @@ namespace WebLab.Estadisticas
 
             if (dt1.Rows.Count > 0)
             {
-                mostrarGrafico(dt1, "Muestras recibidas por efector");
+                mostrarGrafico(dt1, "Muestras recibidas por efector",1);
             }
             DataTable dt2 = LeerIncidencias("1");
             gvProtocolos.DataSource = dt2;
             gvProtocolos.DataBind();
             if (dt2.Rows.Count > 0)
             {
-                 mostrarGrafico(dt2,"Muestras recibidas por efector");
+                 mostrarGrafico(dt2,"Muestras recibidas por efector",2);
             }
             if ((GridView1.Rows.Count > 0) || (gvProtocolos.Rows.Count > 0))
             {
@@ -154,7 +139,7 @@ namespace WebLab.Estadisticas
                 pnlMensaje.Visible = true;
             }
         }
-        private void mostrarGrafico(DataTable dt, string s_titulo)
+        private void mostrarGrafico(DataTable dt, string s_titulo, int tipo)
         {
             //string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
             //string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='20'  decimalPrecision='0' showNames='1'>";
@@ -176,10 +161,21 @@ namespace WebLab.Estadisticas
            
             var js = new JavaScriptSerializer();
 
-            LabelsJson = js.Serialize(labels);
-            DatosJson = js.Serialize(datos);
-            TipoGrafico = js.Serialize("pie");
-            TituloJson = js.Serialize(s_titulo);
+            if(tipo == 1)
+            {
+                miGrafico1.LabelsJson = js.Serialize(labels);
+                miGrafico1.DatosJson = js.Serialize(datos);
+                miGrafico1.TipoGrafico = js.Serialize("pie");
+                miGrafico1.TituloJson = js.Serialize(s_titulo);
+            }
+            else
+            {
+                miGrafico10.LabelsJson = js.Serialize(labels);
+                miGrafico10.DatosJson = js.Serialize(datos);
+                miGrafico10.TipoGrafico = js.Serialize("pie");
+                miGrafico10.TituloJson = js.Serialize(s_titulo);
+            }
+           
 
         }     
         private DataTable LeerIncidencias(string s_tipo)
