@@ -18,6 +18,8 @@ using System.IO;
 using Business.Data;
 using CrystalDecisions.Shared;
 using Business.Data.Laboratorio;
+using System.Web.Script.Serialization;
+using System.Collections.Generic;
 
 namespace WebLab.Estadisticas
 {
@@ -766,6 +768,41 @@ dP.fechavalida as [F.Resultado],
         {
             if (Page.IsValid)
             MostrarReporteGeneral();
+        }
+
+        protected void btnVerGrafico_Click(object sender, ImageClickEventArgs e)
+        {
+            string tipoGrafico = ((ImageButton)sender).CommandArgument;
+            var js = new JavaScriptSerializer();
+            string[] arr = HFTipoMuestra.Value.Split(';');
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+
+            foreach (string item in arr)
+            {
+                string[] items = item.Split('|');
+
+                string label = items[0];
+                int valor = int.Parse(items[1]);
+
+                labels.Add(label);
+                datos.Add(valor);
+            }
+           
+
+            chartResultados.LabelsJson = js.Serialize(labels);
+            chartResultados.DatosJson = js.Serialize(datos);
+            chartResultados.TipoGrafico = js.Serialize(tipoGrafico == "barra" ? "bar" : "pie");
+            chartResultados.TituloJson = js.Serialize(ddlAnalisis.SelectedItem.Text);
+
+            pnlModalGrafico.Visible = true;
+            modalFondo.Visible = true;
+        }
+
+        protected void btnCerrarGrafico_Click(object sender, EventArgs e)
+        {
+            pnlModalGrafico.Visible = false;
+            modalFondo.Visible = false;
         }
 
         protected void imgPdf_Click(object sender, ImageClickEventArgs e)
