@@ -230,6 +230,7 @@ namespace WebLab.Resultados
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
+                    decimal numero;
                     labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
                     if (int.Parse(dt.Rows[i][9].ToString()) == 1) //Valor del analisis en formato decimal
                     {
@@ -237,7 +238,7 @@ namespace WebLab.Resultados
                                 dt.Rows[i][4].ToString(),
                                 System.Globalization.NumberStyles.Any,
                                 System.Globalization.CultureInfo.InvariantCulture,
-                                out decimal numero
+                                out numero
                             );
                         datos.Add(numero);
                     }
