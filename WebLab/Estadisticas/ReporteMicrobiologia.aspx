@@ -1,5 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReporteMicrobiologia.aspx.cs" Inherits="WebLab.Estadisticas.ReporteMicrobiologia" MasterPageFile="~/Site1.Master" ValidateRequest="false"%>
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
 <link href="../script/Resources/jquery-ui-1.8.20.css"
@@ -10,6 +11,7 @@
 <script src="../script/Resources/jQuery-ui-1.8.18.min.js"></script>
 
 <script src="../script/jquery.ui.datepicker-es.js"></script>
+<script src="../script/chart/chart.js"></script>
 
    
     <script type="text/javascript">
@@ -32,9 +34,13 @@
 
 
 $(function () {
-    $("#tabContainer").tabs();
     var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
-    $("#tabContainer").tabs({ selected: currTab });
+    $("#tabContainer").tabs({
+        selected: currTab,
+        select: function (event, ui) {
+            $("#<%= HFCurrTabIndex.ClientID %>").val(ui.index);
+        }
+    });
 });
 
   
@@ -347,8 +353,8 @@ $(function () {
                             </tr>
                             <tr>
                                 <td align="left" class="myLabelIzquierda">
-                                <asp:ImageButton ToolTip="Ver grafico de tortas" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png"  OnClientClick="verGrafico('torta'); return false;"                       />
-                                 &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  OnClientClick="verGrafico('barra'); return false;"                       />
+                                <asp:ImageButton ToolTip="Ver grafico de tortas" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png" OnClick="btnVerGrafico_Click" CommandArgument="torta" />
+                                 &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png" OnClick="btnVerGrafico_Click" CommandArgument="barra" />
                                 </td>
                                 <td align="right" class="myLabelIzquierda">
                                           Exportar lista de Pacientes
@@ -408,10 +414,10 @@ $(function () {
 
                                 <td align="right">
                                 <asp:ImageButton ID="btnGraficoMicroorganismos" runat="server" ToolTip="Ver grafico de tortas"
-                                        OnClientClick="verGraficoMicroorganismo('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
+                                        OnClick="btnVerGrafico_Click" CommandArgument="microtorta" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
                                         &nbsp;&nbsp;
                                         <asp:ImageButton ID="btnGraficoMicroorganismos2" runat="server" ToolTip="Ver grafico de barras"
-                                        OnClientClick="verGraficoMicroorganismo('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
+                                        OnClick="btnVerGrafico_Click" CommandArgument="microbarra" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
                                 </td>
 
                             </tr>
@@ -535,7 +541,7 @@ $(function () {
                                 </td>
                                   <td align="right">
                                       <asp:ImageButton ID="btnGraficoResistencia" runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"
-                                          OnClientClick="verGraficoResistencia(); return false;" />
+                                           OnClick="btnVerGrafico_Click" CommandArgument="resistencia" />
                                   </td>
                             </tr>
                             <tr>
@@ -951,10 +957,10 @@ $(function () {
 
                                 <td align="right">
                                 <asp:ImageButton ID="btnVerGraficoMecanismosRessitencia" runat="server" ToolTip="Ver grafico de tortas" Visible="false"
-                                        OnClientClick="verGraficoMecanismosResistencia('torta'); return false;" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
+                                        OnClick="btnVerGrafico_Click" CommandArgument="mectorta" ImageUrl="~/App_Themes/default/images/ico_torta.png" />
                                         &nbsp;&nbsp;
                                         <asp:ImageButton ID="btnVerGraficoMecanismosRessitencia2" runat="server" ToolTip="Ver grafico de barras" Visible="false"
-                                        OnClientClick="verGraficoMecanismosResistencia('barra'); return false;" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
+                                        OnClick="btnVerGrafico_Click" CommandArgument="mecbarra" ImageUrl="~/App_Themes/default/images/ico_barra.png" />
                                 </td>
 
                             </tr>
@@ -1103,145 +1109,153 @@ $(function () {
            </div>
   
    
-<script language="javascript" type="text/javascript">
 
-    var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
-    var valoresMicroorganismo = $("#<%= HFMicroorganismo.ClientID %>").val();
+<div id="modalFondo" runat="server" visible="false" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;"></div>
+<asp:Panel ID="pnlModalGrafico" runat="server" Visible="false" style="position:fixed; top:30px; left:50%; margin-left:-400px; width:800px; z-index:9999; background:white; border:2px solid #333; border-radius:8px; padding:15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-family:Arial; font-size:18px; font-weight:bold;">
+        <span>Gráfico Estadístico</span>
+        <asp:LinkButton ID="btnCerrarGrafico" runat="server" OnClick="btnCerrarGrafico_Click" style="text-decoration:none; font-size:22px; font-weight:bold; color:#333; cursor:pointer;" ToolTip="Cerrar">X</asp:LinkButton>
+    </div>
+    <uc:GraficoChart ID="chartResultados" runat="server" />
+</asp:Panel>
+
+  <%--  <script language="javascript" type="text/javascript">
+
+        var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
+        var valoresMicroorganismo = $("#<%= HFMicroorganismo.ClientID %>").val();
     var valoresResistencia = $("#<%= HFResistencia.ClientID %>").val();
     var valoresMecanismos = $("#<%= HFMecanismosResistencia.ClientID %>").val();
-    
-    function verGrafico(tipoGrafico) {
-        var dom = document.domain;
-        var domArray = dom.split('.');
-        for (var i = domArray.length - 1; i >= 0; i--) {
-            try {
-                var dom = '';
-                for (var j = domArray.length - 1; j >= i; j--) {
-                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+
+        function verGrafico(tipoGrafico) {
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
                 }
-                document.domain = dom;
-                break;
-            } catch (E) {
             }
+
+
+            var $this = $(this);
+            $('<iframe src="Grafico.aspx?valores=' + valores + '&tipo=0&tipoGrafico=' + tipoGrafico + '" />').dialog({
+                title: 'Gráfico Estadístico de Tipo de Muestras',
+                autoOpen: true,
+                width: 900,
+                height: 500,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                }
+            }).width(900);
         }
 
 
-        var $this = $(this);
-        $('<iframe src="Grafico.aspx?valores=' + valores + '&tipo=0&tipoGrafico=' + tipoGrafico + '" />').dialog({
-            title: 'Gráfico Estadístico de Tipo de Muestras',
-            autoOpen: true,
-            width: 900,
-            height:500,
-            modal: true,
-            resizable: false,
-            autoResize: true,
-            overlay: {
-                opacity: 0.5,
-                background: "black"
-            }
-        }).width(900);
-    }
-
-
-    function verGraficoMicroorganismo(tipoGrafico) {
-        var dom = document.domain;
-        var domArray = dom.split('.');
-        for (var i = domArray.length - 1; i >= 0; i--) {
-            try {
-                var dom = '';
-                for (var j = domArray.length - 1; j >= i; j--) {
-                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+        function verGraficoMicroorganismo(tipoGrafico) {
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
                 }
-                document.domain = dom;
-                break;
-            } catch (E) {
             }
+
+
+            var $this = $(this);
+            $('<iframe src="Grafico.aspx?valores=' + valoresMicroorganismo + '&tipo=1&tipoGrafico=' + tipoGrafico + '" />').dialog({
+                title: 'Gráfico Estadístico de Aislamientos',
+                autoOpen: true,
+                width: 900,
+                height: 500,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                }
+            }).width(900);
         }
 
 
-        var $this = $(this);
-        $('<iframe src="Grafico.aspx?valores=' + valoresMicroorganismo + '&tipo=1&tipoGrafico=' + tipoGrafico + '" />').dialog({
-            title: 'Gráfico Estadístico de Aislamientos',
-            autoOpen: true,
-            width: 900,
-            height: 500,
-            modal: true,
-            resizable: false,
-            autoResize: true,
-            overlay: {
-                opacity: 0.5,
-                background: "black"
-            }
-        }).width(900);
-    }
-
-
-    function verGraficoResistencia() {
-        var dom = document.domain;
-        var domArray = dom.split('.');
-        for (var i = domArray.length - 1; i >= 0; i--) {
-            try {
-                var dom = '';
-                for (var j = domArray.length - 1; j >= i; j--) {
-                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+        function verGraficoResistencia() {
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
                 }
-                document.domain = dom;
-                break;
-            } catch (E) {
             }
+
+
+            var $this = $(this);
+            $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2" />').dialog({
+                title: 'Resistencia en ATB',
+                autoOpen: true,
+                width: 900,
+                height: 600,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                }
+            }).width(900);
         }
 
-       
-        var $this = $(this);
-        $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2" />').dialog({
-            title: 'Resistencia en ATB',
-            autoOpen: true,
-            width:900,
-            height: 600,
-            modal: true,
-            resizable: false,
-            autoResize: true,
-            overlay: {
-                opacity: 0.5,
-                background: "black"
-            }
-        }).width(900);
-    }
-
-    function verGraficoMecanismosResistencia(tipoGrafico) {
-        var dom = document.domain;
-        var domArray = dom.split('.');
-        for (var i = domArray.length - 1; i >= 0; i--) {
-            try {
-                var dom = '';
-                for (var j = domArray.length - 1; j >= i; j--) {
-                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+        function verGraficoMecanismosResistencia(tipoGrafico) {
+            var dom = document.domain;
+            var domArray = dom.split('.');
+            for (var i = domArray.length - 1; i >= 0; i--) {
+                try {
+                    var dom = '';
+                    for (var j = domArray.length - 1; j >= i; j--) {
+                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                    }
+                    document.domain = dom;
+                    break;
+                } catch (E) {
                 }
-                document.domain = dom;
-                break;
-            } catch (E) {
             }
+
+
+            var $this = $(this);
+            $('<iframe src="Grafico.aspx?valores=' + valoresMecanismos + '&tipo=4&tipoGrafico=' + tipoGrafico + '" />').dialog({
+                title: 'Mecanismos Resistencia',
+                autoOpen: true,
+                width: 900,
+                height: 600,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                }
+            }).width(900);
         }
 
-        
-        var $this = $(this);
-        $('<iframe src="Grafico.aspx?valores=' + valoresMecanismos + '&tipo=4&tipoGrafico=' + tipoGrafico + '" />').dialog({
-            title: 'Mecanismos Resistencia',
-            autoOpen: true,
-            width: 900,
-            height: 600,
-            modal: true,
-            resizable: false,
-            autoResize: true,
-            overlay: {
-                opacity: 0.5,
-                background: "black"
-            }
-        }).width(900);
-    }
+    </script>--%>
 
-</script>
-
-  
-   
 </asp:Content>

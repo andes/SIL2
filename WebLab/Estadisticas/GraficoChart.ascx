@@ -55,8 +55,15 @@
             };
         }
 
+        if (tipo === 'pie') {
+            opciones.scales = {
+                x: { display: false },
+                y: { display: false }
+            };
+        }
+
         //Si tiene valor minimo un escala, definimos la escala
-        if (valorMinimo !== null && valorMinimo !== undefined) {
+        if (valorMinimo !== null && valorMinimo !== undefined && valorMinimo !== '') {
             opciones.scales = {
                 x: {
                     title: {
@@ -74,6 +81,8 @@
                 }
             };
         }
+        console.log(valorMinimo)
+        console.log(opciones.scales)
         new Chart(ctx, {
             type: tipo,
             data: {
