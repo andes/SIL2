@@ -67,7 +67,8 @@ namespace WebLab.Resultados
                         {
                             if (coincideUnidadMedida(dt))
                             {
-                                string valorminimo = Math.Round(oItem.ValorMinimo, 0).ToString();
+                                decimal valor = Math.Round(oItem.ValorMinimo, 0);
+                                string valorminimo = (valor == -1) ? "" : valor.ToString(); //-1 es un valor por defecto pero no se grafica si lo envio, debe ser ""
                                  CreateChart(dt, oItem.Nombre, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
                             }
                         }
