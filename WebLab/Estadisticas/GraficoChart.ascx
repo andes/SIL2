@@ -12,10 +12,22 @@
     var ctx = document.getElementById('<%= miGrafico.ClientID %>');
     var labels = <%= string.IsNullOrEmpty(LabelsJson) ? "[]" : LabelsJson %>;
     var datos = <%= string.IsNullOrEmpty(DatosJson) ? "[]" : DatosJson %>;
+    var datosOtros = <%= string.IsNullOrEmpty(DatosStringJson) ? "[]" : DatosStringJson %>;
+    var tieneDatos1 = true; tieneDatos2 = true;
+    var datosFinal = [];
 
     if (arrayVacio(datos)) {
-        ctx.style.display = 'none';
-    } else {
+        tieneDatos1 = false;
+        if (arrayVacio(datosOtros)) {
+            ctx.style.display = 'none';
+            tieneDatos2 = false;
+        }
+    }
+
+
+    if (tieneDatos1) datosFinal = datos; else datosFinal = datosOtros;
+    
+    if (!arrayVacio(datosFinal)) {
         var tipo = <%= string.IsNullOrEmpty(TipoGrafico) ? "\"pie\"" : TipoGrafico %>;
         var titulo = <%= string.IsNullOrEmpty(TituloJson) ? "\"\"" : TituloJson %>;
         var subtitulo = <%= string.IsNullOrEmpty(Subtitulo) ? "\"\"" : Subtitulo %>;
@@ -25,16 +37,16 @@
 
 
         var colores = [
-            '#1E88E5','#E53935','#43A047','#FB8C00','#8E24AA','#00ACC1','#FDD835',
-            '#6D4C41','#3949AB','#D81B60','#7CB342','#5E35B1','#00897B','#EF6C00',
-            '#C0CA33','#546E7A','#8D6E63','#EC407A','#26A69A','#7E57C2','#FFA726',
-            '#66BB6A','#29B6F6','#FF7043','#9CCC65','#AB47BC','#26C6DA','#FFCA28',
-            '#BDBDBD','#8BC34A'
+            '#1E88E5', '#E53935', '#43A047', '#FB8C00', '#8E24AA', '#00ACC1', '#FDD835',
+            '#6D4C41', '#3949AB', '#D81B60', '#7CB342', '#5E35B1', '#00897B', '#EF6C00',
+            '#C0CA33', '#546E7A', '#8D6E63', '#EC407A', '#26A69A', '#7E57C2', '#FFA726',
+            '#66BB6A', '#29B6F6', '#FF7043', '#9CCC65', '#AB47BC', '#26C6DA', '#FFCA28',
+            '#BDBDBD', '#8BC34A'
         ];
 
         var opciones = {
-           
-             plugins: {
+
+            plugins: {
                 title: {
                     display: true,
                     text: titulo
@@ -67,7 +79,7 @@
             opciones.scales = {
                 x: {
                     title: {
-                        display: true, text: tituloX 
+                        display: true, text: tituloX
                     }
                 },
                 y: {
@@ -76,26 +88,27 @@
                         callback: function (value) { return Number(value).toFixed(2); } //para que tenga solo dos decimales despues de la coma
                     },
                     title: {
-                        display: true, text: tituloY 
+                        display: true, text: tituloY
                     }
                 }
             };
         }
-        console.log(valorMinimo)
-        console.log(opciones.scales)
+
         new Chart(ctx, {
             type: tipo,
             data: {
                 labels: labels,
                 datasets: [{
                     label: titulo,
-                    data: datos,
+                    data: datosFinal,
                     backgroundColor: tipo === 'line'
                         ? '#1E88E5'
-                        : colores.slice(0, datos.length)
+                        : colores.slice(0, datosFinal.length)
                 }]
             },
             options: opciones
         });
     }
+        
+    
 </script>
