@@ -22,12 +22,7 @@ namespace WebLab.Resultados
     {
       
         Protocolo oProtocolo = new Protocolo();
-        public string LabelsJson { get; set; }
-        public string DatosJson { get; set; }
-        public string TipoGrafico { get; set; }
-        public string TituloJson { get; set; }
-        public string TooltipsJson { get; set; }
-        public string minimo { get; set; }
+      
         public CrystalReportSource oCr = new CrystalReportSource();
 
         public Usuario oUser = new Usuario();
@@ -256,11 +251,14 @@ namespace WebLab.Resultados
 
             var js = new JavaScriptSerializer();
 
-            LabelsJson = js.Serialize(labels);
-            if(datos.Count >0) DatosJson = js.Serialize(datos); else DatosJson = js.Serialize(datosString);
-            TipoGrafico = js.Serialize("line");
-            TituloJson = js.Serialize(titulo);
-            minimo = js.Serialize(valorminino);
+            miGrafico.LabelsJson = js.Serialize(labels);
+            miGrafico.DatosJson = js.Serialize(datos);
+            miGrafico.DatosStringJson = js.Serialize(datosString);
+            miGrafico.TipoGrafico = js.Serialize("line");
+            miGrafico.TituloJson = js.Serialize(titulo);
+            miGrafico.minimo = js.Serialize(valorminino);
+            miGrafico.tituloX = js.Serialize("Protocolo");
+            miGrafico.tituloY = js.Serialize("Resultado");
         }
     }
 }

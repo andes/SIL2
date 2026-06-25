@@ -60,6 +60,15 @@ namespace WebLab.Resultados
         protected global::System.Web.UI.WebControls.Panel pnlGrafico;
 
         /// <summary>
+        /// miGrafico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico;
+
+        /// <summary>
         /// gvHistorico control.
         /// </summary>
         /// <remarks>

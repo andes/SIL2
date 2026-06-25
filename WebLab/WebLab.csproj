@@ -2071,6 +2071,7 @@
     <Content Include="Estadisticas\GeneralFiltro.aspx" />
     <Content Include="Estadisticas\GeneralReporte.aspx" />
     <Content Include="Estadisticas\Grafico.aspx" />
+    <Content Include="Estadisticas\GraficoChart.ascx" />
     <Content Include="Estadisticas\Principal.aspx" />
     <Content Include="Estadisticas\ProcedimientoSIVILA.html" />
     <Content Include="Estadisticas\Produccion.aspx" />
@@ -4719,6 +4720,10 @@
     <Compile Include="Estadisticas\Grafico.aspx.designer.cs">
       <DependentUpon>Grafico.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Estadisticas\GraficoChart.ascx.cs">
+      <DependentUpon>GraficoChart.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Estadisticas\Principal.aspx.cs">
       <DependentUpon>Principal.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6511,15 +6516,6 @@
     <Content Include="Formulas\ControlEdit.aspx" />
     <Content Include="Formulas\FormulaEdit.aspx" />
     <Content Include="Formulas\FormulaList.aspx" />
-    <Content Include="FusionCharts\FCF_Area2D.swf" />
-    <Content Include="FusionCharts\FCF_Column2D.swf" />
-    <Content Include="FusionCharts\FCF_Column3D.swf" />
-    <Content Include="FusionCharts\FCF_Line.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3D.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3DLineDY.swf" />
-    <Content Include="FusionCharts\FCF_Pie3D.swf" />
-    <Content Include="FusionCharts\FCF_StackedColumn3D.swf" />
-    <Content Include="FusionCharts\FusionCharts.js" />
     <Content Include="Help\CSS\Arbol.css" />
     <Content Include="Help\CSS\emx_nav_left.css" />
     <Content Include="Help\CSS\ftiens4.js" />
