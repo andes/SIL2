@@ -31,17 +31,19 @@ namespace WebLab.Items
         Configuracion oC = new Configuracion();
         Usuario oUser = new Usuario();
         //   Item oItem = new Item();
-        private enum TabIndex
+        private enum TabIndex //Los nombres (ONE, TWO, OCTAVO) no coinciden con la posición real de las tabs porque el HTML las tiene en desorden
         {
-            DEFAULT = 0,
-            ONE = 1,
-            TWO = 2,
-            THREE = 3,
-            CUARTO = 4,
-            QUINTO = 5,
-            SECTO = 6,
-            SEPTIMO = 7, OCTAVO = 8
-            // you can as many as you want here
+            DatosGenerales  = 0,  // tab1
+            Presentaciones  = 1, // tab7
+            ValoresReferencia  = 2,  // tab2
+            Diagrama  = 3,  // tab3
+            ResultadosPredefinidos  = 4, //tab4
+            Recomendaciones  = 5,  // tab5
+            Muestras  = 6, //tab8
+            MasOpciones  = 7, //tab6
+            Turnos  = 8 ,//tab9
+            AutoAnalizadores = 9,        // tab10
+            ObservacionesResultados = 10 // tab11
         }
         private void SetSelectedTab(TabIndex tabIndex)
         {
@@ -1090,7 +1092,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             {
                 EliminarItemVR(int.Parse(e.CommandArgument.ToString()));
                 CargarGrillaVR();
-                //SetSelectedTab(TabIndex.TWO);
+                SetSelectedTab(TabIndex.ValoresReferencia);
             }
         }
 
@@ -2094,7 +2096,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
                     CargarGrillaVR_NoPac();
                 }
 
-                SetSelectedTab(TabIndex.TWO);
+                SetSelectedTab(TabIndex.ValoresReferencia );
 
             }
         }
@@ -3008,7 +3010,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             {
                 EliminarItemVR_NP(int.Parse(e.CommandArgument.ToString()));
                 CargarGrillaVR_NoPac();
-                SetSelectedTab(TabIndex.TWO);
+                SetSelectedTab(TabIndex.ValoresReferencia );
             }
         }
 
@@ -3351,7 +3353,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             {
                 EliminarItemMuestra(int.Parse(e.CommandArgument.ToString()));
                 CargarGrillaMuestras();
-                SetSelectedTab(TabIndex.OCTAVO);
+                SetSelectedTab(TabIndex.Muestras );
             }
         }
 
