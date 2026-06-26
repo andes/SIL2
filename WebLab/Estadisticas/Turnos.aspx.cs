@@ -244,7 +244,7 @@ namespace WebLab.Estadisticas
             string encabezado="";
             if (oUser.IdEfector.IdEfector != 227)
             {
-                if (int.Parse(ddlEfectorSolicitante.SelectedValue) != 0)
+                if (ddlEfectorSolicitante.SelectedItem != null && int.Parse(ddlEfectorSolicitante.SelectedValue) != 0)
                     encabezado = ddlEfectorSolicitante.SelectedItem.Text;
                 else 
                     encabezado =  ddlEfector.SelectedItem.Text;
@@ -404,7 +404,7 @@ namespace WebLab.Estadisticas
             List<int> datos = new List<int>();
             if (dt.Rows.Count > 0)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                for (int i = 0; i < dt.Rows.Count-1; i++) //que no grafique la ultima fila de totales
                 {
                     labels.Add(dt.Rows[i][0].ToString());
                     datos.Add(int.Parse(dt.Rows[i][1].ToString()));
