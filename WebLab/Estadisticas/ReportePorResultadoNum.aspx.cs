@@ -451,7 +451,7 @@ namespace WebLab.Estadisticas
             if (m_resultadoHasta != "") m_condicion += " and  DP.resultadoNum<=" + decimal.Parse(m_resultadoHasta, System.Globalization.CultureInfo.InvariantCulture);
 
             if (rdbPaciente.SelectedValue == "1")
-                m_condicionDiag = " and  exists (select 1 from  LAB_ProtocoloDiagnostico AS PD with (nolock) ON PD.idProtocolo = P.idProtocolo and   (PD.iddiagnostico = 11999)  ";
+                m_condicionDiag = " and  exists (select 1 from  LAB_ProtocoloDiagnostico AS PD with (nolock) Where PD.idProtocolo = P.idProtocolo and   (PD.iddiagnostico = 11999))  ";
 
             if (i_idEfector>0)
                 m_condicion += " and P.idEfector= " + i_idEfector.ToString();
@@ -462,7 +462,7 @@ namespace WebLab.Estadisticas
 
                 if (ddlGrupoEtareo.SelectedValue == "1") m_condicion += " and (P.unidadEdad=1 and P.edad<6) or (P.unidadedad=2)";
                 if (ddlGrupoEtareo.SelectedValue == "2") m_condicion += " and P.unidadEdad=1 and P.edad>=6 and P.edad<12 ";
-                if (ddlGrupoEtareo.SelectedValue == "3") m_condicion += "  and P.edad >= 1 and P.edad <2 AND P.unidadedad = 0   ";
+                if (ddlGrupoEtareo.SelectedValue == "3") m_condicion += "  and P.edad = 1 and P.unidadedad = 0   "; //Respetando lo que hace en LAB_EstadisticaPorResultadosNum
                 if (ddlGrupoEtareo.SelectedValue == "4") m_condicion += " and P.edad >= 2 AND P.edad <= 4 AND P.unidadedad = 0  ";
                 if (ddlGrupoEtareo.SelectedValue == "5") m_condicion += " and P.edad >= 5 AND P.edad <= 9 AND P.unidadedad = 0   ";
                 if (ddlGrupoEtareo.SelectedValue == "6") m_condicion += " and P.edad >= 10 AND P.edad <= 14 AND P.unidadedad = 0 ";
@@ -470,10 +470,10 @@ namespace WebLab.Estadisticas
                 if (ddlGrupoEtareo.SelectedValue == "8") m_condicion += " and P.edad >= 20 AND P.edad <= 24 AND P.unidadedad = 0  ";
                 if (ddlGrupoEtareo.SelectedValue == "9") m_condicion += "  and P.edad >= 25 AND P.edad <= 34 AND P.unidadedad = 0   ";
                 if (ddlGrupoEtareo.SelectedValue == "10") m_condicion += " and P.edad >= 35 AND  P.edad <= 44 AND P.unidadedad = 0  ";
-                if (ddlGrupoEtareo.SelectedValue == "11") m_condicion += " and P.edad >= 45 AND P.edad <= 54 AND P.unidadedad = 0 ";
-                if (ddlGrupoEtareo.SelectedValue == "12") m_condicion += " and P.edad >= 55 AND P.edad <= 64 AND P.unidadedad = 0  ";
-                if (ddlGrupoEtareo.SelectedValue == "13") m_condicion += " and P.edad >= 65 AND P.edad <= 74 AND P.unidadedad = 0   ";
-                if (ddlGrupoEtareo.SelectedValue == "14") m_condicion += " and P.edad >= 75 AND P.unidadedad = 0 ";
+                if (ddlGrupoEtareo.SelectedValue == "11") m_condicion += " and P.edad >= 45 AND P.edad <= 64 AND P.unidadedad = 0 "; //Respetando lo que hace en LAB_EstadisticaPorResultadosNum
+                if (ddlGrupoEtareo.SelectedValue == "12") m_condicion += " and P.edad >= 65 AND P.edad <= 74 AND P.unidadedad = 0  ";//Respetando lo que hace en LAB_EstadisticaPorResultadosNum
+                //if (ddlGrupoEtareo.SelectedValue == "13") m_condicion += " and P.edad >= 65 AND P.edad <= 74 AND P.unidadedad = 0   ";//Respetando lo que hace en LAB_EstadisticaPorResultadosNum
+                if (ddlGrupoEtareo.SelectedValue == "13") m_condicion += " and P.edad >= 75 AND P.unidadedad = 0 ";//Respetando lo que hace en LAB_EstadisticaPorResultadosNum
 
             }
 
@@ -495,7 +495,7 @@ CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS [Fecha Nacimiento],    d.calle 
                              INNER JOIN Sys_Paciente AS Pa with (nolock) ON P.idPaciente = Pa.idPaciente
                              left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pa.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pa.idpaciente)
                             
-                             WHERE P.baja=0 and  I.iditem=" + m_analisis +  m_condicion+ 
+                             WHERE  P.Estado=2 and P.baja=0 and  I.iditem=" + m_analisis +  m_condicion+ 
              " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "') and " +
                              " ( DP.conresultado=1)  "+ m_condicionDiag +" order by P.fecha  ";
 
