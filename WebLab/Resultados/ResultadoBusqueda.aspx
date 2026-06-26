@@ -77,7 +77,7 @@
 					<tr>
 						<td  valign="top" rowspan="12" >
                            
-                            <div class="panel panel-default" runat="server" id="Div1">
+                            <div class="panel panel-default" runat="server" id="pnlCargaResultados">
                     <div class="panel-heading">
     <asp:Label ID="lblFormaCarga" runat="server" 
                                 Text="Forma de Carga" ></asp:Label>

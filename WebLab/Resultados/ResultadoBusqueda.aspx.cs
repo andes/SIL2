@@ -184,6 +184,7 @@ namespace WebLab.Resultados
                 lblMensaje.Visible = false;
                 IniciarValores();
                 //IniciarValoresControl();
+                pnlCargaResultados.Visible = false;
             }
             if (Request["modo"].ToString() == "Urgencia")
                 ddlPrioridad.SelectedValue = "2";
