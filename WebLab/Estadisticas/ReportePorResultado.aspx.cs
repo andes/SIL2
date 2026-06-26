@@ -616,7 +616,7 @@ namespace WebLab.Estadisticas
 
         private DataTable GetDataPacientes(string m_analisis, string m_resultado, int i_idEfector, string m_tipo)
         {
-            string m_strCondicion="";
+            string m_strCondicion= " AND (P.idTipoServicio!=5)  AND (P.baja = 0) "; //Respetando el codigo de [LAB_EstadisticaPorResultados2
             string m_codigopaciente = " '' as codigoPaciente";
 
             
@@ -655,7 +655,7 @@ namespace WebLab.Estadisticas
 
                 if (ddlGrupoEtareo.SelectedValue == "1") m_strCondicion += " and (P.unidadEdad=1 and P.edad<6) or (P.unidadedad=2)";
                 if (ddlGrupoEtareo.SelectedValue == "2") m_strCondicion += " and P.unidadEdad=1 and P.edad>=6 and P.edad<12 ";
-                if (ddlGrupoEtareo.SelectedValue == "3") m_strCondicion += "  and P.edad >= 1 and P.edad <2 AND P.unidadedad = 0   ";
+                if (ddlGrupoEtareo.SelectedValue == "3") m_strCondicion += "  and P.edad = 1 AND P.unidadedad = 0   "; //cambio de grupo etareo
                 if (ddlGrupoEtareo.SelectedValue == "4") m_strCondicion += " and P.edad >= 2 AND P.edad <= 4 AND P.unidadedad = 0  ";
                 if (ddlGrupoEtareo.SelectedValue == "5") m_strCondicion += " and P.edad >= 5 AND P.edad <= 9 AND P.unidadedad = 0   ";
                 if (ddlGrupoEtareo.SelectedValue == "6") m_strCondicion += " and P.edad >= 10 AND P.edad <= 14 AND P.unidadedad = 0 ";
