@@ -980,7 +980,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 if (oRegistro.ObservacionResultado != "")
                 {
                     txtObservacion.Text = oRegistro.ObservacionResultado;
-            
+                    obs.Visible = true;
                 }
                 else
                 {
@@ -4591,6 +4591,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
                 oProtocolo.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()), "OBSERVACION RESULTADO", txtObservacion.Text);
                 lblObservacionResultado.Text = txtObservacion.Text;
+                if (txtObservacion.Text != "") obs.Visible = true; else obs.Visible = false;
                 SetSelectedTab(TabIndex.ONE);
             }
             else Response.Redirect("../FinSesion.aspx", false);      
@@ -4603,7 +4604,7 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
         }
 
 
-        
+
         protected void btnAgregarObsCodificadaGral_Click(object sender, EventArgs e)
         {
             if (ddlObsCodificadaGeneral.Text != "")
