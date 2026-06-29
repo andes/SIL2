@@ -174,9 +174,9 @@
                                             <br />
                             
                           
-                                            &nbsp;<asp:Button ID="btnNuevoAlplex" runat="server" Text="Nueva Alplex" Width="150px" CssClass="btn btn-primary"
+                                            &nbsp;<asp:Button ID="btnNuevoAlplex" runat="server" Text="Respi1" Width="100px" CssClass="btn btn-primary"
                                                 ToolTip="Haga clic aquí para agregar una nueva placa" OnClick="btnNuevoAlplex_Click" />
-                               &nbsp;<asp:Button ID="btnNuevoAlplex8V" runat="server" Text="Nueva Allplex Respiratorios 2" Width="250px" CssClass="btn btn-primary"
+                               &nbsp;<asp:Button ID="btnNuevoAlplex8V" runat="server" Text="Respi2" Width="100px" CssClass="btn btn-primary"
                                                 ToolTip="Haga clic aquí para agregar una nueva placa" OnClick="btnNuevoAlplex8V_Click"   />
                                          
                                                                     
