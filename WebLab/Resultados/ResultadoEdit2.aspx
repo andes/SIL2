@@ -457,7 +457,7 @@
     <%--<li id="tituloCalidad" runat="server"><a  href="#tab6">Incidencia<img alt="tiene incidencias" runat="server" id="inci" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>--%>
     <li id="tituloMicroOrganismo" runat="server"><a href="#tab5"><b>Aislamientos&nbsp;<img alt="tiene antibiogramas" runat="server" id="aisl" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></b></a></li>          
     <li id="tituloAntibiograma" runat="server"><a href="#tab4"><b>Antibiogramas&nbsp;<img alt="tiene antibiogramas" runat="server" id="anti" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></b></a></li>          
-    <li id="tituloObservaciones" runat="server"><a href="#tab2" >Observaciones</a></li>
+    <li id="tituloObservaciones" runat="server"><a href="#tab2" >Observaciones&nbsp;<img alt="tiene observaciones" runat="server" id="obs" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>
       <li id="tituloAntecedente" runat="server"><a href="#tab3" id="tabAntecedente" runat="server">Más opciones</a></li>
     
                                                 
