@@ -113,6 +113,43 @@
             };
         }
 
+        if (titulo === "" && tipo === 'line') { //Usamos este tipo de grafico para evoluciones de analisis 
+            opciones.plugins.legend = {
+                labels: {
+                    boxWidth: 0,
+                    boxHeight: 0
+                }
+            };
+        }
+
+        if (tipo === 'pie' || tipo === 'bar') {
+           
+            opciones.plugins.legend = {
+                position: 'right',
+                labels: {
+                    generateLabels: function (chart) {
+
+                        var datos = chart.data.datasets[0].data;
+                        var total = datos.reduce(function (a, b) { return a + b; }, 0);
+
+                        return chart.data.labels.map(function (label, i) {
+
+                            var porcentaje = (datos[i] * 100 / total).toFixed(1);
+
+                            return {
+                                text: label + "    " + porcentaje + "%",
+                                fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                strokeStyle: chart.data.datasets[0].backgroundColor[i],
+                                hidden: false,
+                                index: i
+                            };
+                        });
+                    }
+                }
+                
+            }
+        }
+
         if (tipo === 'line') { //Usamos este tipo de grafico para evoluciones de analisis 
             opciones.plugins.legend = {
                 labels: {
