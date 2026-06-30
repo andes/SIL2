@@ -45,8 +45,8 @@
         ];
 
         var opciones = {
-           
-             plugins: {
+
+            plugins: {
                 title: {
                     display: true,
                     text: titulo
@@ -98,7 +98,7 @@
             opciones.scales = {
                 x: {
                     title: {
-                        display: true, text: tituloX 
+                        display: true, text: tituloX
                     }
                 },
                 y: {
@@ -107,7 +107,7 @@
                         callback: function (value) { return Number(value).toFixed(2); } //para que tenga solo dos decimales despues de la coma
                     },
                     title: {
-                        display: true, text: tituloY 
+                        display: true, text: tituloY
                     }
                 }
             };
@@ -164,27 +164,27 @@
             //se agrega en los labels el % , y ademas la opcion que no muestre nada (para graficos con muchos items)
             if (mostrarLabels === '' || mostrarLabels === "true") {
                 opciones.plugins.legend = {
-                    position: 'right',
-                    labels: {
-                        generateLabels: function (chart) {
+                position: 'right',
+                labels: {
+                    generateLabels: function (chart) {
 
-                            var datos = chart.data.datasets[0].data;
-                            var total = datos.reduce(function (a, b) { return a + b; }, 0);
+                        var datos = chart.data.datasets[0].data;
+                        var total = datos.reduce(function (a, b) { return a + b; }, 0);
 
-                            return chart.data.labels.map(function (label, i) {
+                        return chart.data.labels.map(function (label, i) {
 
-                                var porcentaje = (datos[i] * 100 / total).toFixed(1);
+                            var porcentaje = (datos[i] * 100 / total).toFixed(1);
 
-                                return {
-                                    text: label + "    " + porcentaje + "%",
-                                    fillStyle: chart.data.datasets[0].backgroundColor[i],
-                                    strokeStyle: chart.data.datasets[0].backgroundColor[i],
-                                    hidden: false,
-                                    index: i
-                                };
-                            });
-                        }
+                            return {
+                                text: label + "    " + porcentaje + "%",
+                                fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                strokeStyle: chart.data.datasets[0].backgroundColor[i],
+                                hidden: false,
+                                index: i
+                            };
+                        });
                     }
+                }
                 
                 };
              } else {
@@ -209,4 +209,6 @@
             options: opciones
         });
     }
+        
+    
 </script>
