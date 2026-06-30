@@ -78,15 +78,6 @@ namespace WebLab.Estadisticas
         protected global::WebLab.Estadisticas.GraficoChart miGrafico;
 
         /// <summary>
-        /// miGrafico10 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::WebLab.Estadisticas.GraficoChart miGrafico10;
-
-        /// <summary>
         /// lblInforme control.
         /// </summary>
         /// <remarks>
@@ -103,6 +94,24 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTipo;
+
+        /// <summary>
+        /// divGrafico2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divGrafico2;
+
+        /// <summary>
+        /// miGrafico10 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico10;
 
         /// <summary>
         /// gvEstadistica control.
