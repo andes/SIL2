@@ -113,13 +113,14 @@
             };
         }
 
-        if (titulo === "" && tipo === 'line') { //Usamos este tipo de grafico para evoluciones de analisis 
+        if (tipo === 'line') { //Usamos este tipo de grafico para evoluciones de analisis 
             opciones.plugins.legend = {
                 labels: {
                     boxWidth: 0,
                     boxHeight: 0
                 }
             };
+            opciones.plugins.title.display = false;  // oculta el título duplicado
         }
 
         if (tipo === 'pie' || tipo === 'bar') {
