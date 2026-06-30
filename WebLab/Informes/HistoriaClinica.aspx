@@ -1,9 +1,9 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="HistoriaClinica.aspx.cs" Inherits="WebLab.Informes.HistoriaClinica" MasterPageFile="~/Site1.Master" %>
+ <%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 
 <asp:Content ID="Content3" runat="server" contentplaceholderid="head">
-<script language="Javascript" type="text/javascript" src="../FusionCharts/FusionCharts.js"></script>
     <link href="StyleSheet.css" rel="stylesheet" type="text/css" />
-    
+   
 <title>LABORATORIO</title> 
 
     <style type="text/css">
@@ -115,7 +115,8 @@
       
     </table>
    <div style="border: 1px solid #C0C0C0">
-       <asp:Literal ID="FCLiteral" runat="server"></asp:Literal>
+       <%--<asp:Literal ID="FCLiteral" runat="server"></asp:Literal>--%>
+        <uc:GraficoChart ID="miGrafico" runat="server" /> 
 </div>
  
                     </div>
