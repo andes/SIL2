@@ -18,6 +18,8 @@ using System.IO;
 using Business.Data;
 using CrystalDecisions.Shared;
 using Business.Data.Laboratorio;
+using System.Web.Script.Serialization;
+using System.Collections.Generic;
 
 namespace WebLab.Estadisticas
 {
@@ -166,6 +168,8 @@ namespace WebLab.Estadisticas
             {
                 lblAnalisis.Text = ddlAnalisis.SelectedItem.Text;
                 pnlResultado.Visible = true;
+                btnVerGraficoTipoMuestra.Visible = true;
+                btnVerGraficoTipoMuestra2.Visible = true;
             }
         }
 
@@ -178,9 +182,9 @@ namespace WebLab.Estadisticas
                 string s_nombre = gvEstadistica.Rows[i].Cells[0].Text.Replace(";", "");
                 s_nombre = s_nombre.Replace("&#", "");
                 if (s_valores == "")
-                    s_valores = "name='" + s_nombre + "' value='" + gvEstadistica.Rows[i].Cells[1].Text + "'";
+                    s_valores =  s_nombre + "|" + gvEstadistica.Rows[i].Cells[1].Text;
                 else
-                    s_valores += ";" + "name='" + s_nombre + "' value='" + gvEstadistica.Rows[i].Cells[1].Text + "'";
+                    s_valores += ";" +  s_nombre + "|" + gvEstadistica.Rows[i].Cells[1].Text;
             }
 
             return s_valores;
@@ -612,7 +616,7 @@ namespace WebLab.Estadisticas
 
         private DataTable GetDataPacientes(string m_analisis, string m_resultado, int i_idEfector, string m_tipo)
         {
-            string m_strCondicion="";
+            string m_strCondicion= " AND (P.idTipoServicio!=5)  AND (P.baja = 0) "; //Respetando el codigo de [LAB_EstadisticaPorResultados2
             string m_codigopaciente = " '' as codigoPaciente";
 
             
@@ -651,7 +655,7 @@ namespace WebLab.Estadisticas
 
                 if (ddlGrupoEtareo.SelectedValue == "1") m_strCondicion += " and (P.unidadEdad=1 and P.edad<6) or (P.unidadedad=2)";
                 if (ddlGrupoEtareo.SelectedValue == "2") m_strCondicion += " and P.unidadEdad=1 and P.edad>=6 and P.edad<12 ";
-                if (ddlGrupoEtareo.SelectedValue == "3") m_strCondicion += "  and P.edad >= 1 and P.edad <2 AND P.unidadedad = 0   ";
+                if (ddlGrupoEtareo.SelectedValue == "3") m_strCondicion += "  and P.edad = 1 AND P.unidadedad = 0   "; //cambio de grupo etareo
                 if (ddlGrupoEtareo.SelectedValue == "4") m_strCondicion += " and P.edad >= 2 AND P.edad <= 4 AND P.unidadedad = 0  ";
                 if (ddlGrupoEtareo.SelectedValue == "5") m_strCondicion += " and P.edad >= 5 AND P.edad <= 9 AND P.unidadedad = 0   ";
                 if (ddlGrupoEtareo.SelectedValue == "6") m_strCondicion += " and P.edad >= 10 AND P.edad <= 14 AND P.unidadedad = 0 ";
@@ -764,6 +768,41 @@ dP.fechavalida as [F.Resultado],
         {
             if (Page.IsValid)
             MostrarReporteGeneral();
+        }
+
+        protected void btnVerGrafico_Click(object sender, ImageClickEventArgs e)
+        {
+            string tipoGrafico = ((ImageButton)sender).CommandArgument;
+            var js = new JavaScriptSerializer();
+            string[] arr = HFTipoMuestra.Value.Split(';');
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+
+            foreach (string item in arr)
+            {
+                string[] items = item.Split('|');
+
+                string label = items[0];
+                int valor = int.Parse(items[1]);
+
+                labels.Add(label);
+                datos.Add(valor);
+            }
+           
+
+            chartResultados.LabelsJson = js.Serialize(labels);
+            chartResultados.DatosJson = js.Serialize(datos);
+            chartResultados.TipoGrafico = js.Serialize(tipoGrafico == "barra" ? "bar" : "pie");
+            chartResultados.TituloJson = js.Serialize(ddlAnalisis.SelectedItem.Text);
+
+            pnlModalGrafico.Visible = true;
+            modalFondo.Visible = true;
+        }
+
+        protected void btnCerrarGrafico_Click(object sender, EventArgs e)
+        {
+            pnlModalGrafico.Visible = false;
+            modalFondo.Visible = false;
         }
 
         protected void imgPdf_Click(object sender, ImageClickEventArgs e)

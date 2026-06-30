@@ -1,10 +1,9 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReporteIncidencias.aspx.cs" Inherits="WebLab.Estadisticas.ReporteIncidencias" MasterPageFile="~/Site1.Master" %>
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
-
     <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
 
-   <%--  <script language="Javascript" type="text/javascript" src="../FusionCharts/FusionCharts.js"></script>--%>
-
+      <script type="text/javascript" src="../script/chart/chart.js"></script>
   <script type="text/javascript"      src="../script/jquery.min.js"></script> 
   <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
     
@@ -126,11 +125,14 @@
  <tr><td style="vertical-align: top" colspan="2">
  <div style="border-style: solid; border-width: 1px">
     <%-- <asp:Literal ID="Literal1" runat="server"></asp:Literal>--%>
+      <uc:GraficoChart ID="miGrafico1" runat="server" />
+   
      </div></td>
 
  <td>&nbsp;</td>
  <td align="left" style="vertical-align: top" colspan="2">
   <div style="border-style: solid; border-width: 1px"> <%--<asp:Literal ID="Literal2" runat="server"></asp:Literal>--%>
+         <uc:GraficoChart ID="miGrafico10" runat="server" />
   </div></td>
  </tr>
  
@@ -146,4 +148,5 @@
        </div>
  
 </div>
+
 </asp:Content>

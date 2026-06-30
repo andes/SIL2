@@ -1,7 +1,7 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Reporte.aspx.cs" Inherits="WebLab.Estadisticas.Reporte" MasterPageFile="~/Site1.Master" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Reporte.aspx.cs" Inherits="WebLab.Estadisticas.Reporte" MasterPageFile="~/Site1.Master" %>
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server"> 
-    <script language="Javascript" type="text/javascript" src="../FusionCharts/FusionCharts.js"></script> 
   <script type="text/javascript">
 
 
@@ -42,12 +42,11 @@
             >Descargar Detalle Por Determinacion</asp:LinkButton>
   
    &nbsp;<asp:Panel ID="pnlGrafico" runat="server">
-   <div style="border: 1px solid #C0C0C0">
-       <asp:Literal ID="FCLiteral" runat="server"></asp:Literal>
-     
-
-  
-       <asp:Literal  ID="FCLiteral0" runat="server"></asp:Literal> 
+   <div style="border: 1px solid #C0C0C0; width: 400px; " >
+      
+        <uc:GraficoChart ID="miGrafico" runat="server" />  &nbsp &nbsp <uc:GraficoChart ID="miGrafico10" runat="server" />
+      
+      
        <asp:Label ID="lblInforme" runat="server" Text="Label" Visible="False"></asp:Label>
        <asp:Label ID="lblTipo" runat="server" Text="Label" Visible="False"></asp:Label>
     </div>

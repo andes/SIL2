@@ -33,7 +33,7 @@ namespace WebLab.Estadisticas
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -48,7 +48,7 @@ namespace WebLab.Estadisticas
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] == null)
-                    Response.Redirect("logout.aspx", false);
+                    Response.Redirect("../FinSesion.aspx", false);
                 else
                 {
               ///      PreventingDoubleSubmit(btnGenerar);
@@ -161,10 +161,10 @@ namespace WebLab.Estadisticas
         {
             DataTable dt   = GetDataSet();
 
-              gvEstadistica.DataSource = dt;
-                gvEstadistica.DataBind();
-
-            Utility.ExportGridViewToExcel(gvEstadistica, "estadisticaProduccionTotal");
+              //gvEstadistica.DataSource = dt;
+              //  gvEstadistica.DataBind();
+            Utility.ExportDataTableToXlsx(dt, "estadisticaProduccionTotal");
+            //Utility.ExportGridViewToExcel(gvEstadistica, "estadisticaProduccionTotal");
                /* StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
                 HtmlTextWriter htw = new HtmlTextWriter(sw);

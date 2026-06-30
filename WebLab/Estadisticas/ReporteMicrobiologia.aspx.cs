@@ -18,7 +18,9 @@ using System.IO;
 using Business.Data;
 using CrystalDecisions.Shared;
 using Business.Data.Laboratorio;
+using System.Web.Script.Serialization;
 using InfoSoftGlobal;
+using System.Collections.Generic;
 
 namespace WebLab.Estadisticas
 {
@@ -52,7 +54,7 @@ namespace WebLab.Estadisticas
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -66,7 +68,7 @@ namespace WebLab.Estadisticas
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] == null)
-                    Response.Redirect("logout.aspx", false);
+                    Response.Redirect("../FinSesion.aspx", false);
                 else
                 {
                     VerificaPermisos("De Microbiologia");
@@ -162,7 +164,7 @@ namespace WebLab.Estadisticas
             gvTipoMuestra.DataSource =dtTipoMuestra;
             gvTipoMuestra.DataBind();
           
-            HFTipoMuestra.Value = getValoresTipoMuestra();
+            //HFTipoMuestra.Value = getValoresTipoMuestra();
 
             //////////////////////Solapa microorganismos
             ddlTipoMuestra.DataTextField = "Tipo Muestra";
@@ -175,7 +177,7 @@ namespace WebLab.Estadisticas
             gvMicroorganismos.DataSource = dtMicroorganismo;
             gvMicroorganismos.DataBind();
 
-            HFMicroorganismo.Value = getValoresMicroorganismos();
+            //HFMicroorganismo.Value = getValoresMicroorganismos();
             gvMicroorganismos.Visible = true;
             lblFiltroMicroorganismo.Text = "Tipo de Muestra: " + ddlTipoMuestra.SelectedItem.Text + " - ATB: " + ddlATB.SelectedValue;
 
@@ -212,7 +214,7 @@ namespace WebLab.Estadisticas
 
             gvMicroorganismosATB.Visible = false;
             gvAntibioticoResistencia.Visible = false;
-
+            btnGraficoResistencia.Visible = false;
           
 
 
@@ -222,7 +224,6 @@ namespace WebLab.Estadisticas
             {
                 lblAnalisis.Text = ddlAnalisis.SelectedItem.Text;
                 pnlResultado.Visible = true;
-                SetSelectedTab(TabIndex.ONE);
             }
         }
 
@@ -652,12 +653,12 @@ namespace WebLab.Estadisticas
 
             gvMicroorganismos.DataSource =dt;          
             gvMicroorganismos.DataBind();
-            HFMicroorganismo.Value = getValoresMicroorganismos();
+            //HFMicroorganismo.Value = getValoresMicroorganismos();
             //gvMicroorganismos.Visible = true;
 
             gvMicroorganismosATB.Visible = false;
             lblFiltroMicroorganismoATB.Visible = false;
-            btnGraficoResistencia.Visible = false;
+           btnGraficoResistencia.Visible = false; 
             lblFiltroMicroorganismo.Text = "Tipo de Muestra: " + ddlTipoMuestra.SelectedItem.Text + " - ATB: " + ddlATB.SelectedValue;
 
           //  gvMicroorganismos.UpdateAfterCallBack = true;
@@ -683,7 +684,6 @@ namespace WebLab.Estadisticas
             lblFiltroAntibiotico.Text = "Tipo de Muestra: " + ddlTipoMuestraAntibioticos.SelectedItem.Text + " - Aislamiento: " + ddlMicroorganismosAntibioticos.SelectedItem.Text;
             gvAntibioticoResistencia.Visible = false;
         
-            SetSelectedTab(TabIndex.THREE);
 
         }
 
@@ -971,7 +971,7 @@ WHERE ANT.idItem=" + ddlAnalisis.SelectedValue + " AND (P.fecha >= '" + fecha1.T
                     lblFiltroMicroorganismoATB.Visible = true;
                     btnGraficoResistencia.Visible = true;
 
-                    HFResistencia.Value = getValoresResistencia();
+                    //HFResistencia.Value = getValoresResistencia();
 
 
                     //string seleccion = "Tipo de Muestra:" + ddlTipoMuestraAntibioticos.SelectedItem.Text + " - " + " Microorganismo: " + ddlMicroorganismosAntibioticos.SelectedItem.Text;
@@ -1069,12 +1069,11 @@ where A.resultado<>'' and  A.germen like '%" + s_germen +"%' and A.idItem=" + dd
             gvTipoMecanismo.DataSource = dt;
             gvTipoMecanismo.DataBind();            
             gvTipoMecanismo.Visible = true;
-            HFMecanismosResistencia.Value = getValoresMecanismos();
-            if (HFMecanismosResistencia.Value != "") {
+            //HFMecanismosResistencia.Value = getValoresMecanismos();
+            if (dt.Rows.Count >0) {
                 btnVerGraficoMecanismosRessitencia.Visible = true;
                 btnVerGraficoMecanismosRessitencia2.Visible = true; 
             }
-            SetSelectedTab(TabIndex.QUINTO);
         }
 
         protected void imgExcelMecanismo_Click(object sender, ImageClickEventArgs e)
@@ -1114,6 +1113,78 @@ where A.resultado<>'' and  A.germen like '%" + s_germen +"%' and A.idItem=" + dd
             }
 
             return s_valores;
+        }
+
+        protected void btnVerGrafico_Click(object sender, ImageClickEventArgs e)
+        {
+            string arg = ((ImageButton)sender).CommandArgument;
+            var js = new JavaScriptSerializer();
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            switch (arg)
+            {
+                case "torta": case "barra":
+                    {
+                        for (int i = 0; i < gvTipoMuestra.Rows.Count; i++) //reemplaza getValoresTipoMuestra()
+                        {
+                            labels.Add(gvTipoMuestra.Rows[i].Cells[0].Text);
+                            datos.Add(int.Parse(gvTipoMuestra.Rows[i].Cells[1].Text));
+                        }
+                        chartResultados.TituloJson = js.Serialize("Tipo de Muestras");
+                    }
+                    break;
+                case "microtorta": case "microbarra":
+
+                    for (int i = 0; i < gvMicroorganismos.Rows.Count; i++) //reemplaza getValoresMicroorganismos
+                    {
+                        labels.Add(gvMicroorganismos.Rows[i].Cells[0].Text);
+                        datos.Add(int.Parse(gvMicroorganismos.Rows[i].Cells[1].Text));
+                    }
+                    chartResultados.TituloJson = js.Serialize("Aislamientos");
+                    break;
+                case "resistencia":
+                    for (int i = 0; i < gvMicroorganismosATB.Rows.Count; i++) //reemplaza getValoresResistencia
+                    {
+                        labels.Add(gvMicroorganismosATB.Rows[i].Cells[0].Text);
+                        datos.Add((gvMicroorganismosATB.Rows[i].Cells[1].Text == "" ? 0 : int.Parse(gvMicroorganismosATB.Rows[i].Cells[1].Text)) +
+                                  (gvMicroorganismosATB.Rows[i].Cells[2].Text == "" ? 0 : int.Parse(gvMicroorganismosATB.Rows[i].Cells[2].Text)) +
+                                  (gvMicroorganismosATB.Rows[i].Cells[3].Text == "" ? 0 : int.Parse(gvMicroorganismosATB.Rows[i].Cells[3].Text)) +
+                                  (gvMicroorganismosATB.Rows[i].Cells[4].Text == "" ? 0 : int.Parse(gvMicroorganismosATB.Rows[i].Cells[4].Text)));
+                    }
+                    chartResultados.TituloJson = js.Serialize("Resistencia en ATB");
+                    break;
+                case "mectorta": case "mecbarra":
+
+                    for (int i = 0; i < gvTipoMecanismo.Rows.Count; i++) //reemplaza getValoresMecanismos
+                    {
+                        string s_nombre = gvTipoMecanismo.Rows[i].Cells[0].Text.Replace(";", "");
+                        string s_mecanismo = gvTipoMecanismo.Rows[i].Cells[1].Text.Replace(";", "");
+                        s_nombre = s_nombre.Replace("&#", "");
+                        s_mecanismo = s_mecanismo.Replace("&#", "");
+                        s_nombre = s_nombre + ": " + s_mecanismo;
+                        labels.Add(s_nombre);
+                        datos.Add(int.Parse(gvTipoMecanismo.Rows[i].Cells[2].Text));
+                    }
+                    chartResultados.TituloJson = js.Serialize("Mecanismos de Resistencia");
+                    break;
+            }
+
+            if (labels.Count > 0)
+            {
+                chartResultados.LabelsJson = js.Serialize(labels);
+                chartResultados.DatosJson = js.Serialize(datos);
+                chartResultados.TipoGrafico = js.Serialize(
+                    arg == "barra" || arg == "microbarra" || arg == "resistencia" || arg == "mecbarra" ? "bar" : "pie");
+
+                pnlModalGrafico.Visible = true;
+                modalFondo.Visible = true;
+            }
+        }
+
+        protected void btnCerrarGrafico_Click(object sender, EventArgs e)
+        {
+            pnlModalGrafico.Visible = false;
+            modalFondo.Visible = false;
         }
     }
 }

@@ -1,14 +1,15 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="AntecedentesAnalisisView.aspx.cs" Inherits="WebLab.Resultados.AntecedentesAnalisisView" %>
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>       
   
      <link rel="stylesheet" type="text/css" href="../App_Themes/default/style.css" />
      <link rel="stylesheet" type="text/css" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" />
      <script src="../bootstrap-3.3.7-dist/js/jquery.min.js"></script>  
-      <script language="Javascript" type="text/javascript" src="../FusionCharts/FusionCharts.js"></script>
+    
+
       <script type="text/javascript">
 
 
@@ -21,8 +22,7 @@
             }
      
   </script>                  
-  
- 
+   
 </head>
 
 <body> 
@@ -42,12 +42,13 @@
                          <asp:ImageButton ID="imgPdf" runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg" onclick="imgPdf_Click" ToolTip="Exportar a Pdf" />
                      
                <asp:Panel ID="pnlGrafico" runat="server">
-         <hr />
+                     <hr />
 
-   <div >
-       <asp:Literal ID="FCLiteral" runat="server"></asp:Literal>
-</div>
-   </asp:Panel> 
+                   <div style="width:auto; height:auto">
+                          <uc:GraficoChart ID="miGrafico" runat="server" /> 
+                  </div>
+             </asp:Panel>  
+             <hr />
               <div>
                 <asp:GridView ID="gvHistorico" runat="server" AutoGenerateColumns="False" 
                      DataKeyNames="idProtocolo" Width="100%"  EmptyDataText="No se encontraron datos para los filtros de búsqueda ingresados"  
@@ -80,9 +81,6 @@
                 </asp:GridView>
              </div>
     </div>
-                                               
-    
-  
     </form> 
      </div>
 </body>

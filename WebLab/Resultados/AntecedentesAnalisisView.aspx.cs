@@ -14,6 +14,7 @@ using Business.Data;
 using CrystalDecisions.Shared;
 using System.IO;
 using System.Configuration;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Resultados
 {
@@ -21,7 +22,7 @@ namespace WebLab.Resultados
     {
       
         Protocolo oProtocolo = new Protocolo();
-
+      
         public CrystalReportSource oCr = new CrystalReportSource();
 
         public Usuario oUser = new Usuario();
@@ -66,8 +67,9 @@ namespace WebLab.Resultados
                         {
                             if (coincideUnidadMedida(dt))
                             {
-                                string valorminimo = Math.Round(oItem.ValorMinimo, 0).ToString();
-                                FCLiteral.Text = CreateChart(dt, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
+                                decimal valor = Math.Round(oItem.ValorMinimo, 0);
+                                string valorminimo = (valor == -1) ? "" : valor.ToString(); //-1 es un valor por defecto pero no se grafica si lo envio, debe ser ""
+                                 CreateChart(dt, oItem.Nombre, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
                             }
                         }
                     }
@@ -102,19 +104,19 @@ namespace WebLab.Resultados
 
         }
 
-        private string CreateChart(DataTable dt, string nombre, string valorminino)
-        {
-            string strXML = "<graph caption='" + nombre.ToUpper() + "'  xAxisName='Protocolo' yAxisMinValue='" + valorminino + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
-                " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
+        //private string CreateChart(DataTable dt, string nombre, string valorminino)
+        //{
+        //    string strXML = "<graph caption='" + nombre.ToUpper() + "'  xAxisName='Protocolo' yAxisMinValue='" + valorminino + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
+        //        " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
                         
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",", ".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
-            }           
+        //    for (int i = 0; i < dt.Rows.Count; i++)
+        //    {
+        //        strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",", ".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
+        //    }           
 
-            strXML += "</graph>";
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "700", "250", false, false);
-        }
+        //    strXML += "</graph>";
+        //    return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "700", "250", false, false);
+        //}
 
 
         protected void imgPdf_Click(object sender, ImageClickEventArgs e)
@@ -220,5 +222,45 @@ namespace WebLab.Resultados
             return Ds.Tables[0];
         }
 
+        private void CreateChart(DataTable dt, string analisis,string titulo, string valorminino)
+        {
+            List<string> labels = new List<string>();
+            List<decimal> datos = new List<decimal>();
+            List<string> datosString = new List<string>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    decimal numero;
+                    labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
+                    if (int.Parse(dt.Rows[i][9].ToString()) == 1) //Valor del analisis en formato decimal
+                    {
+                        decimal.TryParse(
+                                dt.Rows[i][4].ToString(),
+                                System.Globalization.NumberStyles.Any,
+                                System.Globalization.CultureInfo.InvariantCulture,
+                                out numero
+                            );
+                        datos.Add(numero);
+                    }
+                    else
+                        datosString.Add(dt.Rows[i][4].ToString());
+                }
+            }
+         
+
+
+
+            var js = new JavaScriptSerializer();
+
+            miGrafico.LabelsJson = js.Serialize(labels);
+            miGrafico.DatosJson = js.Serialize(datos);
+            miGrafico.DatosStringJson = js.Serialize(datosString);
+            miGrafico.TipoGrafico = js.Serialize("line");
+            miGrafico.TituloJson = js.Serialize(titulo);
+            miGrafico.minimo = js.Serialize(valorminino);
+            miGrafico.tituloX = js.Serialize("Protocolo");
+            miGrafico.tituloY = js.Serialize("Resultado");
+        }
     }
 }

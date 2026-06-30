@@ -15,6 +15,7 @@ using InfoSoftGlobal;
 using Business.Data.Laboratorio;
 using Business.Data;
 using System.Configuration;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
@@ -30,7 +31,7 @@ namespace WebLab.Estadisticas
             //oCr.CacheDuration = 0;
             //oCr.EnableCaching = false;
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -43,7 +44,7 @@ namespace WebLab.Estadisticas
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] == null)
-                    Response.Redirect("logout.aspx", false);
+                    Response.Redirect("../FinSesion.aspx", false);
                 else
                 {
                     VerificaPermisos("De Incidencias");
@@ -118,16 +119,14 @@ namespace WebLab.Estadisticas
 
             if (dt1.Rows.Count > 0)
             {
-                //Literal1.Text = mostrarGrafico(dt1, "", "grafico1");
-             //  Literal2.Text = mostrarGrafico1(dt1, "Muestras recibidas por efector");
+                mostrarGrafico(dt1, "Muestras recibidas por efector",1);
             }
             DataTable dt2 = LeerIncidencias("1");
             gvProtocolos.DataSource = dt2;
             gvProtocolos.DataBind();
             if (dt2.Rows.Count > 0)
             {
-                //Literal2.Text = mostrarGrafico(dt2, "", "grafico2");
-                //  Literal2.Text = mostrarGrafico1(dt1, "Muestras recibidas por efector");
+                 mostrarGrafico(dt2,"Muestras recibidas por efector",2);
             }
             if ((GridView1.Rows.Count > 0) || (gvProtocolos.Rows.Count > 0))
             {
@@ -140,14 +139,44 @@ namespace WebLab.Estadisticas
                 pnlMensaje.Visible = true;
             }
         }
-        private string mostrarGrafico(DataTable dt1, string s_titulo, string id)
+        private void mostrarGrafico(DataTable dt, string s_titulo, int tipo)
         {
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf"; 
-            string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='20'  decimalPrecision='0' showNames='1'>";
-            for (int i = 0; i < dt1.Rows.Count; i++)
-                strXML += "<set name='" + dt1.Rows[i][0].ToString().Replace("\r\n", "") + "' value='" + dt1.Rows[i][1].ToString() + "' />";//.Substring(2, 4)
-            strXML += "</graph>";
-            return FusionCharts.RenderChart(s_tipografico, "2", strXML, id, "500", "300", false, false);
+            //string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+            //string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='20'  decimalPrecision='0' showNames='1'>";
+            //for (int i = 0; i < dt1.Rows.Count; i++)
+            //    strXML += "<set name='" + dt1.Rows[i][0].ToString().Replace("\r\n", "") + "' value='" + dt1.Rows[i][1].ToString() + "' />";//.Substring(2, 4)
+            //strXML += "</graph>";
+            //return FusionCharts.RenderChart(s_tipografico, "2", strXML, id, "500", "300", false, false);
+
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+           
+            var js = new JavaScriptSerializer();
+
+            if(tipo == 1)
+            {
+                miGrafico1.LabelsJson = js.Serialize(labels);
+                miGrafico1.DatosJson = js.Serialize(datos);
+                miGrafico1.TipoGrafico = js.Serialize("pie");
+                miGrafico1.TituloJson = js.Serialize(s_titulo);
+            }
+            else
+            {
+                miGrafico10.LabelsJson = js.Serialize(labels);
+                miGrafico10.DatosJson = js.Serialize(datos);
+                miGrafico10.TipoGrafico = js.Serialize("pie");
+                miGrafico10.TituloJson = js.Serialize(s_titulo);
+            }
+           
+
         }     
         private DataTable LeerIncidencias(string s_tipo)
         {

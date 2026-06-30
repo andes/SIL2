@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReportePorResultado.aspx.cs" Inherits="WebLab.Estadisticas.ReportePorResultado" MasterPageFile="~/Site1.Master" %>
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
       
  <script src="Resources/jquery.min.js" type="text/javascript"></script>
@@ -12,6 +13,7 @@
   <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
     
       <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
+      <script type="text/javascript" src="../script/chart/chart.js"></script>  
       
       <script type="text/javascript"> 
      
@@ -483,21 +485,32 @@ una determinación</asp:RangeValidator>
                           </Columns>
                       </asp:GridView>
                       <br />
-                        <asp:ImageButton ToolTip="Ver grafico de tortas" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png"  OnClientClick="verGrafico('torta'); return false;"                       />
-                                 &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  OnClientClick="verGrafico('barra'); return false;"                       />
+                        <asp:ImageButton ToolTip="Ver grafico de tortas" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png" OnClick="btnVerGrafico_Click" CommandArgument="torta" Visible="false" />
+                                 &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png" OnClick="btnVerGrafico_Click" CommandArgument="barra" visible="false" />
 
-        
-          
+         
+           
        </div>
        </div>
         </div>
-   <script src="../script/Resources/jquery.min.js" type="text/javascript"></script>
+
+<div id="modalFondo" runat="server" visible="false" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9998;"></div>
+<asp:Panel ID="pnlModalGrafico" runat="server" Visible="false" style="position:fixed; top:30px; left:50%; margin-left:-400px; width:800px; z-index:9999; background:white; border:2px solid #333; border-radius:8px; padding:15px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-family:Arial; font-size:18px; font-weight:bold;">
+        <span>Gráfico Estadístico</span>
+        <asp:LinkButton ID="btnCerrarGrafico" runat="server" OnClick="btnCerrarGrafico_Click" style="text-decoration:none; font-size:22px; font-weight:bold; color:#333; cursor:pointer;" ToolTip="Cerrar">X</asp:LinkButton>
+    </div>
+    <uc:GraficoChart ID="chartResultados" runat="server" />
+</asp:Panel>
+
+
+    <%-- <script src="../script/Resources/jquery.min.js" type="text/javascript"></script>
  <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />   
     <script src="../script/Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
 <script language="javascript" type="text/javascript">
 
     var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
-    
+
 
     function verGrafico(tipoGrafico) {
         var dom = document.domain;
@@ -532,7 +545,6 @@ una determinación</asp:RangeValidator>
     }
 
 
-    
-    </script>
 
+</script>--%>
     </asp:Content>

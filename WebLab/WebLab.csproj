@@ -2071,6 +2071,7 @@
     <Content Include="Estadisticas\GeneralFiltro.aspx" />
     <Content Include="Estadisticas\GeneralReporte.aspx" />
     <Content Include="Estadisticas\Grafico.aspx" />
+    <Content Include="Estadisticas\GraficoChart.ascx" />
     <Content Include="Estadisticas\Principal.aspx" />
     <Content Include="Estadisticas\ProcedimientoSIVILA.html" />
     <Content Include="Estadisticas\Produccion.aspx" />
@@ -2086,6 +2087,7 @@
     <Content Include="Estadisticas\ReportePorResultadoSivila.aspx" />
     <Content Include="Estadisticas\ReportePorResultadoTexto.aspx" />
     <Content Include="Estadisticas\ResultadoDefault.aspx" />
+    <Content Include="Estadisticas\ResultadosaSisa.aspx" />
     <Content Include="Estadisticas\SinDatos.aspx" />
     <Content Include="Estadisticas\Turnos.aspx" />
     <Content Include="Global.asax" />
@@ -4718,6 +4720,10 @@
     <Compile Include="Estadisticas\Grafico.aspx.designer.cs">
       <DependentUpon>Grafico.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Estadisticas\GraficoChart.ascx.cs">
+      <DependentUpon>GraficoChart.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Estadisticas\Principal.aspx.cs">
       <DependentUpon>Principal.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4815,6 +4821,13 @@
     </Compile>
     <Compile Include="Estadisticas\ResultadoDefault.aspx.designer.cs">
       <DependentUpon>ResultadoDefault.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Estadisticas\ResultadosaSisa.aspx.cs">
+      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Estadisticas\ResultadosaSisa.aspx.designer.cs">
+      <DependentUpon>ResultadosaSisa.aspx</DependentUpon>
     </Compile>
     <Compile Include="Estadisticas\SinDatos.aspx.cs">
       <DependentUpon>SinDatos.aspx</DependentUpon>
@@ -6503,15 +6516,6 @@
     <Content Include="Formulas\ControlEdit.aspx" />
     <Content Include="Formulas\FormulaEdit.aspx" />
     <Content Include="Formulas\FormulaList.aspx" />
-    <Content Include="FusionCharts\FCF_Area2D.swf" />
-    <Content Include="FusionCharts\FCF_Column2D.swf" />
-    <Content Include="FusionCharts\FCF_Column3D.swf" />
-    <Content Include="FusionCharts\FCF_Line.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3D.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3DLineDY.swf" />
-    <Content Include="FusionCharts\FCF_Pie3D.swf" />
-    <Content Include="FusionCharts\FCF_StackedColumn3D.swf" />
-    <Content Include="FusionCharts\FusionCharts.js" />
     <Content Include="Help\CSS\Arbol.css" />
     <Content Include="Help\CSS\emx_nav_left.css" />
     <Content Include="Help\CSS\ftiens4.js" />

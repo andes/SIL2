@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Estadisticas {
-    
-    
-    public partial class Reporte {
-        
+namespace WebLab.Estadisticas
+{
+
+
+    public partial class Reporte
+    {
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// lblFiltro control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFiltro;
-        
+
         /// <summary>
         /// imgPdf control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgPdf;
-        
+
         /// <summary>
         /// imgExcel control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgExcel;
-        
+
         /// <summary>
         /// lnkDetallePorDet control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDetallePorDet;
-        
+
         /// <summary>
         /// pnlGrafico control.
         /// </summary>
@@ -65,25 +67,25 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlGrafico;
-        
+
         /// <summary>
-        /// FCLiteral control.
+        /// miGrafico control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal FCLiteral;
-        
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico;
+
         /// <summary>
-        /// FCLiteral0 control.
+        /// miGrafico10 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal FCLiteral0;
-        
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico10;
+
         /// <summary>
         /// lblInforme control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblInforme;
-        
+
         /// <summary>
         /// lblTipo control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTipo;
-        
+
         /// <summary>
         /// gvEstadistica control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Estadisticas {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvEstadistica;
-        
+
         /// <summary>
         /// lnkRegresar control.
         /// </summary>

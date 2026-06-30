@@ -19,6 +19,8 @@ using System.IO;
 using CrystalDecisions.Web;
 using System.Text;
 using Business.Data;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
@@ -29,8 +31,7 @@ namespace WebLab.Estadisticas
         public Configuracion oCon = new Configuracion();
         public Usuario oUser = new Usuario();
 
-
-
+       
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -39,7 +40,7 @@ namespace WebLab.Estadisticas
             oCr.EnableCaching = false;
 
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -54,7 +55,7 @@ namespace WebLab.Estadisticas
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] == null)
-                    Response.Redirect("logout.aspx", false);
+                    Response.Redirect("../FinSesion.aspx", false);
                 else
                 {
                     VerificaPermisos("De Turnos");
@@ -173,7 +174,7 @@ namespace WebLab.Estadisticas
                 gvLista.DataSource = dt;
                 gvLista.DataBind();
 
-               // FCLiteral.Text = CreateChart1(dt);
+               CreateChart1(dt);
             }
             else
             {
@@ -243,7 +244,7 @@ namespace WebLab.Estadisticas
             string encabezado="";
             if (oUser.IdEfector.IdEfector != 227)
             {
-                if (int.Parse(ddlEfectorSolicitante.SelectedValue) != 0)
+                if (ddlEfectorSolicitante.SelectedItem != null && int.Parse(ddlEfectorSolicitante.SelectedValue) != 0)
                     encabezado = ddlEfectorSolicitante.SelectedItem.Text;
                 else 
                     encabezado =  ddlEfector.SelectedItem.Text;
@@ -395,6 +396,28 @@ namespace WebLab.Estadisticas
 
                 
             
+        }
+
+        private void CreateChart1(DataTable dt)
+        {
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count-1; i++) //que no grafique la ultima fila de totales
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+
+
+            var js = new JavaScriptSerializer();
+
+            chartTurnos.LabelsJson = js.Serialize(labels);
+            chartTurnos.DatosJson = js.Serialize(datos);
+            chartTurnos.TipoGrafico = js.Serialize("pie");
+            chartTurnos.TituloJson = js.Serialize("Asistencias de turnos dados");
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Turnos.aspx.cs" Inherits="WebLab.Estadisticas.Turnos" MasterPageFile="~/Site1.Master" %>
-
+<%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
 
     <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
@@ -10,7 +10,6 @@
   <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
     
       <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
-      
       <script type="text/javascript"> 
      
 
@@ -124,6 +123,11 @@
                                 Visible="False">
                                  <table style="width:100%;">
                                      <tr>
+                                           <td>
+                                               <uc:GraficoChart ID="chartTurnos" runat="server" />
+                                         </td>
+                                     </tr>
+                                     <tr>
                                          <td style="vertical-align: top">
                                              <asp:GridView ID="gvLista" runat="server" CellPadding="4" ForeColor="#333333" CssClass="table table-bordered bs-table"  Width="100%"  GridLines="None">
                                                  <RowStyle BackColor="#EFF3FB" />
@@ -135,9 +139,7 @@
                                                  <AlternatingRowStyle BackColor="White" />
                                              </asp:GridView>
                                          </td>
-                                         <td>
-                                         <%--    <asp:Literal ID="FCLiteral" runat="server"></asp:Literal>--%>
-                                         </td>
+                                       
                                      </tr>
                                      <tr>
                                          <td colspan="2">
@@ -167,5 +169,4 @@
        </div>
 
       </div>
- 
  </asp:Content>

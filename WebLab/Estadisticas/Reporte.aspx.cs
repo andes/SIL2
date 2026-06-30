@@ -20,6 +20,7 @@ using CrystalDecisions.Web;
 using System.Text;
 using Business.Data;
 using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas
 {
@@ -36,17 +37,13 @@ namespace WebLab.Estadisticas
 
         int col1 = 0;
         Usuario oUser = new Usuario();
-
-      
-
-
         protected void Page_PreInit(object sender, EventArgs e)
         {
             oCr.Report.FileName = "";
             oCr.CacheDuration = 0;
             oCr.EnableCaching = false;
             if (Session["idUsuario"] == null)
-                Response.Redirect("logout.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
             else
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -60,7 +57,7 @@ namespace WebLab.Estadisticas
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] == null)
-                    Response.Redirect("logout.aspx", false);
+                    Response.Redirect("../FinSesion.aspx", false);
                 else
                 {
                     lblInforme.Text = Session["informe"].ToString();
@@ -87,8 +84,7 @@ namespace WebLab.Estadisticas
         {
             bool mostrarGrafico1 = true;
             bool mostrarGrafico2 = true;
-           
-        
+
 
             string s_titulo = "";
             string s_tituloChart = "";
@@ -147,8 +143,9 @@ namespace WebLab.Estadisticas
                         gvEstadistica.ShowFooter = false;
                     }
                     break;
+                    //Me falta le case 11  <asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
             }
-         
+
             lblFiltro.Text= Session["fechaDesde"].ToString() + " - " + Session["fechaHasta"].ToString()+ " " + s_tituloAdicional;
             
             if (Session["grafico"].ToString() == "1") pnlGrafico.Visible = false;
@@ -157,16 +154,18 @@ namespace WebLab.Estadisticas
 
 
             if (mostrarGrafico1)
-            {              
-                     FCLiteral.Text = CreateChart1(s_tituloChart, "Por Origen");              
+            {
+                 CreateChart1(s_tituloChart, "Por Origen");
             }
 
-                /// Grafico 2
+            /// Grafico 2
             if (mostrarGrafico2)
-            {             
-                FCLiteral0.Text = CreateChart2(s_tituloChart);            
+            {
+               CreateChart2(s_tituloChart);            
             }
 
+            if (!mostrarGrafico1 && !mostrarGrafico2)
+                pnlGrafico.Visible = false;
 
             if (Session["idEfector"].ToString() != "0")
             {
@@ -466,7 +465,7 @@ namespace WebLab.Estadisticas
                 case "8": cmd.CommandText = "LAB_EstadisticaPorSector"; break;
                 case "9": cmd.CommandText = "LAB_EstadisticaRankingDia"; break;
                 case "10": cmd.CommandText = "LAB_EstadisticaPorHorario"; break;
-
+                    // falta el case 11...<asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
             }
 
 
@@ -569,64 +568,69 @@ namespace WebLab.Estadisticas
                 Response.Redirect("PorResultado.aspx", false);
 
         }
-        private string CreateChart1(string s_titulo, string s_tipo)
+
+        #region grafico2
+        private void CreateChart1(string s_titulo, string s_tipo)
         {
-
-            DataTable dt = new DataTable();
-            dt = GetDatosEstadistica("CH1");
-            
-       
-
-            string strXML = "<graph caption='"+s_titulo+"' subCaption='"+ s_tipo+"' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";            
-
-            if (dt.Rows.Count > 0)
-            {
-                for (int i=0;i<dt.Rows.Count;i++)
-                {
-                    strXML += "<set name='" + dt.Rows[i][0].ToString() + "' value='" + dt.Rows[i][1].ToString() + "' />";                  
-                }
-            }
-            else
-                Response.Redirect("SinDatos.aspx?Desde=GeneralFiltro.aspx", false);
-
-
-            strXML += "</graph>";
-            
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Pie3D.swf", "", strXML, "Sales", "600", "250", false, false);
-
-
-         
-
-        }
-
-        private string CreateChart2(string s_titulo)
-        {
-
-          
-
-            DataTable dt = new DataTable();
-            dt = GetDatosEstadistica("CH2");
-            string strXML = "<graph caption='"+s_titulo+"'  showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
-
+            DataTable dt =  GetDatosEstadistica("CH1");
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
             if (dt.Rows.Count > 0)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    strXML += "<set name='" + dt.Rows[i][0].ToString() + "' value='" + dt.Rows[i][1].ToString() + "' />";
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
                 }
             }
             else
                 Response.Redirect("SinDatos.aspx?Desde=GeneralFiltro.aspx", false);
 
-            strXML += "</graph>";
+            //return ChartHelper.GenerarGrafico(datos, "chart1", s_titulo + s_tipo, "pie");
+           
 
-            if (Session["tipo"].ToString() != "9")
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Pie3D.swf", "", strXML, "Sales1", "600", "250", false, true);
-            else
-                return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales2", "600", "250", false, true);
 
+            var js = new JavaScriptSerializer();
+
+            miGrafico.LabelsJson = js.Serialize(labels);
+            miGrafico.DatosJson = js.Serialize(datos);
+            miGrafico.TipoGrafico = js.Serialize("pie");
+            miGrafico.TituloJson = js.Serialize(s_titulo);
+            miGrafico.Subtitulo = js.Serialize(s_tipo);
 
         }
+
+        private void CreateChart2(string s_titulo)
+        {
+            string tipo = string.Empty;
+            DataTable dt  = GetDatosEstadistica("CH2");
+            List<string> labels = new List<string>();
+            List<int> datos = new List<int>();
+            if (dt.Rows.Count > 0)
+            {
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    labels.Add(dt.Rows[i][0].ToString());
+                    datos.Add(int.Parse(dt.Rows[i][1].ToString()));
+                }
+            }
+            else
+                Response.Redirect("SinDatos.aspx?Desde=GeneralFiltro.aspx", false);
+
+            if (Session["tipo"].ToString() != "9") tipo = "pie";
+            else tipo = "bar";
+
+            //return ChartHelper.GenerarGrafico(datos, "chart2", s_titulo, tipo);
+
+            var js = new JavaScriptSerializer();
+
+            miGrafico10.LabelsJson = js.Serialize(labels);
+            miGrafico10.DatosJson = js.Serialize(datos);
+            miGrafico10.TipoGrafico = js.Serialize(tipo);
+            miGrafico10.TituloJson = js.Serialize(s_titulo);
+        }
+        #endregion
+
 
         protected void gvEstadistica_RowDataBound(object sender, GridViewRowEventArgs e)
         {
