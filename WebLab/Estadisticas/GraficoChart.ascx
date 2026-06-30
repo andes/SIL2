@@ -71,6 +71,7 @@
                 x: { display: false },
                 y: { display: false }
             };
+            opciones.radius = '85%';
         }
 
         //Si tiene valor minimo un escala, definimos la escala
@@ -105,7 +106,7 @@
         if (tipo === 'pie' || tipo === 'bar') {
            
             opciones.plugins.legend = {
-                position: 'right',
+                position: 'bottom',
                 labels: {
                     generateLabels: function (chart) {
 
