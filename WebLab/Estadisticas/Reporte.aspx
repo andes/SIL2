@@ -42,14 +42,25 @@
             >Descargar Detalle Por Determinacion</asp:LinkButton>
   
    &nbsp;<asp:Panel ID="pnlGrafico" runat="server">
-   <div style="border: 1px solid #C0C0C0; width: 400px; " >
-      
-        <uc:GraficoChart ID="miGrafico" runat="server" />  &nbsp &nbsp <uc:GraficoChart ID="miGrafico10" runat="server" />
-      
-      
-       <asp:Label ID="lblInforme" runat="server" Text="Label" Visible="False"></asp:Label>
-       <asp:Label ID="lblTipo" runat="server" Text="Label" Visible="False"></asp:Label>
-    </div>
+       <table >
+           <tr>
+               <td  style="border: 1px solid #C0C0C0; vertical-align:auto;">
+                     <div  style=" width: 400px; " >
+                          <uc:GraficoChart ID="miGrafico" runat="server" />
+                        </div>
+                   
+                    <asp:Label ID="lblInforme" runat="server" Text="Label" Visible="False"></asp:Label>
+                     <asp:Label ID="lblTipo" runat="server" Text="Label" Visible="False"></asp:Label>
+               </td>
+               <td>&nbsp;</td>
+               <td style="vertical-align:auto;">
+                    <div style="border: 1px solid #C0C0C0;  width: 600px;" id="divGrafico2" runat="server" >
+                        <uc:GraficoChart ID="miGrafico10" runat="server" />
+                     </div>
+               </td>
+           </tr>
+       </table>
+ 
     </asp:Panel>
     </div>
           <div class="panel-body">	

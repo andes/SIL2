@@ -161,7 +161,11 @@ namespace WebLab.Estadisticas
             /// Grafico 2
             if (mostrarGrafico2)
             {
-               CreateChart2(s_tituloChart);            
+               CreateChart2(s_tituloChart);
+            }
+            else
+            {
+                divGrafico2.Visible = false;
             }
 
             if (!mostrarGrafico1 && !mostrarGrafico2)
