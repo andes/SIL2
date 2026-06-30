@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Informes {
-    
-    
-    public partial class HistoriaClinica {
-        
+namespace WebLab.Informes
+{
+
+
+    public partial class HistoriaClinica
+    {
+
         /// <summary>
         /// pnlTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTitulo;
-        
+
         /// <summary>
         /// lblNumeroDocumento control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNumeroDocumento;
-        
+
         /// <summary>
         /// lblPaciente control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPaciente;
-        
+
         /// <summary>
         /// imgPdf control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgPdf;
-        
+
         /// <summary>
         /// lblSexo control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblSexo;
-        
+
         /// <summary>
         /// lblFechaNacimiento control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaNacimiento;
-        
+
         /// <summary>
         /// lblContacto control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblContacto;
-        
+
         /// <summary>
         /// lblAnalisis control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAnalisis;
-        
+
         /// <summary>
         /// pnlGrafico control.
         /// </summary>
@@ -92,16 +94,16 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlGrafico;
-        
+
         /// <summary>
-        /// FCLiteral control.
+        /// miGrafico control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal FCLiteral;
-        
+        protected global::WebLab.Estadisticas.GraficoChart miGrafico;
+
         /// <summary>
         /// gvHistorico control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Informes {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvHistorico;
-        
+
         /// <summary>
         /// lnkRegresar control.
         /// </summary>
