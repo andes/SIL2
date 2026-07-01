@@ -31,7 +31,8 @@ namespace Business.Data.Laboratorio
         private DateTime m_fecharesultado;
         private Efector m_idEfector;
         private int idLote; //Cambio ya que al crear una Derivacion con idlote=0 despues NHibernate da error  'No row with the given identifier exists'
-		private int idProtocoloDerivacion;
+		private int m_idProtocoloOrigen;
+		private int m_idProtocoloDestino;
 		private int idMotivoCancelacion;
         #endregion
 
@@ -52,9 +53,9 @@ namespace Business.Data.Laboratorio
             m_fecharesultado = DateTime.MinValue;
             m_idEfector = new Efector();
             idLote = 0;
-            idProtocoloDerivacion = 0;
+            m_idProtocoloOrigen = 0;
 			idMotivoCancelacion = 0;
-
+			m_idProtocoloDestino = 0;
 		}
 		#endregion // End of Default ( Empty ) Class Constuctor
 
@@ -71,7 +72,9 @@ namespace Business.Data.Laboratorio
             string resultado,
             int idusuarioresultado, 
 			DateTime fecharesultado,
-            Efector idEfector)
+            Efector idEfector,
+			int idEfectorOrigen
+			)
 			: this()
 		{
 			m_iddetalleprotocolo = iddetalleprotocolo;
@@ -85,6 +88,8 @@ namespace Business.Data.Laboratorio
             m_idEfector = idEfector;
             idLote = 0;
 			idMotivoCancelacion = 0;
+			m_idProtocoloOrigen = idEfectorOrigen;
+			m_idProtocoloDestino = 0;
 		}
 		#endregion // End Required Fields Only Constructor
 
@@ -248,12 +253,21 @@ namespace Business.Data.Laboratorio
             }
         }
 
-        public int IdProtocoloDerivacion {
+        public int IdProtocoloOrigen {
             get {
-                return idProtocoloDerivacion;
+                return m_idProtocoloOrigen;
             }
             set {
-                idProtocoloDerivacion = value;
+                m_idProtocoloOrigen = value;
+            }
+        } 
+		
+		public int IdProtocoloDestino {
+            get {
+                return m_idProtocoloDestino;
+            }
+            set {
+                m_idProtocoloDestino = value;
             }
         }
 
