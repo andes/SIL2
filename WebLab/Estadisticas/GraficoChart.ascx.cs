@@ -41,5 +41,9 @@ namespace WebLab.Estadisticas
         /// 
         /// </summary>
         public string tituloY { get; set; }  //titulo de eje Y
+        /// <summary>
+        /// Controla si se muestran los labels en la leyenda (true por defecto)
+        /// </summary>
+        public string MostrarLabels { get; set; }
     }
 }
