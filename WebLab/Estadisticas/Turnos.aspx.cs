@@ -160,9 +160,15 @@ namespace WebLab.Estadisticas
         private void MostrarReporte()
         {
             if (ddlEfector.SelectedValue == "0")
+            {
                 imgPdf.Visible = false;
+                chartTurnos.MostrarLabels = "false"; //son tantos efectores que no es legible, cuando se pasa el mouse por encima se ve el % y las cant.
+            }
             else
-            imgPdf.Visible = true;
+            {
+                imgPdf.Visible = true;
+                chartTurnos.MostrarLabels = "true";
+            }
 
             DataTable dt= getDatosEstadisticos("G");
 
@@ -379,6 +385,7 @@ namespace WebLab.Estadisticas
 
         protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e)
         {
+            pnlDatos.Visible = false; //al cambiar el efector, tanto el chart como el grid se ocultan hasta que el usuario vuelva a clickear "Generar"
             if (oUser.IdEfector.IdEfector == 227)
             {
                 if (ddlEfector.SelectedIndex != 0)
