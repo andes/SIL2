@@ -79,6 +79,7 @@
         }
 
         if (tipo === 'pie' || tipo === 'bar') {
+            // % en tooltip
             opciones.plugins.tooltip = {
                 callbacks: {
                     label: function(context) {
@@ -122,7 +123,7 @@
             opciones.plugins.title.display = false;  // oculta el titulo duplicado
         }
 
-        if (tipo === 'pie' || tipo === 'bar') {
+        if (tipo === 'pie') {
             //se agrega en los labels el % , y ademas la opcion que no muestre nada (para graficos con muchos items)
             if (mostrarLabels === '' || mostrarLabels === "true") {
                 opciones.plugins.legend = {
