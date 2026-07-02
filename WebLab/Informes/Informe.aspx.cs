@@ -238,7 +238,7 @@ namespace WebLab.Informes
                 if (oCon.esMultiEFector())
                 {
                     pnlImpresora.Visible = false;
-                    lnkImprimir.Visible = false;
+                    //lnkImprimir.Visible = false;
                     lnkImprimirAnalisisFueraHT.Visible = false;
                     // ddlImpresora.Visible = false;
                     //lnkImprimir.Visible = false;
@@ -255,7 +255,7 @@ namespace WebLab.Informes
                     if (ddlImpresora.Items.Count == 0)
                     {
                         pnlImpresora.Visible = false;
-                        lnkImprimir.Visible = false;
+                        //lnkImprimir.Visible = false;
                         lnkImprimirAnalisisFueraHT.Visible = false;
                         // ddlImpresora.Visible = false;
                         //lnkImprimir.Visible = false;
@@ -491,19 +491,19 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
             }
         }
 
-     
 
-        
-        private void MarcarSeleccionados(bool p)
-        {
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked == !p)
-                    ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
-            }
 
-        }
+        //Version del sil1
+        //private void MarcarSeleccionados(bool p)
+        //{
+        //    foreach (GridViewRow row in gvLista.Rows)
+        //    {
+        //        CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //        if (a.Checked == !p)
+        //            ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
+        //    }
+
+        //}
         private void VistaPreeliminar(object p, string accion)
         {
             HojaTrabajo oRegistro = new HojaTrabajo();
@@ -1040,26 +1040,27 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {               
-                ImageButton CmdPdf = (ImageButton)e.Row.Cells[4].Controls[1];
+                ImageButton CmdPdf = (ImageButton)e.Row.Cells[3].Controls[1];
                 CmdPdf.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdPdf.CommandName = "Pdf";
                 CmdPdf.ToolTip = "Vista Preeliminar";
+                //Version del sil1
 
-                ImageButton CmdAdicional = (ImageButton)e.Row.Cells[5].Controls[1];
-                CmdAdicional.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdAdicional.CommandName = "Imprimir";
-                CmdAdicional.ToolTip = "Imprimir";
+                //ImageButton CmdAdicional = (ImageButton)e.Row.Cells[5].Controls[1];
+                //CmdAdicional.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                //CmdAdicional.CommandName = "Imprimir";
+                //CmdAdicional.ToolTip = "Imprimir";
 
-                ImageButton CmdExcel = (ImageButton)e.Row.Cells[6].Controls[1];
-                CmdExcel.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdExcel.CommandName = "Excel";
-                CmdExcel.ToolTip = "Excel";
+                //ImageButton CmdExcel = (ImageButton)e.Row.Cells[6].Controls[1];
+                //CmdExcel.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                //CmdExcel.CommandName = "Excel";
+                //CmdExcel.ToolTip = "Excel";
 
-             
-                if (pnlImpresora.Visible == false)
-                {
-                    CmdAdicional.Visible = false;
-                }
+
+                //if (pnlImpresora.Visible == false)
+                //{
+                //    CmdAdicional.Visible = false;
+                //}
             }
         }
 
@@ -1069,7 +1070,7 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
          
             gvLista.DataSource = LeerDatos();
             gvLista.DataBind();
-            MarcarSeleccionados(false);
+            //MarcarSeleccionados(false);
         }
 
         private object LeerDatos()
@@ -1110,23 +1111,23 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
          
         }
 
-        
-        protected void lnkImprimir_Click(object sender, EventArgs e)
-        {
+        //Version del sil1
+        //protected void lnkImprimir_Click(object sender, EventArgs e)
+        //{
             
-            foreach (GridViewRow row in gvLista.Rows)
-            {
+        //    foreach (GridViewRow row in gvLista.Rows)
+        //    {
 
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked == true)
-                {
-                    VistaPreeliminar(gvLista.DataKeys[row.RowIndex].Value.ToString(), "Impresora");                    
-                }
-            }
+        //        CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //        if (a.Checked == true)
+        //        {
+        //            VistaPreeliminar(gvLista.DataKeys[row.RowIndex].Value.ToString(), "Impresora");                    
+        //        }
+        //    }
             
 
          
-        }
+        //}
 
         protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
         {
@@ -1147,15 +1148,16 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
           //  gvLista.UpdateAfterCallBack = true;
         }
 
-        protected void lnkMarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(true);
-        }
+        //Version del sil1
+        //protected void lnkMarcar_Click(object sender, EventArgs e)
+        //{
+        //    MarcarSeleccionados(true);
+        //}
 
-        protected void lnkDesmarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(false);
-        }
+        //protected void lnkDesmarcar_Click(object sender, EventArgs e)
+        //{
+        //    MarcarSeleccionados(false);
+        //}
 
         protected void lnkImprimirAnalisisFueraHT_Click(object sender, EventArgs e)
         {
