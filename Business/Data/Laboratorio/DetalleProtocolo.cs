@@ -1528,7 +1528,8 @@ namespace Business.Data.Laboratorio
                 oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
 
                 oRegistro.IdEfectorDerivacion = this.IdItem.GetIDEfectorDerivacion(oUser.IdEfector);  // se graba el efector configurado en ese momento.
-
+                oRegistro.IdProtocoloOrigen = IdProtocolo.IdProtocolo; //Guardo el idProtocolo de origen
+                oRegistro.IdProtocoloDestino = 0;
                 oRegistro.Save();
 
                 // graba el resultado en ResultadCar  "Pendiente de derivar"
@@ -1595,7 +1596,8 @@ namespace Business.Data.Laboratorio
                 Derivacion de = new Derivacion();
                 de = (Derivacion)de.Get(typeof(Derivacion), "IdDetalleProtocolo", dp);
                 de.Estado = 3;
-                de.IdProtocoloDerivacion = oAnterior.IdProtocolo;
+                //de.IdProtocoloDerivacion = oAnterior.IdProtocolo; //Esto esta mal, ahora guardamos el valor del anterior al crear la derivacion
+                de.IdProtocoloDestino = oRegistro.IdProtocolo; //Guardamos el valor del nuevo protocolo
                 de.Save();
             }
 

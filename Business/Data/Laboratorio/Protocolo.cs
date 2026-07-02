@@ -3328,6 +3328,7 @@ and   P.Baja = 0 and P.Estado > 0  and P.IdPaciente = " + s_idPaciente + "   and
             return s_resultadoAnterior;
 
         }
-    
+
+       
     }
 }

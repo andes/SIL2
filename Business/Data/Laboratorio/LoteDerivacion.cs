@@ -154,7 +154,7 @@ namespace Business.Data.Laboratorio  {
             //dList = dList.FindAll(x => x.IdProtocoloDerivacion == 0 && x.Estado == 1);
 
             //Revisar que Derivacion tenga DetalleProtocolo
-            string m_strSQL = " Select idDerivacion FROM LAB_Derivacion WHERE idLote=" +this.IdLoteDerivacion+ " and idProtocoloDerivacion=0 and estado=1 and " +
+            string m_strSQL = " Select idDerivacion FROM LAB_Derivacion WHERE idLote=" +this.IdLoteDerivacion+ " and idProtocoloDestino=0 and estado=1 and " +
                 " idDetalleProtocolo in (Select idDetalleProtocolo FROM LAB_DetalleProtocolo where IdEfector = " + this.IdEfectorOrigen.IdEfector + ")";
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
