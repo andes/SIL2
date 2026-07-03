@@ -606,24 +606,7 @@ namespace WebLab.Resultados {
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage obs;
 
-        /// <summary>
-        /// obs control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlImage obs;
-
-        /// <summary>
-        /// obs control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlImage obs;
-
+       
         /// <summary>
         /// tituloAntecedente control.
         /// </summary>

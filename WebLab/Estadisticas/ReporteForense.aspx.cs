@@ -18,7 +18,6 @@ using System.IO;
 using Business.Data;
 using CrystalDecisions.Shared;
 using Business.Data.Laboratorio;
-using InfoSoftGlobal;
 
 namespace WebLab.Estadisticas
 {
@@ -287,9 +286,9 @@ namespace WebLab.Estadisticas
             //    Response.Redirect("SinDatos.aspx", false);
 
 
-          
 
-            return FusionCharts.RenderChart(s_tipografico, p.ToString(), strXML, "Sales"+p.ToString(), ancho, "200", false, false);
+
+            return "";// FusionCharts.RenderChart(s_tipografico, p.ToString(), strXML, "Sales"+p.ToString(), ancho, "200", false, false);
         }
 
 

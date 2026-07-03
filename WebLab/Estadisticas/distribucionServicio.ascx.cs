@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using InfoSoftGlobal;
 using System.Data;
 using System.Data.SqlClient;
 using Business;
@@ -16,59 +15,59 @@ namespace WebLab.Estadisticas
         protected void Page_Load(object sender, EventArgs e)
         {
             
-            FCLiteral.Text = mostrarGrafico(); ;
+            //FCLiteral.Text = mostrarGrafico(); ;
         }
 
-        private string mostrarGrafico()
-        {
-            string s_titulo = "";
-            string s_tipo = "";
-            string strXML = "";
-            string strDetalle = "";
+        //private string mostrarGrafico()
+        //{
+        //    string s_titulo = "";
+        //    string s_tipo = "";
+        //    string strXML = "";
+        //    string strDetalle = "";
 
-            //s_tipografico = "../FusionCharts/FCF_MSColumn3D.swf";
+        //    //s_tipografico = "../FusionCharts/FCF_MSColumn3D.swf";
 
-            //s_titulo = "";// ddlAnalisis.SelectedItem.Text;
-            //if (p == 0) s_tipo = "Casos por tipo de muestra";
-            //else
-            //{ if (p == 3) s_tipo = "Casos por Resultados Obtenidos"; else        s_tipo = "Aislamientos"; }
+        //    //s_titulo = "";// ddlAnalisis.SelectedItem.Text;
+        //    //if (p == 0) s_tipo = "Casos por tipo de muestra";
+        //    //else
+        //    //{ if (p == 3) s_tipo = "Casos por Resultados Obtenidos"; else        s_tipo = "Aislamientos"; }
 
-            string s_ancho = "700";
-            string s_alto = "400";
+        //    string s_ancho = "700";
+        //    string s_alto = "400";
 
-            DataTable dt = new DataTable();
-            dt = GetDatosEstadistica();
-
-
-
-        //    string strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
-
-            if (dt.Rows.Count > 0)
-            {
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    strDetalle += "<set name='" + dt.Rows[i][0].ToString() + "' value='" + dt.Rows[i][1].ToString() + "' />";
-                }
-            }
+        //    DataTable dt = new DataTable();
+        //    dt = GetDatosEstadistica();
 
 
-            //string[] arr = Request["valores"].ToString().Split((";").ToCharArray());
-            //foreach (string item in arr)
-            //{
-            //    strDetalle += "<set " + item + " />";
-            //}
 
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+        //   string strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
+
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        for (int i = 0; i < dt.Rows.Count; i++)
+        //        {
+        //            strDetalle += "<set name='" + dt.Rows[i][0].ToString() + "' value='" + dt.Rows[i][1].ToString() + "' />";
+        //        }
+        //    }
+
+
+        //    //string[] arr = Request["valores"].ToString().Split((";").ToCharArray());
+        //    //foreach (string item in arr)
+        //    //{
+        //    //    strDetalle += "<set " + item + " />";
+        //    //}
+
+        //    string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
 
         
                
-                    strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='30'  decimalPrecision='0' showNames='1'>";
-                    strXML += strDetalle;
-                    strXML += "</graph>";
+        //            strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='30'  decimalPrecision='0' showNames='1'>";
+        //            strXML += strDetalle;
+        //            strXML += "</graph>";
                 
             
-            return FusionCharts.RenderChart(s_tipografico, "", strXML, "1", s_ancho, s_alto, false, false);
-        }
+        //    //return FusionCharts.RenderChart(s_tipografico, "", strXML, "1", s_ancho, s_alto, false, false);
+        //}
 
         private DataTable GetDatosEstadistica()
         {

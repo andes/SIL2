@@ -12,7 +12,6 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using Business;
 using System.Data.SqlClient;
-using InfoSoftGlobal;
 using Business.Data.Laboratorio;
 using CrystalDecisions.Shared;
 using System.IO;
@@ -163,12 +162,12 @@ namespace WebLab.Estadisticas
             if (ddlEfector.SelectedValue == "0")
             {
                 imgPdf.Visible = false;
-                chartTurnos.MostrarLabels = "false"; //son tantos efectores que no es legible, cuando se pasa el mouse por encima se ve el % y las cant.
+               //lo agregamos? chartTurnos.MostrarLabels = "false"; //son tantos efectores que no es legible, cuando se pasa el mouse por encima se ve el % y las cant.
             }
             else
             {
                 imgPdf.Visible = true;
-                chartTurnos.MostrarLabels = "true";
+               // chartTurnos.MostrarLabels = "true";
             }
 
             DataTable dt= getDatosEstadisticos("G");
