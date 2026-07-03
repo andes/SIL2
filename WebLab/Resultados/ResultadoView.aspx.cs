@@ -203,35 +203,28 @@ namespace WebLab.Resultados
             if (Request["Operacion"].ToString() == "HC")
                 m_strSQL += " order by idProtocolo desc "; // desde el mas reciente al mas antiguo.
             else                      
-                m_strSQL += " order by  idProtocolo ";
-              
+                m_strSQL += " order by  idProtocolo ";              
     
 
-            DataSet Ds = new DataSet();
-            //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();            
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura, no escribe nada el SP
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             gvLista.DataSource = Ds.Tables[0];
             gvLista.DataBind();
-            dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);
-           
-
+            dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);           
             if (Ds.Tables[0].Rows.Count > 0)
             {
                 dtProtocolo = Ds.Tables[0];
                 int ultimafila = Ds.Tables[0].Rows.Count - 1;
                 CurrentPageIndex = int.Parse(Session["idProtocolo"].ToString());
-                CurrentIndexGrilla = int.Parse(Request["Index"].ToString());
-                //CurrentPageIndex = int.Parse(Ds.Tables[0].Rows[CurrentIndexGrilla].ItemArray[0].ToString());
+                CurrentIndexGrilla = int.Parse(Request["Index"].ToString());                
                 UltimaPageIndex = ultimafila; // int.Parse(Ds.Tables[0].Rows[ultimafila].ItemArray[0].ToString());
             }
 
             lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " protocolos encontrados";
-            Session.Add("Tabla1", dtProtocolo);
-           
-            
+            Session.Add("Tabla1", dtProtocolo);                       
         }
 
 
@@ -360,13 +353,11 @@ namespace WebLab.Resultados
                 
                 lblFecha.Text = oRegistro.Fecha.ToShortDateString();
                 lblProtocolo.Text = oRegistro.Numero.ToString();
-
-                                lblOrigen.Text = oRegistro.IdOrigen.Nombre;
+                lblOrigen.Text = oRegistro.IdOrigen.Nombre;
                 //else
                 lblSolicitante.Text = oRegistro.IdEfectorSolicitante.Nombre;
                 if (oRegistro.MatriculaEspecialista != "-1")
-                    lblMedico.Text = oRegistro.Especialista + " MP:" + oRegistro.MatriculaEspecialista;
-                               
+                    lblMedico.Text = oRegistro.Especialista + " MP:" + oRegistro.MatriculaEspecialista;                               
                 
                 if (oRegistro.Sala != "") lblOrigen.Text += " Sala: " + oRegistro.Sala;
                 if (oRegistro.Cama != "") lblOrigen.Text += " Cama: " + oRegistro.Cama;
@@ -414,17 +405,11 @@ namespace WebLab.Resultados
                         if (lblDiagnostico.Text == "") lblDiagnostico.Text = oD.Nombre;
                         else lblDiagnostico.Text += " - " + oD.Nombre;
                         if (oD.Codigo == "Z32.1") embarazada = "E";
-
                     }
                 }
-
                 lblCodigoPaciente.Text = oRegistro.getCodificaHiv(embarazada); // lblSexo.Text.Substring(0, 1) + oRegistro.IdPaciente.Nombre.Substring(0, 2) + oRegistro.IdPaciente.Apellido.Substring(0, 2) + lblFechaNacimiento.Text.Replace("/", "") + embarazada;            
-
-
                 lblPedidoOriginal.Text = oRegistro.GetPracticasPedidas();
-            }
-           
-
+            }           
         }
        
 
@@ -691,10 +676,7 @@ namespace WebLab.Resultados
 
                     objCellAnalisis.Controls.Add(lbl1);
 
-
-                  /*  var row = Ds.Tables[0].Rows[i];
-                    int idDetalle = Convert.ToInt32(row["idDetalleProtocolo"]);
-                    */
+                     
                     DetalleProtocolo oDetalle;
                     detallesDict.TryGetValue(i_iddetalleProtocolo, out oDetalle);
 
@@ -703,18 +685,7 @@ namespace WebLab.Resultados
                     //fin 
                     Item oItem = new Item();
                     oItem = oDetalle.IdSubItem; // (Item)oItem.Get(typeof(Item), m_idItem);
-
-
-                    /*antes /
-                    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                    oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-
-                    Item oItem = new Item();
-                    oItem = (Item)oItem.Get(typeof(Item), m_idItem);
-
-                    //DetalleProtocolo oDetalle = new DetalleProtocolo();
-                    //oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
-                    fin antes*/
+                     
 
                   //  bool es_Bacteriologia = false;
                     string observacionesDetalle = "";
@@ -723,10 +694,7 @@ namespace WebLab.Resultados
                     observacionesDetalle = oDetalle.Observaciones;
                 //    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
 
-                    /*antes
-                    Derivacion oDeriva = new Derivacion();
-                    oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
-                    fin antes*/
+                  
                     if (oDeriva != null)  /// esta pendiente                                                           
                     {
                         Label lblDerivacion = new Label();
@@ -753,8 +721,7 @@ namespace WebLab.Resultados
                             lblSinMuestra.TabIndex = short.Parse("500");
                             lblSinMuestra.Text = "Sin Muestra";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
                             lblSinMuestra.Font.Italic = true;
-                            lblSinMuestra.ForeColor = Color.Blue;
-                            //     objCellResultado.ColumnSpan = 5;
+                            lblSinMuestra.ForeColor = Color.Blue;                            
                             objCellResultado.Controls.Add(lblSinMuestra);
                         }
                         else
@@ -766,11 +733,9 @@ namespace WebLab.Resultados
                                 {//tipoResultado
 
                                     case 5://fusion
-                                        {
-                                            //if (Request["Operacion"].ToString() != "HC")
+                                        {                                            
                                             if (m_conResultado!= "False")
-                                            {
-                                            
+                                            {                                            
                                                 Anthem.GridView Gd1 = new Anthem.GridView();
                                                 Gd1.ID = m_idItem.ToString();
                                                 ProtocoloLuminex oFusion = new ProtocoloLuminex();
@@ -804,10 +769,8 @@ namespace WebLab.Resultados
 
                                             if (i_iddetalleProtocolo != 0) 
                                             {
-                                                //if (i_iddetalleProtocolo != 9999999)
-                                                //{                                            
-                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
-                                                    if (Observaciones != "")
+                                                m_usuariovalida += " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");
+                                                if (Observaciones != "")
                                                     {
                                                         if (m_conResultado == "False")
                                                         {
@@ -819,8 +782,8 @@ namespace WebLab.Resultados
                                                                 if (oUser.FirmaValidacion == "") m_usuariovalida = oUser.Apellido + " " + oUser.Nombre;
                                                                 else m_usuariovalida = oUser.FirmaValidacion;
 
-                                                                m_usuariovalida +=" " + oDetalle.FechaValida.ToShortDateString();
-                                                            }
+                                                                m_usuariovalida +=" " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");
+                                                        }
                                                         }
                                                         else
                                                             olbl.Text = olbl.Text + Observaciones;
@@ -828,15 +791,11 @@ namespace WebLab.Resultados
 
 
                                                     if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
-                                                    { 
-                                                    //string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                    {                                                  
 
                                                         string resultadoAnterior = "";
-
-                                                        if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
-                                                        {
-                                                            resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
-                                                        }
+                                                        if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))                                                        
+                                                            resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];                                                        
 
                                                         if (resultadoAnterior != "")
                                                          {
@@ -845,7 +804,7 @@ namespace WebLab.Resultados
                                                         olblResultadoAnterior.TabIndex = short.Parse("500");
                                                         olblResultadoAnterior.Font.Size = FontUnit.Point(8);
                                                         olblResultadoAnterior.CssClass = "myLittleLink";
-                                                        olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,540); return false");
+                                                        olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",800,540); return false");
                                                         olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";                                                        
                                                         olblResultadoAnterior.Width = Unit.Pixel(30);
                                                         olblResultadoAnterior.Text = resultadoAnterior;
@@ -865,40 +824,24 @@ namespace WebLab.Resultados
 
                                                     if ((oDetalle.VerificaValoresLimites(x)) && (oDetalle.ConResultado))
                                                     {
-                                                        // verifica si tiene valores fuera de limite: es un valor critico
-                                                     
+                                                        // verifica si tiene valores fuera de limite: es un valor critico                                                     
                                                         lblValorCritico.TabIndex = short.Parse("500");
                                                         lblValorCritico.Text = " VALOR CRITICO";
                                                         lblValorCritico.Font.Bold = true;
-                                                        lblValorCritico.ForeColor = Color.OrangeRed;
-                                                        //     objCellResultado.ColumnSpan = 5;
-                                                       
+                                                        lblValorCritico.ForeColor = Color.OrangeRed;                                                                                                               
                                                     }
 
-                                                    ///IMAGENES ADJUNTAS                                              
-
-                                                  
-
-
+                                                    ///IMAGENES ADJUNTAS                                                                                                
                                                         if (oDetalle.tieneAdjuntoVisible())//Caro: falta mejorar esto
                                                         {
-                                                        imgAdj = true;
+                                                            imgAdj = true;
                                                             btnImagen.TabIndex = short.Parse("500");
                                                             btnImagen.ID = "IMG" + oDetalle.IdDetalleProtocolo.ToString();
                                                             btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
-
                                                             btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
-
-
-                                                            btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
-                                                           
-                                                        }
-                                                   
-                                                    // fin de imagenes adjuntas
-
-
-
-                                                //}
+                                                            btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + oDetalle.IdDetalleProtocolo.ToString() + "," + oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");                                                           
+                                                        }                                                   
+                                                    // fin de imagenes adjuntas                                                
 
                                             }
                                             objCellResultado.Controls.Add(olbl);
@@ -906,8 +849,7 @@ namespace WebLab.Resultados
                                             ///etiqueta de unidad de medida
                                             Label olblUM = new Label();                                                                                        
                                             olblUM.Font.Size = FontUnit.Point(7);
-                                            olblUM.Text = unMedida;                                                                                                                    
-                                                
+                                            olblUM.Text = unMedida;                                                                                                                                                                    
                                             objCellResultado.Controls.Add(olblUM);
                                             olblUM.Visible = false;
                                             objCellResultado.Controls.Add(lblValorCritico);
@@ -943,32 +885,23 @@ namespace WebLab.Resultados
                                         
                                             if ((i_iddetalleProtocolo != 0) )
                                             {
-                                                //if (i_iddetalleProtocolo != 9999999)
-                                                //{
-                                                    //DetalleProtocolo oDetalle = new DetalleProtocolo();
-                                                    //oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
+                                              
 
-                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
-                                                    if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
-                                                    {
-                                                        //string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");
+                                                if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
+                                                    {                                                    
                                                         string resultadoAnterior = "";
-
-                                                        if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
-                                                        {
-                                                            resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
-                                                        }
+                                                        if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))                                                        
+                                                            resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];                                                        
 
                                                         if (resultadoAnterior != "")
                                                         {
                                                             hayAntecedente = true;
                                                             Label olblResultadoAnterior = new Label();
                                                             olblResultadoAnterior.TabIndex = short.Parse("500");
-                                                            olblResultadoAnterior.Font.Size = FontUnit.Point(8);
-                                                            //olblResultadoAnterior.CssClass = "myLink";
-                                                            olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,450); return false");
-                                                            olblResultadoAnterior.ToolTip = "Haga clic aqui para ver más datos.";
-                                                            //olblResultadoAnterior.ForeColor = Color.Green;
+                                                            olblResultadoAnterior.Font.Size = FontUnit.Point(8);                                                            
+                                                            olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",800,450); return false");
+                                                            olblResultadoAnterior.ToolTip = "Haga clic aqui para ver más datos.";                                                            
                                                             olblResultadoAnterior.Width = Unit.Pixel(30);
                                                             olblResultadoAnterior.Text = resultadoAnterior;
                                                             objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
@@ -1024,8 +957,7 @@ namespace WebLab.Resultados
                     ///Definir los anchos de las columnas
                     objCellAnalisis.Width = Unit.Percentage(30);
                     objCellResultado.Width = Unit.Percentage(25);
-                    objCellValoresReferencia.Width = Unit.Percentage(20);
-                    //            objCellValida.Width = Unit.Percentage(5);
+                    objCellValoresReferencia.Width = Unit.Percentage(20);                    
                     objCellPersona.Width = Unit.Percentage(15);
                     objCellResultadoAnterior.Width = Unit.Percentage(10);
 
@@ -1190,85 +1122,48 @@ namespace WebLab.Resultados
                        
                     }
 
-
-
                     Label lbl1 = new Label();
                     if (m_hijo == m_titulo) lbl1.Text = m_hijo;
                     else lbl1.Text = "&nbsp;&nbsp;&nbsp;" + m_hijo;
 
-
-
                     lbl1.TabIndex = short.Parse("500");
                     lbl1.ForeColor = Color.Black;
-                    lbl1.Font.Size = FontUnit.Point(9);
-                    
+                    lbl1.Font.Size = FontUnit.Point(9);                    
                         lbl1.Font.Bold = true;
                         lbl1.Font.Italic = true;
-                        objCellAnalisis.ColumnSpan = 1;
-                    
+                        objCellAnalisis.ColumnSpan = 1;                    
 
-                    objCellAnalisis.Controls.Add(lbl1);
+                    objCellAnalisis.Controls.Add(lbl1);                              
 
-                              
-
-                                            Label olbl = new Label();
+                                           Label olbl = new Label();
                                             olbl.Font.Bold = true;
                                             olbl.Font.Size = FontUnit.Point(9);
-                                                olbl.Text = Ds.Tables[0].Rows[i].ItemArray[3].ToString();
-
-                                          
-
-                                            objCellResultado.Controls.Add(olbl);
-
-                    
+                                                olbl.Text = Ds.Tables[0].Rows[i].ItemArray[3].ToString();                                          
+                                            objCellResultado.Controls.Add(olbl);                    
                         m_usuariovalida += " "; //+ fefecha validad
-                                                    
-                                           
-                                           
-                            
-
-
 
                                 Label lblPersona = new Label();                                
                                 lblPersona.Text = m_usuariovalida; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();      
-
-
-
-                                /// 
+                    
                                 lblPersona.Font.Size = FontUnit.Point(7);
                                 lblPersona.Font.Italic = true;
                                 lblPersona.Text = m_usuariovalida;
 
                                 objCellPersona.Controls.Add(lblPersona);
-
-
-                           
-
-
+                    
                     ///Definir los anchos de las columnas
                     objCellAnalisis.Width = Unit.Percentage(30);
                     objCellResultado.Width = Unit.Percentage(30);
-                    objCellValoresReferencia.Width = Unit.Percentage(20);
-                    //            objCellValida.Width = Unit.Percentage(5);
+                    objCellValoresReferencia.Width = Unit.Percentage(20);                    
                     objCellPersona.Width = Unit.Percentage(20);
-
-
-
+                    
                     ///////////////////////
                     ///agrega a la fila cada una de las celdas
                     objFila.Cells.Add(objCellAnalisis);
-                    objFila.Cells.Add(objCellResultado);
-
-                    //if (Request["Operacion"].ToString() != "HC") objFila.Cells.Add(objCellUnMedida);
-
+                    objFila.Cells.Add(objCellResultado);                    
                     objFila.Cells.Add(objCellValoresReferencia);
-
-                    //if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control")) objFila.Cells.Add(objCellValida);
-
                     objFila.Cells.Add(objCellPersona);
-
-                    objFila.Cells.Add(objCellResultadoAnterior);
-                    //if (Request["Operacion"].ToString() != "HC") objFila.Cells.Add(objCellObservaciones);
+                    objFila.Cells.Add(objCellResultadoAnterior);                    
 
                     //////
                     Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
@@ -1277,8 +1172,7 @@ namespace WebLab.Resultados
                     if (objFila != null)
                         tContenido.Controls.Add(objFila);//.Rows.Add(objRow);                                
                 }
-            }
-            //}
+            }           
         }
 
 
@@ -1532,16 +1426,7 @@ namespace WebLab.Resultados
         }
 
 
-     
-
-        private bool AnalizarLimites(string p)
-        {
-            throw new NotImplementedException();
-        }
-
       
-     
-     
 
         protected void btnSiguiente_Click(object sender, EventArgs e)
         {
@@ -1603,19 +1488,7 @@ namespace WebLab.Resultados
         protected void lnkAuditoria_Click(object sender, EventArgs e)
         {
            
-        }
-
-    
-
-
-      
-  
-      
-
- 
-
-    
-       
+        }                    
 
         protected void imgImprimir_Click(object sender, ImageClickEventArgs e)
         {
@@ -1636,35 +1509,7 @@ namespace WebLab.Resultados
         }
 
 
-        //private string getDetalleProtocolo(string idProtocolo)
-        //{
-        //    string dev = ""; int i = 0;
-        //    Protocolo oRegistro = new Protocolo();
-        //    oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), int.Parse(idProtocolo));
-
-        //    ISession m_session = NHibernateHttpModule.CurrentSession;
-        //    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-        //    crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-        //    IList items = crit.List();
-        //    foreach (DetalleProtocolo oDet in items)
-        //    {
-        //        i += 1;
-        //        if (dev == "")
-        //            dev = oDet.IdItem.Nombre;
-        //        else
-        //        {
-        //            if (dev.IndexOf(oDet.IdItem.Nombre) == -1)
-        //                dev = dev + " - " + oDet.IdItem.Nombre;
-        //        }
-        //    }
-        //    //return i.ToString() + ": " + dev;
-        //    return  dev;
-        //}
-
-        //protected void btnArchivos_Click(object sender, EventArgs e)
-        //{
-        //    Response.Redirect("../Protocolos/ProtocoloAdjuntar.aspx?idProtocolo=" + Session["idProtocolo"].ToString()+"&desde=resultado");
-        //}
+      
 
         protected void imgPdf_Click(object sender, EventArgs e)
         {
@@ -1678,11 +1523,11 @@ namespace WebLab.Resultados
                 Response.Redirect("../FinSesion.aspx", false);
         }
 
-        protected void btnMasResultados_Click(object sender, EventArgs e)
-        {
+        //protected void btnMasResultados_Click(object sender, EventArgs e)
+        //{
           
-                Response.Redirect("http://www.saludnqn.gob.ar/sips/laboratorio/Resultados/ProtocoloList.aspx?id=" + lblDni.Text);
+        //        Response.Redirect("http://www.saludnqn.gob.ar/sips/laboratorio/Resultados/ProtocoloList.aspx?id=" + lblDni.Text);
             
-        }
+        //}
     }
 }

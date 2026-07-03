@@ -140,23 +140,24 @@ INNER JOIN   dbo.Sys_Usuario AS U with (nolock)  ON U.idUsuario = P.idUsuarioReg
 
         protected void DataList1_ItemDataBound(object sender, DataListItemEventArgs e)
         {
+          
             //HyperLink oHplInfo = (HyperLink)e.Item.FindControl("hplProtocoloEdit");
             //if (oHplInfo != null)
             //{
             //    string idProtocolo = oHplInfo.NavigateUrl;
             //    oHplInfo.NavigateUrl = "ProtocoloEditPesquisa.aspx?idServicio=4&Desde=Derivacion&Operacion=Modifica&idProtocolo=" + idProtocolo;
             //}
-            Usuario oUser = new Usuario();
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+            //Usuario oUser = new Usuario();
+            //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-            bool ocultarbotones = false;
+     /*       bool ocultarbotones = false;
             Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector); //"IdConfiguracion", 1);
            
             if (Session["idEfectorSolicitante"] != null)
             {
                 if (Session["idEfectorSolicitante"].ToString() != oC.IdEfector.IdEfector.ToString())
                     ocultarbotones = true;
-            }
+            }*/
         
 
 
@@ -172,7 +173,7 @@ INNER JOIN   dbo.Sys_Usuario AS U with (nolock)  ON U.idUsuario = P.idUsuarioReg
                 { s_pagina = "ProtocoloEditForense.aspx"; s_desde = "Default"; }
 
 
-                if (ocultarbotones) {  s_pagina = "ProtocoloEditEfector.aspx";  s_desde = "Default"; }
+             //   if (ocultarbotones) {  s_pagina = "ProtocoloEditEfector.aspx";  s_desde = "Default"; }
 
                 string idProtocolo = oHplInfo.NavigateUrl;
                 oHplInfo.NavigateUrl = s_pagina + "?idServicio=" + s_idServicio + "&Desde="+s_desde+"&Operacion=Modifica&idProtocolo=" + idProtocolo;
@@ -190,8 +191,8 @@ INNER JOIN   dbo.Sys_Usuario AS U with (nolock)  ON U.idUsuario = P.idUsuarioReg
 
                     }
                 }
-                if (ocultarbotones)
-                    oHplNuevoLaboratorio.Visible = false;
+                //if (ocultarbotones)
+                //    oHplNuevoLaboratorio.Visible = false;
 
 
      Label oMuestra = (Label)e.Item.FindControl("lblTipoMuestra");
@@ -215,9 +216,9 @@ INNER JOIN   dbo.Sys_Usuario AS U with (nolock)  ON U.idUsuario = P.idUsuarioReg
                         }
                     }
 
-                    if (ocultarbotones)
+                    //if (ocultarbotones)
                     
-                        oHplBacteriologia.Visible = false;
+                    //    oHplBacteriologia.Visible = false;
                         
 
 

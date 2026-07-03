@@ -22,7 +22,8 @@
             }
      
   </script>                  
-   
+  
+ 
 </head>
 
 <body> 
@@ -32,7 +33,7 @@
   
    
                                                
-         <div align="left" style="width:790px">
+         <div align="left" style="width:780px">
 
               
                          <asp:Label  ID="lblPaciente" runat="server" Text="Label"></asp:Label>
@@ -42,17 +43,16 @@
                          <asp:ImageButton ID="imgPdf" runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg" onclick="imgPdf_Click" ToolTip="Exportar a Pdf" />
                      
                <asp:Panel ID="pnlGrafico" runat="server">
-                     <hr />
+         <hr />
 
                    <div style="width:auto; height:auto">
                           <uc:GraficoChart ID="miGrafico" runat="server" /> 
                   </div>
-             </asp:Panel>  
-             <hr />
+   </asp:Panel> 
               <div>
                 <asp:GridView ID="gvHistorico" runat="server" AutoGenerateColumns="False" 
                      DataKeyNames="idProtocolo" Width="100%"  EmptyDataText="No se encontraron datos para los filtros de búsqueda ingresados"  
-                    CssClass="table table-bordered bs-table" >
+                    CssClass="table table-bordered bs-table" Font-Size="8">
                     <Columns>
                         <asp:BoundField DataField="numero" HeaderText="Protocolo">
                         
@@ -81,6 +81,9 @@
                 </asp:GridView>
              </div>
     </div>
+                                               
+    
+  
     </form> 
      </div>
 </body>

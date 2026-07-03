@@ -45,15 +45,15 @@ namespace WebLab
         }
 
         protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
-        {          
-
+        {
+            string mensajeError;
             Usuario oUser = new Usuario();
             oUser = (Usuario)oUser.Get(typeof(Usuario), "Username", Login1.UserName);
             if (oUser!= null)                //(i_idusuario > 0)
             {            
                 if ((oUser.Activo) && (oUser.IdPerfil.Activo))
                 {
-                    if (VerificarTipoAutenticacion(oUser))
+                    if (VerificarTipoAutenticacion(oUser ,out mensajeError))
                     {
                         if (MostrarTerminosCondiciones(oUser))
                         {
@@ -66,7 +66,7 @@ namespace WebLab
                     {
                         oUser = null;
                         e.Authenticated = false;
-                        Login1.FailureText = "Usuario y/o contraseña incorrecta.";
+                        Login1.FailureText = mensajeError;//"Usuario y/o contraseña incorrecta.";
                         return;
                     }
                 }
@@ -229,11 +229,11 @@ namespace WebLab
             Login1.FailureText = ""; //Muestro solo lblMensajeError, ya que Login1.FailureText solo sirve para Login1_Authenticate y no para btn_aceptarTerminosCondiciones_Click
         }
 
-        private bool VerificarTipoAutenticacion(Usuario oUser)
+        private bool VerificarTipoAutenticacion(Usuario oUser,  out string mensajeError)
         {  /*
           Caro: autenticacion diferencias con SIL /ONLOGIN
           */
-          //  Utility oUtil = new Utility();
+            mensajeError = "";
             bool autentica = false;
           
             if (oUser != null)
@@ -261,6 +261,10 @@ namespace WebLab
                         var result = cmd.ExecuteScalar();
 
                         autentica= result != null;
+                        if (!autentica)
+                        {
+                            mensajeError = "Usuario o contraseña incorrecta en SIL.";
+                        }
                     }
                 }
 
@@ -283,11 +287,13 @@ namespace WebLab
                     catch (LdapException ex)
                     {
                         ////"Servicio LDAP no disponible"
-                        autentica = false;                         
+                        autentica = false;
+                        mensajeError = "Error de autenticación ONELOGIN: " + ex.Message;
                     }
                     catch (Exception ex)
                     {                                       
                         autentica = false;
+                        mensajeError = "Error general ONELOGIN: " + ex.Message;
                     }
                 }
                 else //ni sil no onlogin
@@ -295,6 +301,7 @@ namespace WebLab
                  
                     /// "Tipo de autenticación no soportado.";               
                     autentica = false;
+                    mensajeError =    "Tipo de autenticación no soportado: " + tipoAutenticacion;
                 }
             }
             return autentica;

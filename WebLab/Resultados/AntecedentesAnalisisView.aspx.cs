@@ -22,7 +22,7 @@ namespace WebLab.Resultados
     {
       
         Protocolo oProtocolo = new Protocolo();
-      
+
         public CrystalReportSource oCr = new CrystalReportSource();
 
         public Usuario oUser = new Usuario();
@@ -92,33 +92,18 @@ namespace WebLab.Resultados
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     if (i == 0)
-                        unidad = dt.Rows[i][6].ToString();
+                        unidad = dt.Rows[i][6].ToString().ToUpper();
                     else
                     {
-                        if (unidad != dt.Rows[i][6].ToString())
+                        if (unidad != dt.Rows[i][6].ToString().ToUpper())
                             hay = false; break;
                     }
                 }
             }
             return hay;
-
         }
 
-        //private string CreateChart(DataTable dt, string nombre, string valorminino)
-        //{
-        //    string strXML = "<graph caption='" + nombre.ToUpper() + "'  xAxisName='Protocolo' yAxisMinValue='" + valorminino + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
-        //        " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
-                        
-        //    for (int i = 0; i < dt.Rows.Count; i++)
-        //    {
-        //        strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",", ".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
-        //    }           
-
-        //    strXML += "</graph>";
-        //    return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "700", "250", false, false);
-        //}
-
-
+       
         protected void imgPdf_Click(object sender, ImageClickEventArgs e)
         {
             ExportarPDF();

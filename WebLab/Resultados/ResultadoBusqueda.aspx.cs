@@ -967,11 +967,9 @@ namespace WebLab.Resultados
                             if (ddlArea.SelectedValue != "0")
                                 m_parametro += " AND DP.idUsuarioValida = 0 " + //Las determinaciones no tienen que estar validadas
                                     " AND DP.idUsuarioValidaObservacion = 0"; //12/6/2026 Vane: Las determinaciones no tienen que estar autovalidas (las determinaciones sin insumo se validan idUsuarioValidaObservacion)
-
-                            if (modoCarga != "HT")
-                                if (s_areas != "0")
+                                if (modoCarga != "HT")
+                                    if (s_areas != "0")
                                     m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
-                                     
                             }
                             break;
                         case "1": // validados
@@ -986,8 +984,8 @@ namespace WebLab.Resultados
                                     m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
                             }
                             break;
-                        case "2": //Todos los estados
-                           
+                        case "2":
+                            //m_parametro += " AND P.estado>=0 ";
                             if (modoCarga != "HT")
                                 if (s_areas != "0")
                                     m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";

@@ -2507,7 +2507,61 @@ namespace WebLab.Resultados
 
         }
 
-        public void MostrarResAnterior( )
+
+        public void MostrarResAnterior()
+        {
+            bool haydatos = false;
+
+            Item oItem = new Item();
+            oItem = (Item)oItem.Get(typeof(Item),                int.Parse(Request["idItem"].ToString()));
+
+
+            if (oItem != null)
+            {
+                DataTable dt = getDataSet(oItem.IdItem.ToString());
+                if (dt.Rows.Count > 0)
+                {
+                    List<int> idsDetalle = new List<int>();
+
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        idsDetalle.Add(int.Parse(row[3].ToString()));
+                    }
+
+
+                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+                    crit.Add(Expression.In( "IdDetalleProtocolo",idsDetalle.ToArray()));
+                    IList resultados = crit.List();
+
+                    foreach (DetalleProtocolo oDet in resultados)
+                    {
+                        string nombreControl = "ResAnterior" + oDet.IdSubItem.IdItem +"_" + oDet.IdProtocolo.IdProtocolo;
+                        Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombreControl);
+                        Label lbl =  control1 as Label;
+                        if (lbl != null)
+                        {
+                            string resultadoAnterior =oDet.BuscarResultadoAnterior(                                    oDet.IdSubItem,                                    oDet.IdItem,                                    true);
+                            if (resultadoAnterior != "")
+                            {
+                                lbl.Text = resultadoAnterior;
+                                lbl.Visible = true;
+                                haydatos = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (!haydatos)
+            {
+                lblSinResultados.Visible = true;
+                lblSinResultados.Text =
+                    "No se encontraron datos anteriores para las determinaciones de este protocolo";
+            }
+        }
+        public void MostrarResAnterior_old( )
         {
             bool haydatos = false;
             ISession m_session = NHibernateHttpModule.CurrentSession;

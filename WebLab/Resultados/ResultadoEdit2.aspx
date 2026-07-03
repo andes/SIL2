@@ -482,7 +482,7 @@
         
         <table width="90%">
         	<tr>						
-						<td>   <asp:Button ID="btnMostrarResultados" runat="server"
+						<td>   <asp:Button ID="btnMostrarResultados" runat="server" Visible="false"
                                 Text="Mostrar Resultados Anteriores"  AccessKey="M"
                                 onclick="btnMostrarResultados_Click" Width="250px" TabIndex="600" />
                             <br />
@@ -493,7 +493,7 @@
                                     <asp:Label ID="lblAlertaMicrobiologia" runat="server" CssClass="myLabelRojo" Text=""></asp:Label>
                                   <br />
                             <asp:Image ID="imgPesquisa" Visible="false" runat="server" ImageUrl="~/App_Themes/default/images/pendiente.png" />                                       				
-                            <asp:Label CssClass="myLabelIzquierdaGde" ID="lblMuestra" runat="server" ></asp:Label>            
+                            <asp:Label  ID="lblMuestra" runat="server" Font-Size="10pt" Font-Bold="True"></asp:Label>            
                             <asp:CustomValidator ID="cvValidaControles" runat="server"  ErrorMessage="CustomValidator" Font-Size="9pt" onservervalidate="cvValidaControles_ServerValidate"   ValidationGroup="0" Font-Bold="True"></asp:CustomValidator> &nbsp; &nbsp;
                             <asp:Button ID="btnAceptarValorFueraLimite" Width="220px" CssClass="myButtonRojo"  onclick="btnAceptarValorFueraLimite_Click" runat="server" Text="Aceptar valor fuera de límite" Visible="false" />  
                             <asp:Label ID="lblIdValorFueraLimite" Visible="false" runat="server" Text="0"></asp:Label>
@@ -509,7 +509,9 @@
                             
                        <asp:Button ID="btnActualizarPracticasCarga" Visible="false" ToolTip="" runat="server" Text="Editar Practicas"  Width="150px"   
                        OnClientClick="ProtocoloEditCarga(); return false;" />
-                       
+                          <asp:Button ID="btnAplicarFormula" runat="server" CssClass="btn btn-danger"
+                                Text="F(x) Calcular Fórmulas"  AccessKey="F" ToolTip="Alt+Shift+F"
+                                onclick="btnAplicarFormula_Click" Visible="False" Font-Size="8" Width="200px" TabIndex="600" /> &nbsp;
                        <INPUT TYPE="button" accesskey="m"  title="Alt+Shift+M"  runat="server" name="marcar" id="lnkMarcar" value="Marcar todos" onClick="seleccionar_todo()" style="font-size: 11px; color: #333333; text-decoration: underline; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" class="myLabelIzquierda">
                        <INPUT TYPE="button" accesskey="z" title="Alt+Shift+Z" runat="server" name="marcar" id="lnkDesmarcar"  value="Desmarcar todos" onClick="desmarcar_todo()" style="font-size: 11px; color: #333333; text-decoration: underline; font-family: Arial, Helvetica, sans-serif; font-weight: bold;" class="myLabelIzquierda">
 						     
@@ -547,9 +549,7 @@
                                                                     <tr>
                                                                       <td colspan="2"  align="right" style="vertical-align: top">
                                                                  
-                                                                    <asp:Button ID="btnAplicarFormula" runat="server" CssClass="btn btn-danger"
-                                Text="F(x) Calcular Fórmulas"  AccessKey="F" ToolTip="Alt+Shift+F"
-                                onclick="btnAplicarFormula_Click" Visible="False" Width="200px" TabIndex="600" /> <br />
+                                                                  
                             <asp:CheckBox ID="chkFormula" runat="server" Checked="True" CssClass="myLabel" 
                                 Text="Calcular fórmulas al guardar" Visible="False" 
                                 ToolTip="Recalcula y sobreescribe formulas al guardar" TabIndex="600" />
@@ -586,7 +586,7 @@
                         
                             <asp:CheckBox ID="chkCerrarSinResultados" runat="server" CssClass="myLabelIzquierda" 
                                 Text="Terminar protocolo" Visible="False" 
-                                ToolTip="Da por terminado el protocolo con analisis sin resultados" />
+                                ToolTip="Da por terminado el protocolo con analisis sin resultados"  />
                         
 						<asp:CheckBox ID="chkWhonet" runat="server" CssClass="myLabelIzquierda" 
                                 Text="Informa Whonet" Visible="False" 
@@ -716,6 +716,7 @@
                 
                 <tr>
                 <td align="right">
+                   
                    <asp:LinkButton ID="lnkMarcarAislamiento" runat="server" CssClass="myLittleLink" onclick="lnkMarcarAislamiento_Click" >Marcar todas</asp:LinkButton>
                                 &nbsp;
                                 <asp:LinkButton ID="lnkDesMarcarAislamiento" runat="server" CssClass="myLittleLink" onclick="lnkDesMarcarAislamiento_Click" >Desmarcar</asp:LinkButton></td>
@@ -824,7 +825,7 @@
 
                    <asp:DropDownList class="form-control input-sm"  onselectedindexchanged="ddlPerfilAntibiotico_SelectedIndexChanged" AutoPostBack="true"   ID="ddlPerfilAntibiotico" runat="server" Width="250px">  </asp:DropDownList>
                    <br />
-<div  style="width:330px;height:250pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC;"> 
+<div  style="width:330px;height:230pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC;"> 
                     <asp:GridView ID="gvAntiobiograma" runat="server" AutoGenerateColumns="False" 
                         DataKeyNames="idAntibiotico"                  CellPadding="1"  Width="310px"                          >
                     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -986,7 +987,7 @@
                                <anthem:Button  CssClass="btn btn-primary"  OnClick="btnAgregarObsCodificadaGral_Click"  ID="btnAgregar"  Width="100px" runat="server" Text="Agregar" />
                                <br />
                            <anthem:TextBox class="form-control input-sm" ID="txtObservacion" runat="server" TextMode="MultiLine" 
-                              Width="95%" MaxLength="4000" Height="400px"></anthem:TextBox>  
+                              Width="95%" MaxLength="4000" Height="370px"></anthem:TextBox>  
                               
 
                         </td>

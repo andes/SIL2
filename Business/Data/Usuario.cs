@@ -375,7 +375,7 @@ namespace Business.Data
         /// </summary>
         public int IdUsuarioActualizacion
         {
-            get { return m_idusuario; }
+            get { return m_idusuarioactualizacion; }
             set
             {
                 m_isChanged |= (m_idusuarioactualizacion != value);

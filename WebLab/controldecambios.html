@@ -122,6 +122,123 @@
   <script>
       const cambios = [
            {
+               "fecha": "2026.07.02",
+               "modulo": "Historico de Analisis",
+               "detalle": "Se muestra la leyenda sin insumos en caso de no informar resultados.",
+               "tipo": "Nueva Funcionalidad"
+           },
+	    {
+                "fecha": "2026.07.02",
+                "modulo": "Derivacion-FFEE",
+                "detalle": "Se agrega trazabilidad de las FFEE a traves del circuito de derivaciones.",
+                "tipo": "Nueva Funcionalidad"
+            },
+            {
+                "fecha": "2026.07.02",
+                "modulo": "Estadisticas",
+                "detalle": "Se mejoras varias en las estadisticas destinadas a mejorar la performance y a mostrar los origenes vigentes ",
+                "tipo": "Mejora Funcionalidad"
+            },
+	    {
+               "fecha": "2026.06.29",
+               "modulo": "Validacion-Resultados Anteriores",
+               "detalle": "Se habilita la carga automatica del resultado anterior en la validacion por Lista de Protocolos. Se realizan ajustes de perfomance. ",
+               "tipo": "Nueva Funcionalidad"
+           },
+		   	    {
+               "fecha": "2026.06.29",
+               "modulo": "Validacion-Calcular formulas",
+               "detalle": "Se mueve a la parte superior de la pantalla el boton Calcular Formulas, con la finalidad de que antes de validar los resultados se agilice la seleccion de Calculo de formulas.",
+               "tipo": "Nueva Funcionalidad"
+           },
+		   		   	    {
+               "fecha": "2026.06.29",
+               "modulo": "Chart- Estadisticas",
+               "detalle": "Se cambian los graficos chart de las estadisticas por nuevas herramientas.",
+               "tipo": "Nueva Funcionalidad"
+           },
+		    	    {
+               "fecha": "2026.06.29",
+               "modulo": "Estadisticas",
+               "detalle": "Se corrigen reportes PDF que no aparecian todos los grupos etareos",
+               "tipo": "Correccion"
+           },
+	   {
+               "fecha": "2026.06.25",
+               "modulo": "Validacion-Edicion de Determinaciones",
+               "detalle": "Correccion de bug en la edicion.",
+               "tipo": "Correccion"
+           },
+           {
+               "fecha": "2026.06.23",
+               "modulo": "Estadistica Sin Insumo",
+               "detalle": "Se agrega una nueva estadística para consultar el historial de días sin insumo por determinación, de uso exclusivo para cada efector.",
+               "tipo": "Nueva Funcionalidad"
+           },
+           {
+               "fecha": "2026.06.23",
+               "modulo": "Panel Seguimiento LNC",
+               "detalle": "Se agregan opciones para facilitar la seleccion de determinaciones a filtrar.<br>Se agrega dentro del excel de seguimiento de panel respiratorios los valores de CT.",
+               "tipo": "Nueva Funcionalidad"
+           },
+            
+            {
+                "fecha": "2026.06.23",
+                "modulo": "Validacion-Filtro de Pendientes",
+                "detalle": "Se corrige filtro de pendientes de validar ya que no estaba contemplando las observaciones validadas (por ej. resultado 'sin insumo')",
+                "tipo": "Correccion"
+            },
+            {
+                "fecha": "2026.06.23",
+                "modulo": "Autenticacion",
+                "detalle": "Se muestran mensajes mas descriptivos al momento de loguearse en el sistema en caso de error de autenticacion.",
+                "tipo": "Nueva Funcionalidad"
+            },
+             {
+                 "fecha": "2026.06.23",
+                 "modulo": "Microbiologia",
+                 "detalle": "Se agrega control de que no se puedan borrar determinaciones que tienen vinculados aislamientos.Para Pacientes y No Pacientes.",
+                 "tipo": "Nueva Funcionalidad"
+             },
+               {
+                   "fecha": "2026.06.22",
+                   "modulo": "Hoja de trabajo con Antecedentes",
+                   "detalle": "Se corrige el error reportado por el cual la hoja de trabajo no mostraba el último antecedente del paciente.",
+                   "tipo": "Correccion"
+               },
+              {
+                  "fecha": "2026.06.17",
+                  "modulo": "Envio a REAL - Microbiologia",
+                  "detalle": "Se actualiza api para recibir la validacion del REAL y que la validacion en SIL sea automatica. Se verifica en la api que si todas las determinaciones fueron validadas se cierra el protocolo automaticamente.",
+                  "tipo": "Nueva Funcionalidad"
+              },
+                {
+                    "fecha": "2026.06.17",
+                    "modulo": "API Resultados",
+                    "detalle": "Se actualiza api de resultados para ordenar las determinaciones.",
+                    "tipo": "Correccion"
+                },
+          {
+              "fecha": "2026.06.11",
+              "modulo": "Microbiologia- Perfil de Antibiotico",
+              "detalle": "Se restringe la creacion y/o modificacion de perfiles de antibioticos por parte de los efectores. Quedando dicha funcionalidad solo para el administrador para unificar los perfiles para toda la Red.",
+              "tipo": "Nueva Funcionalidad"
+          },
+          {
+              "fecha": "2026.06.11",
+              "modulo": "Microbiologia- Metodos",
+              "detalle": "Se agregan nuevos metodos de antibiogramas",
+              "tipo": "Nueva Funcionalidad"
+          },
+           {
+               "fecha": "2026.06.11",
+               "modulo": "Envio a REAL-No Pacientes",
+               "detalle": "Se agrega envío de muestras de No Pacientes",
+               "tipo": "Nueva Funcionalidad"
+           },
+
+
+           {
                "fecha": "2026.06.08",
                "modulo": "Envio a REAL",
                "detalle": "Se agrega punto de menu para envio manual de protocolos no recibidos automaticamente por REAL.",

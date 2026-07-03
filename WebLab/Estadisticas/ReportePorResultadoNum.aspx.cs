@@ -495,7 +495,7 @@ CONVERT(VARCHAR(10), Pa.fechaNacimiento, 103) AS [Fecha Nacimiento],    d.calle 
                              INNER JOIN Sys_Paciente AS Pa with (nolock) ON P.idPaciente = Pa.idPaciente
                              left join sys_Pacientedomicilio as D with (nolock) on d.idpaciente = Pa.idpaciente and idPacienteDomicilio= (select max (idpacientedomicilio) from sys_Pacientedomicilio where idpaciente=Pa.idpaciente)
                             
-                             WHERE  P.Estado=2 and P.baja=0 and  I.iditem=" + m_analisis +  m_condicion+ 
+                             WHERE P.baja=0 and  I.iditem=" + m_analisis +  m_condicion+ 
              " AND (P.fecha >= '" + fecha1.ToString("yyyyMMdd") + "') AND (P.fecha <= '" + fecha2.ToString("yyyyMMdd") + "') and " +
                              " ( DP.conresultado=1)  "+ m_condicionDiag +" order by P.fecha  ";
 

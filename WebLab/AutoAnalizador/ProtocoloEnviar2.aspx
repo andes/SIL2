@@ -57,7 +57,7 @@
                                           <asp:BoundField DataField="numeroDocumento" HeaderText="DU" >
                                               <ItemStyle Font-Bold="True" />
                                         </asp:BoundField>
-                                        <asp:BoundField DataField="paciente" HeaderText="Paciente" >
+                                        <asp:BoundField DataField="paciente" HeaderText="Paciente/Producto" >
                                             <ItemStyle Font-Bold="True" />
                                         </asp:BoundField>
                                         <asp:BoundField DataField="edad" HeaderText="Edad" >

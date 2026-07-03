@@ -205,11 +205,11 @@
                                 <asp:ListItem Value="8">20 a 24 años</asp:ListItem>
                                 <asp:ListItem Value="9">25 a 34 años</asp:ListItem>     
          <asp:ListItem Value="10">35 a 44 años</asp:ListItem>     
-                                    <asp:ListItem Value="11">45-54 años</asp:ListItem>
-         <asp:ListItem Value="12">55-64 años</asp:ListItem>
-         <asp:ListItem Value="13">65-74 años</asp:ListItem>
+                                    <asp:ListItem Value="11">45-64 años</asp:ListItem>
+         <asp:ListItem Value="12">65-74 años</asp:ListItem>
+       <%--  <asp:ListItem Value="13">65-74 años</asp:ListItem>--%>
                                 
-                                <asp:ListItem Value="10">&gt; 75 años</asp:ListItem>
+                                <asp:ListItem Value="13">&gt; 75 años</asp:ListItem>
                             </asp:DropDownList>
     </td>
 <td align="left"  > 

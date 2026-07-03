@@ -42,36 +42,12 @@ namespace WebLab
                 VerificaPermisos("Seguimiento");
                 if (Session["idUsuario"] != null)
                 {
-
-                    //ISession m_session = NHibernateHttpModule.CurrentSession;
-                    //ICriteria crit = m_session.CreateCriteria(typeof(Item));
-                    //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-                    ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-                    //Item oItem = (Item)crit.UniqueResult();
-
-                    //if (oItem != null)
-                    //{
+                    
 
                         txtFechaDesde.Value = DateTime.Now.ToShortDateString();
                         txtFechaHasta.Value = DateTime.Now.ToShortDateString();
                         CargarListas();
-                    //DataTable dtMuestras = MostrarDatos();// (oItem);
-                    //    if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
-                    //    {
-                    //        gvPacientes.DataSource = dtMuestras;
-                    //        gvPacientes.DataBind();
-                    //        gvPacientes.Visible = true;
-                    //        GridView1.Visible = false;
-                    //    }
-                    //    else
-                    //    {
-
-                    //        GridView1.DataSource = dtMuestras;
-                    //        GridView1.DataBind();
-                    //        gvPacientes.Visible = false;
-                    //        GridView1.Visible = true;
-                    //    }
-                    //}
+                  
                 }
                 else Response.Redirect("FinSesion.aspx", false);
             }
@@ -126,103 +102,103 @@ namespace WebLab
             }
             else Response.Redirect("../FinSesion.aspx", false);
         }
-        private DataTable MostrarDatos ()//( Item oItem)
-        {
+//        private DataTable MostrarDatos ()//( Item oItem)
+//        {
              
 
-                 // d.calle as [Calle], d.numero as [Nro.],d.departamento as [Depto], d.cpostal as [CP], d.barrio as Barrio,d.municipio as Municipio,
-                string m_strSQLCondicion = " 1=1 ";
+//                 // d.calle as [Calle], d.numero as [Nro.],d.departamento as [Depto], d.cpostal as [CP], d.barrio as Barrio,d.municipio as Municipio,
+//                string m_strSQLCondicion = " 1=1 ";
 
-            m_strSQLCondicion = " and Ir.idEfector=" + oUser.IdEfector.IdEfector.ToString();
-            //DateTime fecha = DateTime.Parse(txtFechaDesde.Value);
-            if (txtFechaDesde.Value != "")
-                {
-                    DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
-                    m_strSQLCondicion += " AND ir.fecharegistro >= '" + fecha1.ToString("yyyyMMdd") + "'";
+//            m_strSQLCondicion = " and Ir.idEfector=" + oUser.IdEfector.IdEfector.ToString();
+//            //DateTime fecha = DateTime.Parse(txtFechaDesde.Value);
+//            if (txtFechaDesde.Value != "")
+//                {
+//                    DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+//                    m_strSQLCondicion += " AND ir.fecharegistro >= '" + fecha1.ToString("yyyyMMdd") + "'";
 
-                }
+//                }
 
-                if (txtFechaHasta.Value != "")
-                {
-                    DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value).AddDays(1);
-                    m_strSQLCondicion += " AND ir.fecharegistro < '" + fecha2.ToString("yyyyMMdd") + "'";
+//                if (txtFechaHasta.Value != "")
+//                {
+//                    DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value).AddDays(1);
+//                    m_strSQLCondicion += " AND ir.fecharegistro < '" + fecha2.ToString("yyyyMMdd") + "'";
 
-                }
-                if (ddlCaracter.SelectedValue != "0")
-                    m_strSQLCondicion += " AND ir.idCaracter=" + ddlCaracter.SelectedValue;
+//                }
+//                if (ddlCaracter.SelectedValue != "0")
+//                    m_strSQLCondicion += " AND ir.idCaracter=" + ddlCaracter.SelectedValue;
 
-                if ((int.Parse(rdbOpcion.SelectedValue) == 2) || (int.Parse(rdbOpcion.SelectedValue) == 4))  //pacientes positivos
-                    m_strSQLCondicion += " and dp.resultadoCar like 'SE DETECT%'  and Dp.idUsuarioValida>0";
+//                if ((int.Parse(rdbOpcion.SelectedValue) == 2) || (int.Parse(rdbOpcion.SelectedValue) == 4))  //pacientes positivos
+//                    m_strSQLCondicion += " and dp.resultadoCar like 'SE DETECT%'  and Dp.idUsuarioValida>0";
 
-                if (ddlResultado.SelectedValue != "0")
-                    m_strSQLCondicion += " and dp.resultadoCar='" + ddlResultado.SelectedValue + "'  and Dp.idUsuarioValida>0";
-
-
-                if (int.Parse(rdbOpcion.SelectedValue) == 3) // pendiente de resultado
-                    m_strSQLCondicion += " and dp.idUsuarioValida=0 ";
-                if (int.Parse(rdbOpcion.SelectedValue) == 5) // muestra con resultado/procesado
-                    m_strSQLCondicion += @" and dp.idUsuarioValida>0 AND dp.resultadoCar NOT like '%SIN MUESTRA%' 
-AND dp.resultadoCar NOT like '%MUESTRA DERIVADA%'";
-
-            string m_strSQL = @"  select  ir.fecharegistro as [Fecha Registro], 
-IR.numero as [Protocolo], 
-IR.numeroOrigen as [Origen],
-convert(varchar(100),e.nombre) as [Efector Procedencia],   
-ca.nombre as [Caracter],
-pac.Apellido , 
-pac.nombre as [Nombre],
-case when ir.idpaciente=-1 then '' else case when pac.idEstado = 2 then 'SIN DNI'  else 'DNI' end end as [Tipo Doc.],
-case when ir.idpaciente=-1 then 0 else case when pac.idEstado = 2 then 0 ELSE pac.numeroDocumento END end as [Nro. Documento],
-case when ir.idpaciente=-1 then '' else convert(varchar(10),pac.fechaNacimiento,103) end as [Fecha Nacimiento], 
-case when ir.idpaciente=-1 then 0 else IR.edad end as [Edad],
-case IR.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end as [amd],
-case when ir.idpaciente=-1 then '' else IR.sexo end as [Sexo],
-IR.nombreObraSocial as [Obra Social],
- Pac.informacioncontacto as [Telefono],
-substring(O.nombre,1,3) as [Amb/Int.], 
-case when convert(varchar(10), IR.fechaTomaMuestra, 103)='01/01/1900' then '' 
-else convert(varchar(10), IR.fechaTomaMuestra, 103) end as [F. Toma Muestra],
-M.nombre as Muestra, IR.numeroOrigen2,
-IR.Especialista AS [Solicitante] ,
-dP.fechavalida as [F. Resultado],
-I.nombre as [Determinacion],
-case when  Dp.idUsuarioValida>0 then upper(dp.resultadoCar)  else 'EN PROCESO' end   AS 'Resultado' ,
-case when  Dp.idUsuarioValida>0 then upper(ltrim(dp.observaciones + ' '+ ir.observacionesResultados)) else '' end as Observaciones
- from		
-LAB_protocolo as IR with (nolock)
-inner JOIN   Sys_Paciente AS Pac with (nolock) ON IR.idPaciente = Pac.idPaciente 
-inner JOIN Lab_Origen O with (nolock) on O.idOrigen= IR.idOrigen
-inner JOIN LAB_SectorServicio S with (nolock) on S.idSectorServicio= IR.idSector
-INNER JOIN LAB_Muestra as M with (nolock) on M.idMuestra= IR.idMuestra
- left join lab_caracter as Ca with (nolock) on Ca.idCaracter= IR.idcaracter
-inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitante
-inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
-    inner join lab_item I on I.iditem = DP.idsubitem
-inner join lab_Param Pa on Pa.parstr= I.codigo and Pa.idparam=2
-where  DP.idsubitem in ( " + GetDeterminaciones() +") "+ m_strSQLCondicion + @"
-and  ir.baja=0 
-";
+//                if (ddlResultado.SelectedValue != "0")
+//                    m_strSQLCondicion += " and dp.resultadoCar='" + ddlResultado.SelectedValue + "'  and Dp.idUsuarioValida>0";
 
 
-            if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
-                m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
-from (" + m_strSQL + @"  AND IR.IDPACIENTE>-1)x
-group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
-  [Fecha Nacimiento], [Sexo]";
-            else
+//                if (int.Parse(rdbOpcion.SelectedValue) == 3) // pendiente de resultado
+//                    m_strSQLCondicion += " and dp.idUsuarioValida=0 ";
+//                if (int.Parse(rdbOpcion.SelectedValue) == 5) // muestra con resultado/procesado
+//                    m_strSQLCondicion += @" and dp.idUsuarioValida>0 AND dp.resultadoCar NOT like '%SIN MUESTRA%' 
+//AND dp.resultadoCar NOT like '%MUESTRA DERIVADA%'";
 
-                m_strSQL = m_strSQL+ @" order by ir.numero, Pa.parnum ";
+//            string m_strSQL = @"  select  ir.fecharegistro as [Fecha Registro], 
+//IR.numero as [Protocolo], 
+//IR.numeroOrigen as [Origen],
+//convert(varchar(100),e.nombre) as [Efector Procedencia],   
+//ca.nombre as [Caracter],
+//pac.Apellido , 
+//pac.nombre as [Nombre],
+//case when ir.idpaciente=-1 then '' else case when pac.idEstado = 2 then 'SIN DNI'  else 'DNI' end end as [Tipo Doc.],
+//case when ir.idpaciente=-1 then 0 else case when pac.idEstado = 2 then 0 ELSE pac.numeroDocumento END end as [Nro. Documento],
+//case when ir.idpaciente=-1 then '' else convert(varchar(10),pac.fechaNacimiento,103) end as [Fecha Nacimiento], 
+//case when ir.idpaciente=-1 then 0 else IR.edad end as [Edad],
+//case IR.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end as [amd],
+//case when ir.idpaciente=-1 then '' else IR.sexo end as [Sexo],
+//IR.nombreObraSocial as [Obra Social],
+// Pac.informacioncontacto as [Telefono],
+//substring(O.nombre,1,3) as [Amb/Int.], 
+//case when convert(varchar(10), IR.fechaTomaMuestra, 103)='01/01/1900' then '' 
+//else convert(varchar(10), IR.fechaTomaMuestra, 103) end as [F. Toma Muestra],
+//M.nombre as Muestra, IR.numeroOrigen2,
+//IR.Especialista AS [Solicitante] ,
+//dP.fechavalida as [F. Resultado],
+//I.nombre as [Determinacion],
+//case when  Dp.idUsuarioValida>0 then upper(dp.resultadoCar)  else 'EN PROCESO' end   AS 'Resultado' ,
+//case when  Dp.idUsuarioValida>0 then upper(ltrim(dp.observaciones + ' '+ ir.observacionesResultados)) else '' end as Observaciones
+// from		
+//LAB_protocolo as IR with (nolock)
+//inner JOIN   Sys_Paciente AS Pac with (nolock) ON IR.idPaciente = Pac.idPaciente 
+//inner JOIN Lab_Origen O with (nolock) on O.idOrigen= IR.idOrigen
+//inner JOIN LAB_SectorServicio S with (nolock) on S.idSectorServicio= IR.idSector
+//INNER JOIN LAB_Muestra as M with (nolock) on M.idMuestra= IR.idMuestra
+// left join lab_caracter as Ca with (nolock) on Ca.idCaracter= IR.idcaracter
+//inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitante
+//inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
+//    inner join lab_item I on I.iditem = DP.idsubitem
+//inner join lab_Param Pa on Pa.parstr= I.codigo and Pa.idparam=2
+//where  DP.idsubitem in ( " + GetDeterminaciones() +") "+ m_strSQLCondicion + @"
+//and  ir.baja=0 
+//";
 
 
-                                DataSet Ds = new DataSet();
-                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
-                lblCantidad.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
-                return Ds.Tables[0];
+//            if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
+//                m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
+//from (" + m_strSQL + @"  AND IR.IDPACIENTE>-1)x
+//group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
+//  [Fecha Nacimiento], [Sexo]";
+//            else
+
+//                m_strSQL = m_strSQL+ @" order by ir.numero, Pa.parnum ";
+
+
+//                                DataSet Ds = new DataSet();
+//                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+//                SqlDataAdapter adapter = new SqlDataAdapter();
+//                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+//                adapter.Fill(Ds);
+//                lblCantidad.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+//                return Ds.Tables[0];
             
-        }
+//        }
 
         private string GetDeterminaciones()
         {
@@ -234,8 +210,7 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
 
                     if (lista == "") lista = chkItem.Items[i].Value;
                     else lista += "," + chkItem.Items[i].Value;
-                }
-                //oDetalle.IdProtocolo.GrabarAuditoriaProtocolo("Vinculado a caso " + oDetalle.IdCasoFiliacion.IdCasoFiliacion.ToString(), int.Parse(Session["idUsuario"].ToString()));
+                }               
             }
             return lista;
         }
@@ -248,25 +223,13 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
 
         private void ExportarExcel()
         {
-            try
+            if (Page.IsValid)
             {
-
-                //ISession m_session = NHibernateHttpModule.CurrentSession;
-                //ICriteria crit = m_session.CreateCriteria(typeof(Item));
-                //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-                ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-                //Item oItem = (Item)crit.UniqueResult();
-
-                //if (oItem != null)
-                //{
-                    DataTable tabla = MostrarDatosExcel();// (oItem);
+              
+                DataTable tabla = MostrarDatos ();// (oItem);
                     if (tabla.Rows.Count > 0)
                     {
-                        //StringBuilder sb = new StringBuilder();
-                        //StringWriter sw = new StringWriter(sb);
-                        //HtmlTextWriter htw = new HtmlTextWriter(sw);
-                        //Page pagina = new Page();
-                        //HtmlForm form = new HtmlForm();
+                         
                         GridView dg = new GridView();
                         dg.EnableViewState = false;
                         dg.DataSource = tabla;
@@ -279,131 +242,430 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
                         Utility.ExportGridViewToExcel(dg, "Seguimiento_Respiratorios" + DateTime.Now.ToShortDateString());
                       
                     }
-                //}
+                else
+                {
+                    lblError.ForeColor = Color.Red;
+                    lblError.Text = "No se encontraron datos.";
+                    lblError.Visible = true;
+                }
+
             }
 
-            catch
-            {
-
-                lblError.Text = "Ha superado el límite para exportar datos. Comuniquese con el administrador.";
-                lblError.Visible = true;
-            }
+            
 
 
 
 
 }
 
-        private DataTable MostrarDatosExcel()//( Item oItem)
+
+        private DataTable MostrarDatos()
         {
+            DataSet Ds = new DataSet();
 
+            SqlConnection conn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString
+            ); // Performance: conexion solo lectura
 
-            // d.calle as [Calle], d.numero as [Nro.],d.departamento as [Depto], d.cpostal as [CP], d.barrio as Barrio,d.municipio as Municipio,
-            string m_strSQLCondicion = " 1=1 ";
+            SqlCommand cmd = new SqlCommand();
 
-            m_strSQLCondicion = " and Ir.idEfector=" + oUser.IdEfector.IdEfector.ToString();
-            //DateTime fecha = DateTime.Parse(txtFechaDesde.Value);
-            if (txtFechaDesde.Value != "")
+            try
             {
-                DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
-                m_strSQLCondicion += " AND ir.fecharegistro >= '" + fecha1.ToString("yyyyMMdd") + "'";
 
-            }
-
-            if (txtFechaHasta.Value != "")
-            {
-                DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value).AddDays(1);
-                m_strSQLCondicion += " AND ir.fecharegistro < '" + fecha2.ToString("yyyyMMdd") + "'";
-
-            }
-            if (ddlCaracter.SelectedValue != "0")
-                m_strSQLCondicion += " AND ir.idCaracter=" + ddlCaracter.SelectedValue;
-
-            if ((int.Parse(rdbOpcion.SelectedValue) == 2) || (int.Parse(rdbOpcion.SelectedValue) == 4))  //pacientes positivos
-                m_strSQLCondicion += " and (dp.resultadoCar like 'SE DETECT%'   )";
-
-            if (ddlResultado.SelectedValue != "0")
-                m_strSQLCondicion += " and dp.resultadoCar='" + ddlResultado.SelectedValue + "'  and Dp.idUsuarioValida>0";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "[LAB_ReporteSeguimiento]";
 
 
-            if (int.Parse(rdbOpcion.SelectedValue) == 3) // pendiente de resultado
-                m_strSQLCondicion += " and dp.idUsuarioValida=0 ";
-            if (int.Parse(rdbOpcion.SelectedValue) == 5) // muestra con resultado/procesado
-                m_strSQLCondicion += @" and dp.idUsuarioValida>0 AND dp.resultadoCar NOT like '%SIN MUESTRA%' 
+                cmd.Parameters.Add("@idEfector", SqlDbType.Int);
+                cmd.Parameters["@idEfector"].Value =
+                    oUser.IdEfector.IdEfector;
+
+
+                if (txtFechaDesde.Value != "")
+                {
+                    DateTime fechaDesde =
+                        DateTime.Parse(txtFechaDesde.Value);
+
+                    cmd.Parameters.Add("@fechaDesde", SqlDbType.DateTime);
+                    cmd.Parameters["@fechaDesde"].Value = fechaDesde;
+                }
+               
+
+
+
+                if (txtFechaHasta.Value != "")
+                {
+                    DateTime fechaHasta =
+                        DateTime.Parse(txtFechaHasta.Value);
+
+                    cmd.Parameters.Add("@fechaHasta", SqlDbType.DateTime);
+                    cmd.Parameters["@fechaHasta"].Value = fechaHasta;
+                }
+
+
+
+                cmd.Parameters.Add("@idlistaitem", SqlDbType.NVarChar);
+                cmd.Parameters["@idlistaitem"].Value = GetDeterminaciones();
+
+                cmd.Parameters.Add("@idCaracter", SqlDbType.Int);
+                cmd.Parameters["@idCaracter"].Value =
+                    ddlCaracter.SelectedValue == "0"
+                    ? 0
+                    : int.Parse(ddlCaracter.SelectedValue);
+
+
+
+                // Filtros adicionales
+                string filtro = "";
+                //if (ddlResultado.SelectedValue != "0")
+                //{
+                //    filtro +=                    " AND dp.resultadocar='" +
+                //    ddlResultado.SelectedValue.Replace("'", "''") +
+                //    "'";
+                //}
+
+                if ((int.Parse(rdbOpcion.SelectedValue) == 2) || (int.Parse(rdbOpcion.SelectedValue) == 4))  //pacientes positivos
+                    filtro += " and (dp.resultadoCar like 'SE DETECT%'   )";
+
+                if (ddlResultado.SelectedValue != "0")
+                    filtro += " and dp.resultadoCar='" + ddlResultado.SelectedValue + "'  and Dp.idUsuarioValida>0";
+
+
+                if (int.Parse(rdbOpcion.SelectedValue) == 3) // pendiente de resultado
+                    filtro += " and dp.idUsuarioValida=0 ";
+                if (int.Parse(rdbOpcion.SelectedValue) == 5) // muestra con resultado/procesado
+                    filtro += @" and dp.idUsuarioValida>0 AND dp.resultadoCar NOT like '%SIN MUESTRA%' 
 AND dp.resultadoCar NOT like '%MUESTRA DERIVADA%'";
 
-            string m_strSQL = @"  select  ir.fecharegistro as [Fecha Registro], 
-IR.numero as [Protocolo], 
-IR.numeroOrigen as [Origen],
-convert(varchar(100),e.nombre) as [Efector Procedencia],   
-ca.nombre as [Caracter],
-pac.Apellido , 
-pac.nombre as [Nombre],
-case when ir.idpaciente=-1 then '' else case when pac.idEstado = 2 then 'SIN DNI'  else 'DNI' end end as [Tipo Doc.],
-case when ir.idpaciente=-1 then 0 else case when pac.idEstado = 2 then 0 ELSE pac.numeroDocumento END end as [Nro. Documento],
-case when ir.idpaciente=-1 then '' else convert(varchar(10),pac.fechaNacimiento,103) end as [Fecha Nacimiento], 
-case when ir.idpaciente=-1 then 0 else IR.edad end as [Edad],
-case IR.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end as [amd],
-case when ir.idpaciente=-1 then '' else IR.sexo end as [Sexo],
-IR.nombreObraSocial as [Obra Social],
- Pac.informacioncontacto as [Telefono],
-substring(O.nombre,1,3) as [Amb/Int.], 
-case when convert(varchar(10), IR.fechaTomaMuestra, 103)='01/01/1900' then '' 
-else convert(varchar(10), IR.fechaTomaMuestra, 103) end as [F. Toma Muestra],
-M.nombre as Muestra, IR.numeroOrigen2,
-IR.Especialista AS [Solicitante] ,
-dP.fechavalida as [F. Resultado],
-I.nombre as [Determinacion],
-case when  Dp.idUsuarioValida>0  then upper(dp.resultadoCar)  else  case when DP.informable=1 then 'EN PROCESO' else  upper(dp.resultadoCar) end end   AS 'Resultado' ,
-case when  Dp.idUsuarioValida>0 then upper(ltrim(dp.observaciones + ' '+ ir.observacionesResultados)) else '' end as Observaciones
- from		
-LAB_protocolo as IR with (nolock)
-inner JOIN   Sys_Paciente AS Pac with (nolock) ON IR.idPaciente = Pac.idPaciente 
-inner JOIN Lab_Origen O with (nolock) on O.idOrigen= IR.idOrigen
-inner JOIN LAB_SectorServicio S with (nolock) on S.idSectorServicio= IR.idSector
-INNER JOIN LAB_Muestra as M with (nolock) on M.idMuestra= IR.idMuestra
- left join lab_caracter as Ca with (nolock) on Ca.idCaracter= IR.idcaracter
-inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitante
-inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
-inner join lab_item I on I.iditem = DP.idsubitem
-
-inner join lab_Param Pa on Pa.parstr= I.codigo and Pa.idparam=2
-where  DP.idsubitem in ( " + GetDeterminaciones() + ") " + m_strSQLCondicion + @"
-and  ir.baja=0  
-";
 
 
-            if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
-                m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
-from (" + m_strSQL + @" AND IR.IDPACIENTE>-1)x
-group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
-  [Fecha Nacimiento], [Sexo]";
-            else
 
-                m_strSQL = m_strSQL + @" order by ir.numero, pa.parnum";
+                cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
+                cmd.Parameters["@FiltroBusqueda"].Value = filtro;
 
 
-                            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
-            lblCantidad.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
-            return Ds.Tables[0];
+
+                cmd.Connection = conn;
+
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+                da.Fill(Ds);
+
+
+                if (Ds.Tables.Count > 0)
+                {
+                    lblCantidad.Text =
+                        Ds.Tables[0].Rows.Count.ToString()
+                        + " registros encontrados";
+
+                    return Ds.Tables[0];
+                }
+
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception(
+                    ex.Message
+                );
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                    conn.Close();
+            }
+
+
+            return new DataTable();
 
         }
 
+//        private DataTable MostrarDatosExcel_old()//( Item oItem)
+//        {
+             
+//            string m_strSQLCondicion = " 1=1 ";
+
+//            m_strSQLCondicion = " and Ir.idEfector=" + oUser.IdEfector.IdEfector.ToString();
+            
+//            if (txtFechaDesde.Value != "")
+//            {
+//                DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+//                m_strSQLCondicion += " AND ir.fecharegistro >= '" + fecha1.ToString("yyyyMMdd") + "'";
+
+//            }
+
+//            if (txtFechaHasta.Value != "")
+//            {
+//                DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value).AddDays(1);
+//                m_strSQLCondicion += " AND ir.fecharegistro < '" + fecha2.ToString("yyyyMMdd") + "'";
+
+//            }
+//            if (ddlCaracter.SelectedValue != "0")
+//                m_strSQLCondicion += " AND ir.idCaracter=" + ddlCaracter.SelectedValue;
+
+//            if ((int.Parse(rdbOpcion.SelectedValue) == 2) || (int.Parse(rdbOpcion.SelectedValue) == 4))  //pacientes positivos
+//                m_strSQLCondicion += " and (dp.resultadoCar like 'SE DETECT%'   )";
+
+//            if (ddlResultado.SelectedValue != "0")
+//                m_strSQLCondicion += " and dp.resultadoCar='" + ddlResultado.SelectedValue + "'  and Dp.idUsuarioValida>0";
+
+
+//            if (int.Parse(rdbOpcion.SelectedValue) == 3) // pendiente de resultado
+//                m_strSQLCondicion += " and dp.idUsuarioValida=0 ";
+//            if (int.Parse(rdbOpcion.SelectedValue) == 5) // muestra con resultado/procesado
+//                m_strSQLCondicion += @" and dp.idUsuarioValida>0 AND dp.resultadoCar NOT like '%SIN MUESTRA%' 
+//AND dp.resultadoCar NOT like '%MUESTRA DERIVADA%'";
+
+//            string m_strSQL = @"  select  ir.fecharegistro as [Fecha Registro], 
+//IR.numero as [Protocolo], 
+//IR.numeroOrigen as [Origen],
+//convert(varchar(100),e.nombre) as [Efector Procedencia],   
+//ca.nombre as [Caracter],
+//pac.Apellido , 
+//pac.nombre as [Nombre],
+//case when ir.idpaciente=-1 then '' else case when pac.idEstado = 2 then 'SIN DNI'  else 'DNI' end end as [Tipo Doc.],
+//case when ir.idpaciente=-1 then 0 else case when pac.idEstado = 2 then 0 ELSE pac.numeroDocumento END end as [Nro. Documento],
+//case when ir.idpaciente=-1 then '' else convert(varchar(10),pac.fechaNacimiento,103) end as [Fecha Nacimiento], 
+//case when ir.idpaciente=-1 then 0 else IR.edad end as [Edad],
+//case IR.unidadEdad when 0 then 'años' when 1 then 'meses' when 2 then 'días' end as [amd],
+//case when ir.idpaciente=-1 then '' else IR.sexo end as [Sexo],
+//IR.nombreObraSocial as [Obra Social],
+// Pac.informacioncontacto as [Telefono],
+//substring(O.nombre,1,3) as [Amb/Int.], 
+//case when convert(varchar(10), IR.fechaTomaMuestra, 103)='01/01/1900' then '' 
+//else convert(varchar(10), IR.fechaTomaMuestra, 103) end as [F. Toma Muestra],
+//M.nombre as Muestra, IR.numeroOrigen2,
+//IR.Especialista AS [Solicitante] ,
+//dP.fechavalida as [F. Resultado],
+//I.nombre as [Determinacion],
+//case when  Dp.idUsuarioValida>0  then upper(dp.resultadoCar)  else  case when DP.informable=1 then 'EN PROCESO' else  upper(dp.resultadoCar) end end   AS 'Resultado' ,
+//case when  Dp.idUsuarioValida>0 then upper(ltrim(dp.observaciones + ' '+ ir.observacionesResultados)) else '' end as Observaciones
+// from		
+//LAB_protocolo as IR with (nolock)
+//inner JOIN   Sys_Paciente AS Pac with (nolock) ON IR.idPaciente = Pac.idPaciente 
+//inner JOIN Lab_Origen O with (nolock) on O.idOrigen= IR.idOrigen
+//inner JOIN LAB_SectorServicio S with (nolock) on S.idSectorServicio= IR.idSector
+//INNER JOIN LAB_Muestra as M with (nolock) on M.idMuestra= IR.idMuestra
+// left join lab_caracter as Ca with (nolock) on Ca.idCaracter= IR.idcaracter
+//inner JOIN [SYS_efector] e with (nolock) on  e.idefector = ir.idEfectorSolicitante
+//inner JOIN LAB_DetalleProtocolo DP with (nolock) ON DP.idProtocolo = IR.idProtocolo
+//inner join lab_item I on I.iditem = DP.idsubitem
+
+//inner join lab_Param Pa on Pa.parstr= I.codigo and Pa.idparam=2
+//where  DP.idsubitem in ( " + GetDeterminaciones() + ") " + m_strSQLCondicion + @"
+//and  ir.baja=0  
+//";
+
+
+
+//            //            string m_strSQL  = @"
+//            //DECLARE @Columnas NVARCHAR(MAX),
+//            //        @SQL NVARCHAR(MAX)
+
+//            //SELECT @Columnas = STUFF(
+//            //(
+//            //    SELECT ',' + QUOTENAME(parstr)
+//            //    FROM lab_Param
+//            //    WHERE idparam = 3
+//            //    ORDER BY parstr
+//            //    FOR XML PATH('')
+//            //),1,1,'')
+
+
+//            //SET @SQL = '
+
+//            //SELECT 
+//            //    FechaRegistro,
+//            //    Protocolo,
+//            //    Origen,
+//            //    EfectorProcedencia,
+//            //    Caracter,
+//            //    Apellido,
+//            //    Nombre,
+//            //    [Tipo Doc.],
+//            //    [Nro. Documento],
+//            //    [Fecha Nacimiento],
+//            //    Edad,
+//            //    amd,
+//            //    Sexo,
+//            //    [Obra Social],
+//            //    Telefono,
+//            //    [Amb/Int.],
+//            //    [F. Toma Muestra],
+//            //    Muestra,
+//            //    numeroOrigen2,
+//            //    Solicitante,
+//            //    [F. Resultado],
+//            //    Determinacion,
+//            //    Resultado,
+//            //    Observaciones,
+//            //    ' + @Columnas + '
+//            //FROM
+//            //(
+//            //    SELECT
+
+//            //        ir.fecharegistro FechaRegistro,
+//            //        ir.numero Protocolo,
+//            //        ir.numeroOrigen Origen,
+//            //        e.nombre EfectorProcedencia,
+//            //        ca.nombre Caracter,
+
+//            //        pac.Apellido,
+//            //        pac.nombre Nombre,
+
+//            //        CASE 
+//            //            WHEN ir.idpaciente=-1 THEN ''''
+//            //            WHEN pac.idEstado=2 THEN ''SIN DNI''
+//            //            ELSE ''DNI''
+//            //        END [Tipo Doc.],
+
+//            //        CASE 
+//            //            WHEN ir.idpaciente=-1 THEN 0
+//            //            WHEN pac.idEstado=2 THEN 0
+//            //            ELSE pac.numeroDocumento
+//            //        END [Nro. Documento],
+
+//            //        CASE 
+//            //            WHEN ir.idpaciente=-1 THEN ''''
+//            //            ELSE CONVERT(varchar(10),pac.fechaNacimiento,103)
+//            //        END [Fecha Nacimiento],
+
+//            //        CASE WHEN ir.idpaciente=-1 THEN 0 ELSE ir.edad END Edad,
+
+//            //        CASE ir.unidadEdad
+//            //            WHEN 0 THEN ''años''
+//            //            WHEN 1 THEN ''meses''
+//            //            WHEN 2 THEN ''días''
+//            //        END amd,
+
+//            //        ir.sexo Sexo,
+
+//            //        ir.nombreObraSocial [Obra Social],
+//            //        pac.informacioncontacto Telefono,
+
+//            //        SUBSTRING(o.nombre,1,3) [Amb/Int.],
+
+//            //        CASE 
+//            //            WHEN CONVERT(varchar(10),ir.fechaTomaMuestra,103)=''01/01/1900''
+//            //            THEN ''''
+//            //            ELSE CONVERT(varchar(10),ir.fechaTomaMuestra,103)
+//            //        END [F. Toma Muestra],
+
+//            //        m.nombre Muestra,
+
+//            //        ir.numeroOrigen2,
+//            //        ir.Especialista Solicitante,
+
+//            //        dp.fechavalida [F. Resultado],
+
+//            //        i.nombre Determinacion,
+
+//            //        CASE 
+//            //            WHEN dp.idUsuarioValida>0 
+//            //                THEN UPPER(dp.resultadoCar)
+//            //            WHEN dp.informable=1
+//            //                THEN ''EN PROCESO''
+//            //            ELSE UPPER(dp.resultadoCar)
+//            //        END Resultado,
+
+
+//            //        CASE 
+//            //            WHEN dp.idUsuarioValida>0
+//            //            THEN UPPER(LTRIM(dp.observaciones + '' '' + ir.observacionesResultados))
+//            //            ELSE ''''
+//            //        END Observaciones,
+
+
+//            //        p3.parstr ColumnaPivot,
+//            //        ISNULL(dp3.resultadoCar,'''') ValorPivot
+
+
+//            //    FROM LAB_protocolo ir WITH(NOLOCK)
+
+//            //    INNER JOIN Sys_Paciente pac WITH(NOLOCK)
+//            //        ON ir.idPaciente=pac.idPaciente
+
+//            //    INNER JOIN Lab_Origen o WITH(NOLOCK)
+//            //        ON o.idOrigen=ir.idOrigen
+
+//            //    INNER JOIN LAB_Muestra m WITH(NOLOCK)
+//            //        ON m.idMuestra=ir.idMuestra
+
+//            //    LEFT JOIN lab_caracter ca WITH(NOLOCK)
+//            //        ON ca.idCaracter=ir.idcaracter
+
+//            //    INNER JOIN SYS_efector e WITH(NOLOCK)
+//            //        ON e.idefector=ir.idEfectorSolicitante
+
+//            //    INNER JOIN LAB_DetalleProtocolo dp WITH(NOLOCK)
+//            //        ON dp.idProtocolo=ir.idProtocolo
+
+//            //    INNER JOIN lab_item i WITH(NOLOCK)
+//            //        ON i.iditem=dp.idsubitem
+
+//            //    INNER JOIN lab_Param p2 WITH(NOLOCK)
+//            //        ON p2.parstr=i.codigo
+//            //        AND p2.idparam=2
+
+
+//            //    LEFT JOIN LAB_DetalleProtocolo dp3 WITH(NOLOCK)
+//            //        ON dp3.idProtocolo=ir.idProtocolo
+
+//            //    LEFT JOIN lab_item i3 WITH(NOLOCK)
+//            //        ON i3.iditem=dp3.idsubitem
+
+//            //    LEFT JOIN lab_Param p3 WITH(NOLOCK)
+//            //        ON p3.parstr=i3.codigo
+//            //        AND p3.idparam=3
+//            //  where  DP.idsubitem in ( " + GetDeterminaciones() + ") " + m_strSQLCondicion + @"
+//            //    and  ir.baja=0  
+
+//            //) X
+
+//            //PIVOT
+//            //(
+//            //    MAX(ValorPivot)
+//            //    FOR ColumnaPivot IN (' + @Columnas + ')
+//            //) P
+//            //";
+
+
+//            if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
+//                m_strSQL = @" select [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],  [Fecha Nacimiento], [Sexo], count (*) as Cantidad
+//from (" + m_strSQL + @" AND IR.IDPACIENTE>-1)x
+//group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
+//  [Fecha Nacimiento], [Sexo]";
+//            else
+
+//                m_strSQL = m_strSQL + @" order by ir.numero, pa.parnum";
+//                //'
+
+//                //EXEC sp_executesql @SQL;
+//                //";//, pa.parnum";
+
+
+//                DataSet Ds = new DataSet();
+//            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+//            SqlDataAdapter adapter = new SqlDataAdapter();
+//            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+//            try
+//            {
+//                adapter.Fill(Ds);
+//            }
+//            catch (SqlException ex)
+//            {
+//                throw new Exception(ex.Message + "\nSQL:\n" + m_strSQL);
+//            }
+            
+//            lblCantidad.Text = Ds.Tables[0].Rows.Count.ToString() + " registros encontrados";
+//            return Ds.Tables[0];
+
+//        }
+
         protected void rdbOpcion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //ISession m_session = NHibernateHttpModule.CurrentSession;
-            //ICriteria crit = m_session.CreateCriteria(typeof(Item));
-            //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-            ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            //Item oItem = (Item)crit.UniqueResult();
-
-            //if (oItem != null)
-            //{
-            DataTable dtMuestras = MostrarDatos();// (oItem);
+            
+            DataTable dtMuestras = MostrarDatos(); 
                 if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
                 {
                     gvPacientes.DataSource = dtMuestras;
@@ -425,17 +687,10 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            //ISession m_session = NHibernateHttpModule.CurrentSession;
-            //ICriteria crit = m_session.CreateCriteria(typeof(Item));
-            //crit.Add(Expression.Eq("Codigo", oC.CodigoCovid));
-            ////crit.Add(Expression.Eq("IdSector", oProtocoloActual.IdSector));
-            //Item oItem = (Item)crit.UniqueResult();
-
-            //if (oItem != null)
-            //{
+        
             if (Page.IsValid)
             {
-                DataTable dtMuestras = MostrarDatos();// (oItem);
+            DataTable dtMuestras = MostrarDatos();// (oItem);
                 if ((int.Parse(rdbOpcion.SelectedValue) == 1) || (int.Parse(rdbOpcion.SelectedValue) == 2))   //pacientes diferentes
                 {
                     gvPacientes.DataSource = dtMuestras;
@@ -468,8 +723,8 @@ group by  [Tipo Doc.],  [Nro. Documento], Apellido,   [Nombre],
                 
               
 
-                string v = e.Row.Cells[21].Text;
-                e.Row.Cells[21].Font.Bold = true;
+                string v = e.Row.Cells[22].Text;
+                e.Row.Cells[22].Font.Bold = true;
 
                 if (v.Length > 10)
                     res = v.Substring(0,9);
@@ -510,7 +765,6 @@ and idEfector="+ oUser.IdEfector.IdEfector.ToString() +" order by resultadocar";
             oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
             ddlResultado.Items.Insert(0, new ListItem("Todos", "0"));
         }
-
         private bool HayItemSeleccionado()
         {
             bool haySeleccionados = false;

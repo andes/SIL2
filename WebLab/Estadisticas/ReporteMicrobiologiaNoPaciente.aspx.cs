@@ -149,7 +149,6 @@ namespace WebLab.Estadisticas
 
         private void MostrarReporteGeneral()
         {
-            // Solapa Tipo de Muestras
             DataTable dtTipoMuestra = MostrarDatos("Tipo de Muestra");
 
             DataTable dtMicroorganismo = MostrarDatos("Aislamiento");
@@ -158,7 +157,6 @@ namespace WebLab.Estadisticas
             gvTipoMuestra.DataBind();
 
             // HFTipoMuestra.Value = getValoresTipoMuestra();
-
 
             DataTable dtOrigen = MostrarDatos("Origen");
          
@@ -178,7 +176,6 @@ namespace WebLab.Estadisticas
 
             gvMicroorganismos.DataSource = dtMicroorganismo;
             gvMicroorganismos.DataBind();
-
 
             //HFMicroorganismo.Value = getValoresMicroorganismos();
             //gvMicroorganismos.Visible = true;
@@ -210,22 +207,8 @@ namespace WebLab.Estadisticas
            
         }
 
-        private string getValoresMicroorganismos()
-        {
-            string s_valores = "";
 
-            for (int i = 0; i < gvSolicitante.Rows.Count; i++)
-            {
-                string s_nombre = gvSolicitante.Rows[i].Cells[0].Text.Replace(";", "");
-                s_nombre = s_nombre.Replace("&#", "");
-                if (s_valores == "")
-                    s_valores = s_nombre + "|" + gvSolicitante.Rows[i].Cells[1].Text;
-                else
-                    s_valores += ";" + s_nombre + "|" + gvSolicitante.Rows[i].Cells[1].Text;
-            }
 
-            return s_valores;
-        }
 
         private string getValoresTipoMuestra()
         {
@@ -236,9 +219,9 @@ namespace WebLab.Estadisticas
                     string s_nombre = gvTipoMuestra.Rows[i].Cells[0].Text.Replace(";", "");
                     s_nombre = s_nombre.Replace("&#", "");
                     if (s_valores=="")
-                        s_valores =  s_nombre + "|" + gvTipoMuestra.Rows[i].Cells[1].Text;
+                        s_valores = "name='" + s_nombre + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "'";
                     else
-                        s_valores += ";" + s_nombre + "|" + gvTipoMuestra.Rows[i].Cells[1].Text ;
+                        s_valores += ";" + "name='" + s_nombre + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "'";
                 }
                 
             return  s_valores;
@@ -581,11 +564,13 @@ namespace WebLab.Estadisticas
 
         protected void btnBuscarAislamiento_Click(object sender, EventArgs e)
         {
-           //Solapa resultados
+           
             DataTable dt = MostrarDatos("Resultados");
 
             gvResultado.DataSource =dt;
             gvResultado.DataBind();
+          
+            
 
             if (dt.Rows.Count > 0)
             {
@@ -596,6 +581,7 @@ namespace WebLab.Estadisticas
                 btnGraficoResistencia.Visible = false;
             }
             SetSelectedTab(TabIndex.TWO);
+            
         }
 
 
