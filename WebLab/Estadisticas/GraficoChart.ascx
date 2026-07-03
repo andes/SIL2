@@ -163,7 +163,7 @@
 
         if (tipo === 'pie') {
             //se agrega en los labels el % , y ademas la opcion que no muestre nada (para graficos con muchos items)
-            if (mostrarLabels === '' || mostrarLabels === "true") {
+            if (mostrarLabels === '' || mostrarLabels === true) {
                 opciones.plugins.legend = {
                 position: 'right',
                 labels: {
