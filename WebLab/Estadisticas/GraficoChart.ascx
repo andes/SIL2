@@ -9,7 +9,7 @@
     }
 
     var ctx = document.getElementById('<%= miGrafico.ClientID %>');
-    var labels = <%= string.IsNullOrEmpty(LabelsJson) ? "[]" : LabelsJson %>;
+    var labels = <%= string.IsNullOrEmpty(LabelsJsonDecoded) ? "[]" : LabelsJsonDecoded %>;
     var datos = <%= string.IsNullOrEmpty(DatosJson) ? "[]" : DatosJson %>;
     var datosOtros = <%= string.IsNullOrEmpty(DatosStringJson) ? "[]" : DatosStringJson %>;
     var tieneDatos1 = true; tieneDatos2 = true;
