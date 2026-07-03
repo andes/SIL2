@@ -7,72 +7,54 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Resultados {
+namespace WebLab.Estadisticas {
     
     
-    public partial class AntecedentesAnalisisView {
+    public partial class ReporteInsumo {
         
         /// <summary>
-        /// form1 control.
+        /// ddlEfector control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::Anthem.DropDownList ddlEfector;
         
         /// <summary>
-        /// lblPaciente control.
+        /// btnBuscar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPaciente;
+        protected global::System.Web.UI.WebControls.Button btnBuscar;
         
         /// <summary>
-        /// lblItem control.
+        /// estatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblItem;
+        protected global::System.Web.UI.WebControls.Label estatus;
         
         /// <summary>
-        /// imgPdf control.
+        /// lblCantidadRegistros control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgPdf;
+        protected global::System.Web.UI.WebControls.Label lblCantidadRegistros;
         
         /// <summary>
-        /// pnlGrafico control.
+        /// gvSinInsumo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlGrafico;
-        
-        /// <summary>
-        /// miGrafico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::WebLab.Estadisticas.GraficoChart miGrafico;
-
-        /// <summary>
-        /// gvHistorico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvHistorico;
+        protected global::System.Web.UI.WebControls.GridView gvSinInsumo;
     }
 }

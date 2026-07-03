@@ -75,7 +75,6 @@
    <div class="panel-heading">  <h3>Panel Respiratorio:Seguimiento Muestras</h3>
         </div>
          	<div class="panel-body" >  
-              <asp:Label ID="lblError" runat="server" Text="Label" Visible="false"></asp:Label>
                  
                    <div class="form-group" >
                         
@@ -83,9 +82,11 @@
                        <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  OnClientClick="seleccionarTodos(true); return false;">Todos</asp:LinkButton>&nbsp;
                             <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"    OnClientClick="seleccionarTodos(false); return false;" >Ninguno</asp:LinkButton>
-                                &nbsp;&nbsp;
+                               
                             <br /><asp:CustomValidator ID="cvItem" runat="server" OnServerValidate="cvItem_ServerValidate" ErrorMessage="Debe seleccionar al menos una determinación del Panel Respiratorio"></asp:CustomValidator>
 
+              <asp:Label ID="lblError" runat="server" Text="Label" Visible="false"></asp:Label>
+                 
                                 </div>
                        </div>
                     <hr />
@@ -102,8 +103,8 @@
                  <asp:ListItem Value="3">Muestras Pendientes de Resultados</asp:ListItem>
                   <asp:ListItem Value="4">Muestras Positivas</asp:ListItem>
                   <asp:ListItem Value="5">Muestras Procesadas</asp:ListItem>
-                <asp:ListItem Value="1">Pacientes Analizados</asp:ListItem>
-                <asp:ListItem Value="2">Pacientes Positivos</asp:ListItem>
+             <%--   <asp:ListItem Value="1">Pacientes Analizados</asp:ListItem>
+                <asp:ListItem Value="2">Pacientes Positivos</asp:ListItem>--%>
             </asp:RadioButtonList>
 </div> 
                  
@@ -124,6 +125,7 @@
                         <div class="form-group" > 
                         <asp:Button ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" Text="Buscar"  CssClass="btn btn-danger" Width="100px"/>
                              <asp:Button ID="btnExcel" runat="server" OnClick="btnExcel_Click" Text="Exportar Excel"  CssClass="btn btn-danger" Width="150px"/>
+         
              </div>
                  
              
@@ -131,43 +133,7 @@
       	<div class="panel-footer" > 
             <h3  >  <asp:Label ID="lblCantidad" runat="server" Text=""></asp:Label></h3>
               <div style="overflow-y:auto;width:1300px; height:1000px;">  
-        <asp:GridView ID="GridView1"  CssClass="table table-bordered bs-table"  runat="server" Width="980px" Font-Size="8pt" OnRowDataBound="GridView1_RowDataBound" Font-Names="Verdana" AutoGenerateColumns="False">
-            <Columns>
-                <asp:BoundField DataField="Fecha Registro" HeaderText="Fecha Registro" />
-                <asp:BoundField DataField="Protocolo" HeaderText="Nro." />
-                <asp:BoundField DataField="Origen" HeaderText="Origen" />
-                <asp:BoundField DataField="Efector Procedencia" HeaderText="Efector Procedencia" />
-             
-                <asp:BoundField DataField="Caracter" HeaderText="Caracter" />
-                <asp:BoundField DataField="Apellido" HeaderText="Apellidos" />
-                <asp:BoundField DataField="Nombre" HeaderText="Nombres" />
-                <asp:BoundField DataField="Tipo Doc." HeaderText="Tipo Doc." />
-                <asp:BoundField DataField="Nro. Documento" HeaderText="Nro. Doc." />
-                <asp:BoundField DataField="Fecha Nacimiento" HeaderText="Fecha Nac." />
-                <asp:BoundField DataField="Edad" HeaderText="Edad" />
-                <asp:BoundField DataField="amd" HeaderText="amd" />
-                <asp:BoundField DataField="Sexo" HeaderText="S" />
-                
-                  <%-- <asp:BoundField DataField="Calle Domicilio" HeaderText="Calle Domicilio" />
-                   <asp:BoundField DataField="Barrio Domicilio" HeaderText="Barrio Domicilio" />
-                <asp:BoundField DataField="Ciudad Domicilio" HeaderText="Ciudad Domicilio" />
-                <asp:BoundField DataField="Provincia Domicilio" HeaderText="Provincia Domicilio" />
-                <asp:BoundField DataField="Pais" HeaderText="Pais" />--%>
-                 <asp:BoundField DataField="Telefono" HeaderText="Telefono" />
-                <asp:BoundField DataField="Amb/Int." HeaderText="A/I" />
-                   <asp:BoundField DataField="Solicitante" HeaderText="Solicitante" />
-                <asp:BoundField DataField="F. Toma Muestra" HeaderText="F.Toma" />
-
-                <asp:BoundField DataField="Muestra" HeaderText="Muestra" />
-       <asp:BoundField DataField="numeroOrigen2" HeaderText="Nro. Hisopado" />
-                
-               <asp:BoundField DataField="Obra Social" HeaderText="Obra Social" />
-                                      <asp:BoundField DataField="F. Resultado" HeaderText="F. Resultado" />
-                                                 <asp:BoundField DataField="Determinacion" HeaderText="Determinacion" />
-     
-                <asp:BoundField DataField="Resultado" HeaderText="Resultado" />
-                <asp:BoundField DataField="Observaciones" HeaderText="Observaciones" />
-            </Columns> 
+        <asp:GridView ID="GridView1"  CssClass="table table-bordered bs-table"  runat="server" Width="100%" Font-Size="8pt" OnRowDataBound="GridView1_RowDataBound" Font-Names="Verdana" AutoGenerateColumns="true">
                   </asp:GridView>
 
                      <asp:GridView ID="gvPacientes" Visible="false" CssClass="table table-bordered bs-table"  runat="server" Width="600px" Font-Size="8pt"  Font-Names="Verdana" AutoGenerateColumns="true">

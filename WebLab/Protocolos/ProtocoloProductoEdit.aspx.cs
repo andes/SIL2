@@ -797,7 +797,7 @@ namespace WebLab.Protocolos
                             }
                             
                         }
-
+                       EnviarEquipo(oRegistro);
                         Response.Redirect("ProtocoloMensaje.aspx?id=" + oRegistro.IdProtocolo, false);
                         //////////////////////////
                     }
@@ -827,7 +827,47 @@ namespace WebLab.Protocolos
                 }
             }
         }
+        private void EnviarEquipo(Protocolo oRegistro)
+        {
+            try
+            {
+                if ((oRegistro.IdTipoServicio.IdTipoServicio ==5) &&
+                    (oRegistro.IdEfector.IdEfector == 205 ||
+                     oRegistro.IdEfector.IdEfector == 221))
+                {
+                    SqlConnection conn =
+                        (SqlConnection)
+                        NHibernateHttpModule
+                        .CurrentSession.Connection;
 
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
+
+                    using (SqlCommand cmd =
+                        new SqlCommand(
+                            "dbo.LAB_GeneraProtocoloEnvioAutomaticoREAL",
+                            conn))
+                    {
+                        cmd.CommandType =
+                            CommandType.StoredProcedure;
+
+                        cmd.Parameters.AddWithValue(
+                            "@idEfector",
+                            oRegistro.IdEfector.IdEfector);
+
+                        cmd.Parameters.AddWithValue(
+                            "@idProtocolo",
+                            oRegistro.IdProtocolo);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string exception = ex.Message;
+            }
+        }
         private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
         {
 
@@ -1033,7 +1073,7 @@ namespace WebLab.Protocolos
                     oRegistro.Embarazada = "N";
 
                     oRegistro.IdObraSocial = (ObraSocial)oObra.Get(typeof(ObraSocial), -1);
-                    oRegistro.IdOrigen = (Origen)oOrigen.Get(typeof(Origen), 4);
+                    oRegistro.IdOrigen = (Origen)oOrigen.Get(typeof(Origen), 1);
                     oRegistro.IdPrioridad = (Prioridad)oPri.Get(typeof(Prioridad), 1);
                     oRegistro.IdEspecialistaSolicitante = 0;
 
@@ -1759,7 +1799,21 @@ namespace WebLab.Protocolos
             }
           
             TxtDatosCargados.Value = sDatos;
+            /*control de borrado de determinaciones con aislamientos*/
+            string operacion = Request["Operacion"];
+            string idServicio = Request["idServicio"];
 
+            if (operacion == "Modifica" && (idServicio == "3" || idServicio == "5"))
+
+            {
+                if (!ValidarEliminarDeterminacionConAislamientos())
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage =
+                        "No se puede eliminar una determinación que posee aislamientos asociados.";
+                    return;
+                }
+            }
             if (!VerificarAnalisisContenidos())
             {  TxtDatos.Value = "";
                 args.IsValid = false;
@@ -1834,6 +1888,43 @@ namespace WebLab.Protocolos
                 }
 
             }
+        }
+
+        private bool ValidarEliminarDeterminacionConAislamientos()
+        {
+            string IdProtocolo = Request["idProtocolo"].ToString();
+            string sql = @"
+        SELECT distinct I.codigo
+        FROM LAB_ProtocoloGermen A with (nolock)
+        INNER JOIN LAB_Item I with (nolock)
+            ON A.idItem = I.idItem
+        WHERE A.idProtocolo = @idProtocolo";
+
+            using (SqlConnection cn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.Parameters.AddWithValue("@idProtocolo", IdProtocolo);
+
+                    cn.Open();
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        string codigoAntibiograma = dr["codigo"].ToString();
+
+                        // Tiene antibiograma pero ya no está seleccionado
+                        if (!TxtDatos.Value.Contains(codigoAntibiograma + "#"))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
         private bool VerificarAnalisisContenidos()
         {

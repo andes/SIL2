@@ -7,13 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Estadisticas
-{
-
-
-    public partial class ReportePorResultado
-    {
-
+namespace WebLab.Estadisticas {
+    
+    
+    public partial class ReportePorResultado {
+        
         /// <summary>
         /// HFTipoMuestra control.
         /// </summary>
@@ -22,7 +20,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFTipoMuestra;
-
+        
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -31,7 +29,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEfector;
-
+        
         /// <summary>
         /// ddlServicio control.
         /// </summary>
@@ -40,7 +38,16 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlServicio;
-
+        
+        /// <summary>
+        /// rvTipoServicio control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvTipoServicio;
+        
         /// <summary>
         /// rfvDiag control.
         /// </summary>
@@ -49,7 +56,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDiag;
-
+        
         /// <summary>
         /// lstDiag control.
         /// </summary>
@@ -58,7 +65,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox lstDiag;
-
+        
         /// <summary>
         /// chkSinDiag control.
         /// </summary>
@@ -67,7 +74,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkSinDiag;
-
+        
         /// <summary>
         /// lnkMarcarSectores control.
         /// </summary>
@@ -76,7 +83,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkMarcarSectores;
-
+        
         /// <summary>
         /// lnkDesmarcarSectores control.
         /// </summary>
@@ -85,7 +92,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDesmarcarSectores;
-
+        
         /// <summary>
         /// Div3 control.
         /// </summary>
@@ -94,7 +101,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Div3;
-
+        
         /// <summary>
         /// rfvSector control.
         /// </summary>
@@ -103,7 +110,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvSector;
-
+        
         /// <summary>
         /// lstSector control.
         /// </summary>
@@ -112,7 +119,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox lstSector;
-
+        
         /// <summary>
         /// lnkMarcarSector control.
         /// </summary>
@@ -121,7 +128,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkMarcarSector;
-
+        
         /// <summary>
         /// lnkDesmarcarSector control.
         /// </summary>
@@ -130,7 +137,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDesmarcarSector;
-
+        
         /// <summary>
         /// ddlArea control.
         /// </summary>
@@ -139,7 +146,16 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlArea;
-
+        
+        /// <summary>
+        /// rvArea control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvArea;
+        
         /// <summary>
         /// ddlAnalisis control.
         /// </summary>
@@ -148,7 +164,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAnalisis;
-
+        
         /// <summary>
         /// rvAnalisis control.
         /// </summary>
@@ -157,7 +173,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvAnalisis;
-
+        
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -166,7 +182,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-
+        
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -175,7 +191,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-
+        
         /// <summary>
         /// cvFechas control.
         /// </summary>
@@ -184,7 +200,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvFechas;
-
+        
         /// <summary>
         /// ChckOrigen control.
         /// </summary>
@@ -193,7 +209,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList ChckOrigen;
-
+        
         /// <summary>
         /// lnkMarcar control.
         /// </summary>
@@ -202,7 +218,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkMarcar;
-
+        
         /// <summary>
         /// lnkDesmarcar control.
         /// </summary>
@@ -211,7 +227,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDesmarcar;
-
+        
         /// <summary>
         /// ddlGrupoEtareo control.
         /// </summary>
@@ -220,7 +236,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlGrupoEtareo;
-
+        
         /// <summary>
         /// ddlSexo control.
         /// </summary>
@@ -229,7 +245,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSexo;
-
+        
         /// <summary>
         /// btnGenerar control.
         /// </summary>
@@ -238,7 +254,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGenerar;
-
+        
         /// <summary>
         /// pnlResultado control.
         /// </summary>
@@ -247,7 +263,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlResultado;
-
+        
         /// <summary>
         /// lblAnalisis control.
         /// </summary>
@@ -256,7 +272,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAnalisis;
-
+        
         /// <summary>
         /// imgPdf control.
         /// </summary>
@@ -265,7 +281,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgPdf;
-
+        
         /// <summary>
         /// imgExcel control.
         /// </summary>
@@ -274,7 +290,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgExcel;
-
+        
         /// <summary>
         /// gvEstadistica control.
         /// </summary>
@@ -283,7 +299,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvEstadistica;
-
+        
         /// <summary>
         /// btnVerGraficoTipoMuestra control.
         /// </summary>
@@ -292,7 +308,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton btnVerGraficoTipoMuestra;
-
+        
         /// <summary>
         /// btnVerGraficoTipoMuestra2 control.
         /// </summary>
@@ -301,7 +317,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton btnVerGraficoTipoMuestra2;
-
+        
         /// <summary>
         /// modalFondo control.
         /// </summary>
@@ -310,7 +326,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl modalFondo;
-
+        
         /// <summary>
         /// pnlModalGrafico control.
         /// </summary>
@@ -319,7 +335,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlModalGrafico;
-
+        
         /// <summary>
         /// btnCerrarGrafico control.
         /// </summary>
@@ -328,7 +344,7 @@ namespace WebLab.Estadisticas
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton btnCerrarGrafico;
-
+        
         /// <summary>
         /// chartResultados control.
         /// </summary>

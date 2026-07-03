@@ -72,79 +72,29 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.CrystalReports.Engine.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.CrystalReports.TemplateEngine, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.CrystalReports.TemplateEngine.dll</HintPath>
-    </Reference>
     <Reference Include="CrystalDecisions.Data.AdoDotNetInterop, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.Data.AdoDotNetInterop.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.Enterprise.Viewing.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.Enterprise.Viewing.ReportSource.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.ClientDoc, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.ClientDoc.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.ReportAppServer.CommLayer, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.CommLayer.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.CommonControls, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.CommonControls.dll</HintPath>
-    </Reference>
     <Reference Include="CrystalDecisions.ReportAppServer.CommonObjectModel, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.CommonObjectModel.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.Controllers, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.Controllers.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.ReportAppServer.CubeDefModel, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.CubeDefModel.dll</HintPath>
     </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.DataDefModel, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.DataDefModel.dll</HintPath>
-    </Reference>
     <Reference Include="CrystalDecisions.ReportAppServer.DataSetConversion, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.DataSetConversion.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.ObjectFactory, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.ObjectFactory.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.Prompting, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.Prompting.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.ReportDefModel, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.ReportDefModel.dll</HintPath>
-    </Reference>
-    <Reference Include="CrystalDecisions.ReportAppServer.XmlSerialize, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-      <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.ReportAppServer.XmlSerialize.dll</HintPath>
     </Reference>
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -161,6 +111,10 @@
     <Reference Include="CrystalDecisions.Web, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\SAP BusinessObjects\Crystal Reports for .NET Framework 4.0\Common\SAP BusinessObjects Enterprise XI 4.0\win32_x86\dotnet\CrystalDecisions.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=7.3.2.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\LaboSil2Local\SIL2\packages\EPPlus\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="fastJSON, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -267,6 +221,7 @@
     <Content Include="App_Themes\default\menu\stuHover.js" />
     <Content Include="AutoAnalizador\Bc3000\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\Clinitek\ConfiguracionEdit.aspx" />
+    <Content Include="AutoAnalizador\REAL\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\CobasB221\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\CobasC311Config\ConfiguracionEdit.aspx" />
     <Content Include="AutoAnalizador\Counter\ConfiguracionEdit.aspx" />
@@ -349,6 +304,19 @@
     <Content Include="bootstrap\3.3.7\bootstrap.min.js" />
     <Content Include="bootstrap\3.3.7\font-awesome.min.css" />
     <Content Include="bootstrap\3.3.7\jquery.min.js" />
+    <Content Include="bootstrap\css\bootstrap-datepicker.min.css" />
+    <Content Include="bootstrap\css\bootstrap-datepicker3.min.css" />
+    <Content Include="bootstrap\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="bootstrap\css\bootstrap-table.min.css" />
+    <Content Include="bootstrap\css\bootstrap.css" />
+    <Content Include="bootstrap\css\bootstrap.min.css" />
+    <Content Include="bootstrap\css\fonts\font-awesome.min.css" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.svg" />
+    <Content Include="bootstrap\css\formValidation.css" />
+    <Content Include="bootstrap\css\intlTelInput.css" />
+    <Content Include="bootstrap\css\jquery-clockpicker.min.css" />
+    <Content Include="bootstrap\css\jquery-ui.css" />
+    <Content Include="bootstrap\css\select2.min.css" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\attribution.js" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\css\all.css" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\css\all.min.css" />
@@ -1997,6 +1965,27 @@
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\webfonts\fa-brands-400.svg" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\webfonts\fa-regular-400.svg" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\webfonts\fa-solid-900.svg" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="bootstrap\img\flags%402x.png" />
+    <Content Include="bootstrap\img\flags.png" />
+    <Content Include="bootstrap\js\bootstrap-datepicker.es.min.js" />
+    <Content Include="bootstrap\js\bootstrap-datepicker.min.js" />
+    <Content Include="bootstrap\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="bootstrap\js\bootstrap-table-locale-all.min.js" />
+    <Content Include="bootstrap\js\bootstrap-table.min.js" />
+    <Content Include="bootstrap\js\bootstrap.js" />
+    <Content Include="bootstrap\js\bootstrap.min.js" />
+    <Content Include="bootstrap\js\bootstrap3-typeahead.js" />
+    <Content Include="bootstrap\js\intlTelInput.js" />
+    <Content Include="bootstrap\js\jquery-1.12.0.js" />
+    <Content Include="bootstrap\js\jquery-clockpicker.min.js" />
+    <Content Include="bootstrap\js\jquery-ui.js" />
+    <Content Include="bootstrap\js\moment.min.js" />
+    <Content Include="bootstrap\js\pulsate.min.js" />
+    <Content Include="bootstrap\js\select2.full.min.js" />
+    <Content Include="bootstrap\js\utils.js" />
+    <Content Include="bootstrap\js\validar\bootstrap.js" />
+    <Content Include="bootstrap\js\validar\formValidation.js" />
     <Content Include="Calidad\IncidenciaEdit.ascx" />
     <Content Include="Calidad\IncidenciaRecepcionEdit.aspx" />
     <Content Include="Calidad\IncidenciaRecepcionList.aspx" />
@@ -2072,6 +2061,7 @@
     <Content Include="Estadisticas\GeneralReporte.aspx" />
     <Content Include="Estadisticas\Grafico.aspx" />
     <Content Include="Estadisticas\GraficoChart.ascx" />
+    <Content Include="Estadisticas\ReporteInsumo.aspx" />
     <Content Include="Estadisticas\Principal.aspx" />
     <Content Include="Estadisticas\ProcedimientoSIVILA.html" />
     <Content Include="Estadisticas\Produccion.aspx" />
@@ -2100,6 +2090,7 @@
     <Content Include="Informes\PacientesList.aspx" />
     <Content Include="Informes\ResultadosporServicio.aspx" />
     <Content Include="Items\ItemInsumo.aspx" />
+    <Content Include="login.ascx" />
     <Content Include="loginSIL.ascx" />
     <Content Include="LoginEfector.aspx" />
     <Content Include="Logout.aspx" />
@@ -2508,7 +2499,6 @@
     <Content Include="Protocolos\Consentimientos\Fotos\SDC12913.JPG" />
     <Content Include="Protocolos\Consentimientos\Fotos\slide4.jpg" />
     <Content Include="Protocolos\Default2.aspx" />
-    <Content Include="Protocolos\DefaultEfector.aspx" />
     <Content Include="Protocolos\DefaultFFEE.aspx" />
     <Content Include="Protocolos\DefaultFFEE2.aspx" />
     <Content Include="Protocolos\DerivacionMultiEfectorLote.aspx" />
@@ -2524,9 +2514,9 @@
     <Content Include="Protocolos\ProcesaRenaper.aspx" />
     <Content Include="Protocolos\ProcesaSISA.aspx" />
     <Content Include="Protocolos\ProtocoloAdjuntar.aspx" />
-    <Content Include="Protocolos\ProtocoloEditEfector.aspx" />
-    <Content Include="Protocolos\ProtocoloEditForense.aspx" />
     <Content Include="Protocolos\ProtocoloEditPesquisa.aspx" />
+    <Content Include="Protocolos\ProtocoloEditForense.aspx" />
+    <Content Include="Protocolos\ProtocoloEditPesquisa_old.aspx" />
     <Content Include="Protocolos\ProtocoloEliminar.aspx" />
     <Content Include="Protocolos\ProtocoloList.ascx" />
     <Content Include="Protocolos\ProtocoloList.aspx" />
@@ -2643,7 +2633,6 @@
     <Content Include="Resultados\PredefinidoSelect.aspx" />
     <Content Include="Resultados\ObservacionesEdit.aspx" />
     <Content Include="Resultados\RepositorioaExtraccion.aspx" />
-    <Content Include="Resultados\ResultadoBExterno.aspx" />
     <Content Include="Resultados\ResultadoConfirmacion.aspx" />
     <Content Include="Resultados\ResultadoItemEditExterno.aspx" />
     <Content Include="Resultados\ResultadoNoPacienteView.aspx" />
@@ -2656,7 +2645,6 @@
     <Content Include="Rutinas\RutinaMuestraEdit.aspx" />
     <Content Include="Rutinas\RutinaBroEdit.aspx" />
     <Content Include="Rutinas\RutinaBroList.aspx" />
-    <Content Include="script\chart\chart.js" />
     <Content Include="script\chosen\chosen-sprite%402x.png" />
     <Content Include="script\chosen\chosen-sprite.png" />
     <Content Include="script\chosen\chosen.css" />
@@ -4107,6 +4095,10 @@
     <Compile Include="AutoAnalizador\Clinitek\ConfiguracionEdit.aspx.designer.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
+    <Compile Include="AutoAnalizador\REAL\ConfiguracionEdit.aspx.cs">
+      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="AutoAnalizador\CobasB221\ConfiguracionEdit.aspx.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4250,6 +4242,9 @@
     </Compile>
     <Compile Include="AutoAnalizador\ProtocoloEnviar2.aspx.designer.cs">
       <DependentUpon>ProtocoloEnviar2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="AutoAnalizador\REAL\ConfiguracionEdit.aspx.designer.cs">
+      <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
     </Compile>
     <Compile Include="AutoAnalizador\STACompact\ConfiguracionEdit.aspx.cs">
       <DependentUpon>ConfiguracionEdit.aspx</DependentUpon>
@@ -4724,6 +4719,13 @@
       <DependentUpon>GraficoChart.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Estadisticas\ReporteInsumo.aspx.cs">
+      <DependentUpon>ReporteInsumo.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Estadisticas\ReporteInsumo.aspx.designer.cs">
+      <DependentUpon>ReporteInsumo.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Estadisticas\Principal.aspx.cs">
       <DependentUpon>Principal.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4915,138 +4917,12 @@
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Horizontal1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1MicrobiologiaHorizontalSA.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1MicrobiologiaHorizontalSA.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Pesquisa.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1Pesquisa.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Horizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Horizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3PesquisaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3PesquisaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Horizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Informes\PacientesList.aspx.designer.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Informes\PlanillaDetalladaTurno.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PlanillaDetalladaTurno.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\PlanillaTurno.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>PlanillaTurno.rpt</DependentUpon>
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Informes\ResultadosporServicio.aspx.cs">
       <DependentUpon>ResultadosporServicio.aspx</DependentUpon>
@@ -5061,6 +4937,13 @@
     </Compile>
     <Compile Include="Items\ItemInsumo.aspx.designer.cs">
       <DependentUpon>ItemInsumo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="login.ascx.cs">
+      <DependentUpon>login.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="login.ascx.designer.cs">
+      <DependentUpon>login.ascx</DependentUpon>
     </Compile>
     <Compile Include="loginSIL.ascx.cs">
       <DependentUpon>loginSIL.ascx</DependentUpon>
@@ -5377,13 +5260,6 @@
     <Compile Include="Items\ItemOrdenImpresion.aspx.designer.cs">
       <DependentUpon>ItemOrdenImpresion.aspx</DependentUpon>
     </Compile>
-    <Compile Include="login.ascx.cs">
-      <DependentUpon>login.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="login.ascx.designer.cs">
-      <DependentUpon>login.ascx</DependentUpon>
-    </Compile>
     <Compile Include="LogIn.aspx.cs">
       <DependentUpon>LogIn.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5539,13 +5415,6 @@
     <Compile Include="Protocolos\Default2.aspx.designer.cs">
       <DependentUpon>Default2.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Protocolos\DefaultEfector.aspx.cs">
-      <DependentUpon>DefaultEfector.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Protocolos\DefaultEfector.aspx.designer.cs">
-      <DependentUpon>DefaultEfector.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Protocolos\DefaultFFEE.aspx.cs">
       <DependentUpon>DefaultFFEE.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5654,19 +5523,19 @@
     <Compile Include="Protocolos\ProtocoloAdjuntar.aspx.designer.cs">
       <DependentUpon>ProtocoloAdjuntar.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Protocolos\ProtocoloEditPesquisa.aspx.cs">
+      <DependentUpon>ProtocoloEditPesquisa.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Protocolos\ProtocoloEditPesquisa.aspx.designer.cs">
+      <DependentUpon>ProtocoloEditPesquisa.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Protocolos\ProtocoloEdit2.aspx.cs">
       <DependentUpon>ProtocoloEdit2.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Protocolos\ProtocoloEdit2.aspx.designer.cs">
       <DependentUpon>ProtocoloEdit2.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditEfector.aspx.cs">
-      <DependentUpon>ProtocoloEditEfector.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditEfector.aspx.designer.cs">
-      <DependentUpon>ProtocoloEditEfector.aspx</DependentUpon>
     </Compile>
     <Compile Include="Protocolos\ProtocoloEditForense.aspx.cs">
       <DependentUpon>ProtocoloEditForense.aspx</DependentUpon>
@@ -5675,12 +5544,12 @@
     <Compile Include="Protocolos\ProtocoloEditForense.aspx.designer.cs">
       <DependentUpon>ProtocoloEditForense.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa.aspx.cs">
-      <DependentUpon>ProtocoloEditPesquisa.aspx</DependentUpon>
+    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.cs">
+      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa.aspx.designer.cs">
-      <DependentUpon>ProtocoloEditPesquisa.aspx</DependentUpon>
+    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.designer.cs">
+      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
     </Compile>
     <Compile Include="Protocolos\ProtocoloEliminar.aspx.cs">
       <DependentUpon>ProtocoloEliminar.aspx</DependentUpon>
@@ -5886,13 +5755,6 @@
     </Compile>
     <Compile Include="Resultados\RepositorioaExtraccion.aspx.designer.cs">
       <DependentUpon>RepositorioaExtraccion.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Resultados\ResultadoBExterno.aspx.cs">
-      <DependentUpon>ResultadoBExterno.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Resultados\ResultadoBExterno.aspx.designer.cs">
-      <DependentUpon>ResultadoBExterno.aspx</DependentUpon>
     </Compile>
     <Compile Include="Resultados\ResultadoConfirmacion.aspx.cs">
       <DependentUpon>ResultadoConfirmacion.aspx</DependentUpon>
@@ -6407,6 +6269,12 @@
     <Content Include="Site1.Master" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Business\Business.csproj">
+      <Project>{4BEC40CC-9614-4E0E-8F4A-DC7C933425BC}</Project>
+      <Name>Business</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
@@ -6435,6 +6303,15 @@
     <Content Include="App_Themes\default\images\arrow-up.gif" />
     <Content Include="App_Themes\default\images\block.png" />
     <Content Include="App_Themes\default\images\CUADRO.jpg" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.eot" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.ttf" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.woff" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.woff2" />
+    <Content Include="bootstrap\css\fonts\FontAwesome.otf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="bin\WebLab.dll.config" />
     <Content Include="bootstrap-3.3.7-dist\css\bootstrap-theme.css.map" />
     <Content Include="bootstrap-3.3.7-dist\css\bootstrap-theme.min.css.map" />
@@ -6516,6 +6393,15 @@
     <Content Include="Formulas\ControlEdit.aspx" />
     <Content Include="Formulas\FormulaEdit.aspx" />
     <Content Include="Formulas\FormulaList.aspx" />
+    <Content Include="FusionCharts\FCF_Area2D.swf" />
+    <Content Include="FusionCharts\FCF_Column2D.swf" />
+    <Content Include="FusionCharts\FCF_Column3D.swf" />
+    <Content Include="FusionCharts\FCF_Line.swf" />
+    <Content Include="FusionCharts\FCF_MSColumn3D.swf" />
+    <Content Include="FusionCharts\FCF_MSColumn3DLineDY.swf" />
+    <Content Include="FusionCharts\FCF_Pie3D.swf" />
+    <Content Include="FusionCharts\FCF_StackedColumn3D.swf" />
+    <Content Include="FusionCharts\FusionCharts.js" />
     <Content Include="Help\CSS\Arbol.css" />
     <Content Include="Help\CSS\emx_nav_left.css" />
     <Content Include="Help\CSS\ftiens4.js" />
@@ -6545,7 +6431,6 @@
     <Content Include="Informes\Auditoria.aspx" />
     <Content Include="Items\ItemEdit2.aspx" />
     <Content Include="Items\ItemOrdenImpresion.aspx" />
-    <Content Include="login.ascx" />
     <Content Include="LogIn.aspx" />
     <Content Include="Muestras\MuestraList.aspx" />
     <Content Include="Muestras\MuestraEdit.aspx" />
@@ -6879,10 +6764,6 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>AuditoriaLote.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Informes\AuditoriaUser.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>AuditoriaUser.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Informes\AuditoriaProtocolo.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>AuditoriaProtocolo.cs</LastGenOutput>
@@ -6906,6 +6787,18 @@
     <EmbeddedResource Include="Informes\DerivacionLote.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DerivacionLote.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoAnalisis1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoAnalisis2.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoAnalisis3.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoAnalisis3.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -7034,6 +6927,54 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4PesquisaHorizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4PesquisaHorizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra1.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1Horizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra1Horizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1Microbiologia.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra1Microbiologia.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1MicrobiologiaHorizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra1MicrobiologiaHorizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra2.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2Horizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra2Horizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2Microbiologia.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra2Microbiologia.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra2MicrobiologiaHorizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra2MicrobiologiaHorizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra3.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3Horizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra3Horizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3Microbiologia.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra3Microbiologia.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra3MicrobiologiaHorizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocoloLetra3MicrobiologiaHorizontal.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\Repositorio.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -7188,12 +7129,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Business\Business.csproj">
-      <Project>{4bec40cc-9614-4e0e-8f4a-dc7c933425bc}</Project>
-      <Name>Business</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

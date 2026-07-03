@@ -13,15 +13,6 @@ namespace WebLab.Resultados {
     public partial class AnalisisEdit {
         
         /// <summary>
-        /// hidToken control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
-        
-        /// <summary>
         /// lblProtocolo control.
         /// </summary>
         /// <remarks>
@@ -31,13 +22,13 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Label lblProtocolo;
         
         /// <summary>
-        /// ValidationSummary1 control.
+        /// hidToken control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
         
         /// <summary>
         /// pnlMuestra control.
@@ -76,15 +67,6 @@ namespace WebLab.Resultados {
         protected global::Anthem.RangeValidator rvMuestra;
         
         /// <summary>
-        /// TxtCantidadFilas control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtCantidadFilas;
-        
-        /// <summary>
         /// cvValidacionInput control.
         /// </summary>
         /// <remarks>
@@ -92,6 +74,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
+        
+        /// <summary>
+        /// TxtCantidadFilas control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtCantidadFilas;
         
         /// <summary>
         /// ddlRutina control.
@@ -110,6 +101,42 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItem;
+        
+        /// <summary>
+        /// txtCodigo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.TextBox txtCodigo;
+        
+        /// <summary>
+        /// txtCodigosRutina control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.TextBox txtCodigosRutina;
+        
+        /// <summary>
+        /// ValidationSummary1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
+        
+        /// <summary>
+        /// btnGuardar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardar;
         
         /// <summary>
         /// TxtDatosCargados control.
@@ -137,32 +164,5 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtTareas;
-        
-        /// <summary>
-        /// txtCodigo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.TextBox txtCodigo;
-        
-        /// <summary>
-        /// txtCodigosRutina control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.TextBox txtCodigosRutina;
-        
-        /// <summary>
-        /// btnGuardar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardar;
     }
 }

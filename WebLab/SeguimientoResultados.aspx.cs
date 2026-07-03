@@ -269,7 +269,6 @@ and  ir.baja=0  ";
                     DataTable tabla = MostrarDatos(oItem);
                     if (tabla.Rows.Count > 0)
                     {
-                       
                         //StringBuilder sb = new StringBuilder();
                         //StringWriter sw = new StringWriter(sb);
                         //HtmlTextWriter htw = new HtmlTextWriter(sw);

@@ -882,14 +882,15 @@ namespace WebLab.Protocolos
 
                             if (Request["llamada"] == "LaboTurno")
                                 Response.Redirect("../Turnos/TurnosEdit2.aspx?idPaciente=" + pac.IdPaciente.ToString() + "&Modifica=0");
-                            if (Request["llamada"] == "LaboEfector")
+                            ///Caro: llamada LaboEfector obsoleto de sil1 - lnc
+                            /*if (Request["llamada"] == "LaboEfector")
                             {
                                 if (Request["idProtocolo"] == null)
                                     Response.Redirect("../Protocolos/ProtocoloEditEfector.aspx?idPaciente=" + pac.IdPaciente.ToString() + "&llamada=LaboEfector&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Request["idUrgencia"].ToString() + "&Operacion=Alta");
 
                                 else
                                     Response.Redirect("../Protocolos/ProtocoloEditEfector.aspx?idPaciente=" + pac.IdPaciente.ToString() + "&llamada=LaboEfector&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Request["idUrgencia"].ToString() + "&Operacion=Modifica&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
-                            }
+                            }*/
                             if (Request["llamada"] == "LaboProtocolo")
                             {
                                 if (Request["idProtocolo"] == null)
@@ -1042,7 +1043,7 @@ namespace WebLab.Protocolos
             if (Request["llamada"] != null)
             {
 
-                if (Request["llamada"] == "LaboEfector")
+            /*    if (Request["llamada"] == "LaboEfector")
                 {
                     if (Request["idProtocolo"] == null)
                         
@@ -1052,7 +1053,7 @@ namespace WebLab.Protocolos
                     else
                         
                     Response.Redirect("../Protocolos/ProtocoloEditEfector.aspx?idPaciente=" + Request["id"].ToString() + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Request["idUrgencia"].ToString() + "&Operacion=Modifica&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
-                }
+                }*/
 
                 if (Request["llamada"] == "LaboProtocolo")
                 {

@@ -266,7 +266,6 @@ namespace WebLab.Protocolos
                             {
                               
                                 CargarProtocoloDerivadoLote(); //llama a CargarProtocoloDerivado
-                                
                             }
                             if (Request["Operacion"].ToString() == "AltaFFEE")
                             {
@@ -1911,8 +1910,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             oRegistroAnterior = (Business.Data.Laboratorio.Protocolo)oRegistroAnterior.Get(typeof(Protocolo), int.Parse(Request["idProtocolo"].ToString()));
                             ActualizarEstadoDerivacion(oRegistro, oRegistroAnterior);
                             VerificacionEstadoLote(oRegistro, oRegistroAnterior);
-                            
-                            if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
+                            if(Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")
                                 Response.Redirect("DerivacionMultiEfector.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString());
                             else
                                 Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=" + Session["idServicio"].ToString() + "&idLote=" + Request["idLote"]);
@@ -2068,7 +2066,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
            
             DetalleProtocolo dp = new DetalleProtocolo();
             dp.ActualizarItemsDerivados(oRegistro, oRegistroAnterior, Convert.ToInt32(Request["idLote"]), oUser);
-
+           
             //Business.Data.Laboratorio.Derivacion oDerivacion = new Business.Data.Laboratorio.Derivacion();
             //oDerivacion.MarcarComoRecibidas(oRegistroAnterior,oRegistro, oUser, Convert.ToInt32(Request["idLote"]));
             //Business.Data.Laboratorio.DetalleProtocolo oDetalle = new Business.Data.Laboratorio.DetalleProtocolo();
@@ -4020,10 +4018,25 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             }
 
-          
+
+           
 
 
             TxtDatosCargados.Value = sDatos;
+            string operacion = Request["Operacion"];
+            string idServicio = Request["idServicio"];
+
+            if (operacion == "Modifica" && (idServicio == "3" || idServicio == "5"))
+              
+            {
+                if (!ValidarEliminarDeterminacionConAislamientos())
+                {
+                    args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage =
+                        "No se puede eliminar una determinación que posee aislamientos asociados.";
+                    return;
+                }
+            }
             //saco restriccion de forma temporal
             //if (Request["Operacion"].ToString()!="Modifica")
             //    if (!VerificarFechaPacienteMuestra())
@@ -4319,6 +4332,46 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             }
         }
 
+        
+
+        private bool ValidarEliminarDeterminacionConAislamientos()
+        {
+            string IdProtocolo = Request["idProtocolo"].ToString();
+            string sql = @"
+        SELECT distinct I.codigo
+        FROM LAB_ProtocoloGermen A with (nolock)
+        INNER JOIN LAB_Item I with (nolock)
+            ON A.idItem = I.idItem
+        WHERE A.idProtocolo = @idProtocolo";
+
+            using (SqlConnection cn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.Parameters.AddWithValue("@idProtocolo", IdProtocolo);
+
+                    cn.Open();
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        string codigoAntibiograma = dr["codigo"].ToString();
+
+                        // Tiene antibiograma pero ya no está seleccionado
+                        if (!TxtDatos.Value.Contains(codigoAntibiograma + "#"))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+     
         private bool VerificarAnalisisContenidos()
         {
             bool devolver = true;
@@ -5580,7 +5633,6 @@ System.Net.ServicePointManager.SecurityProtocol =
                 txtCodigoEnfermedadBase.UpdateAfterCallBack = true;
             }
         }
-
         private void VerificarFFEE(Protocolo protocoloDestino, Protocolo protocoloOrigen)
         {
             //si protocoloorigen tiene ffee que la traiga

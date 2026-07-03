@@ -196,7 +196,7 @@ $(function () {
               <div  id="tab0" >   
              <asp:HiddenField ID="HFTipoMuestra" runat="server" />
                   <asp:HiddenField ID="HFMicroorganismo" runat="server" />
-                  <asp:HiddenField ID="HFResistencia" runat="server" /> 
+                  <asp:HiddenField ID="HFResistencia" runat="server" />
                         <table style="width:100%;">
               
               <tr>
@@ -294,9 +294,9 @@ $(function () {
                              <td align="right">
                                        <asp:ImageButton ID="btnGraficoResistencia" runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png"  Visible="false"
                                            OnClick="btnVerGrafico_Click" CommandArgument="resultado" />
-                                  </td>
-                        </tr>
-                       
+                                </td>
+
+                            </tr>
                             <tr>
                                 <td align="left" colspan="2">
                                     
@@ -317,9 +317,8 @@ $(function () {
                             </tr>
                            
                             <tr>
-                               
-                                <td align="right"  colspan="2" >
-                                    <asp:ImageButton ID="imgExcel2" runat="server" ImageUrl="~/App_Themes/default/images/excelPeq.gif" onclick="imgExcel2_Click" ToolTip="Exportar a Excel Lista de Resultados"  />
+                                <td align="right"   colspan="2">
+                                    <asp:ImageButton ID="imgExcel2" runat="server" ImageUrl="~/App_Themes/default/images/excelPeq.gif" onclick="imgExcel2_Click" ToolTip="Exportar a Excel Lista de Resultados" />
                                     Exportar a Excel
                                     </td>
                             </tr>
@@ -442,7 +441,7 @@ $(function () {
     var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
     var valoresMicroorganismo = $("#<%= HFMicroorganismo.ClientID %>").val();
     var valoresResistencia = $("#<%= HFResistencia.ClientID %>").val();
-
+   
 
     function verGrafico(tipoGrafico) {
         var dom = document.domain;
@@ -465,7 +464,7 @@ $(function () {
             title: 'Gráfico Estadístico de Tipo de Muestras',
             autoOpen: true,
             width: 900,
-            height: 500,
+            height:500,
             modal: true,
             resizable: false,
             autoResize: true,
@@ -525,12 +524,12 @@ $(function () {
             }
         }
 
-
+       
         var $this = $(this);
         $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2&tipoGrafico=barra" />').dialog({
             title: 'Resistencia en ATB',
             autoOpen: true,
-            width: 900,
+            width:900,
             height: 600,
             modal: true,
             resizable: false,

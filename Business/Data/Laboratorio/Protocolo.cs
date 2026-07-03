@@ -1153,16 +1153,16 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
         dp.ResultadoNum,
         dp.FormatoValida,
         dp.UnidadMedida
-    FROM LAB_DetalleProtocolo dp
-    INNER JOIN LAB_Protocolo p
+    FROM LAB_DetalleProtocolo dp with (nolock)
+    INNER JOIN LAB_Protocolo p with (nolock)
         ON p.IdProtocolo = dp.IdProtocolo
     INNER JOIN
     (
         SELECT
             dp2.IdSubItem,
             MAX(dp2.IdDetalleProtocolo) IdDetalle
-        FROM LAB_DetalleProtocolo dp2
-        INNER JOIN LAB_Protocolo p2
+        FROM LAB_DetalleProtocolo dp2 with (nolock)
+        INNER JOIN LAB_Protocolo p2 with (nolock)
             ON p2.IdProtocolo = dp2.IdProtocolo
         WHERE p2.IdPaciente = @idPaciente
           AND p2.Baja = 0
@@ -2293,10 +2293,26 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
            
 
                         IList lista = crit.List();
- 
-            //if (lista.Count > 0)
-            //{
-                foreach (DetalleProtocolo oDet in lista)
+
+
+            ICriteria critFormula = m_session.CreateCriteria(typeof(Formula));
+
+            critFormula.Add(Expression.Eq("IdTipoFormula", 1));
+            critFormula.Add(Expression.Eq("Baja", false));
+
+            IList formulas = critFormula.List();
+
+
+            Dictionary<int, List<Formula>> formulasDict =
+                formulas.Cast<Formula>()
+                .GroupBy(x => x.IdItem.IdItem)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.ToList()
+                );
+
+
+            foreach (DetalleProtocolo oDet in lista)
                 {
 
                 /*Agrego control si no tiene insumo no calcula*/
@@ -2307,12 +2323,22 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
 
                 /*fin control insumo */
 
-                ICriteria critFormula = m_session.CreateCriteria(typeof(Formula));
-                    critFormula.Add(Expression.Eq("IdItem", oDet.IdSubItem));
-                    critFormula.Add(Expression.Eq("IdTipoFormula", 1));
-                    critFormula.Add(Expression.Eq("Baja", false));
-                    IList lista2 = critFormula.List();
-                    foreach (Formula oFormula in lista2)
+                //ICriteria critFormula = m_session.CreateCriteria(typeof(Formula));
+                //    critFormula.Add(Expression.Eq("IdItem", oDet.IdSubItem));
+                //    critFormula.Add(Expression.Eq("IdTipoFormula", 1));
+                //    critFormula.Add(Expression.Eq("Baja", false));
+                //    IList lista2 = critFormula.List();
+                List<Formula> lista2;
+
+
+                if (!formulasDict.TryGetValue(
+                       oDet.IdSubItem.IdItem,
+                       out lista2))
+                {
+                    continue;
+                }
+
+                foreach (Formula oFormula in lista2)
                     {
                         bool sicalcula = false;
                         if ((oDet.IdProtocolo.Sexo == oFormula.Sexo) || (oFormula.Sexo == "I")) // coincide el sexo del paciente o el sexo del valor de referencia es Indistinto
@@ -2357,12 +2383,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                                        sicalcula = false;
                                }
                              
-                         /*   if ((idraza == 1) && (oDet.IdProtocolo.IdPaciente.IdRaza != 1))
-                                sicalcula = false;
-
-                            if ((idraza == 0) && (oDet.IdProtocolo.IdPaciente.IdRaza == 1))
-                                sicalcula = false;
-                                */
+                          
                         }
 
                         if (sicalcula)
@@ -2456,12 +2477,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                     }
                 }
             
-            //return valor;
-
-
-            //string valorFormula= GetValorFormula(oDetalle.IdSubItem);
-            //if (valorFormula!="NA")
-            //oDetalle.ResultadoNum = decimal.Parse( valorFormula);
+         
 
         }
 
@@ -3328,7 +3344,6 @@ and   P.Baja = 0 and P.Estado > 0  and P.IdPaciente = " + s_idPaciente + "   and
             return s_resultadoAnterior;
 
         }
-
-       
+    
     }
 }

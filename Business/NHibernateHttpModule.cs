@@ -67,52 +67,57 @@ namespace Business
 			} 
  
 			context.Items[KEY_NHIBERNATE_SESSION] = null; 
-		} 
-
-		
-		public static ISessionFactory CreateSessionFactory()
-		{
-			Configuration config;
-			ISessionFactory factory;
-			HttpContext currentContext = HttpContext.Current; 
-			cAppConfig oApp;
-			Utility oUtil = new Utility();
-			
-			config = new NHibernate.Cfg.Configuration();			
-
-			if (HttpContext.Current == null)
-			{
-				oApp = new cAppConfig(ConfigFileType.AppConfig) ;	
-				config.SetProperty("hibernate.connection.connection_string", oApp.GetValue("hibernate.connection.connection_string"));
-			}
-			else
-			{
-				oApp = new cAppConfig(ConfigFileType.WebConfig) ;
-			//	string strDesEnc  = oUtil.Decrypt(oApp.GetValue("hibernate.connection.connection_string"));
-                config.SetProperty("hibernate.connection.connection_string", oApp.GetValue("hibernate.connection.connection_string"));
-			}
-
-    
-			if (config == null)
-			{
-				throw new InvalidOperationException("NHibernate configuration is null.");
-			}
-
-			if (HttpContext.Current==null)
-				config.SetProperty("hibernate.connection.connection_string",oApp.GetValue("hibernate.connection.connection_string"));
-			
-			config.AddAssembly("Business");
-			factory = config.BuildSessionFactory();
-			
-			if (currentContext != null) currentContext.Items[KEY_NHIBERNATE_FACTORY] = factory; 
-			
-			if (factory==null)
-				throw new InvalidOperationException("Call to Configuration.BuildSessionFactory() returned null.");
-			else
-				return factory;
 		}
 
-		public static ISessionFactory CreateSessionFactory(IDictionary dir)
+        /*Caro: version nueva*/
+       public static ISessionFactory CreateSessionFactory()
+       {
+           Configuration config = new Configuration();
+           cAppConfig oApp = new cAppConfig(ConfigFileType.WebConfig);
+           config.SetProperty("hibernate.connection.connection_string", oApp.GetValue("hibernate.connection.connection_string"));
+           config.AddAssembly("Business");
+           ISessionFactory factory = config.BuildSessionFactory();
+           if (HttpContext.Current != null)            {
+               HttpContext.Current.Application[KEY_NHIBERNATE_FACTORY] = factory;
+           }
+           return factory;
+       }
+       /*Caro: version vieja
+       public static ISessionFactory CreateSessionFactory()
+       {
+           Configuration config;
+           ISessionFactory factory;
+           HttpContext currentContext = HttpContext.Current; 
+           cAppConfig oApp;
+           Utility oUtil = new Utility();
+           config = new NHibernate.Cfg.Configuration();			
+           if (HttpContext.Current == null)
+           {
+               oApp = new cAppConfig(ConfigFileType.AppConfig) ;	
+               config.SetProperty("hibernate.connection.connection_string", oApp.GetValue("hibernate.connection.connection_string"));
+           }
+           else
+           {
+               oApp = new cAppConfig(ConfigFileType.WebConfig) ;
+           //	string strDesEnc  = oUtil.Decrypt(oApp.GetValue("hibernate.connection.connection_string"));
+               config.SetProperty("hibernate.connection.connection_string", oApp.GetValue("hibernate.connection.connection_string"));
+           }
+           if (config == null)           {
+               throw new InvalidOperationException("NHibernate configuration is null.");
+               }
+           if (HttpContext.Current==null)
+               config.SetProperty("hibernate.connection.connection_string",oApp.GetValue("hibernate.connection.connection_string"));
+
+           config.AddAssembly("Business");
+           factory = config.BuildSessionFactory();
+            if (currentContext != null) currentContext.Items[KEY_NHIBERNATE_FACTORY] = factory; 
+            if (factory==null)
+               throw new InvalidOperationException("Call to Configuration.BuildSessionFactory() returned null.");
+           else
+               return factory;
+       }*/
+
+        public static ISessionFactory CreateSessionFactory(IDictionary dir)
 		{
 			Configuration config;
 			ISessionFactory factory;

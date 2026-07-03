@@ -37,6 +37,10 @@ namespace WebLab.Estadisticas
 
         int col1 = 0;
         Usuario oUser = new Usuario();
+
+      
+
+
         protected void Page_PreInit(object sender, EventArgs e)
         {
             oCr.Report.FileName = "";
@@ -84,7 +88,8 @@ namespace WebLab.Estadisticas
         {
             bool mostrarGrafico1 = true;
             bool mostrarGrafico2 = true;
-
+           
+        
 
             string s_titulo = "";
             string s_tituloChart = "";
@@ -143,9 +148,8 @@ namespace WebLab.Estadisticas
                         gvEstadistica.ShowFooter = false;
                     }
                     break;
-                    //Me falta le case 11  <asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
             }
-
+         
             lblFiltro.Text= Session["fechaDesde"].ToString() + " - " + Session["fechaHasta"].ToString()+ " " + s_tituloAdicional;
             
             if (Session["grafico"].ToString() == "1") pnlGrafico.Visible = false;
@@ -194,43 +198,43 @@ namespace WebLab.Estadisticas
 
         private void CalcularPromedio()
         {
-            int i = 0;
-            int cantAna = 0;
-            int cantPro = 0;
-            int columnas = gvEstadistica.Columns.Count-1;
-            int prom = 0;
+            //int i = 0;
+            //int cantAna = 0;
+            //int cantPro = 0;
+            //int columnas = gvEstadistica.Columns.Count-1;
+            //int prom = 0;
             
 
-            if (Session["Agrupado"].ToString() == "0") columnas = 6;
-            if (Session["Agrupado"].ToString() == "1") columnas = 2;
+            //if (Session["Agrupado"].ToString() == "0") columnas = 5;
+            //if (Session["Agrupado"].ToString() == "1") columnas = 2;
           
-            for (int j=1; j<columnas;j++)
-            {
-                i = 0; prom = 0;  cantAna = 0;cantPro = 0;
-                foreach ( GridViewRow row in gvEstadistica.Rows)
-                {
-                    if (i == 0)
-                    {
-                        if (row.Cells[j].Text != "&nbsp;")
-                        cantAna = int.Parse(row.Cells[j].Text); }
-                    if (i == 1)
-                    {
-                        if (row.Cells[j].Text != "&nbsp;")
-                        cantPro = int.Parse(row.Cells[j].Text); }
-                    if (i == 2)
-                    {
-                        if ((cantAna > 0) && (cantPro > 0))
-                            prom = cantAna / cantPro;
-                        else
-                            prom = 0;
-                        row.Cells[0].Text = "Promedio Analisis/Protocolo";
-                        row.Cells[j].Text = prom.ToString();
-                    }
+            //for (int j=1; j<columnas;j++)
+            //{
+            //    i = 0; prom = 0;  cantAna = 0;cantPro = 0;
+            //    foreach ( GridViewRow row in gvEstadistica.Rows)
+            //    {
+            //        if (i == 0)
+            //        {
+            //            if (row.Cells[j].Text != "&nbsp;")
+            //            cantAna = int.Parse(row.Cells[j].Text); }
+            //        if (i == 1)
+            //        {
+            //            if (row.Cells[j].Text != "&nbsp;")
+            //            cantPro = int.Parse(row.Cells[j].Text); }
+            //        if (i == 2)
+            //        {
+            //            if ((cantAna > 0) && (cantPro > 0))
+            //                prom = cantAna / cantPro;
+            //            else
+            //                prom = 0;
+            //            row.Cells[0].Text = "Promedio Analisis/Protocolo";
+            //            row.Cells[j].Text = prom.ToString();
+            //        }
 
-                    i += 1;
-                }
+            //        i += 1;
+            //    }
                 
-            }
+            //}
 
         }
         private DataTable GetDatosPorResultado()
@@ -465,7 +469,7 @@ namespace WebLab.Estadisticas
                 case "8": cmd.CommandText = "LAB_EstadisticaPorSector"; break;
                 case "9": cmd.CommandText = "LAB_EstadisticaRankingDia"; break;
                 case "10": cmd.CommandText = "LAB_EstadisticaPorHorario"; break;
-                    // falta el case 11...<asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
+
             }
 
 
@@ -630,7 +634,6 @@ namespace WebLab.Estadisticas
             miGrafico10.TituloJson = js.Serialize(s_titulo);
         }
         #endregion
-
 
         protected void gvEstadistica_RowDataBound(object sender, GridViewRowEventArgs e)
         {

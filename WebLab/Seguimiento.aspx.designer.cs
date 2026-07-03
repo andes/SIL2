@@ -7,22 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab
-{
-
-
-    public partial class Seguimiento
-    {
-
-        /// <summary>
-        /// lblError control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblError;
-
+namespace WebLab {
+    
+    
+    public partial class Seguimiento {
+        
         /// <summary>
         /// chkItem control.
         /// </summary>
@@ -31,7 +20,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList chkItem;
-
+        
         /// <summary>
         /// lnkMarcar control.
         /// </summary>
@@ -40,7 +29,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkMarcar;
-
+        
         /// <summary>
         /// lnkDesMarcar control.
         /// </summary>
@@ -49,7 +38,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDesMarcar;
-
+        
         /// <summary>
         /// cvItem control.
         /// </summary>
@@ -58,7 +47,16 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvItem;
-
+        
+        /// <summary>
+        /// lblError control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblError;
+        
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -67,7 +65,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-
+        
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -76,7 +74,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-
+        
         /// <summary>
         /// rdbOpcion control.
         /// </summary>
@@ -85,7 +83,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbOpcion;
-
+        
         /// <summary>
         /// ddlCaracter control.
         /// </summary>
@@ -94,7 +92,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCaracter;
-
+        
         /// <summary>
         /// ddlResultado control.
         /// </summary>
@@ -103,7 +101,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlResultado;
-
+        
         /// <summary>
         /// btnBuscar control.
         /// </summary>
@@ -112,7 +110,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBuscar;
-
+        
         /// <summary>
         /// btnExcel control.
         /// </summary>
@@ -121,7 +119,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnExcel;
-
+        
         /// <summary>
         /// lblCantidad control.
         /// </summary>
@@ -130,7 +128,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCantidad;
-
+        
         /// <summary>
         /// GridView1 control.
         /// </summary>
@@ -139,7 +137,7 @@ namespace WebLab
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView GridView1;
-
+        
         /// <summary>
         /// gvPacientes control.
         /// </summary>

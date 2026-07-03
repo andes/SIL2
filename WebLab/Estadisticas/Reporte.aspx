@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Reporte.aspx.cs" Inherits="WebLab.Estadisticas.Reporte" MasterPageFile="~/Site1.Master" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Reporte.aspx.cs" Inherits="WebLab.Estadisticas.Reporte" MasterPageFile="~/Site1.Master" %>
 <%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server"> 
@@ -37,9 +37,9 @@
             ToolTip="Exportar a Excel" />
         &nbsp;<br />
       
-       <asp:LinkButton 
+      <%-- <asp:LinkButton 
                             ID="lnkDetallePorDet" runat="server" CssClass="myLink" OnClick="lnkDetallePorDet_Click"  
-            >Descargar Detalle Por Determinacion</asp:LinkButton>
+            >Descargar Detalle Por Determinacion</asp:LinkButton>--%>
   
    &nbsp;<asp:Panel ID="pnlGrafico" runat="server">
    <div style="border: 1px solid #C0C0C0; width: 400px; " >

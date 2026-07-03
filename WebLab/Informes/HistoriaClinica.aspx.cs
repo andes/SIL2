@@ -41,7 +41,7 @@ namespace WebLab.Informes
 
             }
             else
-                Response.Redirect("SinDatos.aspx", false);
+                Response.Redirect("../FinSesion.aspx", false);
 
         }
 
@@ -65,7 +65,7 @@ namespace WebLab.Informes
                     }
                 }
                 else
-                 Response.Redirect("SinDatos.aspx", false);
+                 Response.Redirect("../Estadisticas/SinDatos.aspx", false);
             }
         }
         protected void Page_Unload(object sender, EventArgs e)
@@ -84,10 +84,10 @@ namespace WebLab.Informes
                   for (int i = 0; i < dt.Rows.Count; i++)
                   {
                       if (i == 0)
-                          unidad = dt.Rows[i][6].ToString();
+                          unidad = dt.Rows[i][6].ToString().ToUpper();
                       else
                       {
-                          if (unidad != dt.Rows[i][6].ToString())
+                          if (unidad != dt.Rows[i][6].ToString().ToUpper())
                               hay = false; break;
                       }
                   }

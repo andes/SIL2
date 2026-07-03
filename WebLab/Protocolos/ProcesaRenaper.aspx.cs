@@ -1142,14 +1142,16 @@ INSERT INTO LAB_LogAccesoServicio
                     {
                         if (Request["llamada"] == "LaboTurno")
                             Response.Redirect("../Turnos/TurnosEdit2.aspx?idPaciente=" + pac.IdPaciente.ToString() + "&Modifica=0");
-                        if (Request["llamada"] == "LaboEfector")
+
+                        ///llamada=LaboEfector obsoleto
+                        /*if (Request["llamada"] == "LaboEfector")
                         {
                             if (Request["idProtocolo"] == null)
                                 Response.Redirect("../Protocolos/ProtocoloEditEfector.aspx?idPaciente=" + pac.IdPaciente.ToString() + "&llamada=LaboEfector&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Request["idUrgencia"].ToString() + "&Operacion=Alta");
 
                             else
                                 Response.Redirect("../Protocolos/ProtocoloEditEfector.aspx?idPaciente=" + pac.IdPaciente.ToString() + "&llamada=LaboEfector&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Request["idUrgencia"].ToString() + "&Operacion=Modifica&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
-                        }
+                        }*/
                         if (Request["llamada"] == "LaboProtocolo")
                         {
                             if (Request["idProtocolo"] == null)
@@ -1266,8 +1268,8 @@ INSERT INTO LAB_LogAccesoServicio
         {
             if (Request["llamada"] != null)
             {
-
-                if (Request["llamada"] == "LaboEfector")
+                //Caro: llamado LaboEfector obsoleta del sil1 de lnc
+                /*if (Request["llamada"] == "LaboEfector")
                 {
                     if (Request["idProtocolo"] == null)
                         
@@ -1277,7 +1279,7 @@ INSERT INTO LAB_LogAccesoServicio
                     else
                         
                     Response.Redirect("../Protocolos/ProtocoloEditEfector.aspx?idPaciente=" + Request["id"].ToString() + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Request["idUrgencia"].ToString() + "&Operacion=Modifica&idProtocolo=" + Request["idProtocolo"].ToString() + "&Desde=" + Request["Desde"].ToString());
-                }
+                }*/
 
                 if (Request["llamada"] == "LaboProtocolo")
                 {

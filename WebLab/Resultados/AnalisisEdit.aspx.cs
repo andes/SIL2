@@ -826,6 +826,16 @@ namespace WebLab.Resultados
             }
 
             TxtDatosCargados.Value = sDatos;
+           
+                if (!ValidarEliminarDeterminacionConAislamientos())
+            {
+                TxtDatos.Value = "";
+                args.IsValid = false;
+                    this.cvValidacionInput.ErrorMessage =
+                        "No se puede eliminar una determinación que posee aislamientos asociados.";
+                    return;
+                }
+             
 
             if (!VerificarAnalisisContenidos())
             {
@@ -843,10 +853,48 @@ namespace WebLab.Resultados
                     this.cvValidacionInput.ErrorMessage = "Debe completar al menos un análisis";
                     return;
                 }
+                
                 else args.IsValid = true;            
             }
         }
 
+
+        private bool ValidarEliminarDeterminacionConAislamientos()
+        {
+            string IdProtocolo = Request["idProtocolo"].ToString();
+            string sql = @"
+        SELECT distinct I.codigo
+        FROM LAB_ProtocoloGermen A with (nolock)
+        INNER JOIN LAB_Item I with (nolock)
+            ON A.idItem = I.idItem
+        WHERE A.idProtocolo = @idProtocolo";
+
+            using (SqlConnection cn = new SqlConnection(
+                ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.Parameters.AddWithValue("@idProtocolo", IdProtocolo);
+
+                    cn.Open();
+
+                    SqlDataReader dr = cmd.ExecuteReader();
+
+                    while (dr.Read())
+                    {
+                        string codigoAntibiograma = dr["codigo"].ToString();
+
+                        // Tiene antibiograma pero ya no está seleccionado
+                        if (!TxtDatos.Value.Contains(codigoAntibiograma + "#"))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
         //LAB-192: Bug análisis Repetidos en protocolos. No lo pasamos a produccion porque baja la perfomance del sistema. 
 
         //private bool VerificarAnalisisContenidos_LAB192()
@@ -934,6 +982,8 @@ namespace WebLab.Resultados
             bool devolver = true;
             try
             {
+                int i_idmuestra = 0;
+                if (ddlMuestra.SelectedValue != "") i_idmuestra = int.Parse(ddlMuestra.SelectedValue);
                 Business.Data.Laboratorio.Protocolo oProtocolo = new Business.Data.Laboratorio.Protocolo();
                 oProtocolo = (Business.Data.Laboratorio.Protocolo)oProtocolo.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
 
@@ -955,9 +1005,10 @@ namespace WebLab.Resultados
 
                         Item oItem = new Item();
                         oItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo, "Baja", false);
+                        if (oItem.VerificaMuestrasAsociadas(i_idmuestra))
+                        {
 
-
-                        i_idItemPractica = oItem.IdItem;
+                            i_idItemPractica = oItem.IdItem;
                         for (int j = 0; j < tabla.Length - 1; j++)
                         {
                             string[] fila2 = tabla[j].Split('#');
@@ -983,7 +1034,14 @@ namespace WebLab.Resultados
                                 }
 
                             }
-                        }////for           
+                        }////for  
+                        }
+                        else
+                        {
+                            this.cvValidacionInput.ErrorMessage = "Ha ingresado tipo de muestra que no corresponde con el codigo " + codigo + ". Verifique configuracion.";
+                            devolver = false; break;
+
+                        }
                     }/// if codigo
                     if (!devolver) break;
                 }

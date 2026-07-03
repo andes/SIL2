@@ -70,7 +70,7 @@
 <asp:ListItem Value="0">Conteo por Areas</asp:ListItem>
 <asp:ListItem Value="1">Conteo por Análisis</asp:ListItem>
 <asp:ListItem Value="4">Conteo por Derivaciones Enviadas</asp:ListItem>
-                                    <asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>
+                                 <%--   <asp:ListItem Value="11">Conteo por Derivaciones Recibidas</asp:ListItem>--%>
                                     <asp:ListItem Value="6">Conteo por Diagnósticos</asp:ListItem>
 <asp:ListItem Value="3">Conteo por Efector Solicitante</asp:ListItem>
 <asp:ListItem Value="2">Conteo por Médico Solicitante</asp:ListItem>

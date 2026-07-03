@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReporteIncidencias.aspx.cs" Inherits="WebLab.Estadisticas.ReporteIncidencias" MasterPageFile="~/Site1.Master" %>
 <%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+
     <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
 
       <script type="text/javascript" src="../script/chart/chart.js"></script>
@@ -148,5 +149,4 @@
        </div>
  
 </div>
-
 </asp:Content>

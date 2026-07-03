@@ -58,18 +58,15 @@
 
  
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">   
-     <input id="hidToken" type="hidden" runat="server" />   
+    
      <div  style="width: 750px" class="form-inline" >
       <div class="panel panel-default" runat="server"  >
                     <div class="panel-heading">
-                   <h5>    <strong> <asp:Label ID="lblProtocolo" runat="server" Text="Label"></asp:Label></strong> </h5>
+                   <h5>    <strong> <asp:Label ID="lblProtocolo" runat="server" Text="Label"></asp:Label></strong> </h5> <input id="hidToken" type="hidden" runat="server" />   
     
   </div>
                     <div class="panel-body">
-                         <asp:CustomValidator ID="cvValidacionInput" runat="server" 
-                                                ErrorMessage="Debe completar al menos un analisis" 
-                                    ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
-                                             ></asp:CustomValidator>
+                        
 <asp:Panel  runat="server" ID="pnlMuestra" Width="100%" Visible="false">
 					 
                           Muestra: &nbsp; &nbsp; 
@@ -80,8 +77,11 @@
                                 ControlToValidate="ddlMuestra" Enabled="False" MaximumValue="9999999" 
                                 MinimumValue="1" Type="Integer" ValidationGroup="0">*</anthem:RangeValidator>
                             
-                            </asp:Panel>
-                        <br />
+                            </asp:Panel> <asp:CustomValidator ID="cvValidacionInput" runat="server" 
+                                                ErrorMessage="Debe completar al menos un analisis" 
+                                    ValidationGroup="0" Font-Size="8pt" onservervalidate="cvValidacionInput_ServerValidate" 
+                                             ></asp:CustomValidator>
+                      
 
                         <table  width="600px" align="left">
 				 
@@ -92,7 +92,7 @@
 						
 					
                           
-                            <div id="tab1" style="height: 230px">
+                            <div id="tab1" style="height: 220px">
                    
 
                                  <table style="width:600px;">
@@ -168,9 +168,7 @@
 
                                 </tr>
                                 </table>
-                                <input type="hidden" runat="server" name="TxtDatosCargados" id="TxtDatosCargados" value="" />                                
-                                   <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />                                
-                <input id="txtTareas" name="txtTareas" runat="server" type="hidden"  />
+                             
                             </div>
                           
                           
@@ -178,14 +176,6 @@
 					</tr>
 					
 																					
-						
-						
-						
-				
-						
-					 
-						
-					
 						
 						
 						
@@ -226,7 +216,9 @@
                                         
                                         <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0"  Width="100px" CssClass ="btn btn-primary"
                                                 onclick="btnGuardar_Click"    TabIndex="24" />
-
+                                      <input type="hidden" runat="server" name="TxtDatosCargados" id="TxtDatosCargados" value="" />                                
+                                   <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />                                
+                <input id="txtTareas" name="txtTareas" runat="server" type="hidden"  />
                                                
                                    </div>
           </div>

@@ -1121,140 +1121,140 @@ $(function () {
 
   <%--  <script language="javascript" type="text/javascript">
 
-        var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
-        var valoresMicroorganismo = $("#<%= HFMicroorganismo.ClientID %>").val();
+    var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
+    var valoresMicroorganismo = $("#<%= HFMicroorganismo.ClientID %>").val();
     var valoresResistencia = $("#<%= HFResistencia.ClientID %>").val();
     var valoresMecanismos = $("#<%= HFMecanismosResistencia.ClientID %>").val();
-
-        function verGrafico(tipoGrafico) {
-            var dom = document.domain;
-            var domArray = dom.split('.');
-            for (var i = domArray.length - 1; i >= 0; i--) {
-                try {
-                    var dom = '';
-                    for (var j = domArray.length - 1; j >= i; j--) {
-                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
-                    }
-                    document.domain = dom;
-                    break;
-                } catch (E) {
+    
+    function verGrafico(tipoGrafico) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
                 }
+                document.domain = dom;
+                break;
+            } catch (E) {
             }
-
-
-            var $this = $(this);
-            $('<iframe src="Grafico.aspx?valores=' + valores + '&tipo=0&tipoGrafico=' + tipoGrafico + '" />').dialog({
-                title: 'Gráfico Estadístico de Tipo de Muestras',
-                autoOpen: true,
-                width: 900,
-                height: 500,
-                modal: true,
-                resizable: false,
-                autoResize: true,
-                overlay: {
-                    opacity: 0.5,
-                    background: "black"
-                }
-            }).width(900);
         }
 
 
-        function verGraficoMicroorganismo(tipoGrafico) {
-            var dom = document.domain;
-            var domArray = dom.split('.');
-            for (var i = domArray.length - 1; i >= 0; i--) {
-                try {
-                    var dom = '';
-                    for (var j = domArray.length - 1; j >= i; j--) {
-                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
-                    }
-                    document.domain = dom;
-                    break;
-                } catch (E) {
-                }
+        var $this = $(this);
+        $('<iframe src="Grafico.aspx?valores=' + valores + '&tipo=0&tipoGrafico=' + tipoGrafico + '" />').dialog({
+            title: 'Gráfico Estadístico de Tipo de Muestras',
+            autoOpen: true,
+            width: 900,
+            height:500,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
             }
+        }).width(900);
+    }
 
 
-            var $this = $(this);
-            $('<iframe src="Grafico.aspx?valores=' + valoresMicroorganismo + '&tipo=1&tipoGrafico=' + tipoGrafico + '" />').dialog({
-                title: 'Gráfico Estadístico de Aislamientos',
-                autoOpen: true,
-                width: 900,
-                height: 500,
-                modal: true,
-                resizable: false,
-                autoResize: true,
-                overlay: {
-                    opacity: 0.5,
-                    background: "black"
+    function verGraficoMicroorganismo(tipoGrafico) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
                 }
-            }).width(900);
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
         }
 
 
-        function verGraficoResistencia() {
-            var dom = document.domain;
-            var domArray = dom.split('.');
-            for (var i = domArray.length - 1; i >= 0; i--) {
-                try {
-                    var dom = '';
-                    for (var j = domArray.length - 1; j >= i; j--) {
-                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
-                    }
-                    document.domain = dom;
-                    break;
-                } catch (E) {
-                }
+        var $this = $(this);
+        $('<iframe src="Grafico.aspx?valores=' + valoresMicroorganismo + '&tipo=1&tipoGrafico=' + tipoGrafico + '" />').dialog({
+            title: 'Gráfico Estadístico de Aislamientos',
+            autoOpen: true,
+            width: 900,
+            height: 500,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
             }
+        }).width(900);
+    }
 
 
-            var $this = $(this);
-            $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2" />').dialog({
-                title: 'Resistencia en ATB',
-                autoOpen: true,
-                width: 900,
-                height: 600,
-                modal: true,
-                resizable: false,
-                autoResize: true,
-                overlay: {
-                    opacity: 0.5,
-                    background: "black"
+    function verGraficoResistencia() {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
                 }
-            }).width(900);
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
         }
 
-        function verGraficoMecanismosResistencia(tipoGrafico) {
-            var dom = document.domain;
-            var domArray = dom.split('.');
-            for (var i = domArray.length - 1; i >= 0; i--) {
-                try {
-                    var dom = '';
-                    for (var j = domArray.length - 1; j >= i; j--) {
-                        dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
-                    }
-                    document.domain = dom;
-                    break;
-                } catch (E) {
-                }
+       
+        var $this = $(this);
+        $('<iframe src="Grafico.aspx?valores=' + valoresResistencia + '&tipo=2" />').dialog({
+            title: 'Resistencia en ATB',
+            autoOpen: true,
+            width:900,
+            height: 600,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
             }
+        }).width(900);
+    }
 
-
-            var $this = $(this);
-            $('<iframe src="Grafico.aspx?valores=' + valoresMecanismos + '&tipo=4&tipoGrafico=' + tipoGrafico + '" />').dialog({
-                title: 'Mecanismos Resistencia',
-                autoOpen: true,
-                width: 900,
-                height: 600,
-                modal: true,
-                resizable: false,
-                autoResize: true,
-                overlay: {
-                    opacity: 0.5,
-                    background: "black"
+    function verGraficoMecanismosResistencia(tipoGrafico) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
                 }
-            }).width(900);
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
         }
+
+        
+        var $this = $(this);
+        $('<iframe src="Grafico.aspx?valores=' + valoresMecanismos + '&tipo=4&tipoGrafico=' + tipoGrafico + '" />').dialog({
+            title: 'Mecanismos Resistencia',
+            autoOpen: true,
+            width: 900,
+            height: 600,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(900);
+    }
 
     </script>--%>
 

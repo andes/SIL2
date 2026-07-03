@@ -1,19 +1,13 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ReportePorResultado.aspx.cs" Inherits="WebLab.Estadisticas.ReportePorResultado" MasterPageFile="~/Site1.Master" %>
 <%@ Register Src="~/Estadisticas/GraficoChart.ascx" TagName="GraficoChart" TagPrefix="uc" %>
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
-      
- <script src="Resources/jquery.min.js" type="text/javascript"></script>
-    <link href="Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />
-    <script src="Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
+     <link type="text/css"rel="stylesheet"      href="../App_Themes/default/style.css" />  
     <link type="text/css"rel="stylesheet"      href="../script/jquery-ui-1.7.1.custom.css" />  
 
-
-
-  <script type="text/javascript"      src="../script/jquery.min.js"></script> 
+    <script type="text/javascript"      src="../script/jquery.min.js"></script> 
   <script type="text/javascript"      src="../script/jquery-ui.min.js"></script> 
     
       <script type="text/javascript"     src="../script/jquery.ui.datepicker-es.js"></script>   
-      <script type="text/javascript" src="../script/chart/chart.js"></script>  
       
       <script type="text/javascript"> 
      
@@ -85,7 +79,10 @@
                               <asp:dropdownlist ID="ddlServicio" runat="server"  
                                 ToolTip="Seleccione el servicio" TabIndex="1" class="form-control input-sm" 
                                 AutoCallBack="True" onselectedindexchanged="ddlServicio_SelectedIndexChanged" AutoPostBack="True">
-                            </asp:dropdownlist></td>
+                            </asp:dropdownlist>  <asp:RangeValidator ID="rvTipoServicio" runat="server" 
+                                ControlToValidate="ddlServicio" ErrorMessage="RangeValidator" 
+                                MaximumValue="999999" MinimumValue="1" Type="Integer" ValidationGroup="0">Seleccione 
+un Servicio</asp:RangeValidator></td>
 <td class="auto-style3"  align="left" rowspan="8"> 
   
  
@@ -151,7 +148,9 @@
                             <asp:DropDownList ID="ddlArea" runat="server" AutoPostBack="True" Width="250px"
                                 onselectedindexchanged="ddlArea_SelectedIndexChanged" class="form-control input-sm">
                             </asp:DropDownList>
-                                        
+                                           <asp:RangeValidator ID="rvArea" runat="server" 
+                                ControlToValidate="ddlArea" ErrorMessage="RangeValidator" 
+                                MaximumValue="999999" MinimumValue="1" Type="Integer" ValidationGroup="0">Seleccione</asp:RangeValidator>
  
                                             </td>
 </tr>
@@ -488,8 +487,8 @@ una determinación</asp:RangeValidator>
                         <asp:ImageButton ToolTip="Ver grafico de tortas" ID="btnVerGraficoTipoMuestra"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_torta.png" OnClick="btnVerGrafico_Click" CommandArgument="torta" Visible="false" />
                                  &nbsp;&nbsp;<asp:ImageButton ToolTip="Ver grafico de barras" ID="btnVerGraficoTipoMuestra2"  runat="server"  ImageUrl="~/App_Themes/default/images/ico_barra.png" OnClick="btnVerGrafico_Click" CommandArgument="barra" visible="false" />
 
-         
-           
+        
+          
        </div>
        </div>
         </div>
@@ -510,7 +509,7 @@ una determinación</asp:RangeValidator>
 <script language="javascript" type="text/javascript">
 
     var valores = $("#<%= HFTipoMuestra.ClientID %>").val();
-
+    
 
     function verGrafico(tipoGrafico) {
         var dom = document.domain;

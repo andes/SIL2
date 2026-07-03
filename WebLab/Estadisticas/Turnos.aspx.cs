@@ -31,7 +31,8 @@ namespace WebLab.Estadisticas
         public Configuracion oCon = new Configuracion();
         public Usuario oUser = new Usuario();
 
-       
+
+
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
