@@ -62,7 +62,7 @@ namespace WebLab.Resultados
                     if (oItem != null)
                     {
                         lblItem.Text = oItem.Nombre;
-                        if (oItem.IdTipoResultado == 1)
+                        if (oItem.IdTipoResultado == 1 || oItem.IdTipoResultado == 3) ///1 => Numerico || 3 => predefinidos simple
                         {
                             if (coincideUnidadMedida(dt))
                             {
@@ -71,6 +71,7 @@ namespace WebLab.Resultados
                                  CreateChart(dt, oItem.Nombre, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
                             }
                         }
+                       
                     }
 
                     Paciente oPaciente = new Paciente();
@@ -210,26 +211,24 @@ namespace WebLab.Resultados
         {
             List<string> labels = new List<string>();
             List<decimal> datos = new List<decimal>();
-            List<string> datosString = new List<string>();
-            if (dt.Rows.Count > 0)
+            //List<string> datosString = new List<string>();
+            if (dt.Rows.Count > 1) //Si hay un solo valor no hacer grafico de evolución
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     decimal numero;
+                    string valorNum = dt.Rows[i]["resultadoNum"].ToString();
                     labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
-                    if (int.Parse(dt.Rows[i][9].ToString()) == 1) //Valor del analisis en formato decimal
-                    {
-                        decimal.TryParse(
-                                dt.Rows[i][4].ToString(),
-                                System.Globalization.NumberStyles.Any,
-                                System.Globalization.CultureInfo.InvariantCulture,
-                                out numero
-                            );
+                    bool res = decimal.TryParse(
+                             valorNum,
+                             System.Globalization.NumberStyles.Any,
+                             System.Globalization.CultureInfo.InvariantCulture,
+                             out numero
+                         );
+                    if (res)
                         datos.Add(numero);
-                    }
-                    else
-                        datosString.Add(dt.Rows[i][4].ToString());
-                }
+                    else break; //Corto al primer valor que no es numerico porque ya no sirve para graficar
+                }  
             }
          
 
@@ -239,7 +238,7 @@ namespace WebLab.Resultados
 
             miGrafico.LabelsJson = js.Serialize(labels);
             miGrafico.DatosJson = js.Serialize(datos);
-            miGrafico.DatosStringJson = js.Serialize(datosString);
+            //miGrafico.DatosStringJson = js.Serialize(datosString);
             miGrafico.TipoGrafico = js.Serialize("line");
             miGrafico.TituloJson = js.Serialize(titulo);
             miGrafico.minimo = js.Serialize(valorminino);
