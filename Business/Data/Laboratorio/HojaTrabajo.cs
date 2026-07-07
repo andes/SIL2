@@ -538,7 +538,7 @@ namespace Business.Data.Laboratorio
 
         public  DataTable GetDataSet_HojaTrabajoPreeliminar()
         {
-
+            //  'XX/XX/XXXX' AS fecha ==> CONVERT(varchar(10), GETDATE(), 103) AS fecha ; para evitar error de la formula 'CDate({ht.fecha})' 
             string m_strSQL = @" with  lineas  as (
  select "+ this.IdHojaTrabajo.ToString()+ @" as idhojatrabajo, '01' as linea, 'p' as pac
  union
@@ -575,7 +575,7 @@ union
 SELECT TOP (100) PERCENT 'A' as letra, linea AS  numero, '' as numeroOrigen,'___' as cantidad, HT.idHojaTrabajo,  
                   CASE WHEN HT.imprimirPrioridad = 1 THEN 'R' ELSE '' END AS prioridad, '0'  as antecedente , 
                                 CASE WHEN HT.imprimirorigen = 1 THEN '-A' ELSE '' END AS origen, CHT.textoImprimir AS item, A.nombre AS area, 
-                                CHT.idDetalleHojaTrabajo AS ORDEN, 'XX/XX/XXXX' AS fecha, HT.responsable, HT.codigo AS codigoHT,  
+                                CHT.idDetalleHojaTrabajo AS ORDEN, CONVERT(varchar(10), GETDATE(), 103) AS fecha, HT.responsable, HT.codigo AS codigoHT,  
                                 CASE WHEN HT.imprimirApellidoNombre = 1 THEN '-Paciente' ELSE '' END +
                                     CASE WHEN HT.imprimirDiagnostico = 1 then '-Diag' else '' end AS paciente,  
                                 CASE WHEN HT.imprimirEdad = 1 THEN '-0' ELSE '' END AS edad, CASE WHEN HT.imprimirSexo = 1 THEN '-F' ELSE '' END AS sexo,  
