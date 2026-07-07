@@ -8,10 +8,10 @@
 //------------------------------------------------------------------------------
 
 namespace WebLab.Protocolos {
-    
-    
+
+
     public partial class DerivacionMultiEfectorLote {
-        
+
         /// <summary>
         /// pnlTitulo control.
         /// </summary>
@@ -20,7 +20,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTitulo;
-        
+
         /// <summary>
         /// lblTituloLista control.
         /// </summary>
@@ -29,7 +29,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTituloLista;
-        
+
         /// <summary>
         /// ProtocoloList1 control.
         /// </summary>
@@ -38,7 +38,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::WebLab.Protocolos.ProtocoloList1 ProtocoloList1;
-        
+
         /// <summary>
         /// divControlLote control.
         /// </summary>
@@ -47,7 +47,16 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divControlLote;
-        
+
+        /// <summary>
+        /// pnlNroLote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNroLote;
+
         /// <summary>
         /// lblNumeroLote control.
         /// </summary>
@@ -56,7 +65,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNumeroLote;
-        
+
         /// <summary>
         /// txtNumeroLote control.
         /// </summary>
@@ -65,7 +74,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumeroLote;
-        
+
         /// <summary>
         /// RequiredFieldValidator1 control.
         /// </summary>
@@ -74,7 +83,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// lnkBuscar control.
         /// </summary>
@@ -83,7 +92,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkBuscar;
-        
+
         /// <summary>
         /// divControlLote2 control.
         /// </summary>
@@ -92,7 +101,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divControlLote2;
-        
+
         /// <summary>
         /// lblErrorEfectorOrigen control.
         /// </summary>
@@ -101,7 +110,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblErrorEfectorOrigen;
-        
+
         /// <summary>
         /// lblEfectorOrigen control.
         /// </summary>
@@ -110,7 +119,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEfectorOrigen;
-        
+
         /// <summary>
         /// lblEstadoLote control.
         /// </summary>
@@ -119,7 +128,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEstadoLote;
-        
+
         /// <summary>
         /// divScroll control.
         /// </summary>
@@ -128,7 +137,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divScroll;
-        
+
         /// <summary>
         /// gvProtocolosDerivados control.
         /// </summary>
@@ -137,7 +146,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvProtocolosDerivados;
-        
+
         /// <summary>
         /// lblCantidadRegistros control.
         /// </summary>
@@ -146,7 +155,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCantidadRegistros;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>
@@ -155,7 +164,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ValidationSummary ValidationSummary1;
-        
+
         /// <summary>
         /// btnRecibirLote control.
         /// </summary>
