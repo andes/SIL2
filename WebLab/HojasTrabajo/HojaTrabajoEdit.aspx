@@ -146,6 +146,7 @@
                                     <asp:ListItem Value="1">Texto mediano</asp:ListItem>
                                     <asp:ListItem Value="2">Texto grande</asp:ListItem>
                                    <asp:ListItem  Value="3">Texto corto c/Nro. Fila</asp:ListItem> 
+                                    <asp:ListItem Value="4">Lista Continua</asp:ListItem>
                                 </asp:DropDownList>
                         </td>
                 
