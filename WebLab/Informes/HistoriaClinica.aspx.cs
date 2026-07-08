@@ -62,8 +62,8 @@ namespace WebLab.Informes
                     lblAnalisis.Text = oItem.Codigo + " - " + oItem.Nombre;
                     if (oItem.IdTipoResultado == 1 || oItem.IdTipoResultado == 3) ///1 => Numerico || 3 => predefinidos simple
                     {
-                        if (coincideUnidadMedida(dt))
-                        CreateChart(dt);
+                        if (dt.Rows.Count>1 && coincideUnidadMedida(dt)) // Si hay un solo valor no hacer grafico de evolución
+                            CreateChart(dt);
                     }
                 }
                 else
@@ -106,46 +106,36 @@ namespace WebLab.Informes
 
             decimal valor = Math.Round(oItem.ValorMinimo, 0);
             string valorminimo = (valor == -1) ? "" : valor.ToString(); //-1 es un valor por defecto pero no se grafica si lo envio, debe ser ""
-            //string strXML = "<graph caption='" + lblAnalisis.Text + "' subcaption='' xAxisName='Protocolo' yAxisMinValue='" + valorminimo + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
-            //    " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
-
-            //if (dt.Rows.Count > 0)
-            //{
-            //    for (int i = 0; i < dt.Rows.Count; i++)
-            //    {
-            //        strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",",".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
-            //    }
-            //}        
-
-            //strXML += "</graph>";
-            //return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "600", "250", false, false);
             List<string> labels = new List<string>();
             List<decimal> datos = new List<decimal>();
-            if (dt.Rows.Count > 1) // Si hay un solo valor no hacer grafico de evolución
+           
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                decimal numero;
+                string valorNum = dt.Rows[i]["resultadoNum"].ToString();
+                labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
+                bool res = decimal.TryParse(
+                            valorNum,
+                            System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            out numero
+                        );
+                if (res)
+                    datos.Add(numero);
+                else
                 {
-                    decimal numero;
-                    string valorNum = dt.Rows[i]["resultadoNum"].ToString();
-                    labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
-                    bool res = decimal.TryParse(
-                             valorNum,
-                             System.Globalization.NumberStyles.Any,
-                             System.Globalization.CultureInfo.InvariantCulture,
-                             out numero
-                         );
-                    if (res)
-                        datos.Add(numero);
-                    else break; //Corto al primer valor que no es numerico porque ya no sirve para graficar
+                    datos.Clear(); //reseteo los valores
+                    labels.Clear(); //reseteo los valores
+                    break; //Corto al primer valor que no es numerico porque ya no sirve para graficar
                 }
-
-
             }
+
+
+            
             var js = new JavaScriptSerializer();
 
             miGrafico.LabelsJson = js.Serialize(labels);
             miGrafico.DatosJson = js.Serialize(datos);
-            //miGrafico.DatosStringJson = js.Serialize(datosString);
             miGrafico.TipoGrafico = js.Serialize("line");
             miGrafico.TituloJson = js.Serialize("");
             miGrafico.minimo = js.Serialize(valorminimo);
