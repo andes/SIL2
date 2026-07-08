@@ -357,6 +357,15 @@ namespace WebLab.Usuarios
         protected global::Anthem.Label lblMensajeEfector;
 
         /// <summary>
+        /// Control cv_customValidacionEfector.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::Anthem.CustomValidator cv_customValidacionEfector;
+
+        /// <summary>
         /// Control gvListaEfector.
         /// </summary>
         /// <remarks>

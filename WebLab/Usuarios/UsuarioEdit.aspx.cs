@@ -101,6 +101,14 @@ namespace WebLab.Usuarios
             m_ssql = @" SELECT idArea, nombre FROM LAB_Area  (nolock) where baja=0  ORDER BY nombre ";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
             ddlArea.Items.Insert(0, new ListItem("Todas", "0"));
+
+            //Cargo una sola vez los labos al principio, y despues puedo acceder a ellos para consultar en cv_customValidacionEfector_ServerValidate
+            m_ssql = @" SELECT idEfector, nombre FROM Sys_Efector (nolock) where  idEfector in (select idEfector from lab_configuracion (nolock) ) ORDER BY nombre ";
+            oUtil.CargarCombo(ddlEfectorDestino, m_ssql, "idEfector", "nombre");
+            ddlEfectorDestino.Items.Insert(0, new ListItem("Seleccione Laboratorio", "0"));
+            ddlEfectorDestino.Visible = false; //se muestra dependiendo del perfil seleccionado
+            ddlEfectorDestino.UpdateAfterCallBack = true;
+
         }
 
         #region Datos Generales
@@ -195,10 +203,10 @@ namespace WebLab.Usuarios
             guardarAuditoria(oRegistro);
             
             Perfil oPerfil = new Perfil();
-            oPerfil = (Perfil)oPerfil.Get(typeof(Perfil), int.Parse(ddlPerfil.SelectedValue));
+            int idPerfil = int.Parse((ViewState["efectores"] as DataTable).Rows[0]["idPerfil"].ToString()); //Tomo el primero de la grilla
+            oPerfil = (Perfil)oPerfil.Get(typeof(Perfil), idPerfil);
 
             Efector oEfector = new Efector();
-
             int idEfector = int.Parse((ViewState["efectores"] as DataTable).Rows[0]["idEfector"].ToString()); //Tomo el primero de la grilla
             oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
 
@@ -457,17 +465,16 @@ namespace WebLab.Usuarios
 
         private void CargarEfectorLabo()
         {
-            Utility oUtil = new Utility();
+            //Utility oUtil = new Utility();
+            //string m_ssql = @" SELECT idEfector, nombre FROM Sys_Efector (nolock) where  idEfector in (select idEfector from lab_configuracion (nolock) ) ORDER BY nombre ";
+            //oUtil.CargarCombo(ddlEfectorDestino, m_ssql, "idEfector", "nombre");
+            ////    ddlEfector.Items.Insert(0, new ListItem("Seleccione un efector", "0"));
 
+            //ddlEfectorDestino.Items.Insert(0, new ListItem("Seleccione Laboratorio", "0"));
 
-
-            string m_ssql = @" SELECT idEfector, nombre FROM Sys_Efector (nolock) where  idEfector in (select idEfector from lab_configuracion (nolock) ) ORDER BY nombre ";
-            oUtil.CargarCombo(ddlEfectorDestino, m_ssql, "idEfector", "nombre");
-            //    ddlEfector.Items.Insert(0, new ListItem("Seleccione un efector", "0"));
-
-            ddlEfectorDestino.Items.Insert(0, new ListItem("Seleccione Laboratorio", "0"));
-            ddlEfectorDestino.UpdateAfterCallBack = true;
             ddlEfectorDestino.Visible = true;
+            ddlEfectorDestino.UpdateAfterCallBack = true;
+
             rvEfectorDestino.Enabled = true;
             rvEfectorDestino.UpdateAfterCallBack = true;
             lblEfectorDestino.Visible = true;
@@ -704,11 +711,12 @@ namespace WebLab.Usuarios
 
         private void AgregarEfector()
         {
-            lblMensajeEfector.Visible = false;
-           
+            //lblMensajeEfector.Visible = false;
+
             DataTable dt = ViewState["efectores"] as DataTable;
 
-            if (puedeAgregarEfector(dt))
+
+            //if (puedeAgregarEfector(dt)) //Se valida en cv_customValidacionEfector_ServerValidate
             {
                 string efectorDestino = "";
                 if (ddlEfectorDestino.SelectedItem != null && ddlEfectorDestino.SelectedValue != "0")
@@ -728,14 +736,14 @@ namespace WebLab.Usuarios
                     GuardarEfectores(oUsuario);
                 }
             }
-            else
-            {
-                lblMensajeEfector.Visible = true;
-                lblMensajeEfector.Text = "Alerta: Efector ya ingresado para el usuario.";
+            //else
+            //{
+            //    lblMensajeEfector.Visible = true;
+            //    lblMensajeEfector.Text = "Alerta: Efector ya ingresado para el usuario.";
 
-            }
+            //}
 
-            lblMensajeEfector.UpdateAfterCallBack = true;
+            //lblMensajeEfector.UpdateAfterCallBack = true;
         }
 
 
@@ -903,9 +911,59 @@ namespace WebLab.Usuarios
           
         }
 
+        protected void cv_customValidacionEfector_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            DataTable dt = ViewState["efectores"] as DataTable;
+            DataRow efectorEncontrado = null;
+            args.IsValid = true;
 
+            lblMensajeEfector.Visible = false;
+            lblMensajeEfector.UpdateAfterCallBack = true;
+
+            //Validamos que el perfil seleccionado sea el correcto para el efector seleccionado
+            if (ddlPerfil.SelectedItem.Value != "15")
+            {
+                ListItem efectorLaboratorio = ddlEfectorDestino.Items.FindByValue(ddlEfector3.SelectedValue);
+                if (efectorLaboratorio == null)
+                {
+                    args.IsValid = false;
+                    cv_customValidacionEfector.ErrorMessage = "Alerta: Efector invalido para el perfil seleccionado.";
+                    cv_customValidacionEfector.UpdateAfterCallBack = true;
+
+                    return;
+                }
+            }
+
+
+            //Verifica si ya fue agregado el efctor
+            if (dt != null && dt.Rows.Count > 0)
+                efectorEncontrado = dt.Rows.Find(ddlEfector3.SelectedValue); 
+
+            //Fix: si se intenta asignar un perfil dentro del mismo efector; que el sistema borre automáticamente el registro anterior y genere el nuevo registro
+            if (efectorEncontrado != null)
+            {
+                //Es el mismo efector pero es otro perfil o area o laboratoriodestino
+                if (ddlPerfil.SelectedItem.Value != efectorEncontrado["idPerfil"].ToString() ||
+                    ddlArea.SelectedItem.Value != efectorEncontrado["idArea"].ToString() ||
+                    //si es admin externo vemos si quiere cambiar el labodestino
+                    (ddlPerfil.SelectedItem.Value == "15" && (ddlEfectorDestino.SelectedItem.Value != efectorEncontrado["idEfectorDestino"].ToString()))
+                    )
+                {
+                    //Borro el anterior y permitimos que continue el flujo para que se guarde el nuevo con distinto perfil  o area o laboratoriodestino
+                    dt.Rows.Remove(efectorEncontrado);
+                    ViewState["efectores"] = dt;
+                }
+                else
+                {
+                    args.IsValid = false;
+                    cv_customValidacionEfector.ErrorMessage =  "Alerta: Efector ya ingresado para el usuario.";
+                    cv_customValidacionEfector.UpdateAfterCallBack = true;
+                    return;
+                }
+            }
+
+        }
 
         #endregion
-
     }
 }

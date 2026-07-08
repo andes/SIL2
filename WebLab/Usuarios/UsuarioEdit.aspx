@@ -342,11 +342,19 @@
                     </td>
              
             </tr>
-             <tr>
+            <tr>
                  <td colspan="2">
-                     <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
+                     <anthem:Label ID="lblMensajeEfector" runat="server" Visible="false" Text="Label"  style="color:Red;"></anthem:Label>
+                  
                  </td>
+                 
              </tr>
+                   <tr>
+                       <td colspan="2">   
+                     <anthem:CustomValidator ID="cv_customValidacionEfector" runat="server" onservervalidate="cv_customValidacionEfector_ServerValidate" ValidationGroup="1"  ErrorMessage="" ></anthem:CustomValidator>
+
+                       </td>
+                   </tr>
           <tr>
               <td><hr/></td><td><hr/></td>
           </tr>
