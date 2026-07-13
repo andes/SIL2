@@ -718,13 +718,19 @@ namespace WebLab.Usuarios
 
             //if (puedeAgregarEfector(dt)) //Se valida en cv_customValidacionEfector_ServerValidate
             {
-                string efectorDestino = "";
-                if (ddlEfectorDestino.SelectedItem != null && ddlEfectorDestino.SelectedValue != "0")
-                    efectorDestino=ddlEfectorDestino.SelectedItem.Text;
+                string efectorDestino = ""; int efDestino = 0;
+                if (ddlPerfil.SelectedValue == "15")//(ddlEfectorDestino.SelectedItem != null && ddlEfectorDestino.SelectedValue != "0")
+                {
+                    efectorDestino = ddlEfectorDestino.SelectedItem.Text;
+                    efDestino = int.Parse(ddlEfectorDestino.SelectedValue.ToString());
+                }
                 else
-                    efectorDestino= ddlEfector3.SelectedItem.Text ;
+                { 
+                     efectorDestino = ddlEfector3.SelectedItem.Text;
+                     efDestino = int.Parse(ddlEfector3.SelectedValue);
+                }
 
-                int efDestino = (ddlEfectorDestino.SelectedItem != null ) ? int.Parse( ddlEfectorDestino.SelectedValue.ToString()) : int.Parse( ddlEfector3.SelectedValue);
+                //int efDestino = (ddlEfectorDestino.SelectedItem != null ) ? int.Parse( ddlEfectorDestino.SelectedValue.ToString()) : int.Parse( ddlEfector3.SelectedValue);
 
                 dt.Rows.Add(0, ddlEfector3.SelectedItem.Text, ddlEfector3.SelectedValue, ddlArea.SelectedItem.Text, ddlArea.SelectedValue, ddlPerfil.SelectedItem.Text, ddlPerfil.SelectedValue, efectorDestino, efDestino);
                 ViewState["efectores"] = dt;
