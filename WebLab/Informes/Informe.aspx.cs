@@ -591,6 +591,12 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
                                             nombre_reporte = "../iNFORMES/HojasdeTRabajo/HTrabajoProtocolo4";
                                     }
                                     break;
+                                case 4: //Lista continua
+                                    {
+                                        nombre_reporte = "../Informes/HojasdeTrabajo/HTrabajoProtocolo5";
+                                    }
+                                    break;
+                              
                             }
                         }
                         if (ddlServicio.SelectedValue == "3")  //microbiolgoia
@@ -683,9 +689,9 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
                 Response.End();
             
         }
-     
 
-     
+
+
 
 
         private DataTable GetDataSet_HojaTrabajo(object p)
@@ -693,18 +699,18 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
 
             string s_store = "LAB_GeneraHT";
             DataSet Ds = new DataSet();
-                   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-           // SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            // SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
             if (rdbHojaConResultados.SelectedValue == "0")
-               s_store = "LAB_GeneraHT";
-            else                           
-               s_store = "LAB_GeneraHTconResultados";
-              
-            
+                s_store = "LAB_GeneraHT";
+            else
+                s_store = "LAB_GeneraHTconResultados";
+
+
             if (ddlServicio.SelectedValue=="3") s_store = s_store + "Microbiologia";
             if (ddlServicio.SelectedValue=="4") s_store = s_store + "Pesquisa";
 
