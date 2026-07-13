@@ -219,7 +219,12 @@ namespace WebLab.HojasTrabajo
                             else
                                 nombre_reporte = "../iNFORMES/HojasdeTRabajo/HTrabajoProtocolo4";
                         } break;
-                }                              
+                    case 4: //Lista continua
+                        {
+                            nombre_reporte = "../Informes/HojasdeTrabajo/HTrabajoProtocolo5";
+                        } break;
+                  
+                }                             
             }
             //if (oRegistro.Formato == 1)
             //{
