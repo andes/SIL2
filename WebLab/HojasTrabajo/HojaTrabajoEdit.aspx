@@ -16,7 +16,8 @@
                  $("#tabContainer").tabs();
                         var currTab = $("#<%= HFCurrTabIndex.ClientID %>").val();
                       
-                        $("#tabContainer").tabs({ selected: currTab });
+        $("#tabContainer").tabs('select', parseInt(currTab)); // Cuando usamos jQuery UI 1.8.1 tenemos que usar el metodo 'select'
+
              });
 </script>
   
@@ -141,7 +142,7 @@
                 <td class="style1" >
                                             Formato Ancho Columnas:</td>
 						<td class="style2">
-                                <asp:DropDownList ID="ddlAnchoColumnas" runat="server" class="form-control input-sm">
+                                <asp:DropDownList ID="ddlAnchoColumnas" runat="server" class="form-control input-sm" OnSelectedIndexChanged="ddlAnchoColumnas_SelectedIndexChanged" AutoPostBack="true">
                                     <asp:ListItem Selected="True" Value="0">Texto corto</asp:ListItem>
                                     <asp:ListItem Value="1">Texto mediano</asp:ListItem>
                                     <asp:ListItem Value="2">Texto grande</asp:ListItem>
