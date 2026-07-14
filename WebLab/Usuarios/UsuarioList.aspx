@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="../script/chosen/chosen.css" />
 
 <!-- JS -->
-<script src="https://code.jquery.com/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../script//jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="../script/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../script/chosen/chosen.jquery.js" type="text/javascript"></script>
 

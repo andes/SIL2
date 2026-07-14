@@ -2653,6 +2653,7 @@
     <Content Include="script\chosen\chosen.min.css" />
     <Content Include="script\chosen\chosen.proto.js" />
     <Content Include="script\chosen\chosen.proto.min.js" />
+    <Content Include="script\jquery-1.8.3.min.js" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
