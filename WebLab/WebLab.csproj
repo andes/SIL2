@@ -4876,16 +4876,16 @@
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.cs">
+      <DependentUpon>HTrabajoProtocolo5Horizontal.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo51.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HTrabajoProtocolo5.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo5Horizontal.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
@@ -6876,13 +6876,13 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4PesquisaHorizontal.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo5Horizontal.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo51.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocolo5Horizontal1.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Microbiologia.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
