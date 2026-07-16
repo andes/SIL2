@@ -1120,69 +1120,150 @@ namespace Business.Data.Laboratorio
         }
 
 
-        public string BuscarResultadoAnterior(Item subitem, Item itemprincipal, bool conFecha)
+        //public string BuscarResultadoAnterior(Item subitem, Item itemprincipal, bool conFecha)
+        //{
+        //    string s_resultadoAnterior = "";
+        //    string s_idPaciente = this.IdProtocolo.IdPaciente.IdPaciente.ToString();
+        //    //     int s_idSubItem = this.IdSubItem.IdItem;
+        //    string s_idProtocoloActual = this.IdProtocolo.IdProtocolo.ToString();
+
+        //    ///Caro Perfomance: buscar directamente por sql server
+
+        //    ICriteria critProtocolo = m_session.CreateCriteria(typeof(DetalleProtocolo));
+
+        //    string ssql_Protocolo = @" IdDetalleProtocolo in ( select max (IdDetalleProtocolo) from LAB_DetalleProtocolo inner join LAB_Protocolo on LAB_Protocolo.IdProtocolo = LAB_DetalleProtocolo.IdProtocolo where LAB_DetalleProtocolo.IdSubItem = " + subitem.IdItem.ToString()+ @" and  LAB_Protocolo.Baja = 0 and LAB_Protocolo.Estado > 0 and LAB_Protocolo.IdPaciente = " + s_idPaciente + "  and LAB_Protocolo.IdProtocolo < " + s_idProtocoloActual + " and LAB_DetalleProtocolo.IdUsuarioValida>0 )";
+        //    critProtocolo.Add(Expression.Sql(ssql_Protocolo));
+        //    //Protocolo oUltimoProtocolo = (Protocolo)critProtocolo.List;
+
+        //    IList detalle = critProtocolo.List();
+
+        //    if (detalle.Count > 0)
+        //    {
+        //        foreach (DetalleProtocolo oUltimoResultado in detalle)
+
+        //        //if (oUltimoProtocolo != null)
+        //        {
+
+        //            //ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //            ////      crit.Add(Expression.Eq("IdItem", itemprincipal));// sin importar quien es el padre
+        //            //crit.Add(Expression.Eq("IdSubItem", subitem));
+        //            //crit.Add(Expression.Eq("IdProtocolo", oDetalle));
+        //            //DetalleProtocolo oUltimoResultado = (DetalleProtocolo)crit.UniqueResult();
+
+        //            if (oUltimoResultado != null)
+        //            {
+        //                Utility oUtil = new Utility();
+        //                if ((oUltimoResultado.IdUsuarioValida > 0) && (oUltimoResultado.ConResultado))
+        //                {
+        //                    //if (oUltimoResultado.IdSubItem.IdTipoResultado == 1)
+        //                    if (oUltimoResultado.ResultadoCar.Trim() == "")
+        //                    {
+        //                        decimal resultadoAnterior = oUltimoResultado.ResultadoNum;
+        //                        //string formato = oUtil.Formato(subitem.FormatoDecimal.ToString());
+        //                        string formato = oUtil.Formato(oUltimoResultado.FormatoValida.ToString());
+        //                        decimal x = decimal.Parse(resultadoAnterior.ToString(formato));
+        //                        s_resultadoAnterior = x.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + oUltimoResultado.UnidadMedida;
+        //                    }
+        //                    else
+        //                    {
+        //                        s_resultadoAnterior = oUltimoResultado.ResultadoCar;
+        //                        if (s_resultadoAnterior.Length > 10)
+        //                            s_resultadoAnterior = s_resultadoAnterior.Substring(0, 10);
+
+        //                    }
+        //                    if (conFecha) s_resultadoAnterior = s_resultadoAnterior + Environment.NewLine + oUltimoResultado.IdProtocolo.Fecha.ToShortDateString();
+        //                    //  break;
+        //                }
+
+        //                //else
+        //                //  s_resultadoAnterior = "";
+        //            }
+
+        //        }
+        //    }
+        //    return s_resultadoAnterior;
+
+        //}
+
+        public string BuscarResultadoAnterior(Item subitem, bool conFecha, string conexion)
         {
-            string s_resultadoAnterior = "";
-            string s_idPaciente = this.IdProtocolo.IdPaciente.IdPaciente.ToString();
-            //     int s_idSubItem = this.IdSubItem.IdItem;
-            string s_idProtocoloActual = this.IdProtocolo.IdProtocolo.ToString();
+            string resultadoAnterior = "";
 
-            ///Caro Perfomance: buscar directamente por sql server
+            string sql = @"
+    SELECT TOP 1
+        dp.ResultadoCar,
+        dp.ResultadoNum,
+        dp.FormatoValida,
+        dp.UnidadMedida,
+        dp.FechaValida
+    FROM LAB_DetalleProtocolo dp WITH (NOLOCK)
+    INNER JOIN LAB_Protocolo p WITH (NOLOCK)
+        ON p.IdProtocolo = dp.IdProtocolo
+    WHERE dp.IdSubItem = @idSubItem
+      AND p.Baja = 0
+      AND p.Estado > 0
+      AND p.IdPaciente = @idPaciente
+      AND p.IdProtocolo < @idProtocoloActual
+      AND dp.IdUsuarioValida > 0
+    ORDER BY dp.IdDetalleProtocolo DESC";
 
-            ICriteria critProtocolo = m_session.CreateCriteria(typeof(DetalleProtocolo));
+            Utility util = new Utility();
 
-            string ssql_Protocolo = @" IdDetalleProtocolo in ( select max (IdDetalleProtocolo) from LAB_DetalleProtocolo inner join LAB_Protocolo on LAB_Protocolo.IdProtocolo = LAB_DetalleProtocolo.IdProtocolo where LAB_DetalleProtocolo.IdSubItem = " + subitem.IdItem.ToString()+ @" and  LAB_Protocolo.Baja = 0 and LAB_Protocolo.Estado > 0 and LAB_Protocolo.IdPaciente = " + s_idPaciente + "  and LAB_Protocolo.IdProtocolo < " + s_idProtocoloActual + " and LAB_DetalleProtocolo.IdUsuarioValida>0 )";
-            critProtocolo.Add(Expression.Sql(ssql_Protocolo));
-            //Protocolo oUltimoProtocolo = (Protocolo)critProtocolo.List;
-
-            IList detalle = critProtocolo.List();
-
-            if (detalle.Count > 0)
+            using (SqlConnection conn = new SqlConnection(conexion))
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
             {
-                foreach (DetalleProtocolo oUltimoResultado in detalle)
+                cmd.Parameters.AddWithValue("@idSubItem", subitem.IdItem);
+                cmd.Parameters.AddWithValue("@idPaciente", this.IdProtocolo.IdPaciente.IdPaciente);
+                cmd.Parameters.AddWithValue("@idProtocoloActual", this.IdProtocolo.IdProtocolo);
 
-                //if (oUltimoProtocolo != null)
+                conn.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
                 {
+                    if (!dr.Read())
+                        return "";
 
-                    //ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-                    ////      crit.Add(Expression.Eq("IdItem", itemprincipal));// sin importar quien es el padre
-                    //crit.Add(Expression.Eq("IdSubItem", subitem));
-                    //crit.Add(Expression.Eq("IdProtocolo", oDetalle));
-                    //DetalleProtocolo oUltimoResultado = (DetalleProtocolo)crit.UniqueResult();
+                    string resultadoCar = dr["ResultadoCar"] != DBNull.Value
+                        ? dr["ResultadoCar"].ToString().Trim()
+                        : "";
 
-                    if (oUltimoResultado != null)
+                    if (string.IsNullOrWhiteSpace(resultadoCar))
                     {
-                        Utility oUtil = new Utility();
-                        if ((oUltimoResultado.IdUsuarioValida > 0) && (oUltimoResultado.ConResultado))
+                        decimal resultadoNum = dr["ResultadoNum"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["ResultadoNum"])
+                            : 0;
+
+                        string formato = util.Formato(
+                            dr["FormatoValida"] != DBNull.Value
+                                ? dr["FormatoValida"].ToString()
+                                : "0");
+
+                        resultadoAnterior = resultadoNum.ToString(
+                            formato,
+                            System.Globalization.CultureInfo.InvariantCulture);
+
+                        if (dr["UnidadMedida"] != DBNull.Value &&
+                            !string.IsNullOrWhiteSpace(dr["UnidadMedida"].ToString()))
                         {
-                            //if (oUltimoResultado.IdSubItem.IdTipoResultado == 1)
-                            if (oUltimoResultado.ResultadoCar.Trim() == "")
-                            {
-                                decimal resultadoAnterior = oUltimoResultado.ResultadoNum;
-                                //string formato = oUtil.Formato(subitem.FormatoDecimal.ToString());
-                                string formato = oUtil.Formato(oUltimoResultado.FormatoValida.ToString());
-                                decimal x = decimal.Parse(resultadoAnterior.ToString(formato));
-                                s_resultadoAnterior = x.ToString(System.Globalization.CultureInfo.InvariantCulture) + " " + oUltimoResultado.UnidadMedida;
-                            }
-                            else
-                            {
-                                s_resultadoAnterior = oUltimoResultado.ResultadoCar;
-                                if (s_resultadoAnterior.Length > 10)
-                                    s_resultadoAnterior = s_resultadoAnterior.Substring(0, 10);
-
-                            }
-                            if (conFecha) s_resultadoAnterior = s_resultadoAnterior + Environment.NewLine + oUltimoResultado.IdProtocolo.Fecha.ToShortDateString();
-                            //  break;
+                            resultadoAnterior += " " + dr["UnidadMedida"].ToString();
                         }
-
-                        //else
-                        //  s_resultadoAnterior = "";
+                    }
+                    else
+                    {
+                        resultadoAnterior = resultadoCar.Length > 10
+                            ? resultadoCar.Substring(0, 10)
+                            : resultadoCar;
                     }
 
+                    if (conFecha && dr["FechaValida"] != DBNull.Value)
+                    {
+                        resultadoAnterior += Environment.NewLine +
+                            Convert.ToDateTime(dr["FechaValida"]).ToShortDateString();
+                    }
                 }
             }
-            return s_resultadoAnterior;
 
+            return resultadoAnterior;
         }
         public void GrabarAuditoriaDetalleProtocolo(string m_accion, int m_idusuario)
         {

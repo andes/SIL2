@@ -59,44 +59,98 @@ namespace WebLab.Protocolos
         }
 
 
+        //public string GetPuco_old(int numeroDocumento)
+        //{
+        //    string connetionString = null;
+        //    SqlConnection connection;
+        //    SqlCommand command;
+        //    string sql = null;
+        //    string codigo = "";
+        //    string nombre = "";
+        //    connetionString = ConfigurationManager.ConnectionStrings["Puco"].ConnectionString;
+
+        //    ; // "Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password";
+        //    sql = "select S.nombre, S.cod_os as os from pd_puco P with (nolock) inner join obras_sociales S with (nolock) on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
+
+        //    connection = new SqlConnection(connetionString);
+        //    try
+        //    {
+        //        SqlDataReader rdr = null;
+        //        connection.Open();
+        //        command = new SqlCommand(sql, connection);
+        //        rdr = command.ExecuteReader();
+
+        //        while (rdr.Read())
+        //        {
+        //            nombre = rdr[0].ToString();
+        //            codigo = rdr[1].ToString();
+        //        }
+        //        if (nombre == "") nombre = "Sin obra social"; // sin obra social
+        //        else nombre = nombre + "&" + codigo;
+        //        command.Dispose();
+        //        connection.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        nombre = "Sin obra social&0";
+        //    }
+
+        //    return nombre;
+        //}
+
         public string GetPuco(int numeroDocumento)
         {
-            string connetionString = null;
-            SqlConnection connection;
-            SqlCommand command;
-            string sql = null;
-            string codigo = "";
-            string nombre = "";
-            connetionString = ConfigurationManager.ConnectionStrings["Puco"].ConnectionString;
+            //Se guarda en cache por dni la obra social por 48 horas.
+            string cacheKey = $"PUCO_{numeroDocumento}";
 
-            ; // "Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password";
-            sql = "select S.nombre, S.cod_os as os from pd_puco P inner join obras_sociales S on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
+            string resultado = HttpRuntime.Cache[cacheKey] as string;
+            if (resultado != null)
+                return resultado;
 
-            connection = new SqlConnection(connetionString);
+            resultado = "Sin obra social&0";
+
             try
             {
-                SqlDataReader rdr = null;
-                connection.Open();
-                command = new SqlCommand(sql, connection);
-                rdr = command.ExecuteReader();
-
-                while (rdr.Read())
+                using (SqlConnection connection = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["Puco"].ConnectionString))
+                using (SqlCommand command = new SqlCommand(@"
+            SELECT TOP 1
+                   S.nombre,
+                   S.cod_os
+            FROM pd_puco P WITH (NOLOCK)
+            INNER JOIN obras_sociales S WITH (NOLOCK)
+                ON S.cod_os = P.codigoOS
+            WHERE P.dni = @dni", connection))
                 {
-                    nombre = rdr[0].ToString();
-                    codigo = rdr[1].ToString();
+                    command.Parameters.Add("@dni", SqlDbType.Int).Value = numeroDocumento;
+
+                    connection.Open();
+
+                    using (SqlDataReader rdr = command.ExecuteReader())
+                    {
+                        if (rdr.Read())
+                        {
+                            resultado = rdr["nombre"].ToString() + "&" +
+                                        rdr["cod_os"].ToString();
+                        }
+                    }
                 }
-                if (nombre == "") nombre = "Sin obra social"; // sin obra social
-                else nombre = nombre + "&" + codigo;
-                command.Dispose();
-                connection.Close();
             }
-            catch (Exception ex)
+            catch
             {
-                nombre = "Sin obra social&0";
+                resultado = "Sin obra social&0";
             }
 
-            return nombre;
+            HttpRuntime.Cache.Insert(
+                cacheKey,
+                resultado,
+                null,
+                DateTime.Now.AddHours(48),
+                System.Web.Caching.Cache.NoSlidingExpiration);
+
+            return resultado;
         }
+
 
         private void CargarGrilla()
         {
@@ -1327,9 +1381,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-            //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-
-            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+            string cacheKey = "";
+              string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             ddlMuestra.Items.Insert(0, new ListItem("--Seleccione Muestra--", "0"));
             pnlMuestra.Visible = false;         
@@ -1362,7 +1415,10 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                              WHERE (baja = 0)  
                              and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector="+oUser.IdEfector.IdEfector.ToString()+@" )" + str_condicion +@" order by nombre";
 
-            oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
+            //oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
+             cacheKey = $"CAT_Servicio_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+            Business.Helpers.ComboCache.CargarCombo(ddlSectorServicio, cacheKey, m_ssql, "idSectorServicio", "nombre", connReady);
+
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
         /*    if (oC.IdSectorDefecto > 0)
             {
@@ -1376,19 +1432,19 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             ConfiguracionCodigoBarra oConfiguracion = new ConfiguracionCodigoBarra();
             oConfiguracion = (ConfiguracionCodigoBarra)oConfiguracion.Get(typeof(ConfiguracionCodigoBarra), "IdTipoServicio", oServicio,"IdEfector", oUser.IdEfector); //Multiefector: filtrar por efector
-            if (oConfiguracion == null)
-            {
-                //    lblImprimeCodigoBarras.Visible = false;
-                //    chkAreaCodigoBarra.Items.Clear();
-                ddlImpresoraEtiqueta.Visible = false;
-            }
+            if (oConfiguracion == null)          
+                ddlImpresoraEtiqueta.Visible = false;            
             else
             {
                 if (oConfiguracion.Habilitado)
                 {
                     m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
-                                                                                                                                                             //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-                    oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
+                                                                                                                                                                          //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+
+                    //  oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
+                    
+                     cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+                    Business.Helpers.ComboCache.CargarCombo(ddlImpresoraEtiqueta, cacheKey, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
                   
 
@@ -1457,16 +1513,20 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             m_ssql = " SELECT  idOrigen, nombre FROM LAB_Origen with (nolock) WHERE (baja = 0)";
             if (oC.OrigenHabilitado != "")
                 m_ssql = m_ssql + " and idOrigen in (" + oC.OrigenHabilitado + ")";
+            
+            //oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
+            cacheKey = "CAT_Origen";
+            Business.Helpers.ComboCache.CargarCombo(ddlOrigen, cacheKey, m_ssql, "idOrigen", "nombre", connReady);
 
-
-
-            oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
             ddlOrigen.Items.Insert(0, new ListItem("", "0"));
 
 
             ///Carga de combos de Prioridad
             m_ssql = " SELECT idPrioridad, nombre FROM LAB_Prioridad with (nolock) WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
+         //   oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
+          ///  CargarComboDesdeCache(ddlPrioridad, "pioridad", m_ssql, "idPrioridad", "nombre");
+            cacheKey = "CAT_Prioridad";
+            Business.Helpers.ComboCache.CargarCombo(ddlPrioridad, cacheKey, m_ssql, "idPrioridad", "nombre", connReady);
 
 
             if ((Session["idServicio"].ToString() == "3") || (Session["idServicio"].ToString() == "6"))//microbiologia o forense microbiologia
@@ -1483,10 +1543,12 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             where (tipo=0 or tipo=1)";
                 if (Request["Operacion"].ToString() != "Modifica")  //alta
                     m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString()+")"; //Multiefector";
-
-
                 m_ssql += " order by nombre ";
-                oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
+                //oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
+
+                 cacheKey = $"CAT_Muestra_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+                Business.Helpers.ComboCache.CargarCombo(ddlMuestra, cacheKey, m_ssql, "idMuestra", "nombre", connReady);
+
                 ddlMuestra.Items.Insert(0, new ListItem("--Seleccione Muestra--", "0"));
 
                 ////Carga de combo de enfermedad base
@@ -1507,7 +1569,9 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     ")  or (E.idEfector="+oC.IdEfector.IdEfector.ToString()+ @" )";
            
            m_ssql += " order by nombre ";
-            oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
+            //oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
+            cacheKey =  $"CAT_Efector_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+            Business.Helpers.ComboCache.CargarCombo(ddlEfector, cacheKey, m_ssql, "idEfector", "nombre", connReady);
             ddlEfector.SelectedValue = oC.IdEfector.IdEfector.ToString();
             
 
@@ -1524,8 +1588,10 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             if (Session["idServicio"].ToString() == "3")///Se agrega para todos los efectores y solo para servicio microbiologia
             {
+                
                 m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock) ";
-                oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
+                //oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
+                Business.Helpers.ComboCache.CargarCombo (ddlCaracter, "CAT_Caracter", m_ssql, "idCaracter", "nombre", connReady);
                 ddlCaracter.Items.Insert(0, new ListItem("--Seleccione Caracteristica--", "0"));
 
                 //if ((ddlCaracter.Items.Count > 1) && (oUser.IdEfector.IdEfector==228) )///Se agrega control exclusivo para Laboratorio Central
@@ -1559,7 +1625,10 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             //Carga de combo de rutinas
             m_ssql = "SELECT idRutina, nombre FROM Lab_Rutina (nolock) where baja=0 and IdEfector= " + oUser.IdEfector.IdEfector.ToString() + " and idTipoServicio= " + Session["idServicio"].ToString() + " order by nombre ";//Ver MultiEfector 
-            oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre", connReady);
+
+            cacheKey = $"CAT_Rutina_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+            Business.Helpers.ComboCache.CargarCombo(ddlRutina, cacheKey, m_ssql, "idRutina", "nombre", connReady);
+        //    oUtil.CargarCombo(ddlRutina, m_ssql, "idRutina", "nombre", connReady);
             ddlRutina.Items.Insert(0, new ListItem("Seleccione una rutina", "0"));
 
             ddlItem.UpdateAfterCallBack = true;
@@ -1613,7 +1682,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             m_ssql = null;
             oUtil = null;
         }
-
+      
         private void CargarListaEnfermedadesBase()
         {
             Utility oUtil = new Utility();
@@ -1623,7 +1692,10 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             pnlEnfermedadBase.Visible = true;
             string m_ssql = @"select id as idDiag, nombre + ' - ' + codigo as nombre   from sys_cie10 with (nolock) where tipo='BASE' order by nombre ";
-            oUtil.CargarCombo(ddlEnfermedadBase, m_ssql, "idDiag", "nombre", connReady);
+            //oUtil.CargarCombo(ddlEnfermedadBase, m_ssql, "idDiag", "nombre", connReady);                       
+
+            string cacheKey = "CAT_ENFBASE";
+            Business.Helpers.ComboCache.CargarCombo(ddlEnfermedadBase, cacheKey, m_ssql, "idDiag", "nombre", connReady);
             ddlEnfermedadBase.Items.Insert(0, new ListItem("--Seleccione Enfermedad Base--", "0"));
         }
 

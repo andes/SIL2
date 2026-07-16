@@ -270,7 +270,10 @@ namespace WebLab.Protocolos
 
 
             m_ssql = "SELECT idArea, nombre FROM LAB_Area with (nolock)  where baja=0    order by nombre ";
-            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
+            string cacheKey = "CAT_Area";
+            Business.Helpers.ComboCache.CargarCombo(ddlArea, cacheKey, m_ssql, "idArea", "nombre", connReady);
+
+            ///oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
             ddlArea.Items.Insert(0, new ListItem("--Todas--", "0"));
 
             ddlItem.Items.Insert(0, new ListItem("--Todas--", "0"));
@@ -279,19 +282,27 @@ namespace WebLab.Protocolos
 
             //////////////////////////Carga de combos de ObraSocial//////////////////////////////////////////
             m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString()+" order by nombreObraSocial ";
-            oUtil.CargarCombo(ddlObraSocial, m_ssql, "nombre", "nombre", connReady);
+            ///oUtil.CargarCombo(ddlObraSocial, m_ssql, "nombre", "nombre", connReady);
+               cacheKey = $"CAT_OS_{oUser.IdEfector.IdEfector}";
+            Business.Helpers.ComboCache.CargarCombo(ddlObraSocial, cacheKey, m_ssql, "nombre", "nombre", connReady);
             ddlObraSocial.Items.Insert(0, new ListItem("--Todos--", "0"));
             //////////////////////////////////////////////////////////////////////////////////////////////////
 
             ///Carga de combos de Origen
             m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen with (nolock)  WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
+            ///oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
+                 cacheKey = "CAT_Origen";
+            Business.Helpers.ComboCache.CargarCombo(ddlOrigen, cacheKey, m_ssql, "idOrigen", "nombre", connReady);
+
             ddlOrigen.Items.Insert(0, new ListItem("-- Todos --", "0"));
           
 
             ///Carga de combos de Prioridad
             m_ssql = "SELECT idPrioridad, nombre FROM LAB_Prioridad with (nolock)  WHERE     (baja = 0)";
-            oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
+            //oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
+            cacheKey = "CAT_Prioridad";
+            Business.Helpers.ComboCache.CargarCombo(ddlPrioridad, cacheKey, m_ssql, "idPrioridad", "nombre", connReady);
+
             ddlPrioridad.Items.Insert(0, new ListItem("-- Todos --", "0"));
             if (Request["idServicio"].ToString() == "6") { 
                 lblPrioridad.Visible = false;
@@ -305,15 +316,19 @@ namespace WebLab.Protocolos
 
             ///Carga de combos de Efector
             m_ssql = "SELECT idEfector, nombre FROM sys_Efector with (nolock)  order by nombre ";
-            oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre", connReady);
+            cacheKey = "CAT_Efector";
+            Business.Helpers.ComboCache.CargarCombo(ddlEfectorSolicitante, cacheKey, m_ssql, "idEfector", "nombre", connReady);
+            //   oUtil.CargarCombo(ddlEfectorSolicitante, m_ssql, "idEfector", "nombre", connReady);
             ddlEfectorSolicitante.Items.Insert(0, new ListItem("-- Todos --", "0"));
+           
+
 
             /////Carga de combos de Medicos Solicitantes
             //m_ssql = "SELECT idProfesional, apellido + ' ' + nombre AS nombre FROM Sys_Profesional ORDER BY apellido, nombre ";
             //oUtil.CargarCombo(ddlEspecialista, m_ssql, "idProfesional", "nombre");
             //ddlEspecialista.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
-            
+
 
             if (Request["idServicio"].ToString() != "1")//microbiologia o pesquisa
             {

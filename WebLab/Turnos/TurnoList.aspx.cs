@@ -50,12 +50,12 @@ namespace WebLab.Turnos
                 if (oUser.IdPerfil.IdPerfil == 15)
                 {
                     oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfectorDestino);
-                    this.MasterPageFile = "../SiteTurnos.Master";
+                  ///  this.MasterPageFile = "../SiteTurnos.Master";
                 }
                 else
                 {
                     oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-                    this.MasterPageFile = "../Site1.Master";
+                    ///this.MasterPageFile = "../Site1.Master";
                 }
             }
             else Response.Redirect("../FinSesion.aspx", false);
@@ -805,8 +805,7 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             //Aca se deberá consultar los parametros para mostrar una hoja de trabajo u otra
             //this.CrystalReportSource1.Report.FileName = "HTrabajo2.rpt";
             string informe = "../Informes/Turno.rpt";
-            //Configuracion oCon = new Configuracion();   oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-
+          
             ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
             encabezado1.Value = oCon.EncabezadoLinea1;
 
@@ -977,7 +976,7 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             string informe = "../Informes/PlanillaTurno.rpt";
             string s_item = "";
             if (ddlItem.SelectedValue != "0") s_item = ddlItem.SelectedItem.Text;
-            //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            
 
             ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue(); encabezado1.Value = oCon.EncabezadoLinea1;
             ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue(); encabezado2.Value = oCon.EncabezadoLinea2;
@@ -1010,7 +1009,7 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             string s_item = "";
             if (ddlItem.SelectedValue != "0") s_item = ddlItem.SelectedItem.Text;
             string informe = "../Informes/PlanillaDetalladaTurno.rpt";
-            //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+            
 
             ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
             encabezado1.Value = oCon.EncabezadoLinea1;
@@ -1040,12 +1039,8 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
      
 
         public DataTable GetDataSetPlanillaDetallada()
-        {
-            //string m_strSQL = " SELECT  * from vta_LAB_ImprimirTurno " +
-            //                  " WHERE idTurno=" + IdTurno;
-
-            DataSet Ds = new DataSet();
-        //       SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+        {         
+            DataSet Ds = new DataSet();        
            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
 
             SqlCommand cmd = new SqlCommand();
@@ -1058,15 +1053,7 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
             cmd.Connection = conn;
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(Ds);
-
-
-
-            //SqlDataAdapter adapter = new SqlDataAdapter();
-            //adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            //adapter.Fill(Ds);
-
-            // conn.Close();
-            //   adapter.Dispose();
+            
             return Ds.Tables[0];
         }
 

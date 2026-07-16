@@ -82,7 +82,7 @@ namespace WebLab
                         {
 
 
-                            if ((Request["idServicio"].ToString() == "6") && (VerificarSiTienePermisodeValidar(oUser.Username, "/CasoFiliacion/CasoResultado.aspx")))
+                            if ((Request["idServicio"].ToString() == "6") && (VerificarSiTienePermisodeValidar(oUser.IdUsuario, "/CasoFiliacion/CasoResultado.aspx")))
                             {
                                 //HttpContext Context;
                                 //Context = HttpContext.Current;
@@ -95,7 +95,7 @@ namespace WebLab
 
 
                             }
-                            if ((Request["idServicio"].ToString() == "3") && (VerificarSiTienePermisodeValidar(oUser.Username, "/CasoFiliacion/CasoResultadoHisto.aspx")))
+                            if ((Request["idServicio"].ToString() == "3") && (VerificarSiTienePermisodeValidar(oUser.IdUsuario, "/CasoFiliacion/CasoResultadoHisto.aspx")))
                             {
                                 //HttpContext Context2;
                                 //Context2 = HttpContext.Current;
@@ -141,25 +141,25 @@ namespace WebLab
                                 string idServicio = Request["idServicio"].ToString();
                                 string operacion = Request["Operacion"].ToString();
                                 string modo = Request["modo"].ToString();
-                                Configuracion oC = new Configuracion();
-                                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-                                if (oUser.IdEfector != oC.IdEfector)
-                                {
-                                    if (VerificarSiTienePermisodeValidar(oUser.Username, "/Resultados/ResultadoBExterno.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo))
-                                    {
-                                        Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
-                                        Response.Redirect("~/Resultados/ResultadoBExterno.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo + "&logIn=1", false);// + "&idUsuarioValida=" + oUser.IdUsuario, false);
-                                    }
-                                    else
-                                    {
-                                        e.Authenticated = false;
-                                        Login1.FailureText = "El usuario no tiene permisos para validar.";
-                                    }
+                                //Configuracion oC = new Configuracion();
+                                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+                                //if (oUser.IdEfector != oC.IdEfector)
+                                //{
+                                //    if (VerificarSiTienePermisodeValidar(oUser.Username, "/Resultados/ResultadoBExterno.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo))
+                                //    {
+                                //        Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
+                                //        Response.Redirect("~/Resultados/ResultadoBExterno.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo + "&logIn=1", false);// + "&idUsuarioValida=" + oUser.IdUsuario, false);
+                                //    }
+                                //    else
+                                //    {
+                                //        e.Authenticated = false;
+                                //        Login1.FailureText = "El usuario no tiene permisos para validar.";
+                                //    }
 
-                                }
-                                else
-                                {
-                                    if (VerificarSiTienePermisodeValidar(oUser.Username, "/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo))
+                                //}
+                                //else
+                                //{
+                                    if (VerificarSiTienePermisodeValidar(oUser.IdUsuario, "/Resultados/ResultadoBusqueda.aspx?idServicio=" + idServicio + "&Operacion=" + operacion + "&modo=" + modo))
                                     {
                                         Session["idUsuarioValida"] = oUser.IdUsuario.ToString();
                                         if (Request["urgencia"] != null)
@@ -179,7 +179,7 @@ namespace WebLab
                                         e.Authenticated = false;
                                         Login1.FailureText = "El usuario no tiene permisos para validar.";
                                     }
-                                }
+                                //}
                             }
                         }
                         
@@ -201,20 +201,19 @@ namespace WebLab
 
 
 
-        private bool VerificarSiTienePermisodeValidar(string user, string m_url)
+        private bool VerificarSiTienePermisodeValidar(int IdUsuario, string m_url)
         {
 
-            string m_strSQL = @" SELECT   P.permiso, M.objeto, M.url, U.username
-            FROM         Sys_Menu AS M INNER JOIN
-            Sys_Permiso AS P ON M.idMenu = P.idMenu INNER JOIN
-            Sys_Usuario AS U ON P.idPerfil = U.idPerfil
-            WHERE     (M.url = @url) AND (U.username = @username) AND (P.permiso = 2) and  (U.activo=1 ) ";
+            // Sys_Usuario contiene en idefector y idperfil los seleccionados al loguearse.
+            string m_strSQL = @" SELECT 1
+            FROM        [LAB_MenuTempUsuario] P   with (nolock)                
+            WHERE     (P.urlmenu = @url) AND (P.idusuario = @iduser) AND (P.permiso = 2)  ";
 
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura           
             using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
             {
                 cmd.Parameters.AddWithValue("@url", m_url);
-                cmd.Parameters.AddWithValue("@username", user);
+                cmd.Parameters.AddWithValue("@iduser", IdUsuario);
 
                 conn.Open();
 

@@ -586,11 +586,11 @@ namespace WebLab.Resultados
                     string m_estadoObservacion = Ds.Tables[0].Rows[i].ItemArray[29].ToString();
                     string m_area = Ds.Tables[0].Rows[i].ItemArray[30].ToString();
 
-                    if (m_codificaPaciente == "True")
-                    {
-                        lblPaciente.Visible = false;
-                        lblCodigoPaciente.Visible = true;
-                    }
+                    //if (m_codificaPaciente == "True")
+                    //{
+                    //    lblPaciente.Visible = false;
+                    //    lblCodigoPaciente.Visible = true;
+                    //}
 
 
                     m_hijo = Ds.Tables[0].Rows[i].ItemArray[1].ToString();

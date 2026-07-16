@@ -121,10 +121,22 @@
   
   <script>
       const cambios = [
+            {
+                "fecha": "2026.07.14",
+                "modulo": "Carga/Validacion de Resultados",
+                "detalle": "Se excluye la codificacion de datos del paciente en los casos de determinaciones configuradas para tal fin. Se deja codificacion en generacion de PDF.",
+                "tipo": "Nueva Funcionalidad"
+            },
+	    {
+               "fecha": "2026.07.14",
+               "modulo": "Administracion de usuarios",
+               "detalle": "Se agrega posibilidad de diferenciar perfil de usuario por efector vinculado el usuario. Se cambia lógica de acceso al sistema por estos cambios.",
+               "tipo": "Nueva Funcionalidad"
+           },
            {
                "fecha": "2026.07.02",
                "modulo": "Historico de Analisis",
-               "detalle": "Se muestra la leyenda sin insumos en caso de no informar resultados.",
+               "detalle": "Se excluyen del histórico los casos informados como sin insumos.",
                "tipo": "Nueva Funcionalidad"
            },
 	    {
