@@ -113,6 +113,7 @@
     <Compile Include="Data\AutoAnalizador\ProtocoloLuminex.cs" />
     <Compile Include="Data\AutoAnalizador\ProtocoloEnvio.cs" />
     <Compile Include="Data\AutoAnalizador\BcItem.cs" />
+    <Compile Include="Data\AutoAnalizador\RealItem.cs" />
     <Compile Include="Data\AutoAnalizador\ResultadoItemNcov.cs" />
     <Compile Include="Data\AutoAnalizador\StaCompactItem.cs" />
     <Compile Include="Data\AutoAnalizador\SysmexItemkx21n.cs" />
@@ -337,6 +338,7 @@
     <Content Include="Data\AutoAnalizador\CobasC311.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\DerivacionMotivoCancelacion.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ConfiguracionAreaEtiqueta.hbm.xml" />
+    <Content Include="Data\AutoAnalizador\RealItem.hbm.xml" />
     <Content Include="Data\Laboratorio\Ficha.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\ItemMuestra.hbm.xml" />
     <EmbeddedResource Include="Data\Laboratorio\Marca.hbm.xml" />
