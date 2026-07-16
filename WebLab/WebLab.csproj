@@ -4825,12 +4825,6 @@
     <Compile Include="ImpresoraEdit.aspx.designer.cs">
       <DependentUpon>ImpresoraEdit.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Informes\AnalisisFueraHT.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AnalisisFueraHT.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Informes\AuditoriaLote.cs">
       <DependentUpon>AuditoriaLote.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
