@@ -573,7 +573,7 @@ namespace WebLab.Resultados
 
                                                     if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
                                                     { 
-                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString);//.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
                                                         if (resultadoAnterior != "")
                                                         {
                                                           //  hayAntecedente = true;
@@ -661,7 +661,7 @@ namespace WebLab.Resultados
                                                     m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
                                                     if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
                                                     {
-                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); //oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
                                                         if (resultadoAnterior != "")
                                                         {
                                                      //       hayAntecedente = true;

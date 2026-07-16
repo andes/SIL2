@@ -1152,7 +1152,8 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
         dp.ResultadoCar,
         dp.ResultadoNum,
         dp.FormatoValida,
-        dp.UnidadMedida
+        dp.UnidadMedida,
+        dp.fechaValida
     FROM LAB_DetalleProtocolo dp with (nolock)
     INNER JOIN LAB_Protocolo p with (nolock)
         ON p.IdProtocolo = dp.IdProtocolo
@@ -1169,6 +1170,12 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
           AND p2.Estado > 0
           AND p2.IdProtocolo < @idProtocoloActual
           AND dp2.IdUsuarioValida > 0
+        ---agrego que solo traiga los antecedentes de las determinaciones del protocolo actual
+            AND dp2.IdSubItem IN (
+            SELECT DISTINCT IdSubItem
+            FROM LAB_DetalleProtocolo
+            WHERE IdProtocolo = @idProtocoloActual
+          )
         GROUP BY dp2.IdSubItem
     ) ult
         ON ult.IdDetalle = dp.IdDetalleProtocolo
@@ -1236,6 +1243,9 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
                                     ? resultadoCar.Substring(0, 10)
                                     : resultadoCar;
                             }
+
+                            if (dr["FechaValida"] != DBNull.Value)
+                                resultado += $" ({Convert.ToDateTime(dr["FechaValida"]):dd/MM/yy})";
 
                             if (!diccionario.ContainsKey(idSubItem))
                                 diccionario.Add(idSubItem, resultado);

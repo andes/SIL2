@@ -46,12 +46,14 @@ namespace WebLab
 
         protected void Login1_Authenticate(object sender, AuthenticateEventArgs e)
         {
+
+            ///Usuario Tercera Parte: no verifica que el ultimo perfil loguaeado esté activo; solo verifica que el usuario esté activo
             string mensajeError;
             Usuario oUser = new Usuario();
             oUser = (Usuario)oUser.Get(typeof(Usuario), "Username", Login1.UserName);
             if (oUser!= null)                //(i_idusuario > 0)
-            {            
-                if ((oUser.Activo) && (oUser.IdPerfil.Activo))
+            {
+               if (oUser.Activo)/// && (oUser.IdPerfil.Activo))                         
                 {
                     if (VerificarTipoAutenticacion(oUser ,out mensajeError))
                     {
@@ -74,7 +76,7 @@ namespace WebLab
                 {
                     oUser = null;
                     e.Authenticated = false;
-                    Login1.FailureText = "El usuario inválido.";
+                    Login1.FailureText = "El usuario inválido. Consulte con el Administrador.";
                     return;
                 }
 
@@ -96,13 +98,18 @@ namespace WebLab
        
         private bool VerificarSiTienePermisodeValidar(string user, string m_url)
         {
-       
-            string m_strSQL = @" SELECT   P.permiso, M.objeto, M.url, U.username
-            FROM         Sys_Menu AS M INNER JOIN
-            Sys_Permiso AS P ON M.idMenu = P.idMenu INNER JOIN
-            Sys_Usuario AS U ON P.idPerfil = U.idPerfil
-            WHERE     (M.url = @url) AND (U.username = @username) AND (P.permiso = 2) and  (U.activo=1 ) ";                    
-           
+            // Sys_Usuario contiene en idefector y idperfil los seleccionados al loguearse.
+            string m_strSQL = @" SELECT   P.permiso,P.objeto,P.url, U.username
+            FROM        [LAB_MenuTempUsuario] P            
+            INNER JOIN   Sys_Usuario AS U ON P.idusuario = U.idusuario
+            WHERE     (P.url = @url) AND (U.username = @username) AND (P.permiso = 2) and  (U.activo=1 ) ";
+
+            //string m_strSQL = @" SELECT   P.permiso, M.objeto, M.url, U.username
+            //FROM         Sys_Menu AS M 
+            //INNER JOIN   Sys_Permiso AS P ON M.idMenu = P.idMenu 
+            //INNER JOIN   Sys_Usuario AS U ON P.idPerfil = U.idPerfil
+            //WHERE     (M.url = @url) AND (U.username = @username) AND (P.permiso = 2) and  (U.activo=1 ) ";
+
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura           
             using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
             {
@@ -122,8 +129,9 @@ namespace WebLab
 
             if (oUser != null)
             {
-               
-                if ((oUser.Activo) && (oUser.IdPerfil.Activo))
+                ////Usuario Tercera Parte: no verifica el perfil de usuario, se verifica mas adelante en loginefector
+                //if ((oUser.Activo) && (oUser.IdPerfil.Activo))
+                if (oUser.Activo) 
                 {
                     if ((oUser.Activo) && (oUser.Externo))
                     {
@@ -146,9 +154,7 @@ namespace WebLab
                             {
                                 Session["idUsuarioAux"] = oUser.IdUsuario.ToString();
                                 Response.Redirect("LoginEfector.aspx", false);
-
-                                //Session["idUsuario"] = oUser.IdUsuario.ToString();
-                                //Response.Redirect("Default.aspx", false);
+                                 
                             }
                         }
                         else
@@ -230,9 +236,7 @@ namespace WebLab
         }
 
         private bool VerificarTipoAutenticacion(Usuario oUser,  out string mensajeError)
-        {  /*
-          Caro: autenticacion diferencias con SIL /ONLOGIN
-          */
+        {  
             mensajeError = "";
             bool autentica = false;
           
@@ -246,26 +250,32 @@ namespace WebLab
                     Utility oUtil = new Utility();
                     string m_password = oUtil.Encrypt(Login1.Password);
 
-                    string query = @"            SELECT 1             FROM Sys_usuario 
-            WHERE activo = 1 
-            AND username = @username 
-            AND [password] = @password";
-
-                    using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    if (oUser.Password != m_password)
                     {
-                        cmd.Parameters.AddWithValue("@username", Login1.UserName);
-                        cmd.Parameters.AddWithValue("@password", m_password);
-
-                        conn.Open();
-                        var result = cmd.ExecuteScalar();
-
-                        autentica= result != null;
-                        if (!autentica)
-                        {
-                            mensajeError = "Usuario o contraseña incorrecta en SIL.";
-                        }
+                        autentica = false;
+                        mensajeError = "Usuario o contraseña incorrecta en SIL.";
                     }
+                    else autentica = true;
+
+                    //string query = @" SELECT 1 FROM Sys_usuario with (nolock)
+                    //                    WHERE activo = 1 
+                    //                    AND username = @username 
+                    //                    AND [password] = @password";
+
+                    //using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+                    //using (SqlCommand cmd = new SqlCommand(query, conn))
+                    //{
+                    //    cmd.Parameters.AddWithValue("@username", Login1.UserName);
+                    //    cmd.Parameters.AddWithValue("@password", m_password);
+
+                    //    conn.Open();
+                    //    var result = cmd.ExecuteScalar();
+
+                    //    autentica= result != null;
+                    //    if (!autentica)                        
+                    //        mensajeError = "Usuario o contraseña incorrecta en SIL.";
+
+                    //}
                 }
 
                 else if (tipoAutenticacion == "ONELOGIN")
@@ -305,7 +315,7 @@ namespace WebLab
                 }
             }
             return autentica;
-            /*fin Caro: validacion por tipo de autenticacion*/
+           
         }
 
         protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)

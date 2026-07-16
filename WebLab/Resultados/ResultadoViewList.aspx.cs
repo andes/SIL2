@@ -716,7 +716,7 @@ namespace WebLab.Resultados
                                                                olbl.Text = olbl.Text + Observaciones;
                                                        }
 
-                                                       string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                       string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL"].ConnectionString); //oDetalle..BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
                                                        if (resultadoAnterior != "")
                                                        {
                                                            hayAntecedente = true;
@@ -795,7 +795,7 @@ namespace WebLab.Resultados
                                                        DetalleProtocolo oDetalle = new DetalleProtocolo();
                                                        oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), i_iddetalleProtocolo);
 
-                                                       string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                       string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL"].ConnectionString); //oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
                                                        if (resultadoAnterior != "")
                                                        {
                                                            hayAntecedente = true;

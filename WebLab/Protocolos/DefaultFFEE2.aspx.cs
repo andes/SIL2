@@ -114,7 +114,9 @@ namespace WebLab.Protocolos
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
             Utility oUtil = new Utility();
             string m_ssql =  "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
-            oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre", connReady);
+            string cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+            Business.Helpers.ComboCache.CargarCombo(ddlImpresora, cacheKey, m_ssql, "nombre", "nombre", connReady);
+            ///oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre", connReady);
             ddlImpresora.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
         }
 

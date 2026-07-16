@@ -43,7 +43,16 @@
             </asp:DropDownList> 
         <br />
             <asp:Button ID="btnAceptar"  CssClass="btn btn-primary" Width="100px"  runat="server" OnClick="btnAceptar_Click" Text="Aceptar" ValidationGroup="0" />
-            <asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="ddlEfector" ErrorMessage="Seleccione Efector" MaximumValue="99999" MinimumValue="1" Type="Integer" ValidationGroup="0"></asp:RangeValidator>
+      <asp:RequiredFieldValidator
+    ID="rfvEfector"
+    runat="server"
+    ControlToValidate="ddlEfector"
+    InitialValue="0"
+    ErrorMessage="Seleccione Efector"
+    ValidationGroup="0"
+    Display="Dynamic">
+</asp:RequiredFieldValidator>
+           <%-- <asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="ddlEfector" ErrorMessage="Seleccione Efector" MaximumValue="99999" MinimumValue="1" Type="Integer" ValidationGroup="0"></asp:RangeValidator>--%>
             <br />
        </div>
               </div>

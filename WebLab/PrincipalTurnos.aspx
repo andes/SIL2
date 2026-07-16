@@ -1,8 +1,8 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PrincipalTurnos.aspx.cs" Inherits="WebLab.PrincipalTurnos" MasterPageFile="~/SiteTurnos.Master" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PrincipalTurnos.aspx.cs" Inherits="WebLab.PrincipalTurnos" MasterPageFile="~/Site1.Master" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="ajx" %>
 <%@ Register Src="~/PeticionList.ascx" TagPrefix="uc1" TagName="PeticionList" %>
-<%@ Register Src="~/seguimientoCovid.ascx" TagPrefix="uc1" TagName="seguimientoCovid" %>
+<%--<%@ Register Src="~/seguimientoCovid.ascx" TagPrefix="uc1" TagName="seguimientoCovid" %>--%>
 
 
 
@@ -21,9 +21,9 @@
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">  
     
  
-  <ajx:toolkitscriptmanager ID="ToolkitScriptManager1" runat="server" EnableScriptGlobalization="true"
+   <ajx:toolkitscriptmanager ID="ToolkitScriptManager1" runat="server" EnableScriptGlobalization="true"
     EnableScriptLocalization="true">
-  </ajx:toolkitscriptmanager>
+  </ajx:toolkitscriptmanager> 
  
  <div align="left"  >
    

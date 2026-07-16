@@ -564,15 +564,15 @@ ORDER BY cantidad desc";
             ddlRutina.UpdateAfterCallBack = true;
 
             ///////////////Impresoras////////////////////////
-            m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
-            oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-            if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
+            //m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
+            //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+            //if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
 
-            if (ddlImpresora.Items.Count == 0)
-            {
-                pnlImpresora.Visible = false;
-                chkImprimir.Visible = false;lnkReimprimirComprobante.Visible = false;
-            }
+            //if (ddlImpresora.Items.Count == 0)
+            //{
+            //    pnlImpresora.Visible = false;
+            //    chkImprimir.Visible = false;lnkReimprimirComprobante.Visible = false;
+            //}
             ///////////////Fin de Impresoras///////////////////
 
             m_ssql = null;
@@ -1266,45 +1266,96 @@ ORDER BY cantidad desc";
                 //TxtDatos.Value = ""; //Comentado para que no borre lo que esta cargado dinamicamente
             }
         }
-
         public string GetPuco(int numeroDocumento)
         {
-            string connetionString = null;
-            SqlConnection connection;
-            SqlCommand command;
-            string sql = null;
-            string codigo = "";
-            string nombre = "";
-            connetionString = ConfigurationManager.ConnectionStrings["Puco"].ConnectionString;
+            //Se guarda en cache por dni la obra social por 24 horas.
+            string cacheKey = $"PUCO_{numeroDocumento}";
 
-            
-            sql = "select S.nombre, S.cod_os as os from pd_puco P inner join obras_sociales S on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
+            string resultado = HttpRuntime.Cache[cacheKey] as string;
+            if (resultado != null)
+                return resultado;
 
-            connection = new SqlConnection(connetionString);
+            resultado = "Sin obra social&0";
+
             try
             {
-                SqlDataReader rdr = null;
-                connection.Open();
-                command = new SqlCommand(sql, connection);
-                rdr = command.ExecuteReader();
-
-                while (rdr.Read())
+                using (SqlConnection connection = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["Puco"].ConnectionString))
+                using (SqlCommand command = new SqlCommand(@"
+            SELECT TOP 1
+                   S.nombre,
+                   S.cod_os
+            FROM pd_puco P WITH (NOLOCK)
+            INNER JOIN obras_sociales S WITH (NOLOCK)
+                ON S.cod_os = P.codigoOS
+            WHERE P.dni = @dni", connection))
                 {
-                    nombre = rdr[0].ToString();
-                    codigo = rdr[1].ToString();
+                    command.Parameters.Add("@dni", SqlDbType.Int).Value = numeroDocumento;
+
+                    connection.Open();
+
+                    using (SqlDataReader rdr = command.ExecuteReader())
+                    {
+                        if (rdr.Read())
+                        {
+                            resultado = rdr["nombre"].ToString() + "&" +
+                                        rdr["cod_os"].ToString();
+                        }
+                    }
                 }
-                if (nombre == "") nombre = "Sin obra social"; // sin obra social
-                else nombre = nombre + "&" + codigo;
-                command.Dispose();
-                connection.Close();
             }
-            catch (Exception ex)
+            catch
             {
-                nombre = "Sin obra social&0";
+                resultado = "Sin obra social&0";
             }
 
-            return nombre;
+            HttpRuntime.Cache.Insert(
+                cacheKey,
+                resultado,
+                null,
+                DateTime.Now.AddHours(48),
+                System.Web.Caching.Cache.NoSlidingExpiration);
+
+            return resultado;
         }
+        //public string GetPuco(int numeroDocumento)
+        //{
+        //    string connetionString = null;
+        //    SqlConnection connection;
+        //    SqlCommand command;
+        //    string sql = null;
+        //    string codigo = "";
+        //    string nombre = "";
+        //    connetionString = ConfigurationManager.ConnectionStrings["Puco"].ConnectionString;
+
+
+        //    sql = "select S.nombre, S.cod_os as os from pd_puco P inner join obras_sociales S on S.cod_os=P.codigoOS where P.dni = " + numeroDocumento.ToString();
+
+        //    connection = new SqlConnection(connetionString);
+        //    try
+        //    {
+        //        SqlDataReader rdr = null;
+        //        connection.Open();
+        //        command = new SqlCommand(sql, connection);
+        //        rdr = command.ExecuteReader();
+
+        //        while (rdr.Read())
+        //        {
+        //            nombre = rdr[0].ToString();
+        //            codigo = rdr[1].ToString();
+        //        }
+        //        if (nombre == "") nombre = "Sin obra social"; // sin obra social
+        //        else nombre = nombre + "&" + codigo;
+        //        command.Dispose();
+        //        connection.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        nombre = "Sin obra social&0";
+        //    }
+
+        //    return nombre;
+        //}
         private void MostrarMedico()
         {
             try

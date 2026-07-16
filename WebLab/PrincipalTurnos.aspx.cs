@@ -27,8 +27,10 @@ namespace WebLab
         {
            
              if (!Page.IsPostBack)
-            {  if (Session["s_permiso"] == null)Response.Redirect("FinSesion.aspx");
-   Configuracion oCon = new Configuracion();
+            {
+                if (Session["s_permiso"] == null)Response.Redirect("FinSesion.aspx");
+
+                /*Configuracion oCon = new Configuracion();
       Usuario oUser = new Usuario();
                   Business.Data.Laboratorio.Protocolo oP = new Business.Data.Laboratorio.Protocolo();
                
@@ -37,7 +39,7 @@ namespace WebLab
                 if (oUser!=null)
                     if (oUser.IdEfector.IdEfector != 227)                    
                         oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-                else oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+                else oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);*/
                 //if (oCon.NroProtocolo == -1)
                 //{
                 //    int i = calcularComodinDifProtocolo();

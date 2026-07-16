@@ -297,12 +297,10 @@ namespace Business
 			}
 		}
 
-        public object Get(object id)
-        {
-            return this.Get(this.GetType(), id);
-        }
-
-        
+		public object Get(object id)
+		{
+			return this.Get(this.GetType(),id);
+		}
 
 		public object GetIfExists(Type type, object id)
 		{

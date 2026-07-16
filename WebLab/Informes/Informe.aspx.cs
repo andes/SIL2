@@ -179,12 +179,18 @@ namespace WebLab.Informes
                 }
                 ///Carga de combos de Origen
                 m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen (nolock)  WHERE (baja = 0)";
-                oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
+                //  oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre", connReady);
+                string cacheKey = "CAT_Origen";
+                Business.Helpers.ComboCache.CargarCombo(ddlOrigen, cacheKey, m_ssql, "idOrigen", "nombre", connReady);
+
                 ddlOrigen.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
                 ///Carga de combos de Prioridad
                 m_ssql = "SELECT idPrioridad, nombre FROM LAB_Prioridad (nolock)  WHERE (baja = 0)";
-                oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
+                //oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre", connReady);
+                cacheKey = "CAT_Prioridad";
+                Business.Helpers.ComboCache.CargarCombo(ddlPrioridad, cacheKey, m_ssql, "idPrioridad", "nombre", connReady);
+
                 ddlPrioridad.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
 
@@ -214,7 +220,8 @@ namespace WebLab.Informes
 
                 ///Carga de Efectores solicitantes
                 m_ssql = "SELECT idEfector, nombre FROM sys_Efector (nolock)  order by nombre ";
-                oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
+                Business.Helpers.ComboCache.CargarCombo(ddlEfector, "CAT_Efector", m_ssql, "idEfector", "nombre", connReady);
+                //oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
                 ddlEfector.Items.Insert(0, new ListItem("-- Todos --", "0"));
                 //ddlEfector.SelectedValue = oC.IdEfector.IdEfector.ToString();
 
@@ -235,32 +242,32 @@ namespace WebLab.Informes
 
                 /*En multieFEctor esta parte de codigo no va porque refiere a impresora - no etiquetadora*/
 
-                if (oCon.esMultiEFector())
-                {
+                //if (oCon.esMultiEFector())
+                //{
                     pnlImpresora.Visible = false;
                     lnkImprimir.Visible = false;
                     lnkImprimirAnalisisFueraHT.Visible = false;
                     // ddlImpresora.Visible = false;
                     //lnkImprimir.Visible = false;
-                }
-                else
-                {
-                    m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  
-                    oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre", connReady);
-                    if (Request["Tipo"].ToString() == "CodigoBarras")
-                    { if (Session["Etiquetadora"] != null) ddlImpresora.SelectedValue = Session["Etiquetadora"].ToString(); }
-                    else
-                        if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
+                //}
+                //else
+                //{
+                //    m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  
+                //    oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre", connReady);
+                //    if (Request["Tipo"].ToString() == "CodigoBarras")
+                //    { if (Session["Etiquetadora"] != null) ddlImpresora.SelectedValue = Session["Etiquetadora"].ToString(); }
+                //    else
+                //        if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
 
-                    if (ddlImpresora.Items.Count == 0)
-                    {
-                        pnlImpresora.Visible = false;
-                        lnkImprimir.Visible = false;
-                        lnkImprimirAnalisisFueraHT.Visible = false;
-                        // ddlImpresora.Visible = false;
-                        //lnkImprimir.Visible = false;
-                    }
-                }
+                //    if (ddlImpresora.Items.Count == 0)
+                //    {
+                //        pnlImpresora.Visible = false;
+                //        lnkImprimir.Visible = false;
+                //        lnkImprimirAnalisisFueraHT.Visible = false;
+                //        // ddlImpresora.Visible = false;
+                //        //lnkImprimir.Visible = false;
+                //    }
+                //}
 
 
                 /////////////////////////////////////////////
@@ -451,15 +458,7 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
                     Utility oUtil = new Utility();
                     string nombrePDF = oUtil.CompletarNombrePDF(m_reporte);
                     oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
-                    //MemoryStream oStream; // using System.IO
-                    //oStream = (MemoryStream)oCr.ReportDocument.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                    //Response.Clear();
-                    //Response.Buffer = true;
-                    //Response.ContentType = "application/pdf";
-                    //Response.AddHeader("Content-Disposition", "attachment;filename=" + m_reporte);
-
-                    //Response.BinaryWrite(oStream.ToArray());
-                    //Response.End();
+                   
                 }
             }
             catch

@@ -387,12 +387,15 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
 
             ///Carga los perfiles de  Antibioticos
             string m_ssql = @" SELECT DISTINCT PA.idPerfilAntibiotico, PA.nombre
-FROM         LAB_PerfilAntibiotico AS PA (nolock) INNER JOIN
-                      LAB_DetallePerfilAntibiotico AS DPA (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
-                      LAB_Antibiotico AS A (nolock) ON DPA.idAntibiotico = A.idAntibiotico
-WHERE     (PA.baja = 0)
-ORDER BY PA.nombre";
-            oUtil.CargarCombo(ddlPerfilAntibiotico, m_ssql, "idPerfilAntibiotico", "nombre", connReady);
+                       FROM         LAB_PerfilAntibiotico AS PA with (nolock) INNER JOIN
+                      LAB_DetallePerfilAntibiotico AS DPA with (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
+                      LAB_Antibiotico AS A with (nolock) ON DPA.idAntibiotico = A.idAntibiotico
+                        WHERE     (PA.baja = 0)
+                        ORDER BY PA.nombre";
+            string cacheKey = "CAT_PerfilAntibiotico";
+            Business.Helpers.ComboCache.CargarCombo(ddlPerfilAntibiotico, cacheKey, m_ssql, "idPerfilAntibiotico", "nombre", connReady);
+            
+            //oUtil.CargarCombo(ddlPerfilAntibiotico, m_ssql, "idPerfilAntibiotico", "nombre", connReady);
             //ddlPerfilAntibiotico.Items.Insert(0, new ListItem("--SELECCIONE PERFIL ANTIBIOTICOS--", "0"));
             ddlPerfilAntibiotico.Items.Insert(0, new ListItem("--TODOS LOS ANTIBIOTICOS--", "0"));
             //////////////////////////////                              
@@ -603,47 +606,47 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 Session["Parametros"]
             );
         }
-        private void CargarGrilla_old()
-        {
+        //private void CargarGrilla_old()
+        //{
 
             
-            string m_strSQL = " Select distinct P.idProtocolo, " +
-                    " P.numero as numero," +                    
-                                  " convert(varchar(10),P.fecha,103) as fecha"+// ,P.estado , P.fecha as fecha1," +                              
-                                  " from Lab_Protocolo P with (nolock)" + // +str_condicion;                    
-                                  " WHERE P.idProtocolo in (" + Session["Parametros"].ToString() + ")";
+        //    string m_strSQL = " Select distinct P.idProtocolo, " +
+        //            " P.numero as numero," +                    
+        //                          " convert(varchar(10),P.fecha,103) as fecha"+// ,P.estado , P.fecha as fecha1," +                              
+        //                          " from Lab_Protocolo P with (nolock)" + // +str_condicion;                    
+        //                          " WHERE P.idProtocolo in (" + Session["Parametros"].ToString() + ")";
 
         
-            if (Request["Operacion"].ToString() == "HC")                                 
-                        m_strSQL += " order by P.idProtocolo desc "; // desde el mas reciente al mas antiguo                                 
-                else                                    
-                        m_strSQL += " order by  numero ";                                 
+        //    if (Request["Operacion"].ToString() == "HC")                                 
+        //                m_strSQL += " order by P.idProtocolo desc "; // desde el mas reciente al mas antiguo                                 
+        //        else                                    
+        //                m_strSQL += " order by  numero ";                                 
 
 
-            DataSet Ds = new DataSet();            
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
-                gvLista.DataSource = Ds.Tables[0];
-                gvLista.DataBind();               
+        //    DataSet Ds = new DataSet();            
+        //    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+        //    SqlDataAdapter adapter = new SqlDataAdapter();
+        //        adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+        //        adapter.Fill(Ds);
+        //        gvLista.DataSource = Ds.Tables[0];
+        //        gvLista.DataBind();               
 
-                if (Ds.Tables[0].Rows.Count > 0)
-                {
-                    dtProtocolo = Ds.Tables[0];
-                    int ultimafila = Ds.Tables[0].Rows.Count - 1;                 
-                    CurrentIndexGrilla = int.Parse(Request["Index"].ToString());
-                     CurrentPageIndex = int.Parse(Ds.Tables[0].Rows[CurrentIndexGrilla].ItemArray[0].ToString());
+        //        if (Ds.Tables[0].Rows.Count > 0)
+        //        {
+        //            dtProtocolo = Ds.Tables[0];
+        //            int ultimafila = Ds.Tables[0].Rows.Count - 1;                 
+        //            CurrentIndexGrilla = int.Parse(Request["Index"].ToString());
+        //             CurrentPageIndex = int.Parse(Ds.Tables[0].Rows[CurrentIndexGrilla].ItemArray[0].ToString());
 
                
-                UltimaPageIndex = ultimafila; // int.Parse(Ds.Tables[0].Rows[ultimafila].ItemArray[0].ToString());
-                }
-                int cantidad = Ds.Tables[0].Rows.Count;
-                if (cantidad == 1) {lnkAnterior.Visible = false; lnkPosterior.Visible = false;}
-                lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " protocolos encontrados"; 
-                Session.Add("Tabla1", dtProtocolo);                        
+        //        UltimaPageIndex = ultimafila; // int.Parse(Ds.Tables[0].Rows[ultimafila].ItemArray[0].ToString());
+        //        }
+        //        int cantidad = Ds.Tables[0].Rows.Count;
+        //        if (cantidad == 1) {lnkAnterior.Visible = false; lnkPosterior.Visible = false;}
+        //        lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " protocolos encontrados"; 
+        //        Session.Add("Tabla1", dtProtocolo);                        
             
-        }
+        //}
 
 
         
@@ -1329,11 +1332,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                 string s_idPaciente = Ds.Tables[0].Rows[i]["idpaciente"].ToString() ;
                 string s_idTiposervicio = Ds.Tables[0].Rows[i]["idTiposervicio"].ToString()  ;
-                if (m_codificaPaciente == "True")
-                {
-                    lblPaciente.Visible = false;
-                    lblCodigoPaciente.Visible = true;
-                }
+
+                ///No se muestra mas el paciente codificado en carga y validacion de resultados
+                //if (m_codificaPaciente == "True")
+                //{
+                //    lblPaciente.Visible = false;
+                //    lblCodigoPaciente.Visible = true;
+                //}
                 m_hijo = Ds.Tables[0].Rows[i].ItemArray[1].ToString();
                 m_titulo = Ds.Tables[0].Rows[i].ItemArray[0].ToString();
                 
@@ -2335,15 +2340,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
         {
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
-
+            string idServicio = Request["idServicio"].ToString();
 
             string m_ssql = @" SELECT idObservacionResultado , codigo  AS descripcion 
-                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio=" +Request["idServicio"].ToString()+" and  baja=0 order by codigo " ;
+                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio=" + idServicio + " and  baja=0 order by codigo " ;
           
 
             if (tipo == "gral")
-            {
-                oUtil.CargarCombo(ddlObsCodificadaGeneral, m_ssql, "idObservacionResultado", "descripcion", connReady);
+            {              
+                string cacheKey = $"CAT_Observ_{idServicio}";
+                Business.Helpers.ComboCache.CargarCombo(ddlObsCodificadaGeneral, cacheKey, m_ssql, "idObservacionResultado", "descripcion", connReady);
+
+                ///oUtil.CargarCombo(ddlObsCodificadaGeneral, m_ssql, "idObservacionResultado", "descripcion", connReady);
                 ddlObsCodificadaGeneral.Items.Insert(0, new ListItem("", "0"));
                 ddlObsCodificadaGeneral.UpdateAfterCallBack = true;
             }            
@@ -4643,46 +4651,46 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
             Response.Redirect(s_url, false);
         }
-        private void Avanzar_old(int avance)
-        {
-            //try
-            //{
+        //private void Avanzar_old(int avance)
+        //{
+        //    //try
+        //    //{
 
-            if (Session["Tabla1"] != null)
-           {
-                if (CurrentIndexGrilla <= UltimaPageIndex)
-                {
-                    if (avance == 1)
-                    {
-                        if (CurrentIndexGrilla < UltimaPageIndex) CurrentIndexGrilla += 1;  //avanza
-                    }
-                    else  //retrocede                        
-                    {
-                        if (avance != 0)                        
-                        CurrentIndexGrilla = CurrentIndexGrilla - 1;  //retrocede
-                    }
-                    if (CurrentIndexGrilla > -1)
-                    {
-                        dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);
-                        CurrentPageIndex = int.Parse(dtProtocolo.Rows[CurrentIndexGrilla][0].ToString());
+        //    if (Session["Tabla1"] != null)
+        //   {
+        //        if (CurrentIndexGrilla <= UltimaPageIndex)
+        //        {
+        //            if (avance == 1)
+        //            {
+        //                if (CurrentIndexGrilla < UltimaPageIndex) CurrentIndexGrilla += 1;  //avanza
+        //            }
+        //            else  //retrocede                        
+        //            {
+        //                if (avance != 0)                        
+        //                CurrentIndexGrilla = CurrentIndexGrilla - 1;  //retrocede
+        //            }
+        //            if (CurrentIndexGrilla > -1)
+        //            {
+        //                dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);
+        //                CurrentPageIndex = int.Parse(dtProtocolo.Rows[CurrentIndexGrilla][0].ToString());
 
-                        string s_url = "ResultadoEdit2.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + CurrentPageIndex + "&Index=" + CurrentIndexGrilla + "&idArea=" + Request["idArea"].ToString() + "&validado=" + Request["validado"].ToString() + "&modo=" + Request["modo"].ToString();
-                        if (Request["Desde"] != null) s_url = s_url + "&Desde=" + Request["Desde"].ToString();
-                        Response.Redirect(s_url, false);
-                    }
-                }
-                else
-                    //if (Request["Operacion"].ToString() == "HC")
-                    //    Response.Redirect("../Informes/HistoriaClinicaFiltro.aspx?Tipo=Paciente", false);
-                    //else
-                        Response.Redirect("ResultadoBusqueda.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&modo=" + Request["modo"].ToString(), false);
+        //                string s_url = "ResultadoEdit2.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&idProtocolo=" + CurrentPageIndex + "&Index=" + CurrentIndexGrilla + "&idArea=" + Request["idArea"].ToString() + "&validado=" + Request["validado"].ToString() + "&modo=" + Request["modo"].ToString();
+        //                if (Request["Desde"] != null) s_url = s_url + "&Desde=" + Request["Desde"].ToString();
+        //                Response.Redirect(s_url, false);
+        //            }
+        //        }
+        //        else
+        //            //if (Request["Operacion"].ToString() == "HC")
+        //            //    Response.Redirect("../Informes/HistoriaClinicaFiltro.aspx?Tipo=Paciente", false);
+        //            //else
+        //                Response.Redirect("ResultadoBusqueda.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&modo=" + Request["modo"].ToString(), false);
 
-            }
-            //else Response.Redirect("../FinSesion.aspx", false);                             
+        //    }
+        //    //else Response.Redirect("../FinSesion.aspx", false);                             
 
 
              
-        }
+        //}
 
         protected void lnkPosterior_Click(object sender, EventArgs e)
         {

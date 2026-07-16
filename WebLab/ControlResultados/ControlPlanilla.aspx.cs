@@ -78,6 +78,8 @@ namespace WebLab.ControlResultados
         private void CargarListas()
         {
             Utility oUtil = new Utility();
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
             ///Carga de combos de tipos de servicios
             string m_ssql = "select idTipoServicio, nombre from Lab_TipoServicio with (nolock) WHERE (baja = 0)";
             oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre");
@@ -93,12 +95,17 @@ namespace WebLab.ControlResultados
             }
             ///Carga de combos de Origen
             m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen with (nolock) WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre");
+            string cacheKey = "CAT_Origen";
+            Business.Helpers.ComboCache.CargarCombo(ddlOrigen, cacheKey, m_ssql, "idOrigen", "nombre", connReady);
+
+            //oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre");
             ddlOrigen.Items.Insert(0, new ListItem("Todos", "0"));
 
             ///Carga de combos de Prioridad
             m_ssql = "SELECT idPrioridad, nombre FROM LAB_Prioridad with (nolock) WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre");
+            cacheKey = "CAT_Prioridad";
+            Business.Helpers.ComboCache.CargarCombo(ddlPrioridad, cacheKey, m_ssql, "idPrioridad", "nombre", connReady);
+            //oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre");
             ddlPrioridad.Items.Insert(0, new ListItem("Todos", "0"));
 
             ddlPrioridad.SelectedValue = "1"; //RUTINA
@@ -112,7 +119,9 @@ namespace WebLab.ControlResultados
 
             ///Carga de Efectores solicitantes
             m_ssql = "SELECT idEfector, nombre FROM sys_Efector with (nolock) order by nombre ";
-            oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
+            cacheKey = "CAT_Efector";
+            Business.Helpers.ComboCache.CargarCombo(ddlEfector, cacheKey, m_ssql, "idEfector", "nombre", connReady);
+            //oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");
             ddlEfector.Items.Insert(0, new ListItem("Todos", "0"));
             //ddlEfector.SelectedValue = oC.IdEfector.IdEfector.ToString();
 

@@ -2634,7 +2634,6 @@
     <Content Include="Resultados\ObservacionesEdit.aspx" />
     <Content Include="Resultados\RepositorioaExtraccion.aspx" />
     <Content Include="Resultados\ResultadoConfirmacion.aspx" />
-    <Content Include="Resultados\ResultadoItemEditExterno.aspx" />
     <Content Include="Resultados\ResultadoNoPacienteView.aspx" />
     <Content Include="Resultados\ResultadosaSisa2.aspx" />
     <Content Include="Resultados\ResultadosaSisa.aspx" />
@@ -2653,7 +2652,6 @@
     <Content Include="script\chosen\chosen.min.css" />
     <Content Include="script\chosen\chosen.proto.js" />
     <Content Include="script\chosen\chosen.proto.min.js" />
-    <Content Include="script\jquery-1.8.3.min.js" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -3867,7 +3865,6 @@
     <Content Include="Principal.aspx" />
     <Content Include="SILconnectionstrings.config" />
     <Content Include="Usuarios\Site2.Master" />
-    <Content Include="SiteTurnos.Master" />
     <Content Include="website\103 - Laboratorio Central.pdf" />
     <Content Include="website\Datos Bancarios Laboratorio Central.pdf" />
     <Content Include="website\fichas\Chagas Agudo Congenito.pdf" />
@@ -5778,13 +5775,6 @@
     <Compile Include="Resultados\ResultadoItemEdit.aspx.designer.cs">
       <DependentUpon>ResultadoItemEdit.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Resultados\ResultadoItemEditExterno.aspx.cs">
-      <DependentUpon>ResultadoItemEditExterno.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Resultados\ResultadoItemEditExterno.aspx.designer.cs">
-      <DependentUpon>ResultadoItemEditExterno.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Resultados\ResultadoNoPacienteView.aspx.cs">
       <DependentUpon>ResultadoNoPacienteView.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6046,13 +6036,6 @@
     </Compile>
     <Compile Include="Services\ObrasSociales.ascx.designer.cs">
       <DependentUpon>ObrasSociales.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="SiteTurnos.Master.cs">
-      <DependentUpon>SiteTurnos.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SiteTurnos.Master.designer.cs">
-      <DependentUpon>SiteTurnos.Master</DependentUpon>
     </Compile>
     <Compile Include="Site1.Master.cs">
       <DependentUpon>Site1.Master</DependentUpon>

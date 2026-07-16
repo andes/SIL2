@@ -1,4 +1,4 @@
-Ôªøusing System;
+using System;
 using System.Security.Cryptography;
 using System.Configuration;
 using System.Xml.Serialization;
@@ -98,6 +98,22 @@ namespace Business
             byte[] encryptedData = ms.ToArray();
             return encryptedData;
         }
+
+        
+          public DataTable GetDataTable(string sql, string connectionString)
+        {
+            DataTable dt = new DataTable();
+
+            using (SqlConnection cn = new SqlConnection(connectionString))
+            using (SqlDataAdapter da = new SqlDataAdapter(sql, cn))
+            {
+                da.Fill(dt);
+            }
+
+            return dt;
+        }
+     
+
         private byte[] Decrypt(byte[] cipherData, byte[] Key, byte[] IV)
         {
             MemoryStream ms = new MemoryStream();
@@ -602,7 +618,7 @@ namespace Business
             }
             return ds2.Tables[0];
         }
-        #region " Otros M√©todos "
+        #region " Otros MÈtodos "
 
         public bool EsNumerico(string val)
         {
@@ -684,12 +700,12 @@ namespace Business
         }
 
 
-        /// con √±
-        //private const string ConSignos = "√°√†√§√©√®√´√≠√¨√Ø√≥√≤√∂√∫√πu√±√Å√Ä√Ñ√â√à√ã√ç√å√è√ì√í√ñ√ö√ô√ú√ß√á";
+        /// con Ò
+        //private const string ConSignos = "·‡‰ÈËÎÌÏÔÛÚˆ˙˘uÒ¡¿ƒ…»ÀÕÃœ”“÷⁄Ÿ‹Á«";
         //private const string SinSignos = "aaaeeeiiiooouuunAAAEEEIIIOOOUUUcC";
 
-        /// sin √±
-        private const string ConSignos = "√°√†√§√©√®√´√≠√¨√Ø√≥√≤√∂√∫√πu√Å√Ä√Ñ√â√à√ã√ç√å√è√ì√í√ñ√ö√ô√ú√ß√á¬±";
+        /// sin Ò
+        private const string ConSignos = "·‡‰ÈËÎÌÏÔÛÚˆ˙˘u¡¿ƒ…»ÀÕÃœ”“÷⁄Ÿ‹Á«±";
         private const string SinSignos = "aaaeeeiiiooouuuAAAEEEIIIOOOUUUcCn";
 
 
@@ -715,11 +731,11 @@ namespace Business
       bool resultado;
       //Comprobamos la regla general.
       //Si anno es divisible por 4, es decir, si el
-      //resto de la divisi√≥n entre 4 es 0...
+      //resto de la divisiÛn entre 4 es 0...
       if (anno % 4 == 0)
       {
           //Si es divisible por 4, ahora toca comprobar
-          //la excepci√≥n
+          //la excepciÛn
           if (
                (anno % 100 == 0) &&  //Si es divisible por 100
                (anno % 400 != 0)     //y no por 400
@@ -729,7 +745,7 @@ namespace Business
           }
           else
           {
-              resultado = true; //No cumple la excepci√≥n.
+              resultado = true; //No cumple la excepciÛn.
               //Lo dejamos como bisiesto por ser divisible por 4
           }
       }
@@ -795,11 +811,11 @@ namespace Business
         { ///calculo de fechas teniendo el cuenta los dias de los meses            
 
             DateTime da = fechaProtocolo; // DateTime.Now;
-            int  anos =  da.Year - dn.Year; // calculamos a√±os 
+            int  anos =  da.Year - dn.Year; // calculamos aÒos 
             int meses = da.Month - dn.Month; // calculamos meses 
-            int dias =  da.Day - dn.Day; // calculamos d√≠as 
+            int dias =  da.Day - dn.Day; // calculamos dÌas 
 
-            //ajuste de posible negativo en $d√≠as 
+            //ajuste de posible negativo en $dÌas 
             if (dias < 0) 
             { 
                 //--$meses; 
@@ -876,13 +892,12 @@ namespace Business
 
 
         #endregion
-
         #region Excel
 
         public static void ExportDataTableToXlsx(DataTable dataTable, string filename, string header="")
         {
             //Version final 29/4/26
-            // ‚ö†Ô∏è Si usas EPPlus v5.x o superior, descomenta esta l√≠nea:
+            // ?? Si usas EPPlus v5.x o superior, descomenta esta lÌnea:
             // OfficeOpenXml.ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
             if (dataTable.Rows.Count > 0)
@@ -951,7 +966,7 @@ namespace Business
                                 continue;
                             }
 
-                            // Detectar n√∫meros por TryParse
+                            // Detectar n˙meros por TryParse
                             double numero;
                             string texto = valor.ToString().Trim();
 
@@ -1180,8 +1195,8 @@ namespace Business
         private static void ExcelCompletarFilas(ExcelWorksheet ws, TableCell cell, int fila, int col, Color? encabezadoColor = null, Color? fontColor = null)
         {
             
-            // (1) Detectar si es n√∫mero
-            // Detectar n√∫meros por TryParse
+            // (1) Detectar si es n˙mero
+            // Detectar n˙meros por TryParse
             double numero;
             var texto = cell.Text.ToString().Trim();
 
@@ -1264,6 +1279,8 @@ namespace Business
                 }
             }
         }
+   
+    
         #endregion
     }
 }

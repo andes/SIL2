@@ -21,19 +21,19 @@ namespace WebLab
           //  Page.RegisterRedirectOnSessionEndScript();
             if (!Page.IsPostBack)
             {
-                if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
+                //if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
 
 
-                {
-                    imgPrincipal.Visible = true;
-                    lnkCerrar.NavigateUrl = "FinSesion.aspx";
+                //{
+                //    imgPrincipal.Visible = true;
+                //    lnkCerrar.NavigateUrl = "FinSesion.aspx";
                    
-                }
-                else
-                {
+                //}
+                //else
+                //{
                     imgPrincipal.Visible = false;
                     lnkCerrar.NavigateUrl = "logout.aspx";
-                }
+                //}
                     if (Session["idUsuario"] != null)
                 {
                     lblFechaHora.Text = DateTime.Now.ToLongDateString().ToUpper() + " " + DateTime.Now.ToLongTimeString();
