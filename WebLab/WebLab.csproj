@@ -4825,6 +4825,12 @@
     <Compile Include="ImpresoraEdit.aspx.designer.cs">
       <DependentUpon>ImpresoraEdit.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\AnalisisFueraHT.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AnalisisFueraHT.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\AuditoriaLote.cs">
       <DependentUpon>AuditoriaLote.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -4875,6 +4881,12 @@
     </Compile>
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Microbiologia.cs">
+      <DependentUpon>HTrabajoProtocolo5Microbiologia.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.cs">
       <DependentUpon>HTrabajoProtocolo5Horizontal.rpt</DependentUpon>
@@ -6876,6 +6888,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4PesquisaHorizontal.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Microbiologia.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo5Microbiologia.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo5Horizontal.cs</LastGenOutput>
@@ -6883,10 +6899,6 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo51.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Microbiologia.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocolo5Microbiologia1.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5MicrobiologiaHorizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

@@ -16,14 +16,14 @@ namespace WebLab.Informes.HojasdeTrabajo {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class HTrabajoProtocolo5 : ReportClass {
+    public class HTrabajoProtocolo5Microbiologia : ReportClass {
         
-        public HTrabajoProtocolo5() {
+        public HTrabajoProtocolo5Microbiologia() {
         }
         
         public override string ResourceName {
             get {
-                return "HTrabajoProtocolo5.rpt";
+                return "HTrabajoProtocolo5Microbiologia.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         public override string FullResourceName {
             get {
-                return "WebLab.Informes.HojasdeTrabajo.HTrabajoProtocolo5.rpt";
+                return "WebLab.Informes.HojasdeTrabajo.HTrabajoProtocolo5Microbiologia.rpt";
             }
             set {
                 // Do nothing
@@ -90,7 +90,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section DetailSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection3 {
             get {
                 return this.ReportDefinition.Sections[5];
             }
@@ -98,7 +98,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection3 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[6];
             }
@@ -106,7 +106,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
                 return this.ReportDefinition.Sections[7];
             }
@@ -114,17 +114,9 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
-            get {
-                return this.ReportDefinition.Sections[8];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public CrystalDecisions.CrystalReports.Engine.Section Section5 {
             get {
-                return this.ReportDefinition.Sections[9];
+                return this.ReportDefinition.Sections[8];
             }
         }
         
@@ -162,9 +154,9 @@ namespace WebLab.Informes.HojasdeTrabajo {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedHTrabajoProtocolo5 : Component, ICachedReport {
+    public class CachedHTrabajoProtocolo5Microbiologia : Component, ICachedReport {
         
-        public CachedHTrabajoProtocolo5() {
+        public CachedHTrabajoProtocolo5Microbiologia() {
         }
         
         [Browsable(false)]
@@ -201,7 +193,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            HTrabajoProtocolo5 rpt = new HTrabajoProtocolo5();
+            HTrabajoProtocolo5Microbiologia rpt = new HTrabajoProtocolo5Microbiologia();
             rpt.Site = this.Site;
             return rpt;
         }
