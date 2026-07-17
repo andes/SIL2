@@ -92,6 +92,7 @@ namespace WebLab.Protocolos
             lblEstadoLote.Text = "";
             btnRecibirLote.Enabled = false;
             lblEfectorOrigen.Text = "";
+            divScroll.Style["height"] = "auto";
         }
         protected bool NoIngresado(int estado)
         {
@@ -113,20 +114,28 @@ namespace WebLab.Protocolos
         } 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-           
-            resetearForm();
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.GetIfExists(typeof(LoteDerivacion),int.Parse(txtNumeroLote.Text));
-
-            if (lote != null)
+            if (Page.IsValid)
             {
-                if (efectorCorrecto(lote))
-                { //El efector destino es el efector logueado
-                    CargarControladores(lote);
+                resetearForm();
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.GetIfExists(typeof(LoteDerivacion), int.Parse(txtNumeroLote.Text));
+
+                if (lote != null)
+                {
+                    if (efectorCorrecto(lote))
+                    { //El efector destino es el efector logueado
+                        CargarControladores(lote);
+                    }
+
                 }
-                
+                else
+                {
+                    //ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
+                    cvGeneral.IsValid = false;
+                    cvGeneral.ErrorMessage = "Número de lote inexistente.";
+                    return;
+                }
             }
-            else ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
         }
         private void CargarControladores(LoteDerivacion lote)
         {
@@ -395,6 +404,25 @@ namespace WebLab.Protocolos
            
                      
             GenerarNuevoProtocolo (e.CommandArgument);
+        }
+
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            int salida = 0;
+            resetearForm();
+            if (string.IsNullOrEmpty(txtNumeroLote.Text))
+            {
+                args.IsValid = false;
+                cvGeneral.ErrorMessage = "*";
+                return;
+            }
+            if (!int.TryParse(txtNumeroLote.Text, out salida))
+            {
+                args.IsValid = false;
+                cvGeneral.ErrorMessage = "El numero de lote ingresado no es valido.";
+                return;
+            }
+            
         }
     }
 }

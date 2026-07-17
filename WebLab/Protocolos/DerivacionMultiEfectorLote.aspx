@@ -123,12 +123,10 @@
                                     </tr>
                                     
                                 <tr>
-                                    <td>&nbsp;</td>
-                                    <td class="style7">
+                                   
+                                    <td colspan="2" >
 
-                                        <asp:ValidationSummary ID="ValidationSummary1" runat="server"
-                                            HeaderText="De completar los datos requeridos:" ShowMessageBox="True"
-                                            ValidationGroup="0" />
+                                        <asp:CustomValidator ID="cvGeneral" runat="server" ShowMessageBox="True" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0" />
 
                                     </td>
                                 </tr>
