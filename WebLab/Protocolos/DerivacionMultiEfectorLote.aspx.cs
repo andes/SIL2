@@ -51,7 +51,10 @@ namespace WebLab.Protocolos
                 if (Request["idLote"] != null)
                 {
                     txtNumeroLote.Text = Convert.ToString(Request["idLote"]);
-                    btnBuscar_Click(null, null);
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), int.Parse(txtNumeroLote.Text));
+                    CargarControladores(lote); //21/7/26 si viene por request es porque vuelve de "Recibir Lote" o de "Ingresar Protocolo" podemos cargar la grilla sin validar
+                    //btnBuscar_Click(null, null); //21/7/26 genera error por Page.isValid
                 }
                 txtNumeroLote.Focus();
 
@@ -137,6 +140,8 @@ namespace WebLab.Protocolos
                 }
             }
         }
+
+        
         private void CargarControladores(LoteDerivacion lote)
         {
             //Si el lote es Derivado se habilita el botón para recibirlo
