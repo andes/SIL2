@@ -51,7 +51,10 @@ namespace WebLab.Protocolos
                 if (Request["idLote"] != null)
                 {
                     txtNumeroLote.Text = Convert.ToString(Request["idLote"]);
-                    btnBuscar_Click(null, null);
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), int.Parse(txtNumeroLote.Text));
+                    CargarControladores(lote); //21/7/26 si viene por request es porque vuelve de "Recibir Lote" o de "Ingresar Protocolo" podemos cargar la grilla sin validar
+                    //btnBuscar_Click(null, null); //21/7/26 genera error por Page.isValid
                 }
                 txtNumeroLote.Focus();
 
@@ -92,6 +95,7 @@ namespace WebLab.Protocolos
             lblEstadoLote.Text = "";
             btnRecibirLote.Enabled = false;
             lblEfectorOrigen.Text = "";
+            divScroll.Style["height"] = "auto";
         }
         protected bool NoIngresado(int estado)
         {
@@ -113,21 +117,31 @@ namespace WebLab.Protocolos
         } 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-           
-            resetearForm();
-            LoteDerivacion lote = new LoteDerivacion();
-            lote = (LoteDerivacion)lote.GetIfExists(typeof(LoteDerivacion),int.Parse(txtNumeroLote.Text));
-
-            if (lote != null)
+            if (Page.IsValid)
             {
-                if (efectorCorrecto(lote))
-                { //El efector destino es el efector logueado
-                    CargarControladores(lote);
+                resetearForm();
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion)lote.GetIfExists(typeof(LoteDerivacion), int.Parse(txtNumeroLote.Text));
+
+                if (lote != null)
+                {
+                    if (efectorCorrecto(lote))
+                    { //El efector destino es el efector logueado
+                        CargarControladores(lote);
+                    }
+
                 }
-                
+                else
+                {
+                    //ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
+                    cvGeneral.IsValid = false;
+                    cvGeneral.ErrorMessage = "Número de lote inexistente.";
+                    return;
+                }
             }
-            else ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('Número de lote inexistente.');", true);
         }
+
+        
         private void CargarControladores(LoteDerivacion lote)
         {
             //Si el lote es Derivado se habilita el botón para recibirlo
@@ -395,6 +409,25 @@ namespace WebLab.Protocolos
            
                      
             GenerarNuevoProtocolo (e.CommandArgument);
+        }
+
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            int salida = 0;
+            resetearForm();
+            if (string.IsNullOrEmpty(txtNumeroLote.Text))
+            {
+                args.IsValid = false;
+                cvGeneral.ErrorMessage = "*";
+                return;
+            }
+            if (!int.TryParse(txtNumeroLote.Text, out salida))
+            {
+                args.IsValid = false;
+                cvGeneral.ErrorMessage = "El numero de lote ingresado no es valido.";
+                return;
+            }
+            
         }
     }
 }
