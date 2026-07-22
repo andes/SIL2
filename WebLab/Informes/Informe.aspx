@@ -402,8 +402,8 @@
                                            <asp:Panel ID="pnlHojaTrabajo" runat="server">
                                                        <div class="panel-footer">			
                                                <table style="width:100%;">
-                                                   <tr>
-                                                       <td align="left">
+                                               <%--   <tr>
+                                                        <td align="left">
                                                            Seleccionar: <asp:LinkButton ID="lnkMarcar" runat="server" CssClass="myLink" 
                                                                onclick="lnkMarcar_Click" ValidationGroup="0">Todas</asp:LinkButton> &nbsp;
                                                            <asp:LinkButton ID="lnkDesmarcar" runat="server" CssClass="myLink" 
@@ -414,7 +414,7 @@
                                                                ID="lnkImprimir" runat="server" CssClass="myLittleLink" 
                                                                onclick="lnkImprimir_Click" TabIndex="11" ValidationGroup="0">Imprimir</asp:LinkButton>
                                                        </td>
-                                                   </tr>
+                                                   </tr>--%>
                                                    <tr>
                                                        <td colspan="2">
                                                          
@@ -427,12 +427,12 @@
                                                                Width="100%" OnSelectedIndexChanged="gvLista_SelectedIndexChanged">
                                                             
                                                                <Columns>
-                                                                   <asp:TemplateField HeaderText="Sel.">
+                                                                   <%--<asp:TemplateField HeaderText="Sel.">
                                                                        <ItemTemplate>
                                                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true" />
                                                                        </ItemTemplate>
                                                                        <ItemStyle HorizontalAlign="Center" Width="5%" />
-                                                                   </asp:TemplateField>
+                                                                   </asp:TemplateField>--%>
                                                                    <asp:BoundField DataField="servicio" HeaderText="Tipo de Servicio">
                                                                        <HeaderStyle HorizontalAlign="Left" />
                                                                        <ItemStyle Width="20%" />
@@ -452,22 +452,22 @@
                                                                        </ItemTemplate>
                                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="20px" />
                                                                    </asp:TemplateField>
-                                                                     <asp:TemplateField >
+                                                                    <%-- <asp:TemplateField >
                                                                        <ItemTemplate>
                                                                            <asp:ImageButton ID="Imprimir" runat="server" CommandName="Imprimir" ToolTip="Envia a impresora seleccionada"
                                                                                ImageUrl="~/App_Themes/default/images/imprimir.jpg" ValidationGroup="0" />
                                                                        </ItemTemplate>
                                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="20px" />
                                                                  
-                                                                          </asp:TemplateField>
-                                                                     <asp:TemplateField Visible="false">
+                                                                          </asp:TemplateField>--%>
+                                                                   <%--  <asp:TemplateField Visible="false">
                                                                        <ItemTemplate>
                                                                            <asp:ImageButton ID="Excel" runat="server" CommandName="Imprimir" ToolTip="Envia a impresora seleccionada"
                                                                                ImageUrl="~/App_Themes/default/images/imprimir.jpg" ValidationGroup="0" />
                                                                        </ItemTemplate>
                                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="20px" />
                                                                  
-                                                                          </asp:TemplateField>
+                                                                          </asp:TemplateField>--%>
                                                                </Columns>
                                                                <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                                                                <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />

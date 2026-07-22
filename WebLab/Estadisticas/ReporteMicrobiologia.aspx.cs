@@ -19,7 +19,6 @@ using Business.Data;
 using CrystalDecisions.Shared;
 using Business.Data.Laboratorio;
 using System.Web.Script.Serialization;
-using InfoSoftGlobal;
 using System.Collections.Generic;
 
 namespace WebLab.Estadisticas

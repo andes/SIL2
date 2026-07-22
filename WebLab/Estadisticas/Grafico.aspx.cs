@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
-using InfoSoftGlobal;
 using System.Web.Script.Serialization;
 
 namespace WebLab.Estadisticas

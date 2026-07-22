@@ -18,7 +18,6 @@ using System.IO;
 using Business.Data;
 using CrystalDecisions.Shared;
 using Business.Data.Laboratorio;
-using InfoSoftGlobal;
 using System.Web.Script.Serialization;
 using System.Collections.Generic;
 
@@ -310,60 +309,60 @@ namespace WebLab.Estadisticas
 
 
 
-        private string mostrarGrafico(int p)
-        {
-            string s_titulo="";
-            string s_tipo="";
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
-            DataTable dt = new DataTable();
-            //dt = (DataTable)gvTipoMuestra.DataSource;
-            string strXML = "";
-            string ancho = "500";
-            if (p == 0)
-            {
-                //    s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
-                s_titulo = "No Pacientes";
-                s_tipo = "Casos por tipo de muestra";
-                 strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
+        //private string mostrarGrafico(int p)
+        //{
+        //    string s_titulo="";
+        //    string s_tipo="";
+        //    string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+        //    DataTable dt = new DataTable();
+        //    //dt = (DataTable)gvTipoMuestra.DataSource;
+        //    string strXML = "";
+        //    string ancho = "500";
+        //    if (p == 0)
+        //    {
+        //        //    s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+        //        s_titulo = "No Pacientes";
+        //        s_tipo = "Casos por tipo de muestra";
+        //         strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
 
-                if (gvTipoMuestra.Rows.Count > 0)
-                {
-                    for (int i = 0; i < gvTipoMuestra.Rows.Count; i++)
-                    {
-                        strXML += "<set name='" + gvTipoMuestra.Rows[i].Cells[0].Text + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "' />";
-                    }
-                }
-                strXML += "</graph>";
-            }
+        //        if (gvTipoMuestra.Rows.Count > 0)
+        //        {
+        //            for (int i = 0; i < gvTipoMuestra.Rows.Count; i++)
+        //            {
+        //                strXML += "<set name='" + gvTipoMuestra.Rows[i].Cells[0].Text + "' value='" + gvTipoMuestra.Rows[i].Cells[1].Text + "' />";
+        //            }
+        //        }
+        //        strXML += "</graph>";
+        //    }
 
-            if (p == 1)
-            {
+        //    if (p == 1)
+        //    {
 
-                ancho = "1000";
+        //        ancho = "1000";
 
-            //    s_tipografico = "../FusionCharts/FCF_Column2D.swf";
+        //    //    s_tipografico = "../FusionCharts/FCF_Column2D.swf";
 
-                ////s_titulo = ddlAnalisis.SelectedItem.Text +" " +  ddlTipoMuestra.SelectedItem.Text;
-                //s_tipo = "Casos por Aislamiento";
-                //strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
+        //        ////s_titulo = ddlAnalisis.SelectedItem.Text +" " +  ddlTipoMuestra.SelectedItem.Text;
+        //        //s_tipo = "Casos por Aislamiento";
+        //        //strXML = "<graph caption='" + s_titulo + "' subCaption='" + s_tipo + "' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
 
-                //if (gvMicroorganismos.Rows.Count > 0)
-                //{
-                //    for (int i = 0; i < gvMicroorganismos.Rows.Count; i++)
-                //    {
-                //        strXML += "<set name='" + gvMicroorganismos.Rows[i].Cells[0].Text.Substring(0,5) + "' value='" + gvMicroorganismos.Rows[i].Cells[1].Text + "' />";
-                //    }
-                //}
-                //strXML += "</graph>";
-            }
-            //else
-            //    Response.Redirect("SinDatos.aspx", false);
+        //        //if (gvMicroorganismos.Rows.Count > 0)
+        //        //{
+        //        //    for (int i = 0; i < gvMicroorganismos.Rows.Count; i++)
+        //        //    {
+        //        //        strXML += "<set name='" + gvMicroorganismos.Rows[i].Cells[0].Text.Substring(0,5) + "' value='" + gvMicroorganismos.Rows[i].Cells[1].Text + "' />";
+        //        //    }
+        //        //}
+        //        //strXML += "</graph>";
+        //    }
+        //    //else
+        //    //    Response.Redirect("SinDatos.aspx", false);
 
 
           
 
-            return FusionCharts.RenderChart(s_tipografico, p.ToString(), strXML, "Sales"+p.ToString(), ancho, "200", false, false);
-        }
+        //    return FusionCharts.RenderChart(s_tipografico, p.ToString(), strXML, "Sales"+p.ToString(), ancho, "200", false, false);
+        //}
 
 
         protected void lnkExcel_Click1(object sender, EventArgs e)

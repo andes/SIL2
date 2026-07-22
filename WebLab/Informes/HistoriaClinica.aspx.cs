@@ -14,10 +14,11 @@ using System.Data.SqlClient;
 using Business;
 using Business.Data.Laboratorio;
 using Business.Data;
-using InfoSoftGlobal;
 using CrystalDecisions.Shared;
 using CrystalDecisions.Web;
 using System.IO;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace WebLab.Informes
 {
@@ -59,9 +60,10 @@ namespace WebLab.Informes
                     Item oItem = new Item();
                     oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["idAnalisis"].ToString()));
                     lblAnalisis.Text = oItem.Codigo + " - " + oItem.Nombre;
-                    if (oItem.IdTipoResultado == 1) 
-                    { if (coincideUnidadMedida(dt))
-                        FCLiteral.Text = CreateChart(dt);
+                    if (oItem.IdTipoResultado == 1 || oItem.IdTipoResultado == 3) ///1 => Numerico || 3 => predefinidos simple
+                    {
+                        if (dt.Rows.Count>1 && coincideUnidadMedida(dt)) // Si hay un solo valor no hacer grafico de evolución
+                            CreateChart(dt);
                     }
                 }
                 else
@@ -96,27 +98,49 @@ namespace WebLab.Informes
                         
         }
 
-        private string CreateChart(DataTable dt)
+        private void CreateChart(DataTable dt)
         {
 
             Item oItem = new Item();
             oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["idAnalisis"].ToString()));
 
-            string valorminimo = Math.Round(oItem.ValorMinimo, 0).ToString();
-            string strXML = "<graph caption='" + lblAnalisis.Text + "' subcaption='' xAxisName='Protocolo' yAxisMinValue='" + valorminimo + "' yAxisName='Resultado' decimalPrecision='2' formatNumberScale='1' showNames='1' " +
-                " showValues='0' showAlternateHGridColor='1'  AlternateHGridColor='ff5904' divLineColor='ff5904' divLineAlpha='20' alternateHGridAlpha='5'>";
-
-            if (dt.Rows.Count > 0)
+            decimal valor = Math.Round(oItem.ValorMinimo, 0);
+            string valorminimo = (valor == -1) ? "" : valor.ToString(); //-1 es un valor por defecto pero no se grafica si lo envio, debe ser ""
+            List<string> labels = new List<string>();
+            List<decimal> datos = new List<decimal>();
+           
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                decimal numero;
+                string valorNum = dt.Rows[i]["resultadoNum"].ToString();
+                labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
+                bool res = decimal.TryParse(
+                            valorNum,
+                            System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            out numero
+                        );
+                if (res)
+                    datos.Add(numero);
+                else
                 {
-                    strXML += "<set name='" + dt.Rows[i][2].ToString() + "' value='" + dt.Rows[i][4].ToString().Replace(",",".") + "' hoverText='" + dt.Rows[i][2].ToString() + "' />";
+                    datos.Clear(); //reseteo los valores
+                    labels.Clear(); //reseteo los valores
+                    break; //Corto al primer valor que no es numerico porque ya no sirve para graficar
                 }
-            }        
+            }
 
-            strXML += "</graph>";
-            return FusionCharts.RenderChart("../FusionCharts/FCF_Line.swf", "", strXML, "Sales", "600", "250", false, false);
 
+            
+            var js = new JavaScriptSerializer();
+
+            miGrafico.LabelsJson = js.Serialize(labels);
+            miGrafico.DatosJson = js.Serialize(datos);
+            miGrafico.TipoGrafico = js.Serialize("line");
+            miGrafico.TituloJson = js.Serialize("");
+            miGrafico.minimo = js.Serialize(valorminimo);
+            miGrafico.tituloX = js.Serialize("Protocolo");
+            miGrafico.tituloY = js.Serialize("Resultado");
         }
 
         private void MostrarPaciente()

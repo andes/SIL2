@@ -9,7 +9,6 @@ using Business.Data.Laboratorio;
 using System.Data;
 using System.Data.SqlClient;
 using CrystalDecisions.Web;
-using InfoSoftGlobal;
 using Business.Data;
 using CrystalDecisions.Shared;
 using System.IO;

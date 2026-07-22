@@ -9,7 +9,6 @@ using Business.Data.Laboratorio;
 using System.Data;
 using System.Data.SqlClient;
 using CrystalDecisions.Web;
-using InfoSoftGlobal;
 using Business.Data;
 using CrystalDecisions.Shared;
 using System.IO;
@@ -63,15 +62,16 @@ namespace WebLab.Resultados
                     if (oItem != null)
                     {
                         lblItem.Text = oItem.Nombre;
-                        if (oItem.IdTipoResultado == 1)
+                        if (oItem.IdTipoResultado == 1 || oItem.IdTipoResultado == 3) ///1 => Numerico || 3 => predefinidos simple
                         {
-                            if (coincideUnidadMedida(dt))
+                            if(dt.Rows.Count > 1 && coincideUnidadMedida(dt)) //Si hay un solo valor no hacer grafico de evolución
                             {
                                 decimal valor = Math.Round(oItem.ValorMinimo, 0);
                                 string valorminimo = (valor == -1) ? "" : valor.ToString(); //-1 es un valor por defecto pero no se grafica si lo envio, debe ser ""
-                                 CreateChart(dt, oItem.Nombre, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
+                                CreateChart(dt, oItem.Nombre, oItem.Nombre + " [" + oItem.Codigo + "]", valorminimo);
                             }
                         }
+                       
                     }
 
                     Paciente oPaciente = new Paciente();
@@ -211,36 +211,32 @@ namespace WebLab.Resultados
         {
             List<string> labels = new List<string>();
             List<decimal> datos = new List<decimal>();
-            List<string> datosString = new List<string>();
-            if (dt.Rows.Count > 0)
+            
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
-                for (int i = 0; i < dt.Rows.Count; i++)
+                decimal numero;
+                string valorNum = dt.Rows[i]["resultadoNum"].ToString();
+                labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
+                bool res = decimal.TryParse(
+                            valorNum,
+                            System.Globalization.NumberStyles.Any,
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            out numero
+                        );
+                if (res)
+                    datos.Add(numero);
+                else
                 {
-                    decimal numero;
-                    labels.Add(dt.Rows[i][2].ToString()); //Numero Protocolo anterior
-                    if (int.Parse(dt.Rows[i][9].ToString()) == 1) //Valor del analisis en formato decimal
-                    {
-                        decimal.TryParse(
-                                dt.Rows[i][4].ToString(),
-                                System.Globalization.NumberStyles.Any,
-                                System.Globalization.CultureInfo.InvariantCulture,
-                                out numero
-                            );
-                        datos.Add(numero);
-                    }
-                    else
-                        datosString.Add(dt.Rows[i][4].ToString());
+                    datos.Clear(); //reseteo los valores
+                    labels.Clear(); //reseteo los valores
+                    break; //Corto si no es numerico porque ya no sirve para graficar
                 }
-            }
+            }  
          
-
-
-
             var js = new JavaScriptSerializer();
 
             miGrafico.LabelsJson = js.Serialize(labels);
             miGrafico.DatosJson = js.Serialize(datos);
-            miGrafico.DatosStringJson = js.Serialize(datosString);
             miGrafico.TipoGrafico = js.Serialize("line");
             miGrafico.TituloJson = js.Serialize(titulo);
             miGrafico.minimo = js.Serialize(valorminino);

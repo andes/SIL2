@@ -313,6 +313,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GeneraCodigoQR.cs" />
+    <Compile Include="Helpers\CatalogoCache.cs" />
+    <Compile Include="Helpers\ComboCache.cs" />
     <Compile Include="Moneda.cs" />
     <Compile Include="NHibernateHttpModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

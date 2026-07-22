@@ -7,7 +7,6 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using Business;
-using InfoSoftGlobal;
 using System.Text;
 using System.Web.UI.HtmlControls;
 using System.IO;
@@ -274,8 +273,8 @@ namespace WebLab.Estadisticas
                         gv1.DataBind();
                         if (dt1.Rows.Count > 0)
                         {
-                            Literal1.Text = mostrarGrafico("Muestras recibidas");
-                            Literal2.Text = mostrarGrafico1(dt1,"Muestras recibidas por efector");
+                            //Literal1.Text = mostrarGrafico("Muestras recibidas");
+                            //Literal2.Text = mostrarGrafico1(dt1,"Muestras recibidas por efector");
                         }
                     } break;
                 case "Muestras por Patologia":
@@ -312,9 +311,9 @@ namespace WebLab.Estadisticas
                         Literal4.Visible = true;
                         Literal5.Visible = true; 
                     
-                    Literal3.Text = mostrarGrafico3(dt3, ddlVariable.SelectedValue);
-                    Literal4.Text = mostrarGrafico4(dt3, ddlVariable.SelectedValue,"220","200");
-                    Literal5.Text = mostrarGrafico5(dt3,"Distribución por Sexo");
+                    //Literal3.Text = mostrarGrafico3(dt3, ddlVariable.SelectedValue);
+                    //Literal4.Text = mostrarGrafico4(dt3, ddlVariable.SelectedValue,"220","200");
+                    //Literal5.Text = mostrarGrafico5(dt3,"Distribución por Sexo");
                     }
             }
             
@@ -332,81 +331,81 @@ namespace WebLab.Estadisticas
             oUtil = null;       
         }
 
-        private string mostrarGrafico(string s_titulo)// (DataTable dt1)
-        {         
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";                        
-            string strXML =  "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='5'  decimalPrecision='0' showNames='1'>";
-            strXML += "<set name='Primera Muestra' value='" +  grupo1.ToString() + "' />";
-            strXML += "<set name='Repeticion' value='" + grupo2.ToString() + "' />";              
-            strXML += "</graph>";
-            return FusionCharts.RenderChart(s_tipografico, "", strXML, "pesquisa", "400", "200", false, false);
-        }
-        private string mostrarGrafico1(DataTable dt1, string s_titulo)
-        {
-            string s_tipografico = "../FusionCharts/FCF_Column3D.swf";            
-            string strXML =  "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
-            for (int i = 0; i < dt1.Rows.Count; i++)
-                strXML += "<set name='" + dt1.Rows[i][0].ToString().Substring(2, 4).Replace("\r\n", "") + "' value='" + dt1.Rows[i][3].ToString() + "' />";                                        
-            strXML += "</graph>";
-            return FusionCharts.RenderChart(s_tipografico, "2", strXML, "pesquisa2", "400", "300", false, false);
-        }        
-        private string mostrarGrafico4(DataTable dt1, string s_titulo, string ancho, string alto)
-        {
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
-            string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='5'  decimalPrecision='0' showNames='1'>";                       
-            for (int i = 0; i < dt1.Rows.Count; i++)  strXML += "<set name='" + dt1.Rows[i][0].ToString().Replace("\r\n","") + "' value='" + dt1.Rows[i][4].ToString() + "' />";                            
-            strXML += "</graph>";
-            return FusionCharts.RenderChart(s_tipografico, "", strXML, "pesquisa", ancho,alto, false, false);
-        }   
-        private string mostrarGrafico3(DataTable dt1,  string s_titulo)
-        {                     
+        //private string mostrarGrafico(string s_titulo)// (DataTable dt1)
+        //{         
+        //    string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";                        
+        //    string strXML =  "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='5'  decimalPrecision='0' showNames='1'>";
+        //    strXML += "<set name='Primera Muestra' value='" +  grupo1.ToString() + "' />";
+        //    strXML += "<set name='Repeticion' value='" + grupo2.ToString() + "' />";              
+        //    strXML += "</graph>";
+        //    return FusionCharts.RenderChart(s_tipografico, "", strXML, "pesquisa", "400", "200", false, false);
+        //}
+        //private string mostrarGrafico1(DataTable dt1, string s_titulo)
+        //{
+        //    string s_tipografico = "../FusionCharts/FCF_Column3D.swf";            
+        //    string strXML =  "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='10'  decimalPrecision='0' showNames='1'>";
+        //    for (int i = 0; i < dt1.Rows.Count; i++)
+        //        strXML += "<set name='" + dt1.Rows[i][0].ToString().Substring(2, 4).Replace("\r\n", "") + "' value='" + dt1.Rows[i][3].ToString() + "' />";                                        
+        //    strXML += "</graph>";
+        //    return FusionCharts.RenderChart(s_tipografico, "2", strXML, "pesquisa2", "400", "300", false, false);
+        //}        
+        //private string mostrarGrafico4(DataTable dt1, string s_titulo, string ancho, string alto)
+        //{
+        //    string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+        //    string strXML = "<graph caption='" + s_titulo + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='5'  decimalPrecision='0' showNames='1'>";                       
+        //    for (int i = 0; i < dt1.Rows.Count; i++)  strXML += "<set name='" + dt1.Rows[i][0].ToString().Replace("\r\n","") + "' value='" + dt1.Rows[i][4].ToString() + "' />";                            
+        //    strXML += "</graph>";
+        //    return FusionCharts.RenderChart(s_tipografico, "", strXML, "pesquisa", ancho,alto, false, false);
+        //}   
+        //private string mostrarGrafico3(DataTable dt1,  string s_titulo)
+        //{                     
 
-            string strXML = "<graph caption='" + s_titulo + "' formatNumberScale='0' decimalPrecision='0'  showPercentageInLabel='1' >";
-            string strCategories = "<categories>";
+        //    string strXML = "<graph caption='" + s_titulo + "' formatNumberScale='0' decimalPrecision='0'  showPercentageInLabel='1' >";
+        //    string strCategories = "<categories>";
 
-            string strDataR = "<dataset seriesName='Femenino' color='9D080D'>";
-            string strDataS = "<dataset seriesName='Masculino' color='F6BD0F'>";
-            string strDataI = "<dataset seriesName='Indeterminado' color='AFD8F8'>";
+        //    string strDataR = "<dataset seriesName='Femenino' color='9D080D'>";
+        //    string strDataS = "<dataset seriesName='Masculino' color='F6BD0F'>";
+        //    string strDataI = "<dataset seriesName='Indeterminado' color='AFD8F8'>";
 
-             for (int i = 0; i < dt1.Rows.Count; i++)                
-             {
-                 strCategories = strCategories + "<category name='" + dt1.Rows[i][0].ToString().Replace("\r\n", "") + "' />";
-                if (dt1.Rows[i][1].ToString() == "") strDataR = strDataR + "<set value='0' />";
-                else   strDataR = strDataR + "<set value='" + dt1.Rows[i][1].ToString() + "' />";
+        //     for (int i = 0; i < dt1.Rows.Count; i++)                
+        //     {
+        //         strCategories = strCategories + "<category name='" + dt1.Rows[i][0].ToString().Replace("\r\n", "") + "' />";
+        //        if (dt1.Rows[i][1].ToString() == "") strDataR = strDataR + "<set value='0' />";
+        //        else   strDataR = strDataR + "<set value='" + dt1.Rows[i][1].ToString() + "' />";
 
-                if (dt1.Rows[i][2].ToString() == "")  strDataS = strDataS + "<set value='0' />";
-                else   strDataS = strDataS + "<set value='" + dt1.Rows[i][2].ToString() + "' />";
+        //        if (dt1.Rows[i][2].ToString() == "")  strDataS = strDataS + "<set value='0' />";
+        //        else   strDataS = strDataS + "<set value='" + dt1.Rows[i][2].ToString() + "' />";
 
-                if (dt1.Rows[i][3].ToString() == "") strDataI = strDataI + "<set value='0' />";
-                else   strDataI = strDataI + "<set value='" + dt1.Rows[i][3].ToString() + "' />";               
-            }
+        //        if (dt1.Rows[i][3].ToString() == "") strDataI = strDataI + "<set value='0' />";
+        //        else   strDataI = strDataI + "<set value='" + dt1.Rows[i][3].ToString() + "' />";               
+        //    }
 
-            //'Close <categories> element
-            strCategories = strCategories + "</categories>";
+        //    //'Close <categories> element
+        //    strCategories = strCategories + "</categories>";
 
-            //'Close <dataset> elements
-            strDataR = strDataR + "</dataset>";
-            strDataS = strDataS + "</dataset>";
-            strDataI = strDataI + "</dataset>";
+        //    //'Close <dataset> elements
+        //    strDataR = strDataR + "</dataset>";
+        //    strDataS = strDataS + "</dataset>";
+        //    strDataI = strDataI + "</dataset>";
 
-            //'Assemble the entire XML now
-            strXML = strXML + strCategories + strDataR + strDataS + strDataI + "</graph>";
+        //    //'Assemble the entire XML now
+        //    strXML = strXML + strCategories + strDataR + strDataS + strDataI + "</graph>";
 
-            return FusionCharts.RenderChart("../FusionCharts/FCF_MSColumn3D.swf", "", strXML, "productSales", "400", "400", false, false);
-        }
-        private string mostrarGrafico5(DataTable dt1, string p)
-        {
-            string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
-            string strXML =  "<graph caption='" + p + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='8'  decimalPrecision='0' showNames='1'>";
-            if (dt1.Rows.Count > 0)
-            {
-                strXML += "<set name='Fem.' value='" + gv31 + "' />";
-                strXML += "<set name='Mas.' value='" + gv32 + "' />";
-                strXML += "<set name='Ind.' value='" + gv33 + "' />";
-            }
-            strXML += "</graph>";
-            return FusionCharts.RenderChart(s_tipografico, "", strXML, "pesquisaSexo", "200", "200", false, false);
-        }
+        //    return FusionCharts.RenderChart("../FusionCharts/FCF_MSColumn3D.swf", "", strXML, "productSales", "400", "400", false, false);
+        //}
+        //private string mostrarGrafico5(DataTable dt1, string p)
+        //{
+        //    string s_tipografico = "../FusionCharts/FCF_Pie3D.swf";
+        //    string strXML =  "<graph caption='" + p + "' subCaption='' showPercentageInLabel='1' pieSliceDepth='8'  decimalPrecision='0' showNames='1'>";
+        //    if (dt1.Rows.Count > 0)
+        //    {
+        //        strXML += "<set name='Fem.' value='" + gv31 + "' />";
+        //        strXML += "<set name='Mas.' value='" + gv32 + "' />";
+        //        strXML += "<set name='Ind.' value='" + gv33 + "' />";
+        //    }
+        //    strXML += "</graph>";
+        //    return FusionCharts.RenderChart(s_tipografico, "", strXML, "pesquisaSexo", "200", "200", false, false);
+        //}
 
         protected void gv3_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -456,7 +455,7 @@ namespace WebLab.Estadisticas
                 Literal3.Visible = false;
                 Literal5.Visible = false;
                 Literal4.Visible = true;                
-                Literal4.Text = mostrarGrafico4(dt3, ddlResultado.SelectedValue, "600","400");
+                //Literal4.Text = mostrarGrafico4(dt3, ddlResultado.SelectedValue, "600","400");
                 
             }
         }

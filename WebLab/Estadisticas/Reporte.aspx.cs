@@ -14,7 +14,6 @@ using System.Data.SqlClient;
 using Business;
 using Business.Data.Laboratorio;
 using CrystalDecisions.Shared;
-using InfoSoftGlobal;
 using System.IO;
 using CrystalDecisions.Web;
 using System.Text;
@@ -165,7 +164,11 @@ namespace WebLab.Estadisticas
             /// Grafico 2
             if (mostrarGrafico2)
             {
-               CreateChart2(s_tituloChart);            
+               CreateChart2(s_tituloChart);
+            }
+            else
+            {
+                divGrafico2.Visible = false;
             }
 
             if (!mostrarGrafico1 && !mostrarGrafico2)
