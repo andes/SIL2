@@ -147,7 +147,9 @@ namespace WebLab.Items
                 btnAgregarRecomendacion.Enabled = false;
                 gvListaRecomendacion.Enabled = false;
                 chkEtiquetaAdicional.Enabled = false;
-
+                //22.07.26 no pueden cambiar el tipo de muestra o si imprime la etiqueta de la muestra
+                chkImprimeMuestra.Enabled = false;
+                ddlTipoMuestra.Enabled = false;
 
                 Efector oEfector = new Efector();
                 oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
@@ -167,6 +169,10 @@ namespace WebLab.Items
                 pnlNuevoVR.Visible = false; ///El efector no puede cargar valores de referencia. Solo puede elegir presentacion.
                 PnlVREfector.Visible = true;
                 gdPresentacion.Enabled = false;
+                //efectores no puedan eliminar valores de referencia de la grilla  pacientes
+                gvListaVR.Columns[7].Visible = false;
+                //efectores no puedan eliminar valores de referencia de la grilla  NO pacientes
+                gvListaVRNP.Columns[5].Visible = false;
             }
 
 
@@ -216,7 +222,8 @@ namespace WebLab.Items
 
                 if(oItem.IdPresentacionDefecto == 0)
                 {
-                    lblPresentacionDefecto.Text = "No se ha determinado una presentación por defecto";
+                    if(ddlPresentacionEfectorDefecto.Items.Count > 0) //22.07.26 Este mensaje debe aparecer solo cuando hay datos en el combo “Presentacion por Defecto”:
+                        lblPresentacionDefecto.Text = "No se ha determinado una presentación por defecto";
                 }
                 else
                 {
@@ -340,7 +347,7 @@ namespace WebLab.Items
 
 
                     // dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
-                    ResultadoItem oDetalle = new ResultadoItem();
+                    //ResultadoItem oDetalle = new ResultadoItem();
                     ISession m_session = NHibernateHttpModule.CurrentSession;
                     ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
                     crit.Add(Expression.Eq("IdItem", oItem));
@@ -361,9 +368,9 @@ namespace WebLab.Items
                         }
 
                         if (sDatos == "")
-                            sDatos = oDet.Resultado + "#" + efe + "@";
+                            sDatos = oDet.Resultado + "#" + efe + "#" + (oDet.EstadoValidacion == "D" ? "Definitivo" : "Preliminar") +  "@";
                         else
-                            sDatos += oDet.Resultado + "#" + efe + "@";
+                            sDatos += oDet.Resultado + "#" + efe + "#" + (oDet.EstadoValidacion == "D" ? "Definitivo" : "Preliminar") + "@";
 
                         if (oDet.ResultadoDefecto)
                             ddlResultadoPorDefecto.SelectedValue = oDet.IdResultadoItem.ToString();
@@ -451,13 +458,14 @@ namespace WebLab.Items
                     string resultado = "";
                     string efector = "0";
                     string[] det = tabla[i].ToString().Split('#');
-
+                    string estado = "D";
                     if (det.Length > 1)
                     {
                         resultado = det[0].ToString();
                         string[] e = det[1].ToString().Split('-');
                         if (e.Length > 1)
                             efector = e[1].ToString();
+                        estado = (det[2].ToString() == "Definitivo") ? "D" : "P";
                     }
                     else resultado = det[0].ToString();
 
@@ -468,7 +476,7 @@ namespace WebLab.Items
 
                     oRegistro.IdUsuarioRegistro = oUser;
                     oRegistro.FechaRegistro = DateTime.Now;
-
+                    oRegistro.EstadoValidacion = estado;
                     oRegistro.Save();
                     oItem.GrabarAuditoriaDetalleItem("Guarda", oUser, "Resultado PreDefinido", resultado, "");
                 }
@@ -556,6 +564,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             oUtil.CargarCombo(ddlResultadoPorDefecto, m_ssql, "idResultadoItem", "nombre");
             ddlResultadoPorDefecto.Items.Insert(0, new ListItem("               ", "0"));
             ddlResultadoPorDefecto.UpdateAfterCallBack = true;
+            //ViewState["resultadosPorDefecto"] = ddlResultadoPorDefecto.DataSource;
         }
         //////////////////////////////*****************///Fin de Resultados Predefinidos*************************************//
         ///
@@ -1671,14 +1680,20 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             {
                 //   tabMuestra.Visible = true;
                 btnAgregarMuestra.Visible = true;
+                tituloMuestra.Visible = true;
+                pnlMuestra.Visible = true;
                 
-
             }
             else
             {
                 //    tabMuestra.Visible = false;
                 btnAgregarMuestra.Visible = false;
-                
+
+                //22.07.26 La solapa Muestras mostrar solo cuando la determinación corresponde al servicio de microbiología.
+                tituloMuestra.Visible = false;
+                pnlMuestra.Visible = false;
+                tab8.Style["Display"] = "none"; //para que no se vea el borde cuando se oculta tituloMuestra y pnlMuestra
+
             }
 
             if (oItem.Tipo == "P") rdbTipo.Items[0].Selected = true;
@@ -1874,7 +1889,7 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             string m_strSQL = @" select iditemMuestra, M.nombre as muestra
  from LAB_ItemMuestra I
  inner join Lab_muestra M on I.idmuestra = M.idMuestra
- where I.iditem =  " + Request["id"].ToString();
+ where I.iditem =  " + Request["id"].ToString() + " order by M.nombre  "; //22.07.2026 En la solapa Muestras mostrar la lista de la grilla ordenada alfabéticamente.
 
 
             DataSet Ds = new DataSet();

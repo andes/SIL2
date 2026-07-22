@@ -75,7 +75,7 @@
     <li><a href="#tab3">Diagrama</a></li>
     <li><a href="#tab4">Resultados Predefinidos</a></li>
     <li><a href="#tab5">Recomendaciones</a></li>
-     <li><a href="#tab8"  >Muestras</a></li>
+     <li id="tituloMuestra" runat="server"><a href="#tab8"  >Muestras</a></li>
  <li><a href="#tab6">Mas opciones</a></li>
      <li><a href="#tab9">Turnos</a></li>
      <li><a href="#tab10">AutoAnalizadores</a></li>
@@ -649,8 +649,9 @@
                             </tr>
                             </table>
             </div>--%>
-    				<div id="tab8"   class="tab_content" style="border: 1px solid #C0C0C0">
-                           <asp:Label ID="lblMensajeMuestra1" runat="server"    ForeColor="Red">Sección habilitada para Servicio Microbiologia</asp:Label>
+    				<div id="tab8"   class="tab_content" style="border: 1px solid #C0C0C0" runat="server" ClientIDMode="Static">
+                        <asp:Panel ID="pnlMuestra" runat="server" >
+                            <asp:Label ID="lblMensajeMuestra1" runat="server"    ForeColor="Red">Sección habilitada para Servicio Microbiologia</asp:Label>
                         <table>
                             <tr>
                                 <td>Muestra:</td>
@@ -706,6 +707,8 @@
                             </td>
                         </tr>
                         </table>
+                        </asp:Panel>
+                           
                         </div>
 					<div id="tab2" class="tab_content" style="border: 1px solid #C0C0C0">
 					<anthem:Panel ID="pnlVR" runat="server">
@@ -1121,8 +1124,19 @@
                         <td colspan="2">
                             <anthem:DropDownList ID="ddlEfectorItemDeriva" Width="300px" runat="server" class="form-control input-sm" TabIndex="9" ToolTip="Seleccione el efector a derivar">
                             </anthem:DropDownList>
-                            <input id="Button1" type="button" value="Agregar a Lista" onclick="CrearFila()" class="myButtonGris" />
+                           
                         </td>
+                    </tr>
+                    <tr>
+                        <td class="control-label">Estado</td>
+                        <td colspan="2">
+                            <asp:DropDownList ID="ddlEstadoPredefinido" Width="300px" class="form-control input-sm" TabIndex="10" ToolTip="Seleccione un estado" runat="server">
+                                <asp:ListItem Value="D" Text="Definitivo"></asp:ListItem>
+                                <asp:ListItem Value="P" Text="Preliminar"></asp:ListItem>
+                            </asp:DropDownList>
+                             <input id="Button1" type="button" value="Agregar a Lista" onclick="CrearFila()" class="myButtonGris" />
+                        </td>
+
                     </tr>
 					<tr>
 						<td colspan="3" >
@@ -1134,18 +1148,28 @@
 						<td colspan="3" align="center">
                            <table 
         >
-<tr>
+<%--<tr>
 <td style="width:40px;">&nbsp</td><td width="500px" align="center" >Resultados 
     Predefinidos</td>
    
-</tr>
-
-
+</tr>--%>
 </table>
+
+  
+
+
 <table summary="Tabla editable para sumar filas y columnas" id="tabla"  
         style="font-size:.9em; margin-left:1%; " cellpadding="0" cellspacing="0" 
         >
-
+     <thead>
+        <tr>
+            <th colspan="2">&nbsp;</th>
+            <th>Resultado Predefinido</th>
+            <th>Efector Derivante</th>
+            <th>Estado</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
 <tbody id="cuerpo">
 
 </tbody>
@@ -1491,11 +1515,13 @@ var filas;
 function CrearFila()
 {
     var nombre = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtNombreRP").ClientID %>').value;
-    var idEfector= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value;
-
+    var idEfector = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value;
+    var opcionesEstado = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEstadoPredefinido").ClientID %>');
+    var estado = opcionesEstado.options[opcionesEstado.selectedIndex].text;
+   
 if (nombre!='')
 {
-    NuevaFila(nombre, idEfector);
+    NuevaFila(nombre, idEfector, estado);
     document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtNombreRP").ClientID %>').value = '';
     document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value='';
 }
@@ -1518,7 +1544,7 @@ if (nombre!='')
 }
 }
   
-function NuevaFila(nom ,  efector)
+function NuevaFila(nom ,  efector, estado)
 {
 Grilla = document.getElementById('cuerpo');
 
@@ -1564,22 +1590,41 @@ oCodigo1.runat = 'server';
 //oCodigo1.onblur = function () { CargarDatos() };
 oCodigo1.className = 'form-control input-sm';
 oCodigo1.width = '200px';
-oCodigo1.value = efector;
+oCodigo1.value = (efector == 0) ? "" : efector;
 
 celdaEfector.appendChild(oCodigo1);
 fila.appendChild(celdaEfector);
     /////////////////////
+    //Estado
+    celdaEstado = document.createElement('td');
+    oEstado = document.createElement('input');
+    oEstado.type = 'text';
+    oEstado.runat = 'server';
+    oEstado.className = 'form-control input-sm';
+    oEstado.width = '200px';
+    oEstado.value = estado;
 
-celda6 = document.createElement('td');  
-celda6.className= "orden";
-celda6.width="60px";
-oBoton= document.createElement('img');
-//    oBoton.name= "pru";
-oBoton.src="../script/moverfilas/eliminar.gif";
-oBoton.alt="eliminar fila";
-oBoton.onclick = function () {borrarfila(this,'cuerpo')};
-celda6.appendChild(oBoton);
-fila.appendChild(celda6);
+    celdaEstado.appendChild(oEstado);
+    fila.appendChild(celdaEstado);
+
+    /////////////////////
+
+
+
+    var idEfector = $("#<%= HFEfector.ClientID %>").val();
+    if (idEfector == 227) {
+        celda6 = document.createElement('td');
+        celda6.className = "orden";
+        celda6.width = "60px";
+        oBoton = document.createElement('img');
+        //    oBoton.name= "pru";
+        oBoton.src = "../script/moverfilas/eliminar.gif";
+        oBoton.alt = "eliminar fila";
+        oBoton.onclick = function () { borrarfila(this, 'cuerpo') };
+        celda6.appendChild(oBoton);
+        fila.appendChild(celda6);
+    }
+
 
 Grilla.appendChild(fila);
 
@@ -1641,18 +1686,19 @@ celdaNombre.appendChild(oNombre);
 fila.appendChild(celdaNombre);
 
 ///////////////////////////////////
-
-celda6 = document.createElement('td');  
-celda6.className= "orden";
-celda6.width="60px";
-oBoton= document.createElement('img');
-//    oBoton.name= "pru";
-oBoton.src="../script/moverfilas/eliminar.gif";
-oBoton.alt="eliminar fila";
-oBoton.onclick = function () {borrarfila(this,'cuerpoDiagrama')};
-celda6.appendChild(oBoton);
-fila.appendChild(celda6);
-
+    var idEfector = $("#<%= HFEfector.ClientID %>").val();
+    if (idEfector == 227) {
+        celda6 = document.createElement('td');
+        celda6.className = "orden";
+        celda6.width = "60px";
+        oBoton = document.createElement('img');
+        //    oBoton.name= "pru";
+        oBoton.src = "../script/moverfilas/eliminar.gif";
+        oBoton.alt = "eliminar fila";
+        oBoton.onclick = function () { borrarfila(this, 'cuerpoDiagrama') };
+        celda6.appendChild(oBoton);
+        fila.appendChild(celda6);
+    }
 Grilla.appendChild(fila);
 iniciarTabla('cuerpoDiagrama');
 CargarDatosDiagrama();
@@ -1671,8 +1717,9 @@ for (i=0; ele = filas[i]; i++)
 {  
     var codigo = ele.getElementsByTagName('input')[0].value;
     var efector = ele.getElementsByTagName('input')[1].value;
+    var estado = ele.getElementsByTagName('input')[2].value;
     if (codigo!='')
-        str = str + codigo + '#'+ efector+ '@';
+        str = str + codigo + '#'+ efector+'#'+estado+ '@';
 }     	     	     
 document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value = str;	   	        
 
@@ -1698,21 +1745,20 @@ for (i=0; ele = filas[i]; i++)
 document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosDiagrama").ClientID %>').value = str;	   	        
 }
         
-function CargarDetalle()
-{ 
-var datos= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value ;	   	        
-if (datos!="")
-{      
-    var sTab = datos.split('@');                
-    for (var i=0; i<(sTab.length-1); i++)
-    {
-        var sFi = sTab[i].split('#');
-        if  (sFi[0]!="")
-        {
-            NuevaFila(sFi[0], sFi[1]);
+function CargarDetalle() {
+    var datos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value;
+    if (datos != "") {
+        var sTab = datos.split('@');
+        for (var i = 0; i < (sTab.length - 1); i++) {
+            var sFi = sTab[i].split('#');
+            if (sFi[0] != "") {
+                NuevaFila(sFi[0], sFi[1], sFi[2]);
+            }
         }
     }
-}
+    var tResultados = document.getElementById("tabla");
+
+    tResultados.style.display = (datos != "") ? "" : "none"; //si no hay datos que no salgan los encabezados
 }
 
 function CargarDetalleDiagrama()
@@ -1777,6 +1823,7 @@ return true;
 else
 return false;
 }
+
 
 
 </script>

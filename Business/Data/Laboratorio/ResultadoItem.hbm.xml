@@ -18,6 +18,6 @@
 		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
     <property name="IdEfectorDeriva" column="idEfectorDeriva" type="Int32" not-null="true"/>
     <property column="resultadoDefecto" type="Boolean" name="ResultadoDefecto" not-null="true" />
-		
+    <property column="estadoValidacion" type="String" name="EstadoValidacion" not-null="true" length="1" />
 	</class>
 </hibernate-mapping>

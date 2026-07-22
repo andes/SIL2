@@ -25,6 +25,7 @@ namespace Business.Data.Laboratorio
 		private DateTime m_fecharegistro;
         private int m_idefectorderiva;
         private bool m_resultadoDefecto;
+		private string m_estadoValidacion;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -42,7 +43,9 @@ namespace Business.Data.Laboratorio
 			m_fecharegistro = DateTime.MinValue;
             m_idefectorderiva = 0;
             m_resultadoDefecto = false;
-        }
+			m_estadoValidacion = "D";
+
+		}
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -69,7 +72,8 @@ namespace Business.Data.Laboratorio
 			m_fecharegistro = fecharegistro;
             m_idefectorderiva = idefectorderiva;
             m_resultadoDefecto = resultadoDefecto;
-        }
+			m_estadoValidacion = "D";
+		}
 		#endregion // End Required Fields Only Constructor
 
 		#region Public Properties
@@ -205,7 +209,18 @@ namespace Business.Data.Laboratorio
 		{
 			get { return m_isChanged; }
 		}
-				
-		#endregion 
+
+
+		public string EstadoValidacion
+		{
+			get { return m_estadoValidacion; }
+			set
+			{
+				m_isChanged |= (m_estadoValidacion != value);
+				m_estadoValidacion = value;
+			}
+
+		}
+		#endregion
 	}
 }
