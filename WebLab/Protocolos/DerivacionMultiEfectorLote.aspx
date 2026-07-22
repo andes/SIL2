@@ -9,10 +9,14 @@
     <script type="text/javascript">
         function validaInput() {
             var txtNumeroLote = document.getElementById('<%= txtNumeroLote.ClientID %>');
+            //console.log(txtNumeroLote);
             var num = txtNumeroLote.value;
+            //console.log(num);
             num = num.replace(/\D/g, '');
+            //console.log(num);
             $("#<%=txtNumeroLote.ClientID%>").val(num);
         }
+
     </script>
 
 </asp:Content>
@@ -40,30 +44,30 @@
                         <div class="panel-heading">
                             Recepción de Derivación por Lotes
                         </div>
-                           
                         <div class="panel-body">
                             <table width="700px">
-                                 <tr>
-                                     <td>
-                                         <div class="form-group" id="divControlLote" runat="server">
-                                             <asp:Panel ID="pnlNroLote" runat="server"  DefaultButton="lnkBuscar">
-                                              <asp:Label runat="server" ID="lblNumeroLote" Text="">Nro. Lote:</asp:Label>
-                                             <asp:TextBox ID="txtNumeroLote" runat="server" class="form-control input-sm" Width="100px"   Onkeyup="validaInput();"></asp:TextBox>
-                                            </asp:Panel>
-                                         </div>
+
+                                <tr>
+                                    <td>
+                                        <div class="form-group" id="divControlLote" runat="server">
+                                            
+                                             <asp:Label runat="server" ID="lblNumeroLote" Text="">Nro. Lote:</asp:Label>
+                                            <asp:TextBox ID="txtNumeroLote" runat="server" class="form-control input-sm" Width="100px"   Onkeyup="validaInput();"></asp:TextBox>
+                                            
+                                        </div>
 
 
-                                     </td>
-                                     <td>
+                                    </td>
+                                    <td>
 
-                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
-                                             ControlToValidate="txtNumeroLote" ErrorMessage="Nro. Lote"
-                                             ValidationGroup="0">*</asp:RequiredFieldValidator>
-                                         <asp:LinkButton ID="lnkBuscar" runat="server" CssClass="btn btn-info" OnClick="btnBuscar_Click" ValidationGroup="0" Width="90px">
-                                              <span class="glyphicon glyphicon-search"></span>&nbsp;Buscar</asp:LinkButton>
-                                     </td>
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
+                                            ControlToValidate="txtNumeroLote" ErrorMessage="Nro. Lote"
+                                            ValidationGroup="0">*</asp:RequiredFieldValidator>
+                                        <asp:LinkButton ID="lnkBuscar" runat="server" CssClass="btn btn-info" OnClick="btnBuscar_Click" ValidationGroup="0" Width="90px">
+                                             <span class="glyphicon glyphicon-search"></span>&nbsp;Buscar</asp:LinkButton>
+                                    </td>
 
-                                 </tr>
+                                </tr>
                                 <tr>
                                     <td>
                                         <div class="form-group has-error" id="divControlLote2" runat="server">
@@ -123,10 +127,12 @@
                                     </tr>
                                     
                                 <tr>
-                                   
-                                    <td colspan="2" >
+                                    <td>&nbsp;</td>
+                                    <td class="style7">
 
-                                        <asp:CustomValidator ID="cvGeneral" runat="server" ShowMessageBox="True" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0" />
+                                        <asp:ValidationSummary ID="ValidationSummary1" runat="server"
+                                            HeaderText="De completar los datos requeridos:" ShowMessageBox="True"
+                                            ValidationGroup="0" />
 
                                     </td>
                                 </tr>
