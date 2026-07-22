@@ -374,6 +374,11 @@
                             &nbsp;</td>
 						
 					</tr>
+        <tr>
+            <td colspan="2">
+                <asp:CheckBox ID="cbRequiereDeterminacionesCompletas" runat="server" Text="Mostrar solo pacientes con todas las determinaciones solicitadas" />
+            </td>
+        </tr>
 </table>
 </div>
 </div>

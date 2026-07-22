@@ -47,14 +47,15 @@ namespace Business.Data.Laboratorio
         private bool m_agrupafecha;
 
         private Usuario m_idusuarioregistro; 
-		private DateTime m_fecharegistro; 		
-		#endregion
+		private DateTime m_fecharegistro;
+        private bool m_mequiereTodasLasDeterminaciones;
+        #endregion
 
-		#region Default ( Empty ) Class Constuctor
-		/// <summary>
-		/// default constructor
-		/// </summary>
-		public HojaTrabajo()
+        #region Default ( Empty ) Class Constuctor
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        public HojaTrabajo()
 		{
 			m_idhojatrabajo = 0; 
 			m_idefector = new Efector(); 
@@ -86,8 +87,10 @@ namespace Business.Data.Laboratorio
             //m_datospaciente = false;
             m_formatoancho = 0;
 			m_idusuarioregistro = new Usuario(); 
-			m_fecharegistro = DateTime.MinValue; 
-		}
+			m_fecharegistro = DateTime.MinValue;
+            m_mequiereTodasLasDeterminaciones = false;
+
+        }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
 		#region Required Fields Only Constructor
@@ -155,7 +158,9 @@ namespace Business.Data.Laboratorio
             m_formatoancho = formatoancho;
 			m_idusuarioregistro = idusuarioregistro;
 			m_fecharegistro = fecharegistro;
-		}
+            m_mequiereTodasLasDeterminaciones = false;
+
+        }
 		#endregion // End Required Fields Only Constructor
 
 		#region Public Properties
@@ -531,8 +536,20 @@ namespace Business.Data.Laboratorio
 		{
 			get { return m_isChanged; }
 		}
-				
-		#endregion 
+			
+        public bool RequiereTodasLasDeterminaciones
+        {
+            get
+            {
+                return m_mequiereTodasLasDeterminaciones;
+            }
+            set
+            {
+                m_isChanged |= (m_mequiereTodasLasDeterminaciones != value);
+                m_mequiereTodasLasDeterminaciones = value;
+            }
+        }
+        #endregion
 
 
 

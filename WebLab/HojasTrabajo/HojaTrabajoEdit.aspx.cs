@@ -119,6 +119,7 @@ namespace WebLab.HojasTrabajo
                 }
 
                 TxtDatos.Value = sDatos;
+            cbRequiereDeterminacionesCompletas.Checked = oRegistro.RequiereTodasLasDeterminaciones;
             
         }
         private void VerificaPermisos(string sObjeto)
@@ -335,6 +336,7 @@ namespace WebLab.HojasTrabajo
             ///////////////////////////////////
             oRegistro.IdUsuarioRegistro =oUser;
             oRegistro.FechaRegistro = DateTime.Now;
+            oRegistro.RequiereTodasLasDeterminaciones = cbRequiereDeterminacionesCompletas.Checked;
 
             oRegistro.Save();
 

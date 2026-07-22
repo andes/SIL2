@@ -42,6 +42,6 @@
     <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
     
 		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
-		
+    <property column="requiereTodasLasDeterminaciones" type="Boolean" name="RequiereTodasLasDeterminaciones" not-null="true" />
 	</class>
 </hibernate-mapping>
