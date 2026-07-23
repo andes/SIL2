@@ -120,7 +120,17 @@ namespace WebLab.HojasTrabajo
 
                 TxtDatos.Value = sDatos;
             cbRequiereDeterminacionesCompletas.Checked = oRegistro.RequiereTodasLasDeterminaciones;
-            
+
+            if (oRegistro.FormatoAncho.ToString() == "4") //Lista continua
+            {
+                chkDatosPaciente.Items[0].Selected = true;
+                chkDatosPaciente.Items[1].Selected = true;
+                chkDatosPaciente.Items[2].Selected = true;
+                chkDatosPaciente.Items[0].Enabled = false;
+                chkDatosPaciente.Items[1].Enabled = false;
+                chkDatosPaciente.Items[2].Enabled = false;
+            }
+
         }
         private void VerificaPermisos(string sObjeto)
         {
