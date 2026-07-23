@@ -80,10 +80,19 @@ namespace WebLab.Items
                             MostrarDatos(oItem); HabilitarDatos();
                             if (oItem.IdTipoResultado != 0)
                                 MostrarDatosValoresReferencia();
+                            
                             if ((oItem.Tipo=="P") && (oItem.IdTipoResultado ==0))
-                            MostrarDatosDiagrama();
+                                MostrarDatosDiagrama();
+
                             if (oItem.IdTipoResultado >= 2) //si no es numerico muestra los predefinidos
                                 MostrarDatosResultadosPredefinidos(oItem);
+                            else
+                            { 
+                                tResultadoDefecto.Visible = false; 
+                                lblResultadosPredefinidos.Visible = true;
+                                lblResultadosPredefinidos.Text = "La determinacion no tiene resultados de tipo Predefinidos";
+                            }
+
                             MostrarDatosRecomendaciones();
                             btnGuardarLimiteTurno.Enabled = true;
                         }
@@ -173,8 +182,23 @@ namespace WebLab.Items
                 gvListaVR.Columns[7].Visible = false;
                 //efectores no puedan eliminar valores de referencia de la grilla  NO pacientes
                 gvListaVRNP.Columns[5].Visible = false;
-            }
 
+                //Efectores no ven la grilla dinamica de Resultados Predefinidos, ven su propia grilla en un nuevo panel
+                pnlPredefinidosEfector.Visible = true;
+                pnlPredefinidos.Visible = false;
+                //Efectores no ven la grilla dinamica de Diagramas, ven su propia grilla en un nuevo panel
+                pnlDiagrama.Visible = false;
+                pnlDiagramaEfector.Visible = true;
+            }
+            else
+            {
+                //Para usuario administrador muestro el panel para agregar Resultados Predefinidos, sino muestro grilla de consulta
+
+                pnlPredefinidosEfector.Visible = false;
+                pnlPredefinidos.Visible = true;
+                pnlDiagrama.Visible = true;
+                pnlDiagramaEfector.Visible = false;
+            }
 
         }
 
@@ -335,52 +359,63 @@ namespace WebLab.Items
         ///******************************************Inicio de Resultados Predefinidos***************************************************//
         private void MostrarDatosResultadosPredefinidos(Item oItem)
         {
-         
-            if (oItem != null)
+            CargarListasRPDefecto(); //Para todos los usuarios cargo el combo donde se eligie que resultado es por defecto
+
+            if (pnlPredefinidos.Visible) //23.07.26- Usuario Admin: Cargo la grilla dinamica que permite agregar/borrar/subir/bajar resultados predefinidos
             {
-                //lblItem.Text = oItem.Codigo + " - " + oItem.Nombre;
-                Efector oEfector = new Efector();
-                oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
-                if (oEfector != null)
+                if (oItem != null)
                 {
-                    CargarListasRPDefecto();
-
-
-                    // dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
-                    //ResultadoItem oDetalle = new ResultadoItem();
-                    ISession m_session = NHibernateHttpModule.CurrentSession;
-                    ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
-                    crit.Add(Expression.Eq("IdItem", oItem));
-                    crit.Add(Expression.Eq("Baja", false));
-                    crit.Add(Expression.Eq("IdEfector", oEfector));
-
-                    string sDatos = "";
-                    IList items = crit.List();
-
-                    foreach (ResultadoItem oDet in items)
+                    
+                    Efector oEfector = new Efector();
+                    oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
+                    if (oEfector != null)
                     {
-                        string efe = "0";
-                        if (oDet.IdEfectorDeriva > 0)
+                        ISession m_session = NHibernateHttpModule.CurrentSession;
+                        ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                        crit.Add(Expression.Eq("IdItem", oItem));
+                        crit.Add(Expression.Eq("Baja", false));
+                        crit.Add(Expression.Eq("IdEfector", oEfector));
+
+                        string sDatos = "";
+                        IList items = crit.List();
+
+                        foreach (ResultadoItem oDet in items)
                         {
-                            Efector oEfectorDer = new Efector();
-                            oEfectorDer = (Efector)oEfectorDer.Get(typeof(Efector), oDet.IdEfectorDeriva);
-                            efe = oEfectorDer.Nombre + "-" + oEfectorDer.IdEfector.ToString();
+                            string efe = "0";
+                            if (oDet.IdEfectorDeriva > 0)
+                            {
+                                Efector oEfectorDer = new Efector();
+                                oEfectorDer = (Efector)oEfectorDer.Get(typeof(Efector), oDet.IdEfectorDeriva);
+                                efe = oEfectorDer.Nombre + "-" + oEfectorDer.IdEfector.ToString();
+                            }
+
+                            if (sDatos == "")
+                                sDatos = oDet.Resultado + "#" + efe + "#" + (oDet.EstadoValidacion == "D" ? "Definitivo" : "Preliminar") + "@";
+                            else
+                                sDatos += oDet.Resultado + "#" + efe + "#" + (oDet.EstadoValidacion == "D" ? "Definitivo" : "Preliminar") + "@";
+
+                            if (oDet.ResultadoDefecto)
+                                ddlResultadoPorDefecto.SelectedValue = oDet.IdResultadoItem.ToString();
                         }
 
-                        if (sDatos == "")
-                            sDatos = oDet.Resultado + "#" + efe + "#" + (oDet.EstadoValidacion == "D" ? "Definitivo" : "Preliminar") +  "@";
-                        else
-                            sDatos += oDet.Resultado + "#" + efe + "#" + (oDet.EstadoValidacion == "D" ? "Definitivo" : "Preliminar") + "@";
+                        TxtDatosResultados.Value = sDatos;
 
-                        if (oDet.ResultadoDefecto)
-                            ddlResultadoPorDefecto.SelectedValue = oDet.IdResultadoItem.ToString();
+                        if (Request["idEfector"].ToString() != "227")
+                        {
+                            if (ddlResultadoPorDefecto.Items.Count == 0)
+                            {
+                                tResultadoDefecto.Visible = false;
+
+                            }
+                        }
+                        
                     }
-
-                    TxtDatosResultados.Value = sDatos;
-                    // LeerDatosRP();
-                    //CargarListasRPDefecto();
-                    //ddlResultadoPorDefecto.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
                 }
+            }
+            else //23.07.26  - Usuario Efector: cargo una grilla de solo lectura
+            {
+                gvResultadosPredefinidos.DataSource = LeerDatosRP();
+                gvResultadosPredefinidos.DataBind(); 
             }
 
         }
@@ -394,23 +429,21 @@ namespace WebLab.Items
             //gvLista.DataBind();
         }
 
-        //private object LeerDatosRP()
-        //{
-        //    string m_strSQL = " SELECT idResultadoItem, resultado" +
-        //                      " FROM LAB_ResultadoItem " +
-        //                      " WHERE (baja = 0) and idItem=" + Request["id"].ToString() +
-        //                      " ORDER BY idResultadoItem"; // SE PONE EL ORDEN EN QUE SE FUE AGREGANDO
+        private object LeerDatosRP()
+        {
+            string m_strSQL = " SELECT idResultadoItem, resultado, isnull(e.nombre,'') as efectorDeriva,case when estadoValidacion = 'D' then 'Definitivo' else 'Preliminar' end as Estado " +
+                              " FROM LAB_ResultadoItem rI  with (nolock) " +
+                              " LEFT JOIN  Sys_efector e with (nolock)  ON e.idEfector=rI.idEfectorDeriva  "+
+                              " WHERE (baja = 0) and idItem=" + Request["id"].ToString() + " and rI.idEfector = " + Request["idEfector"].ToString() +
+                              " ORDER BY idResultadoItem"; // SE PONE EL ORDEN EN QUE SE FUE AGREGANDO
 
-        //    DataSet Ds = new DataSet();
-        //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-        //    SqlDataAdapter adapter = new SqlDataAdapter();
-        //    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-        //    adapter.Fill(Ds);
-
-
-
-        //    return Ds.Tables[0];
-        //}
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
+        }
 
         //protected void btnAgregar_Click(object sender, EventArgs e)
         //{
@@ -549,7 +582,7 @@ namespace WebLab.Items
 
                     oRegistro.IdUsuarioRegistro = oUser;
                     oRegistro.FechaRegistro = DateTime.Now;
-
+                    oRegistro.EstadoValidacion = oDetNew.EstadoValidacion;
                     oRegistro.Save();
                 }
 
@@ -560,11 +593,10 @@ namespace WebLab.Items
         {
             Utility oUtil = new Utility();
             string m_ssql = @"select idResultadoItem, resultado  as nombre
-from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].ToString() + " and  idEfector=" + Request["idEfector"].ToString() + " order by idResultadoItem";
+            from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].ToString() + " and  idEfector=" + Request["idEfector"].ToString() + " order by idResultadoItem";
             oUtil.CargarCombo(ddlResultadoPorDefecto, m_ssql, "idResultadoItem", "nombre");
             ddlResultadoPorDefecto.Items.Insert(0, new ListItem("               ", "0"));
             ddlResultadoPorDefecto.UpdateAfterCallBack = true;
-            //ViewState["resultadosPorDefecto"] = ddlResultadoPorDefecto.DataSource;
         }
         //////////////////////////////*****************///Fin de Resultados Predefinidos*************************************//
         ///
@@ -576,52 +608,54 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
         /// </summary>
         private void MostrarDatosDiagrama()
         {
-            txtCodigoDiagrama.Text = "";
-            //  ddlItemDiagrama.SelectedValue = "0";
-            txtNombreDiagrama.Text = "";
-            //  txtTitulo.Text = "";
-
-            //gvListaDiagrama.AutoGenerateColumns = false;
-            //gvListaDiagrama.DataSource = LeerDatosDiagrama();
-            //gvListaDiagrama.DataBind();
-            Item oItem = new Item();
-            oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
-            //lblItem.Text = oItem.Codigo + " - " + oItem.Nombre;
-
-            Efector oEfector = new Efector();
-            oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
-
-
-            // dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
-            ResultadoItem oDetalle = new ResultadoItem();
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
-            crit.Add(Expression.Eq("IdItemPractica", oItem));
-            crit.Add(Expression.Eq("IdEfector", oEfector));
-            crit.Add(Expression.Eq("Orden", 1));
-
-            string sDatos = "";
-            IList items = crit.List();
-
-            foreach (PracticaDeterminacion oDet in items)
+            if (pnlDiagrama.Visible) //23.07.26 - Usuario administrador: cargo grilla dinamica
             {
-                Item oItemDeterminacion = new Item();
-                oItemDeterminacion = (Item)oItemDeterminacion.Get(typeof(Item), oDet.IdItemDeterminacion);
+                txtCodigoDiagrama.Text = "";
+                //  ddlItemDiagrama.SelectedValue = "0";
+                txtNombreDiagrama.Text = "";
+                //  txtTitulo.Text = "";
 
-                if (sDatos == "")
-                    sDatos = oItemDeterminacion.Codigo + "#" + oDet.Titulo + "@";
-                else
-                    sDatos += oItemDeterminacion.Codigo + "#" + oDet.Titulo + "@";
+                //gvListaDiagrama.AutoGenerateColumns = false;
+                //gvListaDiagrama.DataSource = LeerDatosDiagrama();
+                //gvListaDiagrama.DataBind();
+                Item oItem = new Item();
+                oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["id"].ToString()));
+                //lblItem.Text = oItem.Codigo + " - " + oItem.Nombre;
 
+                Efector oEfector = new Efector();
+                oEfector = (Efector)oEfector.Get(typeof(Efector), int.Parse(Request["idEfector"].ToString()));
+
+
+                // dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
+                ResultadoItem oDetalle = new ResultadoItem();
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(PracticaDeterminacion));
+                crit.Add(Expression.Eq("IdItemPractica", oItem));
+                crit.Add(Expression.Eq("IdEfector", oEfector));
+                crit.Add(Expression.Eq("Orden", 1));
+
+                string sDatos = "";
+                IList items = crit.List();
+
+                foreach (PracticaDeterminacion oDet in items)
+                {
+                    Item oItemDeterminacion = new Item();
+                    oItemDeterminacion = (Item)oItemDeterminacion.Get(typeof(Item), oDet.IdItemDeterminacion);
+
+                    if (sDatos == "")
+                        sDatos = oItemDeterminacion.Codigo + "#" + oDet.Titulo + "@";
+                    else
+                        sDatos += oItemDeterminacion.Codigo + "#" + oDet.Titulo + "@";
+
+                }
+
+                TxtDatosDiagrama.Value = sDatos;
             }
-
-            TxtDatosDiagrama.Value = sDatos;
-            //LeerDatosRP();
-            //CargarListasRPDefecto();
-            //ddlResultadoPorDefecto.SelectedValue = oItem.IdResultadoPorDefecto.ToString();
-
-
-
+            else
+            { //23.07.26 usuario efector: muestro una grilla de solo lectura
+              gvDiagrama.DataSource =  LeerDatosDiagrama();
+              gvDiagrama.DataBind();
+            }
         }
 
 
@@ -714,26 +748,26 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             { }
         }
 
-        //private object LeerDatosDiagrama()
-        //{
-        //    string m_strSQL = " SELECT PD.idPracticaDeterminacion as idDiagrama, " +
-        //                      " CASE WHEN PD.iditemdeterminacion = 0 THEN PD.titulo ELSE I.codigo + ' - ' + I.nombre END AS nombre," +
-        //                      " PD.titulo as textoimprimir" +
-        //                      " FROM LAB_PracticaDeterminacion AS PD " +
-        //                      " left JOIN LAB_Item AS I ON PD.idItemDeterminacion = I.idItem" +
-        //                      " WHERE PD.iditempractica=" + Request["id"].ToString() +
-        //                      " ORDER BY PD.idPracticaDeterminacion"; // SE PONE EL ORDEN EN QUE SE FUE AGREGANDO
+        private object LeerDatosDiagrama()
+        {
+            string m_strSQL = " SELECT PD.idPracticaDeterminacion as idDiagrama, " +
+                              " CASE WHEN PD.iditemdeterminacion = 0 THEN PD.titulo ELSE I.codigo  END AS nombre," +
+                              " PD.titulo as textoimprimir" +
+                              " FROM LAB_PracticaDeterminacion AS PD " +
+                              " left JOIN LAB_Item AS I ON PD.idItemDeterminacion = I.idItem" +
+                              " WHERE PD.iditempractica=" + Request["id"].ToString() + " and PD.IdEfector = " + Request["idEfector"].ToString() +
+                              " ORDER BY PD.idPracticaDeterminacion"; // SE PONE EL ORDEN EN QUE SE FUE AGREGANDO
 
-        //    DataSet Ds = new DataSet();
-        //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-        //    SqlDataAdapter adapter = new SqlDataAdapter();
-        //    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-        //    adapter.Fill(Ds);
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
 
 
 
-        //    return Ds.Tables[0];
-        //}
+            return Ds.Tables[0];
+        }
 
 
 
@@ -1787,7 +1821,6 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
 
             txtCodigoNomenclador.Text = oItem.CodigoNomenclador;
             MostrarItemNomenclador();
-
             if (oItem.IdTipoResultado == 0)  /// compuesta
             {
                 pnlVR.Enabled = false;

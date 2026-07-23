@@ -1023,6 +1023,24 @@ namespace WebLab.Items
         protected global::System.Web.UI.WebControls.Button btnGuardarDiagrama;
 
         /// <summary>
+        /// pnlDiagramaEfector control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDiagramaEfector;
+
+        /// <summary>
+        /// gvDiagrama control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvDiagrama;
+
+        /// <summary>
         /// pnlPredefinidos control.
         /// </summary>
         /// <remarks>
@@ -1093,6 +1111,42 @@ namespace WebLab.Items
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosResultados;
+
+        /// <summary>
+        /// pnlPredefinidosEfector control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPredefinidosEfector;
+
+        /// <summary>
+        /// lblResultadosPredefinidos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblResultadosPredefinidos;
+
+        /// <summary>
+        /// gvResultadosPredefinidos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvResultadosPredefinidos;
+
+        /// <summary>
+        /// tResultadoDefecto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTable tResultadoDefecto;
 
         /// <summary>
         /// ddlResultadoPorDefecto control.
