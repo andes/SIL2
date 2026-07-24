@@ -487,6 +487,7 @@ namespace WebLab.HojasTrabajo
                 chkDatosPaciente.Items[2].Enabled = true;
             }
             HFCurrTabIndex.Value = "1"; //Opciones de Impresión
+            chkDatosPaciente.UpdateAfterCallBack = true;
         }
     }
 }

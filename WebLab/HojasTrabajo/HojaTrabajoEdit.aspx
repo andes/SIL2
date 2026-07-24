@@ -142,13 +142,13 @@
                 <td class="style1" >
                                             Formato Ancho Columnas:</td>
 						<td class="style2">
-                                <asp:DropDownList ID="ddlAnchoColumnas" runat="server" class="form-control input-sm" OnSelectedIndexChanged="ddlAnchoColumnas_SelectedIndexChanged" AutoPostBack="true">
+                                <anthem:DropDownList ID="ddlAnchoColumnas" runat="server" class="form-control input-sm" OnSelectedIndexChanged="ddlAnchoColumnas_SelectedIndexChanged" AutoCallBack="true">
                                     <asp:ListItem Selected="True" Value="0">Texto corto</asp:ListItem>
                                     <asp:ListItem Value="1">Texto mediano</asp:ListItem>
                                     <asp:ListItem Value="2">Texto grande</asp:ListItem>
                                    <asp:ListItem  Value="3">Texto corto c/Nro. Fila</asp:ListItem> 
                                     <asp:ListItem Value="4">Lista Continua</asp:ListItem>
-                                </asp:DropDownList>
+                                </anthem:DropDownList>
                         </td>
                 
             </tr>
@@ -179,12 +179,12 @@
                                             Datos del Paciente a Imprimir:<br />
                                                                 </td>
 						<td class="style2">
-                                <asp:CheckBoxList ID="chkDatosPaciente" runat="server" CssClass="myLabel" 
+                                <anthem:CheckBoxList ID="chkDatosPaciente" runat="server" CssClass="myLabel" AutoCallBack="True" 
                                     RepeatDirection="Horizontal">
                                     <asp:ListItem Value="1">Apellido y Nombre</asp:ListItem>
                                     <asp:ListItem Value="2">Edad</asp:ListItem>
                                     <asp:ListItem Value="3">Sexo</asp:ListItem>
-                                </asp:CheckBoxList>
+                                </anthem:CheckBoxList>
                         </td>
                 
             </tr>
@@ -596,7 +596,7 @@ var textoNuevo=	           document.getElementById('<%= Page.Master.FindControl(
         }
         
         function CargarDetalle()
-{ 
+        {
 	var datos= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value ;	   	        
 	
     if (datos!="")
