@@ -1041,6 +1041,15 @@ namespace WebLab.Items
         protected global::System.Web.UI.WebControls.GridView gvDiagrama;
 
         /// <summary>
+        /// lblDiagrama control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDiagrama;
+
+        /// <summary>
         /// pnlPredefinidos control.
         /// </summary>
         /// <remarks>
@@ -1122,15 +1131,6 @@ namespace WebLab.Items
         protected global::System.Web.UI.WebControls.Panel pnlPredefinidosEfector;
 
         /// <summary>
-        /// lblResultadosPredefinidos control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblResultadosPredefinidos;
-
-        /// <summary>
         /// gvResultadosPredefinidos control.
         /// </summary>
         /// <remarks>
@@ -1138,6 +1138,15 @@ namespace WebLab.Items
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvResultadosPredefinidos;
+
+        /// <summary>
+        /// lblResultadosPredefinidos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblResultadosPredefinidos;
 
         /// <summary>
         /// tResultadoDefecto control.

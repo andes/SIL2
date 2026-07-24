@@ -83,6 +83,8 @@ namespace WebLab.Items
                             
                             if ((oItem.Tipo=="P") && (oItem.IdTipoResultado ==0))
                                 MostrarDatosDiagrama();
+                            else
+                                lblDiagrama.Visible = true;
 
                             if (oItem.IdTipoResultado >= 2) //si no es numerico muestra los predefinidos
                                 MostrarDatosResultadosPredefinidos(oItem);
@@ -90,7 +92,6 @@ namespace WebLab.Items
                             { 
                                 tResultadoDefecto.Visible = false; 
                                 lblResultadosPredefinidos.Visible = true;
-                                lblResultadosPredefinidos.Text = "La determinacion no tiene resultados de tipo Predefinidos";
                             }
 
                             MostrarDatosRecomendaciones();
@@ -400,20 +401,15 @@ namespace WebLab.Items
 
                         TxtDatosResultados.Value = sDatos;
 
-                        if (Request["idEfector"].ToString() != "227")
-                        {
-                            if (ddlResultadoPorDefecto.Items.Count == 0)
-                            {
-                                tResultadoDefecto.Visible = false;
-
-                            }
-                        }
-                        
                     }
                 }
             }
             else //23.07.26  - Usuario Efector: cargo una grilla de solo lectura
             {
+                if (ddlResultadoPorDefecto.Items.Count == 1)
+                    tResultadoDefecto.Visible = false;
+
+                
                 gvResultadosPredefinidos.DataSource = LeerDatosRP();
                 gvResultadosPredefinidos.DataBind(); 
             }

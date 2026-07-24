@@ -1117,6 +1117,8 @@
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         </asp:GridView>
     </asp:Panel>
+     
+     <asp:Label ID="lblDiagrama" Text="No hay diagramas cargados para la determinación" Width="300px" runat="server" class="form-control input-sm"> </asp:Label>
 </div>				
 
 
@@ -1174,17 +1176,16 @@
 </tr>
 </table>--%>
 
-  
-<table id="tablaTitulos" >
-      <tr>
-        <td colspan="2">&nbsp;</td>
-        <td>Resultado Predefinido </td>
-        <td>Efector Derivante</td>
-        <td>Estado</td>
-        <td>&nbsp;</td>
-    </tr>
-</table>
+ <table id="Table1"   style="font-size:.9em; font-weight: bold; margin-left:1%; background-color: #DFE7F7;" cellpadding="0" cellspacing="0" align="center">
+        <tr>
+            <td width="40px">&nbsp</td>
+            <td width="425px"  >Resultado Predefinido</td>
+            <td width="400px" >Efector Derivante</td>
+            <td width="80px" >Estado</td>
+            <td width="60px" >&nbsp</td>
+        </tr>
 
+</table>
 <table summary="Tabla editable para sumar filas y columnas" id="tabla"  
         style="font-size:.9em; margin-left:1%; " cellpadding="0" cellspacing="0"   >
    
@@ -1196,13 +1197,12 @@
 					</tr>
 					 
 					<tr>
-						<td colspan="2">
-    
-        
-            
-                                            &nbsp;</td>
+						<td colspan="3">   <hr /></td>
+
+					</tr>
 						
-						<td align="right">
+						<tr>
+                            <td align="right"  colspan="3">
                                             <anthem:Button ID="btnGuardarRP" runat="server" Text="Guardar" 
                                                 onclick="btnGuardarRP_Click" CssClass="btn btn-primary" Width="100px"  ValidationGroup="0" />
         
@@ -1229,7 +1229,6 @@
 
 <asp:Panel ID="pnlPredefinidosEfector" runat="server">
      <h4>Resultados Predefinidos</h4> 
-    <asp:Label ID="lblResultadosPredefinidos" runat="server" Visible="false" ForeColor="Red" ></asp:Label>
     <asp:GridView ID="gvResultadosPredefinidos" runat="server"  AutoGenerateColumns="False" BorderColor="#3A93D2" BorderStyle="Solid" 
         BorderWidth="1px" CellPadding="0" CssClass="table table-bordered bs-table"  Width="100%" 
         EmptyDataText="No hay resultados predefinidos cargados para la determinación" Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal">
@@ -1248,6 +1247,8 @@
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     </asp:GridView>
 </asp:Panel>
+        <asp:Label ID="lblResultadosPredefinidos" runat="server" Visible="false" class="form-control input-sm" Text = "La determinacion no tiene resultados de tipo Predefinidos"></asp:Label>
+
     <table runat="server" id="tResultadoDefecto">
             <tr>
                         <td colspan="3"    >
@@ -1616,7 +1617,7 @@ function NuevaFila(nom ,  efector, estado)
     oCodigo.runat = 'server';
     oCodigo.onblur= function () {CargarDatos()};
     oCodigo.className = 'form-control input-sm';
-    oCodigo.width = '300px';
+    oCodigo.style.width = '300px';
     oCodigo.value= nom;
 
     celdaCodigo.appendChild(oCodigo);
@@ -1628,7 +1629,7 @@ function NuevaFila(nom ,  efector, estado)
     oCodigo1.runat = 'server';
     //oCodigo1.onblur = function () { CargarDatos() };
     oCodigo1.className = 'form-control input-sm';
-    oCodigo1.width = '200px';
+    oCodigo1.style.width = '300px';
     oCodigo1.value = (efector == 0) ? "" : efector;
 
     celdaEfector.appendChild(oCodigo1);
@@ -1640,7 +1641,7 @@ function NuevaFila(nom ,  efector, estado)
     oEstado.type = 'text';
     oEstado.runat = 'server';
     oEstado.className = 'form-control input-sm';
-    oEstado.width = '200px';
+    oEstado.style.width = '100px';
     oEstado.value = estado;
 
     celdaEstado.appendChild(oEstado);
@@ -1652,7 +1653,7 @@ function NuevaFila(nom ,  efector, estado)
 
     celda6 = document.createElement('td');
     celda6.className = "orden";
-    celda6.width = "60px";
+    celda6.style.width = "60px";
     oBoton = document.createElement('img');
     //    oBoton.name= "pru";
     oBoton.src = "../script/moverfilas/eliminar.gif";
@@ -1667,7 +1668,6 @@ function NuevaFila(nom ,  efector, estado)
 
     iniciarTabla('cuerpo');
     CargarDatos();
-    MostrarOcultarTitulos();
 }
         
         
@@ -1791,7 +1791,6 @@ function CargarDetalle() {
             }
         }
     }
-    MostrarOcultarTitulos();
 }
 
 function CargarDetalleDiagrama()
@@ -1857,41 +1856,7 @@ else
 return false;
     }
 
-function MostrarOcultarTitulos() {
-    var datos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value;
 
-    var tResultados = document.getElementById("tablaTitulos");
-
-    tResultados.style.display = (datos != "") ? "" : "none"; //si no hay datos que no salgan los encabezados
-    AlinearTitulos();
-}
-
-function AlinearTitulos() {
-    var fila = document.querySelector("#cuerpo tr");
-    if (!fila) return;
-
-    var titulos = document.querySelector("#tablaTitulos tr").cells;
-    var celdas = fila.cells;
-
-    // El primer td del título tiene colspan=2
-    titulos[0].style.width =  (celdas[0].offsetWidth + celdas[1].offsetWidth) + "px";
-    titulos[1].style.width = celdas[2].offsetWidth + "px";
-    titulos[2].style.width = celdas[3].offsetWidth + "px";
-    titulos[3].style.width = celdas[4].offsetWidth + "px";
-
-    if (celdas.length > 5)  titulos[4].style.width = celdas[5].offsetWidth + "px";
-}
-
-//si borro todas las filas de Resultados Predefinidos quiero que se oculten sus titulos
-var _borrarfila = borrarfila;
-
-borrarfila = function (obj, cuerpo) {
-    _borrarfila(obj, cuerpo);
-
-    if (cuerpo == "cuerpo") {
-        MostrarOcultarTitulos();
-    }
-    };
 
 </script>
                  <asp:ValidationSummary ID="ValidationSummary1" runat="server" 
