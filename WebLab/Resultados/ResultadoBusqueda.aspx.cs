@@ -1261,12 +1261,13 @@ namespace WebLab.Resultados
             ViewState["HojaTrabajoDT"] = ddlHojaTrabajo.DataSource;
             HFFormatoAncho.Value = "";
 
-            if (ddlHojaTrabajo.Items.Count == 1)//si hay una sola de hoja no se va a ejecutar nunca ddlHojaTrabajo_SelectedIndexChanged asi que verifico si tengo que traer su detalle
-                if (HojaTrabajoEsContinua()) CargarDetalleHT();
-            
+            //Verificamos si el primer item tiene que traer su detalle
+            if (HojaTrabajoEsContinua()) CargarDetalleHT();
             else HFFormatoAncho.Value = "";
-          
+           
+
         }
+        
 
         protected void cvFechas_ServerValidate(object source, ServerValidateEventArgs args)
         {  try{
@@ -1445,8 +1446,15 @@ namespace WebLab.Resultados
                         ddlArea2.UpdateAfterCallBack = true;
                         imgAgregarArea.UpdateAfterCallBack = true;
 
+                        //27.07.26 Deshabilito los items de analisis de HT
+                        ddlAnalisis.Items.Clear();
+                        ddlAnalisis.Enabled = false;
+                        txtCodigo.Enabled = false;
+                        ddlAnalisis.UpdateAfterCallBack = true;
+                        txtCodigo.UpdateAfterCallBack = true;
+                    
 
-                    }
+                }
                 }
             }
 
@@ -1550,7 +1558,15 @@ namespace WebLab.Resultados
         {
             if (HojaTrabajoEsContinua())
                 CargarDetalleHT();
-            
+            else
+            {
+                ddlAnalisis.Items.Clear();
+                ddlAnalisis.Enabled = false;
+                txtCodigo.Enabled = false;
+                ddlAnalisis.UpdateAfterCallBack = true;
+                txtCodigo.UpdateAfterCallBack = true;
+            }
+                
         }
 
         
