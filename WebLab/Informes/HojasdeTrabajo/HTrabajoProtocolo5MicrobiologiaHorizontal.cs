@@ -16,14 +16,14 @@ namespace WebLab.Informes.HojasdeTrabajo {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class HTrabajoProtocolo4MicrobiologiaHorizontal : ReportClass {
+    public class HTrabajoProtocolo5MicrobiologiaHorizontal : ReportClass {
         
-        public HTrabajoProtocolo4MicrobiologiaHorizontal() {
+        public HTrabajoProtocolo5MicrobiologiaHorizontal() {
         }
         
         public override string ResourceName {
             get {
-                return "HTrabajoProtocolo4MicrobiologiaHorizontal.rpt";
+                return "HTrabajoProtocolo5MicrobiologiaHorizontal.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         public override string FullResourceName {
             get {
-                return "WebLab.Informes.HojasdeTrabajo.HTrabajoProtocolo4MicrobiologiaHorizontal.rpt";
+                return "WebLab.Informes.HojasdeTrabajo.HTrabajoProtocolo5MicrobiologiaHorizontal.rpt";
             }
             set {
                 // Do nothing
@@ -74,7 +74,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection2 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection3 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -90,7 +90,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection2 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection1 {
             get {
                 return this.ReportDefinition.Sections[5];
             }
@@ -98,7 +98,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection3 {
             get {
                 return this.ReportDefinition.Sections[6];
             }
@@ -106,7 +106,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[7];
             }
@@ -114,9 +114,17 @@ namespace WebLab.Informes.HojasdeTrabajo {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
                 return this.ReportDefinition.Sections[8];
+            }
+        }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+            get {
+                return this.ReportDefinition.Sections[9];
             }
         }
         
@@ -154,9 +162,9 @@ namespace WebLab.Informes.HojasdeTrabajo {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedHTrabajoProtocolo4MicrobiologiaHorizontal : Component, ICachedReport {
+    public class CachedHTrabajoProtocolo5MicrobiologiaHorizontal : Component, ICachedReport {
         
-        public CachedHTrabajoProtocolo4MicrobiologiaHorizontal() {
+        public CachedHTrabajoProtocolo5MicrobiologiaHorizontal() {
         }
         
         [Browsable(false)]
@@ -193,7 +201,7 @@ namespace WebLab.Informes.HojasdeTrabajo {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            HTrabajoProtocolo4MicrobiologiaHorizontal rpt = new HTrabajoProtocolo4MicrobiologiaHorizontal();
+            HTrabajoProtocolo5MicrobiologiaHorizontal rpt = new HTrabajoProtocolo5MicrobiologiaHorizontal();
             rpt.Site = this.Site;
             return rpt;
         }

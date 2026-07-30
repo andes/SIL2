@@ -381,6 +381,7 @@ namespace WebLab.Resultados
             s_valores += ";rdbEstado:" + rdbEstado.SelectedValue;
             s_valores += ";lstSector:" + getListaSectores(false);
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
+            s_valores += ";formatoAncho:" + HFFormatoAncho.Value;
             Session["Resultados"] = s_valores;
         }
 
@@ -401,6 +402,7 @@ namespace WebLab.Resultados
             s_valores += ";rdbEstado:" + rdbEstado.SelectedValue;
             s_valores += ";lstSector:" + getListaSectores(false);
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
+            s_valores += ";formatoAncho:" + HFFormatoAncho.Value;
             Session["Validacion"] = s_valores;
         }
 
@@ -487,6 +489,13 @@ namespace WebLab.Resultados
                                         }
                                     }
                                 }
+                            }
+                            break;
+                        case "formatoAncho":
+                            if (s_control[1].ToString() == "4") // si vuelvo de procesar hojas de trabajo tipo "lista continua" vuelvo a cargar sus items
+                            {
+                                HFFormatoAncho.Value = s_control[1].ToString();
+                                CargarDetalleHT(); 
                             }
                             break;
 
@@ -929,11 +938,12 @@ namespace WebLab.Resultados
                     switch (int.Parse(rdbCargaResultados.SelectedValue))
                     {/// por hoja de trabajo
                         case 0:   modoCarga = "LP"; break;
-                        case 1:   modoCarga = "HT"; break;
+                        case 1:   modoCarga = "HT"; if (HFFormatoAncho.Value == "4")  modoCarga = "AN"; break;//Para las hojas de trabajo tipo "Lista Continua" se tiene que ver como las de analisis
                         case 2:   modoCarga = "AN"; break;
                         case 3: modoCarga = "ANDE"; break;
                         //case 4: modoCarga = "ANDA"; break;
                     }
+
                 }
 
                 //if (modoCarga == "LP")
@@ -1101,9 +1111,11 @@ namespace WebLab.Resultados
                             rvArea.Enabled = true;
 
                             txtCodigo.Text = "";
-
-                            ddlAnalisis.Enabled = false;
-                            txtCodigo.Enabled = false;
+                            if (HFFormatoAncho.Value == "")
+                            {
+                                ddlAnalisis.Enabled = false;
+                                txtCodigo.Enabled = false;
+                            }
                             rvAnalisis.Enabled = false;
                             //ddlPrioridad.SelectedValue = "1"; ///prioridad
 
@@ -1232,7 +1244,7 @@ namespace WebLab.Resultados
         {
             Utility oUtil = new Utility();
             ///Carga de combos de areas
-            string m_ssql = @"select idHojaTrabajo, codigo from Lab_HojaTrabajo  (nolock) where baja=0  
+            string m_ssql = @"select idHojaTrabajo, codigo , formatoAncho from Lab_HojaTrabajo  (nolock) where baja=0  
                                 and idEfector= " + oUser.IdEfector.IdEfector.ToString() + 
                                @" and idArea=" +ddlArea.SelectedValue + " order by codigo ";
 //            if (esHemoterapia())
@@ -1245,7 +1257,17 @@ namespace WebLab.Resultados
             if (ddlHojaTrabajo.Items.Count == 0)
             { ddlHojaTrabajo.Items.Insert(0, new ListItem("", "0")); }
 
+            //Guardo en el view state la tabla para saber el formatoAncho de cada hoja al seleccionarla
+            ViewState["HojaTrabajoDT"] = ddlHojaTrabajo.DataSource;
+            HFFormatoAncho.Value = "";
+
+            //Verificamos si el primer item tiene que traer su detalle
+            if (HojaTrabajoEsContinua()) CargarDetalleHT();
+            else HFFormatoAncho.Value = "";
+           
+
         }
+        
 
         protected void cvFechas_ServerValidate(object source, ServerValidateEventArgs args)
         {  try{
@@ -1424,8 +1446,15 @@ namespace WebLab.Resultados
                         ddlArea2.UpdateAfterCallBack = true;
                         imgAgregarArea.UpdateAfterCallBack = true;
 
+                        //27.07.26 Deshabilito los items de analisis de HT
+                        ddlAnalisis.Items.Clear();
+                        ddlAnalisis.Enabled = false;
+                        txtCodigo.Enabled = false;
+                        ddlAnalisis.UpdateAfterCallBack = true;
+                        txtCodigo.UpdateAfterCallBack = true;
+                    
 
-                    }
+                }
                 }
             }
 
@@ -1490,10 +1519,57 @@ namespace WebLab.Resultados
                 args.IsValid = false;
             }
         }
-          
-       
-       
 
+        private void CargarDetalleHT()
+        {
+            Utility oUtil = new Utility();
+            string m_ssql = @" SELECT     I.idItem as idItem,  I.descripcion + ' ['+ I.codigo + ']'  as nombre  
+                           FROM         LAB_Item AS I (nolock)
+                           INNER JOIN LAB_detalleHojaTrabajo DET ON DET.idItem = I.idItem
+                            WHERE  idHojaTrabajo=  " + ddlHojaTrabajo.SelectedValue + "  order by nombre ";
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            oUtil.CargarCombo(ddlAnalisis, m_ssql, "idItem", "nombre", connReady);
+            ddlAnalisis.Enabled = true;
+            rvAnalisis.Enabled = true;
+            txtCodigo.Enabled = true;
+            ddlAnalisis.UpdateAfterCallBack = true;
+            rvHojaTrabajo.UpdateAfterCallBack = true;
         }
+
+        private bool HojaTrabajoEsContinua()
+        {
+            DataTable dt = ViewState["HojaTrabajoDT"] as DataTable;
+
+            DataRow[] filas = dt.Select("idHojaTrabajo = " + ddlHojaTrabajo.SelectedValue);
+
+            if (filas.Length > 0)
+            {
+                int formatoAncho = int.Parse(filas[0]["formatoAncho"].ToString());
+                HFFormatoAncho.Value = formatoAncho.ToString();
+                if (formatoAncho == 4)
+                    return true;
+                else return false;
+            }
+            else return false;
+            
+        }
+        protected void ddlHojaTrabajo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (HojaTrabajoEsContinua())
+                CargarDetalleHT();
+            else
+            {
+                ddlAnalisis.Items.Clear();
+                ddlAnalisis.Enabled = false;
+                txtCodigo.Enabled = false;
+                ddlAnalisis.UpdateAfterCallBack = true;
+                txtCodigo.UpdateAfterCallBack = true;
+            }
+                
+        }
+
+        
+    }
    
 }

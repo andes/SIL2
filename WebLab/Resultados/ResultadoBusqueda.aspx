@@ -187,13 +187,20 @@
                             </anthem:DropDownList>
                                         
                             <anthem:DropDownList ID="ddlHojaTrabajo" runat="server" 
-                                ToolTip="Seleccione la hoja de trabajo" TabIndex="2" class="form-control input-sm">
+                                ToolTip="Seleccione la hoja de trabajo" TabIndex="2" class="form-control input-sm" 
+                                onselectedindexchanged="ddlHojaTrabajo_SelectedIndexChanged" AutoPostBack="True"> 
                             </anthem:DropDownList>
                                         
                             <anthem:RangeValidator ID="rvHojaTrabajo" runat="server" 
                                 ControlToValidate="ddlHojaTrabajo" ErrorMessage="Hoja Trabajo" 
                                 MaximumValue="999999" MinimumValue="1" Type="Integer" ValidationGroup="0">*</anthem:RangeValidator>
-                                        
+                                   
+                            <asp:HiddenField ID="HFFormatoAncho" runat="server" />
+
+                            <%--  <asp:CustomValidator ID="cvHojaTrabajo" runat="server" 
+                                ErrorMessage="*" 
+                                onservervalidate="cvHojaTrabajo_ServerValidate" ValidationGroup="0">*</asp:CustomValidator>--%>
+
                                             <anthem:Image ID="imgAgregarArea" runat="server" 
                                 ImageUrl="~/App_Themes/default/images/add.png" />
                             <anthem:DropDownList ID="ddlArea2" runat="server" 

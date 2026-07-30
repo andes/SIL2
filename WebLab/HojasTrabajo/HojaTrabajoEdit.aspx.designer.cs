@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.HojasTrabajo {
-    
-    
-    public partial class HojaTrabajoEdit {
-        
+namespace WebLab.HojasTrabajo
+{
+
+
+    public partial class HojaTrabajoEdit
+    {
+
         /// <summary>
         /// HFCurrTabIndex control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField HFCurrTabIndex;
-        
+
         /// <summary>
         /// ddlServicio control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlServicio;
-        
+
         /// <summary>
         /// ddlArea control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlArea;
-        
+
         /// <summary>
         /// rvArea control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvArea;
-        
+
         /// <summary>
         /// txtCodigoHT control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCodigoHT;
-        
+
         /// <summary>
         /// rfvCodigoHT control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvCodigoHT;
-        
+
         /// <summary>
         /// txtResponsable control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtResponsable;
-        
+
         /// <summary>
         /// rdbFormatoHoja control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbFormatoHoja;
-        
+
         /// <summary>
         /// ddlAnchoColumnas control.
         /// </summary>
@@ -91,8 +93,8 @@ namespace WebLab.HojasTrabajo {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlAnchoColumnas;
-        
+        protected global::Anthem.DropDownList ddlAnchoColumnas;
+
         /// <summary>
         /// chkDatosProtocolo control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CheckBoxList chkDatosProtocolo;
-        
+
         /// <summary>
         /// chkDatosPaciente control.
         /// </summary>
@@ -109,8 +111,8 @@ namespace WebLab.HojasTrabajo {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList chkDatosPaciente;
-        
+        protected global::Anthem.CheckBoxList chkDatosPaciente;
+
         /// <summary>
         /// txtCantidadLineaAdicional control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCantidadLineaAdicional;
-        
+
         /// <summary>
         /// rvCantidadLineaAdicional control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvCantidadLineaAdicional;
-        
+
         /// <summary>
         /// RequiredFieldValidator1 control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
-        
+
         /// <summary>
         /// ddlImprimirAntecedente control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlImprimirAntecedente;
-        
+
         /// <summary>
         /// ddlAgrupaFecha control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlAgrupaFecha;
-        
+
         /// <summary>
         /// ddlImprimirFechaHora control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlImprimirFechaHora;
-        
+
         /// <summary>
         /// txtInferiorIzquierda control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtInferiorIzquierda;
-        
+
         /// <summary>
         /// txtInferiorDerecha control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtInferiorDerecha;
-        
+
         /// <summary>
         /// ddlAreaDeterminacion control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlAreaDeterminacion;
-        
+
         /// <summary>
         /// txtCodigo control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigo;
-        
+
         /// <summary>
         /// ddlItem control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItem;
-        
+
         /// <summary>
         /// txtNombre control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtNombre;
-        
+
         /// <summary>
         /// cvAnalisis control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvAnalisis;
-        
+
         /// <summary>
         /// lblMensaje control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensaje;
-        
+
         /// <summary>
         /// txtNombreAnalisis control.
         /// </summary>
@@ -245,7 +247,16 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtNombreAnalisis;
-        
+
+        /// <summary>
+        /// cbRequiereDeterminacionesCompletas control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbRequiereDeterminacionesCompletas;
+
         /// <summary>
         /// lnkRegresar control.
         /// </summary>
@@ -254,7 +265,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkRegresar;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>
@@ -263,7 +274,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
+
         /// <summary>
         /// vsHojaTrabajo control.
         /// </summary>
@@ -272,7 +283,7 @@ namespace WebLab.HojasTrabajo {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ValidationSummary vsHojaTrabajo;
-        
+
         /// <summary>
         /// TxtDatos control.
         /// </summary>

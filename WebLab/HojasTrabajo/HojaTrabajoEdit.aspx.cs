@@ -119,7 +119,18 @@ namespace WebLab.HojasTrabajo
                 }
 
                 TxtDatos.Value = sDatos;
-            
+            cbRequiereDeterminacionesCompletas.Checked = oRegistro.RequiereTodasLasDeterminaciones;
+
+            if (oRegistro.FormatoAncho.ToString() == "4") //Lista continua
+            {
+                chkDatosPaciente.Items[0].Selected = true;
+                chkDatosPaciente.Items[1].Selected = true;
+                chkDatosPaciente.Items[2].Selected = true;
+                chkDatosPaciente.Items[0].Enabled = false;
+                chkDatosPaciente.Items[1].Enabled = false;
+                chkDatosPaciente.Items[2].Enabled = false;
+            }
+
         }
         private void VerificaPermisos(string sObjeto)
         {
@@ -335,6 +346,7 @@ namespace WebLab.HojasTrabajo
             ///////////////////////////////////
             oRegistro.IdUsuarioRegistro =oUser;
             oRegistro.FechaRegistro = DateTime.Now;
+            oRegistro.RequiereTodasLasDeterminaciones = cbRequiereDeterminacionesCompletas.Checked;
 
             oRegistro.Save();
 
@@ -457,6 +469,25 @@ namespace WebLab.HojasTrabajo
             Response.Redirect("HTList.aspx", false);
         }
 
-      
+        protected void ddlAnchoColumnas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(ddlAnchoColumnas.SelectedValue == "4") //Lista continua
+            {
+                chkDatosPaciente.Items[0].Selected = true;
+                chkDatosPaciente.Items[1].Selected = true;
+                chkDatosPaciente.Items[2].Selected = true;
+                chkDatosPaciente.Items[0].Enabled = false;
+                chkDatosPaciente.Items[1].Enabled = false;
+                chkDatosPaciente.Items[2].Enabled = false;
+            }
+            else
+            {
+                chkDatosPaciente.Items[0].Enabled = true;
+                chkDatosPaciente.Items[1].Enabled = true;
+                chkDatosPaciente.Items[2].Enabled = true;
+            }
+            HFCurrTabIndex.Value = "1"; //Opciones de Impresión
+            chkDatosPaciente.UpdateAfterCallBack = true;
+        }
     }
 }
