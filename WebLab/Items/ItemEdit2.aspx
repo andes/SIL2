@@ -1117,8 +1117,7 @@
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
         </asp:GridView>
     </asp:Panel>
-     
-     <asp:Label ID="lblDiagrama" Text="No hay diagramas cargados para la determinación" Width="300px" runat="server" class="form-control input-sm"> </asp:Label>
+   
 </div>				
 
 
@@ -1247,7 +1246,6 @@
             <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
     </asp:GridView>
 </asp:Panel>
-        <asp:Label ID="lblResultadosPredefinidos" runat="server" Visible="false" class="form-control input-sm" Text = "La determinacion no tiene resultados de tipo Predefinidos"></asp:Label>
 
     <table runat="server" id="tResultadoDefecto">
             <tr>

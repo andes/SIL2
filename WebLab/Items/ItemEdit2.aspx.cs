@@ -80,18 +80,22 @@ namespace WebLab.Items
                             MostrarDatos(oItem); HabilitarDatos();
                             if (oItem.IdTipoResultado != 0)
                                 MostrarDatosValoresReferencia();
-                            
-                            if ((oItem.Tipo=="P") && (oItem.IdTipoResultado ==0))
+
+                            if ((oItem.Tipo == "P") && (oItem.IdTipoResultado == 0))
                                 MostrarDatosDiagrama();
                             else
-                                lblDiagrama.Visible = true;
+                            {
+                                gvDiagrama.DataSource = null;
+                                gvDiagrama.DataBind();
+                            }
 
                             if (oItem.IdTipoResultado >= 2) //si no es numerico muestra los predefinidos
                                 MostrarDatosResultadosPredefinidos(oItem);
                             else
                             { 
-                                tResultadoDefecto.Visible = false; 
-                                lblResultadosPredefinidos.Visible = true;
+                                tResultadoDefecto.Visible = false;
+                                gvResultadosPredefinidos.DataSource = null;
+                                gvResultadosPredefinidos.DataBind();
                             }
 
                             MostrarDatosRecomendaciones();
