@@ -2438,8 +2438,7 @@ namespace WebLab.Items
                     oReg.ResultadoDefecto = txtValorDefecto.Text;
 
                     oReg.Save();
-
-                    GuardarLimiteTurno(oReg.IdItem.IdItem, m_accion);
+                       //  GuardarLimiteTurno(oReg.IdItem.IdItem, m_accion); 30.07.2026 guardar solo del btn de turnos
                 }
 
 
@@ -3448,8 +3447,6 @@ namespace WebLab.Items
             // bajo las siguientes condiciones:
             //
             // 1. Efector distinto a Nivel Central:
-            //    - Se permite guardar desde el tab
-            //      "Datos Generales".
             //    - Se permite guardar desde el tab
             //      "Turnos".
             //
