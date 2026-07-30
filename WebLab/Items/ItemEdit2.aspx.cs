@@ -3429,11 +3429,11 @@ from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].
             IList items = crit.List();
             foreach (ItemEfector itemEfector in items)
             {
-                oReg.GrabarAuditoriaDetalleItem(accion, oUser,  "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(),"");
+                oReg.GrabarAuditoriaDetalleItem(accion, oUser, "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(), "");
                 itemEfector.LimiteTurnosDia = int.Parse(txtLimite.Value.ToString());
                 itemEfector.Save();
             }
-
+        }
         private string SanitizarHTML()
         {
             Utility utility = new Utility();
