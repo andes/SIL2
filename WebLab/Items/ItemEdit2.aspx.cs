@@ -3474,11 +3474,11 @@ namespace WebLab.Items
             IList items = crit.List();
             foreach (ItemEfector itemEfector in items)
             {
-                oReg.GrabarAuditoriaDetalleItem(accion, oUser,  "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(),"");
+                oReg.GrabarAuditoriaDetalleItem(accion, oUser, "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(), "");
                 itemEfector.LimiteTurnosDia = int.Parse(txtLimite.Value.ToString());
                 itemEfector.Save();
             }
-
+        }
         private string SanitizarHTML()
         {
             Utility utility = new Utility();
