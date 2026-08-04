@@ -223,8 +223,7 @@ namespace WebLab.HojasTrabajo
                         {
                             nombre_reporte = "../Informes/HojasdeTrabajo/HTrabajoProtocolo5";
                         } break;
-                  
-                }                             
+                }                              
             }
             //if (oRegistro.Formato == 1)
             //{

@@ -197,10 +197,7 @@
                                    
                             <asp:HiddenField ID="HFFormatoAncho" runat="server" />
 
-                            <%--  <asp:CustomValidator ID="cvHojaTrabajo" runat="server" 
-                                ErrorMessage="*" 
-                                onservervalidate="cvHojaTrabajo_ServerValidate" ValidationGroup="0">*</asp:CustomValidator>--%>
-
+                           
                                             <anthem:Image ID="imgAgregarArea" runat="server" 
                                 ImageUrl="~/App_Themes/default/images/add.png" />
                             <anthem:DropDownList ID="ddlArea2" runat="server" 

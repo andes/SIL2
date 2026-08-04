@@ -382,12 +382,12 @@
                                                        <td colspan="2">
                                                            <hr /></td>
                                                    </tr>
-                                                   <tr>
+                                                 <%--  <tr>
                                                        <td>
                                                            &nbsp;</td>
                                                        <td>
                                                            &nbsp;</td>
-                                                   </tr>
+                                                   </tr>--%>
                                                </table>
                         </div>
                                   </div>
@@ -400,7 +400,7 @@
 						<td   colspan="4" >
                     
                                            <asp:Panel ID="pnlHojaTrabajo" runat="server">
-                                                       <div class="panel-footer">			
+                                                   <%--    <div class="panel-footer">	--%>		
                                                <table style="width:100%;">
                                                <%--   <tr>
                                                         <td align="left">
@@ -480,7 +480,7 @@
                                                        </td>
                                                    </tr>
                                                </table>
-                                                           </div>
+                                                          <%-- </div>--%>
                                            </asp:Panel>
                                 
                             </td>

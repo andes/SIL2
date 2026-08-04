@@ -52,8 +52,10 @@ namespace WebLab.Resultados
                 {
                     oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                
-                    LlenarTabla(Request["idProtocolo"].ToString()); 
-                    CargarListas();
+                    LlenarTabla(Request["idProtocolo"].ToString());
+                    //if (oRegistro.IdTipoServicio.IdTipoServicio == 3)
+                        LlenarTablaATB(Request["idProtocolo"].ToString());
+                    //CargarListas();
                 }
                 else
                     Response.Redirect("../FinSesion.aspx", false);                   
@@ -113,19 +115,19 @@ namespace WebLab.Resultados
             
         }
 
-        private void CargarListas()
-        {
-           Utility oUtil = new Utility();
+        //private void CargarListas()
+        //{
+        //   Utility oUtil = new Utility();
             
-           ///////////////Impresoras////////////////////////
+        //   ///////////////Impresoras////////////////////////
 
-           string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
-            oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-            if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
+        //   string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
+        //    oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+        //    if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
             
-           ///////////////Fin de Impresoras///////////////////
+        //   ///////////////Fin de Impresoras///////////////////
                        
-        }
+        //}
 
  
 
@@ -206,10 +208,7 @@ namespace WebLab.Resultados
             int len = oRegistro.FechaRegistro.ToString().Length - 11;
             lblHoraRegistro.Text = oRegistro.FechaRegistro.ToString().Substring(11, oRegistro.FechaRegistro.ToString().Length - 11);
             lblFecha.Text = oRegistro.Fecha.ToShortDateString();
-            lblProtocolo.Text =   oRegistro.GetNumero().ToString();  
-          
-          
-
+            lblProtocolo.Text =   oRegistro.Numero.ToString();                      
             lblSector.Text = oRegistro.IdSector.Nombre;
             if (oRegistro.Sala != "") lblSector.Text += " Sala: " + oRegistro.Sala;
             if (oRegistro.Cama != "") lblSector.Text += " Cama: " + oRegistro.Cama;
@@ -274,10 +273,10 @@ namespace WebLab.Resultados
                 objCellResultado_TITULO.Controls.Add(lblResultado);
 
 
-                Label lblResultadoAnterior = new Label();
-                lblResultadoAnterior.Text = "R.ANTER.";
+                //Label lblResultadoAnterior = new Label();
+                //lblResultadoAnterior.Text = "R.ANTER.";
             
-                objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
+                //objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
 
 
                 if (Request["Operacion"].ToString() != "HC")
@@ -314,7 +313,7 @@ namespace WebLab.Resultados
                 objFila_TITULO.Cells.Add(objCellResultado_TITULO);                            
                 objFila_TITULO.Cells.Add(objCellValoresReferencia_TITULO);                
                 objFila_TITULO.Cells.Add(objCellPersona_TITULO);
-                objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
+                //objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
 
                 objFila_TITULO.CssClass = "myLabelIzquierda";
                 objFila_TITULO.BackColor = Color.Gainsboro;
@@ -398,7 +397,7 @@ namespace WebLab.Resultados
                     TableRow objFila = new TableRow();
                     TableCell objCellAnalisis = new TableCell();
                     TableCell objCellResultado = new TableCell();
-                    TableCell objCellResultadoAnterior = new TableCell();
+                    //TableCell objCellResultadoAnterior = new TableCell();
                     TableCell objCellUnMedida = new TableCell();
                     TableCell objCellValoresReferencia = new TableCell();
                     TableCell objCellValida = new TableCell();
@@ -550,8 +549,8 @@ namespace WebLab.Resultados
                                             if (oDetalle != null) 
                                             {
                                                                                         
-                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
-                                                    if (Observaciones != "")
+                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortDateString();
+                                                if (Observaciones != "")
                                                     {
                                                         if (m_conResultado == "False")
                                                         {
@@ -563,35 +562,35 @@ namespace WebLab.Resultados
                                                                 if (oUser.FirmaValidacion == "") m_usuariovalida = oUser.Apellido + " " + oUser.Nombre;
                                                                 else m_usuariovalida = oUser.FirmaValidacion;
 
-                                                                m_usuariovalida +=" " + oDetalle.FechaValida.ToShortDateString();
-                                                            }
+                                                                m_usuariovalida +=" " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortDateString();
+                                                        }
                                                         }
                                                         else
                                                             olbl.Text = olbl.Text + Observaciones;
                                                     }
 
 
-                                                    if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
-                                                    { 
-                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString);//.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
-                                                        if (resultadoAnterior != "")
-                                                        {
-                                                          //  hayAntecedente = true;
-                                                            Label olblResultadoAnterior = new Label();
-                                                            olblResultadoAnterior.TabIndex = short.Parse("500");
-                                                            olblResultadoAnterior.Font.Size = FontUnit.Point(8);
-                                                            olblResultadoAnterior.CssClass = "myLittleLink";
-                                                            olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,440); return false");
-                                                            olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";                                                        
-                                                            olblResultadoAnterior.Width = Unit.Pixel(20);
-                                                            olblResultadoAnterior.Text = resultadoAnterior;
+                                                    //if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio!=5)
+                                                    //{ 
+                                                    //    string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString);//.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                    //    if (resultadoAnterior != "")
+                                                    //    {
+                                                    //      //  hayAntecedente = true;
+                                                    //        Label olblResultadoAnterior = new Label();
+                                                    //        olblResultadoAnterior.TabIndex = short.Parse("500");
+                                                    //        olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                                    //        olblResultadoAnterior.CssClass = "myLittleLink";
+                                                    //        olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,440); return false");
+                                                    //        olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";                                                        
+                                                    //        olblResultadoAnterior.Width = Unit.Pixel(20);
+                                                    //        olblResultadoAnterior.Text = resultadoAnterior;
 
                                                      
-                                                            objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+                                                    //        objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
                                                    
-                                                        }
+                                                    //    }
 
-                                                    }
+                                                    //}
                                                     
                                                     if (oDetalle.VerificaValorReferencia(x))
                                                         olbl.ForeColor = Color.Black;
@@ -658,24 +657,24 @@ namespace WebLab.Resultados
                                             if (oDetalle != null)
                                             {
                                               
-                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToShortDateString();
-                                                    if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
-                                                    {
-                                                        string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); //oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
-                                                        if (resultadoAnterior != "")
-                                                        {
-                                                     //       hayAntecedente = true;
-                                                            Label olblResultadoAnterior = new Label();
-                                                            olblResultadoAnterior.TabIndex = short.Parse("500");
-                                                            olblResultadoAnterior.Font.Size = FontUnit.Point(8);                                                            
-                                                            olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,300); return false");
-                                                            olblResultadoAnterior.ToolTip = "Haga clic aqui para ver más datos.";                                                            
-                                                            olblResultadoAnterior.Width = Unit.Pixel(20);
-                                                            olblResultadoAnterior.Text = resultadoAnterior;
-                                                            objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+                                                    m_usuariovalida += " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortDateString();
+                                                    //if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
+                                                    //{
+                                                    //    string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, false, ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); //oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, false);
+                                                    //    if (resultadoAnterior != "")
+                                                    //    {
+                                                    // //       hayAntecedente = true;
+                                                    //        Label olblResultadoAnterior = new Label();
+                                                    //        olblResultadoAnterior.TabIndex = short.Parse("500");
+                                                    //        olblResultadoAnterior.Font.Size = FontUnit.Point(8);                                                            
+                                                    //        olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",790,300); return false");
+                                                    //        olblResultadoAnterior.ToolTip = "Haga clic aqui para ver más datos.";                                                            
+                                                    //        olblResultadoAnterior.Width = Unit.Pixel(20);
+                                                    //        olblResultadoAnterior.Text = resultadoAnterior;
+                                                    //        objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
                                                             
-                                                        }
-                                                    }
+                                                    //    }
+                                                    //}
 
                                                     if (oDetalle.tieneAdjuntoVisible())//tiene observaciones
                                                     {
@@ -736,7 +735,7 @@ namespace WebLab.Resultados
 
                     objFila.Cells.Add(objCellPersona);
 
-                    objFila.Cells.Add(objCellResultadoAnterior);
+                    //objFila.Cells.Add(objCellResultadoAnterior);
                     
 
                     //////
@@ -750,6 +749,200 @@ namespace WebLab.Resultados
             //}
         }
 
+        private void LlenarTablaATB(string p)
+        {
+            //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            DataSet Ds = new DataSet();
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "LAB_ResultadoViewATB";
+
+            cmd.Parameters.Add("@idProtocolo", SqlDbType.NVarChar);
+            cmd.Parameters["@idProtocolo"].Value = p;
+            cmd.Connection = conn;
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+            da.Fill(Ds);
+
+
+            string s = System.Globalization.CultureInfo.CurrentCulture.NumberFormat.CurrencyDecimalSeparator;
+
+
+            string m_titulo = "";
+            string m_hijo = "";
+            string m_nombre = "";
+
+
+
+            TableRow objFila_TITULO = new TableRow();
+            TableCell objCellAnalisis_TITULO = new TableCell();
+            TableCell objCellResultado_TITULO = new TableCell();
+         //   TableCell objCellResultadoAnterior_TITULO = new TableCell();
+            TableCell objCellUnMedida_TITULO = new TableCell();
+            TableCell objCellValoresReferencia_TITULO = new TableCell();
+            TableCell objCellValida_TITULO = new TableCell();
+            TableCell objCellPersona_TITULO = new TableCell();
+            TableCell objCellObservaciones_TITULO = new TableCell();
+
+            int tablas = Ds.Tables.Count;
+            if (tablas > 0)
+            {
+
+
+                objFila_TITULO.Cells.Add(objCellAnalisis_TITULO);
+                objFila_TITULO.Cells.Add(objCellResultado_TITULO);
+
+
+
+
+                objFila_TITULO.Cells.Add(objCellValoresReferencia_TITULO);
+
+
+                objFila_TITULO.Cells.Add(objCellPersona_TITULO);
+           //     objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
+
+                objFila_TITULO.CssClass = "myLabelIzquierda";
+                objFila_TITULO.BackColor = Color.Gainsboro;
+
+                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
+
+                //'añadimos la fila a la tabla
+                if (objFila_TITULO != null) tContenido.Controls.Add(objFila_TITULO);//.Rows.Add(objRow);    
+
+                string pivot_Area = "";
+
+
+                for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+                {
+
+                    int tiporesultado = (int.Parse(Ds.Tables[0].Rows[i].ItemArray[4].ToString()));
+
+                    string m_usuariovalida = Ds.Tables[0].Rows[i].ItemArray[5].ToString();
+
+                    string m_area = "ATB";//Ds.Tables[0].Rows[i].ItemArray[30].ToString();
+
+
+
+                    m_hijo = Ds.Tables[0].Rows[i].ItemArray[2].ToString();
+                    m_titulo = Ds.Tables[0].Rows[i].ItemArray[0].ToString();
+
+                    TableRow objFila = new TableRow();
+                    TableCell objCellAnalisis = new TableCell();
+                    TableCell objCellResultado = new TableCell();
+                 //   TableCell objCellResultadoAnterior = new TableCell();
+                    TableCell objCellUnMedida = new TableCell();
+                    TableCell objCellValoresReferencia = new TableCell();
+                    TableCell objCellValida = new TableCell();
+                    TableCell objCellPersona = new TableCell();
+                    TableCell objCellObservaciones = new TableCell();
+
+
+                    decimal x = 0;
+
+
+
+                    if (m_area != pivot_Area) ///poner titulo del area
+                    {
+                        TableRow objRow = new TableRow();
+                        TableCell objCell = new TableCell();
+                        Label lbl0 = new Label();
+                        lbl0.Text = m_area.ToUpper();
+                        lbl0.TabIndex = short.Parse("500");
+                        lbl0.Font.Bold = true;
+
+
+                        Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(lbl0);
+                        objCell.Controls.Add(lbl0);
+                        objCell.ColumnSpan = 8;
+
+                        objRow.BackColor = Color.Beige;
+                        objRow.HorizontalAlign = HorizontalAlign.Center;
+                        objRow.Cells.Add(objCell);
+                        tContenido.Controls.Add(objRow);
+
+                        pivot_Area = m_area;
+                    }
+
+                    if ((m_hijo != m_titulo) && (m_nombre != m_titulo)) ///poner titulo de la practica
+                    {
+                        TableRow objRow = new TableRow();
+                        TableCell objCell = new TableCell();
+                        Label lbl0 = new Label();
+
+                        lbl0.Text = Ds.Tables[0].Rows[i].ItemArray[1].ToString();
+                        lbl0.TabIndex = short.Parse("500");
+                        lbl0.Font.Bold = true;
+
+                        Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(lbl0);
+                        objCell.Controls.Add(lbl0);
+                        if (Request["Operacion"].ToString() == "HC")
+                            objCell.ColumnSpan = 6;
+                        else
+                            objCell.ColumnSpan = 8;
+
+                        objRow.Cells.Add(objCell);
+                        objRow.CssClass = "myLabelIzquierda";
+                        tContenido.Controls.Add(objRow);
+
+                        m_nombre = m_titulo;
+
+
+                    }
+
+                    Label lbl1 = new Label();
+                    if (m_hijo == m_titulo) lbl1.Text = m_hijo;
+                    else lbl1.Text = "&nbsp;&nbsp;&nbsp;" + m_hijo;
+
+                    lbl1.TabIndex = short.Parse("500");
+                    lbl1.ForeColor = Color.Black;
+                    lbl1.Font.Size = FontUnit.Point(9);
+                    lbl1.Font.Bold = true;
+                    lbl1.Font.Italic = true;
+                    objCellAnalisis.ColumnSpan = 1;
+
+                    objCellAnalisis.Controls.Add(lbl1);
+
+                    Label olbl = new Label();
+                    olbl.Font.Bold = true;
+                    olbl.Font.Size = FontUnit.Point(9);
+                    olbl.Text = Ds.Tables[0].Rows[i].ItemArray[3].ToString();
+                    objCellResultado.Controls.Add(olbl);
+                    m_usuariovalida += " "; //+ fefecha validad
+
+                    Label lblPersona = new Label();
+                    lblPersona.Text = m_usuariovalida; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();      
+
+                    lblPersona.Font.Size = FontUnit.Point(7);
+                    lblPersona.Font.Italic = true;
+                    lblPersona.Text = m_usuariovalida;
+
+                    objCellPersona.Controls.Add(lblPersona);
+
+                    ///Definir los anchos de las columnas
+                    objCellAnalisis.Width = Unit.Percentage(30);
+                    objCellResultado.Width = Unit.Percentage(30);
+                    objCellValoresReferencia.Width = Unit.Percentage(20);
+                    objCellPersona.Width = Unit.Percentage(20);
+
+                    ///////////////////////
+                    ///agrega a la fila cada una de las celdas
+                    objFila.Cells.Add(objCellAnalisis);
+                    objFila.Cells.Add(objCellResultado);
+                    objFila.Cells.Add(objCellValoresReferencia);
+                    objFila.Cells.Add(objCellPersona);
+             //       objFila.Cells.Add(objCellResultadoAnterior);
+
+                    //////
+                    Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
+
+                    //'añadimos la fila a la tabla
+                    if (objFila != null)
+                        tContenido.Controls.Add(objFila);//.Rows.Add(objRow);                                
+                }
+            }
+        }
 
 
         private void Imprimir(Protocolo oProtocolo, string tipo)

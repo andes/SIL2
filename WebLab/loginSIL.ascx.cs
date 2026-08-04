@@ -19,6 +19,8 @@ using System.Web.Script.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System.DirectoryServices.Protocols;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace WebLab
 {
@@ -255,27 +257,12 @@ namespace WebLab
                         autentica = false;
                         mensajeError = "Usuario o contraseña incorrecta en SIL.";
                     }
-                    else autentica = true;
+                    else
+                    {
+                        autentica = true;                    
+                        Session["FechaLogin"] = DateTime.Now;                    
+                    }
 
-                    //string query = @" SELECT 1 FROM Sys_usuario with (nolock)
-                    //                    WHERE activo = 1 
-                    //                    AND username = @username 
-                    //                    AND [password] = @password";
-
-                    //using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
-                    //using (SqlCommand cmd = new SqlCommand(query, conn))
-                    //{
-                    //    cmd.Parameters.AddWithValue("@username", Login1.UserName);
-                    //    cmd.Parameters.AddWithValue("@password", m_password);
-
-                    //    conn.Open();
-                    //    var result = cmd.ExecuteScalar();
-
-                    //    autentica= result != null;
-                    //    if (!autentica)                        
-                    //        mensajeError = "Usuario o contraseña incorrecta en SIL.";
-
-                    //}
                 }
 
                 else if (tipoAutenticacion == "ONELOGIN")
@@ -291,14 +278,62 @@ namespace WebLab
                         NetworkCredential nc = new NetworkCredential("uid=" + Login1.UserName + ",ou=people,O=integrabilidad,O=neuquen", Login1.Password);
                         ldapConnection.Bind(nc);                        
                         ldapConnection.Dispose();
+
+                        // Autenticación correcta
+                        string hash = GenerarSHA256(Login1.Password);
+
+                        // Insertar o actualizar
+                        GuardarCredencialContingencia(oUser.IdUsuario, hash);                       
+                        Session["FechaLogin"] = DateTime.Now;                       
                         autentica = true;
 
                     }
                     catch (LdapException ex)
                     {
                         ////"Servicio LDAP no disponible"
-                        autentica = false;
-                        mensajeError = "Error de autenticación ONELOGIN: " + ex.Message;
+                        //     autentica = false;
+                        //   mensajeError = "Error de autenticación ONELOGIN: " + ex.Message;
+                        // LDAP caído
+                        switch (ex.ErrorCode)
+                        {
+                            case 49:
+                                // Usuario o contraseña incorrecta
+                                autentica = false;
+                                mensajeError = "Usuario o contraseña incorrecta en ONELOGIN.";
+                                break;
+
+
+                            case 81:
+                                // LDAP caído
+                                if (ValidarContingencia(oUser.IdUsuario, Login1.Password))
+                                {
+                                    autentica = true;                                 
+                                    Session["FechaLogin"] = DateTime.Now;                                 
+                                    oUser.GrabaAuditoria(
+                                        "LOGIN CONTINGENCIA LDAP",
+                                        oUser.IdUsuario,
+                                        oUser.Username,
+                                        "",
+                                        "LDAP caído");
+                                }
+                                else
+                                {
+                                    autentica = false;
+                                    mensajeError =
+                                        "El servicio ONELOGIN no se encuentra disponible.";
+                                }
+
+                                break;
+
+
+                            default:
+                                autentica = false;
+                                mensajeError =
+                                    "Error LDAP: " + ex.Message;
+                                break;
+                        }
+
+
                     }
                     catch (Exception ex)
                     {                                       
@@ -318,6 +353,84 @@ namespace WebLab
            
         }
 
+
+        private void GuardarCredencialContingencia(int idUsuario, string password)
+        {
+            string hash = password;
+
+            string conn = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
+
+            using (SqlConnection cn = new SqlConnection(conn))
+            {
+                cn.Open();
+
+                string sql = @"
+IF EXISTS (SELECT 1
+           FROM Sys_OneLoginContingencia
+           WHERE IdUsuario = @IdUsuario)
+BEGIN
+    UPDATE Sys_OneLoginContingencia
+       SET PasswordHash = @PasswordHash,
+           FechaUltimaAutenticacion = GETDATE(),
+           FechaActualizacion = GETDATE()
+     WHERE IdUsuario = @IdUsuario
+END
+ELSE
+BEGIN
+    INSERT INTO Sys_OneLoginContingencia
+        (IdUsuario, PasswordHash, FechaUltimaAutenticacion, FechaActualizacion)
+    VALUES
+        (@IdUsuario, @PasswordHash, GETDATE(), GETDATE())
+END";
+
+                using (SqlCommand cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                    cmd.Parameters.AddWithValue("@PasswordHash", hash);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        private bool ValidarContingencia(int idUsuario, string password)
+        {
+            string hash = GenerarSHA256(password);
+
+            string conn = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
+
+            using (SqlConnection cn = new SqlConnection(conn))
+            {
+                cn.Open();
+
+                string sql = @"
+            SELECT COUNT(*)
+            FROM Sys_OneLoginContingencia
+            WHERE IdUsuario = @IdUsuario
+              AND PasswordHash = @PasswordHash
+              AND FechaUltimaAutenticacion >= DATEADD(HOUR,-24,GETDATE())";
+
+                using (SqlCommand cmd = new SqlCommand(sql, cn))
+                {
+                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                    cmd.Parameters.AddWithValue("@PasswordHash", hash);
+
+                    return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+                }
+            }
+        }
+        public static string GenerarSHA256(string texto)
+        {
+            SHA256 sha = new SHA256Managed();
+            byte[] bytes = Encoding.UTF8.GetBytes(texto);
+            byte[] hash = sha.ComputeHash(bytes);
+
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in hash)
+                sb.Append(b.ToString("x2"));
+
+            return sb.ToString();
+        }
+       
         protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)
         {
             if(Session["usuarioPendienteAceptacion"] == null)

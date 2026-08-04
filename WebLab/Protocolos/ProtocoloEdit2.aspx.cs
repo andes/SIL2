@@ -1407,16 +1407,19 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos
             string str_condicion = ")";
+            str_condicion = "  and fechaDesde<=getdate() and (fechaHasta='19000101' or fechahasta>getdate()) ))";
             if ((Request["Operacion"].ToString() == "Modifica") && (Request["idProtocolo"]!=null))
-             str_condicion = "  or exists (select 1 from LAB_Protocolo p WHERE p.idsector  = s.idSectorServicio and idProtocolo = " + Request["idProtocolo"].ToString() + ")) ";
-
+                 str_condicion += "  or exists (select 1 from LAB_Protocolo p WHERE p.idsector  = s.idSectorServicio and idProtocolo = " + Request["idProtocolo"].ToString() + ") ";
+          
+          
 
             string m_ssql = @"SELECT  s.idSectorServicio,  s.prefijo + ' - ' + s.nombre   as nombre FROM LAB_SectorServicio  S with (nolock) 
                              WHERE (baja = 0)  
-                             and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector="+oUser.IdEfector.IdEfector.ToString()+@" )" + str_condicion +@" order by nombre";
+                             and ( exists (select 1 from Lab_SectorServicioEfector SE 
+                                            where SE.idSectorServicio=S.idSectorServicio and se.idefector="+oUser.IdEfector.IdEfector.ToString()+ str_condicion +@" order by nombre";
 
             //oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
-             cacheKey = $"CAT_Servicio_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+             cacheKey = $"CAT_Servicio_{oUser.IdEfector.IdEfector}_{Request["idServicio"]}";
             Business.Helpers.ComboCache.CargarCombo(ddlSectorServicio, cacheKey, m_ssql, "idSectorServicio", "nombre", connReady);
 
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
@@ -1442,8 +1445,9 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                                                                                                                                                                           //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
 
                     //  oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
-                    
-                     cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+
+                    // cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+                    cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}";
                     Business.Helpers.ComboCache.CargarCombo(ddlImpresoraEtiqueta, cacheKey, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
                   
@@ -2096,7 +2100,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             {
                 if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
                     (oRegistro.IdEfector.IdEfector == 205 ||
-                     oRegistro.IdEfector.IdEfector == 221))
+                     oRegistro.IdEfector.IdEfector == 221 ||
+                     oRegistro.IdEfector.IdEfector == 33))
                 {
                     SqlConnection conn =
                         (SqlConnection)

@@ -31,7 +31,7 @@ namespace WebLab
                 //}
                 //else
                 //{
-                    imgPrincipal.Visible = false;
+                    //imgPrincipal.Visible = false;
                     lnkCerrar.NavigateUrl = "logout.aspx";
                 //}
                     if (Session["idUsuario"] != null)

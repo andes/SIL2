@@ -139,6 +139,9 @@ namespace WebLab.Resultados
                     break;
 
             }
+
+            if (Request["idServicio"].ToString() == "5")
+                btnMostrarResultados.Visible = false; //no se muestran resultados anteriores en no paciente
         }
 
         private void CargarObservaciones()
@@ -172,7 +175,9 @@ namespace WebLab.Resultados
             Item oItem = new Item();
             oItem = (Item)oItem.Get(typeof(Item), int.Parse(p));
 
-
+            bool mostrarResultadoAnterior =
+    Request["Operacion"].ToString() == "Valida" &&
+    Request["idServicio"].ToString() != "5";
             ///    bool hiv = oItem.CodificaHiv;
 
             DataTable dt = getDataSet(oItem.IdItem.ToString());
@@ -202,7 +207,10 @@ namespace WebLab.Resultados
                 objCellFecha_TITULO.Controls.Add(lblTituloFecha);
 
                 Label lblTituloPaciente = new Label();
-                lblTituloPaciente.Text = "PACIENTE";
+                if (Request["idServicio"].ToString() != "5")
+                    lblTituloPaciente.Text = "PACIENTE";
+                else
+                    lblTituloPaciente.Text = "DESCRIPCION";
                 objCellPaciente_TITULO.Controls.Add(lblTituloPaciente);
 
                 Label lblTituloResultado = new Label();
@@ -213,10 +221,12 @@ namespace WebLab.Resultados
                 lblTituloObservacionesResultado.Text = "OBS.";
                 objCellObservaciones_TITULO.Controls.Add(lblTituloObservacionesResultado);
 
-                Label lblResultadoAnterior = new Label();
-                lblResultadoAnterior.Text = "R.ANTER.";
-                objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
-
+                if (mostrarResultadoAnterior)
+                {
+                    Label lblResultadoAnterior = new Label();
+                    lblResultadoAnterior.Text = "R.ANTER.";
+                    objCellResultadoAnterior_TITULO.Controls.Add(lblResultadoAnterior);
+                }
                 Label lblTituloReferencia = new Label();
                 lblTituloReferencia.Text = "REFERENCIA|METODO";
                 objCellReferencia_TITULO.Controls.Add(lblTituloReferencia);
@@ -237,7 +247,9 @@ namespace WebLab.Resultados
                 objFila_TITULO.Cells.Add(objCellPaciente_TITULO);
                 objFila_TITULO.Cells.Add(objCellResultado_TITULO);
 
-                if (Request["Operacion"].ToString() == "Valida") objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
+                //if (Request["Operacion"].ToString() == "Valida")
+                    if (mostrarResultadoAnterior)
+                        objFila_TITULO.Cells.Add(objCellResultadoAnterior_TITULO);
                 objFila_TITULO.Cells.Add(objCellReferencia_TITULO);
                 objFila_TITULO.Cells.Add(objCellPersona_TITULO);
 
@@ -317,7 +329,8 @@ namespace WebLab.Resultados
                     string apellido = "";
                     string nombre = "";
                     string s_paciente = "";
-                    if (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0)
+                    int i_idpaciente = oDetalle.IdProtocolo.IdPaciente.IdPaciente;
+                    if (i_idpaciente > 0)
                     {
                         if (oDetalle.IdProtocolo.IdPaciente.IdEstado == 2) numerodocumento = "(Temporal)";
                         else numerodocumento = oDetalle.IdProtocolo.IdPaciente.NumeroDocumento.ToString();
@@ -335,6 +348,16 @@ namespace WebLab.Resultados
                         else
                             s_paciente = numerodocumento.ToUpper() + " - " + apellido.ToUpper() + " " + nombre.ToUpper();
                         //}
+                    }
+                    if (i_idpaciente == -1)
+                    {
+                        if (oDetalle.IdProtocolo.IdMuestra > 0)
+                        {
+                            Muestra oMuestra = new Muestra();
+                            oMuestra = (Muestra)oMuestra.Get(typeof(Muestra), oDetalle.IdProtocolo.IdMuestra);                            
+                            s_paciente = oMuestra.Nombre;
+                        }
+                        s_paciente +=  " " + oDetalle.IdProtocolo.DescripcionProducto;
                     }
                     //    string s_embarazada = oDetalle.IdProtocolo.GetDiagnostico();
                     string m_formato0 = dt.Rows[i].ItemArray[4].ToString();
@@ -417,7 +440,8 @@ namespace WebLab.Resultados
                     TableCell objCellValida = new TableCell();
                     TableCell objCellPersona = new TableCell();
                     TableCell objCellObservaciones = new TableCell();
-                    TableCell objCellResultadoAnterior = new TableCell();
+                   
+                        TableCell objCellResultadoAnterior = new TableCell();
 
                     Label olblProtocolo = new Label();
                     olblProtocolo.Font.Name = "Arial";
@@ -440,7 +464,8 @@ namespace WebLab.Resultados
                     olblPaciente.Text = s_paciente;
 
                     objCellPaciente.Controls.Add(olblPaciente);
-                    if (Request["Operacion"].ToString() == "Valida") /// Solo en la validacion
+                    //   if (Request["Operacion"].ToString() == "Valida") /// Solo en la validacion
+                    if (mostrarResultadoAnterior)/// Solo en la validacion y para servicio!=5 
                     {
                         ImageButton btnAddDiagnostico = new ImageButton();
                         btnAddDiagnostico.TabIndex = short.Parse("500");
@@ -467,7 +492,8 @@ namespace WebLab.Resultados
                         objFila.Cells.Add(objCellPaciente);
                         objFila.Cells.Add(objCellResultado);
 
-                        if (Request["Operacion"].ToString() == "Valida")
+                        //     if (Request["Operacion"].ToString() == "Valida")
+                        if (mostrarResultadoAnterior)
                             objFila.Cells.Add(objCellResultadoAnterior);
 
                         objFila.Cells.Add(objCellReferencia);
@@ -502,8 +528,9 @@ namespace WebLab.Resultados
                         objFila.Cells.Add(objCellPaciente);
                         objFila.Cells.Add(objCellResultado);
 
-                        if (Request["Operacion"].ToString() == "Valida")
-                            objFila.Cells.Add(objCellResultadoAnterior);
+                        //if (Request["Operacion"].ToString() == "Valida")
+                            if (mostrarResultadoAnterior)
+                                objFila.Cells.Add(objCellResultadoAnterior);
 
                         objFila.Cells.Add(objCellReferencia);
                         objFila.Cells.Add(objCellPersona);
@@ -623,7 +650,7 @@ namespace WebLab.Resultados
                                     foreach (ResultadoItem oResultado in resultados)
                                     {
                                         ddl1.Items.Add(new ListItem(
-                                            oResultado.Resultado,
+                                            oResultado.Resultado.Trim(),
                                             oResultado.IdResultadoItem.ToString()
                                         ));
 
@@ -635,11 +662,11 @@ namespace WebLab.Resultados
                                     if (s_conResultado == "0")// sin resultado
                                     {
                                         if (!string.IsNullOrEmpty(m_resultadoDefecto))
-                                            ddl1.SelectedValue = m_resultadoDefecto;
+                                            ddl1.SelectedValue = m_resultadoDefecto.Trim();
                                     }
                                     else
                                     {
-                                        var itemSel = ddl1.Items.FindByText(s_resultadoCar);
+                                        var itemSel = ddl1.Items.FindByText(s_resultadoCar.Trim());
                                         if (itemSel != null)
                                             ddl1.SelectedValue = itemSel.Value;
                                     }
@@ -776,7 +803,8 @@ namespace WebLab.Resultados
                                 objCellResultado.Controls.Add(oValidaNumero);
 
                                 /////////////////Resultado Anterior
-                                if (Request["Operacion"].ToString() == "Valida")
+                                if (mostrarResultadoAnterior)
+                                    ///if (Request["Operacion"].ToString() == "Valida")
                                 {
                                     string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem,true);
                                                                   /*if (resultadoAnterior != "")
@@ -854,7 +882,7 @@ namespace WebLab.Resultados
 
 
                                 /////////////////Resultado Anterior
-                                if (Request["Operacion"].ToString() == "Valida")
+                                if (mostrarResultadoAnterior)//                                    if (Request["Operacion"].ToString() == "Valida")
                                 {
                                     string resultadoAnterior = "";// oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, oDetalle.IdItem, true);
                                                                   //if (resultadoAnterior != "")
@@ -952,7 +980,9 @@ namespace WebLab.Resultados
                     objFila.Cells.Add(objCellPaciente);
                     objFila.Cells.Add(objCellResultado);
 
-                    if (Request["Operacion"].ToString() == "Valida") objFila.Cells.Add(objCellResultadoAnterior);
+                    //if (Request["Operacion"].ToString() == "Valida")
+                    if (mostrarResultadoAnterior)
+                        objFila.Cells.Add(objCellResultadoAnterior);
                     objFila.Cells.Add(objCellReferencia);
                     //objFila.Cells.Add(objCellValoresReferencia);
                     objFila.Cells.Add(objCellPersona); if (Request["Operacion"].ToString() == "Valida") objFila.Cells.Add(objCellValida);

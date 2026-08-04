@@ -654,20 +654,20 @@ namespace WebLab.Protocolos
                             else
                             {
                                 // primero que valide renaper si es identificado y dsps al protocolo
-                                Paciente oPac = new Paciente();
-                                oPac = (Paciente)oPac.Get(typeof(Paciente), int.Parse(e.CommandArgument.ToString()));
-                                if ((oPac.IdEstado == 1) && (oC.ConectaRenaper)) //identificado
-                                {
-                                    string m_sexo = "";
-                                    switch (oPac.IdSexo)
-                                    {
-                                        case 1: m_sexo = "I"; break;
-                                        case 2: m_sexo = "F"; break;
-                                        case 3: m_sexo = "M"; break;
-                                    }
-                                    Response.Redirect("ProcesaRenaper.aspx?id=" + oPac.IdPaciente.ToString() + "&Tipo=" + ddlTipo.SelectedValue + "&dni=" + oPac.NumeroDocumento.ToString() + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
-                                }
-                                else
+                                //Paciente oPac = new Paciente();
+                                //oPac = (Paciente)oPac.Get(typeof(Paciente), int.Parse(e.CommandArgument.ToString()));
+                                //if ((oPac.IdEstado == 1) && (oC.ConectaRenaper)) //identificado
+                                //{
+                                //    string m_sexo = "";
+                                //    switch (oPac.IdSexo)
+                                //    {
+                                //        case 1: m_sexo = "I"; break;
+                                //        case 2: m_sexo = "F"; break;
+                                //        case 3: m_sexo = "M"; break;
+                                //    }
+                                //    Response.Redirect("ProcesaRenaper.aspx?id=" + oPac.IdPaciente.ToString() + "&Tipo=" + ddlTipo.SelectedValue + "&dni=" + oPac.NumeroDocumento.ToString() + "&sexo=" + m_sexo + "&llamada=LaboProtocolo&idServicio=" + Request["idServicio"].ToString() + "&idUrgencia=" + Session["idUrgencia"].ToString());
+                                //}
+                                //else
                                     Response.Redirect(s_pagina + "?idPaciente=" + e.CommandArgument + "&Operacion=Alta&idServicio=" + Request["idServicio"].ToString() + nrocaso);
                             }
 

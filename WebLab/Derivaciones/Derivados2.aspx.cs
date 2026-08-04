@@ -73,22 +73,33 @@ namespace WebLab.Derivaciones
             Usuario oUser = new Usuario();
             oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             //oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdConfiguracion", 1, "IdEfector", oUser.IdEfector);
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+            string cacheKey = "";
 
             Utility oUtil = new Utility();
             ///Carga de combos de tipos de servicios
             string m_ssql = "select idTipoServicio, nombre from Lab_TipoServicio WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre");
+            cacheKey = "CAT_TipoServicio";
+            Business.Helpers.ComboCache.CargarCombo(ddlServicio, cacheKey, m_ssql, "idTipoServicio", "nombre", connReady);
+
+            //oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre");
             ddlServicio.Items.Insert(0, new ListItem("Todos", "0"));
             CargarArea();
 
             ///Carga de combos de Origen
             m_ssql = "SELECT  idOrigen, nombre FROM LAB_Origen WHERE (baja = 0)";
-            oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre");
+              cacheKey = "CAT_Origen";
+            Business.Helpers.ComboCache.CargarCombo(ddlOrigen, cacheKey, m_ssql, "idOrigen", "nombre", connReady);
+
+            //oUtil.CargarCombo(ddlOrigen, m_ssql, "idOrigen", "nombre");
             ddlOrigen.Items.Insert(0, new ListItem("Todos", "0"));
 
             ///Carga de combos de Prioridad
             m_ssql = "SELECT idPrioridad, nombre FROM LAB_Prioridad WHERE     (baja = 0)";
-            oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre");
+            cacheKey = "CAT_Prioridad";
+            Business.Helpers.ComboCache.CargarCombo(ddlPrioridad, cacheKey, m_ssql, "idPrioridad", "nombre", connReady);
+
+            //oUtil.CargarCombo(ddlPrioridad, m_ssql, "idPrioridad", "nombre");
             ddlPrioridad.Items.Insert(0, new ListItem("Todos", "0"));
 
 

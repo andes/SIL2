@@ -19,7 +19,7 @@ using System.Drawing;
 
 namespace WebLab
 {
-    public partial class Principal : System.Web.UI.Page
+    public partial class Principal2 : System.Web.UI.Page
     {
       
    
@@ -46,7 +46,7 @@ namespace WebLab
                 //    int i = calcularComodinDifProtocolo();
                 //    Actualizarcomodin(i);
                 //}
-             //   MostrarInfoLogin(oUser);
+                MostrarInfoLogin(oUser);
                 if (oCon != null)
                 {
                     lblProximoProtocolo1.Visible = false;
@@ -225,7 +225,57 @@ namespace WebLab
 
         }
 
-        
+        private void MostrarInfoLogin(Usuario oUser)
+        {
+
+            string tipoLogin = oUser.TipoAutenticacion;// "";
+
+            //if (Session["TipoLogin"] != null)
+            //    tipoLogin = Session["TipoLogin"].ToString();
+
+
+            string fecha = "";
+
+            if (Session["FechaLogin"] != null)
+                fecha = Convert.ToDateTime(Session["FechaLogin"])
+                    .ToString("dd/MM/yyyy HH:mm");
+
+
+            //string servidor = "";
+
+            //if (Session["ServidorLogin"] != null)
+            //    servidor = Session["ServidorLogin"].ToString();
+
+
+            //string mensaje = "";
+
+            //if (Session["MensajeLogin"] != null)
+            //    mensaje = Session["MensajeLogin"].ToString();
+
+            
+            lblInfoLogin.Text =
+                    "<b>Usuario:</b> " + oUser.Apellido + " " + oUser.Nombre +
+                    "<br/><b>Efector:</b> " + oUser.IdEfector.Nombre +
+                    "<br/><b>Perfil:</b> " + oUser.IdPerfil.Nombre +
+                "<br/><b>Autenticación:</b> " + tipoLogin +
+                "<br/><b>Fecha ingreso:</b> " + fecha+
+                "<br/><b>Fecha Aceptacion de Terminos:</b> " +oUser.FechaAceptaTerminosCondiciones.ToString("dd/MM/yyyy HH:mm");  ;
+
+
+            //if (!string.IsNullOrEmpty(mensaje))
+            //{
+            //    pnlInfoLogin.Visible = true;
+            //    lblInfoLogin.Text +=
+            //        "<br/><br/><b>⚠ Aviso:</b> " + mensaje;
+
+            //    pnlInfoLogin.CssClass = "alert alert-warning";
+            //}
+            //else
+            //    pnlInfoLogin.Visible = false;
+
+
+
+    }
 
         private void CargarGrillaSISA()
         {

@@ -754,35 +754,93 @@ namespace WebLab.Usuarios
 
 
 
+        //private void GuardarEfectores(Business.Data.Usuario oUsuario)
+        //{
+        //    ///Eliminar los efectores y volverlos a crear
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(UsuarioEfector));
+        //    crit.Add(Expression.Eq("IdUsuario", oUsuario));
+        //    IList lista = crit.List();
+
+        //    HashSet<int> yaTieneAuditoriaVincula = new HashSet<int>();
+
+        //    foreach (UsuarioEfector oUsuarioEfector in lista)
+        //    {
+        //        yaTieneAuditoriaVincula.Add(oUsuarioEfector.IdEfector.IdEfector);
+        //        oUsuarioEfector.Delete();
+        //    }
+
+        //    //los genero nuevamente
+        //    DataTable dt = ViewState["efectores"] as DataTable;
+        //    if (dt != null || dt.Rows.Count > 0)
+        //    {
+        //        //instancio una sola vez el usuario auditor
+        //        Usuario oAuditor = new Usuario();
+        //        oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+        //        foreach (DataRow row in dt.Rows)
+        //        {
+        //            UsuarioEfector oRegistro = new UsuarioEfector();
+        //            int idEfector = int.Parse(row["idEfector"].ToString());
+        //            Efector oEfector = new Efector();
+        //            oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
+        //            oRegistro.IdUsuario = oUsuario;
+        //            oRegistro.IdEfector = oEfector;
+        //            oRegistro.Activo = true;
+        //            oRegistro.IdPerfil = int.Parse(row["idPerfil"].ToString());
+        //            oRegistro.IdArea = int.Parse(row["idArea"].ToString());
+        //            oRegistro.IdEfectorDestino = int.Parse(row["idEfectorDestino"].ToString());
+        //            oRegistro.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+        //            oRegistro.FechaRegistro = DateTime.Now;
+        //            oRegistro.Save();
+
+        //            //solo genero auditoria la primera vez que vincula el efector
+        //            if (!yaTieneAuditoriaVincula.Contains(idEfector))
+        //                oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username, "", "Perfil:" + row["Perfil"].ToString() + " Area:" + row["Area"].ToString());
+
+        //            //actualizo el viewstate con los nuevos ID
+        //            row[0] = oRegistro.IdUsuarioEfector;
+
+        //        }
+        //        ViewState["efectores"] = dt;
+        //    }
+        //}
+
+
         private void GuardarEfectores(Business.Data.Usuario oUsuario)
         {
-            ///Eliminar los efectores y volverlos a crear
+            ////Se guarda sin borrar los existentes ; ya que los existentes puden estar deshabilitados
             ISession m_session = NHibernateHttpModule.CurrentSession;
+
             ICriteria crit = m_session.CreateCriteria(typeof(UsuarioEfector));
             crit.Add(Expression.Eq("IdUsuario", oUsuario));
+
             IList lista = crit.List();
 
-            HashSet<int> yaTieneAuditoriaVincula = new HashSet<int>();
+            Dictionary<int, UsuarioEfector> efectoresExistentes = new Dictionary<int, UsuarioEfector>();
 
-            foreach (UsuarioEfector oUsuarioEfector in lista)
+            foreach (UsuarioEfector ue in lista)
             {
-                yaTieneAuditoriaVincula.Add(oUsuarioEfector.IdEfector.IdEfector);
-                oUsuarioEfector.Delete();
+                efectoresExistentes[ue.IdEfector.IdEfector] = ue;
             }
 
-            //los genero nuevamente
             DataTable dt = ViewState["efectores"] as DataTable;
-            if (dt != null || dt.Rows.Count > 0)
+
+            if (dt != null && dt.Rows.Count > 0)
             {
-                //instancio una sola vez el usuario auditor
-                Usuario oAuditor = new Usuario();
-                oAuditor = (Usuario)oAuditor.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                Usuario oAuditor = (Usuario)new Usuario().Get(typeof(Usuario),
+                    int.Parse(Session["idUsuario"].ToString()));
+
                 foreach (DataRow row in dt.Rows)
                 {
-                    UsuarioEfector oRegistro = new UsuarioEfector();
                     int idEfector = int.Parse(row["idEfector"].ToString());
-                    Efector oEfector = new Efector();
-                    oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
+
+                    // Si ya existe, no lo vuelvo a crear
+                    if (efectoresExistentes.ContainsKey(idEfector))
+                        continue;
+
+                    Efector oEfector = (Efector)new Efector().Get(typeof(Efector), idEfector);
+
+                    UsuarioEfector oRegistro = new UsuarioEfector();
                     oRegistro.IdUsuario = oUsuario;
                     oRegistro.IdEfector = oEfector;
                     oRegistro.Activo = true;
@@ -792,15 +850,17 @@ namespace WebLab.Usuarios
                     oRegistro.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
                     oRegistro.FechaRegistro = DateTime.Now;
                     oRegistro.Save();
-                    
-                    //solo genero auditoria la primera vez que vincula el efector
-                    if (!yaTieneAuditoriaVincula.Contains(idEfector))
-                        oAuditor.GrabaAuditoria("Vincula " + oEfector.Nombre, oRegistro.IdUsuario.IdUsuario, oRegistro.IdUsuario.Username, "", "Perfil:" + row["Perfil"].ToString() + " Area:" + row["Area"].ToString());
 
-                    //actualizo el viewstate con los nuevos ID
+                    oAuditor.GrabaAuditoria(
+                        "Vincula " + oEfector.Nombre,
+                        oRegistro.IdUsuario.IdUsuario,
+                        oRegistro.IdUsuario.Username,
+                        "",
+                        "Perfil:" + row["Perfil"] + " Area:" + row["Area"]);
+
                     row[0] = oRegistro.IdUsuarioEfector;
-                   
                 }
+
                 ViewState["efectores"] = dt;
             }
         }

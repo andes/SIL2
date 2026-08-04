@@ -12,6 +12,7 @@ using Business.Data;
 using NHibernate;
 using System.Collections;
 using NHibernate.Expression;
+using System.Configuration;
 
 namespace WebLab.Resultados
 {
@@ -24,6 +25,7 @@ namespace WebLab.Resultados
 
             if (!Page.IsPostBack)
             {
+                string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
                 txtObservacionAnalisis.Focus();
                 string s_idDetalleProtocolo = Request["idDetalleProtocolo"].ToString();
                 DetalleProtocolo oDetalle = new DetalleProtocolo();
@@ -31,13 +33,19 @@ namespace WebLab.Resultados
                 lblObservacionAnalisis.Text = oDetalle.IdSubItem.Nombre;
                 
                 Utility oUtil = new Utility();
-          
+                string idServicio = Request["idTipoServicio"].ToString();
+                string idServicioFiltro = idServicio;
+                if (idServicio == "5")
+                    idServicioFiltro = "1,3";
+
+
                 string m_ssql = @" SELECT  idObservacionResultado , codigo  AS descripcion 
-                                FROM   LAB_ObservacionResultado 
-with (nolock) where idTipoServicio=" + Request["idTipoServicio"].ToString()+" and  baja=0 order by codigo " ;
+                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio in (" + idServicioFiltro + ") and  baja=0 order by codigo " ;
 
+                string cacheKey = $"CAT_Observ_{idServicio}";
+                Business.Helpers.ComboCache.CargarCombo(ddlObservacionesCodificadas, cacheKey, m_ssql, "idObservacionResultado", "descripcion", connReady);
 
-                oUtil.CargarCombo(ddlObservacionesCodificadas, m_ssql, "idObservacionResultado", "descripcion");
+            //    oUtil.CargarCombo(ddlObservacionesCodificadas, m_ssql, "idObservacionResultado", "descripcion");
                 ddlObservacionesCodificadas.Items.Insert(0, new ListItem("", "0"));
 
                 txtObservacionAnalisis.Text=oDetalle.Observaciones;
