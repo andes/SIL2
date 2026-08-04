@@ -77,7 +77,7 @@ namespace WebLab.Protocolos
                 })();
             ";
             }
-
+           
             ClientScript.RegisterStartupScript( GetType(), "Cerrar", script, true);
 
         }

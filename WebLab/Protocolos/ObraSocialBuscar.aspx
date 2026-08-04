@@ -50,7 +50,7 @@
         <table>
             <tr>
                 <td style="vertical-align: top" class="myLabelIzquierda">
-                     Financiador / O.S:  <asp:DropDownList ID="ddlObrasSociales" runat="server" />
+       Financiador / O.S:  <asp:DropDownList ID="ddlObrasSociales" runat="server" />
                 </td>
             </tr>
             <tr>
@@ -60,7 +60,7 @@
             </tr>
             <tr>
                 <td style="vertical-align: top" align="right">
-                      <asp:Button ID="btnSeleccionar" CssClass="btn btn-primary" Width="100px" runat="server" OnClick="btnSeleccionar_Click" Text="Seleccionar" />
+        <asp:Button ID="btnSeleccionar" CssClass="btn btn-primary" Width="100px" runat="server" OnClick="btnSeleccionar_Click" Text="Seleccionar" />
                 </td>
             </tr>
         </table>
