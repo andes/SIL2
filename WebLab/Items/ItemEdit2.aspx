@@ -1234,8 +1234,8 @@
          <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
             <Columns>
                 <asp:BoundField DataField="idResultadoItem" Visible="false" ></asp:BoundField>
-                <asp:BoundField DataField="resultado" HeaderText="Resultado"> </asp:BoundField>
-                <asp:BoundField DataField="efectorDeriva" HeaderText="Efector Derivacion"></asp:BoundField>
+                <asp:BoundField DataField="resultado" HeaderText="Resultado Predefinido"> </asp:BoundField>
+                <asp:BoundField DataField="efectorDeriva" HeaderText="Efector Derivante"></asp:BoundField>
                 <asp:BoundField DataField="Estado" HeaderText="Estado"></asp:BoundField>
             </Columns>
             <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
