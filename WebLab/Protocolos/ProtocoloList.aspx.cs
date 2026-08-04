@@ -283,15 +283,18 @@ namespace WebLab.Protocolos
 
 
             //////////////////////////Carga de combos de ObraSocial//////////////////////////////////////////
-            if (Request["Tipo"].ToString() != "ListaProducto")  // si es no paciente no se cargan las obras sociales
+            if (Request["Tipo"].ToString() == "ListaProducto")  // si es no paciente no se cargan las obras sociales
             {
-                m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
-                ///oUtil.CargarCombo(ddlObraSocial, m_ssql, "nombre", "nombre", connReady);
-                cacheKey = $"CAT_OS_{oUser.IdEfector.IdEfector}";
-                Business.Helpers.ComboCache.CargarCombo(ddlObraSocial, cacheKey, m_ssql, "nombre", "nombre", connReady);
+                btnBorrarObraSocial.Enabled = false;
+                btnBuscarObraSocial.Enabled = false;
+                    
+                //m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
+                /////oUtil.CargarCombo(ddlObraSocial, m_ssql, "nombre", "nombre", connReady);
+                //cacheKey = $"CAT_OS_{oUser.IdEfector.IdEfector}";
+                //Business.Helpers.ComboCache.CargarCombo(ddlObraSocial, cacheKey, m_ssql, "nombre", "nombre", connReady);
                 
             }
-            ddlObraSocial.Items.Insert(0, new ListItem("--Todos--", "0"));
+            //ddlObraSocial.Items.Insert(0, new ListItem("--Todos--", "0"));
             //////////////////////////////////////////////////////////////////////////////////////////////////
             if (Request["Tipo"].ToString() != "ListaProducto")  // si es no paciente no se carga 
             {
@@ -536,7 +539,7 @@ namespace WebLab.Protocolos
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
 
-            if (ddlObraSocial.SelectedValue != "0") str_condicion += " AND P.nombreObraSocial='" + ddlObraSocial.SelectedValue+ "'";
+            if (tbObraSocial.Text != "") str_condicion += " AND P.nombreObraSocial='" + tbObraSocial.Text + "'";
             if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in ("+ ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
             if (ddlSectorServicio.SelectedValue != "0") str_condicion += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
@@ -1657,5 +1660,19 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             }
         }
 
+        protected void btnBorrarObraSocial_Click(object sender, EventArgs e)
+        {
+            tbObraSocial.Text ="";
+            tbObraSocial.UpdateAfterCallBack = true;
+        }
+
+        protected void btnBuscarObraSocial_Click1(object sender, EventArgs e)
+        {
+            if (Session["obraSocial"] != null)
+            {
+                tbObraSocial.Text = Session["obraSocial"].ToString();
+                tbObraSocial.UpdateAfterCallBack = true;
+            }
+        }
     }
 }
