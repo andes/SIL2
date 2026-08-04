@@ -270,16 +270,19 @@
 						<td align="left" >
                                             &nbsp;</td>
 						
-						<td class="myLabelIzquierda" >
-                                            Obra Social:</td>
+						<td class="myLabelIzquierda" > Obra Social:</td>
 						
-						<td>
-                                           <asp:DropDownList ID="ddlObraSocial" runat="server" class="form-control input-sm" 
+						
+                                          <%-- <asp:DropDownList ID="ddlObraSocial" runat="server" class="form-control input-sm" 
                                                 TabIndex="17" Width="400px" >
                                                
-                                            </asp:DropDownList>
-                                                <br />
-                                                </td>
+                                            </asp:DropDownList>--%>
+                            <td><anthem:TextBox runat="server" ID="tbObraSocial" TabIndex="17" CssClass="form-control input-sm" Enabled="False" Width="400px"/> </td>
+                                                
+                           <td>  &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" TabIndex="18" onclick="btnBuscarObraSocial_Click1" OnClientClick="buscaObraSocial(); return false;"   CssClass="btn btn-primary" Width="60px">
+                               <span class="glyphicon glyphicon-zoom-in"/></asp:LinkButton>
+                                   </td>
+                            <td> &nbsp;<asp:Button runat="server" ID="btnBorrarObraSocial" TabIndex="19" onclick="btnBorrarObraSocial_Click" Text="Borrar seleccion" CssClass="btn btn-danger" Width="130px"/>  </td>
 						
 					</tr>
 						    <tr>
@@ -318,7 +321,7 @@
                                                              
                                                                  &nbsp;&nbsp;&nbsp;
                                                                  <asp:Button ID="btnBuscarControl" runat="server" CssClass="btn btn-primary"
-                                                                     onclick="btnBuscarControl_Click" TabIndex="18" Text="Buscar" 
+                                                                     onclick="btnBuscarControl_Click" TabIndex="20" Text="Buscar" 
                                                                      ValidationGroup="0" Width="100px"   />
                                                                  </td>
                                                         </tr>
@@ -341,7 +344,7 @@
                                                                    <asp:ListItem Value="Desc">Descendente</asp:ListItem>
                                                                </asp:DropDownList>
                                                             <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary"
-                                                                onclick="btnBuscar_Click" TabIndex="18" Text="Buscar" ValidationGroup="0" 
+                                                                onclick="btnBuscar_Click" TabIndex="21" Text="Buscar" ValidationGroup="0" 
                                                                 Width="77px" />
                                                         </td>
                                                     </tr>
@@ -804,8 +807,45 @@ function muestraSelect() {
             background: "black"
         }
     }).width(800);
-}
-    </script>
+    }
+
+
+    function buscaObraSocial() {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+
+        var $this = $(this);
+        $('<iframe src="ObraSocialBuscar.aspx"/>').dialog({
+            title: 'Seleccionar Obra Social',
+            autoOpen: true,
+            width: 700,
+            height: 450,
+            modal: false,
+            resizable: false,
+            autoResize: true,
+            <%--buttons: {
+                'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnBuscarObraSocial))%>; } --cerrar con la seleccion
+            },--%>
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(700);
+    }
+
+</script>
 
  
     </table>
