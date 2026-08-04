@@ -51,11 +51,11 @@ namespace Business.Data.Laboratorio
         private bool m_mequiereTodasLasDeterminaciones;
         #endregion
 
-        #region Default ( Empty ) Class Constuctor
-        /// <summary>
-        /// default constructor
-        /// </summary>
-        public HojaTrabajo()
+		#region Default ( Empty ) Class Constuctor
+		/// <summary>
+		/// default constructor
+		/// </summary>
+		public HojaTrabajo()
 		{
 			m_idhojatrabajo = 0; 
 			m_idefector = new Efector(); 
@@ -536,7 +536,7 @@ namespace Business.Data.Laboratorio
 		{
 			get { return m_isChanged; }
 		}
-			
+				
         public bool RequiereTodasLasDeterminaciones
         {
             get
@@ -549,7 +549,7 @@ namespace Business.Data.Laboratorio
                 m_mequiereTodasLasDeterminaciones = value;
             }
         }
-        #endregion
+		#endregion 
 
 
 

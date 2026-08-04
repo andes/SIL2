@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Principal.aspx.cs" Inherits="WebLab.Principal" MasterPageFile="~/Site1.Master" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Principal2.aspx.cs" Inherits="WebLab.Principal" MasterPageFile="~/Site1.Master" %>
 
 <%@ Register assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagprefix="ajx" %>
 <%@ Register Src="~/PeticionList.ascx" TagPrefix="uc1" TagName="PeticionList" %>
@@ -46,7 +46,13 @@
             </div>
  
      </div>
-   
+     <div class="row">
+     <div class="col-sm-4">
+        <asp:Panel ID="pnlInfoLogin" runat="server" CssClass="alert alert-info">
+            <asp:Label ID="lblInfoLogin" runat="server"></asp:Label>
+        </asp:Panel>
+    </div>
+</div>
 
           
         <div class="row" >

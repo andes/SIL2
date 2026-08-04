@@ -299,6 +299,19 @@
     <Content Include="bootstrap\3.3.7\bootstrap.min.js" />
     <Content Include="bootstrap\3.3.7\font-awesome.min.css" />
     <Content Include="bootstrap\3.3.7\jquery.min.js" />
+    <Content Include="bootstrap\css\bootstrap-datepicker.min.css" />
+    <Content Include="bootstrap\css\bootstrap-datepicker3.min.css" />
+    <Content Include="bootstrap\css\bootstrap-datetimepicker.min.css" />
+    <Content Include="bootstrap\css\bootstrap-table.min.css" />
+    <Content Include="bootstrap\css\bootstrap.css" />
+    <Content Include="bootstrap\css\bootstrap.min.css" />
+    <Content Include="bootstrap\css\fonts\font-awesome.min.css" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.svg" />
+    <Content Include="bootstrap\css\formValidation.css" />
+    <Content Include="bootstrap\css\intlTelInput.css" />
+    <Content Include="bootstrap\css\jquery-clockpicker.min.css" />
+    <Content Include="bootstrap\css\jquery-ui.css" />
+    <Content Include="bootstrap\css\select2.min.css" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\attribution.js" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\css\all.css" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\css\all.min.css" />
@@ -1947,6 +1960,27 @@
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\webfonts\fa-brands-400.svg" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\webfonts\fa-regular-400.svg" />
     <Content Include="bootstrap\fontawesome-free-5.15.1-web\webfonts\fa-solid-900.svg" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="bootstrap\img\flags%402x.png" />
+    <Content Include="bootstrap\img\flags.png" />
+    <Content Include="bootstrap\js\bootstrap-datepicker.es.min.js" />
+    <Content Include="bootstrap\js\bootstrap-datepicker.min.js" />
+    <Content Include="bootstrap\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="bootstrap\js\bootstrap-table-locale-all.min.js" />
+    <Content Include="bootstrap\js\bootstrap-table.min.js" />
+    <Content Include="bootstrap\js\bootstrap.js" />
+    <Content Include="bootstrap\js\bootstrap.min.js" />
+    <Content Include="bootstrap\js\bootstrap3-typeahead.js" />
+    <Content Include="bootstrap\js\intlTelInput.js" />
+    <Content Include="bootstrap\js\jquery-1.12.0.js" />
+    <Content Include="bootstrap\js\jquery-clockpicker.min.js" />
+    <Content Include="bootstrap\js\jquery-ui.js" />
+    <Content Include="bootstrap\js\moment.min.js" />
+    <Content Include="bootstrap\js\pulsate.min.js" />
+    <Content Include="bootstrap\js\select2.full.min.js" />
+    <Content Include="bootstrap\js\utils.js" />
+    <Content Include="bootstrap\js\validar\bootstrap.js" />
+    <Content Include="bootstrap\js\validar\formValidation.js" />
     <Content Include="Calidad\IncidenciaEdit.ascx" />
     <Content Include="Calidad\IncidenciaRecepcionEdit.aspx" />
     <Content Include="Calidad\IncidenciaRecepcionList.aspx" />
@@ -2444,6 +2478,7 @@
     <Content Include="Placas\PlacaMixtaEdit.aspx" />
     <Content Include="Placas\PlacaResultado.aspx" />
     <Content Include="Placas\PlacaResultadoMixta.aspx" />
+    <Content Include="Principal2.aspx" />
     <Content Include="PrincipalTurnos.aspx" />
     <Content Include="Protocolos\Consentimiento.aspx" />
     <Content Include="Protocolos\Consentimientos\Fotos\aaa.jpg" />
@@ -2584,7 +2619,6 @@
     <Content Include="Resultados\IncidenciaProtocolo.aspx" />
     <Content Include="Resultados\AuditoriaView.aspx" />
     <Content Include="Resultados\AntecedentesAnalisisView.aspx" />
-    <Content Include="Resultados\ObservacionesEditExt.aspx" />
     <Content Include="Resultados\PesquisaNeonatal.ascx" />
     <Content Include="Resultados\PesquisaNeonatalView.aspx" />
     <Content Include="Resultados\ProcesaExterno.aspx" />
@@ -2655,7 +2689,6 @@
     <Content Include="Turnos\FeriadoEdit.ascx" />
     <Content Include="Turnos\TurnosEdit2.aspx" />
     <Content Include="Usuarios\PasswordEdit2.aspx" />
-    <Content Include="Usuarios\UsuarioConsulta.aspx" />
     <Content Include="vIDEOS\consulta resultados.wmv" />
     <Content Include="vIDEOS\INGRESOMUESTRA.wmv" />
     <Content Include="vIDEOS\MODIFICACIONPROTOCOLOS.wmv" />
@@ -4876,129 +4909,6 @@
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Horizontal1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo1MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1MicrobiologiaHorizontalSA.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Horizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo2MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Horizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo3MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Horizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4Horizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Microbiologia.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4Microbiologia.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4MicrobiologiaHorizontal.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo4MicrobiologiaHorizontal.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5MicrobiologiaHorizontal.cs">
-      <DependentUpon>HTrabajoProtocolo5MicrobiologiaHorizontal.rpt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <SubType>Component</SubType>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Microbiologia.cs">
-      <DependentUpon>HTrabajoProtocolo5Microbiologia.rpt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <SubType>Component</SubType>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.cs">
-      <DependentUpon>HTrabajoProtocolo5Horizontal.rpt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <SubType>Component</SubType>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo51.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HTrabajoProtocolo5.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5461,6 +5371,13 @@
     <Compile Include="Placas\PlacaResultadoMixta.aspx.designer.cs">
       <DependentUpon>PlacaResultadoMixta.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Principal2.aspx.cs">
+      <DependentUpon>Principal2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Principal2.aspx.designer.cs">
+      <DependentUpon>Principal2.aspx</DependentUpon>
+    </Compile>
     <Compile Include="PrincipalTurnos.aspx.cs">
       <DependentUpon>PrincipalTurnos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5767,13 +5684,6 @@
     </Compile>
     <Compile Include="Resultados\AntecedentesAnalisisView.aspx.designer.cs">
       <DependentUpon>AntecedentesAnalisisView.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Resultados\ObservacionesEditExt.aspx.cs">
-      <DependentUpon>ObservacionesEditExt.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Resultados\ObservacionesEditExt.aspx.designer.cs">
-      <DependentUpon>ObservacionesEditExt.aspx</DependentUpon>
     </Compile>
     <Compile Include="Resultados\PesquisaNeonatal.ascx.cs">
       <DependentUpon>PesquisaNeonatal.ascx</DependentUpon>
@@ -6261,13 +6171,6 @@
     <Compile Include="Usuarios\UsuarioEdit.aspx.designer.cs">
       <DependentUpon>UsuarioEdit.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Usuarios\UsuarioConsulta.aspx.cs">
-      <DependentUpon>UsuarioConsulta.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Usuarios\UsuarioConsulta.aspx.designer.cs">
-      <DependentUpon>UsuarioConsulta.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Usuarios\UsuarioList.aspx.cs">
       <DependentUpon>UsuarioList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6371,6 +6274,15 @@
     <Content Include="App_Themes\default\images\arrow-up.gif" />
     <Content Include="App_Themes\default\images\block.png" />
     <Content Include="App_Themes\default\images\CUADRO.jpg" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.eot" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.ttf" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.woff" />
+    <Content Include="bootstrap\css\fonts\fontawesome-webfont.woff2" />
+    <Content Include="bootstrap\css\fonts\FontAwesome.otf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="bootstrap\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="bin\WebLab.dll.config" />
     <Content Include="bootstrap-3.3.7-dist\css\bootstrap-theme.css.map" />
     <Content Include="bootstrap-3.3.7-dist\css\bootstrap-theme.min.css.map" />
@@ -6986,22 +6898,6 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4PesquisaHorizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4PesquisaHorizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5MicrobiologiaHorizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocolo5MicrobiologiaHorizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Microbiologia.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocolo5Microbiologia.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5Horizontal.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocolo5Horizontal.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo5.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>HTrabajoProtocolo51.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

@@ -133,7 +133,7 @@
                                    <td colspan="2"> 
                                         <asp:GridView ID="gvLista" runat="server"
                                             AutoGenerateColumns="False" 
-                                            CellPadding="1" DataKeyNames="idUsuario" 
+                                            CellPadding="1" DataKeyNames="idUsuario,idEfector"
                                             ForeColor="#333333" onrowcommand="gvLista_RowCommand1" 
                                             onrowdatabound="gvLista_RowDataBound"   Width="100%" 
                                             EmptyDataText="No hay usuarios creados"  CssClass="table table-bordered bs-table"  GridLines="Horizontal"

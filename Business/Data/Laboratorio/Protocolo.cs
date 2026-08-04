@@ -1170,6 +1170,7 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
           AND p2.Estado > 0
           AND p2.IdProtocolo < @idProtocoloActual
           AND dp2.IdUsuarioValida > 0
+	  and dp2.conResultado=1
         ---agrego que solo traiga los antecedentes de las determinaciones del protocolo actual
             AND dp2.IdSubItem IN (
             SELECT DISTINCT IdSubItem

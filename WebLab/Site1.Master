@@ -175,8 +175,8 @@ document.onkeydown=checkKeyCode;
           src="~/App_Themes/default/images/icono_help.jpg" border="0" visible="false"  runat="server" id="imgAyudaLinea" /></a>--%>
           
          
-     &nbsp;<a title="Volver a pantalla principal"  href="<%= Page.ResolveUrl("/Sips/default.aspx") %>">
-    <span class=" glyphicon glyphicon-home" runat="server" id="imgPrincipal" visible="false"></span></a>&nbsp;&nbsp;
+   <%--  &nbsp;<a title="Volver a pantalla principal"  href="<%= Page.ResolveUrl("/Sips/default.aspx") %>">
+    <span class=" glyphicon glyphicon-home" runat="server" id="imgPrincipal" visible="false"></span></a>&nbsp;&nbsp;--%>
      <asp:HyperLink ID="lnkCerrar" runat="server" 
          NavigateUrl="FinSesion.aspx" ToolTip="Cierra sesión del usuario y cierra el sistema">  <span class="glyphicon glyphicon-log-out"></span></asp:HyperLink>
          <asp:LinkButton ID="lnkCambiarPass" PostBackUrl="~/Usuarios/PasswordEdit2.aspx" ToolTip="Cambiar Password" runat="server" Text="" Width="20px"  >
@@ -222,7 +222,7 @@ document.onkeydown=checkKeyCode;
   font-weight: normal;
   font-size: 14px;
   font-family: Arial;
-   text-align:center;">Versión MultiEfector Julio 2026-14.<a href="<%= Page.ResolveUrl("~/controldecambios.html") %>"  target="_blank" >Ver Cambios Version</a></p>
+   text-align:center;">Versión MultiEfector Agosto 2026-01.<a href="<%= Page.ResolveUrl("~/controldecambios.html") %>"  target="_blank" >Ver Cambios Version</a></p>
      
 	</div>	</form>
 </body>

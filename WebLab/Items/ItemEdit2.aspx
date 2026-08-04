@@ -79,7 +79,7 @@
  <li><a href="#tab6">Mas opciones</a></li>
      <li><a href="#tab9">Turnos</a></li>
      <li><a href="#tab10">AutoAnalizadores</a></li>
-     <li><a href="#tab11">Observaciones Resultados</a></li>
+    <%-- <li><a href="#tab11">Observaciones Resultados</a></li>--%>
 </ul>
 
     <div id="tab1" class="tab_content" style="border: 1px solid #C0C0C0">

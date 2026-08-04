@@ -1205,7 +1205,9 @@ namespace Business.Data.Laboratorio
       AND p.IdPaciente = @idPaciente
       AND p.IdProtocolo < @idProtocoloActual
       AND dp.IdUsuarioValida > 0
-    ORDER BY dp.IdDetalleProtocolo DESC";
+      AND DP.conresultado=1
+ --   ORDER BY dp.IdDetalleProtocolo DESC---no es necesario ordenar
+";
 
             Utility util = new Utility();
 

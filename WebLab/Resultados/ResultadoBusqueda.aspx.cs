@@ -943,7 +943,6 @@ namespace WebLab.Resultados
                         case 3: modoCarga = "ANDE"; break;
                         //case 4: modoCarga = "ANDA"; break;
                     }
-
                 }
 
                 //if (modoCarga == "LP")
@@ -1264,10 +1263,7 @@ namespace WebLab.Resultados
             //Verificamos si el primer item tiene que traer su detalle
             if (HojaTrabajoEsContinua()) CargarDetalleHT();
             else HFFormatoAncho.Value = "";
-           
-
         }
-        
 
         protected void cvFechas_ServerValidate(object source, ServerValidateEventArgs args)
         {  try{
@@ -1452,9 +1448,8 @@ namespace WebLab.Resultados
                         txtCodigo.Enabled = false;
                         ddlAnalisis.UpdateAfterCallBack = true;
                         txtCodigo.UpdateAfterCallBack = true;
-                    
 
-                }
+                    }
                 }
             }
 
@@ -1519,7 +1514,6 @@ namespace WebLab.Resultados
                 args.IsValid = false;
             }
         }
-
         private void CargarDetalleHT()
         {
             Utility oUtil = new Utility();
@@ -1566,10 +1560,10 @@ namespace WebLab.Resultados
                 ddlAnalisis.UpdateAfterCallBack = true;
                 txtCodigo.UpdateAfterCallBack = true;
             }
-                
+            
         }
+       
 
-        
-    }
+        }
    
 }

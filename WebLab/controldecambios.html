@@ -121,18 +121,131 @@
   
   <script>
       const cambios = [
-            {
-                "fecha": "2026.07.14",
-                "modulo": "Carga/Validacion de Resultados",
-                "detalle": "Se excluye la codificacion de datos del paciente en los casos de determinaciones configuradas para tal fin. Se deja codificacion en generacion de PDF.",
-                "tipo": "Nueva Funcionalidad"
-            },
 	    {
-               "fecha": "2026.07.14",
-               "modulo": "Administracion de usuarios",
-               "detalle": "Se agrega posibilidad de diferenciar perfil de usuario por efector vinculado el usuario. Se cambia lógica de acceso al sistema por estos cambios.",
-               "tipo": "Nueva Funcionalidad"
+                "fecha": "2026.08.01",
+                "modulo": "Protocolo- Ingreso de Paciente",
+                "detalle": "Se corrige para que no valide con Renaper si el paciente ya fue identificado con DNI.",
+                "tipo": "Correccion"
+            },
+            {
+                "fecha": "2026.07.30",
+                "modulo": "API- Andes",
+                "detalle": "Se corrige para que cuando un resultado está validado, pero la observación asociada todavía no lo está, no interopere con Andes enviando esa observación sin validar.",
+                "tipo": "Correccion"
+            },
+           {
+               "fecha": "2026.07.29",
+               "modulo": "Modulo No Pacientes -Estado Protocolo",
+               "detalle": "Se modifica para que el terminar un protocolo no quede en estado Restringido.",
+               "tipo": "Cambio de funcionalidad"
            },
+           {
+               "fecha": "2026.07.29",
+               "modulo": "Modulo No Pacientes -Resultados anteriores",
+               "detalle": "Se cambia para que no se muestren resultados anteriores en las opciones de carga, validacion y consulta de resultados.",
+               "tipo": "Cambio de funcionalidad"
+           },
+            {
+                "fecha": "2026.07.29",
+                "modulo": "Modulo No Pacientes - Carga y Validacion",
+                "detalle": "Correccion en visualizacion de observaciones.",
+                "tipo": "Correccion"
+            },
+           {
+               "fecha": "2026.07.29",
+               "modulo": "Historial de Resultados",
+               "detalle": "Se corrige que no se mostraban los aislamientos, atb en la visualizacion de resultado por pantalla de protocolos de No Pacientes.",
+               "tipo": "Correccion"
+           },
+            {
+                "fecha": "2026.07.29",
+                "modulo": "Usuarios por Efector",
+                "detalle": "Se modifica para que la habilitacion/inhabilitacion se realice por efector y no al usuario completo.",
+                "tipo": "Mejora"
+            },
+              {
+                  "fecha": "2026.07.29",
+                  "modulo": "REAL",
+                  "detalle": "Se habilita interoperabilidad del instrumento REAL para el laboratorio Zapala.",
+                  "tipo": "Nueva funcionalidad"
+              },
+               {
+                   "fecha": "2026.07.29",
+                   "modulo": "REAL - Derivaciones",
+                   "detalle": "Se modifica API para no enviar al REAL determinaciones marcadas como derivables dentro del efector.",
+                   "tipo": "Nueva funcionalidad"
+               },
+                 {
+                     "fecha": "2026.07.29",
+                     "modulo": "Hoja de trabajo - Nuevo Formato",
+                     "detalle": "Se habilita un nuevo formato de hoja de trabajo denominado 'Lista Continua' que permite listar las determinaciones agrupadas por lista a diferencia de la tabla cruzada que se genera actualmente.",
+                     "tipo": "Nueva funcionalidad"
+                 },
+                 {
+                     "fecha": "2026.07.29",
+                     "modulo": "Hoja de trabajo - Nuevo Parametro",
+                     "detalle": "Se habilita un nuevo parametro de hoja de trabajo denominado 'Requiere Todas Las Determinaciones' que permite listar solo por protocolos que tienen pedidas todas las determinaciones de hoja de trabajo",
+                     "tipo": "Nueva funcionalidad"
+                 },
+                  {
+                      "fecha": "2026.07.21",
+                      "modulo": "Interoperabilidad Cobas C303, Cobas 311, Cobas E411",
+                      "detalle": "Se habilitaron los servicios para interoperar con los instrumentos Cobas C303, Cobas 311, Cobas E411 ",
+                      "tipo": "Nueva Funcionalidad"
+                  },
+
+           {
+               "fecha": "2026.07.20",
+               "modulo": "Administración de Determinaciones",
+               "detalle": "Al editar una determinación, la solapa activa se mantiene luego de eliminar un registro de Muestras, evitando volver automáticamente a la solapa principal.",
+               "tipo": "Corrección"
+           },
+    {
+        "fecha": "2026.07.20",
+        "modulo": "Hoja de Trabajo",
+        "detalle": "Se eliminan las opciones de selección, marcado y la última columna de la grilla, funcionalidades obsoletas provenientes de SIL1.",
+        "tipo": "Mejora"
+    }, {
+        "fecha": "2026.07.20",
+        "modulo": "Hoja de Trabajo - Vista Preeliminar",
+        "detalle": "Se corrige un error que impedía visualizar correctamente el preliminar de la Hoja de Trabajo.",
+        "tipo": "Corrección"
+    },
+    {
+        "fecha": "2026.07.20",
+        "modulo": "Consulta de Resultados",
+        "detalle": "Se oculta el panel superior resaltado para mejorar la visualización de la pantalla.",
+        "tipo": "Mejora"
+    },
+    
+    {
+        "fecha": "2026.07.20",
+        "modulo": "Validación de Resultados",
+        "detalle": "Se muestra un indicador (pin rojo) en la solapa Observaciones cuando existen observaciones cargadas, de forma similar a las solapas Aislamiento y Antibiogramas.",
+        "tipo": "Mejora"
+    },
+    
+    {
+        "fecha": "2026.07.20",
+        "modulo": "Gráficos - Histórico por Análisis",
+        "detalle": "Se reemplaza el gráfico de Evolución del Historial por Análisis por una nueva versión con mejoras de visualización. Se incorpora el gráfico de evolución para resultados no numéricos configurados mediante listas de resultados predeterminados.",
+        "tipo": "Nueva Funcionalidad"
+    },
+   
+   
+          {
+              "fecha": "2026.07.14",
+              "modulo": "Codificación de datos del paciente",
+              "detalle": "Se excluye la codificación de datos del paciente en los casos de determinaciones configuradas para tal fin. Se mantiene la codificación en la generación de PDF.",
+              "tipo": "Nueva Funcionalidad"
+          },
+    {
+        "fecha": "2026.07.14",
+        "modulo": "Administración de usuarios",
+        "detalle": "Se agrega la posibilidad de diferenciar el perfil de usuario por efector vinculado al usuario. Se modifica la lógica de acceso al sistema para soportar esta funcionalidad.",
+        "tipo": "Nueva Funcionalidad"
+    },
+   
            {
                "fecha": "2026.07.02",
                "modulo": "Historico de Analisis",

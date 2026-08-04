@@ -11,6 +11,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using System.Web.UI.HtmlControls;
+
 using Business.Data.Laboratorio;
 using Business.Data;
 using System.Configuration;

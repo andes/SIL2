@@ -460,17 +460,17 @@ namespace WebLab.Protocolos
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-
+            int idServicio = 5;
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
 
             ///Carga de combos de tipos de servicios          
-            TipoServicio oServicio = new TipoServicio();            oServicio =(TipoServicio) oServicio.Get(typeof(TipoServicio), 5);
+            TipoServicio oServicio = new TipoServicio();            oServicio =(TipoServicio) oServicio.Get(typeof(TipoServicio), idServicio);
             
             lblServicio.Text = oServicio.Nombre + " NUEVO PROTOCOLO " ;
             lblServicio1.Text = "PROTOCOLO DE " + oServicio.Nombre.ToUpper();
-            
-            
+
+
             ///Carga de grupos de numeración solo si el tipo de numeración es 2: por Grupos => obsoleto con sil2
             //string m_ssql = "SELECT  idSectorServicio,  prefijo + ' - ' + nombre   as nombre FROM LAB_SectorServicio with (nolock) WHERE (baja = 0) order by nombre";
             //oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
@@ -478,15 +478,21 @@ namespace WebLab.Protocolos
 
 
             string str_condicion = ")";
+            str_condicion = "  and fechaDesde<=getdate() and (fechaHasta='19000101' or fechahasta>getdate()) ))";
             if ((Request["Operacion"].ToString() == "Modifica") && (Request["idProtocolo"] != null))
-                str_condicion = "  or exists (select 1 from LAB_Protocolo p WHERE p.idsector  = s.idSectorServicio and idProtocolo = " + Request["idProtocolo"].ToString() + ")) ";
+                str_condicion += "  or exists (select 1 from LAB_Protocolo p with (nolock)  WHERE p.idsector  = s.idSectorServicio and idProtocolo = " + Request["idProtocolo"].ToString() + ") ";
+
 
 
             string m_ssql = @"SELECT  s.idSectorServicio,  s.prefijo + ' - ' + s.nombre   as nombre FROM LAB_SectorServicio  S with (nolock) 
                              WHERE (baja = 0)  
-                             and ( exists (select 1 from Lab_SectorServicioEfector SE where SE.idSectorServicio=S.idSectorServicio and se.idefector=" + oUser.IdEfector.IdEfector.ToString() + @" )" + str_condicion + @" order by nombre";
+                             and ( exists (select 1 from Lab_SectorServicioEfector SE  with (nolock) 
+                                            where SE.idSectorServicio=S.idSectorServicio and se.idefector=" + oUser.IdEfector.IdEfector.ToString() + str_condicion + @" order by nombre";
+            //oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
+            string cacheKey = $"CAT_Servicio_{oUser.IdEfector.IdEfector}_{idServicio}";
+            Business.Helpers.ComboCache.CargarCombo(ddlSectorServicio, cacheKey, m_ssql, "idSectorServicio", "nombre", connReady);
 
-            oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
+        //    oUtil.CargarCombo(ddlSectorServicio, m_ssql, "idSectorServicio", "nombre", connReady);
             ddlSectorServicio.Items.Insert(0, new ListItem("Seleccione", "0"));
             /////////////////////////////////////////////CODIGO DE BARRAS//////////////////////////////////////////////////////////////////////
             tab3Titulo.Visible = false;
@@ -508,8 +514,10 @@ namespace WebLab.Protocolos
                 if (oConfiguracion.Habilitado)
                 {
                     m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
-                                                                                                                                                                          //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-                    oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
+
+                    cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}";
+                    Business.Helpers.ComboCache.CargarCombo(ddlImpresoraEtiqueta, cacheKey, m_ssql, "nombre", "nombre", connReady);                                                                                                                                   //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+               //     oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
 
 
@@ -575,13 +583,14 @@ namespace WebLab.Protocolos
 
             ///Carga de conservacion
              m_ssql = " select idConservacion, descripcion from lab_conservacion with (nolock) where baja=0 order by descripcion";
-            oUtil.CargarCombo(ddlConservacion, m_ssql, "idConservacion", "descripcion", connReady);
+            cacheKey = $"CAT_Conservacion";
+            Business.Helpers.ComboCache.CargarCombo(ddlConservacion, cacheKey, m_ssql, "idConservacion", "descripcion", connReady);
+            ///oUtil.CargarCombo(ddlConservacion, m_ssql, "idConservacion", "descripcion", connReady);
             ddlConservacion.Items.Insert(0, new ListItem("Seleccione", "0"));
 
             ////////////Carga de combos de Efector
             ////////////Carga de combos de Efector
             m_ssql = "SELECT idEfector, nombre FROM sys_Efector E with (nolock) ";
-
             //if (Request["Operacion"].ToString() != "Modifica")  //alta
             m_ssql += " where exists (select 1 from LAB_EfectorRelacionado R with (nolock) where E.idEfector = R.idEfectorRel and R.idefector = " + oUser.IdEfector.IdEfector.ToString() +
                 ")  or (E.idEfector=" + oC.IdEfector.IdEfector.ToString() + @" )";
@@ -833,7 +842,8 @@ namespace WebLab.Protocolos
             {
                 if ((oRegistro.IdTipoServicio.IdTipoServicio ==5) &&
                     (oRegistro.IdEfector.IdEfector == 205 ||
-                     oRegistro.IdEfector.IdEfector == 221))
+                     oRegistro.IdEfector.IdEfector == 221 ||
+                     oRegistro.IdEfector.IdEfector == 33))
                 {
                     SqlConnection conn =
                         (SqlConnection)
@@ -1087,7 +1097,7 @@ namespace WebLab.Protocolos
                 oRegistro.FechaTomaMuestra = DateTime.Parse("01/01/1900"); //DateTime.Parse(txtFechaEntrega.Value);
 
                 oRegistro.IdEfectorSolicitante = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
-                oRegistro.Notificarresultado = false;
+              //  oRegistro.Notificarresultado = false;
 
 
                               

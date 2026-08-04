@@ -1,5 +1,7 @@
 ﻿using Business;
 using Business.Data;
+using NHibernate;
+using NHibernate.Expression;
 using System;
 using System.Collections;
 using System.Configuration;
@@ -26,13 +28,8 @@ namespace WebLab.Usuarios
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (Session["idUsuario"] != null)
-            {
-
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                //  oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-
-            }
+            if (Session["idUsuario"] != null)            
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));                            
             else Response.Redirect("../FinSesion.aspx", false);
         }
         protected void Page_Load(object sender, EventArgs e)
@@ -126,8 +123,8 @@ namespace WebLab.Usuarios
                 m_ssql = @"SELECT DISTINCT
                             U.idPerfil,
                             P.nombre
-                        FROM Sys_Usuario U
-                        INNER JOIN Sys_Perfil P ON P.idPerfil = U.idPerfil
+                        FROM Sys_Usuario U with (nolock) 
+                        INNER JOIN Sys_Perfil P with (nolock)  ON P.idPerfil = U.idPerfil
                         WHERE U.idUsuario IN (
                             SELECT idUsuario
                             FROM Sys_UsuarioEfector
@@ -167,7 +164,7 @@ namespace WebLab.Usuarios
             string m_strSQL;
             if (tipo == "excel")
             {
-                m_strSQL = @"SELECT U.apellido, U.nombre, username, CASE WHEN U.activo = 1 THEN 'Si' ELSE 'No' END AS activo,
+                m_strSQL = @"SELECT U.apellido, U.nombre, username, CASE WHEN UE.activo = 1 THEN 'Si' ELSE 'No' END AS activo,
                     firmaValidacion, email, U.telefono, CASE WHEN externo = 1 THEN 'Si' ELSE 'No' END AS externo,
                     P.nombre AS Perfil, E.nombre AS Efector,tipoAutenticacion as [Tipo Autenticacion] 
                     FROM Sys_Usuario U WITH (NOLOCK) 
@@ -178,7 +175,7 @@ namespace WebLab.Usuarios
             else
             {
                 m_strSQL = @"SELECT U.idUsuario, U.apellido, U.nombre, U.username, P.nombre AS perfil, E.nombre as efector ,
-                        case when U.activo=1 then 'Si' else 'No' end  as habilitado, U.activo as activo , tipoAutenticacion 
+                        case when UE.activo=1 then 'Si' else 'No' end  as habilitado, Ue.activo as activo , tipoAutenticacion, UE.idEfector 
                         FROM Sys_Usuario U WITH(NOLOCK) 
                         INNER JOIN Sys_UsuarioEfector AS UE WITH (NOLOCK) ON UE.idUsuario = U.idUsuario 
                         INNER JOIN sys_perfil P WITH (NOLOCK) ON UE.idPerfil = P.idPerfil 
@@ -209,8 +206,7 @@ namespace WebLab.Usuarios
                 m_strSQL += str_condicion + " order by username";
             
 
-            DataSet Ds = new DataSet();
-            //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();         
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
@@ -235,8 +231,8 @@ namespace WebLab.Usuarios
                 str_condicion += " and tipoAutenticacion='" + ddlTipoAutenticacion.SelectedValue.ToString() + "'";
 
             if (ddlHabilitados.SelectedValue != "0")
-                if (ddlHabilitados.SelectedValue == "1") str_condicion += " and U.activo=1";
-                else str_condicion += " and U.activo=0";
+                if (ddlHabilitados.SelectedValue == "1") str_condicion += " and UE.activo=1";
+                else str_condicion += " and UE.activo=0";
 
             if (txtUsername.Text != "")
                 str_condicion += " and U.username LIKE '%" + txtUsername.Text + "%'";
@@ -266,16 +262,13 @@ namespace WebLab.Usuarios
 
         protected void gvLista_RowCommand1(object sender, GridViewCommandEventArgs e)
         {
-           
             string filtro = parametrosFiltros();
             if (e.CommandName == "Modificar")
             {
                 string MyURL;
-
                 MyURL = "UsuarioEdit.aspx?id=" + e.CommandArgument.ToString() + "&" + filtro;
                 Response.Redirect(MyURL);
-            }
-          
+            }          
         }
 
 
@@ -284,10 +277,10 @@ namespace WebLab.Usuarios
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                ImageButton cmdModificar = (ImageButton)e.Row.FindControl("Modificar");
 
-                ImageButton CmdModificar = (ImageButton)e.Row.Cells[7].Controls[1];
-                CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdModificar.CommandName = "Modificar";
+                cmdModificar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex]["idUsuario"].ToString();
+                cmdModificar.CommandName = "Modificar";
 
                 CheckBox chk = (CheckBox)e.Row.FindControl("chkStatus");
                 if (chk != null)
@@ -296,40 +289,87 @@ namespace WebLab.Usuarios
                 }
 
                 if (Permiso == 1)
-                {
-                    CmdModificar.ToolTip = "Consultar";
-                }
-                if (oUser.IdEfector.IdEfector != 227) /// nivel central
-                {
-                    CmdModificar.Visible = false;
-                }
+                    cmdModificar.ToolTip = "Consultar";
+
+                if (oUser.IdEfector.IdEfector != 227) // nivel central
+                    cmdModificar.Visible = false;
+
+                //ImageButton CmdModificar = (ImageButton)e.Row.Cells[7].Controls[1];
+                //CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                //CmdModificar.CommandName = "Modificar";
+
+                //CheckBox chk = (CheckBox)e.Row.FindControl("chkStatus");
+                //if (chk != null)
+                //{
+                //    chk.InputAttributes["onchange"] = "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
+                //}
+
+                //if (Permiso == 1)
+                //{
+                //    CmdModificar.ToolTip = "Consultar";
+                //}
+                //if (oUser.IdEfector.IdEfector != 227) /// nivel central
+                //{
+                //    CmdModificar.Visible = false;
+                //}
             }
         }
         protected void chkStatus_OnCheckedChanged(object sender, EventArgs e)
         {
+            //CheckBox chkStatus = (CheckBox)sender;
+            //GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
+
+            //int i_id = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
+
+            //string accion = "";
+            //if (chkStatus.Checked) accion = "Habilita"; else accion = "Dehabilita";
+
+
+
+            //Usuario oRegistro = new Usuario();
+            //    oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), i_id);
+
+
+
+            //if (oRegistro != null)
+            //{
+            //    oRegistro.Activo = chkStatus.Checked;
+
+            //    oRegistro.Save();
+
+            //    oUser.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
+            //}
+            //CargarGrilla();
+
+            ///Se dehabilita por efector
             CheckBox chkStatus = (CheckBox)sender;
             GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
 
-            int i_id = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
+            int idUsuario = Convert.ToInt32(gvLista.DataKeys[row.RowIndex]["idUsuario"]);
+            int idEfector = Convert.ToInt32(gvLista.DataKeys[row.RowIndex]["idEfector"]);
 
-            string accion = "";
-            if (chkStatus.Checked) accion = "Habilita"; else accion = "Dehabilita";
-
-
+            string accion = chkStatus.Checked ? "Habilita" : "Deshabilita";
 
             Usuario oRegistro = new Usuario();
-                oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), i_id);
+            oRegistro = (Usuario)oRegistro.Get(typeof(Usuario), idUsuario);
 
+            Efector oEfector = new Efector();
+            oEfector = (Efector)oEfector.Get(typeof(Efector), idEfector);
 
+          
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            ICriteria crit = m_session.CreateCriteria(typeof(UsuarioEfector));
+            crit.Add(Expression.Eq("IdUsuario", oRegistro));
+            crit.Add(Expression.Eq("IdEfector", oEfector));
+            IList lista = crit.List();
+                     
 
-            if (oRegistro != null)
+            foreach (UsuarioEfector oUsuarioEfector in lista)
             {
-                oRegistro.Activo = chkStatus.Checked;
-
-                oRegistro.Save();
-
-                oUser.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username);
-            }
+                oUsuarioEfector.Activo= chkStatus.Checked;
+                oUsuarioEfector.Save();
+                oUser.GrabaAuditoria(accion, oRegistro.IdUsuario, oRegistro.Username,"", oUsuarioEfector.IdEfector.Nombre);
+            }          
             CargarGrilla();
 
         }
@@ -348,8 +388,7 @@ namespace WebLab.Usuarios
         private DataTable LeerDatosExcel()
         {
             string m_strFiltro = "1=1 ";
-            DataSet Ds = new DataSet();
-            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();         
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -362,8 +401,8 @@ namespace WebLab.Usuarios
             if (ddlTipoAutenticacion.SelectedValue != "0")
                 m_strFiltro += " and tipoAutenticacion='" + ddlTipoAutenticacion.SelectedValue.ToString() + "'";
             if (ddlHabilitados.SelectedValue != "0")
-                if (ddlHabilitados.SelectedValue == "1") m_strFiltro += " and U.activo=1";
-                else m_strFiltro += " and U.activo=0";
+                if (ddlHabilitados.SelectedValue == "1") m_strFiltro += " and UE.activo=1";
+                else m_strFiltro += " and UE.activo=0";
 
             if (txtUsername.Text != "")
                 m_strFiltro += " and U.username LIKE '%" + txtUsername.Text + "%'";
@@ -381,45 +420,15 @@ namespace WebLab.Usuarios
 
 
             cmd.Connection = conn;
-
-
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-
             da.Fill(Ds);
-            //////////
-
-
             return Ds.Tables[0];
         }
 
         private void dataTableAExcel(DataTable tabla, string nombreArchivo)
         {
-            if (tabla.Rows.Count > 0)
-            {
-                Utility.ExportDataTableToXlsx(tabla, nombreArchivo);
-                //StringBuilder sb = new StringBuilder();
-                //StringWriter sw = new StringWriter(sb);
-                //HtmlTextWriter htw = new HtmlTextWriter(sw);
-                //Page pagina = new Page();
-                //HtmlForm form = new HtmlForm();
-                //GridView dg = new GridView();
-                //dg.EnableViewState = false;
-                //dg.DataSource = tabla;
-                //dg.DataBind();
-                //pagina.EnableEventValidation = false;
-                //pagina.DesignerInitialize();
-                //pagina.Controls.Add(form);
-                //form.Controls.Add(dg);
-                //pagina.RenderControl(htw);
-                //Response.Clear();
-                //Response.Buffer = true;
-                //Response.ContentType = "application/vnd.ms-excel";
-                //Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
-                //Response.Charset = "UTF-8";
-                //Response.ContentEncoding = Encoding.Default;
-                //Response.Write(sb.ToString());
-                //Response.End();
-            }
+            if (tabla.Rows.Count > 0)            
+                Utility.ExportDataTableToXlsx(tabla, nombreArchivo);                           
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)

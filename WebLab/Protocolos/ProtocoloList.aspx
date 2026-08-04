@@ -455,7 +455,7 @@
                                                                 onpageindexchanging="gvListaProducto_PageIndexChanging" 
                                                                 onrowcommand="gvListaProducto_RowCommand" onrowdatabound="gvListaProducto_RowDataBound" 
                                                                 PageSize="20" Width="100%"  GridLines="Horizontal" BackColor="White">                                                                
-                                                                
+                                                                  <PagerStyle HorizontalAlign = "Center" CssClass = "GridPager" />
                                                                 <Columns>
                                                                     <asp:BoundField DataField="estado" />
                                                                     <asp:BoundField DataField="numero" HeaderText="Nro.">
@@ -538,17 +538,17 @@
                                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                                     </asp:TemplateField>
                                                                 </Columns>
-                                                                <PagerSettings Position="Top" />
-                                                                <HeaderStyle BackColor="#337ab7" Font-Bold="True" ForeColor="White" />
+                                                                   <PagerSettings Mode="NumericFirstLast" Position="Top" />
+                                                                    <HeaderStyle BackColor="#337ab7" Font-Bold="True" ForeColor="White" />
         <EditRowStyle BackColor="#ffffcc" />
         <EmptyDataRowStyle forecolor="Red" CssClass="table table-bordered" />
-        
-                                                                <RowStyle BackColor="White" />
         
                                                                 <SortedAscendingCellStyle BackColor="#FDF5AC" />
                                                                 <SortedAscendingHeaderStyle BackColor="#4D0000" />
                                                                 <SortedDescendingCellStyle BackColor="#FCF6C0" />
                                                                 <SortedDescendingHeaderStyle BackColor="#820000" />
+                                                                <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
+                                                                <SelectedRowStyle BackColor="White" Font-Bold="True" ForeColor="#333333" />
                                                             </asp:GridView>
                                                         </td>
                                                     </tr>

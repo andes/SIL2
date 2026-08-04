@@ -33,23 +33,22 @@
   
    
                                                
-         <div align="left" style="width:780px">
+         <div align="left" style="width:750px">
 
               
-                         <asp:Label  ID="lblPaciente" runat="server" Text="Label"></asp:Label>
-             <hr />
+                         <asp:Label  ID="lblPaciente" runat="server" Text="Label" Font-Bold="True" Font-Size="14"></asp:Label>
+            
                 <asp:Label  ID="lblItem" runat="server" Text="Label"></asp:Label>
                       
                          <asp:ImageButton ID="imgPdf" runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg" onclick="imgPdf_Click" ToolTip="Exportar a Pdf" />
                      
                <asp:Panel ID="pnlGrafico" runat="server">
-         <hr />
-
-                   <div style="width:auto; height:auto">
+                           <div style="width:auto; height:auto">
                           <uc:GraficoChart ID="miGrafico" runat="server" /> 
                   </div>
    </asp:Panel> 
               <div>
+                  <br />
                 <asp:GridView ID="gvHistorico" runat="server" AutoGenerateColumns="False" 
                      DataKeyNames="idProtocolo" Width="100%"  EmptyDataText="No se encontraron datos para los filtros de búsqueda ingresados"  
                     CssClass="table table-bordered bs-table" Font-Size="8">

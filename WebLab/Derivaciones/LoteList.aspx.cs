@@ -49,7 +49,7 @@ namespace WebLab.Derivaciones
                     VerificaPermisos("Lista de Lotes");
                     lblTitulo.Text = "LISTA DE LOTES";
                     habilitaOrdenarEfector();
-                    CargarFiltros();
+                    CargarListas();
                 }
             }
             else
@@ -166,7 +166,7 @@ namespace WebLab.Derivaciones
         }
 
 
-        private void CargarFiltros()
+        private void CargarListas()
         {
             if (Session["idUsuario"] != null)
             {
@@ -471,30 +471,7 @@ namespace WebLab.Derivaciones
 
                             Utility oUtil = new Utility();
                             Utility.ExportDataTableToXlsx(tabla, oUtil.CompletarNombrePDF("Lotes"));
-                            //StringBuilder sb = new StringBuilder();
-                            //StringWriter sw = new StringWriter(sb);
-                            //HtmlTextWriter htw = new HtmlTextWriter(sw);
-                            //HtmlForm form = new HtmlForm();
-                            //GridView dg = new GridView();
-                            //dg.EnableViewState = false;
-                            //dg.DataSource = tabla;
-                            //dg.DataBind();
-                            //Page pagina = new Page();
-                            //pagina.EnableEventValidation = false;
-                            //pagina.DesignerInitialize();
-                            //pagina.Controls.Add(form);
-                            //form.Controls.Add(dg);
-                            //pagina.RenderControl(htw);
-                            //Utility oUtil = new Utility();
-                            //string nombrXLS = oUtil.CompletarNombrePDF("Lotes");
-                            //Response.Clear();
-                            //Response.Buffer = true;
-                            //Response.ContentType = "application/vnd.ms-excel";
-                            //Response.AddHeader("Content-Disposition", "attachment;filename=" + nombrXLS + ".xls");
-                            //Response.Charset = "UTF-8";
-                            //Response.ContentEncoding = Encoding.Default;
-                            //Response.Write(sb.ToString());
-                            //Response.End();
+                      
                         }
                         else
                         {

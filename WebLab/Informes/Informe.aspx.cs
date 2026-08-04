@@ -194,12 +194,15 @@ namespace WebLab.Informes
                 ddlPrioridad.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
 
-                  m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
+                if (Request["Tipo"].ToString() == "CodigoBarras")
+                {
+                    m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
+                    cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}";
+                    Business.Helpers.ComboCache.CargarCombo(ddlImpresoraCB, cacheKey, m_ssql, "nombre", "nombre", connReady);
+                  //  oUtil.CargarCombo(ddlImpresoraCB, m_ssql, "nombre", "nombre", connReady);
 
-                oUtil.CargarCombo(ddlImpresoraCB, m_ssql, "nombre", "nombre", connReady);
-
-                ddlImpresora.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
-
+                    ddlImpresoraCB.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
+                }
 
                 if (Request["Tipo"].ToString() == "HojaTrabajo") ddlPrioridad.SelectedValue = "1";//rutina
 
@@ -596,7 +599,6 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
                                         nombre_reporte = "../Informes/HojasdeTrabajo/HTrabajoProtocolo5";
                                     }
                                     break;
-                              
                             }
                         }
                         if (ddlServicio.SelectedValue == "3")  //microbiolgoia
@@ -689,9 +691,9 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
                 Response.End();
             
         }
+     
 
-
-
+     
 
 
         private DataTable GetDataSet_HojaTrabajo(object p)
@@ -699,18 +701,18 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
 
             string s_store = "LAB_GeneraHT";
             DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            // SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+                   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+           // SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
             if (rdbHojaConResultados.SelectedValue == "0")
-                s_store = "LAB_GeneraHT";
-            else
-                s_store = "LAB_GeneraHTconResultados";
-
-
+               s_store = "LAB_GeneraHT";
+            else                           
+               s_store = "LAB_GeneraHTconResultados";
+              
+            
             if (ddlServicio.SelectedValue=="3") s_store = s_store + "Microbiologia";
             if (ddlServicio.SelectedValue=="4") s_store = s_store + "Pesquisa";
 
