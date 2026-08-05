@@ -43,8 +43,25 @@
     <form id="form1" runat="server">
     <div class="form-group" >
         <br />
-       Financiador / O.S:  <asp:DropDownList ID="ddlObrasSociales" runat="server" />
-        <asp:Button ID="btnSeleccionar" CssClass="btn btn-primary" Width="100px" runat="server" OnClick="btnSeleccionar_Click" Text="Seleccionar" />
+        <table>
+            <tr>
+                <td style="vertical-align: top" class="myLabelIzquierda">
+                     Financiador / O.S:  <asp:DropDownList ID="ddlObrasSociales" runat="server" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td style="vertical-align: top" align="right">
+                      <asp:Button ID="btnSeleccionar" CssClass="btn btn-primary" Width="100px" runat="server" OnClick="btnSeleccionar_Click" Text="Seleccionar" />
+                </td>
+            </tr>
+        </table>
+      
+      
        
     </div>
     </form>

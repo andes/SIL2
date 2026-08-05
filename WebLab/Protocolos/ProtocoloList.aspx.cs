@@ -60,11 +60,11 @@ namespace WebLab.Protocolos
                     }
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
-                
+
                 //else Response.Redirect("../FinSesion.aspx", false);
 
             }
-        }
+           }
         protected void Page_Unload(object sender, EventArgs e)
         {
             if (this.oCr.ReportDocument != null)
@@ -539,7 +539,7 @@ namespace WebLab.Protocolos
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
 
-            if (tbObraSocial.Text != "") str_condicion += " AND P.nombreObraSocial='" + tbObraSocial.Text + "'";
+            if (HFidObraSocial.Value != "") str_condicion += " AND P.cod_os=" + int.Parse(HFidObraSocial.Value);
             if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in ("+ ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
             if (ddlSectorServicio.SelectedValue != "0") str_condicion += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
@@ -1664,14 +1664,18 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
         {
             tbObraSocial.Text ="";
             tbObraSocial.UpdateAfterCallBack = true;
+            Session["obraSocial"] = null;
+            Session["idObraSocial"] = null;
         }
 
-        protected void btnBuscarObraSocial_Click1(object sender, EventArgs e)
+
+        protected void btnBuscarObraSocial_Click(object sender, EventArgs e)
         {
-            if (Session["obraSocial"] != null)
+            if (Session["obraSocial"] != null && Session["idObraSocial"] != null)
             {
                 tbObraSocial.Text = Session["obraSocial"].ToString();
                 tbObraSocial.UpdateAfterCallBack = true;
+                HFidObraSocial.Value = Session["idObraSocial"].ToString();
             }
         }
     }

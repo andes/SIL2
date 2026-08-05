@@ -277,12 +277,18 @@
                                                 TabIndex="17" Width="400px" >
                                                
                                             </asp:DropDownList>--%>
-                            <td><anthem:TextBox runat="server" ID="tbObraSocial" TabIndex="17" CssClass="form-control input-sm" Enabled="False" Width="400px"/> </td>
+                            <td>
+                                <anthem:TextBox runat="server" ID="tbObraSocial" TabIndex="17" CssClass="form-control input-sm" Enabled="False" Width="400px"/>
+                                <asp:HiddenField ID="HFidObraSocial" runat="server" />
+                            </td>
                                                 
-                           <td>  &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" TabIndex="18" onclick="btnBuscarObraSocial_Click1" OnClientClick="buscaObraSocial(); return false;"   CssClass="btn btn-primary" Width="60px">
-                               <span class="glyphicon glyphicon-zoom-in"/></asp:LinkButton>
+                           <td>  &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" TabIndex="18" tooltip="Buscar Obra Social" OnClick="btnBuscarObraSocial_Click" OnClientClick="buscaObraSocial(); return false;"   CssClass="btn btn-info" Width="60px">
+                               <span class="glyphicon glyphicon-search"/></asp:LinkButton>
                                    </td>
-                            <td> &nbsp;<asp:Button runat="server" ID="btnBorrarObraSocial" TabIndex="19" onclick="btnBorrarObraSocial_Click" Text="Borrar seleccion" CssClass="btn btn-danger" Width="130px"/>  </td>
+                            <td> &nbsp;<asp:LinkButton runat="server" ID="btnBorrarObraSocial" TabIndex="19" onclick="btnBorrarObraSocial_Click" Text="Borrar seleccion" CssClass="btn btn-warning" Width="60px" tooltip="Borrar O.S Seleccionada" >
+                                 <span class="glyphicon glyphicon-trash"/></asp:LinkButton>
+                            </td>
+
 						
 					</tr>
 						    <tr>
@@ -809,7 +815,11 @@ function muestraSelect() {
     }).width(800);
     }
 
-
+   
+    var postBackBuscarObraSocial = function () {
+        <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscarObraSocial, "") %>;
+    };
+   
     function buscaObraSocial() {
         var dom = document.domain;
         var domArray = dom.split('.');
@@ -830,19 +840,19 @@ function muestraSelect() {
         $('<iframe src="ObraSocialBuscar.aspx"/>').dialog({
             title: 'Seleccionar Obra Social',
             autoOpen: true,
-            width: 700,
+            width: 350,
             height: 450,
             modal: false,
             resizable: false,
             autoResize: true,
-            <%--buttons: {
-                'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnBuscarObraSocial))%>; } --cerrar con la seleccion
+          <%--  buttons: {
+                'Seleccionar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnBuscarObraSocial))%>; } 
             },--%>
             overlay: {
                 opacity: 0.5,
                 background: "black"
             }
-        }).width(700);
+        }).width(350);
     }
 
 </script>
