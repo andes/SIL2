@@ -1802,6 +1802,24 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             lblCantTerminado.Text = cantTerminado.ToString();
         }
 
-        
+        private void CalcularCantidades(DataTable dt)
+        {
+            //06.08.2026 En las referencias con el nombre de los estados agregar las cantidades por cada caso
+            // La funcion esta aparte de PINTARREFERENCIAS() porque la grilla al estar paginada 
+            // si contamos por gvlista.rows solo cuenta las filas de la pagina actual
+            int cantNoProcesado = 0, cantEnProceso = 0, cantTerminado = 0;
+            foreach (DataRow row in dt.Rows)
+            {
+                switch (row["estado"].ToString())
+                {
+                    case "0": cantNoProcesado++; break;
+                    case "1": cantEnProceso++; break;
+                    case "2": cantTerminado++; break;
+                }
+            }
+            lblCantEnProceso.Text = cantEnProceso.ToString();
+            lblCantNoProcesado.Text = cantNoProcesado.ToString();
+            lblCantTerminado.Text = cantTerminado.ToString();
+        }
     }
 }
