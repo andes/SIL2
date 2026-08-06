@@ -422,6 +422,7 @@ namespace WebLab.Protocolos
             s_valores += ";txtNombre:" + txtNombre.Text;
             s_valores += ";ddlEstado:" + ddlEstado.SelectedValue;
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
+            s_valores += ";txtObraSocial:" + txtObraSocial.Text;
             
             Session["FiltroProtocolo"] = s_valores;
         }
@@ -458,7 +459,7 @@ namespace WebLab.Protocolos
                         case "txtApellido": txtApellido.Text = s_control[1].ToString(); break;
                         case "txtNombre": txtNombre.Text = s_control[1].ToString(); break;
                         case "ddlEstado": ddlEstado.SelectedValue = s_control[1].ToString(); break;
-                      
+                        case "txtObraSocial": txtObraSocial.Text = s_control[1].ToString(); break;
 
                     }
                 }
@@ -485,26 +486,34 @@ namespace WebLab.Protocolos
         }
         private void CargarGrilla(string tipo)
         {
+
             if (tipo == "Lista")
             {
+                DataTable dt;
                 if (Request["idServicio"].ToString() == "6")
                 {
-                    gvLista.DataSource = LeerDatos(12);
+                    dt = LeerDatos(12);
                     gvLista.Columns[4].HeaderText = "Nro. Caso";
                     gvLista.Columns[5].HeaderText = "Origen";
                     gvLista.Columns[6].HeaderText = "Muestra";
                     gvLista.Columns[9].HeaderText = "Solicitante";
                 }
                 else
-                    gvLista.DataSource = LeerDatos(0);
+                    dt = LeerDatos(0);
+
+
+                gvLista.DataSource = dt;
                 gvLista.DataBind();
                 PintarReferencias();
+                CalcularCantidades(dt);
             }
             else
             {
-                gvListaProducto.DataSource = LeerDatos(9);
+                DataTable dt = LeerDatos(9);
+                gvListaProducto.DataSource = dt;
                 gvListaProducto.DataBind();
                 PintarReferenciasNoPacientes();
+                CalcularCantidades(dt);
             }
                          
         }
@@ -538,7 +547,7 @@ namespace WebLab.Protocolos
 
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
-
+            //06.08.2026 Se utiliza el identificador de la obra social seleccionada como criterio de búsqueda
             if (HFidObraSocial.Value != "") str_condicion += " AND P.cod_os=" + int.Parse(HFidObraSocial.Value);
             if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in ("+ ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
@@ -878,9 +887,6 @@ namespace WebLab.Protocolos
 
         private void PintarReferencias()
         {
-          
-
-            
             foreach (GridViewRow row in gvLista.Rows)
             {                
                     switch (row.Cells[0].Text)
@@ -913,7 +919,7 @@ namespace WebLab.Protocolos
                             row.Cells[0].Controls.Add(hlnk);
                         }
                         break;
-                }
+                    }
 
                     switch (row.Cells[1].Text)
                     {
@@ -936,12 +942,10 @@ namespace WebLab.Protocolos
                     }                
 
             }
-        
+
         }
         private void PintarReferenciasNoPacientes()
         {
-
-
 
             foreach (GridViewRow row in gvListaProducto.Rows)
             {
@@ -998,7 +1002,23 @@ namespace WebLab.Protocolos
                 }
 
             }
-
+        }
+        private void CalcularCantidades(DataTable dt)
+        {
+            //06.08.2026 En las referencias con el nombre de los estados agregar las cantidades por cada caso
+            int cantNoProcesado = 0, cantEnProceso = 0, cantTerminado = 0;
+            foreach (DataRow row in dt.Rows)
+            {
+                switch (row["estado"].ToString())
+                {
+                    case "0": cantNoProcesado++; break;
+                    case "1": cantEnProceso++; break;
+                    case "2": cantTerminado++; break;
+                }
+            }
+            lblCantEnProceso.Text = cantEnProceso.ToString();
+            lblCantNoProcesado.Text = cantNoProcesado.ToString();
+            lblCantTerminado.Text = cantTerminado.ToString();
         }
         protected void btnImprimir_Click(object sender, EventArgs e)
         {
@@ -1662,21 +1682,52 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
 
         protected void btnBorrarObraSocial_Click(object sender, EventArgs e)
         {
-            tbObraSocial.Text ="";
-            tbObraSocial.UpdateAfterCallBack = true;
+            //06.08.2026 borra la selección realizada de la Obra social y su identificador interno ( y las sesiones)
+            txtObraSocial.Text ="";
+            txtObraSocial.UpdateAfterCallBack = true;
             Session["obraSocial"] = null;
             Session["idObraSocial"] = null;
+            HFidObraSocial.Value = "";
         }
 
 
         protected void btnBuscarObraSocial_Click(object sender, EventArgs e)
         {
+            //06.08.2026 Se muestra en el TextBox txtObraSocial la descripción de la obra social seleccionada
+            // y se guarda en un identificador el id de la obra social para utilizarlo en la busqueda
             if (Session["obraSocial"] != null && Session["idObraSocial"] != null)
             {
-                tbObraSocial.Text = Session["obraSocial"].ToString();
-                tbObraSocial.UpdateAfterCallBack = true;
+                txtObraSocial.Text = Session["obraSocial"].ToString();
+                txtObraSocial.UpdateAfterCallBack = true;
                 HFidObraSocial.Value = Session["idObraSocial"].ToString();
             }
         }
+
+        protected void lnkBuscarEspecialista_Click(object sender, EventArgs e)
+        {
+            //06.08.2026 Se muestra en el TextBox txtNomApeEspecialista el Nombre y Apellido del especialista
+            // y se guarda en txtEspecialista la matricula para utilizarlo en la busqueda
+            if (Session["matricula"] != null && Session["apellidoNombre"] != null)
+            {
+                txtEspecialista.Text = Session["matricula"].ToString();
+                txtNomApeEspecialista.Text = Session["apellidoNombre"].ToString();
+                txtNomApeEspecialista.UpdateAfterCallBack = true;
+                txtEspecialista.UpdateAfterCallBack = true;
+            }
+        }
+
+        protected void lnkBorrarMatriculaEspecialista_Click(object sender, EventArgs e)
+        {
+            //06.08.2026 borra la selección realizada del especialista y la matricula asociada ( y las sesiones)
+
+            txtEspecialista.Text = "";
+            txtNomApeEspecialista.Text = "";
+            txtEspecialista.UpdateAfterCallBack = true;
+            txtNomApeEspecialista.UpdateAfterCallBack = true;
+            Session["matricula"] = null ;
+            Session["apellidoNombre"] = null;
+        }
+
+        
     }
 }
