@@ -267,6 +267,33 @@ namespace WebLab.Protocolos
         protected global::Anthem.LinkButton lnkBorrarMatriculaEspecialista;
 
         /// <summary>
+        /// txtNomApeEspecialista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.TextBox txtNomApeEspecialista;
+
+        /// <summary>
+        /// lnkBuscarEspecialista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkBuscarEspecialista;
+
+        /// <summary>
+        /// lnkBorrarMatriculaEspecialista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkBorrarMatriculaEspecialista;
+
+        /// <summary>
         /// txtNombre control.
         /// </summary>
         /// <remarks>
