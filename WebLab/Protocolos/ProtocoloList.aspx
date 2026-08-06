@@ -75,6 +75,31 @@
             width: 16%;
             height: 28px;
         }
+
+        /** 06.08.2026  BAGGE como se usa en la version 4 de Bootstrap*/
+        .badge-light{
+            color:#212529;
+            background:#f8f9fa;
+        }
+
+        .badge-pill{
+            border-radius:10rem;
+            padding-right:.6em;
+            padding-left:.6em;
+        }
+
+        .badge-danger{
+                background-color: #d9534f;
+        }
+
+        .badge-warning {
+            background-color: #f0ad4e;
+        }
+
+        .badge-success {
+            background-color: #5cb85c;
+        }
+        
     </style>
   
  
@@ -255,8 +280,20 @@
                                             Médico Solicitante:</td>
 						
 						<td>
-                             <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"   AutoCallBack="true"  ></anthem:TextBox> 
-                                        </td>
+                             <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"
+                                 AutoCallBack="true" Visible="false"  ></anthem:TextBox><anthem:TextBox ToolTip="Nombre y Apellido de especialista" ID="txtNomApeEspecialista" 
+                                     Width="400px" TabIndex="16" class="form-control input-sm" runat="server"  
+                                     AutoCallBack="true" enabled="false" ></anthem:TextBox> 
+                        </td>
+                        <td>
+                            &nbsp;<asp:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista" CssClass="btn btn-info" OnClick="lnkBuscarEspecialista_Click" 
+                                OnClientClick="SelMedico(); return false;" Width="60px">
+                                <span class="glyphicon glyphicon-search"></span></asp:LinkButton>
+                        </td>
+                                    <td>&nbsp;<asp:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" TabIndex="19" onclick="lnkBorrarMatriculaEspecialista_Click" Text="Borrar seleccion"
+                                            CssClass="btn btn-warning" Width="60px" tooltip="Borrar Matricula" >
+                                 <span class="glyphicon glyphicon-trash"/></asp:LinkButton>
+                                    </td>
 						
 					</tr>
                             	<tr>
@@ -278,7 +315,7 @@
                                                
                                             </asp:DropDownList>--%>
                             <td>
-                                <anthem:TextBox runat="server" ID="tbObraSocial" TabIndex="17" CssClass="form-control input-sm" Enabled="False" Width="400px"/>
+                                <anthem:TextBox runat="server" ID="txtObraSocial" TabIndex="17" CssClass="form-control input-sm" Enabled="False" Width="400px" ToolTip="Obra Social seleccionada " />
                                 <asp:HiddenField ID="HFidObraSocial" runat="server" />
                             </td>
                                                 
@@ -339,9 +376,9 @@
                                                 <table style="width:100%;">
                                                     <tr>
                                                         <td>
-                                                           <span class="label label-danger">No procesado</span>
-<span class="label label-warning">En proceso</span>
-<span class="label label-success">Terminado</span>
+                                                           <span class="badge  badge-danger">No procesado <span  class="badge  badge-pill badge-light"><anthem:Label ID="lblCantNoProcesado" runat="server"  /></span></span>
+<span class="badge  badge-warning">En proceso <span  class="badge  badge-pill badge-light"><anthem:Label ID="lblCantEnProceso" runat="server"   /></span></span>
+<span class="badge  badge-success">Terminado <span  class="badge  badge-pill badge-light"><anthem:Label ID="lblCantTerminado" runat="server"   /></span></span>
                                                          
                                                         </td>
                                                         <td align="right">
@@ -821,6 +858,8 @@ function muestraSelect() {
     };
    
     function buscaObraSocial() {
+
+        //06.08.2026 Modificación del filtro de Obra Social: abre Prompt de selección de ObraSocialBuscar.aspx
         var dom = document.domain;
         var domArray = dom.split('.');
         for (var i = domArray.length - 1; i >= 0; i--) {
@@ -845,14 +884,53 @@ function muestraSelect() {
             modal: false,
             resizable: false,
             autoResize: true,
-          <%--  buttons: {
-                'Seleccionar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnBuscarObraSocial))%>; } 
-            },--%>
             overlay: {
                 opacity: 0.5,
                 background: "black"
             }
         }).width(350);
+    }
+
+    var postBackBuscarMedico = function () {
+        <%= this.Page.ClientScript.GetPostBackEventReference(lnkBuscarEspecialista, "") %>;
+    };
+
+    function SelMedico() {
+        //06.08.2026 Abre prompt de MedicoSel.aspx. Enviamos parametro "desde" para incluir busca por matricula
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+      
+          
+        var desde = "ProtocoloList";
+        $('<iframe src="MedicoSel.aspx?desde='+desde+'" />').dialog({
+            title: 'Buscar Médico',
+            autoOpen: true,
+            width: 620,
+            height: 400,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+
+            buttons: {
+                'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.lnkBuscarEspecialista))%>; }
+            },
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(600);
     }
 
 </script>
