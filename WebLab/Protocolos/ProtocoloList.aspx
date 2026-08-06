@@ -477,7 +477,7 @@
                                                                         </ItemTemplate>
                                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                                     </asp:TemplateField>
-                                                                    <asp:BoundField DataField="tieneAnexo" Visible="true" />
+                                                                    <asp:BoundField DataField="tieneAnexo" Visible="false" />
                                                                 </Columns>
                 
                                                                 <PagerSettings Mode="NumericFirstLast" Position="Top" />
@@ -818,7 +818,40 @@ function PreguntoEliminar(idProtocolo) {
         }
     }).width(800);
 
-}
+    }
+
+    function PreguntoRecuperar(idProtocolo) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+
+        var $this = $(this);
+        $('<iframe src="ProtocoloEliminar.aspx?id=' + idProtocolo + '&accion=recupera" />').dialog({
+            title: 'Recuperar Protocolo',
+            autoOpen: true,
+            width: 690,
+            height: 320,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(800);
+
+    }
 function muestraSelect() {
     var dom = document.domain;
     var domArray = dom.split('.');
