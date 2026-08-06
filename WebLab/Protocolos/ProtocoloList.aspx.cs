@@ -423,6 +423,7 @@ namespace WebLab.Protocolos
             s_valores += ";ddlEstado:" + ddlEstado.SelectedValue;
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
             s_valores += ";txtObraSocial:" + txtObraSocial.Text;
+            s_valores += ";txtNomApeEspecialista:" + txtNomApeEspecialista.Text;
             
             Session["FiltroProtocolo"] = s_valores;
         }
@@ -460,6 +461,7 @@ namespace WebLab.Protocolos
                         case "txtNombre": txtNombre.Text = s_control[1].ToString(); break;
                         case "ddlEstado": ddlEstado.SelectedValue = s_control[1].ToString(); break;
                         case "txtObraSocial": txtObraSocial.Text = s_control[1].ToString(); break;
+                        case "txtNomApeEspecialista": txtNomApeEspecialista.Text = s_control[1].ToString(); break;
 
                     }
                 }
