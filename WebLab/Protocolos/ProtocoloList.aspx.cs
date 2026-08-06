@@ -583,7 +583,7 @@ namespace WebLab.Protocolos
                 if (ddlEstado.SelectedValue != "4")
                     str_condicion += " AND P.baja=0 AND P.estado=" + ddlEstado.SelectedValue;
                 else
-                    str_condicion += " AND P.baja=1";
+                 str_condicion += " AND P.baja=1"; 
             }
             
 
@@ -849,38 +849,64 @@ namespace WebLab.Protocolos
                     //CmdPdf.CommandName = "Pdf";
                     //CmdPdf.ToolTip = "Enviar a PDF";
 
-                    LinkButton CmdEliminar = (LinkButton)e.Row.Cells[14].Controls[1];
-                    CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                    CmdEliminar.CommandName = "Anular";
-                    CmdEliminar.ToolTip = "Anular";
+                    if (Permiso == 1)
+                    {
+                        CmdModificar.ToolTip = "Consultar";
+                    }
+
+                    if (ddlEstado.SelectedValue != "4")
+                    {
+                        LinkButton CmdEliminar = (LinkButton)e.Row.Cells[14].Controls[1];
+                        CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdEliminar.CommandName = "Anular";
+                        CmdEliminar.ToolTip = "Anular";
+
+                        if (Permiso == 1)
+                        {
+                            CmdEliminar.Visible = false;
+                        }
+                        if (oC != null)
+                        {
+
+                            if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
+                            else
+                                CmdEliminar.Visible = false;
+                        }
+                    }
+                    else
+                    {
+                        LinkButton CmdRecuperar = (LinkButton)e.Row.Cells[14].Controls[1];
+                        CmdRecuperar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.CommandName = "Recuperar";
+                        CmdRecuperar.ToolTip = "Recuperar";
+
+                        if (Permiso == 1)
+                        {
+                            CmdRecuperar.Visible = false;
+                        }
+
+                        CmdRecuperar.Text = "<span class='glyphicon glyphicon-repeat'></span>";
+                        string idProtocolo = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.OnClientClick = string.Format("PreguntoRecuperar(\"{0}\"); return false;", idProtocolo);
+                    }
+                   
 
                     LinkButton CmdAdjuntar = (LinkButton)e.Row.Cells[15].Controls[1];
                     CmdAdjuntar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                     CmdAdjuntar.CommandName = "Adjuntar";
                     CmdAdjuntar.ToolTip = "Adjuntar";
 
-                    if (Permiso == 1)
-                    {
-                        CmdEliminar.Visible = false;
-                        CmdModificar.ToolTip = "Consultar";
-                    }
+                   
 
-
-                    if (e.Row.Cells[16].Text == "1") // tiene Adjunto
+                    bool tieneAnexo = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "tieneAnexo")) == 1;
+                    if (tieneAnexo)
                         e.Row.Cells[15].BackColor = System.Drawing.Color.Green;
 
 
 
                     //        Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
                     //oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdConfiguracion", 1);
-                    if (oC != null)
-                    {
-
-                        if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
-                        else
-                            CmdEliminar.Visible = false;
-                    }
-                    e.Row.Cells[16].Visible = false;
+                    
                 }
 
 
@@ -943,6 +969,10 @@ namespace WebLab.Protocolos
 
                     }                
 
+                if(ddlEstado.SelectedValue == "4")
+                {
+                    row.BackColor = System.Drawing.Color.LightGray;
+                }
             }
 
         }
@@ -1002,26 +1032,14 @@ namespace WebLab.Protocolos
                         break;
 
                 }
+                if (ddlEstado.SelectedValue == "4")
+                {
+                    row.BackColor = System.Drawing.Color.LightGray;
+                }
 
             }
         }
-        private void CalcularCantidades(DataTable dt)
-        {
-            //06.08.2026 En las referencias con el nombre de los estados agregar las cantidades por cada caso
-            int cantNoProcesado = 0, cantEnProceso = 0, cantTerminado = 0;
-            foreach (DataRow row in dt.Rows)
-            {
-                switch (row["estado"].ToString())
-                {
-                    case "0": cantNoProcesado++; break;
-                    case "1": cantEnProceso++; break;
-                    case "2": cantTerminado++; break;
-                }
-            }
-            lblCantEnProceso.Text = cantEnProceso.ToString();
-            lblCantNoProcesado.Text = cantNoProcesado.ToString();
-            lblCantTerminado.Text = cantTerminado.ToString();
-        }
+       
         protected void btnImprimir_Click(object sender, EventArgs e)
         {
            
@@ -1730,6 +1748,24 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             Session["apellidoNombre"] = null;
         }
 
-        
+        private void CalcularCantidades(DataTable dt)
+        {
+            //06.08.2026 En las referencias con el nombre de los estados agregar las cantidades por cada caso
+            // La funcion esta aparte de PINTARREFERENCIAS() porque la grilla al estar paginada 
+            // si contamos por gvlista.rows solo cuenta las filas de la pagina actual
+            int cantNoProcesado = 0, cantEnProceso = 0, cantTerminado = 0;
+            foreach (DataRow row in dt.Rows)
+            {
+                switch (row["estado"].ToString())
+                {
+                    case "0": cantNoProcesado++; break;
+                    case "1": cantEnProceso++; break;
+                    case "2": cantTerminado++; break;
+                }
+            }
+            lblCantEnProceso.Text = cantEnProceso.ToString();
+            lblCantNoProcesado.Text = cantNoProcesado.ToString();
+            lblCantTerminado.Text = cantTerminado.ToString();
+        }
     }
 }
