@@ -572,11 +572,17 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
                 ICriteria crit = m_session.CreateCriteria(typeof(Turno));
                 crit.Add(Expression.Eq("Fecha", cldTurno.SelectedDate));
                 crit.Add(Expression.Eq("IdTipoServicio", oServicio));
-               
-               if (oUser.IdPerfil.IdPerfil==15)
-                    crit.Add(Expression.Eq("IdEfectorSolicitante", oUser.IdEfector));
+
+                if (oUser.IdPerfil.IdPerfil == 15)
+                { //07.08.2026 CAPS
+                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino)); //aca va el laboratorio
+                    crit.Add(Expression.Eq("IdEfectorSolicitante", oUser.IdEfector)); // el efector que lo solicita es el logueado
+                }
                 else
-                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); 
+                {  //07.08.2026 agregar efector solicitante para filtrar correctamente
+                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); //aca va el laboratorio
+                    crit.Add(Expression.Eq("IdEfectorSolicitante", oUser.IdEfector)); //el efector que lo solicita es el logueado
+                }
 
                 crit.Add(Expression.Eq("IdItem", int.Parse(ddlItem.SelectedValue)));
 

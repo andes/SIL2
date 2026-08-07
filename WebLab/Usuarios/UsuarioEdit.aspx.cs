@@ -833,12 +833,23 @@ namespace WebLab.Usuarios
                 foreach (DataRow row in dt.Rows)
                 {
                     int idEfector = int.Parse(row["idEfector"].ToString());
-
-                    // Si ya existe, no lo vuelvo a crear
-                    if (efectoresExistentes.ContainsKey(idEfector))
-                        continue;
-
                     Efector oEfector = (Efector)new Efector().Get(typeof(Efector), idEfector);
+
+                    // Si ya existe,  lo modifico --> 7.08.2026  en cv_customValidacionEfector_ServerValidate validamos que se cambio el area| perfil | labo destino y lo borramos del viewstate
+                    if (efectoresExistentes.ContainsKey(idEfector))
+                    {
+                        UsuarioEfector oRegistroModificado = efectoresExistentes[idEfector];
+                        oRegistroModificado.IdPerfil = int.Parse(row["idPerfil"].ToString());
+                        oRegistroModificado.IdArea = int.Parse(row["idArea"].ToString());
+                        oRegistroModificado.IdEfectorDestino = int.Parse(row["idEfectorDestino"].ToString());
+                        oRegistroModificado.Save();
+
+                        
+                        
+                        continue;
+                    }
+
+                    
 
                     UsuarioEfector oRegistro = new UsuarioEfector();
                     oRegistro.IdUsuario = oUsuario;
@@ -1015,6 +1026,25 @@ namespace WebLab.Usuarios
                     (ddlPerfil.SelectedItem.Value == "15" && (ddlEfectorDestino.SelectedItem.Value != efectorEncontrado["idEfectorDestino"].ToString()))
                     )
                 {
+                   
+
+                    //Auditoria de modificacion
+                    string s_auditoria = "";
+                    if (ddlPerfil.SelectedItem.Value != efectorEncontrado["idPerfil"].ToString()) 
+                        s_auditoria = "Perfil:" + efectorEncontrado["Perfil"] + " ";
+                    if (ddlArea.SelectedItem.Value != efectorEncontrado["idArea"].ToString())
+                        s_auditoria = s_auditoria + "Area:" + efectorEncontrado["Area"] + " ";
+                    if (ddlPerfil.SelectedItem.Value == "15" && (ddlEfectorDestino.SelectedItem.Value != efectorEncontrado["idEfectorDestino"].ToString()))
+                        s_auditoria = s_auditoria + "Efector Destino:" + efectorEncontrado["idEfectorDestino"] + " ";
+
+                    Usuario oUsuario = (Usuario)new Usuario().Get(typeof(Usuario), int.Parse(Request["id"]));
+                    Usuario oAuditor = (Usuario)new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                    oAuditor.GrabaAuditoria(
+                    "Modifica " + ddlEfector3.SelectedItem.Text,
+                    oUsuario.IdUsuario,
+                    oUsuario.Username,
+                    "", s_auditoria);
+
                     //Borro el anterior y permitimos que continue el flujo para que se guarde el nuevo con distinto perfil  o area o laboratoriodestino
                     dt.Rows.Remove(efectorEncontrado);
                     ViewState["efectores"] = dt;
