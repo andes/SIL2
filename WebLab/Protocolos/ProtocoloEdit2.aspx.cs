@@ -220,20 +220,33 @@ namespace WebLab.Protocolos
 
                         MuestraDatos();
                         //VerificaPermisos("Pacientes sin turno");
-                        if (Request["Desde"].ToString() == "Control")
-                        {
-                            pnlLista.Visible = true;
-                            CargarGrilla();
-                            gvLista.Visible = true;
-                            pnlNavegacion.Visible = true;
-                        }
-                        else
-                        {
-                            pnlLista.Visible = false;
-                            gvLista.Visible = false;
-                            pnlNavegacion.Visible = false;
 
+                        switch (Request["Desde"].ToString())
+                        {
+                            case "Control":
+                                {
+                                    pnlLista.Visible = true;
+                                    CargarGrilla();
+                                    gvLista.Visible = true;
+                                    pnlNavegacion.Visible = true;
+                                }
+                                break;
+                            case "ProtocoloList": //7.8.2026 si viene desde lista de protocolo queremos ver el estado del protocolo
+                                {
+                                    pnlNavegacion.Visible = true; 
+                                    lnkAnterior.Visible = false;//oculto los botones de navegacion porque necesitamos ver el estado
+                                    lnkSiguiente.Visible = false;
+                                }
+                                
+                                break;
+
+                            default:
+                                pnlLista.Visible = false;
+                                gvLista.Visible = false;
+                                pnlNavegacion.Visible = false;
+                                break;
                         }
+                       
 
                         if(Request["idPaciente"] != null) //Cambio de paciente
                         {
