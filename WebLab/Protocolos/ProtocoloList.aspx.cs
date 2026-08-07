@@ -827,27 +827,12 @@ namespace WebLab.Protocolos
            
             if (e.Row.Cells.Count > 1)
             {
-
-            
-
                 if (e.Row.RowType ==  DataControlRowType.DataRow)
                 {
                     LinkButton CmdModificar = (LinkButton)e.Row.Cells[13].Controls[1];
                     CmdModificar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                     CmdModificar.CommandName = "Modificar";
                     CmdModificar.ToolTip = "Modificar";
-
-
-                    //ImageButton CmdImprimir = (ImageButton)e.Row.Cells[14].Controls[1];
-                    //CmdImprimir.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                    //CmdImprimir.CommandName = "Imprimir";
-                    //CmdImprimir.ToolTip = "Imprimir";
-
-
-                    //ImageButton CmdPdf = (ImageButton)e.Row.Cells[15].Controls[1];
-                    //CmdPdf.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                    //CmdPdf.CommandName = "Pdf";
-                    //CmdPdf.ToolTip = "Enviar a PDF";
 
                     if (Permiso == 1)
                     {
@@ -1578,12 +1563,43 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
                     CmdModificar.CommandName = "Modificar";
                     CmdModificar.ToolTip = "Modificar";
 
+                    if (ddlEstado.SelectedValue != "4")
+                    {
+                        LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
+                        CmdEliminar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdEliminar.CommandName = "Anular";
+                        CmdEliminar.ToolTip = "Anular";
+
+                        if (Permiso == 1)
+                        {
+                            CmdEliminar.Visible = false;
+                        }
+                        if (oC != null)
+                        {
+
+                            if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
+                            else
+                                CmdEliminar.Visible = false;
+                        }
+                    }
+                    else
+                    {
+                        LinkButton CmdRecuperar = (LinkButton)e.Row.Cells[12].Controls[1];
+                        CmdRecuperar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.CommandName = "Recuperar";
+                        CmdRecuperar.ToolTip = "Recuperar";
+
+                        if (Permiso == 1)
+                        {
+                            CmdRecuperar.Visible = false;
+                        }
+
+                        CmdRecuperar.Text = "<span class='glyphicon glyphicon-repeat'></span>";
+                        string idProtocolo = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.OnClientClick = string.Format("PreguntoRecuperar(\"{0}\"); return false;", idProtocolo);
+                    }
 
 
-                    LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
-                    CmdEliminar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
-                    CmdEliminar.CommandName = "Anular";
-                    CmdEliminar.ToolTip = "Anular";
 
                     LinkButton CmdAdjuntar= (LinkButton)e.Row.Cells[13].Controls[1];
                     CmdAdjuntar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
@@ -1594,24 +1610,12 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
                     CmdReplicar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
                     CmdReplicar.CommandName = "Replicar";
                     CmdReplicar.ToolTip = "Replicar";
+
                     if (Permiso == 1)
                     {
-                        CmdEliminar.Visible = false;
                         CmdModificar.ToolTip = "Consultar";
                     }
-                  
-
-                    if (oC != null)
-                    {
-                        if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
-                        else
-                            CmdEliminar.Visible = false;
-                    }
-
-
                 }
-                
-
             }
 
         }

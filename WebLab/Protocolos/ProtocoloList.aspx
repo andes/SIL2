@@ -803,7 +803,6 @@ function PreguntoEliminar(idProtocolo) {
 
 
     var $this = $(this);
-
     $('<iframe src="ProtocoloEliminar.aspx?id=' + idProtocolo + '" />').dialog({
         title: 'Anular Protocolo',
         autoOpen: true,
@@ -815,7 +814,12 @@ function PreguntoEliminar(idProtocolo) {
         overlay: {
             opacity: 0.5,
             background: "black"
+        },
+        //Al cerrar que haga postback para que actualice en el listado considerando los anulados
+        close: function () {
+             <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscar, "") %>;
         }
+
     }).width(800);
 
     }
@@ -848,6 +852,10 @@ function PreguntoEliminar(idProtocolo) {
             overlay: {
                 opacity: 0.5,
                 background: "black"
+            },
+            //Al cerrar que haga postback para que actualice en el listado considerando los recuperados
+            close: function () {
+                 <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscar, "") %>;
             }
         }).width(800);
 
