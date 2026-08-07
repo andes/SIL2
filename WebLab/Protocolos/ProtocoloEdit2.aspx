@@ -306,6 +306,7 @@
                                                         <asp:CustomValidator ID="cvValidacionInput" runat="server" ErrorMessage="Debe completar al menos un analisis" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                                                     </td>
                                                 </tr>
+                                               
                                             
                                             </table>
                                         </asp:Panel>
