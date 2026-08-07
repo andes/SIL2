@@ -576,13 +576,13 @@ where  idtipoServicio IN (SELECT idTipoServicio from lab_agenda A where baja=0 "
                 if (oUser.IdPerfil.IdPerfil == 15)
                 { //07.08.2026 CAPS
                     crit.Add(Expression.Eq("IdEfector", oUser.IdEfectorDestino)); //aca va el laboratorio
-                    crit.Add(Expression.Eq("IdEfectorSolicitante", oUser.IdEfector)); // el efector que lo solicita es el logueado
                 }
                 else
                 {  //07.08.2026 agregar efector solicitante para filtrar correctamente
                     crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); //aca va el laboratorio
-                    crit.Add(Expression.Eq("IdEfectorSolicitante", oUser.IdEfector)); //el efector que lo solicita es el logueado
                 }
+
+                crit.Add(Expression.Eq("IdEfectorSolicitante", oUser.IdEfector)); // el efector que lo solicita es el logueado
 
                 crit.Add(Expression.Eq("IdItem", int.Parse(ddlItem.SelectedValue)));
 
