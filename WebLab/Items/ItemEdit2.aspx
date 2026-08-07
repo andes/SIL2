@@ -75,7 +75,7 @@
     <li><a href="#tab3">Diagrama</a></li>
     <li><a href="#tab4">Resultados Predefinidos</a></li>
     <li><a href="#tab5">Recomendaciones</a></li>
-     <li><a href="#tab8"  >Muestras</a></li>
+     <li id="tituloMuestra" runat="server"><a href="#tab8"  >Muestras</a></li>
  <li><a href="#tab6">Mas opciones</a></li>
      <li><a href="#tab9">Turnos</a></li>
      <li><a href="#tab10">AutoAnalizadores</a></li>
@@ -649,8 +649,9 @@
                             </tr>
                             </table>
             </div>--%>
-    				<div id="tab8"   class="tab_content" style="border: 1px solid #C0C0C0">
-                           <asp:Label ID="lblMensajeMuestra1" runat="server"    ForeColor="Red">Sección habilitada para Servicio Microbiologia</asp:Label>
+    				<div id="tab8"   class="tab_content" style="border: 1px solid #C0C0C0" runat="server" ClientIDMode="Static">
+                        <asp:Panel ID="pnlMuestra" runat="server" >
+                            <asp:Label ID="lblMensajeMuestra1" runat="server"    ForeColor="Red">Sección habilitada para Servicio Microbiologia</asp:Label>
                         <table>
                             <tr>
                                 <td>Muestra:</td>
@@ -706,6 +707,8 @@
                             </td>
                         </tr>
                         </table>
+                        </asp:Panel>
+                           
                         </div>
 					<div id="tab2" class="tab_content" style="border: 1px solid #C0C0C0">
 					<anthem:Panel ID="pnlVR" runat="server">
@@ -1095,6 +1098,26 @@
                     </tr>
 					</table>
 			</anthem:Panel>
+    <asp:Panel ID="pnlDiagramaEfector" runat="server">
+        <h4>Diagrama</h4>
+        <asp:GridView ID="gvDiagrama" runat="server"  AutoGenerateColumns="False" BorderColor="#3A93D2" BorderStyle="Solid" 
+        BorderWidth="1px" CellPadding="0" CssClass="table table-bordered bs-table"  Width="100%" 
+        EmptyDataText="No hay codigos cargados para la determinación" Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal">
+             <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+            <Columns>
+                <asp:BoundField DataField="idDiagrama" visible="false"></asp:BoundField>
+                <asp:BoundField DataField="nombre" HeaderText="Codigo"></asp:BoundField>
+                <asp:BoundField DataField="textoimprimir" HeaderText="Analisis"></asp:BoundField>
+            </Columns>
+             <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
+            <EditRowStyle BackColor="#999999" />
+            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+        </asp:GridView>
+    </asp:Panel>
+   
 </div>				
 
 
@@ -1121,8 +1144,19 @@
                         <td colspan="2">
                             <anthem:DropDownList ID="ddlEfectorItemDeriva" Width="300px" runat="server" class="form-control input-sm" TabIndex="9" ToolTip="Seleccione el efector a derivar">
                             </anthem:DropDownList>
-                            <input id="Button1" type="button" value="Agregar a Lista" onclick="CrearFila()" class="myButtonGris" />
+                           
                         </td>
+                    </tr>
+                    <tr>
+                        <td class="control-label">Estado</td>
+                        <td colspan="2">
+                            <asp:DropDownList ID="ddlEstadoPredefinido" Width="300px" class="form-control input-sm" TabIndex="10" ToolTip="Seleccione un estado" runat="server">
+                                <asp:ListItem Value="D" Text="Definitivo"></asp:ListItem>
+                                <asp:ListItem Value="P" Text="Preliminar"></asp:ListItem>
+                            </asp:DropDownList>
+                             <input id="Button1" type="button" value="Agregar a Lista" onclick="CrearFila()" class="myButtonGris" />
+                        </td>
+
                     </tr>
 					<tr>
 						<td colspan="3" >
@@ -1132,20 +1166,28 @@
 					<tr>
 						
 						<td colspan="3" align="center">
-                           <table 
+            <%--               <table 
         >
 <tr>
 <td style="width:40px;">&nbsp</td><td width="500px" align="center" >Resultados 
     Predefinidos</td>
    
 </tr>
+</table>--%>
 
+ <table id="Table1"   style="font-size:.9em; font-weight: bold; margin-left:1%; background-color: #DFE7F7;" cellpadding="0" cellspacing="0" align="center">
+        <tr>
+            <td width="40px">&nbsp</td>
+            <td width="425px"  >Resultado Predefinido</td>
+            <td width="400px" >Efector Derivante</td>
+            <td width="80px" >Estado</td>
+            <td width="60px" >&nbsp</td>
+        </tr>
 
 </table>
 <table summary="Tabla editable para sumar filas y columnas" id="tabla"  
-        style="font-size:.9em; margin-left:1%; " cellpadding="0" cellspacing="0" 
-        >
-
+        style="font-size:.9em; margin-left:1%; " cellpadding="0" cellspacing="0"   >
+   
 <tbody id="cuerpo">
 
 </tbody>
@@ -1154,13 +1196,12 @@
 					</tr>
 					 
 					<tr>
-						<td colspan="2">
-    
-        
-            
-                                            &nbsp;</td>
+						<td colspan="3">   <hr /></td>
+
+					</tr>
 						
-						<td align="right">
+						<tr>
+                            <td align="right"  colspan="3">
                                             <anthem:Button ID="btnGuardarRP" runat="server" Text="Guardar" 
                                                 onclick="btnGuardarRP_Click" CssClass="btn btn-primary" Width="100px"  ValidationGroup="0" />
         
@@ -1185,7 +1226,28 @@
 					<input type="hidden" runat="server" name="TxtDatosResultados" id="TxtDatosResultados" value="" /> 
 					</anthem:Panel>
 
-    <table>
+<asp:Panel ID="pnlPredefinidosEfector" runat="server">
+     <h4>Resultados Predefinidos</h4> 
+    <asp:GridView ID="gvResultadosPredefinidos" runat="server"  AutoGenerateColumns="False" BorderColor="#3A93D2" BorderStyle="Solid" 
+        BorderWidth="1px" CellPadding="0" CssClass="table table-bordered bs-table"  Width="100%" 
+        EmptyDataText="No hay resultados predefinidos cargados para la determinación" Font-Size="10pt" ForeColor="#333333" GridLines="Horizontal">
+         <RowStyle BackColor="#F7F6F3" ForeColor="#333333" />
+            <Columns>
+                <asp:BoundField DataField="idResultadoItem" Visible="false" ></asp:BoundField>
+                <asp:BoundField DataField="resultado" HeaderText="Resultado Predefinido"> </asp:BoundField>
+                <asp:BoundField DataField="efectorDeriva" HeaderText="Efector Derivante"></asp:BoundField>
+                <asp:BoundField DataField="Estado" HeaderText="Estado"></asp:BoundField>
+            </Columns>
+            <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />
+            <HeaderStyle BackColor="#3A93D2" Font-Bold="True" ForeColor="White" />
+            <EditRowStyle BackColor="#999999" />
+            <AlternatingRowStyle BackColor="White" ForeColor="#284775" />
+    </asp:GridView>
+</asp:Panel>
+
+    <table runat="server" id="tResultadoDefecto">
             <tr>
                         <td colspan="3"    >
                             Resultado por Defecto:</td>
@@ -1481,7 +1543,7 @@ alert(document.all.getElementById('txtEdadDesde').value);
 
 
 
-CargarDetalle();
+CargarDetalle(); 
 CargarDetalleDiagrama();
 // var contadorfilas = 0; 
 var tab;
@@ -1491,14 +1553,16 @@ var filas;
 function CrearFila()
 {
     var nombre = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtNombreRP").ClientID %>').value;
-    var idEfector= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value;
-
-if (nombre!='')
-{
-    NuevaFila(nombre, idEfector);
-    document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtNombreRP").ClientID %>').value = '';
-    document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value='';
-}
+    var idEfector = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value;
+    var opcionesEstado = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEstadoPredefinido").ClientID %>');
+    var estado = opcionesEstado.options[opcionesEstado.selectedIndex].text;
+   
+    if (nombre!='')
+    {
+        NuevaFila(nombre, idEfector, estado);
+        document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtNombreRP").ClientID %>').value = '';
+        document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("ddlEfectorItemDeriva").ClientID %>').value='';
+    }
 }
   
   
@@ -1518,163 +1582,179 @@ if (nombre!='')
 }
 }
   
-function NuevaFila(nom ,  efector)
+function NuevaFila(nom ,  efector, estado)
 {
-Grilla = document.getElementById('cuerpo');
+    Grilla = document.getElementById('cuerpo');
+   
+    fila = document.createElement('tr');
 
-fila = document.createElement('tr');
+    celdaflecha1= document.createElement('td');    
+    celdaflecha1.className= "orden";
 
-celdaflecha1= document.createElement('td');    
-celdaflecha1.className= "orden";
+    ////crea la primera flecha
+    oFlecha1= document.createElement('img');
+    oFlecha1.name= "pru";
+    oFlecha1.src="../script/moverfilas/arriba.gif";
+    oFlecha1.alt="subir fila";
+    ////crea la segunda flecha
+    oFlecha2= document.createElement('img');            
+    oFlecha2.src="../script/moverfilas/abajo.gif";
+    oFlecha2.alt="bajar fila";                                  
 
-////crea la primera flecha
-oFlecha1= document.createElement('img');
-oFlecha1.name= "pru";
-oFlecha1.src="../script/moverfilas/arriba.gif";
-oFlecha1.alt="subir fila";
-////crea la segunda flecha
-oFlecha2= document.createElement('img');            
-oFlecha2.src="../script/moverfilas/abajo.gif";
-oFlecha2.alt="bajar fila";                                  
+    celdaflecha1.appendChild(oFlecha1);
+    celdaflecha2= document.createElement('td');    
+    celdaflecha2.className= "orden";
+    celdaflecha2.appendChild(oFlecha2);
+    fila.appendChild(celdaflecha1);
+    fila.appendChild(celdaflecha2);
 
-celdaflecha1.appendChild(oFlecha1);
-celdaflecha2= document.createElement('td');    
-celdaflecha2.className= "orden";
-celdaflecha2.appendChild(oFlecha2);
-fila.appendChild(celdaflecha1);
-fila.appendChild(celdaflecha2);
+    ///////////////////////////////////        	
+    celdaCodigo = document.createElement('td');   
+    oCodigo = document.createElement('input');
+    oCodigo.type = 'text';                        
+    oCodigo.runat = 'server';
+    oCodigo.onblur= function () {CargarDatos()};
+    oCodigo.className = 'form-control input-sm';
+    oCodigo.style.width = '300px';
+    oCodigo.value= nom;
 
-///////////////////////////////////        	
-celdaCodigo = document.createElement('td');   
-oCodigo = document.createElement('input');
-oCodigo.type = 'text';                        
-oCodigo.runat = 'server';
-oCodigo.onblur= function () {CargarDatos()};
-oCodigo.className = 'form-control input-sm';
-oCodigo.width = '300px';
-oCodigo.value= nom;
+    celdaCodigo.appendChild(oCodigo);
+    fila.appendChild(celdaCodigo);
+        ///////////////////////////////////
+    celdaEfector = document.createElement('td');
+    oCodigo1 = document.createElement('input');
+    oCodigo1.type = 'text';
+    oCodigo1.runat = 'server';
+    //oCodigo1.onblur = function () { CargarDatos() };
+    oCodigo1.className = 'form-control input-sm';
+    oCodigo1.style.width = '300px';
+    oCodigo1.value = (efector == 0) ? "" : efector;
 
-celdaCodigo.appendChild(oCodigo);
-fila.appendChild(celdaCodigo);
-    ///////////////////////////////////
-celdaEfector = document.createElement('td');
-oCodigo1 = document.createElement('input');
-oCodigo1.type = 'text';
-oCodigo1.runat = 'server';
-//oCodigo1.onblur = function () { CargarDatos() };
-oCodigo1.className = 'form-control input-sm';
-oCodigo1.width = '200px';
-oCodigo1.value = efector;
+    celdaEfector.appendChild(oCodigo1);
+    fila.appendChild(celdaEfector);
+    /////////////////////
+    //Estado
+    celdaEstado = document.createElement('td');
+    oEstado = document.createElement('input');
+    oEstado.type = 'text';
+    oEstado.runat = 'server';
+    oEstado.className = 'form-control input-sm';
+    oEstado.style.width = '100px';
+    oEstado.value = estado;
 
-celdaEfector.appendChild(oCodigo1);
-fila.appendChild(celdaEfector);
+    celdaEstado.appendChild(oEstado);
+    fila.appendChild(celdaEstado);
+
     /////////////////////
 
-celda6 = document.createElement('td');  
-celda6.className= "orden";
-celda6.width="60px";
-oBoton= document.createElement('img');
-//    oBoton.name= "pru";
-oBoton.src="../script/moverfilas/eliminar.gif";
-oBoton.alt="eliminar fila";
-oBoton.onclick = function () {borrarfila(this,'cuerpo')};
-celda6.appendChild(oBoton);
-fila.appendChild(celda6);
 
-Grilla.appendChild(fila);
 
-iniciarTabla('cuerpo');
-CargarDatos();
+    celda6 = document.createElement('td');
+    celda6.className = "orden";
+    celda6.style.width = "60px";
+    oBoton = document.createElement('img');
+    //    oBoton.name= "pru";
+    oBoton.src = "../script/moverfilas/eliminar.gif";
+    oBoton.alt = "eliminar fila";
+    oBoton.onclick = function () { borrarfila(this, 'cuerpo') };
+    celda6.appendChild(oBoton);
+    fila.appendChild(celda6);
+    
 
+
+    Grilla.appendChild(fila);
+
+    iniciarTabla('cuerpo');
+    CargarDatos();
 }
         
         
 function NuevaFilaDiagrama(cod,nom)
 {
-Grilla = document.getElementById('cuerpoDiagrama');
+    Grilla = document.getElementById('cuerpoDiagrama');
 
-fila = document.createElement('tr');
+    fila = document.createElement('tr');
 
-celdaflecha1= document.createElement('td');    
-celdaflecha1.className= "orden";
+    celdaflecha1= document.createElement('td');    
+    celdaflecha1.className= "orden";
 
-////crea la primera flecha
-oFlecha1= document.createElement('img');
-oFlecha1.name= "pru";
-oFlecha1.src="../script/moverfilas/arriba.gif";
-oFlecha1.alt="subir fila";
-////crea la segunda flecha
-oFlecha2= document.createElement('img');            
-oFlecha2.src="../script/moverfilas/abajo.gif";
-oFlecha2.alt="bajar fila";                                  
+    ////crea la primera flecha
+    oFlecha1= document.createElement('img');
+    oFlecha1.name= "pru";
+    oFlecha1.src="../script/moverfilas/arriba.gif";
+    oFlecha1.alt="subir fila";
+    ////crea la segunda flecha
+    oFlecha2= document.createElement('img');            
+    oFlecha2.src="../script/moverfilas/abajo.gif";
+    oFlecha2.alt="bajar fila";                                  
 
-celdaflecha1.appendChild(oFlecha1);
-celdaflecha2= document.createElement('td');    
-celdaflecha2.className= "orden";
-celdaflecha2.appendChild(oFlecha2);
-fila.appendChild(celdaflecha1);
-fila.appendChild(celdaflecha2);
+    celdaflecha1.appendChild(oFlecha1);
+    celdaflecha2= document.createElement('td');    
+    celdaflecha2.className= "orden";
+    celdaflecha2.appendChild(oFlecha2);
+    fila.appendChild(celdaflecha1);
+    fila.appendChild(celdaflecha2);
 
-///////////////////////////////////        	
-///celda para el codigo
-celdaCodigo = document.createElement('td');   
-oCodigo = document.createElement('input');
-oCodigo.type = 'text';                        
-oCodigo.runat = 'server';
-oCodigo.className = 'textoCorto';
-oCodigo.value= cod;
+    ///////////////////////////////////        	
+    ///celda para el codigo
+    celdaCodigo = document.createElement('td');   
+    oCodigo = document.createElement('input');
+    oCodigo.type = 'text';                        
+    oCodigo.runat = 'server';
+    oCodigo.className = 'textoCorto';
+    oCodigo.value= cod;
 
-celdaCodigo.appendChild(oCodigo);
-fila.appendChild(celdaCodigo);
+    celdaCodigo.appendChild(oCodigo);
+    fila.appendChild(celdaCodigo);
+    ///////////////////////////////////
+
+    ///////////////////////////////////        	
+    ///celda para el NOMBRE
+    celdaNombre = document.createElement('td');   
+    oNombre = document.createElement('input');
+    oNombre.type = 'text';                        
+    oNombre.runat = 'server';
+    oNombre.className = 'textoLargo';
+    oNombre.value= nom;
+
+    celdaNombre.appendChild(oNombre);
+    fila.appendChild(celdaNombre);
+
 ///////////////////////////////////
-
-///////////////////////////////////        	
-///celda para el NOMBRE
-celdaNombre = document.createElement('td');   
-oNombre = document.createElement('input');
-oNombre.type = 'text';                        
-oNombre.runat = 'server';
-oNombre.className = 'textoLargo';
-oNombre.value= nom;
-
-celdaNombre.appendChild(oNombre);
-fila.appendChild(celdaNombre);
-
-///////////////////////////////////
-
-celda6 = document.createElement('td');  
-celda6.className= "orden";
-celda6.width="60px";
-oBoton= document.createElement('img');
-//    oBoton.name= "pru";
-oBoton.src="../script/moverfilas/eliminar.gif";
-oBoton.alt="eliminar fila";
-oBoton.onclick = function () {borrarfila(this,'cuerpoDiagrama')};
-celda6.appendChild(oBoton);
-fila.appendChild(celda6);
-
-Grilla.appendChild(fila);
-iniciarTabla('cuerpoDiagrama');
-CargarDatosDiagrama();
+    celda6 = document.createElement('td');
+    celda6.className = "orden";
+    celda6.width = "60px";
+    oBoton = document.createElement('img');
+    //    oBoton.name= "pru";
+    oBoton.src = "../script/moverfilas/eliminar.gif";
+    oBoton.alt = "eliminar fila";
+    oBoton.onclick = function () { borrarfila(this, 'cuerpoDiagrama') };
+    celda6.appendChild(oBoton);
+    fila.appendChild(celda6);
+    
+    Grilla.appendChild(fila);
+    iniciarTabla('cuerpoDiagrama');
+    CargarDatosDiagrama();
 }
 
         
 function CargarDatos()
 {
-var str = '';            
-var tab;
-var filas;	   	     
+    var str = '';            
+    var tab;
+    var filas;	   	     
 
-tab = document.getElementById('cuerpo');
-filas = tab.getElementsByTagName('tr');
-for (i=0; ele = filas[i]; i++)
-{  
-    var codigo = ele.getElementsByTagName('input')[0].value;
-    var efector = ele.getElementsByTagName('input')[1].value;
-    if (codigo!='')
-        str = str + codigo + '#'+ efector+ '@';
-}     	     	     
-document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value = str;	   	        
+    tab = document.getElementById('cuerpo');
+    filas = tab.getElementsByTagName('tr');
+    for (i=0; ele = filas[i]; i++)
+    {  
+        var codigo = ele.getElementsByTagName('input')[0].value;
+        var efector = ele.getElementsByTagName('input')[1].value;
+        var estado = ele.getElementsByTagName('input')[2].value;
+        if (codigo!='')
+            str = str + codigo + '#'+ efector+'#'+estado+ '@';
+    }     	     	     
+    document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value = str;	   	        
 
 }
         
@@ -1698,21 +1778,17 @@ for (i=0; ele = filas[i]; i++)
 document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosDiagrama").ClientID %>').value = str;	   	        
 }
         
-function CargarDetalle()
-{ 
-var datos= document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value ;	   	        
-if (datos!="")
-{      
-    var sTab = datos.split('@');                
-    for (var i=0; i<(sTab.length-1); i++)
-    {
-        var sFi = sTab[i].split('#');
-        if  (sFi[0]!="")
-        {
-            NuevaFila(sFi[0], sFi[1]);
+function CargarDetalle() {
+    var datos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosResultados").ClientID %>').value;
+    if (datos != "") {
+        var sTab = datos.split('@');
+        for (var i = 0; i < (sTab.length - 1); i++) {
+            var sFi = sTab[i].split('#');
+            if (sFi[0] != "") {
+                NuevaFila(sFi[0], sFi[1], sFi[2]);
+            }
         }
     }
-}
 }
 
 function CargarDetalleDiagrama()
@@ -1776,7 +1852,8 @@ if (confirm('¿Está seguro de eliminar el registro?'))
 return true;
 else
 return false;
-}
+    }
+
 
 
 </script>
