@@ -220,7 +220,8 @@ namespace WebLab.Protocolos
 
                         MuestraDatos();
                         //VerificaPermisos("Pacientes sin turno");
-                        if (Request["Desde"].ToString() == "Control")
+
+                        switch (Request["Desde"].ToString())
                         {
                             pnlLista.Visible = true;
                             CargarGrilla();
