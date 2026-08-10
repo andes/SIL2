@@ -1029,13 +1029,22 @@ namespace WebLab.Usuarios
                    
 
                     //Auditoria de modificacion
-                    string s_auditoria = "";
-                    if (ddlPerfil.SelectedItem.Value != efectorEncontrado["idPerfil"].ToString()) 
-                        s_auditoria = "Perfil:" + efectorEncontrado["Perfil"] + " ";
+                    string s_anterior = "", s_nueva = "";
+                    if (ddlPerfil.SelectedItem.Value != efectorEncontrado["idPerfil"].ToString())
+                    { 
+                        s_anterior = "Perfil:" + efectorEncontrado["Perfil"] + " ";
+                        s_nueva = "Perfil:" + ddlPerfil.SelectedItem.Text;
+                    }
                     if (ddlArea.SelectedItem.Value != efectorEncontrado["idArea"].ToString())
-                        s_auditoria = s_auditoria + "Area:" + efectorEncontrado["Area"] + " ";
+                    {
+                        s_anterior = s_anterior + "Area:" + efectorEncontrado["Area"] + " ";
+                        s_nueva = s_nueva + "Area:" + ddlArea.SelectedItem.Text;
+                    }
                     if (ddlPerfil.SelectedItem.Value == "15" && (ddlEfectorDestino.SelectedItem.Value != efectorEncontrado["idEfectorDestino"].ToString()))
-                        s_auditoria = s_auditoria + "Efector Destino:" + efectorEncontrado["idEfectorDestino"] + " ";
+                    {
+                        s_anterior = s_anterior + "Efector Destino:" + efectorEncontrado["EfectorDestino"];
+                        s_nueva = s_nueva + "Efector Destino:" + ddlEfectorDestino.SelectedItem.Text;
+                    }
 
                     Usuario oUsuario = (Usuario)new Usuario().Get(typeof(Usuario), int.Parse(Request["id"]));
                     Usuario oAuditor = (Usuario)new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
@@ -1043,7 +1052,7 @@ namespace WebLab.Usuarios
                     "Modifica " + ddlEfector3.SelectedItem.Text,
                     oUsuario.IdUsuario,
                     oUsuario.Username,
-                    "", s_auditoria);
+                    s_anterior,s_nueva);
 
                     //Borro el anterior y permitimos que continue el flujo para que se guarde el nuevo con distinto perfil  o area o laboratoriodestino
                     dt.Rows.Remove(efectorEncontrado);
