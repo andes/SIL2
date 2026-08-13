@@ -1821,5 +1821,7 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             lblCantNoProcesado.Text = cantNoProcesado.ToString();
             lblCantTerminado.Text = cantTerminado.ToString();
         }
+
+        
     }
 }
