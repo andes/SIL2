@@ -416,14 +416,15 @@ namespace WebLab.Protocolos
             s_valores += ";ddlOrigen:" + ddlOrigen.SelectedValue;           
             s_valores += ";ddlPrioridad:" + ddlPrioridad.SelectedValue;
             s_valores += ";ddlEfector:" + ddlEfectorSolicitante.SelectedValue;
-            s_valores += ";txtEspecialista:" + txtEspecialista.Text;
+            s_valores += ";HFMatricula:" + HFMatricula.Value;
+            s_valores += ";HFidObraSocial:" + HFidObraSocial.Value;
             s_valores += ";txtDni:" +txtDni.Value;
             s_valores += ";txtApellido:" +txtApellido.Text;
             s_valores += ";txtNombre:" + txtNombre.Text;
             s_valores += ";ddlEstado:" + ddlEstado.SelectedValue;
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
-            s_valores += ";txtObraSocial:" + txtObraSocial.Text;
-            s_valores += ";txtNomApeEspecialista:" + txtNomApeEspecialista.Text;
+            s_valores += ";lblObraSocial:" + lblObraSocial.Text;
+            s_valores += ";lblNomApeEspecialista:" + lblNomApeEspecialista.Text;
             
             Session["FiltroProtocolo"] = s_valores;
         }
@@ -453,15 +454,16 @@ namespace WebLab.Protocolos
 
                         case "ddlPrioridad": ddlPrioridad.SelectedValue = s_control[1].ToString(); break;
                         case "ddlEfector": ddlEfectorSolicitante.SelectedValue = s_control[1].ToString(); break;
-                        case "txtEspecialista": txtEspecialista.Text = s_control[1].ToString(); break;
+                        case "HFMatricula": HFMatricula.Value = s_control[1].ToString(); break;
+                        case "HFidObraSocial": HFidObraSocial.Value = s_control[1].ToString(); break;
 
 
                         case "txtDni": txtDni.Value = s_control[1].ToString(); break;
                         case "txtApellido": txtApellido.Text = s_control[1].ToString(); break;
                         case "txtNombre": txtNombre.Text = s_control[1].ToString(); break;
                         case "ddlEstado": ddlEstado.SelectedValue = s_control[1].ToString(); break;
-                        case "txtObraSocial": txtObraSocial.Text = s_control[1].ToString(); break;
-                        case "txtNomApeEspecialista": txtNomApeEspecialista.Text = s_control[1].ToString(); break;
+                        case "lblObraSocial": lblObraSocial.Text = s_control[1].ToString(); break;
+                        case "lblNomApeEspecialista": lblNomApeEspecialista.Text = s_control[1].ToString(); break;
 
                     }
                 }
@@ -570,7 +572,7 @@ namespace WebLab.Protocolos
             if (ddlOrigen.SelectedValue != "0") str_condicion += " AND P.idOrigen = " + ddlOrigen.SelectedValue;
             if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
             if (ddlEfectorSolicitante.SelectedValue != "0") str_condicion += " AND P.idEfectorSolicitante = " + ddlEfectorSolicitante.SelectedValue;
-            if (txtEspecialista.Text != "") str_condicion += " AND P.matriculaEspecialista = '" + txtEspecialista.Text + "'";
+            if (HFMatricula.Value != "") str_condicion += " AND P.matriculaEspecialista = '" + HFMatricula.Value + "'";
             if (txtDni.Value != "") str_condicion += " AND Pa.numeroDocumento = '" + txtDni.Value + "'";
             if (txtApellido.Text != "") str_condicion += " AND Pa.apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
             if (txtNombre.Text != "") str_condicion += " AND Pa.nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
@@ -1707,11 +1709,14 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
         protected void btnBorrarObraSocial_Click(object sender, EventArgs e)
         {
             //06.08.2026 borra la selección realizada de la Obra social y su identificador interno ( y las sesiones)
-            txtObraSocial.Text ="";
-            txtObraSocial.UpdateAfterCallBack = true;
+            lblObraSocial.Text ="";
+            lblObraSocial.UpdateAfterCallBack = true;
             Session["obraSocial"] = null;
             Session["idObraSocial"] = null;
             HFidObraSocial.Value = "";
+            HFidObraSocial.UpdateAfterCallBack = true;
+            btnBorrarObraSocial.Visible = false;
+            btnBorrarObraSocial.UpdateAfterCallBack = true;
         }
 
 
@@ -1721,9 +1726,12 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             // y se guarda en un identificador el id de la obra social para utilizarlo en la busqueda
             if (Session["obraSocial"] != null && Session["idObraSocial"] != null)
             {
-                txtObraSocial.Text = Session["obraSocial"].ToString();
-                txtObraSocial.UpdateAfterCallBack = true;
+                lblObraSocial.Text = Session["obraSocial"].ToString();
+                lblObraSocial.UpdateAfterCallBack = true;
                 HFidObraSocial.Value = Session["idObraSocial"].ToString();
+                HFidObraSocial.UpdateAfterCallBack = true;
+                btnBorrarObraSocial.Visible = true;
+                btnBorrarObraSocial.UpdateAfterCallBack = true;
             }
         }
 
@@ -1733,10 +1741,13 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             // y se guarda en txtEspecialista la matricula para utilizarlo en la busqueda
             if (Session["matricula"] != null && Session["apellidoNombre"] != null)
             {
-                txtEspecialista.Text = Session["matricula"].ToString();
-                txtNomApeEspecialista.Text = Session["apellidoNombre"].ToString();
-                txtNomApeEspecialista.UpdateAfterCallBack = true;
-                txtEspecialista.UpdateAfterCallBack = true;
+                HFMatricula.Value = Session["matricula"].ToString();
+                HFMatricula.UpdateAfterCallBack = true;
+
+                lblNomApeEspecialista.Text = Session["apellidoNombre"].ToString();
+                lblNomApeEspecialista.UpdateAfterCallBack = true;
+                lnkBorrarMatriculaEspecialista.Visible = true;
+                lnkBorrarMatriculaEspecialista.UpdateAfterCallBack = true;
             }
         }
 
@@ -1744,12 +1755,14 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
         {
             //06.08.2026 borra la selección realizada del especialista y la matricula asociada ( y las sesiones)
 
-            txtEspecialista.Text = "";
-            txtNomApeEspecialista.Text = "";
-            txtEspecialista.UpdateAfterCallBack = true;
-            txtNomApeEspecialista.UpdateAfterCallBack = true;
+            HFMatricula.Value = "";
+            HFMatricula.UpdateAfterCallBack = true;
+            lblNomApeEspecialista.Text = "";
+            lblNomApeEspecialista.UpdateAfterCallBack = true;
             Session["matricula"] = null ;
             Session["apellidoNombre"] = null;
+            lnkBorrarMatriculaEspecialista.Visible = false;
+            lnkBorrarMatriculaEspecialista.UpdateAfterCallBack = true;
         }
 
         private void CalcularCantidades(DataTable dt)
@@ -1771,5 +1784,7 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             lblCantNoProcesado.Text = cantNoProcesado.ToString();
             lblCantTerminado.Text = cantTerminado.ToString();
         }
+
+        
     }
 }

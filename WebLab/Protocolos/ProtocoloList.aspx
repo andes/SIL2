@@ -280,19 +280,17 @@
                                             Médico Solicitante:</td>
 						
 						<td>
-                             <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"
-                                 AutoCallBack="true" Visible="false"  ></anthem:TextBox><anthem:TextBox ToolTip="Nombre y Apellido de especialista" ID="txtNomApeEspecialista" 
-                                     Width="400px" TabIndex="16" class="form-control input-sm" runat="server"  
-                                     AutoCallBack="true" enabled="false" ></anthem:TextBox> 
+                            <%-- <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"
+                                 AutoCallBack="true" Visible="false"  ></anthem:TextBox>--%>
+                            <anthem:HiddenField ID="HFMatricula" runat="server" />
+                            <anthem:Label ToolTip="Nombre y Apellido de especialista" ID="lblNomApeEspecialista" runat="server"  AutoCallBack="true" Text="" ></anthem:Label> 
+                            &nbsp;<anthem:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista"  OnClick="lnkBuscarEspecialista_Click" 
+                                OnClientClick="SelMedico(); return false;">
+                                <span class="glyphicon glyphicon-search"></span></anthem:LinkButton>
                         </td>
-                        <td>
-                            &nbsp;<asp:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista" CssClass="btn btn-info" OnClick="lnkBuscarEspecialista_Click" 
-                                OnClientClick="SelMedico(); return false;" Width="60px">
-                                <span class="glyphicon glyphicon-search"></span></asp:LinkButton>
-                        </td>
-                                    <td>&nbsp;<asp:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" TabIndex="19" onclick="lnkBorrarMatriculaEspecialista_Click" Text="Borrar seleccion"
-                                            CssClass="btn btn-warning" Width="60px" tooltip="Borrar Matricula" >
-                                 <span class="glyphicon glyphicon-trash"/></asp:LinkButton>
+                                    <td>&nbsp;<anthem:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" TabIndex="19" onclick="lnkBorrarMatriculaEspecialista_Click" Text="Borrar seleccion"
+                                            tooltip="Borrar Matricula" Visible="false" >
+                                 <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
                                     </td>
 						
 					</tr>
@@ -315,15 +313,12 @@
                                                
                                             </asp:DropDownList>--%>
                             <td>
-                                <anthem:TextBox runat="server" ID="txtObraSocial" TabIndex="17" CssClass="form-control input-sm" Enabled="False" Width="400px" ToolTip="Obra Social seleccionada " />
-                                <asp:HiddenField ID="HFidObraSocial" runat="server" />
-                            </td>
-                                                
-                           <td>  &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" TabIndex="18" tooltip="Buscar Obra Social" OnClick="btnBuscarObraSocial_Click" OnClientClick="buscaObraSocial(); return false;"   CssClass="btn btn-info" Width="60px">
+                                <anthem:Label runat="server" ID="lblObraSocial" text="" ToolTip="Obra Social seleccionada " ></anthem:Label>
+                                <anthem:HiddenField ID="HFidObraSocial" runat="server" />
+                               &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" tooltip="Buscar Obra Social" OnClick="btnBuscarObraSocial_Click" OnClientClick="buscaObraSocial(); return false;"  >
                                <span class="glyphicon glyphicon-search"/></asp:LinkButton>
-                                   </td>
-                            <td> &nbsp;<asp:LinkButton runat="server" ID="btnBorrarObraSocial" TabIndex="19" onclick="btnBorrarObraSocial_Click" Text="Borrar seleccion" CssClass="btn btn-warning" Width="60px" tooltip="Borrar O.S Seleccionada" >
-                                 <span class="glyphicon glyphicon-trash"/></asp:LinkButton>
+                               &nbsp;<anthem:LinkButton runat="server" ID="btnBorrarObraSocial" onclick="btnBorrarObraSocial_Click" Text="Borrar seleccion" tooltip="Borrar O.S Seleccionada" Visible="false" >
+                                 <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
                             </td>
 
 						
