@@ -17,35 +17,36 @@ using System.Security.Cryptography;
 using OfficeOpenXml;
 using System.Drawing;
 using OfficeOpenXml.Style;
+using Microsoft.Security.Application;
 
 namespace Business
 {
-	/// <summary>
-	/// Summary description for Utility.
-	/// </summary>
-	public class Utility
-	{
-		private PDSAEncryptionType mbytEncryptionType;
-		private string mstrOriginalString;
-		private string mstrEncryptedString;
-		private SymmetricAlgorithm mCSP;
+    /// <summary>
+    /// Summary description for Utility.
+    /// </summary>
+    public class Utility
+    {
+        private PDSAEncryptionType mbytEncryptionType;
+        private string mstrOriginalString;
+        private string mstrEncryptedString;
+        private SymmetricAlgorithm mCSP;
 
-		public enum PDSAEncryptionType : byte
-		{
-			DES,
-			RC2,
-			Rijndael,
-			TripleDES
-		}
+        public enum PDSAEncryptionType : byte
+        {
+            DES,
+            RC2,
+            Rijndael,
+            TripleDES
+        }
 
-		#region " Constructores "
+        #region " Constructores "
 
-		public Utility()
-		{
-			mbytEncryptionType = PDSAEncryptionType.DES;
+        public Utility()
+        {
+            mbytEncryptionType = PDSAEncryptionType.DES;
 
-			this.SetEncryptor();
-		}
+            this.SetEncryptor();
+        }
 
 
         public string EncryptarNet(string Data, string Password, int Bits)
@@ -74,7 +75,7 @@ namespace Business
 
         }
 
-        public   string quitaCerosIzquierda(string valor)
+        public string quitaCerosIzquierda(string valor)
         {
             for (int j = 0; j < valor.Length; j++)
             {
@@ -99,8 +100,8 @@ namespace Business
             return encryptedData;
         }
 
-        
-          public DataTable GetDataTable(string sql, string connectionString)
+
+        public DataTable GetDataTable(string sql, string connectionString)
         {
             DataTable dt = new DataTable();
 
@@ -112,7 +113,7 @@ namespace Business
 
             return dt;
         }
-     
+
 
         private byte[] Decrypt(byte[] cipherData, byte[] Key, byte[] IV)
         {
@@ -159,60 +160,60 @@ namespace Business
         }
 
         public Utility(PDSAEncryptionType EncryptionType)
-		{
-			mbytEncryptionType = EncryptionType;
+        {
+            mbytEncryptionType = EncryptionType;
 
-			this.SetEncryptor();
-		}
+            this.SetEncryptor();
+        }
         public string CompletarNombrePDF(string v)
         {
             return v + "_" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString();
         }
-       
+
         public Utility(PDSAEncryptionType EncryptionType, string OriginalString)
-		{
-			mbytEncryptionType = EncryptionType;
-			mstrOriginalString = OriginalString;
+        {
+            mbytEncryptionType = EncryptionType;
+            mstrOriginalString = OriginalString;
 
-			this.SetEncryptor();
-		}
+            this.SetEncryptor();
+        }
 
-		#endregion
+        #endregion
 
-		#region " Metodos Anteriores "
-        
-		public  string EncryptAnterior(string strPass)
-		{
-			long lngChr;
-			string strBuff="";
-			string strInput = ConfigurationSettings.AppSettings["encKey"];
-			strPass = strPass.ToUpper();
+        #region " Metodos Anteriores "
 
-			if(strPass.Length != 0) 
-			{
-				for(int intCnt=0;intCnt<strInput.Length;intCnt++)
-				{
-					int intStart = intCnt % strPass.Length; lngChr = Convert.ToInt64(strInput.Substring(intCnt,1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S'
-					// To avoid index is not found exception
-					if(intStart == (strPass.Length -1))
-						lngChr = lngChr + Convert.ToInt64(strPass.Substring(intStart,1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S'
-					else
-						lngChr = lngChr + Convert.ToInt64(strPass.Substring(intStart+1,1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S' 
+        public string EncryptAnterior(string strPass)
+        {
+            long lngChr;
+            string strBuff = "";
+            string strInput = ConfigurationSettings.AppSettings["encKey"];
+            strPass = strPass.ToUpper();
 
-					strBuff = strBuff + (char)(lngChr & Convert.ToInt64("0xFF", 16));// AND wif 0xFF
-				}
-			}
-			else
-				strBuff = strInput;
+            if (strPass.Length != 0)
+            {
+                for (int intCnt = 0; intCnt < strInput.Length; intCnt++)
+                {
+                    int intStart = intCnt % strPass.Length; lngChr = Convert.ToInt64(strInput.Substring(intCnt, 1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S'
+                                                                                                                        // To avoid index is not found exception
+                    if (intStart == (strPass.Length - 1))
+                        lngChr = lngChr + Convert.ToInt64(strPass.Substring(intStart, 1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S'
+                    else
+                        lngChr = lngChr + Convert.ToInt64(strPass.Substring(intStart + 1, 1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S' 
 
-			return strBuff;
-		}
+                    strBuff = strBuff + (char)(lngChr & Convert.ToInt64("0xFF", 16));// AND wif 0xFF
+                }
+            }
+            else
+                strBuff = strInput;
+
+            return strBuff;
+        }
 
         public object getParametro(string val, string para)
         {
             string par = "";
-          
-          
+
+
             string[] arr = val.Split(("&").ToCharArray());
             foreach (string item in arr)
             {
@@ -224,273 +225,273 @@ namespace Business
             }
             return par;
         }
-        public  string DecryptAnterior(string strPass) 
-		{
-			string strBuff="";
-			string strInput = ConfigurationSettings.AppSettings["encKey"];
-			long lngChr; strPass = strPass.ToUpper();
-			if(strPass.Length != 0)
-			{
-				for(int intCnt=0;intCnt<strInput.Length;intCnt++)
-				{ 
-					int intStart = intCnt % strPass.Length;
+        public string DecryptAnterior(string strPass)
+        {
+            string strBuff = "";
+            string strInput = ConfigurationSettings.AppSettings["encKey"];
+            long lngChr; strPass = strPass.ToUpper();
+            if (strPass.Length != 0)
+            {
+                for (int intCnt = 0; intCnt < strInput.Length; intCnt++)
+                {
+                    int intStart = intCnt % strPass.Length;
 
-					lngChr = Convert.ToInt64(strInput.Substring(intCnt,1)[0]);// [0] for to avoid "" from the input, e.g., "S" ==> 'S'
+                    lngChr = Convert.ToInt64(strInput.Substring(intCnt, 1)[0]);// [0] for to avoid "" from the input, e.g., "S" ==> 'S'
 
-					// To avoid index is not found exception
-					if(intStart == (strPass.Length -1))
-						lngChr = lngChr - Convert.ToInt64(strPass.Substring(intStart,1)[0]);// [0] for to avoid "" from the input, e.g., "S" ==> 'S'
-					else
-						lngChr = lngChr - Convert.ToInt64(strPass.Substring(intStart+1,1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S' 
+                    // To avoid index is not found exception
+                    if (intStart == (strPass.Length - 1))
+                        lngChr = lngChr - Convert.ToInt64(strPass.Substring(intStart, 1)[0]);// [0] for to avoid "" from the input, e.g., "S" ==> 'S'
+                    else
+                        lngChr = lngChr - Convert.ToInt64(strPass.Substring(intStart + 1, 1)[0]); // [0] for to avoid "" from the input, e.g., "S" ==> 'S' 
 
-					strBuff = strBuff + (char)(lngChr & Convert.ToInt64("0xFF", 16));// AND wif 0xFF
+                    strBuff = strBuff + (char)(lngChr & Convert.ToInt64("0xFF", 16));// AND wif 0xFF
 
-				}
+                }
 
-			}
-			else
+            }
+            else
 
-				strBuff = strInput;
+                strBuff = strInput;
 
-			return strBuff; 
-		}
+            return strBuff;
+        }
 
-      
+
 
         #endregion
 
         #region " Propiedades Publicas "
 
         public PDSAEncryptionType EncryptionType
-		{
-			get {return mbytEncryptionType;}
-			set
-			{
-				if (mbytEncryptionType != value) 
-				{
-					mbytEncryptionType = value;
-					mstrOriginalString = String.Empty;
-					mstrEncryptedString = String.Empty;
+        {
+            get { return mbytEncryptionType; }
+            set
+            {
+                if (mbytEncryptionType != value)
+                {
+                    mbytEncryptionType = value;
+                    mstrOriginalString = String.Empty;
+                    mstrEncryptedString = String.Empty;
 
-					this.SetEncryptor();
-				}
-			}
-		}
+                    this.SetEncryptor();
+                }
+            }
+        }
 
-		public SymmetricAlgorithm CryptoProvider
-		{
-			get {return mCSP;}
-			set {mCSP = value;}
-		}
+        public SymmetricAlgorithm CryptoProvider
+        {
+            get { return mCSP; }
+            set { mCSP = value; }
+        }
 
-		public string OriginalString
-		{
-			get {return mstrOriginalString;}
-			set {mstrOriginalString = value;}
-		}
+        public string OriginalString
+        {
+            get { return mstrOriginalString; }
+            set { mstrOriginalString = value; }
+        }
 
-		public string EncryptedString
-		{
-			get {return mstrEncryptedString;}
-			set {mstrEncryptedString = value;}
-		}
+        public string EncryptedString
+        {
+            get { return mstrEncryptedString; }
+            set { mstrEncryptedString = value; }
+        }
 
-		public byte[] key
-		{
-			get {return mCSP.Key;}
-			set {mCSP.Key = value;}
-		}
+        public byte[] key
+        {
+            get { return mCSP.Key; }
+            set { mCSP.Key = value; }
+        }
 
-		public string KeyString
-		{
-			get {return Convert.ToBase64String(mCSP.Key);}
-			set {mCSP.Key = Encoding.UTF8.GetBytes(value);}
-		}
+        public string KeyString
+        {
+            get { return Convert.ToBase64String(mCSP.Key); }
+            set { mCSP.Key = Encoding.UTF8.GetBytes(value); }
+        }
 
-		public byte[] IV
-		{
-			get {return mCSP.IV;}
-			set {mCSP.IV = value;}
-		}
+        public byte[] IV
+        {
+            get { return mCSP.IV; }
+            set { mCSP.IV = value; }
+        }
 
-		public string IVString
-		{
-			get {return Convert.ToBase64String(mCSP.IV);}
-			set {mCSP.IV = Encoding.UTF8.GetBytes(value);}
-		}
+        public string IVString
+        {
+            get { return Convert.ToBase64String(mCSP.IV); }
+            set { mCSP.IV = Encoding.UTF8.GetBytes(value); }
+        }
 
-		#endregion
+        #endregion
 
-		#region " Metodos de Encriptacion "
+        #region " Metodos de Encriptacion "
 
-		public string Encrypt()
-		{
-			ICryptoTransform ct;
-			MemoryStream ms;
-			CryptoStream cs;
-			byte[] byt;
+        public string Encrypt()
+        {
+            ICryptoTransform ct;
+            MemoryStream ms;
+            CryptoStream cs;
+            byte[] byt;
 
-			ct = mCSP.CreateEncryptor(mCSP.Key, mCSP.IV);
+            ct = mCSP.CreateEncryptor(mCSP.Key, mCSP.IV);
 
-			byt = Encoding.UTF8.GetBytes(mstrOriginalString);
+            byt = Encoding.UTF8.GetBytes(mstrOriginalString);
 
-			ms = new MemoryStream();
-			cs = new CryptoStream(ms, ct, CryptoStreamMode.Write);
-			cs.Write(byt, 0, byt.Length);
-			cs.FlushFinalBlock();
-			cs.Close();
+            ms = new MemoryStream();
+            cs = new CryptoStream(ms, ct, CryptoStreamMode.Write);
+            cs.Write(byt, 0, byt.Length);
+            cs.FlushFinalBlock();
+            cs.Close();
 
-			mstrEncryptedString = Convert.ToBase64String(ms.ToArray());
+            mstrEncryptedString = Convert.ToBase64String(ms.ToArray());
 
-			return mstrEncryptedString;
-		}
+            return mstrEncryptedString;
+        }
 
-		public string Encrypt(string OriginalString)
-		{
-			mstrOriginalString = OriginalString;
-      
-			return this.Encrypt();
-		}
+        public string Encrypt(string OriginalString)
+        {
+            mstrOriginalString = OriginalString;
 
-		public string Encrypt(string OriginalString, PDSAEncryptionType EncryptionType)
-		{
-			mstrOriginalString = OriginalString;
-			mbytEncryptionType = EncryptionType;
+            return this.Encrypt();
+        }
 
-			return this.Encrypt();
-		}
+        public string Encrypt(string OriginalString, PDSAEncryptionType EncryptionType)
+        {
+            mstrOriginalString = OriginalString;
+            mbytEncryptionType = EncryptionType;
 
-		#endregion
+            return this.Encrypt();
+        }
 
-		#region " Metodos de Desencriptacion "
+        #endregion
 
-		public string Decrypt()
-		{
-			ICryptoTransform ct;
-			MemoryStream ms;
-			CryptoStream cs;
-			byte[] byt;
+        #region " Metodos de Desencriptacion "
 
-			ct = mCSP.CreateDecryptor(mCSP.Key, mCSP.IV);
+        public string Decrypt()
+        {
+            ICryptoTransform ct;
+            MemoryStream ms;
+            CryptoStream cs;
+            byte[] byt;
 
-			byt = Convert.FromBase64String(mstrEncryptedString);
+            ct = mCSP.CreateDecryptor(mCSP.Key, mCSP.IV);
 
-			ms = new MemoryStream();
-			cs = new CryptoStream(ms, ct, CryptoStreamMode.Write);
-			cs.Write(byt, 0, byt.Length);
-			cs.FlushFinalBlock();
-			cs.Close();
+            byt = Convert.FromBase64String(mstrEncryptedString);
 
-			mstrOriginalString = Encoding.UTF8.GetString(ms.ToArray());
+            ms = new MemoryStream();
+            cs = new CryptoStream(ms, ct, CryptoStreamMode.Write);
+            cs.Write(byt, 0, byt.Length);
+            cs.FlushFinalBlock();
+            cs.Close();
 
-			return mstrOriginalString;
-		}
+            mstrOriginalString = Encoding.UTF8.GetString(ms.ToArray());
 
-		public string Decrypt(string EncryptedString)
-		{
-			mstrEncryptedString = EncryptedString;
-           // return mstrEncryptedString;
-			return this.Decrypt();
-		}
+            return mstrOriginalString;
+        }
 
-		public string Decrypt(string EncryptedString, PDSAEncryptionType EncryptionType)
-		{
-			mstrEncryptedString = EncryptedString;
-			mbytEncryptionType = EncryptionType;
+        public string Decrypt(string EncryptedString)
+        {
+            mstrEncryptedString = EncryptedString;
+            // return mstrEncryptedString;
+            return this.Decrypt();
+        }
 
-			return this.Decrypt();
-		}
+        public string Decrypt(string EncryptedString, PDSAEncryptionType EncryptionType)
+        {
+            mstrEncryptedString = EncryptedString;
+            mbytEncryptionType = EncryptionType;
 
-		#endregion
+            return this.Decrypt();
+        }
 
-		#region " Metodo SetEncryptor() "
+        #endregion
 
-		private void SetEncryptor()
-		{
-			switch(mbytEncryptionType)
-			{
-				case PDSAEncryptionType.DES:
-					mCSP = new DESCryptoServiceProvider();
-					break;
-				case PDSAEncryptionType.RC2:
-					mCSP = new RC2CryptoServiceProvider();
-					break;
-				case PDSAEncryptionType.Rijndael:
-					mCSP = new RijndaelManaged();
-					break;
-				case PDSAEncryptionType.TripleDES:
-					mCSP = new TripleDESCryptoServiceProvider();
-					break;
-			}
-      
-			// Generate Key
-			this.GenerateKey();
+        #region " Metodo SetEncryptor() "
 
-			// Generate IV
-			this.GenerateIV();
-		}
-		#endregion
+        private void SetEncryptor()
+        {
+            switch (mbytEncryptionType)
+            {
+                case PDSAEncryptionType.DES:
+                    mCSP = new DESCryptoServiceProvider();
+                    break;
+                case PDSAEncryptionType.RC2:
+                    mCSP = new RC2CryptoServiceProvider();
+                    break;
+                case PDSAEncryptionType.Rijndael:
+                    mCSP = new RijndaelManaged();
+                    break;
+                case PDSAEncryptionType.TripleDES:
+                    mCSP = new TripleDESCryptoServiceProvider();
+                    break;
+            }
 
-		#region " Metodos Publicos Varios "
+            // Generate Key
+            this.GenerateKey();
 
-		public byte[] GenerateKey()
-		{
-			try
-			{
-				int x = 0;
-				char[] chars = ConfigurationSettings.AppSettings["encKey"].ToCharArray();
-				byte[] bits = new byte[chars.Length];
-				foreach (char c in chars)
-				{
-					bits[x] = Convert.ToByte(c);
-					x += 1;
-				}
-										  
-				mCSP.Key = bits;
+            // Generate IV
+            this.GenerateIV();
+        }
+        #endregion
 
-				return mCSP.Key;
-			}
-			catch (Exception ex)
-			{
-				if (ex.GetType().Name.Equals("ArgumentException"))
-					throw new Exception("La clave encKey debe tener 8 digitos"); 
-				else
-					throw new Exception("Clave encKey en Archivo de Configuracion no implementada"); 
-			}
-		}
+        #region " Metodos Publicos Varios "
 
-		public byte[] GenerateIV()
-		{
-			try
-			{
-				int x = 0;
-				char[] chars = ConfigurationSettings.AppSettings["encKey"].ToCharArray();
-				byte[] bits = new byte[chars.Length];
-				foreach (char c in chars)
-				{
-					bits[x] = Convert.ToByte(c);
-					x += 1;
-				}
-										  
-				mCSP.IV = bits;
+        public byte[] GenerateKey()
+        {
+            try
+            {
+                int x = 0;
+                char[] chars = ConfigurationSettings.AppSettings["encKey"].ToCharArray();
+                byte[] bits = new byte[chars.Length];
+                foreach (char c in chars)
+                {
+                    bits[x] = Convert.ToByte(c);
+                    x += 1;
+                }
 
-				return mCSP.IV;
-			}
-			catch (Exception ex)
-			{
-				if (ex.GetType().Name.Equals("ArgumentException"))
-					throw new Exception("La clave encKey debe tener 8 digitos"); 
-				else
-					throw new Exception("Clave encKey en Archivo de Configuracion no implementada"); 
-			}
-		}
+                mCSP.Key = bits;
 
-		#endregion
+                return mCSP.Key;
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType().Name.Equals("ArgumentException"))
+                    throw new Exception("La clave encKey debe tener 8 digitos");
+                else
+                    throw new Exception("Clave encKey en Archivo de Configuracion no implementada");
+            }
+        }
+
+        public byte[] GenerateIV()
+        {
+            try
+            {
+                int x = 0;
+                char[] chars = ConfigurationSettings.AppSettings["encKey"].ToCharArray();
+                byte[] bits = new byte[chars.Length];
+                foreach (char c in chars)
+                {
+                    bits[x] = Convert.ToByte(c);
+                    x += 1;
+                }
+
+                mCSP.IV = bits;
+
+                return mCSP.IV;
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType().Name.Equals("ArgumentException"))
+                    throw new Exception("La clave encKey debe tener 8 digitos");
+                else
+                    throw new Exception("Clave encKey en Archivo de Configuracion no implementada");
+            }
+        }
+
+        #endregion
 
         #region " Metodos Carga Componentes "
 
 
-      
+
 
         public void CargarCombo(DropDownList Combo, String strSql, String CampoId, String CampoDetalle)
         {
@@ -505,7 +506,7 @@ namespace Business
             Combo.DataBind();
             da.Dispose();
             ds.Dispose();
-         
+
         }
 
         public void CargarCombo(DropDownList Combo, String strSql, String CampoId, String CampoDetalle, string strconn)
@@ -529,7 +530,7 @@ namespace Business
             Combo.DataTextField = CampoDetalle;
             Combo.DataValueField = CampoId;
             Combo.DataSource = lista;
-            Combo.DataBind();           
+            Combo.DataBind();
         }
 
         public void CargarCheckBox(CheckBoxList Checks, String strSql, String CampoId, String CampoDetalle)
@@ -547,7 +548,7 @@ namespace Business
         }
 
         public void CargarCheckBox(CheckBoxList Checks, String strSql, String CampoId, String CampoDetalle, string strconn)
-        { 
+        {
             SqlDataAdapter da = new SqlDataAdapter(strSql, strconn);
             DataSet ds = new DataSet();
             da.Fill(ds, "t");
@@ -557,10 +558,10 @@ namespace Business
             Checks.DataBind();
 
         }
-        public void CargarListBox(ListBox Lista, String strSql, String CampoId, String CampoDetalle,  string strconn)
+        public void CargarListBox(ListBox Lista, String strSql, String CampoId, String CampoDetalle, string strconn)
         {
             NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
-          
+
             SqlDataAdapter da = new SqlDataAdapter(strSql, strconn);
             DataSet ds = new DataSet();
             da.Fill(ds, "t");
@@ -571,7 +572,7 @@ namespace Business
 
         }
 
-        public void CargarListBox(ListBox Lista, String strSql, String CampoId, String CampoDetalle )
+        public void CargarListBox(ListBox Lista, String strSql, String CampoId, String CampoDetalle)
         {
             NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
             String strconn = oConf.GetProperty("hibernate.connection.connection_string");
@@ -598,14 +599,14 @@ namespace Business
             SqlDataReader dr = myCommand.ExecuteReader();
             return dr;
         }
-           
+
 
         public DataTable getDataSet(String strSql, bool conColu)
-        {       
+        {
             NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
             String strconn = oConf.GetProperty("hibernate.connection.connection_string");
             SqlDataAdapter da2 = new SqlDataAdapter(strSql, strconn);
-            DataSet ds2 = new DataSet();            
+            DataSet ds2 = new DataSet();
             da2.Fill(ds2, "t");
             if (conColu == true)
             {
@@ -643,7 +644,7 @@ namespace Business
             match = regEx.Match(val).Success ? true : false;
             //return the match value (true or false)
             return match;
-        }   
+        }
 
         public string SacaComillas(string cadena)
         {
@@ -686,7 +687,7 @@ namespace Business
 
         public int VerificaPermisos(ArrayList lista, string m_Objeto)
         {
-            int per = 0;          
+            int per = 0;
             foreach (string item in lista)
             {
                 string[] arr = item.Split((":").ToCharArray());
@@ -710,7 +711,7 @@ namespace Business
 
 
 
-        public  string RemoverSignosAcentos(string texto)
+        public string RemoverSignosAcentos(string texto)
         {
             var textoSinAcentos = string.Empty;
 
@@ -727,35 +728,35 @@ namespace Business
 
 
         public bool bisiesto(int anno)
-  {
-      bool resultado;
-      //Comprobamos la regla general.
-      //Si anno es divisible por 4, es decir, si el
-      //resto de la división entre 4 es 0...
-      if (anno % 4 == 0)
-      {
-          //Si es divisible por 4, ahora toca comprobar
-          //la excepción
-          if (
-               (anno % 100 == 0) &&  //Si es divisible por 100
-               (anno % 400 != 0)     //y no por 400
-             )
-          {
-              resultado = false; //entonces no es bisiesto
-          }
-          else
-          {
-              resultado = true; //No cumple la excepción.
-              //Lo dejamos como bisiesto por ser divisible por 4
-          }
-      }
-      else //Si no cumple la regla general
-      {
-          //No es bisiesto.
-          resultado = false;
-      }
-      return resultado;
-} 
+        {
+            bool resultado;
+            //Comprobamos la regla general.
+            //Si anno es divisible por 4, es decir, si el
+            //resto de la división entre 4 es 0...
+            if (anno % 4 == 0)
+            {
+                //Si es divisible por 4, ahora toca comprobar
+                //la excepción
+                if (
+                     (anno % 100 == 0) &&  //Si es divisible por 100
+                     (anno % 400 != 0)     //y no por 400
+                   )
+                {
+                    resultado = false; //entonces no es bisiesto
+                }
+                else
+                {
+                    resultado = true; //No cumple la excepción.
+                                      //Lo dejamos como bisiesto por ser divisible por 4
+                }
+            }
+            else //Si no cumple la regla general
+            {
+                //No es bisiesto.
+                resultado = false;
+            }
+            return resultado;
+        }
         public string Formato(string p)
         {
             string aux = "";
@@ -811,51 +812,54 @@ namespace Business
         { ///calculo de fechas teniendo el cuenta los dias de los meses            
 
             DateTime da = fechaProtocolo; // DateTime.Now;
-            int  anos =  da.Year - dn.Year; // calculamos años 
+            int anos = da.Year - dn.Year; // calculamos años 
             int meses = da.Month - dn.Month; // calculamos meses 
-            int dias =  da.Day - dn.Day; // calculamos días 
+            int dias = da.Day - dn.Day; // calculamos días 
 
             //ajuste de posible negativo en $días 
-            if (dias < 0) 
-            { 
+            if (dias < 0)
+            {
                 //--$meses; 
-                int dias_mes_anterior=0;
+                int dias_mes_anterior = 0;
                 //ahora hay que sumar a $dias los dias que tiene el mes anterior de la fecha actual 
-                switch (da.Month) { 
-                case 1:     dias_mes_anterior=31; break; 
-                case 2:     dias_mes_anterior=31; break; 
-                case 3:  
-                    if (bisiesto(da.Year )) 
-                    { 
-                        dias_mes_anterior=29; break; 
-                    } else { 
-                        dias_mes_anterior=28; break; 
-                    } 
-                case 4:     dias_mes_anterior=31; break; 
-                case 5:     dias_mes_anterior=30; break; 
-                case 6:     dias_mes_anterior=31; break; 
-                case 7:     dias_mes_anterior=30; break; 
-                case 8:     dias_mes_anterior=31; break; 
-                case 9:     dias_mes_anterior=31; break; 
-                case 10:    dias_mes_anterior=30; break; 
-                case 11:    dias_mes_anterior=31; break; 
-                case 12:    dias_mes_anterior=30; break; 
-                } 
-                dias=dias + dias_mes_anterior;
+                switch (da.Month)
+                {
+                    case 1: dias_mes_anterior = 31; break;
+                    case 2: dias_mes_anterior = 31; break;
+                    case 3:
+                        if (bisiesto(da.Year))
+                        {
+                            dias_mes_anterior = 29; break;
+                        }
+                        else
+                        {
+                            dias_mes_anterior = 28; break;
+                        }
+                    case 4: dias_mes_anterior = 31; break;
+                    case 5: dias_mes_anterior = 30; break;
+                    case 6: dias_mes_anterior = 31; break;
+                    case 7: dias_mes_anterior = 30; break;
+                    case 8: dias_mes_anterior = 31; break;
+                    case 9: dias_mes_anterior = 31; break;
+                    case 10: dias_mes_anterior = 30; break;
+                    case 11: dias_mes_anterior = 31; break;
+                    case 12: dias_mes_anterior = 30; break;
+                }
+                dias = dias + dias_mes_anterior;
                 meses = meses - 1;
             }
-           
-             
+
+
             //ajuste de posible negativo en $meses 
             if (meses < 0)
             {   //--$anos; 
                 meses = meses + 12;
             }
-            
+
             string edad = "1;D";
             if (anos > 0)
             {
-                if ((da.Month < dn.Month)&&(anos==1))
+                if ((da.Month < dn.Month) && (anos == 1))
                 {
                     if (meses > 0) edad = meses.ToString() + ";M";
                     else
@@ -863,13 +867,13 @@ namespace Business
                 }
                 else
                 {
-                    if (da.Month < dn.Month) anos=anos-1;
+                    if (da.Month < dn.Month) anos = anos - 1;
                     edad = anos.ToString() + ";A";
                 }
             }
             else
             {
-                if (meses> 0) edad = meses.ToString() + ";M";
+                if (meses > 0) edad = meses.ToString() + ";M";
                 else
                     if (dias > 0) edad = dias.ToString() + ";D";
             }
@@ -894,7 +898,7 @@ namespace Business
         #endregion
         #region Excel
 
-        public static void ExportDataTableToXlsx(DataTable dataTable, string filename, string header="")
+        public static void ExportDataTableToXlsx(DataTable dataTable, string filename, string header = "")
         {
             //Version final 29/4/26
             // ?? Si usas EPPlus v5.x o superior, descomenta esta línea:
@@ -926,12 +930,12 @@ namespace Business
                         worksheet.Cells[1, 1].Value = header;
 
                         // combinar columnas
-                        worksheet.Cells[1, 1, 1, colCount+1].Merge = true;
+                        worksheet.Cells[1, 1, 1, colCount + 1].Merge = true;
 
                         // estilo
                         worksheet.Cells[1, 1, 1, colCount].Style.Font.Bold = true;
                         worksheet.Cells[1, 1, 1, colCount].Style.Font.Size = 14;
-                        worksheet.Cells[1, 1, 1, colCount].Style.HorizontalAlignment =  ExcelHorizontalAlignment.Center;
+                        worksheet.Cells[1, 1, 1, colCount].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     // --- ENCABEZADOS ---
@@ -941,7 +945,7 @@ namespace Business
                     }
 
                     // --- DATOS ---
-                    int filaExcel = filaInicioTabla +1 ;
+                    int filaExcel = filaInicioTabla + 1;
 
                     foreach (DataRow row in dataTable.Rows)
                     {
@@ -1057,7 +1061,7 @@ namespace Business
             }
 
         }
-       
+
         private static void ExcelEstilo(ExcelRange range, Color? backColor = null, Color? fontColor = null)
         {
             Color finalBackColor = backColor ?? Color.Transparent;
@@ -1086,7 +1090,7 @@ namespace Business
 
         public static void ExportGridViewToExcel(GridView grid, string nombreArchivo)
         {
-            if(grid.Rows.Count > 0)
+            if (grid.Rows.Count > 0)
             {
                 using (var package = new ExcelPackage())
                 {
@@ -1138,7 +1142,7 @@ namespace Business
                         fila++;
                     }
                     //Todas las celdas
-                    var range2 = ws.Cells[1, 1, grid.Rows.Count + 1, grid.Columns.Count]; 
+                    var range2 = ws.Cells[1, 1, grid.Rows.Count + 1, grid.Columns.Count];
                     ExcelBordes(range2);
                     // Autoajustar columnas
                     ws.Cells[1, 1, fila - 1, grid.Columns.Count].AutoFitColumns();
@@ -1147,7 +1151,7 @@ namespace Business
                     // 2.2) Escribir filas del footer
                     // ================================
 
-                    GridViewRow filaFooter =  grid.FooterRow;
+                    GridViewRow filaFooter = grid.FooterRow;
                     col = 1;
 
                     if (tieneValores(filaFooter.Cells))
@@ -1161,7 +1165,7 @@ namespace Business
                             ws.Cells[fila, col].Style.Font.Color.SetColor(fontColor);
                             col++;
                         }
-                        ExcelBordes(ws.Cells[grid.Rows.Count + 2,1, grid.Rows.Count + 2,col-1 ]);
+                        ExcelBordes(ws.Cells[grid.Rows.Count + 2, 1, grid.Rows.Count + 2, col - 1]);
                     }
 
                     // ================================
@@ -1177,9 +1181,9 @@ namespace Business
                     response.End();
                 }
             }
-            
+
         }
-        private static bool tieneValores(TableCellCollection footer) 
+        private static bool tieneValores(TableCellCollection footer)
         {
 
             foreach (TableCell cell in footer)
@@ -1194,7 +1198,7 @@ namespace Business
 
         private static void ExcelCompletarFilas(ExcelWorksheet ws, TableCell cell, int fila, int col, Color? encabezadoColor = null, Color? fontColor = null)
         {
-            
+
             // (1) Detectar si es número
             // Detectar números por TryParse
             double numero;
@@ -1261,17 +1265,17 @@ namespace Business
             {
                 ws.Cells[fila, col].Style.Font.Color.SetColor(cell.ForeColor);
             }
-              
+
             ws.Cells[fila, col].Style.Font.Size = 9;
-         
+
         }
 
         public static void GenerarColumnasGrid(GridView grid, DataTable dt)
         {
-            if(dt.Columns.Count > 0)
+            if (dt.Columns.Count > 0)
             {
                 DataColumnCollection dc = dt.Columns;
-                foreach(DataColumn column in dc)
+                foreach (DataColumn column in dc)
                 {
                     BoundField columna = new BoundField();
                     columna.HeaderText = column.ColumnName;
@@ -1279,8 +1283,45 @@ namespace Business
                 }
             }
         }
-   
-    
+
+
+        #endregion
+
+        #region textoEnriquecido
+        /// <summary>
+        /// Sanitiza un texto HTML para eliminar contenido potencialmente peligroso.
+        /// </summary>
+        /// <param name="server">
+        /// Instancia de <see cref="HttpServerUtility"/> utilizada para decodificar el contenido HTML.
+        /// </param>
+        /// <param name="texto">
+        /// Texto HTML recibido desde el cliente.
+        /// </param>
+        /// <returns>
+        /// Devuelve el HTML sanitizado y seguro para almacenar o mostrar.
+        /// </returns>
+
+        public string SanitizarHTML(HttpServerUtility server, string texto)
+        {
+            // Leer HTML sin que ASP.NET lo bloquee
+            string html = server.UrlDecode(texto);
+            // Sanitizar
+            string limpio = Sanitizer.GetSafeHtmlFragment(html);
+            //Después del sanitizado, decodificá entidades HTML:
+            limpio = HttpUtility.HtmlDecode(limpio);
+
+            return limpio;
+        }
+
+        public string PasarHTMLaPlano(HttpServerUtility server, string texto)
+        {
+            string html = server.UrlDecode(texto);
+
+            string textoPlano = Regex.Replace(html, "<.*?>", string.Empty);
+
+            return HttpUtility.HtmlDecode(textoPlano).Trim();
+        }
         #endregion
     }
+
 }
