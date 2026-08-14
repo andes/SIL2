@@ -31,7 +31,7 @@ namespace WebLab.Protocolos
         {
             if (!Page.IsPostBack)
             {
-                Session["obraSocial"] = null;
+                Session["obraSocial"] = null; //No ponego "" porque "" es tambien un valor de O.S
                 CargarListas();
             }
         }
@@ -40,9 +40,11 @@ namespace WebLab.Protocolos
         {
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
-            string  m_ssql = "select distinct nombreObraSocial as nombre, cod_os from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
-            oUtil.CargarCombo(ddlObrasSociales, m_ssql, "cod_os", "nombre", connReady);
+            string  m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
+           
+            oUtil.CargarCombo(ddlObrasSociales, m_ssql, "nombre", "nombre", connReady);
             ddlObrasSociales.Items.Insert(0, new ListItem("--Seleccione una obra social --", "0"));
+
 
         }
         protected void btnSeleccionar_Click(object sender, EventArgs e)
@@ -52,7 +54,6 @@ namespace WebLab.Protocolos
             if (ddlObrasSociales.SelectedValue != "0")
             {
                 Session["obraSocial"] = ddlObrasSociales.SelectedItem.Text;
-                Session["idObraSocial"] = ddlObrasSociales.SelectedItem.Value;
                 // Script para cerrar y forzar postback en el padre
                 script = @"
                 (function() {
@@ -65,7 +66,7 @@ namespace WebLab.Protocolos
             }
             else
             {
-                Session["obraSocial"] = null;
+                Session["obraSocial"] = null; 
 
                 // Script para cerrar sin postback 
                 script = @"
@@ -77,11 +78,7 @@ namespace WebLab.Protocolos
             ";
             }
 
-            ClientScript.RegisterStartupScript(
-            GetType(),
-            "Cerrar",
-            script,
-            true);
+            ClientScript.RegisterStartupScript( GetType(), "Cerrar", script, true);
 
         }
     }
