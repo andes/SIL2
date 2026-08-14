@@ -454,8 +454,8 @@ namespace WebLab.Protocolos
 
                         case "ddlPrioridad": ddlPrioridad.SelectedValue = s_control[1].ToString(); break;
                         case "ddlEfector": ddlEfectorSolicitante.SelectedValue = s_control[1].ToString(); break;
-                        case "HFMatricula": HFMatricula.Value = s_control[1].ToString(); break;
-                        case "HFidObraSocial": HFidObraSocial.Value = s_control[1].ToString(); break;
+                        case "HFMatricula": HFMatricula.Value = s_control[1].ToString(); if(HFMatricula.Value != "") lnkBorrarMatriculaEspecialista.Visible = true; break;
+                        case "HFidObraSocial": HFidObraSocial.Value = s_control[1].ToString(); if(HFidObraSocial.Value != "") btnBorrarObraSocial.Visible = true; break;
 
 
                         case "txtDni": txtDni.Value = s_control[1].ToString(); break;
