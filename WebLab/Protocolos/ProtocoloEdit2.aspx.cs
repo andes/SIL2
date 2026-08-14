@@ -220,38 +220,29 @@ namespace WebLab.Protocolos
 
                         MuestraDatos();
                         //VerificaPermisos("Pacientes sin turno");
-
-                        switch (Request["Desde"].ToString())
+                        if (Request["Desde"].ToString() == "Control")
                         {
-                            case "Control":
-                                {
-                                    pnlLista.Visible = true;
-                                    CargarGrilla();
-                                    gvLista.Visible = true;
-                                    pnlNavegacion.Visible = true;
-                                }
-                                break;
-                            case "ProtocoloList": //7.8.2026 si viene desde lista de protocolo queremos ver el estado del protocolo
-                                {
-                                    pnlNavegacion.Visible = true; 
-                                    lnkAnterior.Visible = false;//oculto los botones de navegacion porque necesitamos ver el estado
-                                    lnkSiguiente.Visible = false;
-                                }
-                                
-                                break;
-
-                            default:
-                                pnlLista.Visible = false;
-                                gvLista.Visible = false;
-                                pnlNavegacion.Visible = false;
-                                break;
+                            pnlLista.Visible = true;
+                            CargarGrilla();
+                            gvLista.Visible = true;
+                            pnlNavegacion.Visible = true;
                         }
+                        else
+                        {
+                            pnlLista.Visible = false;
+                            gvLista.Visible = false;
+                            pnlNavegacion.Visible = false;
+                           
+                        }
+                       
                        
 
                         if(Request["idPaciente"] != null) //Cambio de paciente
                         {
                             HFModificarPaciente.Value = "Si";
                         }
+
+
                     }
                     else
 
@@ -927,7 +918,8 @@ namespace WebLab.Protocolos
 
                 lblEstado.Text = VerEstado(oRegistro);
 
-
+                //7.8.2026 si viene desde lista de protocolo queremos ver el estado anulado del protocolo
+                if (Request["Desde"].ToString() == "ProtocoloList" && oRegistro.Baja) lblEstadoAnulado.Visible = true;
 
                 if (oC.TipoNumeracionProtocolo == 2)
                 {
@@ -1292,8 +1284,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 hplModificarPaciente.Enabled = false;
                 hplActualizarPaciente.Enabled = false;
             }
-
-
+            
+                
             return result;
         }
 
