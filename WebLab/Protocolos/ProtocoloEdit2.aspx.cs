@@ -1108,7 +1108,9 @@ namespace WebLab.Protocolos
                 //chkImprimir.Visible = false;
                 //chkRecordarConfiguracion.Visible = false;
 
-                if (oRegistro.Estado == 2) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
+                //14.08.2026 El parametro ModificarProtocoloTerminado aplica solo a protocolos activos.
+               // Si esta anulado no se puede modificar independientemente del estado(no procesado, en proceso, terminado o restringido)
+                if (oRegistro.Estado == 2 && !oRegistro.Baja) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
             }
         }
 
