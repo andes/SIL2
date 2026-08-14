@@ -76,30 +76,7 @@
             height: 28px;
         }
 
-        /** 06.08.2026  BAGGE como se usa en la version 4 de Bootstrap*/
-        .badge-light{
-            color:#212529;
-            background:#f8f9fa;
-        }
-
-        .badge-pill{
-            border-radius:10rem;
-            padding-right:.6em;
-            padding-left:.6em;
-        }
-
-        .badge-danger{
-                background-color: #d9534f;
-        }
-
-        .badge-warning {
-            background-color: #f0ad4e;
-        }
-
-        .badge-success {
-            background-color: #5cb85c;
-        }
-        
+       
     </style>
   
  
@@ -371,9 +348,9 @@
                                                 <table style="width:100%;">
                                                     <tr>
                                                         <td>
-                                                           <span class="badge  badge-danger">No procesado <span  class="badge  badge-pill badge-light"><anthem:Label ID="lblCantNoProcesado" runat="server"  /></span></span>
-<span class="badge  badge-warning">En proceso <span  class="badge  badge-pill badge-light"><anthem:Label ID="lblCantEnProceso" runat="server"   /></span></span>
-<span class="badge  badge-success">Terminado <span  class="badge  badge-pill badge-light"><anthem:Label ID="lblCantTerminado" runat="server"   /></span></span>
+                                                           <span class="label  label-danger">No procesado: <anthem:Label ID="lblCantNoProcesado" runat="server"  /></span>
+<span class="label  label-warning">En proceso: <anthem:Label ID="lblCantEnProceso" runat="server"   /></span>
+<span class="label  label-success">Terminado: <anthem:Label ID="lblCantTerminado" runat="server"   /></span>
                                                          
                                                         </td>
                                                         <td align="right">
