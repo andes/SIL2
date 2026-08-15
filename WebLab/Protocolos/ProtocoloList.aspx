@@ -259,14 +259,11 @@
 						<td>
                             <%-- <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"
                                  AutoCallBack="true" Visible="false"  ></anthem:TextBox>--%>
-                            <anthem:HiddenField ID="HFMatricula" runat="server" />
+                            <anthem:HiddenField ID="HFEspecialista" runat="server" />
                             <anthem:Label ToolTip="Nombre y Apellido de especialista" ID="lblNomApeEspecialista" runat="server"  AutoCallBack="true" Text="" ></anthem:Label> 
-                            &nbsp;<anthem:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista"  OnClick="lnkBuscarEspecialista_Click" 
-                                OnClientClick="SelMedico(); return false;">
+                            &nbsp;<anthem:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista" onclick="lnkBuscarEspecialista_Click"    OnClientClick="SelMedico(); return false;">
                                 <span class="glyphicon glyphicon-search"></span></anthem:LinkButton>
-                        </td>
-                                    <td>&nbsp;<anthem:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" TabIndex="19" onclick="lnkBorrarMatriculaEspecialista_Click" Text="Borrar seleccion"
-                                            tooltip="Borrar Matricula" Visible="false" >
+                       &nbsp;<anthem:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" Text="Borrar seleccion" tooltip="Borrar Matricula" Visible="false" OnClick="lnkBorrarMatriculaEspecialista_Click"  >
                                  <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
                                     </td>
 						
@@ -290,11 +287,11 @@
                                                
                                             </asp:DropDownList>--%>
                             <td>
+                                <anthem:HiddenField ID="HFObraSocial" runat="server" />
                                 <anthem:Label runat="server" ID="lblObraSocial" text="" ToolTip="Obra Social seleccionada " ></anthem:Label>
-                                <anthem:HiddenField ID="HFidObraSocial" runat="server" />
-                               &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" tooltip="Buscar Obra Social" OnClick="btnBuscarObraSocial_Click" OnClientClick="buscaObraSocial(); return false;"  >
+                               &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" tooltip="Buscar Obra Social" OnClientClick="buscaObraSocial(); return false;" OnClick="btnBuscarObraSocial_Click"  >
                                <span class="glyphicon glyphicon-search"/></asp:LinkButton>
-                               &nbsp;<anthem:LinkButton runat="server" ID="btnBorrarObraSocial" onclick="btnBorrarObraSocial_Click" Text="Borrar seleccion" tooltip="Borrar O.S Seleccionada" Visible="false" >
+                               &nbsp;<anthem:LinkButton runat="server" ID="btnBorrarObraSocial"  Text="Borrar seleccion" tooltip="Borrar O.S Seleccionada"  onclick="btnBorrarObraSocial_Click"  Visible="false">
                                  <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
                             </td>
 
@@ -385,8 +382,39 @@
                                                                 PageSize="20" Width="100%" BackColor="White">
                                                                 <PagerStyle HorizontalAlign = "Center" CssClass = "GridPager" />
                                                                 <Columns>
-                                                                    <asp:BoundField DataField="estado" />
-                                                                    <asp:BoundField DataField="impreso" />
+                                                                   <%-- <asp:BoundField DataField="estado" />--%>
+                                                                    <asp:TemplateField HeaderText="">
+                                                                    <ItemTemplate>
+                                                                        <asp:Image
+                                                                            ID="imgEstado"
+                                                                            runat="server"
+                                                                            ImageUrl='<%# 
+                                                                                Eval("estado").ToString() == "0" ? "~/App_Themes/default/images/rojo.gif" :
+                                                                                Eval("estado").ToString() == "1" ? "~/App_Themes/default/images/amarillo.gif" :
+                                                                                Eval("estado").ToString() == "2" ? "~/App_Themes/default/images/verde.gif" :
+                                                                                Eval("estado").ToString() == "3" ? "~/App_Themes/default/images/lock.png" :
+                                                                                "~/App_Themes/default/images/transparente.jpg"
+                                                                            %>' />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                                    <%--<asp:BoundField DataField="impreso" />--%>
+                                                                    <asp:TemplateField HeaderText="">
+                                                                        <ItemTemplate>
+                                                                            <asp:Image
+                                                                                ID="imgImpreso"
+                                                                                runat="server"
+                                                                                ImageUrl='<%#
+                                                                                    Eval("impreso").ToString() == "True"
+                                                                                        ? "~/App_Themes/default/images/impreso.jpg"
+                                                                                        : "~/App_Themes/default/images/transparente.jpg"
+                                                                                %>'
+                                                                                ToolTip='<%#
+                                                                                    Eval("impreso").ToString() == "True"
+                                                                                        ? "Protocolo Impreso"
+                                                                                        : ""
+                                                                                %>' />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
                                                                     <asp:BoundField DataField="numero" HeaderText="Nro.">
                                                                         <ItemStyle Width="5%" />
                                                                     </asp:BoundField>
@@ -866,10 +894,11 @@ function muestraSelect() {
     }
 
    
+  
     var postBackBuscarObraSocial = function () {
         <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscarObraSocial, "") %>;
-    };
-   
+      };
+
     function buscaObraSocial() {
 
         //06.08.2026 Modificación del filtro de Obra Social: abre Prompt de selección de ObraSocialBuscar.aspx
