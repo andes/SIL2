@@ -25,6 +25,10 @@
                 select.chosen('destroy'); //El destroy evita que Anthem duplique la lista después de un callback.
             }
 
+            // Chosen no muestra opciones con texto vacío.
+            // Se agrega un espacio invisible manteniendo value="". (<option value="">&nbsp;</option>)
+            select.find('option[value=""]').text('\u00A0');
+
             //convierte el select en un dropdown Chosen
             select.chosen({
                 width: "300px",
