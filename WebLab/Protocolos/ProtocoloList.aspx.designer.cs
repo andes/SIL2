@@ -231,13 +231,13 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.TextBox txtApellido;
 
         /// <summary>
-        /// HFMatricula control.
+        /// HFEspecialista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.HiddenField HFMatricula;
+        protected global::Anthem.HiddenField HFEspecialista;
 
         /// <summary>
         /// lblNomApeEspecialista control.
@@ -276,6 +276,15 @@ namespace WebLab.Protocolos
         protected global::System.Web.UI.WebControls.TextBox txtNombre;
 
         /// <summary>
+        /// HFObraSocial control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.HiddenField HFObraSocial;
+
+        /// <summary>
         /// lblObraSocial control.
         /// </summary>
         /// <remarks>
@@ -283,15 +292,6 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblObraSocial;
-
-        /// <summary>
-        /// HFidObraSocial control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.HiddenField HFidObraSocial;
 
         /// <summary>
         /// btnBuscarObraSocial control.
