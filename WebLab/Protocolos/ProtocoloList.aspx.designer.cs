@@ -318,16 +318,16 @@ namespace WebLab.Protocolos
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.Label lblObraSocial;
+        protected global::Anthem.HiddenField HFObraSocial;
 
         /// <summary>
-        /// HFidObraSocial control.
+        /// lblObraSocial control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.HiddenField HFidObraSocial;
+        protected global::Anthem.Label lblObraSocial;
 
         /// <summary>
         /// btnBuscarObraSocial control.
