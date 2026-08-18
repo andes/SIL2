@@ -401,8 +401,7 @@
                                                                     <asp:TemplateField HeaderText="">
                                                                         <ItemTemplate>
                                                                             <asp:Image
-                                                                                ID="imgImpreso"
-                                                                                runat="server"
+                                                                                ID="imgImpreso" runat="server"
                                                                                 ImageUrl='<%#
                                                                                     Eval("impreso").ToString() == "True"
                                                                                         ? "~/App_Themes/default/images/impreso.jpg"

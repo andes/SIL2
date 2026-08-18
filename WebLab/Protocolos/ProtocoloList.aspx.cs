@@ -421,21 +421,10 @@ namespace WebLab.Protocolos
             s_valores += ";txtNombre:" + txtNombre.Text;
             s_valores += ";ddlEstado:" + ddlEstado.SelectedValue;
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
-           
-            
-            if(Request["idServicio"].ToString() == "1" || Request["idServicio"].ToString() == "2"){
-                s_valores += ";lblObraSocial:" + lblObraSocial.Text;
-                s_valores += ";lblNomApeEspecialista:" + lblNomApeEspecialista.Text;
-                s_valores += ";HFMatricula:" + HFEspecialista.Value;
-                s_valores += ";HFidObraSocial:" + HFObraSocial.Value;
-            }
-            else
-            {
-                s_valores += ";lblObraSocial:" + "";
-                s_valores += ";lblNomApeEspecialista:" + "";
-                s_valores += ";HFMatricula:" + "";
-                s_valores += ";HFidObraSocial:" + "";
-            }
+            s_valores += ";lblObraSocial:" + lblObraSocial.Text;
+            s_valores += ";lblNomApeEspecialista:" + lblNomApeEspecialista.Text;
+            s_valores += ";HFMatricula:" + HFEspecialista.Value;
+            s_valores += ";HFidObraSocial:" + HFObraSocial.Value;
             Session["FiltroProtocolo"] = s_valores;
         }
 
@@ -464,10 +453,10 @@ namespace WebLab.Protocolos
 
                         case "ddlPrioridad": ddlPrioridad.SelectedValue = s_control[1].ToString(); break;
                         case "ddlEfector": ddlEfectorSolicitante.SelectedValue = s_control[1].ToString(); break;
+
+
                         case "HFMatricula": HFEspecialista.Value = s_control[1].ToString(); if (HFEspecialista.Value != "") lnkBorrarMatriculaEspecialista.Visible = true; break;
                         case "HFidObraSocial": HFObraSocial.Value = s_control[1].ToString(); if (HFObraSocial.Value != "") btnBorrarObraSocial.Visible = true;  break;
-
-
                         case "txtDni": txtDni.Value = s_control[1].ToString(); break;
                         case "txtApellido": txtApellido.Text = s_control[1].ToString(); break;
                         case "txtNombre": txtNombre.Text = s_control[1].ToString(); break;
@@ -488,12 +477,12 @@ namespace WebLab.Protocolos
             {
                 if (chkRecordarFiltro.Checked) AlmacenarSesion();
               
-                CargarGrilla(Request["Tipo"].ToString());
+                CargarGrilla(Request["Tipo"].ToString()); 
                 CurrentPageLabel.Text = " ";
             }
             else
             {
-                //PintarReferencias(); genero los valores en el aspx para poder hacer postback sin tener que volver a recargar todo
+                //PintarReferencias(); //14.08.2026 genero los valores estaticos en aspx para no llamar a PintarReferencias en cada postback 
                 PintarReferenciasNoPacientes();
             }
             
@@ -518,7 +507,7 @@ namespace WebLab.Protocolos
 
                 gvLista.DataSource = dt;
                 gvLista.DataBind();
-                //PintarReferencias(); genero los valores en el aspx para poder hacer postback sin tener que volver a recargar todo
+                //PintarReferencias();//14.08.2026 genero los valores estaticos en aspx para no llamar a PintarReferencias en cada postback 
                 CalcularCantidades(dt);
             }
             else
@@ -562,7 +551,7 @@ namespace WebLab.Protocolos
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
             //06.08.2026 Se utiliza el identificador de la obra social seleccionada como criterio de búsqueda
-            if (HFObraSocial.Value != "") str_condicion += " AND P.nombreObraSocial='" + HFObraSocial.Value + "'";
+            if (HFObraSocial.Value != "" && pnlPaciente.Visible) str_condicion += " AND P.nombreObraSocial='" + HFObraSocial.Value + "'";
             if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in ("+ ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
             if (ddlSectorServicio.SelectedValue != "0") str_condicion += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
@@ -582,7 +571,13 @@ namespace WebLab.Protocolos
             if (ddlOrigen.SelectedValue != "0") str_condicion += " AND P.idOrigen = " + ddlOrigen.SelectedValue;
             if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
             if (ddlEfectorSolicitante.SelectedValue != "0") str_condicion += " AND P.idEfectorSolicitante = " + ddlEfectorSolicitante.SelectedValue;
-            if (HFEspecialista.Value != "") str_condicion += " AND P.Especialista = '" + HFEspecialista.Value + "'";
+            
+            //14.08.2026 el especialista se carga como 'Apeliido y Nombre' en el alta pero si fue cargado desde FFEE esta como 'Nombre y Apellido'
+            if (HFEspecialista.Value != "" && pnlPaciente.Visible)
+            {
+                string[] especialista = HFEspecialista.Value.Split('|');
+                str_condicion += " AND (P.Especialista = '" + especialista[0].Trim() + "' OR P.Especialista = '" + especialista[1].Trim() + "' )";
+            }
             if (txtDni.Value != "") str_condicion += " AND Pa.numeroDocumento = '" + txtDni.Value + "'";
             if (txtApellido.Text != "") str_condicion += " AND Pa.apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
             if (txtNombre.Text != "") str_condicion += " AND Pa.nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
@@ -912,7 +907,7 @@ namespace WebLab.Protocolos
             }  
         }
 
-        private void PintarReferencias() // Se evitamos depender de row.Cells[0]/[1], así la lógica no se rompe al agregar o reordenar columnas.
+        private void PintarReferencias() //14.08.2026 Lo hacemos estatico para no tener que llamar despues de un postback
         {
             foreach (GridViewRow row in gvLista.Rows)
             {                
@@ -1754,13 +1749,13 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
         protected void lnkBuscarEspecialista_Click(object sender, EventArgs e)
         {
             //06.08.2026 Se muestra en el TextBox txtNomApeEspecialista el Nombre y Apellido del especialista
-            if (Session["matricula"] != null && Session["apellidoNombre"] != null)
+            if (Session["matricula"] != null && Session["apellidoNombre"] != null && Session["nombreApellido"] != null)
             {
                 lblNomApeEspecialista.Text = Session["apellidoNombre"].ToString();
                 lblNomApeEspecialista.UpdateAfterCallBack = true;
                 lnkBorrarMatriculaEspecialista.Visible = true;
                 lnkBorrarMatriculaEspecialista.UpdateAfterCallBack = true;
-                HFEspecialista.Value = Session["apellidoNombre"].ToString();
+                HFEspecialista.Value = Session["apellidoNombre"].ToString() + "|" + Session["nombreApellido"].ToString();
                 HFEspecialista.UpdateAfterCallBack = true;
             }
         }
@@ -1773,6 +1768,7 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             lblNomApeEspecialista.UpdateAfterCallBack = true;
             Session["matricula"] = null;
             Session["apellidoNombre"] = null;
+            Session["nombreApellido"] = null;
             lnkBorrarMatriculaEspecialista.Visible = false;
             lnkBorrarMatriculaEspecialista.UpdateAfterCallBack = true;
             HFEspecialista.Value = "";
@@ -1798,7 +1794,5 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             lblCantNoProcesado.Text = cantNoProcesado.ToString();
             lblCantTerminado.Text = cantTerminado.ToString();
         }
-
-        
     }
 }
