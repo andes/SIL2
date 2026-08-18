@@ -75,6 +75,8 @@
             width: 16%;
             height: 28px;
         }
+
+       
     </style>
   
  
@@ -255,8 +257,15 @@
                                             Médico Solicitante:</td>
 						
 						<td>
-                             <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"   AutoCallBack="true"  ></anthem:TextBox> 
-                                        </td>
+                            <%-- <anthem:TextBox ToolTip="Ingrese la mátricula" ID="txtEspecialista" Width="80px" TabIndex="16" class="form-control input-sm" runat="server"
+                                 AutoCallBack="true" Visible="false"  ></anthem:TextBox>--%>
+                            <anthem:HiddenField ID="HFEspecialista" runat="server" />
+                            <anthem:Label ToolTip="Nombre y Apellido de especialista" ID="lblNomApeEspecialista" runat="server"  AutoCallBack="true" Text="" ></anthem:Label> 
+                            &nbsp;<anthem:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista" onclick="lnkBuscarEspecialista_Click"    OnClientClick="SelMedico(); return false;">
+                                <span class="glyphicon glyphicon-search"></span></anthem:LinkButton>
+                       &nbsp;<anthem:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" Text="Borrar seleccion" tooltip="Borrar Matricula" Visible="false" OnClick="lnkBorrarMatriculaEspecialista_Click"  >
+                                 <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
+                                    </td>
 						
 					</tr>
                             	<tr>
@@ -270,16 +279,22 @@
 						<td align="left" >
                                             &nbsp;</td>
 						
-						<td class="myLabelIzquierda" >
-                                            Obra Social:</td>
+						<td class="myLabelIzquierda" > Obra Social:</td>
 						
-						<td>
-                                           <asp:DropDownList ID="ddlObraSocial" runat="server" class="form-control input-sm" 
+						
+                                          <%-- <asp:DropDownList ID="ddlObraSocial" runat="server" class="form-control input-sm" 
                                                 TabIndex="17" Width="400px" >
                                                
-                                            </asp:DropDownList>
-                                                <br />
-                                                </td>
+                                            </asp:DropDownList>--%>
+                            <td>
+                                <anthem:HiddenField ID="HFObraSocial" runat="server" />
+                                <anthem:Label runat="server" ID="lblObraSocial" text="" ToolTip="Obra Social seleccionada " ></anthem:Label>
+                               &nbsp;<asp:LinkButton runat="server" ID="btnBuscarObraSocial" tooltip="Buscar Obra Social" OnClientClick="buscaObraSocial(); return false;" OnClick="btnBuscarObraSocial_Click"  >
+                               <span class="glyphicon glyphicon-search"/></asp:LinkButton>
+                               &nbsp;<anthem:LinkButton runat="server" ID="btnBorrarObraSocial"  Text="Borrar seleccion" tooltip="Borrar O.S Seleccionada"  onclick="btnBorrarObraSocial_Click"  Visible="false">
+                                 <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
+                            </td>
+
 						
 					</tr>
 						    <tr>
@@ -318,7 +333,7 @@
                                                              
                                                                  &nbsp;&nbsp;&nbsp;
                                                                  <asp:Button ID="btnBuscarControl" runat="server" CssClass="btn btn-primary"
-                                                                     onclick="btnBuscarControl_Click" TabIndex="18" Text="Buscar" 
+                                                                     onclick="btnBuscarControl_Click" TabIndex="20" Text="Buscar" 
                                                                      ValidationGroup="0" Width="100px"   />
                                                                  </td>
                                                         </tr>
@@ -330,9 +345,9 @@
                                                 <table style="width:100%;">
                                                     <tr>
                                                         <td>
-                                                           <span class="label label-danger">No procesado</span>
-<span class="label label-warning">En proceso</span>
-<span class="label label-success">Terminado</span>
+                                                           <span class="label  label-danger">No procesado: <anthem:Label ID="lblCantNoProcesado" runat="server"  /></span>
+<span class="label  label-warning">En proceso: <anthem:Label ID="lblCantEnProceso" runat="server"   /></span>
+<span class="label  label-success">Terminado: <anthem:Label ID="lblCantTerminado" runat="server"   /></span>
                                                          
                                                         </td>
                                                         <td align="right">
@@ -341,7 +356,7 @@
                                                                    <asp:ListItem Value="Desc">Descendente</asp:ListItem>
                                                                </asp:DropDownList>
                                                             <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary"
-                                                                onclick="btnBuscar_Click" TabIndex="18" Text="Buscar" ValidationGroup="0" 
+                                                                onclick="btnBuscar_Click" TabIndex="21" Text="Buscar" ValidationGroup="0" 
                                                                 Width="77px" />
                                                         </td>
                                                     </tr>
@@ -367,8 +382,38 @@
                                                                 PageSize="20" Width="100%" BackColor="White">
                                                                 <PagerStyle HorizontalAlign = "Center" CssClass = "GridPager" />
                                                                 <Columns>
-                                                                    <asp:BoundField DataField="estado" />
-                                                                    <asp:BoundField DataField="impreso" />
+                                                                   <%-- <asp:BoundField DataField="estado" />--%>
+                                                                    <asp:TemplateField HeaderText="">
+                                                                    <ItemTemplate>
+                                                                        <asp:Image
+                                                                            ID="imgEstado"
+                                                                            runat="server"
+                                                                            ImageUrl='<%# 
+                                                                                Eval("estado").ToString() == "0" ? "~/App_Themes/default/images/rojo.gif" :
+                                                                                Eval("estado").ToString() == "1" ? "~/App_Themes/default/images/amarillo.gif" :
+                                                                                Eval("estado").ToString() == "2" ? "~/App_Themes/default/images/verde.gif" :
+                                                                                Eval("estado").ToString() == "3" ? "~/App_Themes/default/images/lock.png" :
+                                                                                "~/App_Themes/default/images/transparente.jpg"
+                                                                            %>' />
+                                                                    </ItemTemplate>
+                                                                </asp:TemplateField>
+                                                                    <%--<asp:BoundField DataField="impreso" />--%>
+                                                                    <asp:TemplateField HeaderText="">
+                                                                        <ItemTemplate>
+                                                                            <asp:Image
+                                                                                ID="imgImpreso" runat="server"
+                                                                                ImageUrl='<%#
+                                                                                    Eval("impreso").ToString() == "True"
+                                                                                        ? "~/App_Themes/default/images/impreso.jpg"
+                                                                                        : "~/App_Themes/default/images/transparente.jpg"
+                                                                                %>'
+                                                                                ToolTip='<%#
+                                                                                    Eval("impreso").ToString() == "True"
+                                                                                        ? "Protocolo Impreso"
+                                                                                        : ""
+                                                                                %>' />
+                                                                        </ItemTemplate>
+                                                                    </asp:TemplateField>
                                                                     <asp:BoundField DataField="numero" HeaderText="Nro.">
                                                                         <ItemStyle Width="5%" />
                                                                     </asp:BoundField>
@@ -431,7 +476,7 @@
                                                                         </ItemTemplate>
                                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                                     </asp:TemplateField>
-                                                                    <asp:BoundField DataField="tieneAnexo" Visible="true" />
+                                                                    <asp:BoundField DataField="tieneAnexo" Visible="false" />
                                                                 </Columns>
                 
                                                                 <PagerSettings Mode="NumericFirstLast" Position="Top" />
@@ -757,7 +802,6 @@ function PreguntoEliminar(idProtocolo) {
 
 
     var $this = $(this);
-
     $('<iframe src="ProtocoloEliminar.aspx?id=' + idProtocolo + '" />').dialog({
         title: 'Anular Protocolo',
         autoOpen: true,
@@ -769,10 +813,52 @@ function PreguntoEliminar(idProtocolo) {
         overlay: {
             opacity: 0.5,
             background: "black"
+        },
+        //Al cerrar que haga postback para que actualice en el listado considerando los anulados
+        close: function () {
+             <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscar, "") %>;
         }
+
     }).width(800);
 
-}
+    }
+
+    function PreguntoRecuperar(idProtocolo) {
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+
+        var $this = $(this);
+        $('<iframe src="ProtocoloEliminar.aspx?id=' + idProtocolo + '&accion=recupera" />').dialog({
+            title: 'Recuperar Protocolo',
+            autoOpen: true,
+            width: 690,
+            height: 320,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            },
+            //Al cerrar que haga postback para que actualice en el listado considerando los recuperados
+            close: function () {
+                 <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscar, "") %>;
+            }
+        }).width(800);
+
+    }
 function muestraSelect() {
     var dom = document.domain;
     var domArray = dom.split('.');
@@ -804,8 +890,91 @@ function muestraSelect() {
             background: "black"
         }
     }).width(800);
-}
-    </script>
+    }
+
+   
+  
+    var postBackBuscarObraSocial = function () {
+        <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscarObraSocial, "") %>;
+      };
+
+    function buscaObraSocial() {
+
+        //06.08.2026 Modificación del filtro de Obra Social: abre Prompt de selección de ObraSocialBuscar.aspx
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+
+        var $this = $(this);
+        $('<iframe src="ObraSocialBuscar.aspx"/>').dialog({
+            title: 'Seleccionar Obra Social',
+            autoOpen: true,
+            width: 350,
+            height: 450,
+            modal: false,
+            resizable: false,
+            autoResize: true,
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(350);
+    }
+
+    var postBackBuscarMedico = function () {
+        <%= this.Page.ClientScript.GetPostBackEventReference(lnkBuscarEspecialista, "") %>;
+    };
+
+    function SelMedico() {
+        //06.08.2026 Abre prompt de MedicoSel.aspx. Enviamos parametro "desde" para incluir busca por matricula
+        var dom = document.domain;
+        var domArray = dom.split('.');
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1) ? (domArray[j]) : domArray[j] + '.' + dom;
+                }
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+      
+          
+        var desde = "ProtocoloList";
+        $('<iframe src="MedicoSel.aspx?desde='+desde+'" />').dialog({
+            title: 'Buscar Médico',
+            autoOpen: true,
+            width: 620,
+            height: 400,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+            open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+
+            buttons: {
+                'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.lnkBuscarEspecialista))%>; }
+            },
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+        }).width(600);
+    }
+
+</script>
 
  
     </table>

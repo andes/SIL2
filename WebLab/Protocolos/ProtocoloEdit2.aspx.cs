@@ -232,13 +232,17 @@ namespace WebLab.Protocolos
                             pnlLista.Visible = false;
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
-
+                           
                         }
+                       
+                       
 
                         if(Request["idPaciente"] != null) //Cambio de paciente
                         {
                             HFModificarPaciente.Value = "Si";
                         }
+
+
                     }
                     else
 
@@ -914,7 +918,8 @@ namespace WebLab.Protocolos
 
                 lblEstado.Text = VerEstado(oRegistro);
 
-
+                //7.8.2026 si viene desde lista de protocolo queremos ver el estado anulado del protocolo
+                if (Request["Desde"].ToString() == "ProtocoloList" && oRegistro.Baja) lblEstadoAnulado.Visible = true;
 
                 if (oC.TipoNumeracionProtocolo == 2)
                 {
@@ -1103,7 +1108,9 @@ namespace WebLab.Protocolos
                 //chkImprimir.Visible = false;
                 //chkRecordarConfiguracion.Visible = false;
 
-                if (oRegistro.Estado == 2) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
+                //14.08.2026 El parametro ModificarProtocoloTerminado aplica solo a protocolos activos.
+               // Si esta anulado no se puede modificar independientemente del estado(no procesado, en proceso, terminado o restringido)
+                if (oRegistro.Estado == 2 && !oRegistro.Baja) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
             }
         }
 
@@ -1279,8 +1286,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 hplModificarPaciente.Enabled = false;
                 hplActualizarPaciente.Enabled = false;
             }
-
-
+            
+                
             return result;
         }
 
