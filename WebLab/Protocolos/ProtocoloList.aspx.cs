@@ -546,13 +546,29 @@ namespace WebLab.Protocolos
                     string listaM = getListaMuestra();
                     if (listaM != "") str_condicion += " AND P.idMuestra  in  (" + listaM + ")"; // ddlMuestra.SelectedValue;
                 }
-                
 
+               
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
-            //06.08.2026 Se utiliza el identificador de la obra social seleccionada como criterio de búsqueda
-            if (HFObraSocial.Value != "" && pnlPaciente.Visible) str_condicion += " AND P.nombreObraSocial='" + HFObraSocial.Value + "'";
-            if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in ("+ ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
+           
+            if (Request["Tipo"].ToString() != "ListaProducto") //18.08.026 si cargo sesion en 'No paciente' no Corresponden estos filtros
+            {
+                //06.08.2026 Se utiliza el identificador de la obra social seleccionada como criterio de búsqueda
+                if (HFObraSocial.Value != "" ) str_condicion += " AND P.nombreObraSocial='" + HFObraSocial.Value + "'";
+               
+                if (HFEspecialista.Value != "") //14.08.2026 el especialista se carga como 'Apeliido y Nombre' en el alta pero si fue cargado desde FFEE esta como 'Nombre y Apellido'
+                {
+                    string[] especialista = HFEspecialista.Value.Split('|');
+                    str_condicion += " AND (P.Especialista = '" + especialista[0].Trim() + "' OR P.Especialista = '" + especialista[1].Trim() + "' )";
+                }
+                if (txtDni.Value != "") str_condicion += " AND Pa.numeroDocumento = '" + txtDni.Value + "'";
+                if (txtApellido.Text != "") str_condicion += " AND Pa.apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
+                if (txtNombre.Text != "") str_condicion += " AND Pa.nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
+                if (ddlOrigen.SelectedValue != "0") str_condicion += " AND P.idOrigen = " + ddlOrigen.SelectedValue;
+                if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
+                if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in (" + ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
+            }
+           
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
             if (ddlSectorServicio.SelectedValue != "0") str_condicion += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
             if (txtFechaDesde.Value != "")            {
@@ -568,19 +584,10 @@ namespace WebLab.Protocolos
             if (txtNroOrigen.Text != "") str_condicion += " And P.numeroOrigen='" + txtNroOrigen.Text + "'";
             if (txtNroOrigen2.Text != "") str_condicion += " And P.numeroOrigen2='" + txtNroOrigen2.Text + "'";
 
-            if (ddlOrigen.SelectedValue != "0") str_condicion += " AND P.idOrigen = " + ddlOrigen.SelectedValue;
-            if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
+           
             if (ddlEfectorSolicitante.SelectedValue != "0") str_condicion += " AND P.idEfectorSolicitante = " + ddlEfectorSolicitante.SelectedValue;
             
-            //14.08.2026 el especialista se carga como 'Apeliido y Nombre' en el alta pero si fue cargado desde FFEE esta como 'Nombre y Apellido'
-            if (HFEspecialista.Value != "" && pnlPaciente.Visible)
-            {
-                string[] especialista = HFEspecialista.Value.Split('|');
-                str_condicion += " AND (P.Especialista = '" + especialista[0].Trim() + "' OR P.Especialista = '" + especialista[1].Trim() + "' )";
-            }
-            if (txtDni.Value != "") str_condicion += " AND Pa.numeroDocumento = '" + txtDni.Value + "'";
-            if (txtApellido.Text != "") str_condicion += " AND Pa.apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
-            if (txtNombre.Text != "") str_condicion += " AND Pa.nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
+            
             if (ddlEstado.SelectedValue == "-1")
             {
                 str_condicion += " AND P.baja=0";
