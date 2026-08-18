@@ -24,7 +24,8 @@ namespace WebLab.Protocolos
             {
                 Session["matricula"] = null;
                 Session["apellidoNombre"] = null;
-                if(Request["desde"]!= null && Request["desde"].ToString() == "ProtocoloList")
+                Session["nombreApellido"] = null;
+                if (Request["desde"]!= null && Request["desde"].ToString() == "ProtocoloList")
                     divMatricula.Visible = true;
             }
         }
@@ -188,6 +189,7 @@ namespace WebLab.Protocolos
                 Session["matricula"] = e.CommandArgument.ToString();
                 LinkButton boton = (LinkButton)e.CommandSource;
                 Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
+                Session["nombreApellido"] = boton.Attributes["nombre"] + " " + boton.Attributes["apellido"];
             }
           
         }
