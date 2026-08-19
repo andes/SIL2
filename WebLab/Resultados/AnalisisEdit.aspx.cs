@@ -45,18 +45,18 @@ namespace WebLab.Resultados
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuarioValida"] != null)
-            {
-               
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
-                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-            }
-            else Response.Redirect("../FinSesion.aspx", false);
+            else 
+                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga") //19.08.2026 si viene de carga que en el usuario ponga el logueado
+                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                 else  
+                    Response.Redirect("../FinSesion.aspx", false);
 
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["idUsuarioValida"] != null)
+            if (Session["idUsuarioValida"] != null || (Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")) //19.08.2026 si viene de carga que permita continuar
             {
                 if (!Page.IsPostBack)
                 {
@@ -290,7 +290,13 @@ namespace WebLab.Resultados
                 {
                     Guardar(oRegistro);
                 }
-                Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
+
+                //19.08.2026 Si viene de Operacion=Carga cuando recarga la pagina volver a ponerle el request
+                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")
+                    
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Operacion=Carga", false);
+                else
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
             }
                
 
