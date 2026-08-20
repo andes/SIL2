@@ -1620,7 +1620,7 @@
             }
         }   
         var $this = $(this);
-        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
+        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '&operacion=Carga"/>').dialog({
             title: 'Practicas Pedidas',
             autoOpen: true,
             width: 800,

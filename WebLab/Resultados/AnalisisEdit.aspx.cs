@@ -45,18 +45,18 @@ namespace WebLab.Resultados
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuarioValida"] != null)
-            {
-               
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
-                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-            }
-            else Response.Redirect("../FinSesion.aspx", false);
+            else 
+                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga") //19.08.2026 si viene de carga que en el usuario ponga el logueado
+                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                 else  
+                    Response.Redirect("../FinSesion.aspx", false);
 
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["idUsuarioValida"] != null)
+            if (Session["idUsuarioValida"] != null || (Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")) //19.08.2026 si viene de carga que permita continuar
             {
                 if (!Page.IsPostBack)
                 {
@@ -290,7 +290,13 @@ namespace WebLab.Resultados
                 {
                     Guardar(oRegistro);
                 }
-                Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
+
+                //19.08.2026 Si viene de Operacion=Carga cuando recarga la pagina volver a ponerle el request
+                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")
+                    
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Operacion=Carga", false);
+                else
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
             }
                
 
@@ -408,7 +414,10 @@ namespace WebLab.Resultados
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
                             if (trajomuestra == "true")
+                            { 
                                 oDetalle.TrajoMuestra = "No";
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
+                            }
                             else // (trajomuestra == "false"
                             {
                                 /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
@@ -417,12 +426,12 @@ namespace WebLab.Resultados
                                  * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
                                  */
 
-                               
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
                                 bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
                                 oDetalle.TrajoMuestra = "Si";
-                                
-                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem && 
-                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio ==3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+
+                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem &&
+                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio == 3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
                                 {
                                     /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
                                     * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
@@ -430,8 +439,8 @@ namespace WebLab.Resultados
 
                                     //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
                                     if (!oDetalle.ConResultado)
-                                    { 
-                                        oDetalle.IdUsuarioValida = 0; 
+                                    {
+                                        oDetalle.IdUsuarioValida = 0;
                                         oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                                     }
 
@@ -448,10 +457,10 @@ namespace WebLab.Resultados
                                      *  Considero idItem = idSubItem
                                      */
 
-                                    if ( oItem.IdCategoria == 1 )
+                                    if (oItem.IdCategoria == 1)
                                         GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                 }
-                                
+
                             }
                             oDetalle.Save();
                         }
@@ -489,7 +498,7 @@ namespace WebLab.Resultados
                         if (noesta)
                         {
                             oDetalle.Delete();                            
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()));
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", oUser.IdUsuario); //20.08.2029 usar el oUser logueado (idUsuarioValida en validacion o idUsuario en carga)
                         }
                     }
                 }
