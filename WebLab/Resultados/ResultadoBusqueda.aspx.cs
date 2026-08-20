@@ -987,6 +987,9 @@ namespace WebLab.Resultados
                                 if (modoCarga != "HT")
                                     if (s_areas != "0")
                                     m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+
+                            //20.08.2026 Las derivaciones no tienen idUsuariovalida o idUsuarioValidaObservacion
+                              m_parametro += " AND NOT EXISTS (  SELECT 1  FROM LAB_Derivacion d  WHERE d.idDetalleProtocolo = dp.idDetalleProtocolo ) ";
                             }
                             break;
                         case "1": // validados
