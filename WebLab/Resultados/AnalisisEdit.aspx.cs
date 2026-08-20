@@ -430,9 +430,9 @@ namespace WebLab.Resultados
                                 oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
                                 bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
                                 oDetalle.TrajoMuestra = "Si";
-                                
-                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem && 
-                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio ==3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+
+                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem &&
+                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio == 3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
                                 {
                                     /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
                                     * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
@@ -440,8 +440,8 @@ namespace WebLab.Resultados
 
                                     //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
                                     if (!oDetalle.ConResultado)
-                                    { 
-                                        oDetalle.IdUsuarioValida = 0; 
+                                    {
+                                        oDetalle.IdUsuarioValida = 0;
                                         oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                                     }
 
@@ -458,10 +458,10 @@ namespace WebLab.Resultados
                                      *  Considero idItem = idSubItem
                                      */
 
-                                    if ( oItem.IdCategoria == 1 )
+                                    if (oItem.IdCategoria == 1)
                                         GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                 }
-                                
+
                             }
                             oDetalle.Save();
                         }
