@@ -318,7 +318,7 @@ namespace WebLab.Protocolos
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                             {
-                              
+                                 ddlEfector.SelectedValue = Request["idEfectorSolicitante"].ToString(); SelectedEfector();
                                 CargarProtocoloDerivadoLote(); //llama a CargarProtocoloDerivado
                             }
                             if (Request["Operacion"].ToString() == "AltaFFEE")

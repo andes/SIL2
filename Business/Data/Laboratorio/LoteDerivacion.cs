@@ -101,6 +101,7 @@ namespace Business.Data.Laboratorio  {
 
         public static string derivacionPDF(int idLote)
         {
+            //20.08.2026 se agrupa (para casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica)
 
             //agrego el tipo de muestra para NO PACIENTES  (Cambios en la vista vta_LAB_Derivaciones)
 
@@ -113,7 +114,9 @@ namespace Business.Data.Laboratorio  {
               END as idLoteString ,  
               idTipoServicio ,
               TipoProducto
-             FROM vta_LAB_Derivaciones WHERE  idLote= " + idLote + " ORDER BY efectorDerivacion,numero ";
+             FROM vta_LAB_Derivaciones WHERE  idLote= " + idLote + 
+             "  group by numero, fecha, dni, determinacion,  apellido ,nombre ,  efectorderivacion,  fechaNacimiento , unidadEdad, sexo,  solicitante , idLote ,  idTipoServicio ,TipoProducto " +
+             " ORDER BY efectorDerivacion,numero ";
 
             return m_strSQL;     
         }
