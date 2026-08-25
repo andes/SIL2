@@ -74,6 +74,7 @@ namespace WebLab.Derivaciones
                             HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
                             ddlEstado.SelectedIndex = 2;
                             ddlMotivoCancelacion.Enabled = false;
+                            lnkPDF.Visible = false; //24.08.2026 Corrige BUG:en modificacion de lote imprimir el resultado de lote
                         }
 
                     }
@@ -465,10 +466,10 @@ namespace WebLab.Derivaciones
                     // 2 - No esta chequeado y tiene estado "Pendiente para enviar" (4) 
                     if (estado == 4 && !chequeado)  desasociaLote = 1;
 
-                    //20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
+                    
                    if(desasociaLote != -1)
                    {
-                        string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');
+                        string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
                         foreach (string idDetalleProtocolo in idDetalles)
                         {
                             DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
