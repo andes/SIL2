@@ -1248,9 +1248,9 @@
                 if (form.elements[i].name.indexOf("TreeView2") == -1)
                     if (form.elements[i].name.indexOf("chkCerrarSinResultados") == -1)
                         if (form.elements[i].name.indexOf("chkWhonet") == -1)
-                        
-                 if (form.elements[i].name.indexOf("F")==-1) 
-                    form.elements[i].checked = 1;                                       
+                            if (form.elements[i].name.indexOf("chkMecanismoResistencia") == -1)
+                                 if (form.elements[i].name.indexOf("F")==-1) 
+                                    form.elements[i].checked = 1;                                       
             }
         }
     }
@@ -1262,8 +1262,9 @@
                 if (form.elements[i].name.indexOf("TreeView2") == -1)
                     if (form.elements[i].name.indexOf("chkCerrarSinResultados") == -1)
                         if (form.elements[i].name.indexOf("chkWhonet") == -1)
-                    if (form.elements[i].name.indexOf("F")==-1) 
-                        form.elements[i].checked = 0;
+                            if (form.elements[i].name.indexOf("chkMecanismoResistencia") == -1)
+                                if (form.elements[i].name.indexOf("F")==-1) 
+                                    form.elements[i].checked = 0;
             }
         }
     } 
@@ -1889,7 +1890,7 @@
         }).width(670);
     }
 
-    </script>
+</script>
 
      <script type="text/javascript">
         
