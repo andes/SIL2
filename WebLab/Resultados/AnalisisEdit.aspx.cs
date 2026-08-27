@@ -42,21 +42,23 @@ namespace WebLab.Resultados
 
         Protocolo oProtocolo = new Protocolo();
 
+
+       
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuarioValida"] != null)
-            {
-               
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuarioValida"].ToString()));
-                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-            }
-            else Response.Redirect("../FinSesion.aspx", false);
+            else 
+                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga") //19.08.2026 si viene de carga que en el usuario ponga el logueado
+                    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                 else  
+                    Response.Redirect("../FinSesion.aspx", false);
 
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["idUsuarioValida"] != null)
+            if (Session["idUsuarioValida"] != null || (Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")) //19.08.2026 si viene de carga que permita continuar
             {
                 if (!Page.IsPostBack)
                 {
@@ -74,13 +76,13 @@ namespace WebLab.Resultados
                     CargarListas(oRegistro);
                     MuestraDatos();
 
-                }  
-                
+                }
+
             }
             else
             {
                 //Si se perdio la sesion le pida a la pagina padre que se redirija al login
-                string script = "window.top.location.href = '../FinSesion.aspx';"; 
+                string script = "window.top.location.href = '../FinSesion.aspx';";
                 ScriptManager.RegisterStartupScript(this, GetType(), "redirigirLogin", script, true);
                 return;
             }
@@ -290,7 +292,12 @@ namespace WebLab.Resultados
                 {
                     Guardar(oRegistro);
                 }
-                Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
+                //19.08.2026 Si viene de Operacion=Carga cuando recarga la pagina volver a ponerle el request
+                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")
+                    
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Operacion=Carga", false);
+                else
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
             }
                
 
@@ -408,7 +415,10 @@ namespace WebLab.Resultados
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
                             if (trajomuestra == "true")
+                            { 
                                 oDetalle.TrajoMuestra = "No";
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
+                            }
                             else // (trajomuestra == "false"
                             {
                                 /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
@@ -417,7 +427,7 @@ namespace WebLab.Resultados
                                  * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
                                  */
 
-                               
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
                                 bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
                                 oDetalle.TrajoMuestra = "Si";
                                 
@@ -489,7 +499,7 @@ namespace WebLab.Resultados
                         if (noesta)
                         {
                             oDetalle.Delete();                            
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()));
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", oUser.IdUsuario); //20.08.2029 usar el oUser logueado (idUsuarioValida en validacion o idUsuario en carga)
                         }
                     }
                 }

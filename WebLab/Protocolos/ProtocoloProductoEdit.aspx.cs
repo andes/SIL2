@@ -263,41 +263,41 @@ namespace WebLab.Protocolos
             else Response.Redirect(Page.ResolveUrl("~/FinSesion.aspx"), false);
         }
        
-        private void CargarDeterminacionesTurno()
-        {
-            Turno oTurno = new Turno();
-            oTurno = (Turno)oTurno.Get(typeof(Turno), int.Parse(Request["idTurno"].ToString()));
+        //private void CargarDeterminacionesTurno()
+        //{
+        //    Turno oTurno = new Turno();
+        //    oTurno = (Turno)oTurno.Get(typeof(Turno), int.Parse(Request["idTurno"].ToString()));
 
-            ddlSectorServicio.SelectedValue = oTurno.IdSector.ToString();
-            ddlMuestra.SelectedValue = oTurno.IdEspecialistaSolicitante.ToString();
-            //ddlObraSocial.SelectedValue = oTurno.IdObraSocial.IdObraSocial.ToString();
-         //   ddlServicio.SelectedValue = oTurno.IdTipoServicio.IdTipoServicio.ToString();
+        //    ddlSectorServicio.SelectedValue = oTurno.IdSector.ToString();
+        //    ddlMuestra.SelectedValue = oTurno.IdEspecialistaSolicitante.ToString();
+        //    //ddlObraSocial.SelectedValue = oTurno.IdObraSocial.IdObraSocial.ToString();
+        // //   ddlServicio.SelectedValue = oTurno.IdTipoServicio.IdTipoServicio.ToString();
 
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(TurnoItem));
-            crit.Add(Expression.Eq("IdTurno", oTurno));
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(TurnoItem));
+        //    crit.Add(Expression.Eq("IdTurno", oTurno));
 
-            IList items = crit.List();
-            string pivot = "";
-            string sDatos = "";
-            foreach (TurnoItem oDet in items)
-            {
-                if (pivot != oDet.IdItem.Nombre)
-                {
-                    //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#false@";
-                    if (sDatos == "")
-                        sDatos = oDet.IdItem.Codigo + "#Si";
-                    else
-                        sDatos += ";" + oDet.IdItem.Codigo + "#Si" ;
+        //    IList items = crit.List();
+        //    string pivot = "";
+        //    string sDatos = "";
+        //    foreach (TurnoItem oDet in items)
+        //    {
+        //        if (pivot != oDet.IdItem.Nombre)
+        //        {
+        //            //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#false@";
+        //            if (sDatos == "")
+        //                sDatos = oDet.IdItem.Codigo + "#Si";
+        //            else
+        //                sDatos += ";" + oDet.IdItem.Codigo + "#Si" ;
 
-                    pivot = oDet.IdItem.Nombre;
-                }
-            }
+        //            pivot = oDet.IdItem.Nombre;
+        //        }
+        //    }
 
-            TxtDatosCargados.Value = sDatos;
+        //    TxtDatosCargados.Value = sDatos;
 
             
-        }
+        //}
 
         private void MuestraDatos()
         {
@@ -542,14 +542,28 @@ namespace WebLab.Protocolos
                         tab3Titulo.Visible = true;
                         pnlEtiquetas.Visible = true;
 
-                        m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
-                            WHERE imprimeCodigoBarra=1 
-                            and baja=0
-                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
-                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
-                                        where dp.idProtocolo = " + Request["idProtocolo"].ToString() + @"
-                                        and dp.trajoMuestra = 'Si'
-                                        and p.idarea = A.idArea) order by nombre";
+                        //m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
+                        //    WHERE imprimeCodigoBarra=1 
+                        //    and baja=0
+                        //    and exists (select 1 from lab_detalleprotocolo dp with (nolock)
+                        //                inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
+                        //                where dp.idProtocolo = " + Request["idProtocolo"].ToString() + @"
+                        //                and dp.trajoMuestra = 'Si'
+                        //                and p.idarea = A.idArea) order by nombre";
+                        m_ssql = @"
+ SELECT
+    CASE
+        WHEN CHARINDEX('-', numeroP) > 0
+            THEN CONVERT(VARCHAR, idArea) + ';' +
+                 SUBSTRING(numeroP, CHARINDEX('-', numeroP) + 1, LEN(numeroP))
+        ELSE
+            CONVERT(VARCHAR, idArea)
+    END AS idArea,
+
+    area AS nombre
+FROM vta_LAB_GeneraCodigoBarras WITH (NOLOCK)
+WHERE idProtocolo =  " + Request["idProtocolo"].ToString() + @"
+ORDER BY numeroP";
                         oUtil.CargarCheckBox(chkAreaCodigoBarra, m_ssql, "idArea", "nombre");
                         chkAreaCodigoBarra.Items.Insert(0, new ListItem("General", "-1"));
                     }
@@ -878,7 +892,39 @@ namespace WebLab.Protocolos
                 string exception = ex.Message;
             }
         }
+
         private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
+        {////Genera con area y muestra
+            string[] tabla = s_listaAreas.Split(','); for (int i = 0; i < tabla.Length; i++)
+            {
+                string s_area = tabla[i].ToUpper(); string s_idarea = ""; string s_tipoMuestra = "";
+
+                if (s_area == "-1") { s_idarea = "-1"; oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta General", oUser.IdUsuario); }
+                else
+                { // Formato: 11;SPL
+                    string[] tablaAreaMuestra = s_area.Split(';');
+                    s_idarea = tablaAreaMuestra[0];
+                    if (tablaAreaMuestra.Length > 1)
+                        s_tipoMuestra = tablaAreaMuestra[1];
+
+                    Area oArea = new Area(); oArea = (Area)oArea.Get(typeof(Area), int.Parse(s_idarea));
+                    string s_narea = oArea.Nombre;
+                    if (s_narea.Length > 25)
+                        s_narea = s_narea.Substring(0, 25);
+                    if (s_tipoMuestra.Length > 1)
+                        s_narea = s_narea + "-" + s_tipoMuestra;
+
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta " + s_narea, oUser.IdUsuario);
+                }
+                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                string query = @" INSERT INTO LAB_ProtocoloEtiqueta ( idProtocolo, idEfector, idArea, 
+idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.ToString() + @", " + oUser.IdEfector.IdEfector.ToString() + @", " + s_idarea + @", 0, '" + impresora + @"', GETDATE(), '" + s_tipoMuestra + @"' )";
+                SqlCommand cmd = new SqlCommand(query, conn); cmd.ExecuteNonQuery();
+            }
+        }
+
+
+        private void ImprimirCodigoBarrasAreas_old(Protocolo oProt, string s_listaAreas, string impresora)
         {
 
             string[] tabla = s_listaAreas.Split(',');
@@ -2426,7 +2472,11 @@ namespace WebLab.Protocolos
                 txtDescripcionProducto.Text = oRegistro.DescripcionProducto;
                 ddlConservacion.SelectedValue = oRegistro.IdConservacion.ToString();
                 txtNumeroOrigen.Text = oRegistro.Numero.ToString();
+                //    ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
+                //correccion
+                ddlEfector.Items.Insert(0, new ListItem(oRegistro.IdEfector.Nombre, oRegistro.IdEfector.IdEfector.ToString()));
                 ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
+
                 ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
                 txtObservacion.Text = oRegistro.Observacion;
                 pnlNavegacion.Visible = false;

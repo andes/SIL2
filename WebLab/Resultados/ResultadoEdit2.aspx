@@ -18,7 +18,7 @@
 
                    <script type="text/javascript">                     
                                       
-
+                       
   
   
 
@@ -680,31 +680,59 @@
                                                
                                              
           <div id="tab5" >
-            <asp:Panel  ID="pnlMicroOrganismo" runat="server" Height="500px" >    
+            <asp:Panel  ID="pnlMicroOrganismo" runat="server" Width="400px" Height="500px" >    
 
              
            <asp:DropDownList class="form-control input-sm" ID="ddlPracticaAislamiento"  Width="350px" runat="server"> </asp:DropDownList> 
                    <asp:RangeValidator ID="rvPracticaAislamiento" ControlToValidate="ddlPracticaAislamiento" MinimumValue="1" MaximumValue="999999" ValidationGroup="AIS" runat="server" ErrorMessage="*"></asp:RangeValidator>
              
-          <table width="850">           
+          <table    width="400px">           
                 <tr>
-                <td style="vertical-align: top" height="100%" width="400px">
-                
-                 
-                </td>
+                <td style="vertical-align: top" height="100%" width="100%">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                 Nro. Aislamiento:
+<asp:TextBox 
+    ID="txtNumeroAislamiento" 
+    runat="server" 
+    CssClass="form-control input-sm"
+    Width="50px"
+    MaxLength="3">
+</asp:TextBox>
+
+<asp:RangeValidator
+    ID="rvNumeroAislamiento"
+    ControlToValidate="txtNumeroAislamiento"
+    MinimumValue="1"
+    MaximumValue="999"
+    ValidationGroup="AIS"
+    runat="server"
+    ErrorMessage="*"
+    Type="Integer">
+</asp:RangeValidator><asp:CustomValidator
+    ID="cvNumeroAislamiento"
+    runat="server"
+    ValidationGroup="AIS"
+    Display="Dynamic"
+    ForeColor="Red"
+    ErrorMessage="El número de aislamiento ya existe."
+    OnServerValidate="cvNumeroAislamiento_ServerValidate">
+</asp:CustomValidator>
+                <%--</td>
                 </tr>
 
                  
                 <tr>
-                <td style="vertical-align: top">
-              Microorganismo: &nbsp; &nbsp; <anthem:TextBox ID="txtCodigoMicroorganismo" runat="server" class="form-control input-sm"
+                <td style="vertical-align: top">--%>
+                  
+              Microorganismo:   <anthem:TextBox ID="txtCodigoMicroorganismo" runat="server" CssClass="form-control input-sm"
                         ontextchanged="txtCodigoMicroorganismo_TextChanged" Width="60px" AutoCallBack="True"  TabIndex="1" 
                         ToolTip="Ingrese el codigo de microorganismo"></anthem:TextBox>
 
-                    <anthem:DropDownList class="form-control input-sm" Width="400px" ID="ddlAislamiento" runat="server"></anthem:DropDownList>
+                    <anthem:DropDownList CssClass="form-control input-sm" Width="350px" ID="ddlAislamiento" runat="server"></anthem:DropDownList>
                     
                        <asp:RangeValidator ID="rvAislamiento" ControlToValidate="ddlAislamiento" MinimumValue="1" MaximumValue="999999" ValidationGroup="AIS" runat="server" ErrorMessage="*" Type="Integer"></asp:RangeValidator>
                          <asp:Button  CssClass="btn btn-danger" Width="80px" ID="btnAgregarGermen" ValidationGroup="AIS"  runat="server" Text="Agregar" onclick="btnAgregarGermen_Click"/>
+                        </div>
                                                                     </td>
                 </tr>
                 
@@ -725,12 +753,12 @@
                     <td>
                         <asp:GridView ID="gvAislamientos" runat="server" AutoGenerateColumns="False" CellPadding="1" 
                             CssClass="table table-bordered bs-table" 
-                            DataKeyNames="idProtocoloGermen"  onrowcommand="gvAislamientos_RowCommand" onrowdatabound="gvAislamientos_RowDataBound1" Width="100%">
+                            DataKeyNames="idProtocoloGermen"  onrowcommand="gvAislamientos_RowCommand" onrowdatabound="gvAislamientos_RowDataBound1" Width="400px">
                             <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <RowStyle BackColor="White" ForeColor="#333333" />
                             <Columns>
                                 <asp:BoundField DataField="item" HeaderText="" />
-                                <asp:BoundField DataField="numeroAislamiento" HeaderText="Nro.Aisl." />
+                                <asp:BoundField DataField="numeroAislamiento" HeaderText="Nro." />
                                 <asp:BoundField DataField="germen" HeaderText="Aislamiento" />
                                 <asp:TemplateField HeaderText="">
                                     <ItemTemplate>
@@ -742,7 +770,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Observaciones">
                                     <ItemTemplate>
-                                        <asp:TextBox ID="txtObservacionesAislamiento" runat="server" TextMode="MultiLine" class="form-control input-sm"  Text='<%# DataBinder.Eval(Container.DataItem, "observaciones") %>' Width="400px"></asp:TextBox>
+                                        <asp:TextBox ID="txtObservacionesAislamiento" runat="server" TextMode="MultiLine" class="form-control input-sm"  Text='<%# DataBinder.Eval(Container.DataItem, "observaciones") %>' Width="250px"></asp:TextBox>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Valida">
@@ -1337,11 +1365,12 @@
             } catch (E) {
             }
         }
-
+        //AntecedentesView2
 
         var $this = $(this);
         $('<iframe src="AntecedentesView2.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
             title: 'Antecedentes del Paciente',
+           
             autoOpen: true,
             width:750,
             height: 490,
@@ -1620,7 +1649,7 @@
             }
         }   
         var $this = $(this);
-        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
+        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '&operacion=Carga"/>').dialog({
             title: 'Practicas Pedidas',
             autoOpen: true,
             width: 800,

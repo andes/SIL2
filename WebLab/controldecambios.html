@@ -121,6 +121,121 @@
   
   <script>
       const cambios = [
+	   {
+                "fecha": "2026.08.24",
+                "modulo": "Excel de Determinaciones",
+                "detalle": "Se agregan mas datos de las determinaciones en la exportacion a excel.",
+                "tipo": "Nueva Funcionalidad"
+            },
+	    {
+                "fecha": "2026.08.24",
+                "modulo": "Valores de Referencia",
+                "detalle": "Se corrige para que calcule correctamente el VR para sexo indistinto.",
+                "tipo": "Correccion"
+            },
+				    {
+                "fecha": "2026.08.24",
+                "modulo": "Validacion de Protocolos por Area",
+                "detalle": "Se corrige para que no muestre en la Validacion de resultados las derivaciones ya gestionadas cuando se filtrar lo pendiente por area. ",
+                "tipo": "Mejora de Funcionalidad"
+            },
+							    {
+                "fecha": "2026.08.24",
+                "modulo": "Edicion desde Carga de Resultados",
+                "detalle": "Se corrige para que se pueda editar las determinaciones desde carga de resultados.",
+                "tipo": "Correccion"
+            },
+            {
+                "fecha": "2026.08.18",
+                "modulo": "Recepcion Derivacion - Efector Vinculado",
+                "detalle": "Se corrige para que al recibir una derivacion de un efector no vinculado se pueda cargue por defecto el efector derivante.",
+                "tipo": "Correccion"
+            },
+            {
+                "fecha": "2026.08.18",
+                "modulo": "Cobas E411-C311 - Menu de Configuracion",
+                "detalle": "Habilitacion para administrar el mapeo entre determinaciones del sistema y el equipo Cobas C311 nuevo y E411",
+                "tipo": "Nueva Funcionalidad"
+            },
+             {
+                 "fecha": "2026.08.18",
+                 "modulo": "Microbiologia - Nro. Aislamiento",
+                 "detalle": "Se habilita el ingreso manual de numero de aislamiento controlando que el mismo sea valido y correlativo.",
+                 "tipo": "Mejora Funcionalidad"
+             },
+          {
+              "fecha": "2026.08.13",
+              "modulo": "REAL - Envio de Datos Manual Zapala",
+              "detalle": "Se habilita para el efector Zapala en envio manual de datos al equipo REAL.",
+              "tipo": "Nueva Funcionalidad"
+          },
+           {
+               "fecha": "2026.08.13",
+               "modulo": "Cobas C303 - Menu de Configuracion",
+               "detalle": "Habilitacion para administrar el mapeo entre determinaciones del sistema y el equipo Cobas C303",
+               "tipo": "Nueva Funcionalidad"
+           },
+
+		    {
+                "fecha": "2026.08.10",
+                "modulo": "Protocolos-Etiquetas",
+                "detalle": "Reimpresion de etiquetas se habilita la seleccion de area+tipo de muestra para equipos nuevos Cobas",
+                "tipo": "Cambio de Funcionalidad"
+            },
+            {
+                "fecha": "2026.08.10",
+                "modulo": "Turnos",
+                "detalle": "Se corrige que no estaba calculando correctamente la disponibilidad de turnos",
+                "tipo": "Correccion"
+            },
+           {
+               "fecha": "2026.08.10",
+               "modulo": "Lista de Usuarios",
+               "detalle": "Se modifica la lista de usuarios para diferenciar la marca de 'activo' del usuario con la marca de 'activo' en el efector.",
+               "tipo": "Mejora Funcionalidad"
+           },
+              {
+                  "fecha": "2026.08.10",
+                  "modulo": "Usuarios",
+                  "detalle": "Se corrige que no graba el area asociada al efector",
+                  "tipo": "Correccion"
+              },
+           {
+               "fecha": "2026.08.06",
+               "modulo": "Administracion de Determinaciones-Tipo de Muestra",
+               "detalle": "Restricción de edición de Tipo de Muestra e Imprime Muestra para usuarios no administradores.",
+               "tipo": "Mejora Funcionalidad"
+           },
+            {
+                "fecha": "2026.08.06",
+                "modulo": "Administracion de Determinaciones-Valores de Referencia",
+                "detalle": "Restricción de eliminación de Valores de Referencia para usuarios no administradores para que no puedan eliminar.",
+                "tipo": "Mejora Funcionalidad"
+            },
+              {
+                  "fecha": "2026.08.06",
+                  "modulo": "Administracion de Determinaciones-Resultados Predefinidos",
+                  "detalle": "Mejoras de visualización y permisos en Resultados Predefinidos",
+                  "tipo": "Mejora Funcionalidad"
+              },
+              {
+                  "fecha": "2026.08.06",
+                  "modulo": "Administracion de Determinaciones-Diagrama",
+                  "detalle": "Mejora de visualización y permisos en la solapa Diagrama",
+                  "tipo": "Mejora Funcionalidad"
+              },
+              {
+                  "fecha": "2026.08.06",
+                  "modulo": "Administracion de Determinaciones-Estado de Validación",
+                  "detalle": "Incorporación del campo Estado de Validación (Preeliminar/Definitivo) en resultados predefinidos con restricción de edición del Estado de Validación para usuarios no administradores.",
+                  "tipo": "Nueva Funcionalidad"
+              },
+           {
+               "fecha": "2026.08.04",
+               "modulo": "Interoperabilidad Cobas C303, Cobas 311, Cobas E411",
+               "detalle": "Se agrega control para que inteoperen determinaciones marcadas como derivables o sin insumo en el Efector.",
+               "tipo": "Nueva Funcionalidad"
+           },
 	    {
                 "fecha": "2026.08.01",
                 "modulo": "Protocolo- Ingreso de Paciente",

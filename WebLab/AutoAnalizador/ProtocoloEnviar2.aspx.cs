@@ -683,7 +683,8 @@ namespace WebLab.AutoAnalizador
             {
                 if ((oRegistro.IdTipoServicio.IdTipoServicio == 3) &&
                     (oRegistro.IdEfector.IdEfector == 205 ||
-                     oRegistro.IdEfector.IdEfector == 221))
+                     oRegistro.IdEfector.IdEfector == 221 ||
+                     oRegistro.IdEfector.IdEfector == 33))
                 {
                     SqlConnection conn =
                         (SqlConnection)
@@ -729,11 +730,9 @@ namespace WebLab.AutoAnalizador
             {
                 foreach (ProtocoloEnvio oDetalle in detalle)
                 {
-                    //if (oDetalle.Equipo == Request["Equipo"].ToString())
-                    //{
-                    //    if (oDetalle.IdEfector == oUser.IdEfector.IdEfector)
+                 
                             oDetalle.Delete();
-                    //}
+                  
                 }
 
             }
