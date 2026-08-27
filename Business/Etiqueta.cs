@@ -37,7 +37,7 @@ namespace Business
         
         int fontSize =7;///estaba en 7
         int fontSizeSubLinea = 7;///estaba en 7
-        int fontSizeCodigoBarras = 14; // 16; //estaba en 16 Cambio para plottier
+        int fontSizeCodigoBarras = 10; //10 para heller 14; // 16; //estaba en 16 Cambio para plottier
 
         Font printFont = null;
         Font printFontPequeño = null;
@@ -110,6 +110,10 @@ namespace Business
         {
             switch (fuenteBarCode)
             {
+                case "Code128":
+                    line = line.Replace("*", "");
+                    break;
+
                 case "Code39 Mediana": line = "*" + line + "*"; break;
                 //case "Code39": line = "*" + line + "*"; break;
                 case "CCode39": line = "*" + line + "*"; break;
@@ -373,22 +377,27 @@ namespace Business
                 Font printFont_Numero = new Font("Verdana", 8, FontStyle.Bold );
                 Font printFont_NumeroPequeño = new Font("Verdana", 7, FontStyle.Bold);
 
-
+                string[] datoscortados = line.Split('-');
+                string lineachiquita = datoscortados[0];
 
                 if (TipoEtiqueta == "5x2.5")
                 {
-                    gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 40, 5, new StringFormat(StringFormatFlags.DirectionVertical));
-                   // gfx.DrawString(line, printFont_Numero, myBrush, leftMargin+12, 24, new StringFormat(StringFormatFlags.DirectionRightToLeft)); //cambio plottier numero abajo
+                    ///gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 40, 5, new StringFormat(StringFormatFlags.DirectionVertical));
+                    gfx.DrawString(lineachiquita, printFont_Numero, myBrush, leftMargin + 42, 4, new StringFormat(StringFormatFlags.DirectionVertical));
+                    // gfx.DrawString(line, printFont_Numero, myBrush, leftMargin+12, 24, new StringFormat(StringFormatFlags.DirectionRightToLeft)); //cambio plottier numero abajo
 
                 }
                 else
-                    gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 48, 4, new StringFormat(StringFormatFlags.DirectionVertical));
-
+                {
+                   
+                    gfx.DrawString(lineachiquita, printFont_Numero, myBrush, leftMargin + 48, 4, new StringFormat(StringFormatFlags.DirectionVertical));
+                    // gfx.DrawString(line, printFont_Numero, myBrush, leftMargin +30, 10 );
+                }
                 if (TipoEtiqueta == "8x2.5")
                 {
                    
-                    string[] datoscortados = line.Split('-');
-                 string lineachiquita=datoscortados[0];
+                 //   string[] datoscortados = line.Split('-');
+                 //string lineachiquita=datoscortados[0];
 
                     /// funcion segun si cambia de milenio                
                     //int numero = int.Parse(lineachiquita);
@@ -407,7 +416,8 @@ namespace Business
                     /// //////
 
                     //gfx.DrawString(lineachiquita, printFont_NumeroPequeño, myBrush, leftMarginSdaEtiqueta, 22, new StringFormat());
-                    gfx.DrawString(lineachiquita, printFont_NumeroPequeño, myBrush, leftMarginSdaEtiqueta, 10, new StringFormat());
+                    //gfx.DrawString(lineachiquita, printFont_NumeroPequeño, myBrush, leftMarginSdaEtiqueta, 10, new StringFormat());
+                    gfx.DrawString(line, printFont_NumeroPequeño, myBrush, leftMarginSdaEtiqueta, 10, new StringFormat());
                 }
                 count++;
               

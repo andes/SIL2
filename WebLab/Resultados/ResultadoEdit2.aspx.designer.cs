@@ -605,8 +605,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage obs;
-
-       
+        
         /// <summary>
         /// tituloAntecedente control.
         /// </summary>
@@ -966,6 +965,33 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvPracticaAislamiento;
+        
+        /// <summary>
+        /// txtNumeroAislamiento control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNumeroAislamiento;
+        
+        /// <summary>
+        /// rvNumeroAislamiento control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RangeValidator rvNumeroAislamiento;
+        
+        /// <summary>
+        /// cvNumeroAislamiento control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvNumeroAislamiento;
         
         /// <summary>
         /// txtCodigoMicroorganismo control.

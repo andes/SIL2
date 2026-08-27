@@ -865,11 +865,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                 { }
 
         }
-
- 
-
- 
-      
+          
   
   
       
@@ -944,41 +940,41 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                         }
                         break;
                 }
+                ///Caro: no se graba valor de referencia ni unidad de medida ya que se carga en el ingreso de protocolo
+                //int pres = oDetalle.IdSubItem.GetPresentacionEfector(oDetalle.IdEfector);
 
-                int pres = oDetalle.IdSubItem.GetPresentacionEfector(oDetalle.IdEfector);
-
-                string valorRef = oDetalle.CalcularValoresReferencia(pres);
-                string m_metodo = "";
-                string m_valorReferencia = "";
+                //string valorRef = oDetalle.CalcularValoresReferencia(pres);
+                //string m_metodo = "";
+                //string m_valorReferencia = "";
                 
 
-                if (valorRef != null)
-                {
-                    string[] arr = valorRef.Split(("|").ToCharArray());
-                    switch (arr.Length)
-                    {
-                        case 1: m_valorReferencia = arr[0].Trim().ToString(); break;
-                        case 2:
-                            {
-                                m_valorReferencia = arr[0].Trim().ToString();
-                                m_metodo = arr[1].Trim().ToString();
-                            }
-                            break;
-                    }
-                    oDetalle.Metodo = m_metodo;
-                    oDetalle.ValorReferencia = m_valorReferencia;
-                }
+                //if (valorRef != null)
+                //{
+                //    string[] arr = valorRef.Split(("|").ToCharArray());
+                //    switch (arr.Length)
+                //    {
+                //        case 1: m_valorReferencia = arr[0].Trim().ToString(); break;
+                //        case 2:
+                //            {
+                //                m_valorReferencia = arr[0].Trim().ToString();
+                //                m_metodo = arr[1].Trim().ToString();
+                //            }
+                //            break;
+                //    }
+                //    oDetalle.Metodo = m_metodo;
+                //    oDetalle.ValorReferencia = m_valorReferencia;
+                //}
                 string operacion = Request["Operacion"].ToString();
-                string s_unidadMedida = "";
-                int i_unidadMedida = oDetalle.IdSubItem.IdUnidadMedida;
-                if (i_unidadMedida > 0)
-                {
-                    UnidadMedida oUnidad = new UnidadMedida();
-                    oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), i_unidadMedida);
-                    s_unidadMedida = oUnidad.Nombre;
-                }
+                //string s_unidadMedida = "";
+                //int i_unidadMedida = oDetalle.IdSubItem.IdUnidadMedida;
+                //if (i_unidadMedida > 0)
+                //{
+                //    UnidadMedida oUnidad = new UnidadMedida();
+                //    oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), i_unidadMedida);
+                //    s_unidadMedida = oUnidad.Nombre;
+                //}
 
-                oDetalle.UnidadMedida = s_unidadMedida;
+                //oDetalle.UnidadMedida = s_unidadMedida;
                 //oDetalle.Metodo = m_metodo;
                 //oDetalle.ValorReferencia = m_valorReferencia;
                 bool grabar = true;
@@ -1131,16 +1127,24 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                 //Usuario oUser = new Usuario();
                 //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-
                 Protocolo oRegistro = new Protocolo();
-                oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), "Numero", int.Parse(txtNumero.Text), "IdEfector",oUser.IdEfector );
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));
+                crit.Add(Expression.Eq("Numero", int.Parse(txtNumero.Text)));
+                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                crit.Add(Expression.Eq("Baja", false));
+                oRegistro = (Protocolo)crit.UniqueResult();
+                
+
+                if (oRegistro != null)
+                {
+                //    Protocolo oRegistro = new Protocolo();
+                //oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), "Numero", int.Parse(txtNumero.Text), "IdEfector",oUser.IdEfector );
 
                 Item oItem = new Item();
 
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["idItem"].ToString()));
 
-                if (oRegistro != null)
-                {
                     DetalleProtocolo oDProtocolo = new DetalleProtocolo();
                     oDProtocolo = (DetalleProtocolo)oDProtocolo.Get(typeof(DetalleProtocolo), "IdProtocolo", oRegistro, "IdSubItem", oItem);
 
@@ -1166,10 +1170,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                                 btnHabilitar.Visible = true;
                                 btnHabilitar.UpdateAfterCallBack = true;
                             }
-
-    }
-
-
+                        }
                      }
 
                    
@@ -1180,7 +1181,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
             }
             catch
             {
-                lblError.Text = "Numero no encontrado";
+                lblError.Text = "Error al buscar numero";
                 lblError.UpdateAfterCallBack = true;
             }
 

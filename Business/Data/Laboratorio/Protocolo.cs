@@ -2620,17 +2620,33 @@ and dp.trajoMuestra = 'Si'
         public string getListaAreasCodigoBarras()
         {
             string lista = "";/// "-1";            
-            string m_ssql = @"select -1 as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta   with (nolock) where  idArea=-1 and idEfector =" + this.IdEfector.IdEfector.ToString() + @"
+//            string m_ssql = @"select -1 as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta   with (nolock) where  idArea=-1 and idEfector =" + this.IdEfector.IdEfector.ToString() + @"
+//union
+//select idArea, nombre from Lab_Area  A with (nolock)
+//                            WHERE 
+//                            baja=0
+//                            and exists (select 1 from LAB_ConfiguracionAreaEtiqueta E with (nolock) where E.idArea=A.idArea and E.idEfector =" + this.IdEfector.IdEfector.ToString()+@" ) 
+//                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
+//                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
+//                                        where dp.idProtocolo = " + this.IdProtocolo.ToString() + @"
+//                                        and dp.trajoMuestra = 'Si'
+//                                        and p.idarea = A.idArea) ";
+
+
+            string m_ssql = @"select '-1' as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta   with (nolock) where  idArea=-1 and idEfector =" + this.IdEfector.IdEfector.ToString() + @"
 union
-select idArea, nombre from Lab_Area  A with (nolock)
-                            WHERE 
-                            baja=0
-                            and exists (select 1 from LAB_ConfiguracionAreaEtiqueta E with (nolock) where E.idArea=A.idArea and E.idEfector =" + this.IdEfector.IdEfector.ToString()+@" ) 
-                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
-                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
-                                        where dp.idProtocolo = " + this.IdProtocolo.ToString() + @"
-                                        and dp.trajoMuestra = 'Si'
-                                        and p.idarea = A.idArea) ";
+ SELECT distinct
+    CASE
+        WHEN CHARINDEX('-', numeroP) > 0
+            THEN CONVERT(VARCHAR, idArea) + ';' +
+                 SUBSTRING(numeroP, CHARINDEX('-', numeroP) + 1, LEN(numeroP))
+        ELSE
+            CONVERT(VARCHAR, idArea)
+    END AS idArea,
+    area AS nombre
+FROM vta_LAB_GeneraCodigoBarras A WITH (NOLOCK)
+where exists (select 1 from LAB_ConfiguracionAreaEtiqueta E with (nolock) where E.idArea=A.idArea and E.idEfector =" + this.IdEfector.IdEfector.ToString() + @" ) 
+and A.idProtocolo =  " + this.IdProtocolo.ToString() ;
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;

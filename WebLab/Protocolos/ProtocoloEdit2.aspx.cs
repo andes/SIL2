@@ -300,7 +300,7 @@ namespace WebLab.Protocolos
                             {
                                 txtNumeroOrigen.Text = Request["numeroOrigen"].ToString();
                                 txtFechaOrden.Value = Request["fechaOrden"].ToString();
-                                ddlEfector.SelectedValue = Request["idEfectorSolicitante"].ToString(); SelectedEfector();
+                                ddlEfector.SelectedValue = Request["idEfectorSolicitante"].ToString(); //SelectedEfector();
                                 txtSala.Text = Request["sala"].ToString();
                                 txtCama.Text = Request["cama"].ToString();
                                 CargarDeterminacionesDerivacion(Request["analisis"].ToString(), Request["diagnostico"].ToString());
@@ -415,7 +415,14 @@ namespace WebLab.Protocolos
                 btnCancelar.Width = Unit.Pixel(80);
 
                 txtNumeroOrigen2.Text = oRegistro.Identificadorlabo;//numero de pcr va en hispado o numero de origen 2
-                ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); SelectedEfector();
+
+
+
+                ///ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); SelectedEfector();
+                /// Corrreccion
+                ddlEfector.Items.Insert(0, new ListItem(oRegistro.IdEfectorSolicitante.Nombre, oRegistro.IdEfectorSolicitante.IdEfector.ToString()));
+                ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString();
+
                 ddlOrigen.SelectedValue =  oRegistro.IdOrigen.ToString();
                 ddlSectorServicio.SelectedValue =  oSector.IdSectorServicio.ToString();// oRegistro.IdSector.IdSectorServicio.ToString(); //ver el servicio 
                 ddlPrioridad.SelectedValue = "1";// oRegistro.IdPrioridad.IdPrioridad.ToString();                                                 
@@ -556,7 +563,11 @@ namespace WebLab.Protocolos
                 btnCancelar.Width = Unit.Pixel(80);
 
                 txtNumeroOrigen.Text = oRegistro.Numero.ToString();
-                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString(); SelectedEfector();
+                ///   ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString(); SelectedEfector();
+                /// Correccion
+                ddlEfector.Items.Insert(0, new ListItem(oRegistro.IdEfector.Nombre, oRegistro.IdEfector.IdEfector.ToString()));
+                ddlEfector.SelectedValue = oRegistro.IdEfector.IdEfector.ToString();
+
                 txtSala.Text = oRegistro.Sala.ToString();
                 txtCama.Text = oRegistro.Cama;
                 ddlOrigen.SelectedValue = oRegistro.IdOrigen.IdOrigen.ToString();
@@ -1054,40 +1065,21 @@ namespace WebLab.Protocolos
                     MostrarPaciente();
                 }
 
-
-
-
                 ddlEfector.Items.Insert(0, new ListItem(oRegistro.IdEfectorSolicitante.Nombre, oRegistro.IdEfectorSolicitante.IdEfector.ToString()));
-                ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString();
-                //if (oRegistro.IdEfectorSolicitante!= oRegistro.IdEfector)
-                //    CargarSolicitantesExternos("");
-                //else
-                //    CargarSolicitantesInternos();
+                ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString();              
 
                 ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
-                //    ddlEspecialista.SelectedValue = oRegistro.IdEspecialistaSolicitante.ToString();
-
-
-
+                
                 ///Carga de combos de Origen        
-
                 ddlOrigen.Items.Insert(0, new ListItem(oRegistro.IdOrigen.Nombre, oRegistro.IdOrigen.IdOrigen.ToString()));
-
                 ddlOrigen.SelectedValue = oRegistro.IdOrigen.IdOrigen.ToString();
-
                 ////
-
                 ddlPrioridad.SelectedValue = oRegistro.IdPrioridad.IdPrioridad.ToString();
-
 
                 ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
                 txtObservacion.Text = oRegistro.Observacion;
-
-
                 MostrarDeterminaciones(oRegistro);
-
-                //TxtDatos.Value = sDatos;
-
+                
 
                 MostrarDiagnosticos(oRegistro);
                 //muestra enfermedad base
@@ -1366,9 +1358,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 string[] edad = oUtil.DiferenciaFechas(oPaciente.FechaNacimiento, DateTime.Now).Split(';');
                 lblEdad.Text = edad[0].ToString();
                 lblUnidadEdad.Text = " " + edad[1].ToUpper();
-                //    ddlEfector.SelectedValue = Origen[1].ToString();
-
-                //txtEdad.Value = edadpropuesta.Split(;);
+              
                 lblFechaNacimiento.Text = "F.Nac.:" + oPaciente.FechaNacimiento.ToShortDateString();
                 txtTelefono.Text = oPaciente.InformacionContacto;
 
@@ -1444,11 +1434,9 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                     m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora with (nolock) where idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombre";  //MultiEfector
                                                                                                                                                                           //oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
 
-                    //  oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
-
-                    // cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
-                    cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}";
-                    Business.Helpers.ComboCache.CargarCombo(ddlImpresoraEtiqueta, cacheKey, m_ssql, "nombre", "nombre", connReady);
+                     oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);                 
+                 //   cacheKey = $"CAT_ImpresoraEtiqueta_{oUser.IdEfector.IdEfector}";
+                  //  Business.Helpers.ComboCache.CargarCombo(ddlImpresoraEtiqueta, cacheKey, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
                   
 
@@ -1477,17 +1465,35 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
                         //lblImprimeCodigoBarras.Visible = true;
                         ///cargar de areas con codigo de barras           ==> solo areas que estan en el protocolo.
-                                         
-                        m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
-                            WHERE imprimeCodigoBarra=1 and idTipoServicio=" + oServicio.IdTipoServicio.ToString() +
-                            @"  and baja=0
-                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
-                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
-                                        where dp.idProtocolo = " + Request["idProtocolo"].ToString() + @"
-                                        and dp.trajoMuestra = 'Si'
-                                        and p.idarea = A.idArea) order by nombre";
+
+                        //m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
+                        //    WHERE imprimeCodigoBarra=1 and idTipoServicio=" + oServicio.IdTipoServicio.ToString() +
+                        //    @"  and baja=0
+                        //    and exists (select 1 from lab_detalleprotocolo dp with (nolock)
+                        //                inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
+                        //                where dp.idProtocolo = " + Request["idProtocolo"].ToString() + @"
+                        //                and dp.trajoMuestra = 'Si'
+                        //                and p.idarea = A.idArea) order by nombre";
+                        //oUtil.CargarCheckBox(chkAreaCodigoBarra, m_ssql, "idArea", "nombre", connReady);
+                        //chkAreaCodigoBarra.Items.Insert(0, new ListItem("General", "-1"));
+
+                        m_ssql = @"
+ SELECT
+    CASE
+        WHEN CHARINDEX('-', numeroP) > 0
+            THEN CONVERT(VARCHAR, idArea) + ';' +
+                 SUBSTRING(numeroP, CHARINDEX('-', numeroP) + 1, LEN(numeroP))
+        ELSE
+            CONVERT(VARCHAR, idArea)
+    END AS idArea,
+
+    area AS nombre
+FROM vta_LAB_GeneraCodigoBarras WITH (NOLOCK)
+WHERE idProtocolo =  " + Request["idProtocolo"].ToString() + @"
+ORDER BY numeroP";
                         oUtil.CargarCheckBox(chkAreaCodigoBarra, m_ssql, "idArea", "nombre", connReady);
                         chkAreaCodigoBarra.Items.Insert(0, new ListItem("General", "-1"));
+
                     }
                 }
                 else
@@ -1546,7 +1552,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 m_ssql = @"SELECT idMuestra, nombre + ' - ' + codigo as nombre FROM LAB_Muestra  M with (nolock)
                             where (tipo=0 or tipo=1)";
                 if (Request["Operacion"].ToString() != "Modifica")  //alta
-                    m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString()+")"; //Multiefector";
+                    m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  with (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString()+")"; //Multiefector";
                 m_ssql += " order by nombre ";
                 //oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
 
@@ -1650,10 +1656,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             if (Request["Operacion"].ToString() == "AltaDerivacion") IniciarValores(oC);
 
-            //if (oC.IdEfector.IdEfector.ToString() != ddlEfector.SelectedValue)
-            //    CargarSolicitantesExternos("");
-            //else
-            //    CargarSolicitantesInternos();
+          
 
             ///Carga de determinaciones y rutinas dependen de la selección del tipo de servicio
             CargarItems();
@@ -1686,7 +1689,9 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             m_ssql = null;
             oUtil = null;
         }
-      
+
+       
+
         private void CargarListaEnfermedadesBase()
         {
             Utility oUtil = new Utility();
@@ -1901,13 +1906,10 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                             if (s_AreasCodigosBarras != "")
                             {
 
+
                                 ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras, ddlImpresoraEtiqueta.SelectedItem.Text);
                             }
-                            //string s_Items = oRegistro.getListaEtiquetaDeterminacion();
-                            //if (s_Items != "")
-                            //{                                
-                            //    ImprimirCodigoBarrasDeterminacion(oRegistro,  s_Items, ddlImpresoraEtiqueta.SelectedItem.Text);
-                            //}
+                           
                         }
 
 
@@ -2169,10 +2171,37 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             return lista;
         }
 
-
-       
-
         private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
+        {////Genera con area y muestra
+            string[] tabla = s_listaAreas.Split(','); for (int i = 0; i < tabla.Length; i++)
+            {
+                string s_area = tabla[i].ToUpper(); string s_idarea = ""; string s_tipoMuestra = "";
+
+                if (s_area == "-1") { s_idarea = "-1"; oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta General", oUser.IdUsuario); }
+                else
+                { // Formato: 11;SPL
+                    string[] tablaAreaMuestra = s_area.Split(';');
+                    s_idarea = tablaAreaMuestra[0];
+                    if (tablaAreaMuestra.Length > 1)
+                        s_tipoMuestra = tablaAreaMuestra[1];
+
+                    Area oArea = new Area(); oArea = (Area)oArea.Get(typeof(Area), int.Parse(s_idarea));
+                    string s_narea = oArea.Nombre;
+                    if (s_narea.Length > 25)
+                        s_narea = s_narea.Substring(0, 25);
+                    if (s_tipoMuestra.Length > 1)
+                        s_narea = s_narea + "-" + s_tipoMuestra;
+
+                    oProt.GrabarAuditoriaProtocolo("Imprime Etiqueta " + s_narea, oUser.IdUsuario);
+                }
+                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                string query = @" INSERT INTO LAB_ProtocoloEtiqueta ( idProtocolo, idEfector, idArea, 
+idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.ToString() + @", " + oUser.IdEfector.IdEfector.ToString() + @", " + s_idarea + @", 0, '" + impresora + @"', GETDATE(), '" + s_tipoMuestra + @"' )";
+                SqlCommand cmd = new SqlCommand(query, conn); cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void ImprimirCodigoBarrasAreas_old(Protocolo oProt, string s_listaAreas, string impresora)
         {
            
             string[] tabla = s_listaAreas.Split(',');
@@ -3714,7 +3743,7 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
         protected void ddlEfector_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            SelectedEfector();
+        //    SelectedEfector();
         }
 
 
@@ -3736,76 +3765,76 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             }
         }
 
-        private void SelectedEfector()
-        {
-         //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-            if (ddlEfector.SelectedValue != oC.IdEfector.IdEfector.ToString())
-            {
-                //CargarSolicitantesExternos("");
+        //private void SelectedEfector()
+        //{
+        // //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+        //    if (ddlEfector.SelectedValue != oC.IdEfector.IdEfector.ToString())
+        //    {
+        //        //CargarSolicitantesExternos("");
 
-                try { 
-                Efector oEfectorExterno = new Efector();
-                oEfectorExterno = (Efector)oEfectorExterno.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
-                    if (oEfectorExterno.IdTipoEfector == 2) // es privado
-                    {
-                        if (lblObraSocial.Text == "-") // es temporal
-                        {
-                            lblAlertaObraSocial.Text = "El efector derivante es privado verifique Financiador u Obra Social.";
-                            lblAlertaObraSocial.Visible = true;                       
+        //        try { 
+        //        Efector oEfectorExterno = new Efector();
+        //        oEfectorExterno = (Efector)oEfectorExterno.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
+        //            if (oEfectorExterno.IdTipoEfector == 2) // es privado
+        //            {
+        //                if (lblObraSocial.Text == "-") // es temporal
+        //                {
+        //                    lblAlertaObraSocial.Text = "El efector derivante es privado verifique Financiador u Obra Social.";
+        //                    lblAlertaObraSocial.Visible = true;                       
 
-                        }
-                    }
-                    else lblAlertaObraSocial.Visible = false;
+        //                }
+        //            }
+        //            else lblAlertaObraSocial.Visible = false;
 
-                switch (oEfectorExterno.IdZona.IdZona)
-                {
-                    case 1: // subse
-                        ddlOrigen.SelectedValue = "5"; break;
-                    case 2: // zona I
-                        ddlOrigen.SelectedValue = "6"; break;
-                    case 3: // zona II
-                        ddlOrigen.SelectedValue = "8"; break; //7
-                    case 5: // zona III
-                        ddlOrigen.SelectedValue = "9"; break;
-                    case 7: // zona IV
-                        ddlOrigen.SelectedValue = "10"; break;
-                    case 8: // zona v
-                        ddlOrigen.SelectedValue = "11"; break;
-                    case 9: // zona metro
-                        ddlOrigen.SelectedValue = "5"; break;
-                    case 10: // rio negro
-                        ddlOrigen.SelectedValue = "12"; break;
+        //        switch (oEfectorExterno.IdZona.IdZona)
+        //        {
+        //            case 1: // subse
+        //                ddlOrigen.SelectedValue = "5"; break;
+        //            case 2: // zona I
+        //                ddlOrigen.SelectedValue = "6"; break;
+        //            case 3: // zona II
+        //                ddlOrigen.SelectedValue = "8"; break; //7
+        //            case 5: // zona III
+        //                ddlOrigen.SelectedValue = "9"; break;
+        //            case 7: // zona IV
+        //                ddlOrigen.SelectedValue = "10"; break;
+        //            case 8: // zona v
+        //                ddlOrigen.SelectedValue = "11"; break;
+        //            case 9: // zona metro
+        //                ddlOrigen.SelectedValue = "5"; break;
+        //            case 10: // rio negro
+        //                ddlOrigen.SelectedValue = "12"; break;
 
-                }
+        //        }
 
-                }
-                catch {
-                    ddlOrigen.SelectedValue = "0";
-                }
-                //btnGuardarSolicitante.Visible = true;
-                //btnGuardarSolicitante.UpdateAfterCallBack = true;
-                lblAlertaObraSocial.UpdateAfterCallBack = true;
-                //btnCancelarSolicitante.Visible = true;
-                //btnCancelarSolicitante.UpdateAfterCallBack = true;
+        //        }
+        //        catch {
+        //            ddlOrigen.SelectedValue = "0";
+        //        }
+        //        //btnGuardarSolicitante.Visible = true;
+        //        //btnGuardarSolicitante.UpdateAfterCallBack = true;
+        //        lblAlertaObraSocial.UpdateAfterCallBack = true;
+        //        //btnCancelarSolicitante.Visible = true;
+        //        //btnCancelarSolicitante.UpdateAfterCallBack = true;
 
 
-                ddlOrigen.UpdateAfterCallBack = true;
+        //        ddlOrigen.UpdateAfterCallBack = true;
 
-            }
-            else
-            {
-                ddlOrigen.SelectedValue = "0"; 
-                ddlOrigen.UpdateAfterCallBack = true;
+        //    }
+        //    else
+        //    {
+        //        ddlOrigen.SelectedValue = "0"; 
+        //        ddlOrigen.UpdateAfterCallBack = true;
 
-                //btnGuardarSolicitante.Visible = false;
-                //btnGuardarSolicitante.UpdateAfterCallBack = true;
+        //        //btnGuardarSolicitante.Visible = false;
+        //        //btnGuardarSolicitante.UpdateAfterCallBack = true;
 
-                //btnCancelarSolicitante.Visible = false;
-                //btnCancelarSolicitante.UpdateAfterCallBack = true;
-                //CargarSolicitantesInternos();
-            }
+        //        //btnCancelarSolicitante.Visible = false;
+        //        //btnCancelarSolicitante.UpdateAfterCallBack = true;
+        //        //CargarSolicitantesInternos();
+        //    }
 
-        }
+        //}
 
   
 

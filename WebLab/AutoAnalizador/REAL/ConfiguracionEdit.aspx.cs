@@ -66,8 +66,8 @@ namespace WebLab.AutoAnalizador.REAL
         private DataTable LeerDatos()
         {
             string m_strSQL = @" SELECT     M.idrealitem, I.codigo, I.nombre, M.idreal, M.habilitado as Habilitado
-                                 FROM  lab_realitem AS M 
-                                 INNER JOIN LAB_Item AS I ON M.idItem = I.idItem Order by I.nombre ";
+                                 FROM  lab_realitem AS M with (nolock)
+                                 INNER JOIN LAB_Item AS I with (nolock) ON M.idItem = I.idItem Order by I.nombre ";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -81,9 +81,10 @@ namespace WebLab.AutoAnalizador.REAL
         }
         private DataTable LeerDatosExcel()
         {
-            string m_strSQL = @" SELECT   I.codigo as [Codigo SIL], I.nombre as [Descripcion], M.idreal as [Codigo Real], M.habilitado as Habilitado
-                                 FROM  lab_realitem AS M 
-                                 INNER JOIN LAB_Item AS I ON M.idItem = I.idItem Order by I.nombre ";
+            string m_strSQL = @" SELECT   I.codigo as [Codigo SIL], I.nombre as [Descripcion], M.idreal as [Codigo Real],
+                                 case when M.habilitado=1 then 'Si' else 'No' end as Habilitado
+                                 FROM  lab_realitem AS M with (nolock)
+                                 INNER JOIN LAB_Item AS I with (nolock) ON M.idItem = I.idItem Order by I.nombre ";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -102,24 +103,14 @@ namespace WebLab.AutoAnalizador.REAL
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-            string m_ssql = "select idArea, nombre from Lab_Area where baja=0 and idtiposervicio=3 order by nombre";
-            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);
-
-            
-
+            string m_ssql = "select idArea, nombre from Lab_Area with (nolock) where baja=0 and idtiposervicio=3 order by nombre";
+            oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre", connReady);            
             CargarItem();
-            //ddlArea.Items.Insert(0, new ListItem("Seleccione Area", "0"));
-
-
+            
             m_ssql = null;
             oUtil = null;
         }
-
-
-
-
-
-
+        
         private void GuardarDetalleConfiguracion()
         {
             RealItem oDetalle = new RealItem();
@@ -127,9 +118,6 @@ namespace WebLab.AutoAnalizador.REAL
             oDetalle.IdItem = int.Parse(ddlItem.SelectedValue);
             oDetalle.Habilitado = true;
             oDetalle.Save();
-
-
-
         }
 
 
@@ -240,18 +228,15 @@ namespace WebLab.AutoAnalizador.REAL
         }
 
         private void CargarItem()
-        {
-
-           
-
+        { 
 
             Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
             ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
-            string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item I
-                where baja=0 AND idArea=" + ddlArea.SelectedValue +
-                       " order by nombre";
+            string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item I with (nolock)
+                              where baja=0 AND idArea=" + ddlArea.SelectedValue +
+                            " order by nombre";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre", connReady);
             ddlItem.Items.Insert(0, new ListItem("Seleccione Item", "0"));
@@ -266,33 +251,6 @@ namespace WebLab.AutoAnalizador.REAL
         }
 
 
-        private void dataTableAExcel(DataTable tabla, string nombreArchivo)
-        {
-            if (tabla.Rows.Count > 0)
-            {
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-                HtmlTextWriter htw = new HtmlTextWriter(sw);
-                Page pagina = new Page();
-                HtmlForm form = new HtmlForm();
-                GridView dg = new GridView();
-                dg.EnableViewState = false;
-                dg.DataSource = tabla;
-                dg.DataBind();
-                pagina.EnableEventValidation = false;
-                pagina.DesignerInitialize();
-                pagina.Controls.Add(form);
-                form.Controls.Add(dg);
-                pagina.RenderControl(htw);
-                Response.Clear();
-                Response.Buffer = true;
-                Response.ContentType = "application/vnd.ms-excel";
-                Response.AddHeader("Content-Disposition", "attachment;filename=" + nombreArchivo + ".xls");
-                Response.Charset = "UTF-8";
-                Response.ContentEncoding = Encoding.Default;
-                Response.Write(sb.ToString());
-                Response.End();
-            }
-        }
+     
     }
 }

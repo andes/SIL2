@@ -300,7 +300,8 @@ namespace WebLab.Resultados
         {
 
             Utility oUtil = new Utility();
-            ///Carga los germenes para la solapa Aislamientos
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+                                                                                                        ///Carga los germenes para la solapa Aislamientos
             string m_ssql = @" SELECT     CONVERT(varchar, PG.numeroAislamiento) + ' -  ' + G.nombre AS nombre, PG.idProtocoloGermen
 FROM         LAB_Germen AS G (nolock) INNER JOIN
                       LAB_ProtocoloGermen AS PG (nolock) ON G.idGermen = PG.idGermen
@@ -315,11 +316,17 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             
 
             //Carga dinamica de Metodos de ATB
-             m_ssql = @"SELECT idMetodoAntibiograma, codigo FROM LAB_MetodoAntibiograma WHERE baja=0";
+             m_ssql = @"SELECT idMetodoAntibiograma, codigo FROM LAB_MetodoAntibiograma  with (nolock)  WHERE baja=0";
+            string cacheKey = "CAT_MetodoAntibiograma";
+            Business.Helpers.ComboCache.CargarCombo(ddlMetodologiaATB, cacheKey, m_ssql, "idMetodoAntibiograma", "codigo", connReady);
+
             //Cambiamos radio button rdbMetodologiaAntibiograma por ddlMetodologiaATB
-            oUtil.CargarCombo(ddlMetodologiaATB, m_ssql, "idMetodoAntibiograma", "codigo");
+        //    oUtil.CargarCombo(ddlMetodologiaATB, m_ssql, "idMetodoAntibiograma", "codigo");
             ddlMetodologiaATB.SelectedValue = "0";
-            oUtil.CargarCombo(ddlMetodoAntibiograma, m_ssql, "idMetodoAntibiograma", "codigo");
+            //oUtil.CargarCombo(ddlMetodoAntibiograma, m_ssql, "idMetodoAntibiograma", "codigo");
+            Business.Helpers.ComboCache.CargarCombo(ddlMetodoAntibiograma, cacheKey, m_ssql, "idMetodoAntibiograma", "codigo", connReady);
+
+
             ddlMetodoAntibiograma.SelectedValue = "0";
         }
 
@@ -349,8 +356,11 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
         {
             Utility oUtil = new Utility();
 
-            string m_ssql = @" SELECT DISTINCT DP.idItem, I.nombre FROM  LAB_DetalleProtocolo as DP (nolock)
-                inner join lab_item as I (nolock) on I.iditem= DP.idItem WHERE  idProtocolo = " + Request["idProtocolo"].ToString();
+            string m_ssql = @" SELECT DISTINCT DP.idItem, I.nombre 
+                FROM  LAB_DetalleProtocolo as DP (nolock)
+                inner join lab_item as I (nolock) 
+                    on I.iditem= DP.idItem 
+                WHERE  idProtocolo = " + Request["idProtocolo"].ToString();
             oUtil.CargarCombo(ddlPracticaAislamiento, m_ssql, "idItem", "nombre");
             
             //ddlPracticaAislamiento.Items.Insert(0, new ListItem("--SELECCIONE PRACTICA--", "0"));
@@ -365,9 +375,9 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             
 
             ///Carga los germenes para la solapa Aislamientos
-             m_ssql = " SELECT   idGermen, nombre +  ' ' + codigo as nombre FROM LAB_Germen (nolock) " +
-            " where baja=0 and idGermen not in (Select distinct idGermen from  LAB_Antibiograma  where idProtocolo=" + Request["idProtocolo"].ToString() + ")" +
-            " order by nombre";
+             m_ssql = @" SELECT   idGermen, nombre +  ' ' + codigo as nombre 
+                         FROM LAB_Germen with (nolock) 
+                         where baja=0 and idGermen not in (Select distinct idGermen from  LAB_Antibiograma  with (nolock)  where idProtocolo=" + Request["idProtocolo"].ToString() + ") order by nombre";
 
             oUtil.CargarCombo(ddlAislamiento, m_ssql, "idGermen", "nombre");
             ddlAislamiento.Items.Insert(0, new ListItem("--SELECCIONE MICROORGANISMO--", "0"));
@@ -387,9 +397,11 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
 
             ///Carga los perfiles de  Antibioticos
             string m_ssql = @" SELECT DISTINCT PA.idPerfilAntibiotico, PA.nombre
-                       FROM         LAB_PerfilAntibiotico AS PA with (nolock) INNER JOIN
-                      LAB_DetallePerfilAntibiotico AS DPA with (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
-                      LAB_Antibiotico AS A with (nolock) ON DPA.idAntibiotico = A.idAntibiotico
+                       FROM  LAB_PerfilAntibiotico AS PA with (nolock) 
+                        INNER JOIN  LAB_DetallePerfilAntibiotico AS DPA with (nolock) 
+                            ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico 
+                        INNER JOIN  LAB_Antibiotico AS A with (nolock) 
+                            ON DPA.idAntibiotico = A.idAntibiotico
                         WHERE     (PA.baja = 0)
                         ORDER BY PA.nombre";
             string cacheKey = "CAT_PerfilAntibiotico";
@@ -2359,7 +2371,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if (idServiciofiltro == "5")
                 idServiciofiltro = "1,3";
             string m_ssql = @" SELECT idObservacionResultado , codigo  AS descripcion 
-                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio in (" + idServiciofiltro + ") and  baja=0 order by codigo " ;
+                                FROM   LAB_ObservacionResultado with (nolock)
+                                where idTipoServicio in (" + idServiciofiltro + ") and  baja=0 order by codigo " ;
           
 
             if (tipo == "gral")
@@ -2832,25 +2845,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                     {
                                                                         txt = (TextBox)control5;
                                                                         if (txt.Enabled)
-                                                                        {
-
-                                                                         
+                                                                        {                                                                         
                                                                             m_id = txt.Text;
-
                                                                             if (Request["Operacion"].ToString() == "Valida") 
                                                                             {
                                                                                 if (estaTildado(txt.ID))
-                                                                                {
-
-                                                                                DesValidarResultado(txt.ID, txt.Text, oProtocolo, false);
-                                                                                    //  GuardarReferenciaMetodoUnidadMedida(txt.ID, oProtocolo);
-                                                                                }
-                                                                            }
-                                                                           
-                                                                            //}
-
-                                                                            //}
-
+                                                                                DesValidarResultado(txt.ID, txt.Text, oProtocolo, false);                                                                                                                                                             
+                                                                            }                                                                                                                                                       
                                                                         }
                                                                     }
 
@@ -2861,15 +2862,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                         {
                                                                             if ((ddl.SelectedValue != "") && (Request["Operacion"].ToString() == "Valida") )
                                                                                 {
-                                                                                    if (estaTildado(ddl.ID))
-                                                                                        {
-
-                                                                                        DesValidarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, false);
-                                                                                        //   GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
-
-                                                                                    }
-                                                                                }
-                                                                            
+                                                                                    if (estaTildado(ddl.ID))                                                                            
+                                                                                        DesValidarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, false);                                                                                    
+                                                                                }                                                                            
                                                                         }
                                                                     }
                                                                 }
@@ -3003,16 +2998,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                             if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                                                             {
                                                                                 if (estaTildado(txt.ID))
-                                                                                {
-
-                                                                                    GuardarResultado(txt.ID, txt.Text, oProtocolo, imprimir, todo);
-                                                                                    //  GuardarReferenciaMetodoUnidadMedida(txt.ID, oProtocolo);
-                                                                                }
+                                                                                    GuardarResultado(txt.ID, txt.Text, oProtocolo, imprimir, todo);                                                                                    
                                                                             }
                                                                             else
                                                                             {
-                                                                                GuardarResultado(txt.ID, txt.Text, oProtocolo, imprimir, todo);
-                                                                                //  GuardarReferenciaMetodoUnidadMedida(txt.ID, oProtocolo);
+                                                                                GuardarResultado(txt.ID, txt.Text, oProtocolo, imprimir, todo);                                                                                
                                                                             }
 
                                                                             //}
@@ -3030,18 +3020,12 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                             if (ddl.SelectedValue != "")
                                                                                 if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                                                                 {
-                                                                                    if (estaTildado(ddl.ID))
-                                                                                    {
-
-                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);
-                                                                                        //   GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
-
-                                                                                    }
+                                                                                    if (estaTildado(ddl.ID))                                                                                    
+                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);                                                                                                                                                                            
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);
-                                                                                    //      GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
+                                                                                    GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);                                                                                
                                                                                 }
                                                                         }
                                                                     }// termina control 5
@@ -3058,8 +3042,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                                 {
                                                                                     ProtocoloLuminex oFusion = new ProtocoloLuminex();
                                                                                     oFusion.Guardar(gd.ID, oProtocolo.Numero, int.Parse(Session["idUsuarioValida"].ToString()));
-                                                                                    GuardarResultado(gd.ID, "Luminex", oProtocolo, imprimir, todo);
-                                                                                    //   GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
+                                                                                    GuardarResultado(gd.ID, "Luminex", oProtocolo, imprimir, todo);                                                                                    
 
                                                                                 }
 
@@ -3130,17 +3113,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
         private void GuardarResultado(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo)
         {
             Utility oUtil = new Utility();
-            string m_metodo = "";
-            string m_valorReferencia = "";
-            string nombre_control = "VR" + m_idItem;
-            Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
-            Label valorRef = (Label)control1;
+
+            // Caro Performance: no es necesario guardar VR y unidad de medida; se graba en la carga de protocolo
+            //string m_metodo = "";
+            //string m_valorReferencia = "";
+            //string nombre_control = "VR" + m_idItem;
+            //Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
+            //Label valorRef = (Label)control1;
 
 
-            ///busca unidad de medida
-            nombre_control = "UM" + m_idItem;
-            Control controlUMedida = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
-            Label unMedida = (Label)controlUMedida;
+            /////busca unidad de medida
+            //nombre_control = "UM" + m_idItem;
+            //Control controlUMedida = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
+            //Label unMedida = (Label)controlUMedida;
 
 
             //////////////////////////////////////////////////////////////////
@@ -3201,27 +3186,27 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
 
                         /////////////////////////////////////////////////////////////////////////////////
-                        if ((valorRef != null) || (unMedida != null))
-                        {
-                            if (valorRef != null)
-                            {
-                                string[] arr = valorRef.Text.Split(("|").ToCharArray());
-                                switch (arr.Length)
-                                {
-                                    case 1: m_valorReferencia = arr[0].ToString(); break;
-                                    case 2:
-                                        {
-                                            m_valorReferencia = arr[0].ToString();
-                                            m_metodo = arr[1].ToString();
-                                        } break;
-                                }
-                                oDetalle.Metodo = m_metodo;
-                                oDetalle.ValorReferencia = m_valorReferencia;
-                            }
+                        //if ((valorRef != null) || (unMedida != null))
+                        //{
+                        //    if (valorRef != null)
+                        //    {
+                        //        string[] arr = valorRef.Text.Split(("|").ToCharArray());
+                        //        switch (arr.Length)
+                        //        {
+                        //            case 1: m_valorReferencia = arr[0].ToString(); break;
+                        //            case 2:
+                        //                {
+                        //                    m_valorReferencia = arr[0].ToString();
+                        //                    m_metodo = arr[1].ToString();
+                        //                } break;
+                        //        }
+                        //        oDetalle.Metodo = m_metodo;
+                        //        oDetalle.ValorReferencia = m_valorReferencia;
+                        //    }
 
-                            if (unMedida != null) oDetalle.UnidadMedida = unMedida.Text;
-                        }
-                        ///////////////////////////
+                        //    if (unMedida != null) oDetalle.UnidadMedida = unMedida.Text;
+                        //}
+                        /////////////////////////////
                     
 
                      
@@ -5306,6 +5291,42 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
 
         }
 
+
+        protected void cvNumeroAislamiento_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            Protocolo oProtocolo = new Protocolo();
+            oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);
+
+            int numeroAislamiento;
+
+            if (!int.TryParse(txtNumeroAislamiento.Text, out numeroAislamiento))
+            {
+                args.IsValid = false;
+                cvNumeroAislamiento.ErrorMessage = "Ingrese un número de aislamiento válido.";
+                return;
+            }
+
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+
+            ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloGermen));
+
+            crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+            crit.Add(Expression.Eq("NumeroAislamiento", numeroAislamiento));
+            crit.Add(Expression.Eq("Baja", false));
+
+            IList lista = crit.List();
+
+            if (lista.Count > 0)
+            {
+                args.IsValid = false;
+                cvNumeroAislamiento.ErrorMessage =
+                    "Ya existe un aislamiento con el número " + numeroAislamiento + ".";
+            }
+            else
+            {
+                args.IsValid = true;
+            }
+        }
         private void GuardarAislamiento()
         {
             Protocolo oProtocolo = new Protocolo();
@@ -5319,7 +5340,9 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
             ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloGermen));
             crit.Add(Expression.Eq("IdProtocolo", oProtocolo));            
             IList lista = crit.List();
-            int numeroAislamiento= lista.Count+1;                
+            ///  int numeroAislamiento= lista.Count+1;                
+             int numeroAislamiento = int.Parse(txtNumeroAislamiento.Text);
+
             /////////////////////////////////
 
             ProtocoloGermen oRegistro = new ProtocoloGermen();
@@ -5336,23 +5359,47 @@ and ( fechavigenciahasta  >convert(date,convert(varchar,getdate(),112)) or conve
         }
 
 
+        private void InicializarNumeroAislamiento()
+        {
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+
+            Protocolo oProtocolo = new Protocolo();
+            oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);
+
+            ICriteria crit = m_session.CreateCriteria(typeof(ProtocoloGermen));
+            crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+
+            IList lista = crit.List();
+
+            int numeroPropuesto = 1;
+
+            foreach (ProtocoloGermen aislamiento in lista)
+            {
+                if (aislamiento.NumeroAislamiento >= numeroPropuesto)
+                    numeroPropuesto = aislamiento.NumeroAislamiento + 1;
+            }
+
+            txtNumeroAislamiento.Text = numeroPropuesto.ToString();
+        }
         private void CargarGrillaAislamientos()
         {
+            InicializarNumeroAislamiento();
+
             ////Metodo que carga la grilla de Protocolos
 
             string m_strSQL = @" SELECT PG.numeroAislamiento, I.nombre as item, G.nombre AS germen, PG.atb, PG.observaciones, PG.idProtocoloGermen
-                        FROM         LAB_ProtocoloGermen AS PG 
-                        INNER JOIN                      LAB_Germen AS G ON PG.idGermen = G.idGermen 
-INNER JOIN LAB_Item AS I ON I.idItem= PG.idItem
-WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
+                        FROM         LAB_ProtocoloGermen AS PG with (nolock)
+                        INNER JOIN   LAB_Germen AS G with (nolock) ON PG.idGermen = G.idGermen 
+                        INNER JOIN LAB_Item AS I with (nolock) ON I.idItem= PG.idItem
+                        WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex + @" order by PG.numeroAislamiento";
 
             if (Request["Operacion"].ToString() == "HC")
             {
                 m_strSQL = @" SELECT PG.idProtocoloGermen, I.nombre as [Deter.], PG.numeroAislamiento as [Nro. Cepa], G.nombre AS [Aislamiento], PG.atb as [ATB], PG.observaciones as [Observaciones], '' as Estado
-                        FROM         LAB_ProtocoloGermen AS PG 
-                        INNER JOIN                      LAB_Germen AS G ON PG.idGermen = G.idGermen 
-INNER JOIN LAB_Item AS I ON I.idItem= PG.idItem
-WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex;
+                        FROM         LAB_ProtocoloGermen AS PG  with (nolock)
+                        INNER JOIN   LAB_Germen AS G  with (nolock) ON PG.idGermen = G.idGermen 
+                        INNER JOIN LAB_Item AS I  with (nolock) ON I.idItem= PG.idItem
+                        WHERE   PG.baja=0 and  PG.idProtocolo = " + CurrentPageIndex + @" order by PG.numeroAislamiento"; ;
             }
 
             DataSet Ds = new DataSet();

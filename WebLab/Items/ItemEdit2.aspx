@@ -1627,7 +1627,7 @@ function NuevaFila(nom ,  efector, estado)
     oCodigo1.runat = 'server';
     //oCodigo1.onblur = function () { CargarDatos() };
     oCodigo1.className = 'form-control input-sm';
-    oCodigo1.style.width = '300px';
+    oCodigo1.style.width = '200px';
     oCodigo1.value = (efector == 0) ? "" : efector;
 
     celdaEfector.appendChild(oCodigo1);

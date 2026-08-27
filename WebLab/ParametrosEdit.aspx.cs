@@ -22,6 +22,7 @@ using CrystalDecisions.Shared;
 using System.Web.Script.Serialization;
 using System.Text;
 using System.IO;
+using Business.Helpers;
 
 namespace WebLab
 {
@@ -1617,12 +1618,19 @@ order by I.codigo, I.nombre
         protected void btnReinializacion_Click(object sender, EventArgs e)
         {
           
-            ReprocesarFichas();
+     ///       ReprocesarFichas();
             EjecutarMantenimiento();
+            BorrarCache();
 
             /////
 
         }
+
+        private void BorrarCache()
+        {
+            CatalogoCache.ClearCatalogos();
+        }
+
         private void EjecutarMantenimiento()
         {
             DataSet Ds = new DataSet();

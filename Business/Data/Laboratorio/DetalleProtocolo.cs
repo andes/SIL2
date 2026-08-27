@@ -691,28 +691,32 @@ namespace Business.Data.Laboratorio
 
         ///Metodos
         ///
+
+
         public string CalcularValoresReferencia(int pres)
         {
-          
             int edadPaciente = IdProtocolo.Edad;
 
-            switch (IdProtocolo.UnidadEdad)//Calcular edad del paciente en días
+            // Calcular edad del paciente en días
+            switch (IdProtocolo.UnidadEdad)
             {
                 case 0: // años
                     edadPaciente *= 365;
                     break;
+
                 case 1: // meses
                     edadPaciente *= 30;
                     break;
             }
-                                    
-            string sexoProtocolo = IdProtocolo.Sexo; //sexo del paciente
 
+            string sexoProtocolo = IdProtocolo.Sexo;
+
+            // Si está embarazada, utilizar sexo E
             if (IdProtocolo.Embarazada == "S")
                 sexoProtocolo = "E";
 
-            
-            List<string> prioridadesSexo = new List<string>();  //prioridad de sexo
+            // Prioridad de sexo
+            List<string> prioridadesSexo = new List<string>();
 
             if (sexoProtocolo == "E")
                 prioridadesSexo.AddRange(new[] { "E", "F", "I" });
@@ -723,175 +727,341 @@ namespace Business.Data.Laboratorio
             else
                 prioridadesSexo.AddRange(new[] { sexoProtocolo, "I" });
 
-                       
             ISession session = NHibernateHttpModule.CurrentSession;
-            IList  items = null;
+            IList items = null;
 
-            foreach (string sexo in prioridadesSexo) ///Buscar primer grupo válido de sexo en la base
+            // Buscar el primer grupo de sexo que tenga
+            // una referencia válida para la edad del paciente
+            foreach (string sexo in prioridadesSexo)
             {
                 ICriteria crit = session.CreateCriteria(typeof(ValorReferencia));
+
                 crit.Add(Expression.Eq("IdItem", IdSubItem));
                 crit.Add(Expression.Eq("IdEfector", IdProtocolo.IdEfector));
                 crit.Add(Expression.Eq("IdPresentacion", pres));
                 crit.Add(Expression.Eq("Sexo", sexo));
 
-                 items = crit.List();
+                IList candidatos = crit.List();
 
-                if (items != null && items.Count > 0)
-                    break; // encontramos registros válidos, usamos este grupo
+                if (candidatos == null || candidatos.Count == 0)
+                    continue;
+
+                // Verificar si existe alguna referencia
+                // que corresponda a la edad del paciente
+                bool tieneReferenciaParaEdad = false;
+
+                foreach (ValorReferencia vr in candidatos)
+                {
+                    int desde = vr.EdadDesde;
+                    int hasta = vr.EdadHasta;
+
+                    switch (vr.UnidadEdad)
+                    {
+                        case 0: // años
+                            desde *= 365;
+                            hasta *= 365;
+                            break;
+
+                        case 1: // meses
+                            desde *= 30;
+                            hasta *= 30;
+                            break;
+                    }
+
+                    if (edadPaciente >= desde && edadPaciente <= hasta)
+                    {
+                        tieneReferenciaParaEdad = true;
+                        break;
+                    }
+                }
+
+                if (tieneReferenciaParaEdad)
+                {
+                    items = candidatos;
+                    break;
+                }
             }
 
             if (items == null || items.Count == 0)
                 return "";
 
-            
             string valorReferencia = "";
             string metodo = "";
 
-            foreach (ValorReferencia vr in items) ///Procesa valores de referencia
+            // Procesar valores de referencia correspondientes a la edad
+            foreach (ValorReferencia vr in items)
             {
                 int desde = vr.EdadDesde;
                 int hasta = vr.EdadHasta;
 
                 switch (vr.UnidadEdad)
                 {
-                    case 0: desde *= 365; hasta *= 365; break;
-                    case 1: desde *= 30; hasta *= 30; break;
+                    case 0: // años
+                        desde *= 365;
+                        hasta *= 365;
+                        break;
+
+                    case 1: // meses
+                        desde *= 30;
+                        hasta *= 30;
+                        break;
                 }
 
                 if (edadPaciente < desde || edadPaciente > hasta)
                     continue;
 
-                string vMin = Math.Round(vr.ValorMinimo, vr.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                string vMax = Math.Round(vr.ValorMaximo, vr.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
+                string vMin = Math.Round(
+                    vr.ValorMinimo,
+                    vr.IdItem.FormatoDecimal
+                ).ToString(
+                    System.Globalization.CultureInfo.InvariantCulture
+                );
+
+                string vMax = Math.Round(
+                    vr.ValorMaximo,
+                    vr.IdItem.FormatoDecimal
+                ).ToString(
+                    System.Globalization.CultureInfo.InvariantCulture
+                );
 
                 if (!string.IsNullOrEmpty(valorReferencia))
                     valorReferencia += Environment.NewLine;
 
                 switch (vr.TipoValor)
                 {
-                    case 0: valorReferencia += $"{vMin} a {vMax} {vr.Observacion}"; break;
-                    case 1: valorReferencia += $"Mayor de: {vMin} {vr.Observacion}"; break;
-                    case 2: valorReferencia += $"Hasta: {vMax} {vr.Observacion}"; break;
-                    case 3: valorReferencia += vr.Observacion; break;
+                    case 0:
+                        valorReferencia += $"{vMin} a {vMax} {vr.Observacion}";
+                        break;
+
+                    case 1:
+                        valorReferencia += $"Mayor de: {vMin} {vr.Observacion}";
+                        break;
+
+                    case 2:
+                        valorReferencia += $"Hasta: {vMax} {vr.Observacion}";
+                        break;
+
+                    case 3:
+                        valorReferencia += vr.Observacion;
+                        break;
                 }
 
                 if (vr.IdMetodo != 0 && string.IsNullOrEmpty(metodo))
                 {
                     Metodo m = (Metodo)new Metodo().Get(typeof(Metodo), vr.IdMetodo);
+
                     if (m != null)
                         metodo = m.Nombre;
                 }
             }
-             
+
             if (!string.IsNullOrEmpty(metodo))
                 valorReferencia += Environment.NewLine + " |Método: " + metodo;
 
             return valorReferencia;
         }
 
+        //public string CalcularValoresReferencia_2(int pres)
+        //{
+          
+        //    int edadPaciente = IdProtocolo.Edad;
 
-        public string CalcularValoresReferencia_old(int pres )
-        {
-            int edadPaciente= IdProtocolo.Edad;
-            string valorReferencia = "";
+        //    switch (IdProtocolo.UnidadEdad)//Calcular edad del paciente en días
+        //    {
+        //        case 0: // años
+        //            edadPaciente *= 365;
+        //            break;
+        //        case 1: // meses
+        //            edadPaciente *= 30;
+        //            break;
+        //    }
+                                    
+        //    string sexoProtocolo = IdProtocolo.Sexo; //sexo del paciente
+
+        //    if (IdProtocolo.Embarazada == "S")
+        //        sexoProtocolo = "E";
+
             
-            switch( IdProtocolo.UnidadEdad)  ///lleva las edades a dias
-            {
-                case 0: /// años
-                   edadPaciente= IdProtocolo.Edad * 365; break;
-                case 1: /// meses
-                   edadPaciente= IdProtocolo.Edad * 30; break;               
-            }
+        //    List<string> prioridadesSexo = new List<string>();  //prioridad de sexo
+
+        //    if (sexoProtocolo == "E")
+        //        prioridadesSexo.AddRange(new[] { "E", "F", "I" });
+        //    else if (sexoProtocolo == "F")
+        //        prioridadesSexo.AddRange(new[] { "F", "I" });
+        //    else if (sexoProtocolo == "M")
+        //        prioridadesSexo.AddRange(new[] { "M", "I" });
+        //    else
+        //        prioridadesSexo.AddRange(new[] { sexoProtocolo, "I" });
+
+                       
+        //    ISession session = NHibernateHttpModule.CurrentSession;
+        //    IList  items = null;
+
+        //    foreach (string sexo in prioridadesSexo) ///Buscar primer grupo válido de sexo en la base
+        //    {
+        //        ICriteria crit = session.CreateCriteria(typeof(ValorReferencia));
+        //        crit.Add(Expression.Eq("IdItem", IdSubItem));
+        //        crit.Add(Expression.Eq("IdEfector", IdProtocolo.IdEfector));
+        //        crit.Add(Expression.Eq("IdPresentacion", pres));
+        //        crit.Add(Expression.Eq("Sexo", sexo));
+
+        //         items = crit.List();
+
+        //        if (items != null && items.Count > 0)
+        //            break; // encontramos registros válidos, usamos este grupo
+        //    }
+
+        //    if (items == null || items.Count == 0)
+        //        return "";
+
+            
+        //    string valorReferencia = "";
+        //    string metodo = "";
+
+        //    foreach (ValorReferencia vr in items) ///Procesa valores de referencia
+        //    {
+        //        int desde = vr.EdadDesde;
+        //        int hasta = vr.EdadHasta;
+
+        //        switch (vr.UnidadEdad)
+        //        {
+        //            case 0: desde *= 365; hasta *= 365; break;
+        //            case 1: desde *= 30; hasta *= 30; break;
+        //        }
+
+        //        if (edadPaciente < desde || edadPaciente > hasta)
+        //            continue;
+
+        //        string vMin = Math.Round(vr.ValorMinimo, vr.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        //        string vMax = Math.Round(vr.ValorMaximo, vr.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+        //        if (!string.IsNullOrEmpty(valorReferencia))
+        //            valorReferencia += Environment.NewLine;
+
+        //        switch (vr.TipoValor)
+        //        {
+        //            case 0: valorReferencia += $"{vMin} a {vMax} {vr.Observacion}"; break;
+        //            case 1: valorReferencia += $"Mayor de: {vMin} {vr.Observacion}"; break;
+        //            case 2: valorReferencia += $"Hasta: {vMax} {vr.Observacion}"; break;
+        //            case 3: valorReferencia += vr.Observacion; break;
+        //        }
+
+        //        if (vr.IdMetodo != 0 && string.IsNullOrEmpty(metodo))
+        //        {
+        //            Metodo m = (Metodo)new Metodo().Get(typeof(Metodo), vr.IdMetodo);
+        //            if (m != null)
+        //                metodo = m.Nombre;
+        //        }
+        //    }
+             
+        //    if (!string.IsNullOrEmpty(metodo))
+        //        valorReferencia += Environment.NewLine + " |Método: " + metodo;
+
+        //    return valorReferencia;
+        //}
 
 
-            string sexoProtocolo = this.IdProtocolo.Sexo; // this.IdProtocolo.EsEmbarazo();
+        //public string CalcularValoresReferencia_old(int pres )
+        //{
+        //    int edadPaciente= IdProtocolo.Edad;
+        //    string valorReferencia = "";
+            
+        //    switch( IdProtocolo.UnidadEdad)  ///lleva las edades a dias
+        //    {
+        //        case 0: /// años
+        //           edadPaciente= IdProtocolo.Edad * 365; break;
+        //        case 1: /// meses
+        //           edadPaciente= IdProtocolo.Edad * 30; break;               
+        //    }
 
-            if (this.IdProtocolo.Embarazada == "S")
-                sexoProtocolo = "E";
+
+        //    string sexoProtocolo = this.IdProtocolo.Sexo; // this.IdProtocolo.EsEmbarazo();
+
+        //    if (this.IdProtocolo.Embarazada == "S")
+        //        sexoProtocolo = "E";
 
 
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(ValorReferencia));
-            crit.Add(Expression.Eq("IdItem", this.IdSubItem));
-            crit.Add(Expression.Eq("IdEfector", this.IdProtocolo.IdEfector));
-            crit.Add(Expression.Eq("IdPresentacion", pres));
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(ValorReferencia));
+        //    crit.Add(Expression.Eq("IdItem", this.IdSubItem));
+        //    crit.Add(Expression.Eq("IdEfector", this.IdProtocolo.IdEfector));
+        //    crit.Add(Expression.Eq("IdPresentacion", pres));
              
 
 
-            IList detalle = crit.List();
-            string s_metodo = "";
-                if (detalle.Count > 0)
-                {
-                    foreach (ValorReferencia oDetalle in detalle)
-                    {
-                        int edadDesde = oDetalle.EdadDesde;
-                        int edadHasta = oDetalle.EdadHasta;
-                        switch (oDetalle.UnidadEdad)
-                        {
-                            case 0: /// años
-                                { edadDesde = edadDesde * 365;
-                                edadHasta = edadHasta * 365; 
-                                } break;
-                            case 1: /// meses
-                                {
-                                    edadDesde = edadDesde * 30; 
-                                         edadHasta = edadHasta * 30;                                       
-                                }
-                        break;                           
-                        }
+        //    IList detalle = crit.List();
+        //    string s_metodo = "";
+        //        if (detalle.Count > 0)
+        //        {
+        //            foreach (ValorReferencia oDetalle in detalle)
+        //            {
+        //                int edadDesde = oDetalle.EdadDesde;
+        //                int edadHasta = oDetalle.EdadHasta;
+        //                switch (oDetalle.UnidadEdad)
+        //                {
+        //                    case 0: /// años
+        //                        { edadDesde = edadDesde * 365;
+        //                        edadHasta = edadHasta * 365; 
+        //                        } break;
+        //                    case 1: /// meses
+        //                        {
+        //                            edadDesde = edadDesde * 30; 
+        //                                 edadHasta = edadHasta * 30;                                       
+        //                        }
+        //                break;                           
+        //                }
                     
-                        if ((sexoProtocolo == oDetalle.Sexo) || (oDetalle.Sexo == "I")) // coincide el sexo del paciente o el sexo del valor de referencia es Indistinto
-                        {
-                            if ((edadPaciente >= edadDesde) && (edadPaciente <= edadHasta)) // si la edad del paciente está entre los rangos definidos.
-                            {
-                                string s_valorminimo =Math.Round( oDetalle.ValorMinimo, oDetalle.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
-                                string s_valormaximo = Math.Round(oDetalle.ValorMaximo, oDetalle.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);                                    
-                                if (valorReferencia != "")
-                                    valorReferencia += Environment.NewLine;
-                                switch (oDetalle.TipoValor)
-                                {
-                                    case 0:
-                                        //valorReferencia += s_valorminimo + " a " + s_valormaximo + Environment.NewLine+ oDetalle.Observacion ;
-                                        valorReferencia += s_valorminimo + " a " + s_valormaximo + " "  + oDetalle.Observacion;
-                                        break;
-                                    case 1:
-                                        //valorReferencia += "Mayor de:" + s_valorminimo + Environment.NewLine + oDetalle.Observacion;
-                                        valorReferencia += "Mayor de:" + s_valorminimo + " " + oDetalle.Observacion;
-                                        break;
-                                    case 2:
-                                        //valorReferencia += "Hasta:" + s_valormaximo + Environment.NewLine + oDetalle.Observacion;
-                                        valorReferencia += "Hasta:" + s_valormaximo + " " + oDetalle.Observacion;
-                                        break;
-                                    case 3:
-                                        valorReferencia += oDetalle.Observacion;
-                                        break;
+        //                if ((sexoProtocolo == oDetalle.Sexo) || (oDetalle.Sexo == "I")) // coincide el sexo del paciente o el sexo del valor de referencia es Indistinto
+        //                {
+        //                    if ((edadPaciente >= edadDesde) && (edadPaciente <= edadHasta)) // si la edad del paciente está entre los rangos definidos.
+        //                    {
+        //                        string s_valorminimo =Math.Round( oDetalle.ValorMinimo, oDetalle.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        //                        string s_valormaximo = Math.Round(oDetalle.ValorMaximo, oDetalle.IdItem.FormatoDecimal).ToString(System.Globalization.CultureInfo.InvariantCulture);                                    
+        //                        if (valorReferencia != "")
+        //                            valorReferencia += Environment.NewLine;
+        //                        switch (oDetalle.TipoValor)
+        //                        {
+        //                            case 0:
+        //                                //valorReferencia += s_valorminimo + " a " + s_valormaximo + Environment.NewLine+ oDetalle.Observacion ;
+        //                                valorReferencia += s_valorminimo + " a " + s_valormaximo + " "  + oDetalle.Observacion;
+        //                                break;
+        //                            case 1:
+        //                                //valorReferencia += "Mayor de:" + s_valorminimo + Environment.NewLine + oDetalle.Observacion;
+        //                                valorReferencia += "Mayor de:" + s_valorminimo + " " + oDetalle.Observacion;
+        //                                break;
+        //                            case 2:
+        //                                //valorReferencia += "Hasta:" + s_valormaximo + Environment.NewLine + oDetalle.Observacion;
+        //                                valorReferencia += "Hasta:" + s_valormaximo + " " + oDetalle.Observacion;
+        //                                break;
+        //                            case 3:
+        //                                valorReferencia += oDetalle.Observacion;
+        //                                break;
 
-                                }
+        //                        }
                                 
-                                if (oDetalle.IdMetodo != 0)
-                                {
-                                    Metodo oMetodo = new Metodo();
-                                    oMetodo = (Metodo)oMetodo.Get(typeof(Metodo), oDetalle.IdMetodo);
-                                    if (oMetodo!=null)
-                                          s_metodo = oMetodo.Nombre;
-                                    //valorReferencia +=Environment.NewLine+ " |Método:" + oMetodo.Nombre;
-                                }
-                            //    break;
-                            }
-                        }
-                    }//foreach
-                }
+        //                        if (oDetalle.IdMetodo != 0)
+        //                        {
+        //                            Metodo oMetodo = new Metodo();
+        //                            oMetodo = (Metodo)oMetodo.Get(typeof(Metodo), oDetalle.IdMetodo);
+        //                            if (oMetodo!=null)
+        //                                  s_metodo = oMetodo.Nombre;
+        //                            //valorReferencia +=Environment.NewLine+ " |Método:" + oMetodo.Nombre;
+        //                        }
+        //                    //    break;
+        //                    }
+        //                }
+        //            }//foreach
+        //        }
 
-                if (s_metodo != "")
-                {
-                    valorReferencia += Environment.NewLine + " |Método:" + s_metodo;
-                }
-                return valorReferencia;
+        //        if (s_metodo != "")
+        //        {
+        //            valorReferencia += Environment.NewLine + " |Método:" + s_metodo;
+        //        }
+        //        return valorReferencia;
        
 
             
-        }
+        //}
 
 
         public string CalcularValoresReferencia_NoPaciente()
