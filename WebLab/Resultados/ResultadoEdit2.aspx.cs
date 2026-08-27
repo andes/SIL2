@@ -2959,8 +2959,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if (Request["Operacion"].ToString() == "Valida")   //Validacion
             { if (Session["idUsuarioValida"] == null) Response.Redirect("../FinSesion.aspx", false); }
 
-            //19.08.2026 Guardo en memoria los idItems que generaron derivaciones automaticas 
-            HashSet<int> derivacionesAutomaticas = new HashSet<int>();
             string m_id = "";
             TextBox txt;
             DropDownList ddl;
@@ -3029,7 +3027,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                                     if (estaTildado(ddl.ID))
                                                                                     {
 
-                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo, ddl.SelectedValue, derivacionesAutomaticas);
+                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo, ddl.SelectedValue);
                                                                                         //   GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
 
                                                                                     }
@@ -3113,34 +3111,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
                         oProtocolo.Estado = 3; //Acceso Restringido
                 }
-
-                //if (dtDetalles.Rows.Count > 0)
-                //{
-                //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                //    SqlCommand cmd = new SqlCommand();
-                //    cmd.CommandType = CommandType.StoredProcedure;
-                //    cmd.CommandText = "LAB_DerivacionAutomatica";
-
-                //    cmd.Parameters.AddWithValue("@idEfector", oUser.IdEfector.IdEfector);
-                //    cmd.Parameters.AddWithValue("@idProtocolo", oProtocolo.IdProtocolo);
-                //    cmd.Parameters.AddWithValue("@idUsuarioRegistro", oUser.IdUsuario);
-
-                //    SqlParameter pDetalles = cmd.Parameters.AddWithValue("@detalles", dtDetalles);
-                //    pDetalles.SqlDbType = SqlDbType.Structured;
-                //    pDetalles.TypeName = "TABLA_DetalleResultado";
-
-                //    cmd.Connection = conn;
-
-
-                //    // RETURN del SP
-                //    SqlParameter pReturn = cmd.Parameters.Add("@RETURN_VALUE", SqlDbType.Int);
-                //    pReturn.Direction = ParameterDirection.ReturnValue;
-
-                //    cmd.ExecuteNonQuery();
-
-                //    int resultado = (int)pReturn.Value;
-                //}
-
                 oProtocolo.Save();
             }
         }
@@ -3148,7 +3118,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         
         
-        private void GuardarResultado(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo, string valueSeleccionado = null, HashSet<int> derivacionesAutomaticas=null)
+        private void GuardarResultado(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo, string valueSeleccionado = null)
         {
             Utility oUtil = new Utility();
 
@@ -3347,7 +3317,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
                                 {
                                     oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
-                                   
                                 }
 
                             }
