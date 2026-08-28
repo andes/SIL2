@@ -308,7 +308,7 @@
                                 <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
                                     DataKeyNames="idDetalleProtocolo"  Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
                                     EmptyDataText ="No se encontraron protocolos para los parametros de busqueda ingresados" BorderColor="#3A93D2" 
-                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal" onrowcommand="gvLista_RowCommand">
+                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal" onrowcommand="gvLista_RowCommand" OnRowDataBound="gvLista_RowDataBound">
                                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" Font-Names="Arial"  Font-Size="8pt" />
                                     <Columns>
             
@@ -362,7 +362,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField>
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="Eliminar" OnClientClick="PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProcolo") %>'>
+                                            <asp:LinkButton ID="Eliminar" OnClientClick="PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProtocolo") %>'>
                                                 <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
                                         </ItemTemplate>
                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />

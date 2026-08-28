@@ -89,9 +89,65 @@ namespace WebLab.Derivaciones
             
         }
 
+        protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
+                //La key podria ser compuesta this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+              
+                CmdEliminar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                CmdEliminar.CommandName = "Eliminar";
 
+                int estado = Convert.ToInt32(((Label)(e.Row.Cells[0].FindControl("lbl_estado"))).Text);
+                if (Request["Tipo"] == "Modifica" || estado != 0) //Solo se elimina cuando no esta asociado a un lote
+                {
+                    CmdEliminar.Visible = false;
+                }
+                
+            }
+        }
+        protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Eliminar")
+            {
+                GridViewRow row = ((Control)e.CommandSource).NamingContainer as GridViewRow;
+
+                if (row == null)
+                    return;
+                
+                Eliminar(e.CommandArgument);
+                CargarGrilla();
+
+            }
+        }
+
+        private void Eliminar(object detalle)
+        {
+            string[] idDetalles = detalle.ToString().Split('|');
+
+            foreach (string idDetalleProtocolo in idDetalles)
+            {
+                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
+                crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
+                object oDerivacion = crit.UniqueResult();
+
+
+                if (oDerivacion != null) {
+                    oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivado", oUser.IdUsuario);
+                    oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", ""); 
+                    oDetalle.Save();
+                    ((Derivacion)(oDerivacion)).Delete();
+                }
+                
+            }
+            
+        }
         #region carga
-       
+
         private void CargarListas()
         {
             Utility oUtil = new Utility();
@@ -144,7 +200,7 @@ namespace WebLab.Derivaciones
 
         private void CargarGrilla()
         {
-            gvLista.DataSource = GetDataSet("", Request["Tipo"].ToString() );
+            gvLista.DataSource = GetDataSet("", Request["Tipo"] );
             gvLista.DataBind();
 
 
@@ -185,22 +241,22 @@ namespace WebLab.Derivaciones
                     m_strSQL += " inner join LAB_DerivacionEstado de on de.idEstado = vta.estado ";
                     m_strSQL += " WHERE " + Request["Parametros"].ToString() +
                                "  and estado= " + int.Parse(Request["Estado"]) +
-                               "  and idDetalleProtocolo in (" + s_lista.Replace("|",",") + ") ";
+                               "  and idDetalleProtocolo in (" + s_lista.Replace("|", ",") + ") ";
                     m_strSQL += @" GROUP BY
                                     vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
                                     vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
                                     idTipoServicio, TipoProducto,  de.descripcion ";
 
                     m_strSQL += " ORDER BY efectorDerivacion,numero ";
-                                    break;
+                    break;
                 case "Alta":
                     m_strSQL += " , isnull(mot.descripcion,'') as motivo ";
                     m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
                     m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
                     m_strSQL += " WHERE " + Request["Parametros"].ToString() + "  and estado = " + int.Parse(Request["Estado"]);
-                    
-                    if (int.Parse(Request["Estado"]) == 0)  m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
-                   
+
+                    if (int.Parse(Request["Estado"]) == 0) m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
+
                     m_strSQL += @" GROUP BY
                                     vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
                                     vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
@@ -242,7 +298,7 @@ namespace WebLab.Derivaciones
             string motivoCancelacion = "";
             string tiposProducto = "";
             string strDer = "";
-
+            string orden = "";
             if (s_donde == "")
                 motivoCancelacion = " , isnull(mot.descripcion,'') as motivo ";
             else
@@ -251,9 +307,9 @@ namespace WebLab.Derivaciones
                 strDer = ", de.descripcion as estadoDerivacion";
             }
 
-            string m_strSQL = " SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
+            string m_strSQL = " SELECT   idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
             " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , " +
-            " solicitante as especialista , isnull(idlote,0) as idLote " + motivoCancelacion + tiposProducto + strDer +
+            " solicitante as especialista , isnull(idlote,0) as idLote,idProtocolo,idItem " + motivoCancelacion + tiposProducto + strDer +
             " FROM  vta_LAB_Derivaciones vta ";
 
             if (s_donde == "")
@@ -272,7 +328,7 @@ namespace WebLab.Derivaciones
                     {
                         m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
                     }
-                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
+                    orden = " ORDER BY efectorDerivacion,numero ";
 
 
                 }
@@ -286,8 +342,8 @@ namespace WebLab.Derivaciones
                                "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
                                "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
                                "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
-                                  ")" +
-                         " ORDER BY estado desc, efectorDerivacion,numero desc";
+                                  ")";
+                         orden = " ORDER BY estado desc, efectorDerivacion,numero desc";
                     }
 
                 }
@@ -297,10 +353,15 @@ namespace WebLab.Derivaciones
                 //es PDF de Control
                 m_strSQL += Request["Parametros"].ToString() +
                 "  and estado= " + estado +
-                "  and idDetalleProtocolo in (" + s_lista + ") "+
-                " ORDER BY efectorDerivacion,numero ";
+                "  and idDetalleProtocolo in (" + s_lista + ") ";
+                orden = " ORDER BY efectorDerivacion,numero ";
             }
-               
+
+            m_strSQL += @"  group by idProtocolo, estado, numero, fecha, dni,  apellido ,nombre, determinacion,
+                 efectorderivacion, username, fechaNacimiento, unidadEdad, sexo, observacion ,  solicitante ,  idLote  ,
+                 mot.descripcion,   idItem " + orden;
+            
+
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
@@ -581,7 +642,7 @@ namespace WebLab.Derivaciones
 
                     #region estado_protocolo
                     /*Actualiza estado de protocolo*/
-                    if(oDetalle.IdProtocolo.Estado < 2)
+                if (oDetalle.IdProtocolo.Estado < 2)
                     {
                         if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuarioRegistro))
                             oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
@@ -705,7 +766,9 @@ namespace WebLab.Derivaciones
             }
             return m_lista;
         }
+
         #endregion
 
+       
     }
 }
