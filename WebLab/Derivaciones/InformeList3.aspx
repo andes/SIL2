@@ -136,6 +136,13 @@
             }
             return false;
         }
+
+        function PreguntoEliminar() {
+            if (confirm('¿Está seguro de eliminar el registro?'))
+                return true;
+            else
+                return false;
+        }
     </script>
 
   <script type="text/javascript">
@@ -299,9 +306,9 @@
 					    <td colspan="3">
                             <div  style="width:100%;height:450pt;overflow:scroll;;overflow-x:hidden;border:1px solid #CCCCCC; background-color: #F3F3F3;"> 
                                 <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
-                                    DataKeyNames="idDetalleProtocolo"   Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
+                                    DataKeyNames="idDetalleProtocolo"  Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
                                     EmptyDataText ="No se encontraron protocolos para los parametros de busqueda ingresados" BorderColor="#3A93D2" 
-                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal">
+                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal" onrowcommand="gvLista_RowCommand">
                                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" Font-Names="Arial"  Font-Size="8pt" />
                                     <Columns>
             
@@ -350,13 +357,16 @@
                                     <asp:TemplateField HeaderText="Motivo Cancelaci&oacute;n">
                                           <ItemTemplate> <asp:Label ID="lbl_motivo" runat="server" Text='<%# Eval("motivo") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
-
-                                  
-
                                     <asp:TemplateField Visible="false">
                                         <ItemTemplate> <asp:Label ID="lbl_estado" runat="server" Text='<%# Eval("estado") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
-                                       
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="Eliminar" OnClientClick="PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProcolo") %>'>
+                                                <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
+                                        </ItemTemplate>
+                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                    </asp:TemplateField>
                                    </Columns>
                                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                                 <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />

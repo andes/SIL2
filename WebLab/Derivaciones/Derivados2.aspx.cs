@@ -251,10 +251,19 @@ namespace WebLab.Derivaciones
 
 
                     Utility oUtil = new Utility();
-                    string m_ssql = @" SELECT  i.idItem, nombre as determinacion FROM lab_item I
+                    string m_ssql = @" SELECT  i.idItem, nombre as determinacion 
+                                     FROM lab_item I
                                      inner join LAB_ItemEfector IE on IE.idItem= I.iditem
                                      WHERE baja=0 AND (ie.disponible = 1) and Ie.idEfectorDerivacion =" + ddlEfector.SelectedValue +
-                                     "  and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() + " order by nombre";
+                                     "  and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() +
+                                   //27.08.2026 Incluir las practicas de las derivaciones automaticas
+                                     " UNION select distinct i.idItem, nombre as determinacion " +
+                                     "  from LAB_PracticaDeterminacion PD " +
+                                     " inner join LAB_ResultadoItem RI ON RI.idItem = PD.idItemDeterminacion " +
+                                     "  inner join lab_item I ON I.idItem = PD.idItemPractica " +
+                                     "  Where RI.idEfector=" + oUser.IdEfector.IdEfector.ToString() + " and RI.idEfectorDeriva=" + ddlEfector.SelectedValue +
+                                     "  and PD.idEfector=" + oUser.IdEfector.IdEfector.ToString()+
+                                     " order by nombre";
 
                     //" SELECT  idItem, nombre as determinacion FROM lab_item WHERE baja=0 AND (disponible = 1) and idEfectorDerivacion =" + ddlEfector.SelectedValue + " order by nombre";
                     oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "determinacion");
