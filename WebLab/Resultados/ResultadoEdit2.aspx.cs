@@ -1508,6 +1508,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         objCellResultado.ColumnSpan = 1;
                         lblDerivacion.EnableViewState = false;
                         objCellResultado.Controls.Add(lblDerivacion);
+
+                        //27.08.2026 Para derivacion automatica mostrar el usuario que validó el resultado 
+                        if (oDetalle.IdUsuarioValida != 0)  //27.08.2026 Solo derivacion automatica tiene idUsuarioValida en DetalleProtocolo
+                        {
+                            Label lblPersona = new Label();
+                            lblPersona.TabIndex = short.Parse("500");
+                            lblPersona.Text = "Val.: " + m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");// + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortTimeString();                                                                                                                                                                                                                               
+                            lblPersona.ForeColor = Color.Blue;
+                            lblPersona.Font.Size = FontUnit.Point(6);
+                            objCellPersona.Controls.Add(lblPersona);
+                        }
+                       
+                         
                     }
                     //}
                     else
@@ -3312,16 +3325,11 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //10.08.2026 Es validacion y es resultado predefinido
                         if ((Request["Operacion"].ToString() == "Valida") &&  (oItem.IdTipoResultado == 3) && valueSeleccionado != null)  ///resultados predefinidos (selección simple ))  
                         {
+                            string[] efectorDeriva = valueSeleccionado.Split(';');
+                            if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
                             {
-                                string[] efectorDeriva = valueSeleccionado.Split(';');
-                                if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
-                                {
-                                    oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
-                                }
-
+                                oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
                             }
-                            
-                            
                         }
 
                     }

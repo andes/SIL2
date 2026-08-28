@@ -712,6 +712,39 @@ namespace WebLab.Resultados
                         
                         objCellResultado.ColumnSpan = 1;
                         objCellResultado.Controls.Add(lblDerivacion);
+
+                        if (m_usuariovalida != "")
+                        {
+                            if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
+                            {
+
+                                string resultadoAnterior = "";
+                                if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
+                                    resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
+
+                                if (resultadoAnterior != "")
+                                {
+                                    hayAntecedente = true;
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.TabIndex = short.Parse("500");
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                    //olblResultadoAnterior.CssClass = "myLittleLink";
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",800,540); return false");
+                                    olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";
+                                    olblResultadoAnterior.Width = Unit.Pixel(30);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+
+                                }
+
+                            }
+                            Label lblPersona = new Label();
+                            lblPersona.Text = m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");
+                            lblPersona.Font.Size = FontUnit.Point(7);
+                            lblPersona.Font.Italic = true;
+                            objCellPersona.Controls.Add(lblPersona);
+                        }
                     }
                     else
                     {//No es derivado                     
