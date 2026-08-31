@@ -362,7 +362,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField>
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="Eliminar" OnClientClick="PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProtocolo") %>'>
+                                            <asp:LinkButton ID="Eliminar" OnClientClick="return PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProtocolo") %>'>
                                                 <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
                                         </ItemTemplate>
                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
