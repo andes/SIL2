@@ -370,8 +370,10 @@ namespace WebLab.Derivaciones
                         int idLote = Convert.ToInt32(row.Cells[2].Text);
                         int idUsuario = oUser.IdUsuario;
                         int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
+                        //19.08.2026 Se guarda el resultado predefinido y la leyenda de derivacion
                         string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
                         string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
+                        string resultadoAuditoria = resultadoDerivacion + " " + observacion;
                         LoteDerivacion lote = new LoteDerivacion();
                         lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
@@ -384,7 +386,9 @@ namespace WebLab.Derivaciones
                         DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                         lote.FechaEnvio = fechaResultado;
                         lote.Save();
-                   
+
+                       
+
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                         //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
@@ -396,21 +400,22 @@ namespace WebLab.Derivaciones
                         foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                         {
                             #region Derivacion 
-                                //Cambia el estado de las derivaciones LAB_Derivacion 
+                            //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                                /*
-                                 Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                                 1 : Creado
-                                 2 : Derivado
-                                 3 : Cancelado
+                            /*
+                             Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                             1 : Creado
+                             2 : Derivado
+                             3 : Cancelado
 
-                                 Estado de la derivacion LAB_DerivacionEstado
-                                 0 : Pendiente de derivar
-                                 1 : Enviado
-                                 2 : No Enviado
-                                 3 : Recibido
-                                 4 : Pendiente para enviar
-                               */
+                             Estado de la derivacion LAB_DerivacionEstado
+                             0 : Pendiente de derivar
+                             1 : Enviado
+                             2 : No Enviado
+                             3 : Recibido
+                             4 : Pendiente para enviar
+                           */
+                            int estadoAnterior = oDeriva.Estado;
                                 oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
                                 oDeriva.Save();
                                 #endregion
@@ -419,7 +424,19 @@ namespace WebLab.Derivaciones
                             #region cambio_codificacion_a_derivacion
                             //Cambia el resultado de LAB_DetalleProtocolo
                             DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
-                            oDet.ResultadoCar = resultadoDerivacion + " "+observacion;
+
+                            string aux_resultadoCar="";
+                            //Si el resultado anterior era 'pendiente de derivar'
+                            if (estadoAnterior == 4 && oDet.ResultadoCar != "Pendiente para enviar ")   aux_resultadoCar = oDet.ResultadoCar.Replace("- Pendiente para enviar", "");
+
+                            //Si el resultado anterior era 'No derivado.'
+                            if(estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
+
+                            if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
+                                if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
+                                else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
+                            
+                            oDet.ResultadoCar = resultadoDerivacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
                             oDet.FechaResultado = fechaResultado;
@@ -434,11 +451,11 @@ namespace WebLab.Derivaciones
                     
                     //Inserta auditoria del lote
                     lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
-                    lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Observacion", txtObservacion.Text);
+                    lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Observacion", txtObservacion.Text);
 
                         if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
                         {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-                            lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", ddlTransporte.SelectedValue);
+                            lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Transportista", ddlTransporte.SelectedValue);
                             DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
                             lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
                             lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);

@@ -1508,6 +1508,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         objCellResultado.ColumnSpan = 1;
                         lblDerivacion.EnableViewState = false;
                         objCellResultado.Controls.Add(lblDerivacion);
+
+                        //27.08.2026 Para derivacion automatica mostrar el usuario que validó el resultado 
+                        if (oDetalle.IdUsuarioValida != 0)  //27.08.2026 Solo derivacion automatica tiene idUsuarioValida en DetalleProtocolo
+                        {
+                            Label lblPersona = new Label();
+                            lblPersona.TabIndex = short.Parse("500");
+                            lblPersona.Text = "Val.: " + m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");// + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortTimeString();                                                                                                                                                                                                                               
+                            lblPersona.ForeColor = Color.Blue;
+                            lblPersona.Font.Size = FontUnit.Point(6);
+                            objCellPersona.Controls.Add(lblPersona);
+                        }
+                       
+                         
                     }
                     //}
                     else
@@ -1724,13 +1737,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ddl1.ID = m_idItem.ToString();                                                    
                                                     ddl1.TabIndex = short.Parse(i + 1.ToString());
                                                     ListItem ItemSeleccion = new ListItem();
-                                                    ItemSeleccion.Value = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
+                                                    ResultadoItem rValue =  resultados.Find(r => r.Resultado == Ds.Tables[0].Rows[i].ItemArray[4].ToString());
+                                                    if(rValue != null)
+                                                        ItemSeleccion.Value = rValue.IdResultadoItem.ToString() + ";" + rValue.IdEfectorDeriva; //11.08.2026 Agregamos el id del efector de derivacion para automatizacion de derivacion
+                                                    else
+                                                        ItemSeleccion.Value = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
+
                                                     ItemSeleccion.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                     ddl1.Items.Add(ItemSeleccion);
                                                     foreach (ResultadoItem oResultado in resultados)
                                                     {
                                                         ListItem Item = new ListItem();
-                                                        Item.Value = oResultado.IdResultadoItem.ToString();
+                                                        Item.Value = oResultado.IdResultadoItem.ToString() + ";"+oResultado.IdEfectorDeriva; //11.08.2026 Agregamos el id del efector de derivacion para automatizacion de derivacion
                                                         Item.Text = oResultado.Resultado;
                                                         ddl1.Items.Add(Item);
                                                         if (oResultado.ResultadoDefecto)
@@ -2954,7 +2972,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if (Request["Operacion"].ToString() == "Valida")   //Validacion
             { if (Session["idUsuarioValida"] == null) Response.Redirect("../FinSesion.aspx", false); }
 
-
             string m_id = "";
             TextBox txt;
             DropDownList ddl;
@@ -3020,8 +3037,13 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                             if (ddl.SelectedValue != "")
                                                                                 if ((Request["Operacion"].ToString() == "Valida") || (Request["Operacion"].ToString() == "Control"))
                                                                                 {
-                                                                                    if (estaTildado(ddl.ID))                                                                                    
-                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);                                                                                                                                                                            
+                                                                                    if (estaTildado(ddl.ID))
+                                                                                    {
+
+                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo, ddl.SelectedValue);
+                                                                                        //   GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
+
+                                                                                    }
                                                                                 }
                                                                                 else
                                                                                 {
@@ -3102,7 +3124,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
                         oProtocolo.Estado = 3; //Acceso Restringido
                 }
-
                 oProtocolo.Save();
             }
         }
@@ -3110,7 +3131,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
         
         
-        private void GuardarResultado(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo)
+        private void GuardarResultado(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo, string valueSeleccionado = null)
         {
             Utility oUtil = new Utility();
 
@@ -3289,7 +3310,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
 
                            
                         }  
-                          if (Request["Operacion"].ToString() == "Control")   //Control
+                        if (Request["Operacion"].ToString() == "Control")   //Control
                         {
                             //if (estaTildado(m_idItem) && (oDetalle.ConResultado))
                             if (oDetalle.ConResultado)
@@ -3299,8 +3320,20 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 oDetalle.Save();
                                 if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
                             }
-                        }                                                                         
-                    }                 
+                        }
+
+                        //10.08.2026 Es validacion y es resultado predefinido
+                        if ((Request["Operacion"].ToString() == "Valida") &&  (oItem.IdTipoResultado == 3) && valueSeleccionado != null)  ///resultados predefinidos (selección simple ))  
+                        {
+                            string[] efectorDeriva = valueSeleccionado.Split(';');
+                            if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
+                            {
+                                oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
+                            }
+                        }
+
+                    }
+
                 }   
             }                       
         }
