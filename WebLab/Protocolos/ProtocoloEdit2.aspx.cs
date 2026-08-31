@@ -1660,6 +1660,11 @@ ORDER BY numeroP";
                         IniciarValores(oC);
                 }
             }
+            else
+            {
+                if (Session["Etiquetadora"] != null) //26.08.2026 para modificacion recordar la impresora seleccionada
+                    ddlImpresora2.SelectedValue = Session["Etiquetadora"].ToString();
+            }
 
             if (Request["Operacion"].ToString() == "AltaDerivacion") IniciarValores(oC);
 
@@ -2622,7 +2627,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
                 if (Request["Operacion"].ToString() != "Modifica") { if (Request["Operacion"].ToString() != "AltaPeticion") { if (Session["idUrgencia"] != null) { if (Session["idUrgencia"].ToString() == "0") AlmacenarSesion(oC); } } }
                     if (Request["Operacion"].ToString() == "AltaDerivacion") AlmacenarSesion(oC);
-
+                if (Request["Operacion"].ToString() == "Modifica") Session["Etiquetadora"] = ddlImpresora2.SelectedValue; //26.08.2026 si guardo desde modficicacion que recuerde la impresora seleccionada
                 //   if (Request["idSolicitudScreening"] != null) ActualizarSolicitudScreening(Request["idSolicitudScreening"].ToString(),oRegistro);
                 GuardarDiagnosticos(oRegistro);
                 if (oRegistro.IdTipoServicio.IdTipoServicio==3) GuardarEnfermedadBase(oRegistro);
