@@ -1462,7 +1462,59 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         objCellResultado.ColumnSpan = 1;
                         lblDerivacion.EnableViewState = false;
                         objCellResultado.Controls.Add(lblDerivacion);
-                       }
+                        //27.08.2026 Para derivacion automatica mostrar el usuario que validó el resultado 
+                        if (oDetalle.IdUsuarioValida != 0)  //27.08.2026 Solo derivacion automatica tiene idUsuarioValida en DetalleProtocolo
+                        {
+                            Label lblPersona = new Label();
+                            lblPersona.TabIndex = short.Parse("500");
+                            lblPersona.Text = "Val.: " + m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");// + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortTimeString();                                                                                                                                                                                                                               
+                            lblPersona.ForeColor = Color.Blue;
+                            lblPersona.Font.Size = FontUnit.Point(6);
+                            objCellPersona.Controls.Add(lblPersona);
+                            //04.09.2026.- Mostrar el valor de referencia y el metodo para Derivacion automatica
+                            if (s_operacion != "HC")
+                            {
+                                Label lblUMedida = new Label();
+                                lblUMedida.Font.Italic = true;
+                                lblUMedida.Font.Size = FontUnit.Point(8);
+                                lblUMedida.Text = unMedida;
+                                objCellUnMedida.Controls.Add(lblUMedida);
+                            }
+                            Label lblValoresReferencia = new Label();
+                            lblValoresReferencia.ID = "VR" + m_idItem.ToString();
+                            lblValoresReferencia.Font.Italic = true;
+                            lblValoresReferencia.Font.Size = FontUnit.Point(8);
+                            if (valorReferencia != "")
+                            {// muestra el valor guardado 
+                                lblValoresReferencia.Text = valorReferencia;
+                                if (m_metodo != "")
+                                    lblValoresReferencia.Text += " |" + m_metodo;
+                            }
+
+                            //04.09.2026 .- Resultados anteriores para Derivacion automatica
+                            if (mostrarResultadosAnteriores)
+                            {
+                                string resultadoAnterior = "";
+                                string s_determinacion = oDetalle.IdSubItem.IdItem.ToString();
+
+                                if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
+                                    resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
+                                if (resultadoAnterior != "")
+                                {
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.TabIndex = short.Parse("500");
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                    olblResultadoAnterior.ToolTip = "Haga clic aquí para ver más datos.";
+                                    olblResultadoAnterior.ForeColor = Color.Green;
+                                    olblResultadoAnterior.ID = "ResAnterior" + s_determinacion;
+                                    olblResultadoAnterior.Width = Unit.Pixel(20);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + s_determinacion + "," + s_idPaciente + ",800,420); return false");
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+                                }
+                            }
+                        }
+                    }
                     if (m_trajoMuestra == "No")
                     {
                         Label lblSinMuestra = new Label();
@@ -1509,18 +1561,66 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         lblDerivacion.EnableViewState = false;
                         objCellResultado.Controls.Add(lblDerivacion);
 
-                        //27.08.2026 Para derivacion automatica mostrar el usuario que validó el resultado 
-                        if (oDetalle.IdUsuarioValida != 0)  //27.08.2026 Solo derivacion automatica tiene idUsuarioValida en DetalleProtocolo
+                        //27.08.2026 .- Para derivacion automatica mostrar el usuario que validó el resultado, el metodo y el resultado anterior 
+                        if (oDetalle.IdUsuarioValida != 0)  // <-- Solo derivacion automatica tiene valor en idUsuarioValida
                         {
                             Label lblPersona = new Label();
                             lblPersona.TabIndex = short.Parse("500");
-                            lblPersona.Text = "Val.: " + m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");// + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");//.ToShortTimeString();                                                                                                                                                                                                                               
+                            lblPersona.Text = "Val.: " + m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");
                             lblPersona.ForeColor = Color.Blue;
                             lblPersona.Font.Size = FontUnit.Point(6);
                             objCellPersona.Controls.Add(lblPersona);
+
+                            //04.09.2026.- Mostrar el valor de referencia y el metodo para Derivacion automatica
+                            if (s_operacion != "HC")
+                            {
+                                Label lblUMedida = new Label();
+                                lblUMedida.Font.Italic = true;
+                                lblUMedida.Font.Size = FontUnit.Point(8);
+                                lblUMedida.Text = unMedida;
+                                objCellUnMedida.Controls.Add(lblUMedida);
+                            }
+                            Label lblValoresReferencia = new Label();
+                            lblValoresReferencia.ID = "VR" + m_idItem.ToString();
+                            lblValoresReferencia.Font.Italic = true;
+                            lblValoresReferencia.Font.Size = FontUnit.Point(8);
+                            if (valorReferencia != "")
+                            {// muestra el valor guardado 
+                                lblValoresReferencia.Text = valorReferencia;
+                                if (m_metodo != "")
+                                    lblValoresReferencia.Text += " |" + m_metodo;
+                            }
+
+                            if ((s_operacion == "Valida") )
+                            {
+                                ///if (oDetalle.) si tiene mas de una presentacion
+                                lblValoresReferencia.Attributes.Add("onClick", "javascript:  AnalisisMetodoEdit (" + m_idItem + "," + p.ToString() + ",790,420); return false");
+                                lblValoresReferencia.ForeColor = Color.Blue;
+                            }
+                            objCellValoresReferencia.Controls.Add(lblValoresReferencia);
+                            //04.09.2026 .- Resultados anteriores para Derivacion automatica
+                            if (mostrarResultadosAnteriores)
+                            {   string resultadoAnterior = "";
+                                string s_determinacion = oDetalle.IdSubItem.IdItem.ToString();
+
+                                if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
+                                    resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
+                                if (resultadoAnterior != "")
+                                {
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.TabIndex = short.Parse("500");
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                    olblResultadoAnterior.ToolTip = "Haga clic aquí para ver más datos.";
+                                    olblResultadoAnterior.ForeColor = Color.Green;
+                                    olblResultadoAnterior.ID = "ResAnterior" + s_determinacion;
+                                    olblResultadoAnterior.Width = Unit.Pixel(20);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + s_determinacion + "," + s_idPaciente + ",800,420); return false");
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+                                }
+                            }
                         }
-                       
-                         
+
                     }
                     //}
                     else
@@ -1737,18 +1837,20 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     ddl1.ID = m_idItem.ToString();                                                    
                                                     ddl1.TabIndex = short.Parse(i + 1.ToString());
                                                     ListItem ItemSeleccion = new ListItem();
-                                                    ResultadoItem rValue =  resultados.Find(r => r.Resultado == Ds.Tables[0].Rows[i].ItemArray[4].ToString());
-                                                    if(rValue != null)
-                                                        ItemSeleccion.Value = rValue.IdResultadoItem.ToString() + ";" + rValue.IdEfectorDeriva; //11.08.2026 Agregamos el id del efector de derivacion para automatizacion de derivacion
-                                                    else
+													//////nuevo
+             //                                       ResultadoItem rValue =  resultados.Find(r => r.Resultado == Ds.Tables[0].Rows[i].ItemArray[4].ToString());
+             //                                       if(rValue != null)
+             //                                           ItemSeleccion.Value = rValue.IdResultadoItem.ToString() + ";" + rValue.IdEfectorDeriva; //11.08.2026 Agregamos el id del efector de derivacion para automatizacion de derivacion
+             //                                       else
+													/////fin de lo nuevo
                                                         ItemSeleccion.Value = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
-
                                                     ItemSeleccion.Text = Ds.Tables[0].Rows[i].ItemArray[4].ToString();
                                                     ddl1.Items.Add(ItemSeleccion);
                                                     foreach (ResultadoItem oResultado in resultados)
                                                     {
                                                         ListItem Item = new ListItem();
-                                                        Item.Value = oResultado.IdResultadoItem.ToString() + ";"+oResultado.IdEfectorDeriva; //11.08.2026 Agregamos el id del efector de derivacion para automatizacion de derivacion
+                                                        Item.Value = oResultado.IdResultadoItem.ToString();
+													//     Item.Value = oResultado.IdResultadoItem.ToString() + ";"+oResultado.IdEfectorDeriva; //11.08.2026 Agregamos el id del efector de derivacion para automatizacion de derivacion
                                                         Item.Text = oResultado.Resultado;
                                                         ddl1.Items.Add(Item);
                                                         if (oResultado.ResultadoDefecto)
@@ -2972,6 +3074,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if (Request["Operacion"].ToString() == "Valida")   //Validacion
             { if (Session["idUsuarioValida"] == null) Response.Redirect("../FinSesion.aspx", false); }
 
+
             string m_id = "";
             TextBox txt;
             DropDownList ddl;
@@ -3039,9 +3142,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                                 {
                                                                                     if (estaTildado(ddl.ID))
                                                                                     {
+                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);
+                                                                                        ///GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo);
 
-                                                                                        GuardarResultado(ddl.ID, ddl.SelectedItem.Text, oProtocolo, imprimir, todo, ddl.SelectedValue);
-                                                                                        //   GuardarReferenciaMetodoUnidadMedida(ddl.ID, oProtocolo);
 
                                                                                     }
                                                                                 }
@@ -3124,14 +3227,234 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
                         oProtocolo.Estado = 3; //Acceso Restringido
                 }
+
                 oProtocolo.Save();
             }
         }
 
+        private void GuardarResultado(string m_idItem, string valorItem, Protocolo oProtocolo, bool marcarImpresion, bool todo)
+        {
+            Utility oUtil = new Utility();
 
-        
-        
-        private void GuardarResultado(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo, string valueSeleccionado = null)
+            //////////////////////////////////////////////////////////////////
+            Item oItem = new Item();
+            if (valorItem != "Seleccione")
+            {
+
+                oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
+                int tiporesultado = oItem.IdTipoResultado;
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+                crit.Add(Expression.Eq("IdSubItem", oItem));
+                crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+
+
+                //  crit.Add(Expression.Eq("IdEfector", oProtocolo.IdEfector));
+                if (!todo) crit.Add(Expression.Eq("IdUsuarioValida", 0));
+
+                if (Request["Operacion"].ToString() == "Carga") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
+                if (Request["Operacion"].ToString() == "Control") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
+
+                IList detalle = crit.List();
+
+                if (detalle.Count > 0)
+                {
+                    foreach (DetalleProtocolo oDetalle in detalle)
+                    {
+                        switch (tiporesultado)
+                        {
+                            case 1:// numerico         
+                                if ((valorItem.Trim() != "") && (oUtil.EsNumerico(valorItem)))
+
+                                {
+                                    oDetalle.ResultadoNum = decimal.Parse(valorItem, System.Globalization.CultureInfo.InvariantCulture);
+                                    oDetalle.FormatoValida = oItem.FormatoDecimal;
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoNum = 0;
+                                    oDetalle.ConResultado = false;
+                                }
+                                break;
+                            case 3://Predefinido
+                                {
+                                    if (Request["Operacion"].ToString() == "Valida")
+                                    {
+                                        if (valorItem != "")
+                                        {
+                                            ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
+                                            crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                                            crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                            crit2.Add(Expression.Eq("Resultado", valorItem));
+
+                                            IList detalleResultadoItem = crit2.List();
+
+                                            if (detalleResultadoItem.Count > 0)
+                                            {
+                                                ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
+
+                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                                oDetalle.ResultadoCar = valorItem; // lo necesito antes para armar el string correcto
+                                                if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
+                                                    oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+                                            }
+                                            else
+                                            {
+                                                // El resultado no está configurado en ResultadoItem
+                                                oDetalle.EstadoValidacion = "";
+                                                oDetalle.ResultadoCar = valorItem;
+                                            }
+                                           
+                                            oDetalle.ConResultado = true;
+                                        }
+                                        else
+                                        {
+                                            oDetalle.ResultadoCar = "";
+                                            oDetalle.ConResultado = false;
+                                            oDetalle.EstadoValidacion = "";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (valorItem != "")
+                                        {
+                                            oDetalle.ResultadoCar = valorItem;
+                                            oDetalle.ConResultado = true;
+                                        }
+                                        else
+                                        {
+                                            oDetalle.ResultadoCar = "";
+                                            oDetalle.ConResultado = false;
+                                            oDetalle.EstadoValidacion = "";
+                                        }
+                                    }
+                                }
+                                    break;
+                                default:
+                                if (valorItem != "")
+                                    {
+                                        oDetalle.ResultadoCar = valorItem;
+                                        oDetalle.ConResultado = true;
+                                    }
+                                    else
+                                    {
+                                        oDetalle.ResultadoCar = "";
+                                        oDetalle.ConResultado = false;
+                                    }
+                                    break;
+                                }
+
+
+
+                                if (Request["Operacion"].ToString() == "Carga")
+                                {
+                                    if (oDetalle.ConResultado)
+                                    {
+                                        oDetalle.IdUsuarioResultado = int.Parse(oUser.IdUsuario.ToString());
+                                        oDetalle.FechaResultado = DateTime.Now;
+                                    }
+                                    oDetalle.Save();
+                                    if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
+                                }
+
+                                if ((Request["Operacion"].ToString() == "Valida") && (!oDetalle.Informable))   //Validacion
+                                {
+                                    if (oDetalle.ConResultado)
+                                    {
+                                        string res = valorItem;
+                                        oDetalle.IdUsuarioResultado = int.Parse(oUser.IdUsuario.ToString());
+                                        oDetalle.FechaResultado = DateTime.Now;
+                                        oDetalle.Save();
+                                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo("Carga", int.Parse(oUser.IdUsuario.ToString()));
+                                    }
+                                }
+                                if ((Request["Operacion"].ToString() == "Valida") && (oDetalle.Informable))   //Validacion
+                                {
+                                    string operacion = "Valida";
+                                    if (oDetalle.ConResultado)
+                                    {
+
+                                        string res = valorItem;
+                                        if (valorItem.Length > 10)
+                                            res = valorItem.Substring(0, 10);
+
+                                        if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))// GENOMA DE COVID-19"))
+                                        {
+
+                                            if (oCon.PreValida)
+                                            {
+                                                operacion = "PreValida";
+                                                oDetalle.IdUsuarioPreValida = int.Parse(oUser.IdUsuario.ToString());
+                                                oDetalle.FechaPreValida = DateTime.Now;
+                                                oDetalle.IdUsuarioValida = 0;
+                                                oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                            }
+                                            else
+                                            {
+                                                oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+                                                oDetalle.FechaValida = DateTime.Now;
+
+                                                if (marcarImpresion)
+                                                {
+                                                    oDetalle.IdUsuarioImpresion = int.Parse(oUser.IdUsuario.ToString());
+                                                    oDetalle.FechaImpresion = DateTime.Now;
+                                                }
+                                                Notificar(oDetalle);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+                                            oDetalle.FechaValida = DateTime.Now;
+
+                                            if (marcarImpresion)
+                                            {
+                                                oDetalle.IdUsuarioImpresion = int.Parse(oUser.IdUsuario.ToString());
+                                                oDetalle.FechaImpresion = DateTime.Now;
+                                            }
+
+                                            //   if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
+                                            Notificar(oDetalle);
+
+                                        }
+                                        oDetalle.Save();
+                                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(operacion, int.Parse(oUser.IdUsuario.ToString()));
+                                    }
+
+
+
+                                }
+                                if (Request["Operacion"].ToString() == "Control")   //Control
+                                {
+                                    //if (estaTildado(m_idItem) && (oDetalle.ConResultado))
+                                    if (oDetalle.ConResultado)
+                                    {
+                                        oDetalle.IdUsuarioControl = int.Parse(oUser.IdUsuario.ToString());
+                                        oDetalle.FechaControl = DateTime.Now;
+                                        oDetalle.Save();
+                                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
+                                    }
+                                }
+                                ////10.08.2026 Es validacion y es resultado predefinido
+                                //if ((Request["Operacion"].ToString() == "Valida") && (oItem.IdTipoResultado == 3) && valueSeleccionado != null)  ///resultados predefinidos (selección simple ))  
+                                //{
+                                //    string[] efectorDeriva = valueSeleccionado.Split(';');
+                                //    if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
+                                //    {
+                                //        oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
+                                //    }
+                                //}
+
+                        }
+
+                    }
+                
+            }
+        }
+        private void GuardarResultado_prod(string m_idItem, string valorItem, Protocolo oProtocolo, bool marcarImpresion, bool todo)///, string valueSeleccionado = null)
         {
             Utility oUtil = new Utility();
 
@@ -3152,7 +3475,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             //////////////////////////////////////////////////////////////////
             Item oItem = new Item();
             if (valorItem != "Seleccione")
-            { 
+            {
 
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
                 int tiporesultado = oItem.IdTipoResultado;
@@ -3162,15 +3485,15 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 crit.Add(Expression.Eq("IdSubItem", oItem));
                 crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
 
-                
+
                 //  crit.Add(Expression.Eq("IdEfector", oProtocolo.IdEfector));
                 if (!todo) crit.Add(Expression.Eq("IdUsuarioValida", 0));
-                 
-                if (Request["Operacion"].ToString() == "Carga") crit.Add(Expression.Eq("IdUsuarioValida",0));//Solo guarda resultados que no han sido validados
+
+                if (Request["Operacion"].ToString() == "Carga") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
                 if (Request["Operacion"].ToString() == "Control") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
 
                 IList detalle = crit.List();
-               
+
                 if (detalle.Count > 0)
                 {
                     foreach (DetalleProtocolo oDetalle in detalle)
@@ -3178,7 +3501,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         switch (tiporesultado)
                         {
                             case 1:// numerico         
-                                if ((valorItem.Trim() != "") &&  (oUtil.EsNumerico(valorItem)))
+                                if ((valorItem.Trim() != "") && (oUtil.EsNumerico(valorItem)))
 
                                 {
                                     oDetalle.ResultadoNum = decimal.Parse(valorItem, System.Globalization.CultureInfo.InvariantCulture);
@@ -3189,7 +3512,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 {
                                     oDetalle.ResultadoNum = 0;
                                     oDetalle.ConResultado = false;
-                                }                             
+                                }
                                 break;
                             default:
                                 if (valorItem != "")
@@ -3202,7 +3525,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     oDetalle.ResultadoCar = "";
                                     oDetalle.ConResultado = false;
                                 }
-                                break;                            
+                                break;
                         }
 
 
@@ -3228,9 +3551,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         //    if (unMedida != null) oDetalle.UnidadMedida = unMedida.Text;
                         //}
                         /////////////////////////////
-                    
 
-                     
+
+
 
                         if (Request["Operacion"].ToString() == "Carga")
                         {
@@ -3244,7 +3567,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                         }
 
                         if ((Request["Operacion"].ToString() == "Valida") && (!oDetalle.Informable))   //Validacion
-                        {                           
+                        {
                             if (oDetalle.ConResultado)
                             {
                                 string res = valorItem;
@@ -3254,19 +3577,19 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo("Carga", int.Parse(oUser.IdUsuario.ToString()));
                             }
                         }
-                        if ((Request["Operacion"].ToString() == "Valida") &&   (oDetalle.Informable))   //Validacion
+                        if ((Request["Operacion"].ToString() == "Valida") && (oDetalle.Informable))   //Validacion
                         {
                             string operacion = "Valida";
-                                if (oDetalle.ConResultado)
+                            if (oDetalle.ConResultado)
                             {
 
                                 string res = valorItem;
                                 if (valorItem.Length > 10)
                                     res = valorItem.Substring(0, 10);
 
-                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente>0) &&  (res == "SE DETECTA"))// GENOMA DE COVID-19"))
+                                if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))// GENOMA DE COVID-19"))
                                 {
-                                  
+
                                     if (oCon.PreValida)
                                     {
                                         operacion = "PreValida";
@@ -3289,7 +3612,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     }
                                 }
                                 else
-                                {                                    
+                                {
                                     oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
                                     oDetalle.FechaValida = DateTime.Now;
 
@@ -3299,8 +3622,8 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         oDetalle.FechaImpresion = DateTime.Now;
                                     }
 
-                                 //   if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
-                                       Notificar(oDetalle);
+                                    //   if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
+                                    Notificar(oDetalle);
 
                                 }
                                 oDetalle.Save();
@@ -3308,35 +3631,240 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             }
 
 
-                           
-                        }  
+
+                        }
                         if (Request["Operacion"].ToString() == "Control")   //Control
                         {
                             //if (estaTildado(m_idItem) && (oDetalle.ConResultado))
                             if (oDetalle.ConResultado)
                             {
-                                oDetalle.IdUsuarioControl = int.Parse(oUser.IdUsuario.ToString()); 
+                                oDetalle.IdUsuarioControl = int.Parse(oUser.IdUsuario.ToString());
                                 oDetalle.FechaControl = DateTime.Now;
                                 oDetalle.Save();
                                 if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
                             }
                         }
-
-                        //10.08.2026 Es validacion y es resultado predefinido
-                        if ((Request["Operacion"].ToString() == "Valida") &&  (oItem.IdTipoResultado == 3) && valueSeleccionado != null)  ///resultados predefinidos (selección simple ))  
-                        {
-                            string[] efectorDeriva = valueSeleccionado.Split(';');
-                            if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
-                            {
-                                oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
-                            }
-                        }
+                        ////10.08.2026 Es validacion y es resultado predefinido
+                        //if ((Request["Operacion"].ToString() == "Valida") && (oItem.IdTipoResultado == 3) && valueSeleccionado != null)  ///resultados predefinidos (selección simple ))  
+                        //{
+                        //    string[] efectorDeriva = valueSeleccionado.Split(';');
+                        //    if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
+                        //    {
+                        //        oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
+                        //    }
+                        //}
 
                     }
 
-                }   
-            }                       
+                }
+            }
         }
+
+        //private void GuardarResultado_no(string m_idItem, string valorItem , Protocolo oProtocolo, bool marcarImpresion, bool todo, string valueSeleccionado = null)
+        //{
+        //    Utility oUtil = new Utility();
+
+        //    // Caro Performance: no es necesario guardar VR y unidad de medida; se graba en la carga de protocolo
+        //    //string m_metodo = "";
+        //    //string m_valorReferencia = "";
+        //    //string nombre_control = "VR" + m_idItem;
+        //    //Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
+        //    //Label valorRef = (Label)control1;
+
+
+        //    /////busca unidad de medida
+        //    //nombre_control = "UM" + m_idItem;
+        //    //Control controlUMedida = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
+        //    //Label unMedida = (Label)controlUMedida;
+
+
+        //    //////////////////////////////////////////////////////////////////
+        //    Item oItem = new Item();
+        //    if (valorItem != "Seleccione")
+        //    { 
+
+        //        oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
+        //        int tiporesultado = oItem.IdTipoResultado;
+
+        //        ISession m_session = NHibernateHttpModule.CurrentSession;
+        //        ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //        crit.Add(Expression.Eq("IdSubItem", oItem));
+        //        crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+
+                
+        //        //  crit.Add(Expression.Eq("IdEfector", oProtocolo.IdEfector));
+        //        if (!todo) crit.Add(Expression.Eq("IdUsuarioValida", 0));
+                 
+        //        if (Request["Operacion"].ToString() == "Carga") crit.Add(Expression.Eq("IdUsuarioValida",0));//Solo guarda resultados que no han sido validados
+        //        if (Request["Operacion"].ToString() == "Control") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
+
+        //        IList detalle = crit.List();
+               
+        //        if (detalle.Count > 0)
+        //        {
+        //            foreach (DetalleProtocolo oDetalle in detalle)
+        //            {
+        //                switch (tiporesultado)
+        //                {
+        //                    case 1:// numerico         
+        //                        if ((valorItem.Trim() != "") &&  (oUtil.EsNumerico(valorItem)))
+
+        //                        {
+        //                            oDetalle.ResultadoNum = decimal.Parse(valorItem, System.Globalization.CultureInfo.InvariantCulture);
+        //                            oDetalle.FormatoValida = oItem.FormatoDecimal;
+        //                            oDetalle.ConResultado = true;
+        //                        }
+        //                        else
+        //                        {
+        //                            oDetalle.ResultadoNum = 0;
+        //                            oDetalle.ConResultado = false;
+        //                        }                             
+        //                        break;
+        //                    default:
+        //                        if (valorItem != "")
+        //                        {
+        //                            oDetalle.ResultadoCar = valorItem;
+        //                            oDetalle.ConResultado = true;
+        //                        }
+        //                        else
+        //                        {
+        //                            oDetalle.ResultadoCar = "";
+        //                            oDetalle.ConResultado = false;
+        //                        }
+        //                        break;                            
+        //                }
+
+
+        //                /////////////////////////////////////////////////////////////////////////////////
+        //                //if ((valorRef != null) || (unMedida != null))
+        //                //{
+        //                //    if (valorRef != null)
+        //                //    {
+        //                //        string[] arr = valorRef.Text.Split(("|").ToCharArray());
+        //                //        switch (arr.Length)
+        //                //        {
+        //                //            case 1: m_valorReferencia = arr[0].ToString(); break;
+        //                //            case 2:
+        //                //                {
+        //                //                    m_valorReferencia = arr[0].ToString();
+        //                //                    m_metodo = arr[1].ToString();
+        //                //                } break;
+        //                //        }
+        //                //        oDetalle.Metodo = m_metodo;
+        //                //        oDetalle.ValorReferencia = m_valorReferencia;
+        //                //    }
+
+        //                //    if (unMedida != null) oDetalle.UnidadMedida = unMedida.Text;
+        //                //}
+        //                /////////////////////////////
+                    
+
+                     
+
+        //                if (Request["Operacion"].ToString() == "Carga")
+        //                {
+        //                    if (oDetalle.ConResultado)
+        //                    {
+        //                        oDetalle.IdUsuarioResultado = int.Parse(oUser.IdUsuario.ToString());
+        //                        oDetalle.FechaResultado = DateTime.Now;
+        //                    }
+        //                    oDetalle.Save();
+        //                    if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
+        //                }
+
+        //                if ((Request["Operacion"].ToString() == "Valida") && (!oDetalle.Informable))   //Validacion
+        //                {                           
+        //                    if (oDetalle.ConResultado)
+        //                    {
+        //                        string res = valorItem;
+        //                        oDetalle.IdUsuarioResultado = int.Parse(oUser.IdUsuario.ToString());
+        //                        oDetalle.FechaResultado = DateTime.Now;
+        //                        oDetalle.Save();
+        //                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo("Carga", int.Parse(oUser.IdUsuario.ToString()));
+        //                    }
+        //                }
+        //                if ((Request["Operacion"].ToString() == "Valida") &&   (oDetalle.Informable))   //Validacion
+        //                {
+        //                    string operacion = "Valida";
+        //                        if (oDetalle.ConResultado)
+        //                    {
+
+        //                        string res = valorItem;
+        //                        if (valorItem.Length > 10)
+        //                            res = valorItem.Substring(0, 10);
+
+        //                        if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente>0) &&  (res == "SE DETECTA"))// GENOMA DE COVID-19"))
+        //                        {
+                                  
+        //                            if (oCon.PreValida)
+        //                            {
+        //                                operacion = "PreValida";
+        //                                oDetalle.IdUsuarioPreValida = int.Parse(oUser.IdUsuario.ToString());
+        //                                oDetalle.FechaPreValida = DateTime.Now;
+        //                                oDetalle.IdUsuarioValida = 0;
+        //                                oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+        //                            }
+        //                            else
+        //                            {
+        //                                oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+        //                                oDetalle.FechaValida = DateTime.Now;
+
+        //                                if (marcarImpresion)
+        //                                {
+        //                                    oDetalle.IdUsuarioImpresion = int.Parse(oUser.IdUsuario.ToString());
+        //                                    oDetalle.FechaImpresion = DateTime.Now;
+        //                                }
+        //                                Notificar(oDetalle);
+        //                            }
+        //                        }
+        //                        else
+        //                        {                                    
+        //                            oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+        //                            oDetalle.FechaValida = DateTime.Now;
+
+        //                            if (marcarImpresion)
+        //                            {
+        //                                oDetalle.IdUsuarioImpresion = int.Parse(oUser.IdUsuario.ToString());
+        //                                oDetalle.FechaImpresion = DateTime.Now;
+        //                            }
+
+        //                         //   if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0))
+        //                               Notificar(oDetalle);
+
+        //                        }
+        //                        oDetalle.Save();
+        //                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(operacion, int.Parse(oUser.IdUsuario.ToString()));
+        //                    }
+
+
+                           
+        //                }  
+        //                  if (Request["Operacion"].ToString() == "Control")   //Control
+        //                {
+        //                    //if (estaTildado(m_idItem) && (oDetalle.ConResultado))
+        //                    if (oDetalle.ConResultado)
+        //                    {
+        //                        oDetalle.IdUsuarioControl = int.Parse(oUser.IdUsuario.ToString()); 
+        //                        oDetalle.FechaControl = DateTime.Now;
+        //                        oDetalle.Save();
+        //                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
+        //                    }
+        //                }                                                                         
+        //                //10.08.2026 Es validacion y es resultado predefinido
+        //                if ((Request["Operacion"].ToString() == "Valida") &&  (oItem.IdTipoResultado == 3) && valueSeleccionado != null)  ///resultados predefinidos (selección simple ))  
+        //                {
+        //                    string[] efectorDeriva = valueSeleccionado.Split(';');
+        //                    if (efectorDeriva.Length > 1 && efectorDeriva[1] != "0" && int.Parse(efectorDeriva[1]) != oUser.IdEfector.IdEfector)
+        //                    {
+        //                        oDetalle.GuardarDerivacion(oUser, int.Parse(efectorDeriva[1].ToString()));
+        //                    }
+        //                }
+
+        //            }
+
+        //        }   
+        //    }                       
+        //}
 
         private void Notificar(DetalleProtocolo oDetalle)
         {

@@ -270,7 +270,8 @@ namespace WebLab.Derivaciones
                     m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
                     m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
                     m_strSQL += " WHERE    (" +
-                              "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
+                              " vta.fecha >='20260101' and " + //Fecha hardcodeada hasta la mejora de modificacion
+                              "    (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
                               "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
                               "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
                                  ")";
