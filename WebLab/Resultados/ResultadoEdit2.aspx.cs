@@ -3297,6 +3297,184 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     {
                                         if (valorItem != "")
                                         {
+                                            ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
+                                            crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                                            crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                            crit2.Add(Expression.Eq("Resultado", valorItem));
+
+                                            IList detalleResultadoItem = crit2.List();
+
+                                            if (detalleResultadoItem.Count > 0)
+                                            {
+                                                ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
+
+                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                                oDetalle.ResultadoCar = valorItem; // lo necesito antes para armar el string correcto
+                                                if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
+                                                    oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+                                            }
+                                            else
+                                            {
+                                                // El resultado no está configurado en ResultadoItem
+                                                oDetalle.EstadoValidacion = "";
+                                                oDetalle.ResultadoCar = valorItem;
+                                            }
+                                           
+                                            oDetalle.ConResultado = true;
+                                        }
+                                        else
+                                        {
+                                            oDetalle.ResultadoCar = "";
+                                            oDetalle.ConResultado = false;
+                                            oDetalle.EstadoValidacion = "";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (valorItem != "")
+                                        {
+                                            oDetalle.ResultadoCar = valorItem;
+                                            oDetalle.ConResultado = true;
+                                        }
+                                        else
+                                        {
+                                            oDetalle.ResultadoCar = "";
+                                            oDetalle.ConResultado = false;
+                                            oDetalle.EstadoValidacion = "";
+                                        }
+                                    }
+                                }
+                                    break;
+                                default:
+                                if (valorItem != "")
+                                    {
+                                        oDetalle.ResultadoCar = valorItem;
+                                        oDetalle.ConResultado = true;
+                                    }
+                                    else
+                                    {
+                                        oDetalle.ResultadoCar = "";
+                                        oDetalle.ConResultado = false;
+                                    }
+                                    break;
+                                }
+
+
+
+                                if (Request["Operacion"].ToString() == "Carga")
+                                {
+                                    if (oDetalle.ConResultado)
+                                    {
+                                        oDetalle.IdUsuarioResultado = int.Parse(oUser.IdUsuario.ToString());
+                                        oDetalle.FechaResultado = DateTime.Now;
+                                    }
+                                    oDetalle.Save();
+                                    if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString()));
+                                }
+
+                                if ((Request["Operacion"].ToString() == "Valida") && (!oDetalle.Informable))   //Validacion
+                                {
+                                    if (oDetalle.ConResultado)
+                                    {
+                                        string res = valorItem;
+                                        oDetalle.IdUsuarioResultado = int.Parse(oUser.IdUsuario.ToString());
+                                        oDetalle.FechaResultado = DateTime.Now;
+                                        oDetalle.Save();
+                                        if (oDetalle.ConResultado) oDetalle.GrabarAuditoriaDetalleProtocolo("Carga", int.Parse(oUser.IdUsuario.ToString()));
+                                    }
+                                }
+                                if ((Request["Operacion"].ToString() == "Valida") && (oDetalle.Informable))   //Validacion
+                                {
+                                    string operacion = "Valida";
+                                    if (oDetalle.ConResultado)
+                                    {
+
+                                        string res = valorItem;
+                                        if (valorItem.Length > 10)
+                                            res = valorItem.Substring(0, 10);
+
+                                        if ((oDetalle.IdItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))// GENOMA DE COVID-19"))
+                                        {
+
+                                            if (oCon.PreValida)
+                                            {
+                                                operacion = "PreValida";
+                                                oDetalle.IdUsuarioPreValida = int.Parse(oUser.IdUsuario.ToString());
+                                                oDetalle.FechaPreValida = DateTime.Now;
+                                                oDetalle.IdUsuarioValida = 0;
+                                                oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                            }
+                                            else
+                                            {
+                                                oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+                                                oDetalle.FechaValida = DateTime.Now;
+
+                                                if (marcarImpresion)
+                                                {
+                                                    oDetalle.IdUsuarioImpresion = int.Parse(oUser.IdUsuario.ToString());
+                                                    oDetalle.FechaImpresion = DateTime.Now;
+                                                }
+                                                Notificar(oDetalle);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            oDetalle.IdUsuarioValida = int.Parse(oUser.IdUsuario.ToString());
+                                            oDetalle.FechaValida = DateTime.Now;
+
+        private void GuardarResultado(string m_idItem, string valorItem, Protocolo oProtocolo, bool marcarImpresion, bool todo)
+        {
+            Utility oUtil = new Utility();
+
+            //////////////////////////////////////////////////////////////////
+            Item oItem = new Item();
+            if (valorItem != "Seleccione")
+            {
+
+                oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
+                int tiporesultado = oItem.IdTipoResultado;
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+                crit.Add(Expression.Eq("IdSubItem", oItem));
+                crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+
+
+                //  crit.Add(Expression.Eq("IdEfector", oProtocolo.IdEfector));
+                if (!todo) crit.Add(Expression.Eq("IdUsuarioValida", 0));
+
+                if (Request["Operacion"].ToString() == "Carga") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
+                if (Request["Operacion"].ToString() == "Control") crit.Add(Expression.Eq("IdUsuarioValida", 0));//Solo guarda resultados que no han sido validados
+
+                IList detalle = crit.List();
+
+                if (detalle.Count > 0)
+                {
+                    foreach (DetalleProtocolo oDetalle in detalle)
+                    {
+                        switch (tiporesultado)
+                        {
+                            case 1:// numerico         
+                                if ((valorItem.Trim() != "") && (oUtil.EsNumerico(valorItem)))
+
+                                {
+                                    oDetalle.ResultadoNum = decimal.Parse(valorItem, System.Globalization.CultureInfo.InvariantCulture);
+                                    oDetalle.FormatoValida = oItem.FormatoDecimal;
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoNum = 0;
+                                    oDetalle.ConResultado = false;
+                                }
+                                break;
+                            case 3://Predefinido
+                                {
+                                    if (Request["Operacion"].ToString() == "Valida")
+                                    {
+                                        if (valorItem != "")
+                                        {
                                             oDetalle.ResultadoCar = valorItem;
                                             ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
 
