@@ -3284,20 +3284,18 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     {
                                         if (valorItem != "")
                                         {
+                                            oDetalle.ResultadoCar = valorItem;
                                             ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
-
                                             crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
                                             crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
                                             crit2.Add(Expression.Eq("Resultado", valorItem));
 
                                             IList detalleResultadoItem = crit2.List();
-
                                             if (detalleResultadoItem.Count > 0)
                                             {
                                                 ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
 
                                                 oDetalle.EstadoValidacion = oRes.EstadoValidacion;
-                                                oDetalle.ResultadoCar = valorItem; // lo necesito antes para armar el string correcto
                                                 if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
                                                     oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
                                             }
@@ -3305,7 +3303,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             {
                                                 // El resultado no está configurado en ResultadoItem
                                                 oDetalle.EstadoValidacion = "";
-                                                oDetalle.ResultadoCar = valorItem;
                                             }
                                            
                                             oDetalle.ConResultado = true;

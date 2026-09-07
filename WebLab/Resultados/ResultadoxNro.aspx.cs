@@ -73,7 +73,7 @@ namespace WebLab.Resultados
                                 
 
             }
-
+           
 
         }
        
@@ -927,6 +927,62 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                             oDetalle.ConResultado = false;
                         }
                         break;
+                    case 3://Predefinido
+                        {
+                            if (valida)
+                            {
+                                if (valorItem != "")
+                                {
+                                    oDetalle.ResultadoCar = valorItem;
+                                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                                    ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
+                                    crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                                    crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                    crit2.Add(Expression.Eq("Resultado", valorItem));
+
+                                    IList detalleResultadoItem = crit2.List();
+
+                                    if (detalleResultadoItem.Count > 0)
+                                    {
+                                        ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
+                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                        if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
+                                            oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+                                    }
+                                    else
+                                    {
+                                        // El resultado no está configurado en ResultadoItem
+                                        oDetalle.EstadoValidacion = "";
+                                    }
+
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoCar = "";
+                                    oDetalle.ConResultado = false;
+                                    oDetalle.EstadoValidacion = "";
+                                }
+                            }
+                            else
+                            {
+                                if (valorItem != "")
+                                {
+                                    oDetalle.ResultadoCar = valorItem;
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoCar = "";
+                                    oDetalle.ConResultado = false;
+                                    oDetalle.EstadoValidacion = "";
+                                }
+                            }
+                        }
+                        break;
+
+
                     default:
                         if (valorItem != "")
                         {
@@ -1150,6 +1206,20 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
 
                   
                     string res = oDProtocolo.ResultadoCar;
+
+                    //07.09.2026 Validamos que el analisis no tenga una derivacion automatica
+                    if (res.Contains(" - Pendiente de derivar")
+                     || (res.Contains(" - Pendiente para enviar "))
+                     || (res.Contains(" - No Derivado:"))
+                     || (res.Contains(" - Derivado:"))
+                     || (res.Contains(" - Recibido en ")))
+                    {
+                        lblError.Text = "El resultado tiene una derivacion asociada no puede modificar.";
+                        lblError.Visible = true;
+                        lblError.UpdateAfterCallBack = true;
+
+                        return;
+                    }
 
                     Agregar(oDProtocolo);
 
