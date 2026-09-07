@@ -671,7 +671,7 @@ namespace WebLab.Resultados
                                         ddl1.SelectedItem.Text = oDetalle.ResultadoCar;
 
                                         if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar")
-                                         || (oDetalle.ResultadoCar.Contains(" - Pendiente para enviar "))
+                                         || (oDetalle.ResultadoCar.Contains(" - Pendiente para enviar"))
                                          || (oDetalle.ResultadoCar.Contains(" - No Derivado:"))
                                          || (oDetalle.ResultadoCar.Contains(" - Derivado:"))
                                          || (oDetalle.ResultadoCar.Contains(" - Recibido en ")))

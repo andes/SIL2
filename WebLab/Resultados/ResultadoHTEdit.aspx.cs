@@ -696,7 +696,7 @@ namespace WebLab.Resultados
                                                             ddl1.SelectedItem.Text = oDet.ResultadoCar;
                                                             //07.09.2026 Si tiene derivacion automatica no puede cambiar el valor del combo
                                                             if (oDet.ResultadoCar.Contains(" - Pendiente de derivar")
-                                                                || oDet.ResultadoCar.Contains(" - Pendiente para enviar ")
+                                                                || oDet.ResultadoCar.Contains(" - Pendiente para enviar")
                                                                 || oDet.ResultadoCar.Contains(" - No Derivado:")
                                                                 || oDet.ResultadoCar.Contains(" - Derivado:")
                                                                 || oDet.ResultadoCar.Contains(" - Recibido en ")

@@ -1209,7 +1209,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
 
                     //07.09.2026 Validamos que el analisis no tenga una derivacion automatica
                     if (res.Contains(" - Pendiente de derivar")
-                     || (res.Contains(" - Pendiente para enviar "))
+                     || (res.Contains(" - Pendiente para enviar"))
                      || (res.Contains(" - No Derivado:"))
                      || (res.Contains(" - Derivado:"))
                      || (res.Contains(" - Recibido en ")))
