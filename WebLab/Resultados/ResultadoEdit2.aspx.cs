@@ -1323,9 +1323,9 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             System.Web.Caching.Cache.NoSlidingExpiration);
                     }
                 }
-
+           
             //Fin antecednetes
-
+         
             for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
             {              
                 bool algovalidado = false;                
@@ -1434,7 +1434,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 //Item oItem = new Item();
                 //oItem = oDetalle.IdSubItem;  
 
-               
+
                 if (tipodeterminacion != 0)
                 {
                     TableRow objRowTitulo = new TableRow();
@@ -1468,7 +1468,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                 estadoDerivacion += " - Resultado Informado: " + oDeriva.Resultado;                        
 
                         lblDerivacion.Text = estadoDerivacion;
-                        lblDerivacion.ID =  oDetalle.IdSubItem.IdItem.ToString();
                         objCellResultado.ColumnSpan = 1;
                         lblDerivacion.EnableViewState = false;
                         objCellResultado.Controls.Add(lblDerivacion);
@@ -1523,12 +1522,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
                                 }
                             }
-                            //Si es derivacion automatica y tiene titulo queremos que se muestre el btn de deshabilitar
-                            if (s_operacion == "Valida") 
-                            {
-                                desvalidar = true;
-                            }
-
                         }
 						///fin modificacion 07.09.2026
                        }
@@ -1574,7 +1567,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                        
 
                         lblDerivacion.Text = estadoDerivacion;
-                        lblDerivacion.ID = oDetalle.IdSubItem.IdItem.ToString();
                         objCellResultado.ColumnSpan = 1;
                         lblDerivacion.EnableViewState = false;
                         objCellResultado.Controls.Add(lblDerivacion);
@@ -1636,19 +1628,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                     olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteAnalisisView (" + s_determinacion + "," + s_idPaciente + ",800,420); return false");
                                     objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
                                 }
-                            }
-
-                            //agregamos el check para que puedan desvalidar " - Pendiente de derivar"
-                            if (((s_operacion == "Valida") || (s_operacion == "Control")) &&  (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar")))
-                            {
-                                CheckBox chk1 = new CheckBox();
-                                chk1.ID = "chk" + Ds.Tables[0].Rows[i].ItemArray[2].ToString();
-                                if ((estado == 2) && (s_operacion == "Control")) //si esta validado y entro a controlar no puedo modificar                                    
-                                    chk1.Visible = false;
-                                objCellValida.Controls.Add(chk1);
-
-                                //Si es derivacion automatica y no es titulo queremos que se muestre el btn de deshabilitar
-                                desvalidar = true;
                             }
                         }
 						///07.09.2026 fin modificacion
@@ -2385,7 +2364,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         {
                                             if (s_operacion == "Valida")
                                             {
-                                                desvalidar = true;
+                                                desvalidar = true;                                              
                                             }
 
                                             //if ((m_usuariovalida == "") && (oDetalle.IdUsuarioValidaObservacion > 0))
@@ -2966,7 +2945,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             string m_id = "";
             TextBox txt;
             DropDownList ddl;
-            Label lbl;
 
             if (Page.Master != null)
             {
@@ -3021,18 +2999,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                                                 }                                                                            
                                                                         }
                                                                     }
-                                                                    //Label para desvalidar derivacion automatica
-                                                                    if(control5 is Label)
-                                                                    {
-                                                                        lbl = (Label)control5;
-                                                                        m_id = lbl.Text;
-                                                                        if (Request["Operacion"].ToString() == "Valida" && lbl.ID != null)
-                                                                        {
-                                                                            if (estaTildado(lbl.ID))
-                                                                                DesValidarResultado(lbl.ID, lbl.Text, oProtocolo, false);
-                                                                        }
-                                                                        
-                                                                    }
                                                                 }
                                                         }
                                                 }
@@ -3076,7 +3042,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             if (valorItem != "Seleccione")
             {
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
-                //int tiporesultado = oItem.IdTipoResultado;
+                int tiporesultado = oItem.IdTipoResultado;
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
@@ -3107,18 +3073,6 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     //    oDetalle.IdUsuarioResultado = 0;
                         oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                         oDetalle.Save();
-
-                        //07.09.2026 Si tiene una derivacion automatica y no enviada la elimino
-                        if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar"))
-                        {
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivado", oUser.IdUsuario);
-                            oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
-                            oDetalle.Save();
-
-                            Derivacion oDerivacion = (Derivacion) new Derivacion().Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
-                            oDerivacion.Delete();
-
-                        }
                     }                                      
                 }
                 
@@ -3345,25 +3299,28 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         {
                                             oDetalle.ResultadoCar = valorItem;
                                             ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
                                             crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
                                             crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
                                             crit2.Add(Expression.Eq("Resultado", valorItem));
 
                                             IList detalleResultadoItem = crit2.List();
+
                                             if (detalleResultadoItem.Count > 0)
                                             {
                                                 ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
-
-                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                            
                                                 if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
                                                     oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
                                             }
                                             else
                                             {
-                                                // El resultado no está configurado en ResultadoItem
+                                                // El resultado no está configurado en ResultadoItem                                               
                                                 oDetalle.EstadoValidacion = "";
                                             }
-                                           
+                                          
                                             oDetalle.ConResultado = true;
                                         }
                                         else
@@ -3372,7 +3329,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                             oDetalle.ConResultado = false;
                                             oDetalle.EstadoValidacion = "";
                                         }
-                                    }
+                                    }/// si no es validacion graba como antes: EstadoValidacion se grabó vacio por defecto en la carga del protocolo
                                     else
                                     {
                                         if (valorItem != "")
@@ -3384,7 +3341,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                         {
                                             oDetalle.ResultadoCar = "";
                                             oDetalle.ConResultado = false;
-                                            oDetalle.EstadoValidacion = "";
+                                            ///oDetalle.EstadoValidacion = "";
                                         }
                                     }
                                 }

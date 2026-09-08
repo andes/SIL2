@@ -107,7 +107,7 @@ namespace WebLab.Resultados
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["idItem"].ToString()));
                 if (oItem != null)
                     lblItem.Text = oItem.Codigo + "  -  " + oItem.Nombre;
-                 //if (oItem.IdTipoResultado == 4)
+                //if (oItem.IdTipoResultado == 4)
                 //    lblMensaje.Text = "Para ampliar la selección de carga de resultados acceder por Lista de Protocolos";
                 //else lblMensaje.Text = "";
             }
@@ -667,9 +667,9 @@ namespace WebLab.Resultados
                                     foreach (ResultadoItem oResultado in resultados)
                                     {
                                         ddl1.Items.Add(new ListItem(
-                                          oResultado.Resultado.Trim(),
-                                          oResultado.IdResultadoItem.ToString()
-                                      ));
+                                            oResultado.Resultado.Trim(),
+                                            oResultado.IdResultadoItem.ToString()
+                                        ));
 
                                         if (oResultado.ResultadoDefecto)
                                             m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
@@ -2241,7 +2241,6 @@ namespace WebLab.Resultados
             {
 
                 int tiporesultado = oDetalle.IdSubItem.IdTipoResultado;
-
                 switch (tiporesultado)
                 {
                     case 1:// numerico         
@@ -2480,18 +2479,6 @@ namespace WebLab.Resultados
                     oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                     oDetalle.Save();
-
-                    //07.09.2026 Si tiene una derivacion automatica y no enviada la elimino
-                    if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar"))
-                    {
-                        oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivado", oUser.IdUsuario);
-                        oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
-                        oDetalle.Save();
-
-                        Derivacion oDerivacion = (Derivacion)new Derivacion().Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
-                        oDerivacion.Delete();
-
-                    }
                 }
 
             }
@@ -2626,17 +2613,17 @@ namespace WebLab.Resultados
                     crit.Add(Expression.In("IdDetalleProtocolo", idsDetalle.ToArray()));
                     IList resultados = crit.List();
 
-                    foreach (DetalleProtocolo oDetalle in resultados)
+                    foreach (DetalleProtocolo oDet in resultados)
                     {
-                        string nombreControl = "ResAnterior" + oDetalle.IdSubItem.IdItem + "_" + oDetalle.IdProtocolo.IdProtocolo;
+                        string nombreControl = "ResAnterior" + oDet.IdSubItem.IdItem + "_" + oDet.IdProtocolo.IdProtocolo;
                         Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombreControl);
                         Label lbl = control1 as Label;
                         if (lbl != null)
                         {
                             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-                            string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, true, connReady);
-                            //string resultadoAnterior =oDetalle.BuscarResultadoAnterior(   oDetalle.IdSubItem,      oDetalle.IdItem,      true);
+                            string resultadoAnterior = oDet.BuscarResultadoAnterior(oDet.IdSubItem, true, connReady);
+                            //string resultadoAnterior =oDet.BuscarResultadoAnterior(   oDet.IdSubItem,      oDet.IdItem,      true);
                             if (resultadoAnterior != "")
                             {
                                 lbl.Text = resultadoAnterior;
