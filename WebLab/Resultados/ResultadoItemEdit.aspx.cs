@@ -670,11 +670,13 @@ namespace WebLab.Resultados
                                         //if (itemSel != null)
                                         ddl1.SelectedItem.Text = oDetalle.ResultadoCar;
 
-                                        if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar")
-                                         || (oDetalle.ResultadoCar.Contains(" - Pendiente para enviar"))
-                                         || (oDetalle.ResultadoCar.Contains(" - No Derivado:"))
-                                         || (oDetalle.ResultadoCar.Contains(" - Derivado:"))
-                                         || (oDetalle.ResultadoCar.Contains(" - Recibido en ")))
+                                        if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar"))
+                                            ddl1.Attributes["disabled"] = "disabled"; //solo deshabilitado visual pero enabled para desvalidar
+
+                                        if (oDetalle.ResultadoCar.Contains(" - Pendiente para enviar")
+                                         || oDetalle.ResultadoCar.Contains(" - No Derivado:")
+                                         || oDetalle.ResultadoCar.Contains(" - Derivado:")
+                                         || oDetalle.ResultadoCar.Contains(" - Recibido en "))
                                         {
                                             ddl1.Enabled = false;
                                         }
@@ -2501,6 +2503,18 @@ namespace WebLab.Resultados
                     oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                     oDetalle.Save();
+
+                    //07.09.2026 Si tiene una derivacion automatica y no enviada la elimino
+                    if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar"))
+                    {
+                        oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivado", oUser.IdUsuario);
+                        oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
+                        oDetalle.Save();
+
+                        Derivacion oDerivacion = (Derivacion)new Derivacion().Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
+                        oDerivacion.Delete();
+
+                    }
                 }
 
             }
