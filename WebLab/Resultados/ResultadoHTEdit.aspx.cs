@@ -336,6 +336,42 @@ namespace WebLab.Resultados
 
                 var listaResultados = listaResultadosRaw.Cast<ResultadoItem>().ToList();
 
+
+                // Traer todas las Derivaciones juntas
+                //var derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                //    .CreateAlias("IdDetalleProtocolo", "dp")
+                //    .Add(Expression.In("dp.IdDetalleProtocolo", dictDetalles))
+                //    .List()
+                //    .Cast<Derivacion>()
+                //    .ToList();
+
+
+                var idsDetalles = dictDetalles.Values
+                    .Select(x => x.IdDetalleProtocolo)
+                    .Distinct()
+                    .ToArray();
+
+                var derivacionesList = new List<Derivacion>();
+
+                if (idsDetalles.Length > 0)
+                {
+                    derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                        .CreateAlias("IdDetalleProtocolo", "dp")
+                        .Add(Expression.In("dp.IdDetalleProtocolo", idsDetalles))
+                        .List()
+                        .Cast<Derivacion>()
+                        .ToList();
+                }
+
+                var derivacionesDict = derivacionesList
+                    .GroupBy(d => d.IdDetalleProtocolo.IdDetalleProtocolo)
+                    .ToDictionary(g => g.Key, g => g.First());
+
+
+                //fin de derivaciones
+                /// CARO PF : fin 
+
+
                 // ==========================
                 // 🔹 7. INDEXAR POR ITEM
                 // ==========================
@@ -343,7 +379,7 @@ namespace WebLab.Resultados
                     .GroupBy(x => x.IdItem.IdItem)
                     .ToDictionary(g => g.Key, g => g.ToList());
 
-               
+
 
                 bool controlado = false;
                 for (int j = 0; j < Ds.Tables[0].Rows.Count; j++)
@@ -355,6 +391,8 @@ namespace WebLab.Resultados
                     //objRow.Height = Unit.Pixel(50);
                     for (int i = 0; i < Ds.Tables[0].Columns.Count; i++)
                     {
+
+                    
 
                         TableCell objCell = new TableCell();
                         objCell.CssClass = "CeldaContenedor";
@@ -463,6 +501,8 @@ namespace WebLab.Resultados
                             DetalleProtocolo oDet = null;
                             dictDetalles.TryGetValue(idProtocolo + "_" + idItem, out oDet);
 
+                            Derivacion oDeriva;
+                            derivacionesDict.TryGetValue(oDet.IdDetalleProtocolo, out oDeriva);
 
                             //Item oItem = new Item();
                             //oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));
@@ -500,7 +540,7 @@ namespace WebLab.Resultados
                                     continue;
                                 }
 
-                                 ///Antes de mostrar el control verifica  si está derivado                    
+                                ///Antes de mostrar el control verifica  si está derivado                    
                                 if (oItem.esDerivado(oCon.IdEfector)) //es derivado
                                 {
                                     Label lblDerivacion = new Label();
@@ -672,7 +712,7 @@ namespace WebLab.Resultados
                                                             ListItem Item = new ListItem();
                                                             Item.Value = oResultado.IdResultadoItem.ToString();
                                                             Item.Text = oResultado.Resultado;
-                                                            
+
                                                             ddl1.ID = m_idControl;
                                                             ddl1.Items.Add(Item);
 
@@ -681,7 +721,7 @@ namespace WebLab.Resultados
                                                             if (oResultado.ResultadoDefecto)
                                                                 m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
                                                         }                                                         
-
+                                                        ////Caro: derivacion
                                                     if (oDet != null)
                                                     {
                                                         if (oDet.ConResultado == false) // sin resultado
@@ -694,16 +734,9 @@ namespace WebLab.Resultados
                                                         else
                                                         {
                                                             ddl1.SelectedItem.Text = oDet.ResultadoCar;
-                                                            //07.09.2026 Si tiene derivacion automatica no puede cambiar el valor del combo
-                                                            if (oDet.ResultadoCar.Contains(" - Pendiente de derivar")
-                                                                || oDet.ResultadoCar.Contains(" - Pendiente para enviar")
-                                                                || oDet.ResultadoCar.Contains(" - No Derivado:")
-                                                                || oDet.ResultadoCar.Contains(" - Derivado:")
-                                                                || oDet.ResultadoCar.Contains(" - Recibido en ")
-                                                                ) {
+                                                            if (oDeriva != null)  /// si tiene una derivacion inhabilita control                                                           
                                                                 ddl1.Enabled = false;
-                                                                
-                                                            }
+                                                            
                                                         }
                                                     }
 
@@ -786,10 +819,10 @@ namespace WebLab.Resultados
                                                         }
                                                         else
                                                         {
-                                                                ddl1.SelectedItem.Text = oDet.ResultadoCar;
-                                                            }
+                                                            ddl1.SelectedItem.Text = oDet.ResultadoCar;
                                                         }
-                                                    
+                                                    }
+
                                                     // Colores
                                                     if (oDet.IdUsuarioValida > 0)
                                                         ddl1.BackColor = Color.LightBlue;
@@ -850,281 +883,281 @@ namespace WebLab.Resultados
         {
             //try
             //{
+          
+                ///Llena la tabla con los datos
+                DataSet Ds = new DataSet();
+                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
 
-            ///Llena la tabla con los datos
-            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
+                string s_idHoja = Request["idHojaTrabajo"].ToString();
+                //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+                           
 
-            string s_idHoja = Request["idHojaTrabajo"].ToString();
-            //Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-
-
-            if (oRegistro != null)
-            {
-                cmd.CommandText = "LAB_TablaCruzada";
-                cmd.Parameters.Add("@ListaProtocolos", SqlDbType.NVarChar);
-                cmd.Parameters["@ListaProtocolos"].Value = Session["Parametros"].ToString();
-                cmd.Parameters.Add("@IdHojaTrabajo", SqlDbType.NVarChar);
-                cmd.Parameters["@IdHojaTrabajo"].Value = oRegistro.IdHojaTrabajo.ToString(); // Request["idHojaTrabajo"].ToString();
-
-
-                cmd.Connection = conn;
-
-
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-
-                da.Fill(Ds);
-
-
-                bool controlado = false;
-                for (int j = 0; j < Ds.Tables[0].Rows.Count; j++)
+                if (oRegistro != null)
                 {
+                    cmd.CommandText = "LAB_TablaCruzada";
+                    cmd.Parameters.Add("@ListaProtocolos", SqlDbType.NVarChar);
+                    cmd.Parameters["@ListaProtocolos"].Value = Session["Parametros"].ToString();
+                    cmd.Parameters.Add("@IdHojaTrabajo", SqlDbType.NVarChar);
+                    cmd.Parameters["@IdHojaTrabajo"].Value = oRegistro.IdHojaTrabajo.ToString(); // Request["idHojaTrabajo"].ToString();
 
-                    string m_nroprotocolo = "";
-                    TableRow objRow = new TableRow();
+
+                    cmd.Connection = conn;
+
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+                    da.Fill(Ds);
+
+
+                    bool controlado = false;
+                    for (int j = 0; j < Ds.Tables[0].Rows.Count; j++)
+                    {
+
+                        string m_nroprotocolo = "";
+                        TableRow objRow = new TableRow();
                     objRow.CssClass = "CeldaContenedor";
                     //objRow.Height = Unit.Pixel(50);
                     for (int i = 0; i < Ds.Tables[0].Columns.Count; i++)
-                    {
-                        TableCell objCell = new TableCell();
+                        {
+                            TableCell objCell = new TableCell();
                         objCell.CssClass = "CeldaContenedor";
                         if (i == 0) ///numero del protocolo o nombre del analisis segun sea el caso
-                        {
-                            TableRow objRow0 = new TableRow();
-                            //  objRow0.Height = Unit.Pixel(40);
-                            m_nroprotocolo = Ds.Tables[0].Rows[j].ItemArray[i].ToString();
-
-                            Label lbl0 = new Label();
-                            lbl0.Text = m_nroprotocolo;
-                            lbl0.ID = m_nroprotocolo;
-                            lbl0.ToolTip = "Haga clic aquí para ver más información del protocolo";
-                            lbl0.Font.Size = FontUnit.Point(8);
-                            lbl0.Font.Bold = true;
-                            string s_idProtocolo = Ds.Tables[0].Rows[j].ItemArray[1].ToString();
-
-                            lbl0.Attributes.Add("onClick", "javascript: protocoloView (" + s_idProtocolo + "); return false");
-                            objCell.Height = Unit.Pixel(40);
-                            objCell.BackColor = Color.WhiteSmoke;
-
-
-
-
-                            if (true)// formato prtocolo:filas - determinacion:columna
                             {
-                                if (Request["Operacion"] != "Carga")
+                                TableRow objRow0 = new TableRow();
+                              //  objRow0.Height = Unit.Pixel(40);
+                                m_nroprotocolo = Ds.Tables[0].Rows[j].ItemArray[i].ToString();
+
+                                Label lbl0 = new Label();
+                                lbl0.Text = m_nroprotocolo;
+                                lbl0.ID = m_nroprotocolo;
+                                lbl0.ToolTip = "Haga clic aquí para ver más información del protocolo";
+                                lbl0.Font.Size = FontUnit.Point(8);
+                                lbl0.Font.Bold = true;
+                                string s_idProtocolo = Ds.Tables[0].Rows[j].ItemArray[1].ToString();
+                                
+                                lbl0.Attributes.Add("onClick", "javascript: protocoloView (" + s_idProtocolo + "); return false");
+                                objCell.Height = Unit.Pixel(40);
+                                objCell.BackColor = Color.WhiteSmoke;        
+                        
+
+
+                              
+                                if (true)// formato prtocolo:filas - determinacion:columna
                                 {
+                                    if (Request["Operacion"] != "Carga")
+                                         {
                                     controlado = estaControladoProtocolo(Ds.Tables[0].Rows[j].ItemArray[1].ToString(), s_idHoja, Request["Operacion"].ToString());
                                     if (controlado)
                                     {///agrega tilde                                        
                                         if (Request["Operacion"] == "Control")
                                         {
-                                            objCell.BackColor = Color.LightGreen;
+                                            objCell.BackColor = Color.LightGreen;                                            
                                             lbl0.Font.Bold = true;
-                                            lbl0.ToolTip = "Controlado";
+                                            lbl0.ToolTip = "Controlado";                                                                                    
                                         }
                                         if (Request["Operacion"] == "Valida")
                                         {
-                                            objCell.BackColor = Color.LightBlue;
+                                            objCell.BackColor = Color.LightBlue;                                            
                                             lbl0.Font.Bold = true;
-                                            lbl0.ToolTip = "Validado";
-                                        }
+                                            lbl0.ToolTip = "Validado";                                            
+                                        }                                       
+                                    }                                                                     
+                                         }
+                                   
+                                }
+  
+                                Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(lbl0);
+                                objCell.Controls.Add(lbl0);
+
+                                ////////////////////
+                                if ((Request["idServicio"].ToString() == "4") && (Request["Operacion"].ToString() == "Valida")) //Pesquisa
+                                {
+                                    Protocolo oP = new Protocolo();
+                                    oP = (Protocolo)oP.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
+                                    SolicitudScreening oSolicitud = new SolicitudScreening();
+                                    oSolicitud = (Business.Data.Laboratorio.SolicitudScreening)oSolicitud.Get(typeof(Business.Data.Laboratorio.SolicitudScreening), "IdProtocolo", oP);
+                                    if (oSolicitud != null)
+                                    {
+                                        int i_alarmas = oSolicitud.GetCantidadAlarmas();
+                                        ImageButton imgPesquisa = new ImageButton();
+                                        //imgPesquisa.TabIndex = short.Parse("500");                                    
+                                        imgPesquisa.ImageUrl = "~/App_Themes/default/images/pendiente.png";
+                                        imgPesquisa.ToolTip = "Tiene " + i_alarmas.ToString() + " alarmas";
+                                        imgPesquisa.Attributes.Add("onClick", "javascript: protocoloView (" + s_idProtocolo + "); return false");
+                                        if (i_alarmas > 0) imgPesquisa.Visible = true; else imgPesquisa.Visible = false; 
+                                        Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(imgPesquisa);
+                                        objCell.Controls.Add(imgPesquisa);       
                                     }
                                 }
 
-                            }
-
-                            Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(lbl0);
-                            objCell.Controls.Add(lbl0);
-
-                            ////////////////////
-                            if ((Request["idServicio"].ToString() == "4") && (Request["Operacion"].ToString() == "Valida")) //Pesquisa
-                            {
-                                Protocolo oP = new Protocolo();
-                                oP = (Protocolo)oP.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
-                                SolicitudScreening oSolicitud = new SolicitudScreening();
-                                oSolicitud = (Business.Data.Laboratorio.SolicitudScreening)oSolicitud.Get(typeof(Business.Data.Laboratorio.SolicitudScreening), "IdProtocolo", oP);
-                                if (oSolicitud != null)
+                                //////////////////
+                                objRow0.Cells.Add(objCell);
+                                if (Request["control"] != null)
                                 {
-                                    int i_alarmas = oSolicitud.GetCantidadAlarmas();
-                                    ImageButton imgPesquisa = new ImageButton();
-                                    //imgPesquisa.TabIndex = short.Parse("500");                                    
-                                    imgPesquisa.ImageUrl = "~/App_Themes/default/images/pendiente.png";
-                                    imgPesquisa.ToolTip = "Tiene " + i_alarmas.ToString() + " alarmas";
-                                    imgPesquisa.Attributes.Add("onClick", "javascript: protocoloView (" + s_idProtocolo + "); return false");
-                                    if (i_alarmas > 0) imgPesquisa.Visible = true; else imgPesquisa.Visible = false;
-                                    Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(imgPesquisa);
-                                    objCell.Controls.Add(imgPesquisa);
+                                    ////FUNCION DE CONTROL
+                                    TableCell objCellControl = new TableCell();                                    
+                                    CheckBox chk1 = new CheckBox();
+                                    chk1.ID = "chkc" + Ds.Tables[0].Rows[j].ItemArray[1].ToString();
+                                    Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(chk1);
+                                    objCellControl.BackColor = Color.Beige;
+                                    objCellControl.Controls.Add(chk1);
+                                    objRow0.Cells.Add(objCellControl);
                                 }
+                                tContenido0.Controls.Add(objRow0);                                                                                   
+                                Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(tContenido0);
                             }
 
-                            //////////////////
-                            objRow0.Cells.Add(objCell);
-                            if (Request["control"] != null)
+                            if (i >= 3)
                             {
-                                ////FUNCION DE CONTROL
-                                TableCell objCellControl = new TableCell();
-                                CheckBox chk1 = new CheckBox();
-                                chk1.ID = "chkc" + Ds.Tables[0].Rows[j].ItemArray[1].ToString();
-                                Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(chk1);
-                                objCellControl.BackColor = Color.Beige;
-                                objCellControl.Controls.Add(chk1);
-                                objRow0.Cells.Add(objCellControl);
-                            }
-                            tContenido0.Controls.Add(objRow0);
-                            Master.FindControl("ContentPlaceHolder1").FindControl("PanelPrimeraColumna").Controls.Add(tContenido0);
-                        }
+                               
+                                string m_iditem = Ds.Tables[0].Columns[i].ToString();
+                                string m_idprotocolo = Ds.Tables[0].Rows[j].ItemArray[0].ToString();
+                                
+                                    m_iditem = Ds.Tables[0].Columns[i].ToString();
+                                    m_idprotocolo = Ds.Tables[0].Rows[j].ItemArray[1].ToString();
+                               
 
-                        if (i >= 3)
-                        {
+                                string m_valoritem = Ds.Tables[0].Rows[j].ItemArray[i].ToString();
+                                string m_idControl = m_idprotocolo + "_" + m_iditem;
 
-                            string m_iditem = Ds.Tables[0].Columns[i].ToString();
-                            string m_idprotocolo = Ds.Tables[0].Rows[j].ItemArray[0].ToString();
+                                Item oItem = new Item();
+                                oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));
+                                Label oLblXXX = new Label();
+                                oLblXXX.Text = "";
+                                if (oItem.IdTipoResultado == 1)
+                                { objCell.Width = Unit.Pixel(80); oLblXXX.Width = Unit.Pixel(80); }
+                                if (oItem.IdTipoResultado == 2)
+                                { objCell.Width = Unit.Pixel(100);  oLblXXX.Width= Unit.Pixel(100);}
+                                if (oItem.IdTipoResultado > 2)
+                                { objCell.Width = Unit.Pixel(150); oLblXXX.Width = Unit.Pixel(150); }
 
-                            m_iditem = Ds.Tables[0].Columns[i].ToString();
-                            m_idprotocolo = Ds.Tables[0].Rows[j].ItemArray[1].ToString();
-
-
-                            string m_valoritem = Ds.Tables[0].Rows[j].ItemArray[i].ToString();
-                            string m_idControl = m_idprotocolo + "_" + m_iditem;
-
-                            Item oItem = new Item();
-                            oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));
-                            Label oLblXXX = new Label();
-                            oLblXXX.Text = "";
-                            if (oItem.IdTipoResultado == 1)
-                            { objCell.Width = Unit.Pixel(80); oLblXXX.Width = Unit.Pixel(80); }
-                            if (oItem.IdTipoResultado == 2)
-                            { objCell.Width = Unit.Pixel(100);  oLblXXX.Width= Unit.Pixel(100);}
-                            if (oItem.IdTipoResultado > 2)
-                            { objCell.Width = Unit.Pixel(150); oLblXXX.Width = Unit.Pixel(150); }
-
-                            objCell.Controls.Add(oLblXXX);
-
-                            if (m_valoritem != "")
-                            {
-
-                                string nombrePractica =  oItem.Nombre;
-                                Protocolo oP = new Protocolo();
-                                oP = (Protocolo)oP.Get(typeof(Protocolo), int.Parse(m_idprotocolo));
-                                DetalleProtocolo oDet = new DetalleProtocolo();
-                                oDet = (DetalleProtocolo)oDet.Get(typeof(DetalleProtocolo), "IdSubItem", oItem, "IdProtocolo", oP);
-
-                                ///Antes de mostrar el control verifica  si está derivado                    
-                                if (oItem.esDerivado(oCon.IdEfector)) //es derivado
+                                objCell.Controls.Add(oLblXXX);
+                             
+                                if (m_valoritem != "")
                                 {
-                                    Label lblDerivacion = new Label();
-                                    lblDerivacion.Text = "Derivado";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
-                                    lblDerivacion.Font.Italic = true;
-                                    lblDerivacion.Font.Size = FontUnit.Point(8);
-                                    lblDerivacion.ForeColor = Color.Red;
-                                    objCell.Controls.Add(lblDerivacion);
-                                }
-                                else
-                                {//No es derivado
-
-                                    switch (oItem.IdTipoResultado)
+                                   
+                                    string nombrePractica =  oItem.Nombre;
+                                    Protocolo oP = new Protocolo();
+                                    oP = (Protocolo)oP.Get(typeof(Protocolo), int.Parse(m_idprotocolo));
+                                    DetalleProtocolo oDet = new DetalleProtocolo();
+                                    oDet = (DetalleProtocolo)oDet.Get(typeof(DetalleProtocolo), "IdSubItem", oItem, "IdProtocolo", oP);                                    
+                                  
+                                    ///Antes de mostrar el control verifica  si está derivado                    
+                                    if (oItem.esDerivado(oCon.IdEfector)) //es derivado
                                     {
-                                        case 1: ///numerico
-                                            {
-                                                Utility oUtil = new Utility();
-                                                TextBox txt1 = new TextBox();
-                                                txt1.ID = m_idControl;
-
-                                                decimal aux = decimal.Parse( m_valoritem);
-                                                string formato = oUtil.Formato(oItem.FormatoDecimal.ToString());
-                                                decimal x = decimal.Parse(aux.ToString(formato));
-
-                                                //decimal x = decimal.Parse(m_valoritem);
-                                                txt1.Text = x.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                                                txt1.Width = Unit.Pixel(70);
-                                                txt1.CssClass = "myTexto";
-
-                                                txt1.Attributes.Add("onkeypress", "javascript:return Enter(this, event)");
-                                                if (oDet.ConResultado ==false)//no tiene resultado
+                                        Label lblDerivacion = new Label();
+                                        lblDerivacion.Text = "Derivado";// +oItem.IdEfectorDerivacion.Nombre; /// Ds.Tables[0].Rows[i].ItemArray[1].ToString();
+                                        lblDerivacion.Font.Italic = true;
+                                        lblDerivacion.Font.Size = FontUnit.Point(8);
+                                        lblDerivacion.ForeColor = Color.Red;
+                                        objCell.Controls.Add(lblDerivacion);
+                                        }
+                                    else
+                                    {//No es derivado
+                                        
+                                        switch (oItem.IdTipoResultado)
+                                        {
+                                            case 1: ///numerico
                                                 {
-                                                    if (oItem.ResultadoDefecto != "")
-                                                        txt1.Text = oItem.ResultadoDefecto;
-                                                    else
-                                                        txt1.Text = "";
-                                                }
+                                                    Utility oUtil = new Utility();
+                                                    TextBox txt1 = new TextBox();
+                                                    txt1.ID = m_idControl;
 
-                                                if (oDet.IdUsuarioValida > 0) // validado
-                                                    txt1.BackColor = Color.LightBlue;
-                                                else
-                                                {
-                                                    if (oDet.IdUsuarioPreValida > 0) // prevalidado
-                                                        txt1.BackColor = Color.Red;
-                                                    else
-                                                    {
-                                                        if (oDet.IdUsuarioControl > 0) // controlado
-                                                            txt1.BackColor = Color.LightGreen;
-                                                    }
-                                                }
-                                                if (Request["Operacion"] == "Control") // control
-                                                {
-                                                    if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
-                                                        txt1.Enabled = false;
-                                                }
-                                                if (Request["Operacion"] == "Carga") // control
-                                                {
-                                                    if (oDet.IdUsuarioControl > 0)
-                                                        txt1.Enabled = false;
-                                                    else
-                                                    {
-                                                        if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
-                                                            txt1.Enabled = false;
-                                                    }
-                                                }
+                                                    decimal aux = decimal.Parse( m_valoritem);
+                                                    string formato = oUtil.Formato(oItem.FormatoDecimal.ToString());
+                                                    decimal x = decimal.Parse(aux.ToString(formato));                                                                                                                                                            
 
-
-                                                ///Se agrega un validador de solo numeros
-                                                RegularExpressionValidator oValidaNumero = new RegularExpressionValidator();
-                                                oValidaNumero.ValidationExpression = oUtil.ExpresionFormato(oItem.FormatoDecimal);
-                                                oValidaNumero.ControlToValidate = txt1.ID;
-                                                oValidaNumero.Width = Unit.Pixel(1);
-                                                oValidaNumero.Text = "*";
-                                                oValidaNumero.ValidationGroup = "0";
-                                                txt1.ToolTip = txt1.Text;
-                                                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
-                                                objCell.Controls.Add(txt1);
-                                                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(oValidaNumero);
-                                                objCell.Controls.Add(oValidaNumero);
-                                                objCell.Width = Unit.Pixel(80);
-                                            }
-                                            break;
-                                        case 2: //texto
-                                            {
-                                                TextBox txt1 = new TextBox();
-                                                txt1.ID = m_idControl;
-                                                txt1.CssClass = "myTexto";
-                                                txt1.Width = Unit.Pixel(90);
-                                                txt1.TextMode = TextBoxMode.MultiLine;
-                                                txt1.Rows = 1;
-                                                txt1.MaxLength = 200;
-
-
-                                                if (oDet != null)
-                                                {
-                                                    if (oDet.ConResultado == false)
+                                                    //decimal x = decimal.Parse(m_valoritem);
+                                                    txt1.Text = x.ToString(System.Globalization.CultureInfo.InvariantCulture);                                                    
+                                                    txt1.Width = Unit.Pixel(70);
+                                                    txt1.CssClass = "myTexto";
+                                                 
+                                                    txt1.Attributes.Add("onkeypress", "javascript:return Enter(this, event)");
+                                                    if (oDet.ConResultado ==false)//no tiene resultado
                                                     {
                                                         if (oItem.ResultadoDefecto != "")
                                                             txt1.Text = oItem.ResultadoDefecto;
                                                         else
                                                             txt1.Text = "";
                                                     }
+
+                                                if (oDet.IdUsuarioValida > 0) // validado
+                                                    txt1.BackColor = Color.LightBlue;
+                                                else
+                                                {
+                                                    if (oDet.IdUsuarioPreValida > 0) // prevalidado
+                                                        txt1.BackColor = Color.Red;
                                                     else
                                                     {
-                                                        string resNum = oDet.ResultadoNum.ToString();
-                                                        if ((oDet.ResultadoCar == "") && (oDet.Enviado == 2) && (oDet.IdUsuarioValida==0) && (oDet.IdUsuarioResultado==0)) // automatico
+                                                        if (oDet.IdUsuarioControl > 0) // controlado
+                                                            txt1.BackColor = Color.LightGreen;
+                                                    }
+                                                }   
+                                                    if (Request["Operacion"] == "Control") // control
+                                                    {
+                                                        if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
+                                                            txt1.Enabled = false;
+                                                    }
+                                                    if (Request["Operacion"] == "Carga") // control
+                                                    {
+                                                        if (oDet.IdUsuarioControl > 0)
+                                                            txt1.Enabled = false;
+                                                        else
                                                         {
-                                                            if (resNum != "") txt1.Text = resNum.Substring(0, resNum.Length - 2).Replace(",", ".");
+                                                        if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
+                                                            txt1.Enabled = false;
+                                                        }
+                                                    }
+                                                   
+
+                                                    ///Se agrega un validador de solo numeros
+                                                    RegularExpressionValidator oValidaNumero = new RegularExpressionValidator();
+                                                    oValidaNumero.ValidationExpression = oUtil.ExpresionFormato(oItem.FormatoDecimal);
+                                                    oValidaNumero.ControlToValidate = txt1.ID;
+                                                    oValidaNumero.Width = Unit.Pixel(1);
+                                                    oValidaNumero.Text = "*";
+                                                    oValidaNumero.ValidationGroup = "0";
+                                                    txt1.ToolTip = txt1.Text;
+                                                    Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
+                                                    objCell.Controls.Add(txt1);
+                                                    Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(oValidaNumero);                                                    
+                                                    objCell.Controls.Add(oValidaNumero);
+                                                    objCell.Width = Unit.Pixel(80);
+                                                }
+                                                break;
+                                            case 2: //texto
+                                                {                                                                                                        
+                                                    TextBox txt1 = new TextBox();
+                                                    txt1.ID = m_idControl;
+                                                    txt1.CssClass = "myTexto";                                                                                                            
+                                                    txt1.Width = Unit.Pixel(90);
+                                                    txt1.TextMode = TextBoxMode.MultiLine;
+                                                    txt1.Rows = 1;
+                                                    txt1.MaxLength = 200;
+                                                   
+                                                
+                                                    if (oDet != null)
+                                                    {
+                                                        if (oDet.ConResultado == false)
+                                                        {
+                                                            if (oItem.ResultadoDefecto != "")
+                                                                txt1.Text = oItem.ResultadoDefecto;
+                                                            else
+                                                                txt1.Text = "";
                                                         }
                                                         else
+                                                        {
+                                                            string resNum = oDet.ResultadoNum.ToString();
+                                                            if ((oDet.ResultadoCar == "") && (oDet.Enviado == 2) && (oDet.IdUsuarioValida==0) && (oDet.IdUsuarioResultado==0)) // automatico
+                                                            {
+                                                                if (resNum != "") txt1.Text = resNum.Substring(0, resNum.Length - 2).Replace(",", ".");                                                                
+                                                            }
+                                                            else
                                                             txt1.Text = oDet.ResultadoCar;
+                                                        }
                                                     }
-                                                }
 
                                                 if (oDet.IdUsuarioValida > 0) // validado
                                                     txt1.BackColor = Color.LightBlue;
@@ -1140,75 +1173,75 @@ namespace WebLab.Resultados
                                                 }
 
                                                 if (Request["Operacion"] == "Control") // control
-                                                {
+                                                    {
                                                     if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
                                                         txt1.Enabled = false;
-                                                }
-                                                if (Request["Operacion"] == "Carga") // control
-                                                {
-                                                    if (oDet.IdUsuarioControl > 0)
-                                                        txt1.Enabled = false;
-                                                    else
+                                                    }
+                                                    if (Request["Operacion"] == "Carga") // control
                                                     {
+                                                        if (oDet.IdUsuarioControl > 0)
+                                                            txt1.Enabled = false;
+                                                        else
+                                                        {
                                                         if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
                                                             txt1.Enabled = false;
+                                                        }
                                                     }
-                                                }
 
-                                                txt1.ToolTip = txt1.Text;
-                                                objCell.Controls.Add(txt1);
-                                                objCell.Width = Unit.Pixel(100);
+                                                    txt1.ToolTip = txt1.Text;
+                                                    objCell.Controls.Add(txt1);
+                                                    objCell.Width = Unit.Pixel(100);
 
-                                            } // fin case 2
-                                            break;
-                                        case 3: //Lista predefinida
-                                            {
-
-                                                //Verifica si la determinacion tiene una lista predeterminada de resultados
-                                                ISession m_session = NHibernateHttpModule.CurrentSession;
-                                                ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
-                                                crit.Add(Expression.Eq("IdItem", oItem));
-                                                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
-                                                crit.Add(Expression.Eq("Baja", false));
+                                                } // fin case 2
+                                                break;
+                                            case 3: //Lista predefinida
+                                                {
+                                                   
+                                                    //Verifica si la determinacion tiene una lista predeterminada de resultados
+                                                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                                                    ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
+                                                    crit.Add(Expression.Eq("IdItem", oItem));
+                                                    crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                                    crit.Add(Expression.Eq("Baja", false));                                              
 
                                                 ///Si tiene resultados predeterminados muestra un combo
                                                 IList resultados = crit.List();
-                                                if (resultados.Count > 0)
-                                                {
+                                                    if (resultados.Count > 0)
+                                                    {
                                                     string m_resultadoDefecto = "";
                                                     DropDownList ddl1 = new DropDownList();
-                                                    //ddl1.Font.Size = FontUnit.Point(7);
-                                                    ListItem ItemSeleccion = new ListItem();
-                                                    ItemSeleccion.Value = "0";
-                                                    ItemSeleccion.Text = "";
-
-                                                    ddl1.ToolTip = nombrePractica;
-                                                    ddl1.Items.Add(ItemSeleccion);
-                                                    foreach (ResultadoItem oResultado in resultados)
-                                                    {
-                                                        ListItem Item = new ListItem();
-                                                        Item.Value = oResultado.IdResultadoItem.ToString();
-                                                        Item.Text = oResultado.Resultado;
-
-                                                        ddl1.ID = m_idControl;
-                                                        ddl1.Items.Add(Item);
-                                                        ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
-                                                        if (oResultado.ResultadoDefecto)
-                                                            m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
-                                                    }
-
-                                                    if (oDet != null)
-                                                    {
-                                                        if (oDet.ConResultado == false) // sin resultado
+                                                        //ddl1.Font.Size = FontUnit.Point(7);
+                                                        ListItem ItemSeleccion = new ListItem();
+                                                        ItemSeleccion.Value = "0";
+                                                        ItemSeleccion.Text = "";
+                                                        
+                                                        ddl1.ToolTip = nombrePractica;
+                                                        ddl1.Items.Add(ItemSeleccion);
+                                                        foreach (ResultadoItem oResultado in resultados)
                                                         {
-                                                            if (m_resultadoDefecto!="")///(oItem.ResultadoDefecto != "") //correccion de bug que no mostraba el resultado por defecto.
-                                                                ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
+                                                            ListItem Item = new ListItem();
+                                                            Item.Value = oResultado.IdResultadoItem.ToString();
+                                                            Item.Text = oResultado.Resultado;
+                                                                                                                    
+                                                            ddl1.ID = m_idControl;
+                                                            ddl1.Items.Add(Item);                                                            
+                                                            ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
+                                                            if (oResultado.ResultadoDefecto)
+                                                                m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
+                                                        }                                                      
+
+                                                        if (oDet != null)
+                                                        {
+                                                            if (oDet.ConResultado == false) // sin resultado
+                                                            {
+                                                                if (m_resultadoDefecto!="")///(oItem.ResultadoDefecto != "") //correccion de bug que no mostraba el resultado por defecto.
+                                                                    ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
+                                                                else
+                                                                    ddl1.SelectedValue= "0";
+                                                            }
                                                             else
-                                                                ddl1.SelectedValue= "0";
+                                                                ddl1.SelectedItem.Text = oDet.ResultadoCar;
                                                         }
-                                                        else
-                                                            ddl1.SelectedItem.Text = oDet.ResultadoCar;
-                                                    }
 
                                                     if (oDet.IdUsuarioValida > 0) // validado
                                                         ddl1.BackColor = Color.LightBlue;
@@ -1223,43 +1256,43 @@ namespace WebLab.Resultados
                                                         }
                                                     }
 
-                                                    if (Request["Operacion"] == "Control") // control
-                                                    {
+                                                        if (Request["Operacion"] == "Control") // control
+                                                        {
                                                         if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
                                                             ddl1.Enabled = false;
-                                                    }
-                                                    if (Request["Operacion"] == "Carga") // control
-                                                    {
-                                                        if (oDet.IdUsuarioControl > 0)
-                                                            ddl1.Enabled = false;
-                                                        else
+                                                        }
+                                                        if (Request["Operacion"] == "Carga") // control
                                                         {
+                                                            if (oDet.IdUsuarioControl > 0)
+                                                                ddl1.Enabled = false;
+                                                            else
+                                                            {
                                                             if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
                                                                 ddl1.Enabled = false;
+                                                            }
                                                         }
-                                                    }
 
-                                                    ddl1.Width = Unit.Pixel(150);
-                                                    objCell.Controls.Add(ddl1);
-                                                    objCell.Width = Unit.Pixel(150);
+                                                        ddl1.Width = Unit.Pixel(150);
+                                                        objCell.Controls.Add(ddl1);
+                                                        objCell.Width = Unit.Pixel(150);
+                                                    }
                                                 }
-                                            }
-                                            break;
-                                        case 4: //Lista predefinida con seleccion multiple (sin seleccion multiple...jiji)
-                                            {
+                                                break;
+                                            case 4: //Lista predefinida con seleccion multiple (sin seleccion multiple...jiji)
+                                                {
                                                 //Antes
                                                 ////Verifica si la determinacion tiene una lista predeterminada de resultados
                                                 ISession m_session = NHibernateHttpModule.CurrentSession;
                                                 ICriteria crit = m_session.CreateCriteria(typeof(ResultadoItem));
                                                 crit.Add(Expression.Eq("IdItem", oItem));
                                                 crit.Add(Expression.Eq("IdEfector", oUser.IdEfector)); //Multiefector
-                                                crit.Add(Expression.Eq("Baja", false));
+                                                crit.Add(Expression.Eq("Baja", false));                                       
                                                 string m_resultadoDefecto = "";
                                                 ///Si tiene resultados predeterminados muestra un combo
                                                 IList resultados = crit.List();
                                                 if (resultados.Count > 0)
                                                 {
-                                                    DropDownList ddl1 = new DropDownList();
+                                                    DropDownList ddl1 = new DropDownList();                                                    
                                                     ListItem ItemSeleccion = new ListItem();
                                                     ItemSeleccion.Value = "0";
                                                     ItemSeleccion.Text = "";
@@ -1272,7 +1305,7 @@ namespace WebLab.Resultados
                                                         Item.Value = oResultado.IdResultadoItem.ToString();
                                                         Item.Text = oResultado.Resultado;
                                                         ddl1.ID = m_idControl;
-                                                        ddl1.Items.Add(Item);
+                                                        ddl1.Items.Add(Item);                                                        
                                                         ddl1.SelectedIndexChanged += new EventHandler(ddl1_SelectedIndexChanged);
                                                         if (oResultado.ResultadoDefecto)
                                                             m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
@@ -1282,7 +1315,7 @@ namespace WebLab.Resultados
                                                     if (oDet != null)
                                                     {
                                                         if (oDet.ConResultado == false) // sin resultado
-                                                        {
+                                                        {                                                            
                                                             if (m_resultadoDefecto != "")
                                                                 ddl1.SelectedValue = m_resultadoDefecto;// oItem.IdResultadoPorDefecto.ToString();
                                                             else
@@ -1293,22 +1326,22 @@ namespace WebLab.Resultados
                                                             ddl1.SelectedItem.Text = oDet.ResultadoCar;
                                                     }
 
-                                                    if (oDet.IdUsuarioValida > 0) // validado
-                                                        ddl1.BackColor = Color.LightBlue;
-                                                    else
-                                                    {
-                                                        if (oDet.IdUsuarioPreValida > 0) // prevalidado
-                                                            ddl1.BackColor = Color.Red;
-                                                        else {
-                                                            if (oDet.IdUsuarioControl > 0) // controlado
-                                                                ddl1.BackColor = Color.LightGreen;
-                                                        }
+                                                if (oDet.IdUsuarioValida > 0) // validado
+                                                    ddl1.BackColor = Color.LightBlue;
+                                                else
+                                                {
+                                                    if (oDet.IdUsuarioPreValida > 0) // prevalidado
+                                                        ddl1.BackColor = Color.Red;
+                                                    else {
+                                                        if (oDet.IdUsuarioControl > 0) // controlado
+                                                            ddl1.BackColor = Color.LightGreen;
                                                     }
+                                                }
 
                                                     if (Request["Operacion"] == "Control") // control
                                                     {
-                                                        if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
-                                                            ddl1.Enabled = false;
+                                                    if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
+                                                        ddl1.Enabled = false;
                                                     }
                                                     if (Request["Operacion"] == "Carga") // control
                                                     {
@@ -1316,17 +1349,17 @@ namespace WebLab.Resultados
                                                             ddl1.Enabled = false;
                                                         else
                                                         {
-                                                            if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
-                                                                ddl1.Enabled = false;
+                                                        if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioPreValida > 0))
+                                                            ddl1.Enabled = false;
                                                         }
                                                     }
                                                     ///agrega boton para seleccionar las opciones
                                                     ImageButton btnAddDetalle = new ImageButton();
-                                                    btnAddDetalle.TabIndex = short.Parse("500");
+                                                    btnAddDetalle.TabIndex = short.Parse("500");                                                    
                                                     btnAddDetalle.ID = "b" + m_idControl;
                                                     btnAddDetalle.ToolTip = "Desplegar opciones";
-                                                    btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";
-                                                    btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");
+                                                    btnAddDetalle.ImageUrl = "~/App_Themes/default/images/add.png";                                                    
+                                                    btnAddDetalle.Attributes.Add("onClick", "javascript: PredefinidoSelect (" + oDet.IdDetalleProtocolo.ToString() + ",'" + Request["Operacion"].ToString() + "'); return false");                                                    
                                                     ddl1.Width= Unit.Pixel(150);
                                                     objCell.Controls.Add(ddl1);
                                                     objCell.Controls.Add(btnAddDetalle);
@@ -1334,24 +1367,24 @@ namespace WebLab.Resultados
                                                 }
 
 
-
+                                            
                                             }
                                             break;
-
+                                           
+                                        }
                                     }
+
                                 }
 
+                                objCell.Height = Unit.Pixel(40);                                
+                                objRow.Cells.Add(objCell);
                             }
-
-                            objCell.Height = Unit.Pixel(40);
-                            objRow.Cells.Add(objCell);
                         }
+                        tContenido.Controls.Add(objRow);                      
                     }
-                    tContenido.Controls.Add(objRow);
+                    Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);                    
                 }
-                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(tContenido);
-            }
-
+            
         }
         protected void btnActualizarPracticas_Click(object sender, EventArgs e)
         {
@@ -1548,8 +1581,8 @@ namespace WebLab.Resultados
             Protocolo oProtocolo = new Protocolo();
             oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(id_Protocolo));
                             
-            Item oItem = new Item();
-            oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
+    Item oItem = new Item();
+                oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_idItem));
 
             if (valorItem != "") 
             {
@@ -1568,7 +1601,7 @@ namespace WebLab.Resultados
                 
 
                 int tiporesultado = oItem.IdTipoResultado;
-
+                
 
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
@@ -1590,7 +1623,7 @@ namespace WebLab.Resultados
                         //oDetalle.ValorReferencia = valorReferencia;
                         //if (tabla.Length>1)
                         //    oDetalle.Metodo= tabla[1].ToString();
-                        
+
                         switch (tiporesultado)
                         {
                             case 1:// numerico 
@@ -1606,6 +1639,7 @@ namespace WebLab.Resultados
                                     oDetalle.ConResultado = false;
                                 }
                                 break;
+
 
                             case 3://Predefinido
                                 {
@@ -1625,13 +1659,15 @@ namespace WebLab.Resultados
                                             if (detalleResultadoItem.Count > 0)
                                             {
                                                 ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
-                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+
                                                 if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
                                                     oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
                                             }
                                             else
                                             {
-                                                // El resultado no está configurado en ResultadoItem
+                                                // El resultado no está configurado en ResultadoItem                                               
                                                 oDetalle.EstadoValidacion = "";
                                             }
 

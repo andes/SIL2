@@ -73,7 +73,7 @@ namespace WebLab.Resultados
                                 
 
             }
-           
+
 
         }
        
@@ -903,7 +903,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
         private void GuardarResultado(string m_idDetalleProtocolo, string valorItem, bool valida )
         {
 
-           
+            ISession m_session = NHibernateHttpModule.CurrentSession;
             DetalleProtocolo oDetalle = new DetalleProtocolo();
            
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(m_idDetalleProtocolo));
@@ -927,14 +927,14 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                             oDetalle.ConResultado = false;
                         }
                         break;
+
                     case 3://Predefinido
                         {
-                            if (valida)
+                           if (valida)
                             {
                                 if (valorItem != "")
                                 {
                                     oDetalle.ResultadoCar = valorItem;
-                                    ISession m_session = NHibernateHttpModule.CurrentSession;
                                     ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
 
                                     crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
@@ -946,13 +946,15 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                                     if (detalleResultadoItem.Count > 0)
                                     {
                                         ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
-                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+
                                         if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
                                             oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
                                     }
                                     else
                                     {
-                                        // El resultado no está configurado en ResultadoItem
+                                        // El resultado no está configurado en ResultadoItem                                               
                                         oDetalle.EstadoValidacion = "";
                                     }
 
@@ -982,7 +984,6 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                         }
                         break;
 
-
                     default:
                         if (valorItem != "")
                         {
@@ -996,43 +997,9 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                         }
                         break;
                 }
-                ///Caro: no se graba valor de referencia ni unidad de medida ya que se carga en el ingreso de protocolo
-                //int pres = oDetalle.IdSubItem.GetPresentacionEfector(oDetalle.IdEfector);
-
-                //string valorRef = oDetalle.CalcularValoresReferencia(pres);
-                //string m_metodo = "";
-                //string m_valorReferencia = "";
-                
-
-                //if (valorRef != null)
-                //{
-                //    string[] arr = valorRef.Split(("|").ToCharArray());
-                //    switch (arr.Length)
-                //    {
-                //        case 1: m_valorReferencia = arr[0].Trim().ToString(); break;
-                //        case 2:
-                //            {
-                //                m_valorReferencia = arr[0].Trim().ToString();
-                //                m_metodo = arr[1].Trim().ToString();
-                //            }
-                //            break;
-                //    }
-                //    oDetalle.Metodo = m_metodo;
-                //    oDetalle.ValorReferencia = m_valorReferencia;
-                //}
+             
                 string operacion = Request["Operacion"].ToString();
-                //string s_unidadMedida = "";
-                //int i_unidadMedida = oDetalle.IdSubItem.IdUnidadMedida;
-                //if (i_unidadMedida > 0)
-                //{
-                //    UnidadMedida oUnidad = new UnidadMedida();
-                //    oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), i_unidadMedida);
-                //    s_unidadMedida = oUnidad.Nombre;
-                //}
-
-                //oDetalle.UnidadMedida = s_unidadMedida;
-                //oDetalle.Metodo = m_metodo;
-                //oDetalle.ValorReferencia = m_valorReferencia;
+            
                 bool grabar = true;
                 string s_operacion = "Valida";
                 if (!valida) s_operacion = "Carga";
@@ -1204,15 +1171,13 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                     DetalleProtocolo oDProtocolo = new DetalleProtocolo();
                     oDProtocolo = (DetalleProtocolo)oDProtocolo.Get(typeof(DetalleProtocolo), "IdProtocolo", oRegistro, "IdSubItem", oItem);
 
-                  
+                    ///Caro: control de derivacion                    
+                    Derivacion oDeriva = new Derivacion();
+                    oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDProtocolo);
+
                     string res = oDProtocolo.ResultadoCar;
 
-                    //07.09.2026 Validamos que el analisis no tenga una derivacion automatica
-                    if (res.Contains(" - Pendiente de derivar")
-                     || (res.Contains(" - Pendiente para enviar"))
-                     || (res.Contains(" - No Derivado:"))
-                     || (res.Contains(" - Derivado:"))
-                     || (res.Contains(" - Recibido en ")))
+                    if (oDeriva!= null)
                     {
                         lblError.Text = "El resultado tiene una derivacion asociada no puede modificar.";
                         lblError.Visible = true;

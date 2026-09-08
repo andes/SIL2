@@ -107,7 +107,7 @@ namespace WebLab.Resultados
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["idItem"].ToString()));
                 if (oItem != null)
                     lblItem.Text = oItem.Codigo + "  -  " + oItem.Nombre;
-                 //if (oItem.IdTipoResultado == 4)
+                //if (oItem.IdTipoResultado == 4)
                 //    lblMensaje.Text = "Para ampliar la selección de carga de resultados acceder por Lista de Protocolos";
                 //else lblMensaje.Text = "";
             }
@@ -309,6 +309,19 @@ namespace WebLab.Resultados
     .ToDictionary(g => g.Key, g => g.ToList());
                 /*fin del cambio*/
 
+                // Traer todas las Derivaciones juntas
+                var derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                    .CreateAlias("IdDetalleProtocolo", "dp")
+                    .Add(Expression.In("dp.IdDetalleProtocolo", listaDetalleIds.ToArray()))
+                    .List()
+                    .Cast<Derivacion>()
+                    .ToList();
+
+                var derivacionesDict = derivacionesList
+                    .ToDictionary(d => d.IdDetalleProtocolo.IdDetalleProtocolo);
+                /// CARO PF : fin 
+                /// 
+
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     string s_valorReferencia = dt.Rows[i].ItemArray[9].ToString();
@@ -319,6 +332,9 @@ namespace WebLab.Resultados
                     DetalleProtocolo oDetalle;
                     if (!dictDetalles.TryGetValue(int.Parse(s_idDetalleProtocolo), out oDetalle))
                         continue;
+
+                    Derivacion oDeriva;
+                    derivacionesDict.TryGetValue(int.Parse(s_idDetalleProtocolo), out oDeriva);
 
                     string s_idProtocolo = oDetalle.IdProtocolo.ToString();
                     string s_fecha = oDetalle.IdProtocolo.Fecha.ToShortDateString();
@@ -650,9 +666,9 @@ namespace WebLab.Resultados
                                     foreach (ResultadoItem oResultado in resultados)
                                     {
                                         ddl1.Items.Add(new ListItem(
-                                          oResultado.Resultado.Trim(),
-                                          oResultado.IdResultadoItem.ToString()
-                                      ));
+                                            oResultado.Resultado.Trim(),
+                                            oResultado.IdResultadoItem.ToString()
+                                        ));
 
                                         if (oResultado.ResultadoDefecto)
                                             m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
@@ -666,20 +682,16 @@ namespace WebLab.Resultados
                                     }
                                     else
                                     {
-                                        //var itemSel = ddl1.Items.FindByText(s_resultadoCar.Trim());
-                                        //if (itemSel != null)
+                                        /*     var itemSel = ddl1.Items.FindByText(s_resultadoCar.Trim());
+                                             if (itemSel != null)
+                                                 ddl1.SelectedValue = itemSel.Value;
+                                                 */
                                         ddl1.SelectedItem.Text = oDetalle.ResultadoCar;
 
-                                        if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar"))
-                                            ddl1.Attributes["disabled"] = "disabled"; //solo deshabilitado visual pero enabled para desvalidar
-
-                                        if (oDetalle.ResultadoCar.Contains(" - Pendiente para enviar")
-                                         || oDetalle.ResultadoCar.Contains(" - No Derivado:")
-                                         || oDetalle.ResultadoCar.Contains(" - Derivado:")
-                                         || oDetalle.ResultadoCar.Contains(" - Recibido en "))
-                                        {
+                                        ///Caro: derivacion
+                                        /// 
+                                        if (oDeriva != null)  /// si tiene una derivacion inhabilita control                                                           
                                             ddl1.Enabled = false;
-                                        }
                                     }
 
 
@@ -2229,7 +2241,6 @@ namespace WebLab.Resultados
             {
 
                 int tiporesultado = oDetalle.IdSubItem.IdTipoResultado;
-
                 switch (tiporesultado)
                 {
                     case 1:// numerico         
@@ -2252,8 +2263,8 @@ namespace WebLab.Resultados
                             {
                                 if (valorItem != "")
                                 {
-                                    oDetalle.ResultadoCar = valorItem;
                                     ISession m_session = NHibernateHttpModule.CurrentSession;
+                                    oDetalle.ResultadoCar = valorItem;
                                     ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
 
                                     crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
@@ -2265,13 +2276,15 @@ namespace WebLab.Resultados
                                     if (detalleResultadoItem.Count > 0)
                                     {
                                         ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
-                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+
                                         if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
                                             oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
                                     }
                                     else
                                     {
-                                        // El resultado no está configurado en ResultadoItem
+                                        // El resultado no está configurado en ResultadoItem                                               
                                         oDetalle.EstadoValidacion = "";
                                     }
 
@@ -2301,7 +2314,6 @@ namespace WebLab.Resultados
                         }
                         break;
 
-
                     default:
                         if (valorItem != "")
                         {
@@ -2316,43 +2328,7 @@ namespace WebLab.Resultados
                         break;
                 }
 
-                //Caro Performance: el metodo y valor de referencia se calcula en la carga de protocolo
-                /*string m_metodo = "";
-                string m_valorReferencia = "";
-                string nombre_control = "VR" + oDetalle.IdDetalleProtocolo.ToString();
-                Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
-                Label valorRef = (Label)control1;
-
-
-                if (valorRef != null)
-                {
-                    string[] arr = valorRef.Text.Split(("|").ToCharArray());
-                    switch (arr.Length)
-                    {
-                        case 1: m_valorReferencia = arr[0].Trim().ToString(); break;
-                        case 2:
-                            {
-                                m_valorReferencia = arr[0].Trim().ToString();
-                                m_metodo = arr[1].Trim().ToString();
-                            } break;
-                    }
-                    oDetalle.Metodo = m_metodo;
-                    oDetalle.ValorReferencia = m_valorReferencia;
-                }
               
-                string s_unidadMedida = "";
-                int i_unidadMedida = oDetalle.IdSubItem.IdUnidadMedida;
-                if (i_unidadMedida > 0)
-                {
-                    UnidadMedida oUnidad = new UnidadMedida();
-                    oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), i_unidadMedida);
-                    s_unidadMedida = oUnidad.Nombre;
-                }
-
-                oDetalle.UnidadMedida = s_unidadMedida;
-                oDetalle.Metodo = m_metodo;
-                oDetalle.ValorReferencia = m_valorReferencia;
-                */
                 string operacion = Request["Operacion"].ToString();
                 if (Request["Operacion"].ToString() == "Carga")
                 {
@@ -2503,18 +2479,6 @@ namespace WebLab.Resultados
                     oDetalle.FechaValida = DateTime.Parse("01/01/1900");
                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                     oDetalle.Save();
-
-                    //07.09.2026 Si tiene una derivacion automatica y no enviada la elimino
-                    if (oDetalle.ResultadoCar.Contains(" - Pendiente de derivar"))
-                    {
-                        oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivado", oUser.IdUsuario);
-                        oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
-                        oDetalle.Save();
-
-                        Derivacion oDerivacion = (Derivacion)new Derivacion().Get(typeof(Derivacion), "IdDetalleProtocolo", oDetalle);
-                        oDerivacion.Delete();
-
-                    }
                 }
 
             }
@@ -2649,17 +2613,17 @@ namespace WebLab.Resultados
                     crit.Add(Expression.In("IdDetalleProtocolo", idsDetalle.ToArray()));
                     IList resultados = crit.List();
 
-                    foreach (DetalleProtocolo oDetalle in resultados)
+                    foreach (DetalleProtocolo oDet in resultados)
                     {
-                        string nombreControl = "ResAnterior" + oDetalle.IdSubItem.IdItem + "_" + oDetalle.IdProtocolo.IdProtocolo;
+                        string nombreControl = "ResAnterior" + oDet.IdSubItem.IdItem + "_" + oDet.IdProtocolo.IdProtocolo;
                         Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombreControl);
                         Label lbl = control1 as Label;
                         if (lbl != null)
                         {
                             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-                            string resultadoAnterior = oDetalle.BuscarResultadoAnterior(oDetalle.IdSubItem, true, connReady);
-                            //string resultadoAnterior =oDetalle.BuscarResultadoAnterior(   oDetalle.IdSubItem,      oDetalle.IdItem,      true);
+                            string resultadoAnterior = oDet.BuscarResultadoAnterior(oDet.IdSubItem, true, connReady);
+                            //string resultadoAnterior =oDet.BuscarResultadoAnterior(   oDet.IdSubItem,      oDet.IdItem,      true);
                             if (resultadoAnterior != "")
                             {
                                 lbl.Text = resultadoAnterior;
