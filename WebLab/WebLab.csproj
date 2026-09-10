@@ -2038,6 +2038,7 @@
     <Content Include="Consulta\Procesa.aspx" />
     <Content Include="Consulta\ResultadoView.aspx" />
     <Content Include="controldecambios.html" />
+    <Content Include="Derivaciones\EditarListaLote.aspx" />
     <Content Include="Derivaciones\LoteList.aspx" />
     <Content Include="Derivaciones\NuevoLote.aspx" />
     <Content Include="Derivaciones\InformeLote.aspx" />
@@ -2647,6 +2648,7 @@
     <Content Include="script\chosen\chosen.min.css" />
     <Content Include="script\chosen\chosen.proto.js" />
     <Content Include="script\chosen\chosen.proto.min.js" />
+    <Content Include="script\jquery-1.9.1.js" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -4580,6 +4582,13 @@
     </Compile>
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\EditarListaLote.aspx.cs">
+      <DependentUpon>EditarListaLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\EditarListaLote.aspx.designer.cs">
+      <DependentUpon>EditarListaLote.aspx</DependentUpon>
     </Compile>
     <Compile Include="Derivaciones\LoteList.aspx.cs">
       <DependentUpon>LoteList.aspx</DependentUpon>

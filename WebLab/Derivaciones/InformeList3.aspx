@@ -2,6 +2,9 @@
 <%--<%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>--%>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+  <script type="text/javascript" src="../script/jquery.min.js"></script> 
+  <script type="text/javascript" src="../script/jquery-ui.min.js"></script> 
+  <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet"  type="text/css" />
     <script type="text/javascript">
 
         function validarFormulario() {
@@ -143,6 +146,33 @@
             else
                 return false;
         }
+       
+        function AgregarDeterminaciones() {
+            var idLoteDerivacion = document.getElementById('<%= HFIdLote.ClientID %>').value;
+            var idEfectorDerivacion = document.getElementById('<%= HFIdEfectorDerivacion.ClientID %>').value;
+
+            $('<iframe src="EditarListaLote.aspx?id=' + idLoteDerivacion + '&idEfectorDerivacion=' + idEfectorDerivacion+'" />').dialog({
+                title: 'Agregar Determinaciones a Lote ' + idLoteDerivacion,
+                autoOpen: true,
+                width: 800,
+                height: 590,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+
+                buttons: {
+                    'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnAgregarDeterminaciones))%>; }
+                },
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                }
+
+            }).width(800);
+
+          
+        }
     </script>
 
   <script type="text/javascript">
@@ -189,7 +219,7 @@
   </script>
 
 
-
+    
 
 </asp:Content>
  
@@ -283,6 +313,14 @@
                         <td>
                         <!-- PDF de Control de determinaciones -->
                             <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" OnClientClick="return validarGrilla();"  onclick="lnkPDF_Click"> <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />Generar PDF de Control</asp:LinkButton>       
+                        </td>
+                        <td>
+                        </td>  
+
+                        <td align="right">
+                            <asp:HiddenField ID="HFIdLote" runat="server" />
+                            <asp:HiddenField ID="HFIdEfectorDerivacion" runat="server" />
+                            <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200" OnClientClick="AgregarDeterminaciones(); return false; " OnClick="btnAgregarDeterminaciones_Click"/>
                         </td>
                     </tr>
                     <tr><td> <br /></td></tr>
@@ -395,4 +433,6 @@
 </div>
    
  </div>
+
+   
 </asp:Content>
