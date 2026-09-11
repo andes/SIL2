@@ -4841,6 +4841,8 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             lblMensajeImpresion.Text = "Se ha enviado la impresión.";
             if (ddlImpresora2.SelectedIndex>0)
             {
+                Session["Etiquetadora"] = ddlImpresora2.SelectedValue;
+
                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                 oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
                 ///Imprimir codigo de barras.

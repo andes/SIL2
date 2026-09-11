@@ -7,10 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Resultados {
+namespace WebLab.Resultados
+{
 
 
-    public partial class ResultadoEdit2 {
+    public partial class ResultadoEdit2
+    {
 
         /// <summary>
         /// lblTitulo control.
@@ -605,7 +607,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage obs;
-        
+
         /// <summary>
         /// tituloAntecedente control.
         /// </summary>
@@ -859,6 +861,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.RadioButtonList rdbImprimir;
 
         /// <summary>
+        /// btnAplicarFormula2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAplicarFormula2;
+
+        /// <summary>
         /// btnValidarImprimir control.
         /// </summary>
         /// <remarks>
@@ -974,7 +985,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumeroAislamiento;
-        
+
         /// <summary>
         /// rvNumeroAislamiento control.
         /// </summary>
@@ -983,7 +994,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvNumeroAislamiento;
-        
+
         /// <summary>
         /// cvNumeroAislamiento control.
         /// </summary>
@@ -992,7 +1003,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvNumeroAislamiento;
-        
+
         /// <summary>
         /// txtCodigoMicroorganismo control.
         /// </summary>

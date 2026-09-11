@@ -628,6 +628,10 @@
 						</td>
 						<td align="right" style="vertical-align: top" colspan="1"> 
                           
+                             <asp:Button ID="btnAplicarFormula2" runat="server" CssClass="btn btn-danger"
+                                Text="F(x) Calcular Fórmulas"  AccessKey="F" ToolTip="Alt+Shift+F"
+                                onclick="btnAplicarFormula_Click" Visible="False" Font-Size="8" Width="200px" TabIndex="600" /> 
+                              &nbsp;&nbsp;
                            <asp:Button ID="btnValidarImprimir" AccessKey="I" runat="server" CssClass="btn btn-primary" ToolTip="Alt+Shift+I:Validar e Imprimir en impresora seleccionada" Text="Validar + Imprimir" 
                                 onclick="btnValidarImprimir_Click" ValidationGroup="0" Visible="False" 
                                 Width="180px" />

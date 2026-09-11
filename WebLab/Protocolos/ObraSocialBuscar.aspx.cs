@@ -38,11 +38,13 @@ namespace WebLab.Protocolos
 
         private void CargarListas()
         {
-            Utility oUtil = new Utility();
+            //Utility oUtil = new Utility();
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
             string  m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
-           
-            oUtil.CargarCombo(ddlObrasSociales, m_ssql, "nombre", "nombre", connReady);
+            string cacheKey = $"CAT_OS_{oUser.IdEfector.IdEfector}";
+            Business.Helpers.ComboCache.CargarCombo(ddlObrasSociales, cacheKey, m_ssql, "nombre", "nombre", connReady);
+
+            //oUtil.CargarCombo(ddlObrasSociales, m_ssql, "nombre", "nombre", connReady);
             ddlObrasSociales.Items.Insert(0, new ListItem("--Seleccione una obra social --", "0"));
 
 
