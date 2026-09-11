@@ -202,6 +202,8 @@ namespace WebLab.Informes
                   //  oUtil.CargarCombo(ddlImpresoraCB, m_ssql, "nombre", "nombre", connReady);
 
                     ddlImpresoraCB.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
+                    if (Session["Etiquetadora"] != null) //11.09.2026 recordar impresora por usuario
+                        ddlImpresoraCB.SelectedValue = Session["Etiquetadora"].ToString();
                 }
 
                 if (Request["Tipo"].ToString() == "HojaTrabajo") ddlPrioridad.SelectedValue = "1";//rutina
@@ -1222,6 +1224,8 @@ and ie.idEfector= ie.idEfectorDerivacion " + m_condicion+ @" order by I.nombre "
                     ImprimirCodigoBarrasAreas(oProt, ddlArea.SelectedValue, ddlImpresoraCB.SelectedItem.Text);
 
                 }
+                Session["Etiquetadora"] = ddlImpresoraCB.SelectedValue; //11.09.2026 recordar impresora por usuario
+
             }
            
 

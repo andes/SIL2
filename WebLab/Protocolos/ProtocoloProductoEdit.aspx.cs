@@ -520,6 +520,8 @@ namespace WebLab.Protocolos
                //     oUtil.CargarCombo(ddlImpresoraEtiqueta, m_ssql, "nombre", "nombre", connReady);
                     ddlImpresoraEtiqueta.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
 
+                    if (Session["Etiquetadora"] != null) //11.09.2026 recordar impresora por sesion de usuario
+                        ddlImpresoraEtiqueta.SelectedValue = Session["Etiquetadora"].ToString();
 
 
                     if ((Request["Operacion"].ToString() == "Alta") ||
@@ -541,7 +543,8 @@ namespace WebLab.Protocolos
                         ddlImpresora2.Items.Insert(0, new ListItem("Seleccione impresora", "0"));
                         tab3Titulo.Visible = true;
                         pnlEtiquetas.Visible = true;
-
+                        if (Session["Etiquetadora"] != null) //11.09.2026 recordar impresora por sesion de usuario
+                            ddlImpresora2.SelectedValue = Session["Etiquetadora"].ToString();
                         //m_ssql = @"select idArea, nombre from Lab_Area  A with (nolock)
                         //    WHERE imprimeCodigoBarra=1 
                         //    and baja=0
@@ -818,7 +821,7 @@ ORDER BY numeroP";
                               
                                ImprimirCodigoBarrasAreas(oRegistro, s_AreasCodigosBarras, ddlImpresoraEtiqueta.SelectedItem.Text);
                             }
-                            
+                            Session["Etiquetadora"] = ddlImpresoraEtiqueta.SelectedValue; //11.09.2026 recordar impresora por sesion de usuario
                         }
                        EnviarEquipo(oRegistro);
                         Response.Redirect("ProtocoloMensaje.aspx?id=" + oRegistro.IdProtocolo, false);
@@ -2282,6 +2285,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             lblMensajeImpresion.Text = "Se ha enviado la impresión.";
             if (ddlImpresora2.SelectedIndex > 0)
             {
+                Session["Etiquetadora"] = ddlImpresora2.SelectedValue;
                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                 oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
                 ///Imprimir codigo de barras.

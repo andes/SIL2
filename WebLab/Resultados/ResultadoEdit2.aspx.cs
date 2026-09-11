@@ -256,6 +256,7 @@ namespace WebLab.Resultados
 
                         chkFormula.Visible = false;
                         btnAplicarFormula.Visible = false;
+                        btnAplicarFormula2.Visible = false;
                         lblFormula.Visible = false;
                         if (Request["validado"].ToString() == "1")
                          lblTitulo.Text = "HISTORIA CLINICA";
@@ -869,6 +870,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             btnGuardar.Visible = false;
                             chkFormula.Enabled = false;
                             btnAplicarFormula.Enabled = false;
+                            btnAplicarFormula2.Enabled = false;
                             ////OCULTAR OPCIONES PARA CREAR O ELIMINAR ANTIBIOGRAMAS
 
                             btnGuardarAislamientos.Visible = false;
@@ -892,6 +894,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                             btnGuardar.Visible = false;
                             chkFormula.Enabled = false;
                             btnAplicarFormula.Enabled = false;
+                            btnAplicarFormula2.Enabled = false;
                             ////OCULTAR OPCIONES PARA CREAR O ELIMINAR ANTIBIOGRAMAS
                             btnGuardarAislamientos.Visible = false;
                             btnAgregarGermen.Visible = false;
@@ -1928,6 +1931,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                     chkFormula.Visible = true;
                                                     lblFormula.Visible = true;
                                                     btnAplicarFormula.Visible = true;                                                                                                    
+                                                    btnAplicarFormula2.Visible = true;                                                                                                    
                                                     /// seleccionar la formula a calcular
                                                     CheckBox ochkFormula = new CheckBox();
                                                     ochkFormula.Checked = true;                                                    

@@ -232,13 +232,17 @@ namespace WebLab.Protocolos
                             pnlLista.Visible = false;
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
-
+                           
                         }
+                       
+                       
 
                         if(Request["idPaciente"] != null) //Cambio de paciente
                         {
                             HFModificarPaciente.Value = "Si";
                         }
+
+
                     }
                     else
 
@@ -925,7 +929,8 @@ namespace WebLab.Protocolos
 
                 lblEstado.Text = VerEstado(oRegistro);
 
-
+                //7.8.2026 si viene desde lista de protocolo queremos ver el estado anulado del protocolo
+                if (Request["Desde"].ToString() == "ProtocoloList" && oRegistro.Baja) lblEstadoAnulado.Visible = true;
 
                 if (oC.TipoNumeracionProtocolo == 2)
                 {
@@ -1095,7 +1100,9 @@ namespace WebLab.Protocolos
                 //chkImprimir.Visible = false;
                 //chkRecordarConfiguracion.Visible = false;
 
-                if (oRegistro.Estado == 2) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
+                //14.08.2026 El parametro ModificarProtocoloTerminado aplica solo a protocolos activos.
+               // Si esta anulado no se puede modificar independientemente del estado(no procesado, en proceso, terminado o restringido)
+                if (oRegistro.Estado == 2 && !oRegistro.Baja) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
             }
         }
 
@@ -1271,8 +1278,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 hplModificarPaciente.Enabled = false;
                 hplActualizarPaciente.Enabled = false;
             }
-
-
+            
+                
             return result;
         }
 
@@ -1652,6 +1659,11 @@ ORDER BY numeroP";
 
                         IniciarValores(oC);
                 }
+            }
+            else
+            {
+                if (Session["Etiquetadora"] != null) //26.08.2026 para modificacion recordar la impresora seleccionada
+                    ddlImpresora2.SelectedValue = Session["Etiquetadora"].ToString();
             }
 
             if (Request["Operacion"].ToString() == "AltaDerivacion") IniciarValores(oC);
@@ -2615,7 +2627,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
                 if (Request["Operacion"].ToString() != "Modifica") { if (Request["Operacion"].ToString() != "AltaPeticion") { if (Session["idUrgencia"] != null) { if (Session["idUrgencia"].ToString() == "0") AlmacenarSesion(oC); } } }
                     if (Request["Operacion"].ToString() == "AltaDerivacion") AlmacenarSesion(oC);
-
+                if (Request["Operacion"].ToString() == "Modifica") Session["Etiquetadora"] = ddlImpresora2.SelectedValue; //26.08.2026 si guardo desde modficicacion que recuerde la impresora seleccionada
                 //   if (Request["idSolicitudScreening"] != null) ActualizarSolicitudScreening(Request["idSolicitudScreening"].ToString(),oRegistro);
                 GuardarDiagnosticos(oRegistro);
                 if (oRegistro.IdTipoServicio.IdTipoServicio==3) GuardarEnfermedadBase(oRegistro);
@@ -4829,6 +4841,8 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             lblMensajeImpresion.Text = "Se ha enviado la impresión.";
             if (ddlImpresora2.SelectedIndex>0)
             {
+                Session["Etiquetadora"] = ddlImpresora2.SelectedValue;
+
                 Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                 oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
                 ///Imprimir codigo de barras.

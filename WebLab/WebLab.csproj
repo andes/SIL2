@@ -2503,6 +2503,7 @@
     <Content Include="Protocolos\DerivacionProcesa.aspx" />
     <Content Include="Protocolos\Derivacion.aspx" />
     <Content Include="Protocolos\DerivacionScreening.aspx" />
+    <Content Include="Protocolos\ObraSocialBuscar.aspx" />
     <Content Include="Protocolos\MedicoSel.aspx" />
     <Content Include="Protocolos\ObraSocialSel.aspx" />
     <Content Include="Protocolos\PesquisaNeonatal.ascx" />
@@ -5472,6 +5473,13 @@
     </Compile>
     <Compile Include="Protocolos\Family.cs" />
     <Compile Include="Protocolos\Identifier.cs" />
+    <Compile Include="Protocolos\ObraSocialBuscar.aspx.cs">
+      <DependentUpon>ObraSocialBuscar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Protocolos\ObraSocialBuscar.aspx.designer.cs">
+      <DependentUpon>ObraSocialBuscar.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Protocolos\MedicoSel.aspx.cs">
       <DependentUpon>MedicoSel.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
