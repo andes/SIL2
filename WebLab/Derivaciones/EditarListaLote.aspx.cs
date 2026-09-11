@@ -131,13 +131,13 @@ namespace WebLab.Derivaciones
                         foreach (string idDetalleProtocolo in idDetalles)
                         {
                             DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
-                            
+
                             ISession m_session = NHibernateHttpModule.CurrentSession;
                             ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                             crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
 
                             IList lista = crit.List();
-                            
+
                             if (lista.Count > 0)
                             {
                                 //verificamos resultado predefinido para cambiar el valor del resultadoCar correctamente
@@ -153,7 +153,7 @@ namespace WebLab.Derivaciones
                                 {
                                     oDeriva.Estado = 4; // 4  Pendiente para enviar
                                     oDeriva.IdUsuarioRegistro = idUsuarioRegistro;
-                                    oDeriva.FechaRegistro = DateTime.Now; 
+                                    oDeriva.FechaRegistro = DateTime.Now;
                                     oDeriva.Idlote = idLote; //asociamos al lote del request
                                     oDeriva.Save();
                                 }
@@ -181,11 +181,12 @@ namespace WebLab.Derivaciones
 
 
                 }
-                
+
                 lblMensaje.Text = "Determinaciones agregadas al lote";
                 CargarGrilla();
             }
         }
+        
 
 
         protected void ddlServicio_SelectedIndexChanged(object sender, EventArgs e)
