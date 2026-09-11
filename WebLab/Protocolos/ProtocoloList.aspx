@@ -263,7 +263,7 @@
                             <anthem:Label ToolTip="Nombre y Apellido de especialista" ID="lblNomApeEspecialista" runat="server"  AutoCallBack="true" Text="" ></anthem:Label> 
                             &nbsp;<anthem:LinkButton ID="lnkBuscarEspecialista" runat="server" ToolTip="Buscar Especialista" onclick="lnkBuscarEspecialista_Click"    OnClientClick="SelMedico(); return false;">
                                 <span class="glyphicon glyphicon-search"></span></anthem:LinkButton>
-                       &nbsp;<anthem:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" Text="Borrar seleccion" tooltip="Borrar Matricula" Visible="false" OnClick="lnkBorrarMatriculaEspecialista_Click"  >
+                       &nbsp;<anthem:LinkButton runat="server" ID="lnkBorrarMatriculaEspecialista" Text="Borrar seleccion" tooltip="Borrar Especialista" Visible="false" OnClick="lnkBorrarMatriculaEspecialista_Click"  >
                                  <span class="glyphicon glyphicon-trash"/></anthem:LinkButton>
                                     </td>
 						
