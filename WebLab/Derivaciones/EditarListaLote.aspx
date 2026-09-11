@@ -115,7 +115,7 @@
 
                       </td>
                       <td style="vertical-align: top; text-align: center; align-content:center">
-                        <asp:Button ID="btnConfirmar" runat="server" Text="Confirmar" OnClick="btnConfirmar_Click" CssClass="btn btn-success" Width="100" ValidationGroup="0" />
+                        <asp:Button ID="btnGuardar" runat="server" Text="Confirmar" OnClick="btnGuardar_Click" CssClass="btn btn-success" Width="100" ValidationGroup="0" />
                     </td>
                     
                 </tr>
