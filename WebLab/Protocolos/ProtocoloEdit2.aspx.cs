@@ -318,7 +318,7 @@ namespace WebLab.Protocolos
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                             {
-                                 
+                              
                                 CargarProtocoloDerivadoLote(); //llama a CargarProtocoloDerivado
                             }
                             if (Request["Operacion"].ToString() == "AltaFFEE")
@@ -1554,10 +1554,10 @@ ORDER BY numeroP";
                 if (Request["Operacion"].ToString() != "Modifica")  //alta
                     m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  with (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString()+")"; //Multiefector";
                 m_ssql += " order by nombre ";
-                //oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
+                oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
 
-                 cacheKey = $"CAT_Muestra_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
-                Business.Helpers.ComboCache.CargarCombo(ddlMuestra, cacheKey, m_ssql, "idMuestra", "nombre", connReady);
+                // cacheKey = $"CAT_Muestra_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+                //Business.Helpers.ComboCache.CargarCombo(ddlMuestra, cacheKey, m_ssql, "idMuestra", "nombre", connReady);
 
                 ddlMuestra.Items.Insert(0, new ListItem("--Seleccione Muestra--", "0"));
 
@@ -3094,7 +3094,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
-
+                        oDetalle.EstadoValidacion = "";
 
                         GuardarDetallePractica(oDetalle);
 
@@ -3430,7 +3430,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                     oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
                                     oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-
+                                    oDetalle.EstadoValidacion = "";
 
                                     oDetalle.Save();
                                     oDetalle.GuardarSinInsumo();
@@ -3447,8 +3447,8 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 {
                     oDet.IdSubItem = oDet.IdItem;
                     oDet.Informable = oDet.IdSubItem.GetInformableEfector(oUser.IdEfector);
+                    oDet.EstadoValidacion = "";
 
-               
                     oDet.Save();
                      oDet.GuardarSinInsumo();
                     oDet.GuardarValorReferencia();

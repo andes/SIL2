@@ -507,7 +507,26 @@ namespace Business
             ds.Dispose();
          
         }
+        public void CargarCombo(DropDownList Combo, String strSql, String CampoId, String CampoDetalle, String CampoExtra, String ValorCampoExtra)
+        {
+            NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
+            String strconn = oConf.GetProperty("hibernate.connection.connection_string");
 
+            SqlDataAdapter da = new SqlDataAdapter(strSql, strconn);
+            DataSet ds = new DataSet();
+            da.Fill(ds, "t");
+            Combo.Items.Clear();
+
+            foreach (DataRow row in ds.Tables["t"].Rows)
+            {
+                ListItem item = new ListItem(row[CampoDetalle].ToString(), row[CampoId].ToString());
+                item.Attributes[CampoExtra] = row[ValorCampoExtra].ToString();
+                Combo.Items.Add(item);
+            }
+
+            da.Dispose();
+            ds.Dispose();
+        }
         public void CargarCombo(DropDownList Combo, String strSql, String CampoId, String CampoDetalle, string strconn)
         {
             //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();

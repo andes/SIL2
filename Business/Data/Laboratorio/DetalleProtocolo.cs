@@ -57,6 +57,7 @@ namespace Business.Data.Laboratorio
         private DateTime m_fechaprevalida;
         private int m_ideventomuestraSISA;
         private bool m_informable;
+        private string m_estadoValidacion;
         #endregion
 
         #region Default ( Empty ) Class Constuctor
@@ -100,7 +101,7 @@ namespace Business.Data.Laboratorio
             m_formatovalida = 0;
             m_ideventomuestraSISA = 0;
             m_informable = true;
-
+            m_estadoValidacion = String.Empty;
         }
 		#endregion // End of Default ( Empty ) Class Constuctor
 
@@ -125,7 +126,8 @@ namespace Business.Data.Laboratorio
             DateTime fechaimpresion,
                 int idusuarioprevalida,
             DateTime fechaprevalida,
-            bool informable
+            bool informable,
+            string estadoValidacion
             //int idusuarioenvio,
             //DateTime fechaenvio
             )
@@ -151,6 +153,7 @@ namespace Business.Data.Laboratorio
             m_idusuarioprevalida = idusuarioprevalida;
             m_fechaprevalida = fechaprevalida;
             m_informable = informable;
+            m_estadoValidacion = estadoValidacion;
 
 
         }
@@ -273,10 +276,24 @@ namespace Business.Data.Laboratorio
                 m_isChanged |= (m_resultadocar != value); m_resultadocar = value;
             }
         }
-		/// <summary>
-		/// 
-		/// </summary>
-		public decimal ResultadoNum
+
+
+        public string EstadoValidacion
+        {
+            get { return m_estadoValidacion; }
+
+            set
+            {
+                if (value != null && value.Length > 1)
+                    throw new ArgumentOutOfRangeException("Invalid value for m_estadoValidacion", value, value.ToString());
+
+                m_isChanged |= (m_estadoValidacion != value); m_estadoValidacion = value;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public decimal ResultadoNum
 		{
 			get { return m_resultadonum; }
 			set
@@ -1768,7 +1785,12 @@ namespace Business.Data.Laboratorio
             return ok;
         }
 
-        public void GuardarDerivacion(Usuario oUser, int idEfectorDerivacion = 0)
+        /// <summary>
+        /// Guarda Derivacion con el efector parametrizado en Resultado Predefinido
+        /// </summary>
+        /// <param name="oUser"></param>
+        /// <param name="idEfectorDerivacion"></param>
+   public void GuardarDerivacion(Usuario oUser, int idEfectorDerivacion = 0)
         {
             if (this.IdItem.esDerivado(oUser.IdEfector) || idEfectorDerivacion != 0)
             {
@@ -1796,6 +1818,34 @@ namespace Business.Data.Laboratorio
                     this.ResultadoCar = "Pendiente de derivar";   
                 else
                     this.ResultadoCar += " - Pendiente de derivar";
+                this.Save();
+                this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
+            }
+        }
+		
+        /// <summary>
+        /// Guarda Derivacion con el efector parametrizado en Item EFector
+        /// </summary>
+        /// <param name="oUser"></param>
+        public void GuardarDerivacion(Usuario oUser)
+        {
+            if (this.IdItem.esDerivado(oUser.IdEfector))
+            {
+                Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
+                oRegistro.IdDetalleProtocolo = this;
+                oRegistro.Estado = 0;
+                oRegistro.Observacion = "";// txtObservacion.Text;
+                oRegistro.IdUsuarioRegistro = oUser.IdUsuario;//int.Parse(Session["idUsuario"].ToString());
+                oRegistro.FechaRegistro = DateTime.Now;
+                oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+
+                oRegistro.IdEfectorDerivacion = this.IdItem.GetIDEfectorDerivacion(oUser.IdEfector);  // se graba el efector configurado en ese momento.
+                oRegistro.IdProtocoloOrigen = IdProtocolo.IdProtocolo; //Guardo el idProtocolo de origen
+                oRegistro.IdProtocoloDestino = 0;
+                oRegistro.Save();
+
+                // graba el resultado en ResultadCar  "Pendiente de derivar"
+                this.ResultadoCar = "Pendiente de derivar";   
                 this.Save();
                 this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
             }

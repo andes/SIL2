@@ -413,7 +413,13 @@ namespace WebLab.Items
                 if (ddlResultadoPorDefecto.Items.Count == 1)
                     tResultadoDefecto.Visible = false;
 
-                
+                //02.09.2026 Seleccionar el resultado por defecto
+                ListItem item = ddlResultadoPorDefecto.Items
+                   .Cast<ListItem>()
+                   .FirstOrDefault(x => x.Attributes["resultadoDefecto"] == true.ToString());
+                if (item != null)
+                    ddlResultadoPorDefecto.SelectedValue = item.Value;
+
                 gvResultadosPredefinidos.DataSource = LeerDatosRP();
                 gvResultadosPredefinidos.DataBind(); 
             }
@@ -592,9 +598,9 @@ namespace WebLab.Items
         private void CargarListasRPDefecto()
         {
             Utility oUtil = new Utility();
-            string m_ssql = @"select idResultadoItem, resultado  as nombre
+            string m_ssql = @"select idResultadoItem, resultado  as nombre , resultadoDefecto
             from Lab_ResultadoItem with (nolock) where baja=0 and idItem= " + Request["id"].ToString() + " and  idEfector=" + Request["idEfector"].ToString() + " order by idResultadoItem";
-            oUtil.CargarCombo(ddlResultadoPorDefecto, m_ssql, "idResultadoItem", "nombre");
+            oUtil.CargarCombo(ddlResultadoPorDefecto, m_ssql, "idResultadoItem", "nombre", "resultadoDefecto", "resultadoDefecto");
             ddlResultadoPorDefecto.Items.Insert(0, new ListItem("               ", "0"));
             ddlResultadoPorDefecto.UpdateAfterCallBack = true;
         }

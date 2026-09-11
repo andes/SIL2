@@ -336,6 +336,42 @@ namespace WebLab.Resultados
 
                 var listaResultados = listaResultadosRaw.Cast<ResultadoItem>().ToList();
 
+
+                // Traer todas las Derivaciones juntas
+                //var derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                //    .CreateAlias("IdDetalleProtocolo", "dp")
+                //    .Add(Expression.In("dp.IdDetalleProtocolo", dictDetalles))
+                //    .List()
+                //    .Cast<Derivacion>()
+                //    .ToList();
+
+
+                var idsDetalles = dictDetalles.Values
+                    .Select(x => x.IdDetalleProtocolo)
+                    .Distinct()
+                    .ToArray();
+
+                var derivacionesList = new List<Derivacion>();
+
+                if (idsDetalles.Length > 0)
+                {
+                    derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                        .CreateAlias("IdDetalleProtocolo", "dp")
+                        .Add(Expression.In("dp.IdDetalleProtocolo", idsDetalles))
+                        .List()
+                        .Cast<Derivacion>()
+                        .ToList();
+                }
+
+                var derivacionesDict = derivacionesList
+                    .GroupBy(d => d.IdDetalleProtocolo.IdDetalleProtocolo)
+                    .ToDictionary(g => g.Key, g => g.First());
+
+
+                //fin de derivaciones
+                /// CARO PF : fin 
+
+
                 // ==========================
                 // 🔹 7. INDEXAR POR ITEM
                 // ==========================
@@ -355,6 +391,8 @@ namespace WebLab.Resultados
                     //objRow.Height = Unit.Pixel(50);
                     for (int i = 0; i < Ds.Tables[0].Columns.Count; i++)
                     {
+
+                    
 
                         TableCell objCell = new TableCell();
                         objCell.CssClass = "CeldaContenedor";
@@ -463,6 +501,8 @@ namespace WebLab.Resultados
                             DetalleProtocolo oDet = null;
                             dictDetalles.TryGetValue(idProtocolo + "_" + idItem, out oDet);
 
+                            Derivacion oDeriva;
+                            derivacionesDict.TryGetValue(oDet.IdDetalleProtocolo, out oDeriva);
 
                             //Item oItem = new Item();
                             //oItem = (Item)oItem.Get(typeof(Item), int.Parse(m_iditem));
@@ -681,7 +721,7 @@ namespace WebLab.Resultados
                                                             if (oResultado.ResultadoDefecto)
                                                                 m_resultadoDefecto = oResultado.IdResultadoItem.ToString();
                                                         }                                                         
-
+                                                        ////Caro: derivacion
                                                     if (oDet != null)
                                                     {
                                                         if (oDet.ConResultado == false) // sin resultado
@@ -692,7 +732,12 @@ namespace WebLab.Resultados
                                                                 ddl1.SelectedValue = "0";
                                                         }
                                                         else
+                                                        {
                                                             ddl1.SelectedItem.Text = oDet.ResultadoCar;
+                                                            if (oDeriva != null)  /// si tiene una derivacion inhabilita control                                                           
+                                                                ddl1.Enabled = false;
+                                                            
+                                                        }
                                                     }
 
                                                     if (oDet.IdUsuarioValida > 0) // validado
@@ -1592,6 +1637,63 @@ namespace WebLab.Resultados
                                 {
                                     oDetalle.ResultadoNum = 0;
                                     oDetalle.ConResultado = false;
+                                }
+                                break;
+
+
+                            case 3://Predefinido
+                                {
+                                    if (Request["Operacion"].ToString() == "Valida")
+                                    {
+                                        if (valorItem != "")
+                                        {
+                                            oDetalle.ResultadoCar = valorItem;
+                                            ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
+                                            crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                                            crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                            crit2.Add(Expression.Eq("Resultado", valorItem));
+
+                                            IList detalleResultadoItem = crit2.List();
+
+                                            if (detalleResultadoItem.Count > 0)
+                                            {
+                                                ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
+
+                                                if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
+                                                    oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                                oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                            }
+                                            else
+                                            {
+                                                // El resultado no está configurado en ResultadoItem                                               
+                                                oDetalle.EstadoValidacion = "";
+                                            }
+
+                                            oDetalle.ConResultado = true;
+                                        }
+                                        else
+                                        {
+                                            oDetalle.ResultadoCar = "";
+                                            oDetalle.ConResultado = false;
+                                            oDetalle.EstadoValidacion = "";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (valorItem != "")
+                                        {
+                                            oDetalle.ResultadoCar = valorItem;
+                                            oDetalle.ConResultado = true;
+                                        }
+                                        else
+                                        {
+                                            oDetalle.ResultadoCar = "";
+                                            oDetalle.ConResultado = false;
+                                            oDetalle.EstadoValidacion = "";
+                                        }
+                                    }
                                 }
                                 break;
                             default:

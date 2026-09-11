@@ -713,6 +713,7 @@ namespace WebLab.Resultados
                         objCellResultado.ColumnSpan = 1;
                         objCellResultado.Controls.Add(lblDerivacion);
 
+                        //04.09.2026 A la derivacion si tiene usuario valida y antecedentes lo mostramos
                         if (m_usuariovalida != "")
                         {
                             if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
@@ -744,6 +745,18 @@ namespace WebLab.Resultados
                             lblPersona.Font.Size = FontUnit.Point(7);
                             lblPersona.Font.Italic = true;
                             objCellPersona.Controls.Add(lblPersona);
+
+                            Label lblValoresReferencia = new Label();
+                            lblValoresReferencia.Font.Italic = true;
+                            lblValoresReferencia.Font.Size = FontUnit.Point(8);
+                            if (valorReferencia != "")
+                            {// muestra el valor guardado 
+                                lblValoresReferencia.Text = valorReferencia;
+                                if (m_metodo != "")
+                                    lblValoresReferencia.Text += Environment.NewLine + m_metodo;
+                            }
+
+                            objCellValoresReferencia.Controls.Add(lblValoresReferencia);
                         }
                     }
                     else

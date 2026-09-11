@@ -432,11 +432,12 @@ namespace WebLab.Derivaciones
                             //Si el resultado anterior era 'No derivado.'
                             if(estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
 
-                            if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
-                                if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
-                                else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
-                            
-                            oDet.ResultadoCar = resultadoDerivacion;
+                            //if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
+                            //    if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
+                            //    else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
+
+                            oDet.ResultadoCar = (aux_resultadoCar != "") ? aux_resultadoCar + " - " + resultadoDerivacion  : resultadoDerivacion;
+                            //oDet.ResultadoCar = resultadoDerivacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
                             oDet.FechaResultado = fechaResultado;
