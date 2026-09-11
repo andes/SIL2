@@ -33,7 +33,7 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                //oCr.Report.FileName = "";
+                oCr.Report.FileName = "";
                 oCr.CacheDuration = 0;
                 oCr.EnableCaching = false;
             }
