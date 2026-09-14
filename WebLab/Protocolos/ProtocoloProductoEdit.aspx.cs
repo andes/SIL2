@@ -350,21 +350,8 @@ namespace WebLab.Protocolos
             
 
             txtNumeroOrigen.Text = oRegistro.NumeroOrigen;
-
-
-
-            ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString(); 
-            
-
-            ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();
-         
-
-             
-
-            //ddlOrigen.SelectedValue = oRegistro.IdOrigen.IdOrigen.ToString();
-                        
-            //ddlPrioridad.SelectedValue = oRegistro.IdPrioridad.IdPrioridad.ToString();
-
+            ddlEfector.SelectedValue = oRegistro.IdEfectorSolicitante.IdEfector.ToString();             
+            ddlSectorServicio.SelectedValue = oRegistro.IdSector.IdSectorServicio.ToString();                      
 
             ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
             ddlConservacion.SelectedValue = oRegistro.IdConservacion.ToString();
@@ -387,11 +374,7 @@ namespace WebLab.Protocolos
             {
                 if (pivot != oDet.IdItem.Nombre)
                 {
-                    /*    if (sDatos == "")
-                            sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
-                        else
-                            sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + oDet.ConResultado;
-                    */
+                   
 
                     string estado = "0";
                     if (oDet.IdUsuarioValida > 0) //validado
@@ -1335,7 +1318,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
-
+                        oDetalle.EstadoValidacion = "";
 
                         GuardarDetallePractica(oDetalle);
                         //GuardarDerivacion(oDetalle);
@@ -1490,6 +1473,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
                     oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
+                    oDetalle.EstadoValidacion = "";
                     GuardarDetallePractica(oDetalle);
                 }
             }
@@ -1562,7 +1546,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                  oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
                                  oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                                 oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-
+                                oDetalle.EstadoValidacion = "";
                                 oDetalle.Save();
 
                                 GuardarValorReferencia(oDetalle);

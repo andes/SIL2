@@ -583,10 +583,13 @@
                            <span class="label label-default">Dentro de V.R</span>
                                 <span class="label label-danger">Fuera de V.R</span>
                             </asp:Panel> 
-                        
-                            <asp:CheckBox ID="chkCerrarSinResultados" runat="server" CssClass="myLabelIzquierda" 
-                                Text="Terminar protocolo" Visible="False" 
-                                ToolTip="Da por terminado el protocolo con analisis sin resultados"  />
+                        <br />
+                             <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-primary" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
+                                  Visible="False" 
+                                Width="180px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+
+
+                         
                         
 						<asp:CheckBox ID="chkWhonet" runat="server" CssClass="myLabelIzquierda" 
                                 Text="Informa Whonet" Visible="False" 
@@ -594,8 +597,8 @@
                         
 						<asp:RadioButtonList ID="rdbImprimir" RepeatDirection="Horizontal" runat="server" CssClass="myLabel" 
                                 Font-Names="Arial" Font-Size="8pt">
-                                <asp:ListItem Selected="True" Value="0">Imprimir sólo seleccionados</asp:ListItem>
-                                <asp:ListItem Value="1">Imprimir todos validados</asp:ListItem>
+                                <asp:ListItem Value="0">Imprimir sólo seleccionados</asp:ListItem>
+                                <asp:ListItem  Selected="True" Value="1">Imprimir todos validados</asp:ListItem>
                             </asp:RadioButtonList>
                          
 						</td>

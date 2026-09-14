@@ -832,13 +832,13 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Panel pnlReferencia;
         
         /// <summary>
-        /// chkCerrarSinResultados control.
+        /// btnCerrarSinResultados control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkCerrarSinResultados;
+        protected global::System.Web.UI.WebControls.Button btnCerrarSinResultados;
         
         /// <summary>
         /// chkWhonet control.

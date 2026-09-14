@@ -370,7 +370,6 @@ namespace WebLab.Derivaciones
                         int idLote = Convert.ToInt32(row.Cells[2].Text);
                         int idUsuario = oUser.IdUsuario;
                         int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
-                        //19.08.2026 Se guarda el resultado predefinido y la leyenda de derivacion
                         string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
                         string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
                         string resultadoAuditoria = resultadoDerivacion + " " + observacion;
@@ -386,9 +385,7 @@ namespace WebLab.Derivaciones
                         DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                         lote.FechaEnvio = fechaResultado;
                         lote.Save();
-
-                       
-
+                   
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                         //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
@@ -400,21 +397,21 @@ namespace WebLab.Derivaciones
                         foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                         {
                             #region Derivacion 
-                            //Cambia el estado de las derivaciones LAB_Derivacion 
+                                //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                            /*
-                             Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                             1 : Creado
-                             2 : Derivado
-                             3 : Cancelado
+                                /*
+                                 Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                                 1 : Creado
+                                 2 : Derivado
+                                 3 : Cancelado
 
-                             Estado de la derivacion LAB_DerivacionEstado
-                             0 : Pendiente de derivar
-                             1 : Enviado
-                             2 : No Enviado
-                             3 : Recibido
-                             4 : Pendiente para enviar
-                           */
+                                 Estado de la derivacion LAB_DerivacionEstado
+                                 0 : Pendiente de derivar
+                                 1 : Enviado
+                                 2 : No Enviado
+                                 3 : Recibido
+                                 4 : Pendiente para enviar
+                               */
                             int estadoAnterior = oDeriva.Estado;
                                 oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
                                 oDeriva.Save();
@@ -432,11 +429,12 @@ namespace WebLab.Derivaciones
                             //Si el resultado anterior era 'No derivado.'
                             if(estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
 
-                            if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
-                                if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
-                                else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
-                            
-                            oDet.ResultadoCar = resultadoDerivacion;
+                            //if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
+                            //    if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
+                            //    else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
+
+                            oDet.ResultadoCar = (aux_resultadoCar != "") ? aux_resultadoCar + " - " + resultadoDerivacion  : resultadoDerivacion;
+                            //oDet.ResultadoCar = resultadoDerivacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
                             oDet.FechaResultado = fechaResultado;

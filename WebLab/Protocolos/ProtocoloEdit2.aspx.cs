@@ -318,7 +318,7 @@ namespace WebLab.Protocolos
                             }
                             if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote")
                             {
-                                 
+                              
                                 CargarProtocoloDerivadoLote(); //llama a CargarProtocoloDerivado
                             }
                             if (Request["Operacion"].ToString() == "AltaFFEE")
@@ -1554,10 +1554,10 @@ ORDER BY numeroP";
                 if (Request["Operacion"].ToString() != "Modifica")  //alta
                     m_ssql += " and baja=0 and exists (select 1 from lab_muestraEfector E  with (nolock) where M.idMuestra = E.idmuestra and E.idefector = " + oUser.IdEfector.IdEfector.ToString()+")"; //Multiefector";
                 m_ssql += " order by nombre ";
-                //oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
+                oUtil.CargarCombo(ddlMuestra, m_ssql, "idMuestra", "nombre", connReady);
 
-                 cacheKey = $"CAT_Muestra_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
-                Business.Helpers.ComboCache.CargarCombo(ddlMuestra, cacheKey, m_ssql, "idMuestra", "nombre", connReady);
+                // cacheKey = $"CAT_Muestra_{oUser.IdEfector.IdEfector}_{Session["idServicio"]}";
+                //Business.Helpers.ComboCache.CargarCombo(ddlMuestra, cacheKey, m_ssql, "idMuestra", "nombre", connReady);
 
                 ddlMuestra.Items.Insert(0, new ListItem("--Seleccione Muestra--", "0"));
 
@@ -1596,23 +1596,22 @@ ORDER BY numeroP";
 
 
 
-            if (Session["idServicio"].ToString() == "3")///Se agrega para todos los efectores y solo para servicio microbiologia
-            {
+            //if (Session["idServicio"].ToString() == "3")///Se agrega para todos los efectores y solo para servicio microbiologia
+            //{
                 
                 m_ssql = "SELECT idCaracter, nombre   FROM LAB_Caracter with (nolock) ";
                 //oUtil.CargarCombo(ddlCaracter, m_ssql, "idCaracter", "nombre", connReady);
                 Business.Helpers.ComboCache.CargarCombo (ddlCaracter, "CAT_Caracter", m_ssql, "idCaracter", "nombre", connReady);
                 ddlCaracter.Items.Insert(0, new ListItem("--Seleccione Caracteristica--", "0"));
-
-                //if ((ddlCaracter.Items.Count > 1) && (oUser.IdEfector.IdEfector==228) )///Se agrega control exclusivo para Laboratorio Central
+                
                 if (ddlCaracter.Items.Count > 1) ///Se agrega para todos los efectores y solo para servicio microbiologia
                 {
                     lblCaracterSisa.Visible = true;
                     ddlCaracter.Visible = true;
                 }
-            }
-            else
-                ddlCaracter.Items.Insert(0, new ListItem("", "0"));
+            //}
+            //else
+            //    ddlCaracter.Items.Insert(0, new ListItem("", "0"));
             ////////////////////////////Carga de combos de ObraSocial//////////////////////////////////////////
             //m_ssql = "SELECT idObraSocial,  nombre AS nombre FROM Sys_ObraSocial order by idObraSocial ";          
             //oUtil.CargarCombo(ddlObraSocial, m_ssql, "idObraSocial", "nombre");
@@ -3094,7 +3093,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
-
+                        oDetalle.EstadoValidacion = "";
 
                         GuardarDetallePractica(oDetalle);
 
@@ -3430,7 +3429,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                     oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
                                     oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-
+                                    oDetalle.EstadoValidacion = "";
 
                                     oDetalle.Save();
                                     oDetalle.GuardarSinInsumo();
@@ -3447,8 +3446,8 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 {
                     oDet.IdSubItem = oDet.IdItem;
                     oDet.Informable = oDet.IdSubItem.GetInformableEfector(oUser.IdEfector);
+                    oDet.EstadoValidacion = "";
 
-               
                     oDet.Save();
                      oDet.GuardarSinInsumo();
                     oDet.GuardarValorReferencia();
@@ -4245,8 +4244,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
 
 
-                if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))
-                //if ((sDatos.Contains(oC.CodigoCovid) && (ddlCaracter.SelectedValue=="0")))
+                if ((VerificaRequiereCaracter(sDatos)) && (ddlCaracter.SelectedValue == "0"))                
                 {
                     //TxtDatos.Value = "";
                     args.IsValid = false;
@@ -4262,7 +4260,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     {
                         //TxtDatos.Value = "";
                         args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas";
+                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de inicio de síntomas (FIS en Diagnosticos)";
                         return;
                     }
                 }
@@ -4272,7 +4270,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     
                        // TxtDatos.Value = "";
                         args.IsValid = false;
-                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto";
+                        this.cvValidacionInput.ErrorMessage = "Debe ingresar fecha de último contacto (FUC en Diagnosticos)";
                         return;
                      
                 }
