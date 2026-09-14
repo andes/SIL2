@@ -309,6 +309,19 @@ namespace WebLab.Resultados
     .ToDictionary(g => g.Key, g => g.ToList());
                 /*fin del cambio*/
 
+                // Traer todas las Derivaciones juntas
+                var derivacionesList = session.CreateCriteria(typeof(Derivacion))
+                    .CreateAlias("IdDetalleProtocolo", "dp")
+                    .Add(Expression.In("dp.IdDetalleProtocolo", listaDetalleIds.ToArray()))
+                    .List()
+                    .Cast<Derivacion>()
+                    .ToList();
+
+                var derivacionesDict = derivacionesList
+                    .ToDictionary(d => d.IdDetalleProtocolo.IdDetalleProtocolo);
+                /// CARO PF : fin 
+                /// 
+
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     string s_valorReferencia = dt.Rows[i].ItemArray[9].ToString();
@@ -319,6 +332,9 @@ namespace WebLab.Resultados
                     DetalleProtocolo oDetalle;
                     if (!dictDetalles.TryGetValue(int.Parse(s_idDetalleProtocolo), out oDetalle))
                         continue;
+
+                    Derivacion oDeriva;
+                    derivacionesDict.TryGetValue(int.Parse(s_idDetalleProtocolo), out oDeriva);
 
                     string s_idProtocolo = oDetalle.IdProtocolo.ToString();
                     string s_fecha = oDetalle.IdProtocolo.Fecha.ToShortDateString();
@@ -666,9 +682,15 @@ namespace WebLab.Resultados
                                     }
                                     else
                                     {
-                                        var itemSel = ddl1.Items.FindByText(s_resultadoCar.Trim());
-                                        if (itemSel != null)
-                                            ddl1.SelectedValue = itemSel.Value;
+                                        /*     var itemSel = ddl1.Items.FindByText(s_resultadoCar.Trim());
+                                             if (itemSel != null)
+                                                 ddl1.SelectedValue = itemSel.Value;
+                                                 */
+                                        ddl1.SelectedItem.Text = oDetalle.ResultadoCar;
+
+                                        ///Caro: derivacion                                        
+                                        if (oDeriva != null)  /// si tiene una derivacion inhabilita control                                                           
+                                            ddl1.Enabled = false;
                                     }
 
 
@@ -2233,6 +2255,64 @@ namespace WebLab.Resultados
                             oDetalle.ConResultado = false;
                         }
                         break;
+
+                    case 3://Predefinido
+                        {
+                            if (Request["Operacion"].ToString() == "Valida")
+                            {
+                                if (valorItem != "")
+                                {
+                                    ISession m_session = NHibernateHttpModule.CurrentSession;
+                                    oDetalle.ResultadoCar = valorItem;
+                                    ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
+                                    crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                                    crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                    crit2.Add(Expression.Eq("Resultado", valorItem));
+
+                                    IList detalleResultadoItem = crit2.List();
+
+                                    if (detalleResultadoItem.Count > 0)
+                                    {
+                                        ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
+
+                                        if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
+                                            oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                    }
+                                    else
+                                    {
+                                        // El resultado no está configurado en ResultadoItem                                               
+                                        oDetalle.EstadoValidacion = "";
+                                    }
+
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoCar = "";
+                                    oDetalle.ConResultado = false;
+                                    oDetalle.EstadoValidacion = "";
+                                }
+                            }
+                            else
+                            {
+                                if (valorItem != "")
+                                {
+                                    oDetalle.ResultadoCar = valorItem;
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoCar = "";
+                                    oDetalle.ConResultado = false;
+                                    oDetalle.EstadoValidacion = "";
+                                }
+                            }
+                        }
+                        break;
+
                     default:
                         if (valorItem != "")
                         {
@@ -2247,43 +2327,7 @@ namespace WebLab.Resultados
                         break;
                 }
 
-                //Caro Performance: el metodo y valor de referencia se calcula en la carga de protocolo
-                /*string m_metodo = "";
-                string m_valorReferencia = "";
-                string nombre_control = "VR" + oDetalle.IdDetalleProtocolo.ToString();
-                Control control1 = Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").FindControl(nombre_control);
-                Label valorRef = (Label)control1;
-
-
-                if (valorRef != null)
-                {
-                    string[] arr = valorRef.Text.Split(("|").ToCharArray());
-                    switch (arr.Length)
-                    {
-                        case 1: m_valorReferencia = arr[0].Trim().ToString(); break;
-                        case 2:
-                            {
-                                m_valorReferencia = arr[0].Trim().ToString();
-                                m_metodo = arr[1].Trim().ToString();
-                            } break;
-                    }
-                    oDetalle.Metodo = m_metodo;
-                    oDetalle.ValorReferencia = m_valorReferencia;
-                }
               
-                string s_unidadMedida = "";
-                int i_unidadMedida = oDetalle.IdSubItem.IdUnidadMedida;
-                if (i_unidadMedida > 0)
-                {
-                    UnidadMedida oUnidad = new UnidadMedida();
-                    oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), i_unidadMedida);
-                    s_unidadMedida = oUnidad.Nombre;
-                }
-
-                oDetalle.UnidadMedida = s_unidadMedida;
-                oDetalle.Metodo = m_metodo;
-                oDetalle.ValorReferencia = m_valorReferencia;
-                */
                 string operacion = Request["Operacion"].ToString();
                 if (Request["Operacion"].ToString() == "Carga")
                 {
@@ -2296,36 +2340,36 @@ namespace WebLab.Resultados
 
                 if ((Request["Operacion"].ToString() == "Valida") && (oDetalle.ConResultado))  //Validacion
                 {
-                    string res = valorItem;
-                    if (valorItem.Length > 10)
-                        res = valorItem.Substring(0, 10);
+                    ////string res = valorItem;
+                    ////if (valorItem.Length > 10)
+                    ////    res = valorItem.Substring(0, 10);
 
 
-                    if ((oDetalle.IdSubItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))
-                    {
-                        if (oCon.PreValida)
-                        {
-                            operacion = "Pre Valida";
-                            oDetalle.IdUsuarioPreValida = int.Parse(Session["idUsuarioValida"].ToString());
-                            oDetalle.FechaPreValida = DateTime.Now;
-                            oDetalle.IdUsuarioValida = 0;
-                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                        }
-                        else
-                        {
-                            oDetalle.IdUsuarioValida = int.Parse(Session["idUsuarioValida"].ToString());
-                            oDetalle.FechaValida = DateTime.Now;
-                        }
+                    ////if ((oDetalle.IdSubItem.Codigo == oCon.CodigoCovid) && (oDetalle.IdProtocolo.IdPaciente.IdPaciente > 0) && (res == "SE DETECTA"))
+                    ////{
+                    ////    if (oCon.PreValida)
+                    ////    {
+                    ////        operacion = "Pre Valida";
+                    ////        oDetalle.IdUsuarioPreValida = int.Parse(Session["idUsuarioValida"].ToString());
+                    ////        oDetalle.FechaPreValida = DateTime.Now;
+                    ////        oDetalle.IdUsuarioValida = 0;
+                    ////        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                    ////    }
+                    ////    else
+                    ////    {
+                    ////        oDetalle.IdUsuarioValida = int.Parse(Session["idUsuarioValida"].ToString());
+                    ////        oDetalle.FechaValida = DateTime.Now;
+                    ////    }
 
-                    }
-                    else
-                    {
+                    ////}
+                    //else
+                    //{
                         if (oDetalle.Informable)
                         {
                             oDetalle.IdUsuarioValida = int.Parse(Session["idUsuarioValida"].ToString());
                             oDetalle.FechaValida = DateTime.Now;
                         }
-                    }
+                    //}
 
 
                     if (listavalidado == "") listavalidado = oDetalle.IdDetalleProtocolo.ToString();

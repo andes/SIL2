@@ -404,7 +404,7 @@ namespace WebLab.Resultados
                         oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                         oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
-
+                        oDetalle.EstadoValidacion = "";
                         GuardarDetallePractica(oDetalle);
                         
                         // GuardarDerivacion(oDetalle);
@@ -523,86 +523,86 @@ namespace WebLab.Resultados
 
 
         }
-        private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
-        {
-            ///Eliminar los detalles para volverlos a crear            
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-            IList detalle = crit.List();
-            if (detalle.Count > 0)
-            {
-                foreach (DetalleProtocolo oDetalle in detalle)
-                {
-                    oDetalle.Delete();
-                }
-            }
+        //private void GuardarDetalle2(Business.Data.Laboratorio.Protocolo oRegistro)
+        //{
+        //    ///Eliminar los detalles para volverlos a crear            
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+        //    crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+        //    IList detalle = crit.List();
+        //    if (detalle.Count > 0)
+        //    {
+        //        foreach (DetalleProtocolo oDetalle in detalle)
+        //        {
+        //            oDetalle.Delete();
+        //        }
+        //    }
 
 
-            int dias_espera = 0;
-            string[] tabla = TxtDatos.Value.Split('@');
+        //    int dias_espera = 0;
+        //    string[] tabla = TxtDatos.Value.Split('@');
 
-            for (int i = 0; i < tabla.Length - 1; i++)
-            {
-                string[] fila = tabla[i].Split('#');
-
-
-                string codigo = fila[1].ToString();
-                if (codigo != "")
-                {
-                    DetalleProtocolo oDetalle = new DetalleProtocolo();
-                    Item oItem = new Item();
-                    oDetalle.IdProtocolo = oRegistro;
-                    oDetalle.IdEfector = oRegistro.IdEfector;
-
-                    string trajomuestra = fila[3].ToString();
-
-                    oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
-
-                    if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
-
-                    /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                    if (a.Checked)
-                        oDetalle.TrajoMuestra = "Si";
-                    else*/
-
-                    if (trajomuestra == "true")
-                        oDetalle.TrajoMuestra = "No";
-                    else
-                        oDetalle.TrajoMuestra = "Si";
+        //    for (int i = 0; i < tabla.Length - 1; i++)
+        //    {
+        //        string[] fila = tabla[i].Split('#');
 
 
-                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaControl = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
-                    oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
-                    GuardarDetallePractica(oDetalle);
-                }
-            }
+        //        string codigo = fila[1].ToString();
+        //        if (codigo != "")
+        //        {
+        //            DetalleProtocolo oDetalle = new DetalleProtocolo();
+        //            Item oItem = new Item();
+        //            oDetalle.IdProtocolo = oRegistro;
+        //            oDetalle.IdEfector = oRegistro.IdEfector;
+
+        //            string trajomuestra = fila[3].ToString();
+
+        //            oDetalle.IdItem = (Item)oItem.Get(typeof(Item), "Codigo", codigo);
+
+        //            if (dias_espera < oDetalle.IdItem.Duracion) dias_espera = oDetalle.IdItem.Duracion;
+
+        //            /*CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //            if (a.Checked)
+        //                oDetalle.TrajoMuestra = "Si";
+        //            else*/
+
+        //            if (trajomuestra == "true")
+        //                oDetalle.TrajoMuestra = "No";
+        //            else
+        //                oDetalle.TrajoMuestra = "Si";
 
 
-            Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
-          //  DateTime fechaentrega;
-            //if (oCon.TipoCalculoDiasRetiro == 0)
-
-            if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
-                if (oCon.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
-                else   // calcula con los días predeterminados de espera
-                    oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oCon.DiasRetiro));
-            else
-                oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
-
+        //            oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaControl = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaImpresion = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaEnvio = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
+        //            oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
+        //            GuardarDetallePractica(oDetalle);
+        //        }
+        //    }
 
 
+        //    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oRegistro.IdEfector);
+        //  //  DateTime fechaentrega;
+        //    //if (oCon.TipoCalculoDiasRetiro == 0)
 
-            oRegistro.Save();
+        //    if (oRegistro.IdOrigen.IdOrigen == 1) /// Solo calcula con Calendario si es Externo
+        //        if (oCon.TipoCalculoDiasRetiro == 0)  //Calcula con los días de espera del analisis
+        //            oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(dias_espera));
+        //        else   // calcula con los días predeterminados de espera
+        //            oRegistro.FechaRetiro = oRegistro.CalcularCalendarioEntrega(oRegistro.Fecha.AddDays(oCon.DiasRetiro));
+        //    else
+        //        oRegistro.FechaRetiro = oRegistro.Fecha.AddDays(dias_espera);
 
 
-        }
+
+
+        //    oRegistro.Save();
+
+
+        //}
 
 
 
@@ -677,7 +677,7 @@ namespace WebLab.Resultados
                                     oDetalle.FechaObservacion = DateTime.Parse("01/01/1900");
                                     oDetalle.FechaValidaObservacion = DateTime.Parse("01/01/1900");
                                     oDetalle.FechaPreValida = DateTime.Parse("01/01/1900");
-                                     
+                                    oDetalle.EstadoValidacion = "";
                                     oDetalle.Save();
                                     oDetalle.GuardarSinInsumo();
                                     oDetalle.GuardarValorReferencia();
@@ -691,6 +691,7 @@ namespace WebLab.Resultados
                 {
                     oDet.IdSubItem = oDet.IdItem;
                     oDet.Informable = oDet.IdSubItem.GetInformableEfector(oUser.IdEfector);
+                    oDet.EstadoValidacion = "";
                     oDet.Save();
                     oDet.GuardarSinInsumo();
                     oDet.GuardarValorReferencia();

@@ -304,6 +304,7 @@
                                                     <td><label>Teléfono Contacto</label>:
                                                         <asp:TextBox ID="txtTelefono" runat="server" class="form-control input-sm" Width="200px"></asp:TextBox>
                                                         <asp:CustomValidator ID="cvValidacionInput" runat="server" ErrorMessage="Debe completar al menos un analisis" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                                                             <anthem:Label ID="lblErrorMedico" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="False"></anthem:Label>
                                                     </td>
                                                
                                                 </tr>
@@ -471,7 +472,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" ><hr />
-                                                        <anthem:Label ID="lblErrorMedico" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="False"></anthem:Label>
+                                                   
                                                     </td>
 					</tr>
 					
@@ -486,6 +487,7 @@
     <li><a href="#tab1">Analisis</a></li>    
     <li><a href="#tab2">Diagnósticos<img alt="tiene diagnostico" runat="server" id="diag" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>
    <li  id="tab3Titulo" runat="server"><a href="#tab3" >Etiquetas</a></li> 
+                                  
        
     <li id="tituloCalidad" runat="server"><a  href="#tab5">Incidencias<img alt="tiene incidencias" runat="server" id="inci" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>
     

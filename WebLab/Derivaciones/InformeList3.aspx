@@ -2,6 +2,9 @@
 <%--<%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>--%>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
+  <script type="text/javascript" src="../script/jquery.min.js"></script> 
+  <script type="text/javascript" src="../script/jquery-ui.min.js"></script> 
+  <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet"  type="text/css" />
     <script type="text/javascript">
 
         function validarFormulario() {
@@ -82,7 +85,7 @@
                // console.log(tipo);
                 if (estado == '4' && tipo == 'Modifica') { //Estado 4 es Pendiente de envio
                     console.log(window.location.search);
-                    alert("Cuidado! Al desmarcar la determinacion no se enviara en el lote.");
+                    alert("Al desmarcar la determinacion se excluirá del lote.");
                 }
             }
         }
@@ -135,6 +138,39 @@
                 if (chk && chk.checked) return true;
             }
             return false;
+        }
+        function PreguntoEliminar() {
+            if (confirm('¿Está seguro de eliminar el registro?'))
+                return true;
+            else
+                return false;
+        }
+       
+        function AgregarDeterminaciones() {
+            var idLoteDerivacion = document.getElementById('<%= HFIdLote.ClientID %>').value;
+            var idEfectorDerivacion = document.getElementById('<%= HFIdEfectorDerivacion.ClientID %>').value;
+
+            $('<iframe src="EditarListaLote.aspx?id=' + idLoteDerivacion + '&idEfectorDerivacion=' + idEfectorDerivacion+'" />').dialog({
+                title: 'Agregar Determinaciones a Lote ' + idLoteDerivacion,
+                autoOpen: true,
+                width: 800,
+                height: 590,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
+
+                buttons: {
+                    'Cerrar': function () { <%=this.Page.ClientScript.GetPostBackEventReference(new PostBackOptions(this.btnAgregarDeterminaciones))%>; }
+                },
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                }
+
+            }).width(800);
+
+          
         }
     </script>
 
@@ -277,6 +313,14 @@
                         <!-- PDF de Control de determinaciones -->
                             <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" OnClientClick="return validarGrilla();"  onclick="lnkPDF_Click"> <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />Generar PDF de Control</asp:LinkButton>       
                         </td>
+                        <td>
+                        </td>  
+
+                        <td align="right">
+                            <asp:HiddenField ID="HFIdLote" runat="server" />
+                            <asp:HiddenField ID="HFIdEfectorDerivacion" runat="server" />
+                            <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200" OnClientClick="AgregarDeterminaciones(); return false; " OnClick="btnAgregarDeterminaciones_Click"/>
+                        </td>
                     </tr>
                     <tr><td> <br /></td></tr>
 				    <tr>
@@ -301,7 +345,7 @@
                                 <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
                                     DataKeyNames="idDetalleProtocolo"   Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
                                     EmptyDataText ="No se encontraron protocolos para los parametros de busqueda ingresados" BorderColor="#3A93D2" 
-                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal">
+                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal" onrowcommand="gvLista_RowCommand" OnRowDataBound="gvLista_RowDataBound">
                                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" Font-Names="Arial"  Font-Size="8pt" />
                                     <Columns>
             
@@ -356,7 +400,13 @@
                                     <asp:TemplateField Visible="false">
                                         <ItemTemplate> <asp:Label ID="lbl_estado" runat="server" Text='<%# Eval("estado") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
-                                       
+                                    <asp:TemplateField>
+                                        <ItemTemplate>
+                                            <asp:LinkButton ID="Eliminar" OnClientClick="return PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProtocolo") %>'>
+                                                <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
+                                        </ItemTemplate>
+                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                    </asp:TemplateField>
                                    </Columns>
                                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                                 <PagerStyle BackColor="#666666" ForeColor="White" HorizontalAlign="Center" />
