@@ -104,9 +104,11 @@ namespace WebLab
             txtUrlServicioSISA.Enabled = false;
             txtUrlMuestraSISA.Enabled = false;
             txtUrlResultadoSISA.Enabled = false;
+            btnFeriado.Enabled = false;
 
             if (oUser.IdEfector.IdEfector.ToString() == "227")
             {
+                btnFeriado.Enabled = true;
                 ddlRenaper.Enabled = true;
                 txtUrlRenaper.Enabled = true;
                 ddlAndes.Enabled = true;

@@ -101,7 +101,6 @@ namespace Business.Data.Laboratorio  {
 
         public static string derivacionPDF(int idLote)
         {
-            //20.08.2026 se agrupa (para casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica)
 
             //agrego el tipo de muestra para NO PACIENTES  (Cambios en la vista vta_LAB_Derivaciones)
 

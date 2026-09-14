@@ -121,6 +121,61 @@
   
   <script>
       const cambios = [
+          {
+              "fecha": "2026.09.23",
+              "modulo": "Validacion Protocolos-Terminacion",
+              "detalle": "Se cambia la marca de Terminar Protocolo por un boton para realizar esta accion.",
+              "tipo": "Cambio de Funcionalidad"
+          },
+          {
+              "fecha": "2026.09.23",
+              "modulo": "Validacion Protocolos- Descarga PDF",
+              "detalle": "Se corrige que al momento de descargar PDF no verificaba correctamente los tildes 'imprimir solo seleccionado' o ' imprimir todos'.",
+              "tipo": "Correccion"
+          },
+            {
+                "fecha": "2026.09.23",
+                "modulo": "Protocolos con Caracter SNVS",
+                "detalle": "Se habilita el ingreso de Caracter SNVS en Laboratorio General requerido para determinaciones que interoperan con SISA-SNVS",
+                "tipo": "Nueva Funcionalidad"
+            },
+              
+              {
+                  "fecha": "2026.09.23",
+                  "modulo": "Configuracion de Feriados",
+                  "detalle": "Se restringe uso para el Administrador del sistema, para aplicar Feriados a toda la Red.",
+                  "tipo": "Cambio de Funcionalidad"
+              },
+                 {
+                     "fecha": "2026.09.23",
+                     "modulo": "Lote de Derivacion",
+                     "detalle": "Se cambia para que al modificar un lote, las determinaciones a agregar al lote sean elegidas desde una nueva pantalla de seleccion. La finalidad es mejorar la performance y experiencia del usuario.",
+                     "tipo": "Cambio de Funcionalidad"
+                 },
+           {
+               "fecha": "2026.09.23",
+               "modulo": "Derivacion por Resultado",
+               "detalle": "Se agrega nueva funcionalidad que se genera derivacion segun validacion de resultado predefinido.",
+               "tipo": "Nueva Funcionalidad"
+           },
+           {
+               "fecha": "2026.09.23",
+               "modulo": "Cierre de protocolos segun tipo de Resultado",
+               "detalle": "Se agrega nueva funcionalidad que permite diferenciar en los resultados predefinidos si son Provisorios o Definitivos, para definir si la validacion de estos resultados cierra o no un protocolo.",
+               "tipo": "Nueva Funcionalidad"
+           },
+	      {
+	          "fecha": "2026.09.23",
+	          "modulo": "Validacion por Renaper",
+	          "detalle": "Se agrega mensaje en pantalla para avisar cuando no RENAPER no encuentra informacion para el paciente.",
+	          "tipo": "Nueva Funcionalidad"
+	      },
+          {
+              "fecha": "2026.09.09",
+              "modulo": "SNVS- Habilitacion de 5724 y 5726",
+              "detalle": "Se habilita la interoperabilidad con SISA-SNVS de las determinaciones H0antavirus, Ac. IgG Anti y Hantavirus, Ac. IgM Anti",
+              "tipo": "Nueva Funcionalidad"
+          },
 	   {
                 "fecha": "2026.08.24",
                 "modulo": "Excel de Determinaciones",

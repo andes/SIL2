@@ -31,7 +31,7 @@ namespace WebLab.Derivaciones
                     if (Request["tipo"] == "informe")
                     {
                         lblTitulo.Text = "DERIVACIONES";
-                        VerificaPermisos("Gestionar");
+                        VerificaPermisos("Crear Lote");
                     }
                     if (Request["tipo"] == "resultado")
                     {
@@ -222,7 +222,6 @@ namespace WebLab.Derivaciones
                         cvBotonBuscar.IsValid = false; //que de error sin enviar alert
                     }
 
-
                 }
                 else
                     Response.Redirect("../FinSesion.aspx", false);
@@ -251,8 +250,7 @@ namespace WebLab.Derivaciones
 
 
                     Utility oUtil = new Utility();
-                    string m_ssql = @" SELECT  i.idItem, nombre as determinacion 
-                                     FROM lab_item I
+                    string m_ssql = @" SELECT  i.idItem, nombre as determinacion FROM lab_item I
                                      inner join LAB_ItemEfector IE on IE.idItem= I.iditem
                                      WHERE baja=0 AND (ie.disponible = 1) and Ie.idEfectorDerivacion =" + ddlEfector.SelectedValue +
                                      "  and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() +

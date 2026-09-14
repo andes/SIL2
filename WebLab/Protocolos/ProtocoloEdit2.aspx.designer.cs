@@ -346,6 +346,15 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
         
         /// <summary>
+        /// lblErrorMedico control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblErrorMedico;
+        
+        /// <summary>
         /// lblIdPaciente control.
         /// </summary>
         /// <remarks>
@@ -542,15 +551,6 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumeroOrigen2;
-        
-        /// <summary>
-        /// lblErrorMedico control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblErrorMedico;
         
         /// <summary>
         /// diag control.

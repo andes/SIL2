@@ -74,7 +74,10 @@ namespace WebLab.Derivaciones
                             HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
                             ddlEstado.SelectedIndex = 2;
                             ddlMotivoCancelacion.Enabled = false;
-                            lnkPDF.Visible = false; //24.08.2026 Corrige BUG:en modificacion de lote imprimir el resultado de lote
+                            lnkPDF.Visible = false; //24.08.2026 Corrige BUG: en modificacion de lote no existe el request por lo que da error al imprimir
+                            btnAgregarDeterminaciones.Visible = true;
+                            HFIdLote.Value = Request["idLote"].ToString();
+                            HFIdEfectorDerivacion.Value = Request["Destino"].ToString();
                         }
 
                     }
@@ -147,7 +150,7 @@ namespace WebLab.Derivaciones
             
         }
         #region carga
-
+       
         private void CargarListas()
         {
             Utility oUtil = new Utility();
@@ -269,11 +272,8 @@ namespace WebLab.Derivaciones
                     m_strSQL += " , isnull(mot.descripcion,'') as motivo ";
                     m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
                     m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
-                    m_strSQL += " WHERE    (" +
-                              "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
-                              "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
-                              "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
-                                 ")";
+                    m_strSQL += " WHERE    " +
+                              "  (estado = 4 and idLote= " + Request["idLote"] + ")"; //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
                     m_strSQL += @" GROUP BY
                                 vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
                                 vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
@@ -291,14 +291,13 @@ namespace WebLab.Derivaciones
             adapter.Fill(Ds);
             return Ds.Tables[0];
         }
-        public DataTable GetDataSet_old(string s_lista, string s_donde)
+   /*    public DataTable GetDataSet_old(string s_lista, string s_donde)
         {
             
             int estado = Convert.ToInt16(Request["Estado"]);
             string motivoCancelacion = "";
             string tiposProducto = "";
             string strDer = "";
-            string orden = "";
             if (s_donde == "")
                 motivoCancelacion = " , isnull(mot.descripcion,'') as motivo ";
             else
@@ -307,9 +306,9 @@ namespace WebLab.Derivaciones
                 strDer = ", de.descripcion as estadoDerivacion";
             }
 
-            string m_strSQL = " SELECT   idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
+            string m_strSQL = " SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
             " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , " +
-            " solicitante as especialista , isnull(idlote,0) as idLote,idProtocolo,idItem " + motivoCancelacion + tiposProducto + strDer +
+            " solicitante as especialista , isnull(idlote,0) as idLote " + motivoCancelacion + tiposProducto + strDer +
             " FROM  vta_LAB_Derivaciones vta ";
 
             if (s_donde == "")
@@ -328,7 +327,7 @@ namespace WebLab.Derivaciones
                     {
                         m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
                     }
-                    orden = " ORDER BY efectorDerivacion,numero ";
+                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
 
 
                 }
@@ -342,8 +341,8 @@ namespace WebLab.Derivaciones
                                "     (estado = 0 and isnull(idlote,0) = 0 " +//Traer derivaciones pendientes por si se necesitan agregar 
                                "       and idEfectorDerivacion = " + Request["Destino"] + " and idEfector = " + oUser.IdEfector.IdEfector + ")   " +
                                "  or (estado = 4 and idLote= " + Request["idLote"] + ")" + //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
-                                  ")";
-                         orden = " ORDER BY estado desc, efectorDerivacion,numero desc";
+                                  ")" +
+                         " ORDER BY estado desc, efectorDerivacion,numero desc";
                     }
 
                 }
@@ -353,22 +352,17 @@ namespace WebLab.Derivaciones
                 //es PDF de Control
                 m_strSQL += Request["Parametros"].ToString() +
                 "  and estado= " + estado +
-                "  and idDetalleProtocolo in (" + s_lista + ") ";
-                orden = " ORDER BY efectorDerivacion,numero ";
+                "  and idDetalleProtocolo in (" + s_lista + ") "+
+                " ORDER BY efectorDerivacion,numero ";
             }
-
-            m_strSQL += @"  group by idProtocolo, estado, numero, fecha, dni,  apellido ,nombre, determinacion,
-                 efectorderivacion, username, fechaNacimiento, unidadEdad, sexo, observacion ,  solicitante ,  idLote  ,
-                 mot.descripcion,   idItem " + orden;
-            
-
+               
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             return Ds.Tables[0];
-        }
+        }*/
 
         protected string CargarImagenEstado(int estado)
         {
@@ -447,7 +441,7 @@ namespace WebLab.Derivaciones
                     //Se verifica que se hayan realizados cambios
                     if (hdnDatosModificados.Value == "false")
                     {
-                        ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
+                     //   ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
                     }
                     else
                     {
@@ -542,7 +536,38 @@ namespace WebLab.Derivaciones
             else 
                 Response.Redirect("../FinSesion.aspx", false);
         }
+		
+		
+	/*	    private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion lote, int idUsuario)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+                    bool chequeado = ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked;
+                    int idLote = lote.IdLoteDerivacion;
+                    //CASOS: Se evalua el estado anterior de las determinaciones
 
+                    // 1 - Esta chequeado -> Se asocia al lote
+                    if ((estado == 0 || estado == 2 || estado == 4) && chequeado)
+                    {
+                        ActualizarDetalleProtocolo(row, idLote);
+                        continue; // ✅ La línea continue; en un foreach (o cualquier bucle) salta inmediatamente al siguiente ciclo de iteración, evitando que se siga ejecutando el resto del código dentro del bucle actual.
+                    }
+
+                    // 2 - No esta chequeado y tiene estado "Pendiente para enviar" (4) 
+                    if (estado == 4 && !chequeado)
+                    {
+                       ActualizarDetalleProtocolo(row, idLote, 1);
+                       continue;
+                    }
+                }
+            }
+            else 
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+*/
         private void ActualizarDetalleProtocolo(DetalleProtocolo oDetalle, int idLote, int estado,  int desasociaLote)
         {
             //int idDetalle = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
@@ -642,7 +667,7 @@ namespace WebLab.Derivaciones
 
                     #region estado_protocolo
                     /*Actualiza estado de protocolo*/
-                if (oDetalle.IdProtocolo.Estado < 2)
+                    if(oDetalle.IdProtocolo.Estado < 2)
                     {
                         if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuarioRegistro))
                             oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
@@ -766,9 +791,11 @@ namespace WebLab.Derivaciones
             }
             return m_lista;
         }
-
         #endregion
 
-       
+        protected void btnAgregarDeterminaciones_Click(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
     }
 }
