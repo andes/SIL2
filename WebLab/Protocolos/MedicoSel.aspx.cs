@@ -24,6 +24,9 @@ namespace WebLab.Protocolos
             {
                 Session["matricula"] = null;
                 Session["apellidoNombre"] = null;
+                Session["nombreApellido"] = null;
+                if (Request["desde"]!= null && Request["desde"].ToString() == "ProtocoloList")
+                    divMatricula.Visible = true;
             }
         }
 
@@ -41,7 +44,16 @@ namespace WebLab.Protocolos
                 string nombre = txtNombre.Text;
                 string s_urlWFC = oCon.UrlMatriculacion;
                 string s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido;// + "&codigoProfesion=1 ";
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                
+                if (Request["desde"] != null && Request["desde"].ToString() == "ProtocoloList")
+                {
+                    string matricula = txtMatricula.Text;
+                    s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido+ "&numeroMatricula="+matricula;
+                }
+
+
+                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
                 HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
@@ -177,6 +189,7 @@ namespace WebLab.Protocolos
                 Session["matricula"] = e.CommandArgument.ToString();
                 LinkButton boton = (LinkButton)e.CommandSource;
                 Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
+                Session["nombreApellido"] = boton.Attributes["nombre"] + " " + boton.Attributes["apellido"];
             }
           
         }

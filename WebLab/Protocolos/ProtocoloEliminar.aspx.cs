@@ -31,12 +31,19 @@ namespace WebLab.Protocolos
                 lblTitulo.Text = "Nro." + oProt.Numero.ToString();
                 if (oProt.Baja)
                 {
-                    estatus.Text = "El caso ha sido anulado. Ver auditoria";
-                    estatus.Visible = true;
-
-                    btnGuardar.Visible = false;
+                    if (Request["accion"] != null && Request["accion"].ToString() == "recupera")
+                    {
+                        lblMotivo.Text = "Motivo de recuperación";
+                    }
+                    else
+                    {
+                        estatus.Text = "El caso ha sido anulado. Ver auditoria";
+                        estatus.Visible = true;
+                        btnGuardar.Text = "Recuperar";
+                        btnGuardar.Visible = false;
+                    }
+                  
                 }
-
             }
 
         }
@@ -62,14 +69,44 @@ namespace WebLab.Protocolos
 
             }
 
-        }
+        } 
+        
+        private void Recuperar()
+        {
+            string s_idCaso = Request["id"].ToString();
 
+            Protocolo oProt = new Protocolo();
+            if (s_idCaso != "")
+            {
+
+               
+                    oProt = (Protocolo)oProt.Get(typeof(Protocolo), int.Parse(s_idCaso));
+                    oProt.Baja = false;
+                    oProt.Save();
+                string accion = txtMotivoBaja.Text;
+                if (accion.Length > 50)
+                    accion = accion.Substring(0, 50);
+                oProt.GrabarAuditoriaProtocoloObs("Recupera", int.Parse(Session["idUsuario"].ToString()), accion);
+
+
+            }
+
+        }
+        
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
-                Eliminar();
-                estatus.Text = "El caso ha sido anulado";
+                if (Request["accion"] != null && Request["accion"].ToString() == "recupera")
+                {
+                    Recuperar();
+                    estatus.Text = "El caso ha sido recuperado";
+                }
+                else
+                {
+                    Eliminar();
+                    estatus.Text = "El caso ha sido anulado";
+                }
             }
         }
     }
