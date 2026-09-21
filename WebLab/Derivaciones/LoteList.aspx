@@ -40,8 +40,8 @@
             $('<iframe src="InformeLote.aspx?IdLote=' + IdLote + '&Destino='+ Efector + '" />').dialog({
                 title: 'Cambiar Estado',
                 autoOpen: true,
-                width: 690,
-                height: 350,
+                width: 800,
+                height: 400,
                 modal: true,
                 resizable: false,
                 autoResize: true,
@@ -141,6 +141,10 @@
                                                         <td align="right">
                                                             <img alt="" src="../App_Themes/default/images/excelPeq.gif" />
                                                             <asp:LinkButton ID="lnkExcel" runat="server" CssClass="myLittleLink" OnClick="lnkExcel_Click" ValidationGroup="0">Exportar a Excel</asp:LinkButton>
+                                                            <label>Orden:</label><asp:DropDownList ID="ddlOrden" runat="server">
+                                                                   <asp:ListItem Selected="True" Value="Asc">Ascendente</asp:ListItem>
+                                                                   <asp:ListItem Value="Desc">Descendente</asp:ListItem>
+                                                               </asp:DropDownList>
                                                             <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
                                                         </td>
                                                     </tr>
@@ -164,8 +168,7 @@
                                                 GridLines="Horizontal"
                                                 OnPageIndexChanging="gvLista_PageIndexChanging"
                                                 PageSize="20" Width="100%" BackColor="White"
-                                                AllowSorting="True"
-                                                OnSorting="gvLista_Sorting"
+                                               
                                                 OnRowDataBound="gvLista_RowDataBound" OnRowCommand="gvLista_RowCommand"
                                                 >
                                                 <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
@@ -212,13 +215,13 @@
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Reimprimir">
+                                                    <asp:TemplateField HeaderText="Informe Derivacion">
                                                         <ItemTemplate>
                                                             <asp:LinkButton runat="server" ID="lnkPDFImprimir" >
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
-                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="60px" />
                                                     </asp:TemplateField>
 
                                                 </Columns>

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -49,6 +50,7 @@ namespace WebLab.Derivaciones
                     VerificaPermisos("Lista de Lotes");
                     Inicializar();
                     CargarListas();
+                    RecuperarSesion();
                     CargarGrilla();
                 }
             }
@@ -67,16 +69,24 @@ namespace WebLab.Derivaciones
                 expresion = "efectorOrigen";
 
             gvLista.Columns[2].SortExpression = expresion;
+        }
 
+        private void RecuperarSesion() { 
             if(Request["Parametros"] != null)
             {
                 string str_condicion = Request["Parametros"].ToString();
                 if(str_condicion.Contains("AND l.fechaRegistro>= "))
-                   txtFechaDesde.Value =  DateTime.Parse(ObtenerParametro("AND l.fechaRegistro>= ", str_condicion)).ToShortDateString(); 
+                { 
+                    string fecha = ObtenerParametro("AND l.fechaRegistro>= ", str_condicion);
+                    txtFechaDesde.Value =  DateTime.ParseExact( fecha, "yyyyMMdd", CultureInfo.InvariantCulture ).ToShortDateString();
+                }
 
-                if (str_condicion.Contains("AND l.fechaRegistro <= "))
-                    txtFechaHasta.Value = DateTime.Parse(ObtenerParametro(" AND l.fechaRegistro<= '", str_condicion)).ToShortDateString();
-                
+                if (str_condicion.Contains("l.fechaRegistro<="))
+                {
+                    string fecha = ObtenerParametro(" AND l.fechaRegistro<= '", str_condicion);
+                    txtFechaHasta.Value = DateTime.ParseExact(fecha, "yyyyMMdd", CultureInfo.InvariantCulture).ToShortDateString();
+
+                }
                 if (str_condicion.Contains("AND L.idLoteDerivacion >="))
                     txtLoteDesde.Text = ObtenerParametro(" AND L.idLoteDerivacion >= ",str_condicion);
 
@@ -359,7 +369,9 @@ namespace WebLab.Derivaciones
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "[LAB_ListaLotes]";
             cmd.Parameters.Add("@FiltroBusqueda", SqlDbType.NVarChar);
+            cmd.Parameters.Add("@orden", SqlDbType.NVarChar);
             cmd.Parameters["@FiltroBusqueda"].Value = str_condicion;
+            cmd.Parameters["@orden"].Value = ddlOrden.SelectedValue;
             cmd.Connection = conn;
 
 
@@ -593,38 +605,38 @@ namespace WebLab.Derivaciones
                 Response.Redirect("../FinSesion.aspx", false);
         }
 
-        protected void gvLista_Sorting(object sender, GridViewSortEventArgs e)
-        {
-            if (Session["idUsuario"] != null)
-            {
-                DataTable dt = ViewState["Datos"] as DataTable;
-                string sortDirection = GetSortDirection(e.SortExpression);
-                dt.DefaultView.Sort = e.SortExpression + " " + sortDirection;
-                gvLista.DataSource = dt;
-                gvLista.DataBind();
-            }
-            else
-                Response.Redirect("../FinSesion.aspx", false);
-        }
-        private string GetSortDirection(string column)
-        {
-            string sortDirection = "ASC";
-            string sortExpression = ViewState["SortExpression"] as string;
+        //protected void gvLista_Sorting(object sender, GridViewSortEventArgs e)
+        //{
+        //    if (Session["idUsuario"] != null)
+        //    {
+        //        DataTable dt = ViewState["Datos"] as DataTable;
+        //        string sortDirection = GetSortDirection(e.SortExpression);
+        //        dt.DefaultView.Sort = e.SortExpression + " " + sortDirection;
+        //        gvLista.DataSource = dt;
+        //        gvLista.DataBind();
+        //    }
+        //    else
+        //        Response.Redirect("../FinSesion.aspx", false);
+        //}
+        //private string GetSortDirection(string column)
+        //{
+        //    string sortDirection = "ASC";
+        //    string sortExpression = ViewState["SortExpression"] as string;
 
-            if (sortExpression != null)
-            {
-                if (sortExpression == column)
-                {
-                    string lastDirection = ViewState["SortDirection"] as string;
-                    if ((lastDirection != null) && (lastDirection == "ASC"))
-                        sortDirection = "DESC";
-                }
-            }
+        //    if (sortExpression != null)
+        //    {
+        //        if (sortExpression == column)
+        //        {
+        //            string lastDirection = ViewState["SortDirection"] as string;
+        //            if ((lastDirection != null) && (lastDirection == "ASC"))
+        //                sortDirection = "DESC";
+        //        }
+        //    }
 
-            ViewState["SortDirection"] = sortDirection;
-            ViewState["SortExpression"] = column;
-            return sortDirection;
-        }
+        //    ViewState["SortDirection"] = sortDirection;
+        //    ViewState["SortExpression"] = column;
+        //    return sortDirection;
+        //}
 
         protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -664,20 +676,17 @@ namespace WebLab.Derivaciones
         {
             string str_condicion = Parametros();
 
+            GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
+            int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
+
             switch (e.CommandName)
             {
                 case "Modificar":
-                    {
-                        GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
-                        int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
                         Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument + "&Destino=" + idEfectorOrigen + "&Tipo=Modifica&Parametros=" + str_condicion, false); 
-                    }
 
                     break;
                 case "CambiarEstado":
                     {
-                        GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
-                        int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
                         string script = "CambiarEstado('" + e.CommandArgument + "' , '"+ idEfectorOrigen + "');";
 
                         ScriptManager.RegisterStartupScript(
@@ -689,10 +698,10 @@ namespace WebLab.Derivaciones
                     }
                      break;
                 case "Auditoria":
-                        PDFAuditoria(int.Parse(e.CommandArgument.ToString()), int.Parse( e.CommandName));
+                        PDFAuditoria(int.Parse(e.CommandArgument.ToString()), idEfectorOrigen);
                     break;
                 case "PDFControl":
-                        PDFControl(int.Parse(e.CommandArgument.ToString()), int.Parse(e.CommandName));
+                        PDFControl(int.Parse(e.CommandArgument.ToString()), idEfectorOrigen);
                      break;
                
             }
