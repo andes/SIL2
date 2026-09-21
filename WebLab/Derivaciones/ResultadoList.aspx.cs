@@ -12,18 +12,32 @@ using System.Web.UI.WebControls.WebParts;
 using System.Xml.Linq;
 using Business;
 using System.Data.SqlClient;
+using Business.Data;
 
 namespace WebLab.Derivaciones
 {
     public partial class ResultadoList : System.Web.UI.Page
     {
-     
 
+        private Usuario oUsuario = new Usuario();
        
 
         protected void Page_Load(object sender, EventArgs e)
         {
-          
+            if(Session["idUsuario"] != null)
+            {
+                oUsuario = (Usuario)new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                if (!IsPostBack)
+                {
+                    //VerificaPermisos("Lista de Lotes"); ???
+                    txtFechaDesde.Value = DateTime.Now.AddDays(-7).ToShortDateString();
+                    txtFechaHasta.Value = DateTime.Now.ToShortDateString();
+
+                    CargarListas();
+                }
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
         }
 
 
@@ -71,19 +85,32 @@ namespace WebLab.Derivaciones
 
         private DataTable LeerDatos(int tipo)
         {
-            string str_condicion = " 1=1 ";
+            string str_condicion = " 1=1 AND idEfector=" + oUsuario.IdEfector.IdEfector;
 
        
             if (txtDni.Value != "") str_condicion += " AND dni= '" + txtDni.Value + "'";
             if (txtApellido.Text != "") str_condicion += " AND apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
             if (txtNombre.Text != "") str_condicion += " AND nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
-           
+            if (txtFechaDesde.Value != "")
+            {
+                DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+                str_condicion += " AND fecha >= '" + fecha1.ToString("yyyyMMdd") + "'";
+            }
 
+            if (txtFechaHasta.Value != "")
+            {
+                DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
+                fecha2 = fecha2.AddDays(1);
+                str_condicion += " AND fecha <= '" + fecha2.ToString("yyyyMMdd") + "'";
+            }
+
+            if (ddlEfectorDestino.SelectedValue != "0")
+                str_condicion += " AND idEfectorDerivacion=" + ddlEfectorDestino.SelectedValue;
             /////////////
-            ///Si no fue enviado muestra la observacion sino el resultado
-          string m_strSQL = " SELECT estadoDerivacion , numero , convert(varchar(10),fecha,103) as fecha, dni, apellido + ' ' + nombre as paciente, determinacion, efectorDerivacion, " +
-                            " case when estadoDerivacion=1 then resultado else observacion end as resultado "+
-                            " FROM [vta_LAB_DerivacionesEnviadas] " +
+                ///Si no fue enviado muestra la observacion sino el resultado
+            string m_strSQL = " SELECT estadoDerivacion , numero , idlote, convert(varchar(10),fecha,103) as fecha, dni, apellido + ' ' + nombre as paciente, determinacion, efectorDerivacion, " +
+                            " case when estadoDerivacion=1 then resultado else observacion end as resultado   "+
+                            " FROM [vta_LAB_Derivaciones] " +
                             " WHERE  " + str_condicion + 
                             " ORDER BY convert(datetime,fecha) desc ";     
 
@@ -157,6 +184,20 @@ namespace WebLab.Derivaciones
                             row.Cells[0].Controls.Add(hlnk);
                         }
                         break;
+                    case "3": //Recibido
+                        {
+                            Image hlnk = new Image();
+                            hlnk.ImageUrl = "~/App_Themes/default/images/verde.gif";
+                            row.Cells[0].Controls.Add(hlnk);
+                        }
+                        break;
+                    case "4": //Pendiente de envio
+                        {
+                            Image hlnk = new Image();
+                            hlnk.ImageUrl = "~/App_Themes/default/images/reloj-de-arena.png";
+                            row.Cells[0].Controls.Add(hlnk);
+                        }
+                        break;
                 }
 
                
@@ -176,7 +217,25 @@ namespace WebLab.Derivaciones
         }
 
 
-        
+        private void CargarListas()
+        {
+            Utility oUtil = new Utility();
+            string m_ssql = "SELECT  E.idEfector, E.nombre " +
+               " FROM  Sys_Efector AS E " +
+               " where E.idEfector IN " +
+               " (SELECT DISTINCT idEfectorDerivacion FROM   lab_itemEfector AS IE  " +
+               " WHERE Ie.disponible=1 and IE.idEfector<>Ie.idEfectorDerivacion and  IE.idEfector=" + oUsuario.IdEfector.IdEfector.ToString() + ")" +
+               //19.08.2026 Agregamos los efectores de derivacion de los resultados predefinidos
+               @" UNION
+                    SELECT E.idEfector, E.nombre
+                    FROM  Sys_Efector AS E
+                    where E.idEfector IN ( SELECT DISTINCT idEfectorDeriva FROM  
+                        LAB_ResultadoItem AS RI WHERE RI.baja= 0  
+                        and RI.idEfector<> RI.idEfectorDeriva and RI.idEfector= " + oUsuario.IdEfector.IdEfector.ToString() + " ) " +
+               "    ORDER BY E.nombre";
+            oUtil.CargarCombo(ddlEfectorDestino, m_ssql, "idEfector", "nombre");
+            ddlEfectorDestino.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+        }
 
     }
 }

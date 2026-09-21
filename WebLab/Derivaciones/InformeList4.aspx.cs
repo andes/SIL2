@@ -49,12 +49,12 @@ namespace WebLab.Derivaciones
             {
                 if (Request["Tipo"] == "Modifica")
                 {
-                    lblTitulo.Text = "MODIFICACION DE LOTE ";
                     LoteDerivacion oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", int.Parse(Request["idLote"].ToString()));
-
+                    Efector oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", oLote.IdEfectorDestino.IdEfector);
+                   
+                    lblTitulo.Text = "MODIFICACION DE LOTE ";
                     lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
                     pnlNroLote.Visible = true;
-                    Efector oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", int.Parse(Request["Destino"].ToString()));
                     lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
                     lblSubTitulo.Visible = true;
                     HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
@@ -62,9 +62,15 @@ namespace WebLab.Derivaciones
                     btnGuardar.Visible = false;
                     btnNoEnviado.Visible = false;
                     HFIdLote.Value = Request["idLote"].ToString();
-                    HFIdEfectorDerivacion.Value = Request["Destino"].ToString();
+                    HFIdEfectorDerivacion.Value = oLote.IdEfectorDestino.IdEfector.ToString();
                     gvLista.Visible = false;
                     gvListaEdit.Visible = true;
+
+                    if(oLote.Estado != 1 || oLote.Estado != 3 ) //Solo lectura
+                    {
+                        lnkMarcar.Enabled = false;
+                        lnkDesMarcar.Enabled = false;
+                    }
                 }
             }
         }
@@ -101,20 +107,17 @@ namespace WebLab.Derivaciones
         }
         protected bool HacerCheck(int estado)
         {
-            if (Request["Tipo"] == "Modifica")
-            {
-                if (estado == 4) return true; //Dejar checkeados aquellos que ya estan en el lote
-                else return false;
-            }
-            else
-                return false;
+            bool check = false;
+            if ((Request["Tipo"] == "Modifica") && (estado == 4)) check =  true; //Dejar checkeados aquellos que ya estan en el lote
+            
+            return check;
 
         }
         protected void gvListaEdit_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                CheckBox chk = (CheckBox)e.Row.FindControl("CheckBox1");
+                CheckBox chk = (CheckBox)e.Row.FindControl("chkSel");
                 if (chk != null)
                 {
                     chk.InputAttributes["onchange"] = "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
@@ -125,8 +128,74 @@ namespace WebLab.Derivaciones
 
         protected void chkSel_CheckedChanged(object sender, EventArgs e)
         {
-            //si es estado 4 pasar a estado 0
+            
+            CheckBox chkStatus = (CheckBox)sender;
+            string str_accion = chkStatus.Checked ? "Habilita" : "Deshabilita";
 
+            GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
+
+            string[] idDetalles = gvListaEdit.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
+            foreach (string idDetalleProtocolo in idDetalles)
+            {
+                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                string accion = Request["Tipo"].ToString();
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
+                crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
+
+                IList lista = crit.List();
+                if (lista.Count > 0)
+                {
+                    string resultadoDerivacion = "Pendiente de derivar";
+
+                    if (oDetalle.ResultadoCar != "Pendiente para enviar ") 
+                        resultadoDerivacion = oDetalle.ResultadoCar.Replace(" - Pendiente para enviar", " - Pendiente de derivar");
+
+                    oDetalle.ResultadoCar = resultadoDerivacion;
+                    oDetalle.ConResultado = false;
+                    oDetalle.IdUsuarioResultado = 0;
+                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+                    oDetalle.Save();
+
+
+                    foreach (Derivacion oDeriva in lista)
+                    {
+                        oDeriva.Estado = 0;
+                        oDeriva.IdUsuarioRegistro = 0;
+                        oDeriva.FechaRegistro = DateTime.Now;
+                        oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
+                        oDeriva.Idlote = 0;
+                        oDeriva.Observacion = "";
+                        oDeriva.Save();
+                    }
+
+                    /*Actualiza estado de protocolo*/
+                    if (oDetalle.IdProtocolo.Estado < 2)
+                    {
+                        if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
+                            oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                        else
+                        {
+                            if (oDetalle.IdProtocolo.EnProceso())
+                            {
+                                oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                                                // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                            }
+                            else
+                                oDetalle.IdProtocolo.Estado = 0;
+                        }
+                        oDetalle.IdProtocolo.Save();
+                    }
+
+                    oDetalle.GrabarAuditoriaDetalleExtra("Elimina", oUser.IdUsuario, "Eliminado del lote");
+
+                }
+
+            }
+
+            CargarGrilla();
+            
         }
         private void Eliminar(object detalle)
         {

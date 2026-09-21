@@ -659,18 +659,32 @@ namespace WebLab.Derivaciones
                 CmdPDFControl.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdPDFControl.CommandName = "PDFControl";
 
-                string estado = e.Row.Cells[5].Text;
-                LoteDerivacionEstado oEstado = (LoteDerivacionEstado) new LoteDerivacionEstado().Get(typeof(LoteDerivacionEstado), "Nombre", estado);
-                if (oEstado.IdEstado == 1 || oEstado.IdEstado == 3)
+                int idLote = int.Parse(e.Row.Cells[0].Text);
+                LoteDerivacion  oLote = (LoteDerivacion) new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", idLote);
+
+                if ((oLote.Estado == 1 || oLote.Estado == 3))
                      CmdCambiarEstado.Visible = true; 
                 else
                      CmdCambiarEstado.Visible = false; 
 
-                if (oEstado.IdEstado == 1 || oEstado.IdEstado == 3)
+                if (oLote.Estado == 1 || oLote.Estado == 3)
                     CmdPDFControl.Visible = false;
 
             }
         }
+
+        private bool TieneDerivaciones(int idLote)
+        {
+            string m_strSQL = "select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote;
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            if (Ds.Tables[0].Rows.Count == 0) return false;
+            else return true;
+        }
+            
 
         protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -678,23 +692,27 @@ namespace WebLab.Derivaciones
 
             GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
             int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
-
+            int idLote = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[0].Text);
             switch (e.CommandName)
             {
                 case "Modificar":
-                        Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument + "&Destino=" + idEfectorOrigen + "&Tipo=Modifica&Parametros=" + str_condicion, false); 
+                        Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument +  "&Tipo=Modifica&Parametros=" + str_condicion, false); 
 
                     break;
                 case "CambiarEstado":
                     {
-                        string script = "CambiarEstado('" + e.CommandArgument + "' , '"+ idEfectorOrigen + "');";
-
-                        ScriptManager.RegisterStartupScript(
-                            this,
-                            this.GetType(),
-                            "CambiarEstado",
-                            script,
-                            true);
+                        if (TieneDerivaciones(idLote))
+                        {
+                            string script = "CambiarEstado('" + e.CommandArgument + "' , '"+ idEfectorOrigen + "');";
+                            ScriptManager.RegisterStartupScript( this, this.GetType(), "CambiarEstado",  script,true);
+                        }
+                        else
+                        {
+                            string script = "alert('No se puede derivar Lote N° " + idLote + " no tiene determinaciones.');";
+                            ScriptManager.RegisterStartupScript( this, this.GetType(), "mensajeError", script, true);
+                        }
+                        
+                            
                     }
                      break;
                 case "Auditoria":

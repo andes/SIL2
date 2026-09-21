@@ -263,8 +263,13 @@
                                     <asp:TemplateField HeaderText="Sel." >
                                         <ItemTemplate>
                                             <asp:CheckBox ID="chkSel" runat="server" EnableViewState="true" 
-                                                OnCheckedChanged="chkSel_CheckedChanged"   
-                                                Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> ' />
+                                                OnCheckedChanged="chkSel_CheckedChanged"   AutoPostBack="true"
+                                                Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> ' 
+                                               Enabled='<%# Convert.ToInt32(Eval("estado")) == 0 || 
+                                                            Convert.ToInt32(Eval("estado")) == 2 || 
+                                                            Convert.ToInt32(Eval("estado")) == 4 %>'
+                                              
+                                               />
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" HorizontalAlign="Center" />
                                     </asp:TemplateField>
