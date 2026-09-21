@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Derivaciones {
-    
-    
-    public partial class LoteList {
-        
+namespace WebLab.Derivaciones
+{
+
+
+    public partial class LoteList
+    {
+
         /// <summary>
         /// pnlTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTitulo;
-        
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// txtFechaDesde control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
-        
+
         /// <summary>
         /// txtFechaHasta control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
-        
+
         /// <summary>
         /// txtLoteDesde control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLoteDesde;
-        
+
         /// <summary>
         /// txtLoteHasta control.
         /// </summary>
@@ -65,16 +67,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLoteHasta;
-        
-        /// <summary>
-        /// ddlEstado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEstado;
-        
+
         /// <summary>
         /// ddlEfectorOrigen control.
         /// </summary>
@@ -83,7 +76,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEfectorOrigen;
-        
+
         /// <summary>
         /// ddlEfectorDestino control.
         /// </summary>
@@ -92,7 +85,16 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEfectorDestino;
-        
+
+        /// <summary>
+        /// chkEstados control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList chkEstados;
+
         /// <summary>
         /// cvValidar control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvValidar;
-        
+
         /// <summary>
         /// pnlLista control.
         /// </summary>
@@ -110,52 +112,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlLista;
-        
-        /// <summary>
-        /// btnBuscar control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBuscar;
-        
-        /// <summary>
-        /// CantidadRegistros control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label CantidadRegistros;
-        
-        /// <summary>
-        /// CurrentPageLabel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label CurrentPageLabel;
-        
-        /// <summary>
-        /// gvLista control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvLista;
-        
-        /// <summary>
-        /// pnlImpresion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlImpresion;
-        
+
         /// <summary>
         /// lnkExcel control.
         /// </summary>
@@ -164,5 +121,41 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkExcel;
+
+        /// <summary>
+        /// btnBuscar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnBuscar;
+
+        /// <summary>
+        /// CantidadRegistros control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label CantidadRegistros;
+
+        /// <summary>
+        /// CurrentPageLabel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label CurrentPageLabel;
+
+        /// <summary>
+        /// gvLista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvLista;
     }
 }

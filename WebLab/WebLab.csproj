@@ -2038,6 +2038,9 @@
     <Content Include="Consulta\Procesa.aspx" />
     <Content Include="Consulta\ResultadoView.aspx" />
     <Content Include="controldecambios.html" />
+    <Content Include="Derivaciones\DerivacionAnular.aspx" />
+    <Content Include="Derivaciones\InformeList4.aspx" />
+    <Content Include="Derivaciones\EditarListaLote.aspx" />
     <Content Include="Derivaciones\LoteList.aspx" />
     <Content Include="Derivaciones\NuevoLote.aspx" />
     <Content Include="Derivaciones\InformeLote.aspx" />
@@ -4580,6 +4583,27 @@
     </Compile>
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\DerivacionAnular.aspx.cs">
+      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\DerivacionAnular.aspx.designer.cs">
+      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList4.aspx.cs">
+      <DependentUpon>InformeList4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList4.aspx.designer.cs">
+      <DependentUpon>InformeList4.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\EditarListaLote.aspx.cs">
+      <DependentUpon>EditarListaLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\EditarListaLote.aspx.designer.cs">
+      <DependentUpon>EditarListaLote.aspx</DependentUpon>
     </Compile>
     <Compile Include="Derivaciones\LoteList.aspx.cs">
       <DependentUpon>LoteList.aspx</DependentUpon>
