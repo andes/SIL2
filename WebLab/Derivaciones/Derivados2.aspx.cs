@@ -30,7 +30,7 @@ namespace WebLab.Derivaciones
                 {
                     if (Request["tipo"] == "informe")
                     {
-                        lblTitulo.Text = "DERIVACIONES";
+                        lblTitulo.Text = "NUEVO LOTE";
                         VerificaPermisos("Crear Lote");
                     }
                     if (Request["tipo"] == "resultado")
@@ -129,9 +129,11 @@ namespace WebLab.Derivaciones
         private void CargarEstadoInforme()
         {
             Utility oUtil = new Utility();
-            string query_string = "SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (0,1,2,4)";
+            string query_string = "SELECT idEstado,descripcion FROM LAB_DerivacionEstado where idEstado in (0,2)"; //SOLO ESTADOS Pendiente de derivar YNo Enviado
             oUtil.CargarRadioButton(rdbEstado, query_string, "idEstado", "descripcion");
-            rdbEstado.SelectedIndex = 0;
+            rdbEstado.Items.Insert(0, new ListItem("Todos", "-1"));
+
+            rdbEstado.SelectedIndex = 1;
         }
 
         private void CargarEstadoResultado()
@@ -211,7 +213,7 @@ namespace WebLab.Derivaciones
                     if (dt.Rows.Count > 0)
                     {
                         if (Request["tipo"] == "informe")
-                            Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
+                            Response.Redirect("InformeList4.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
                         else
                         if (Request["tipo"] == "resultado")
                             Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
@@ -294,17 +296,18 @@ namespace WebLab.Derivaciones
 
         public DataTable GetDataSet(string parametros)
         {
-
             int estado = Convert.ToInt32(rdbEstado.SelectedValue);
+            //verifica por estados
+            string condicion = estado < 0 ? " AND estado in (0,2) " : " AND estado = " + estado;
 
             string m_strSQL = @" 
              SELECT  idDetalleProtocolo, estado, numero, convert(varchar(10), fecha,103) as fecha, dni, 
                  apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, fechaNacimiento as edad, unidadEdad, sexo, observacion , 
                 solicitante as especialista , isnull(idlote,0) as idLote , isnull(mot.descripcion,'') as motivo
              FROM  vta_LAB_Derivaciones vta left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion 
-             WHERE " + parametros + "  and estado = " + estado;
-
-            if(estado == 0) //Pendiente de derivar
+             WHERE " + parametros + condicion; //"  and estado = " + estado;
+            //siempre verifica que no tenga lote porque es "Crear lote"
+            //if(estado == 0) //Pendiente de derivar
                 m_strSQL += " and idlote = 0 ";//No tiene que tener lote asociado
             
             
