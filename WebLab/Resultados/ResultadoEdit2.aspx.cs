@@ -1263,6 +1263,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             .Add(Expression.In("IdItem.IdItem", idsItems.ToArray()))
             .Add(Expression.Eq("IdEfector", oUser.IdEfector))
             .Add(Expression.Eq("Baja", false))
+            .AddOrder(Order.Asc("IdResultadoItem"))
             .List();
 
             var resultadosPorItem = listaResultados
