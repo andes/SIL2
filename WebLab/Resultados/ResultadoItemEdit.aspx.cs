@@ -297,7 +297,8 @@ namespace WebLab.Resultados
                     @"FROM ResultadoItem r
       WHERE r.IdItem = :item
       AND r.IdEfector = :efector
-      AND r.Baja = :baja")
+      AND r.Baja = :baja
+      ORDER BY r.IdResultadoItem ")
                     .SetEntity("item", oItem)
                     .SetEntity("efector", oUser.IdEfector)
                     .SetBoolean("baja", false)
