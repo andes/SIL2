@@ -692,6 +692,7 @@ namespace WebLab.Derivaciones
 
             GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
             int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
+            
             int idLote = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[0].Text);
             switch (e.CommandName)
             {
@@ -703,7 +704,8 @@ namespace WebLab.Derivaciones
                     {
                         if (TieneDerivaciones(idLote))
                         {
-                            string script = "CambiarEstado('" + e.CommandArgument + "' , '"+ idEfectorOrigen + "');";
+                            string efectorDestino = gvLista.Rows[fila.RowIndex].Cells[4].Text;
+                            string script = "CambiarEstado('" + e.CommandArgument + "' , '"+ efectorDestino + "');";
                             ScriptManager.RegisterStartupScript( this, this.GetType(), "CambiarEstado",  script,true);
                         }
                         else

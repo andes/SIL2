@@ -130,15 +130,12 @@ namespace WebLab.Derivaciones
         {
             
             CheckBox chkStatus = (CheckBox)sender;
-            string str_accion = chkStatus.Checked ? "Habilita" : "Deshabilita";
-
             GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
 
             string[] idDetalles = gvListaEdit.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
             foreach (string idDetalleProtocolo in idDetalles)
             {
                 DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
-                string accion = Request["Tipo"].ToString();
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
@@ -162,7 +159,7 @@ namespace WebLab.Derivaciones
                     foreach (Derivacion oDeriva in lista)
                     {
                         oDeriva.Estado = 0;
-                        oDeriva.IdUsuarioRegistro = 0;
+                        oDeriva.IdUsuarioRegistro = oUser.IdUsuario;
                         oDeriva.FechaRegistro = DateTime.Now;
                         oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                         oDeriva.Idlote = 0;
@@ -393,6 +390,7 @@ namespace WebLab.Derivaciones
                                     oDeriva.FechaRegistro = DateTime.Now;
                                     oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                                     oDeriva.Idlote = lote.IdLoteDerivacion;
+                                    oDeriva.IdMotivoCancelacion = 0; 
                                     oDeriva.Save();
                                 }
                                 
@@ -462,17 +460,23 @@ namespace WebLab.Derivaciones
 
         private void MarcarSeleccionados(bool p)
         {
-            GridView gv;
+            GridView gv; string control = "";
             if (Request["Tipo"] == "Alta")
+            { 
                 gv = gvLista;
-            else 
+                control = "CheckBox1";
+            }
+            else
+            { 
                 gv = gvListaEdit;
+                control = "chkSel";
+            }
 
             foreach (GridViewRow row in gv.Rows)
             {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("chkSel")));
+                CheckBox a = ((CheckBox)(row.Cells[0].FindControl(control)));
                 if (a.Checked == !p)
-                    ((CheckBox)(row.Cells[0].FindControl("chkSel"))).Checked = p;
+                    ((CheckBox)(row.Cells[0].FindControl(control))).Checked = p;
             }
 
         }

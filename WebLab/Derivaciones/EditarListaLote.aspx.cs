@@ -142,7 +142,7 @@ namespace WebLab.Derivaciones
                             if (lista.Count > 0)
                             {
                                 //verificamos resultado predefinido para cambiar el valor del resultadoCar correctamente
-                                if (oDetalle.ResultadoCar != "Pendiente de derivar") oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
+                                if (oDetalle.ResultadoCar != "Pendiente de derivar") oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", " - Pendiente para enviar");
                                 else oDetalle.ResultadoCar = "Pendiente para enviar ";
 
                                 oDetalle.ConResultado = true;

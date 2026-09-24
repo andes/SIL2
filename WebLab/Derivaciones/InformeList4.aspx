@@ -114,7 +114,8 @@
                             <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
                             <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
                             <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
-                            <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;<br />
+                            <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
+                            <img alt="" src="../App_Themes/default/principal/images/tildeverde.png" /> Recibido&nbsp;<br />
                             &nbsp;<br />
                         </td>
 				    </tr>
@@ -162,8 +163,8 @@
                             <asp:CustomValidator ID="cvGeneral" runat="server" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                             <asp:CustomValidator ID="cvNoEnviado" runat="server" OnServerValidate="cvNoEnviado_ServerValidate" ValidationGroup="1"></asp:CustomValidator>
                              <div class="mylabelizquierda" >Seleccionar:                                           
-                                <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click">Todas</asp:LinkButton>&nbsp;
-                                <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0"  onclick="lnkDesMarcar_Click" >Ninguna</asp:LinkButton>
+                                <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  onclick="lnkMarcar_Click">Todas</asp:LinkButton>&nbsp;
+                                <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"   onclick="lnkDesMarcar_Click" >Ninguna</asp:LinkButton>
                                     &nbsp;&nbsp;
                               </div>
                         </td>
@@ -197,9 +198,7 @@
                                                 <asp:Image ID="estado" runat="server" 
                                                     ImageUrl='<%# 
                                                     Eval("estado").ToString() == "0" ? "~/App_Themes/default/images/pendiente.png" :
-                                                    Eval("estado").ToString() == "1" ? "~/App_Themes/default/images/enviado.png" :
                                                     Eval("estado").ToString() == "2" ? "~/App_Themes/default/images/block.png" :
-                                                    Eval("estado").ToString() == "4" ? "~/App_Themes/default/images/reloj-de-arena.png" :
                                                     "~/App_Themes/default/images/transparente.jpg"%>'  />
                                            </ItemTemplate>
                                        </asp:TemplateField>
@@ -282,6 +281,7 @@
                                                     Eval("estado").ToString() == "0" ? "~/App_Themes/default/images/pendiente.png" :
                                                     Eval("estado").ToString() == "1" ? "~/App_Themes/default/images/enviado.png" :
                                                     Eval("estado").ToString() == "2" ? "~/App_Themes/default/images/block.png" :
+                                                    Eval("estado").ToString() == "3" ? "~/App_Themes/default/principal/images/tildeverde.png" :
                                                     Eval("estado").ToString() == "4" ? "~/App_Themes/default/images/reloj-de-arena.png" :
                                                     "~/App_Themes/default/images/transparente.jpg"%>'  />
                                            </ItemTemplate>

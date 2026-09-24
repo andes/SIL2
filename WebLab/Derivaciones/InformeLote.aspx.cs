@@ -72,8 +72,7 @@ namespace WebLab.Derivaciones
         private void Inicializar()
         {
             lblTitulo.Text = "LOTE NUMERO "+ Request["idLote"];
-            Efector oEfector = (Efector) new Efector().Get(typeof(Efector), "IdEfector",int.Parse(Request["Destino"].ToString()));
-            lblSubtitulo.Text = "EFECTOR DESTINO: " +oEfector.Nombre;
+            lblSubtitulo.Text = "EFECTOR DESTINO: " + Request["Destino"];
         }
         
         private void CargarListas()
@@ -112,7 +111,7 @@ namespace WebLab.Derivaciones
             int idUsuario = oUser.IdUsuario;
             int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
             string resultadoDerivacion = (estadoLote == 2) ? "Derivado: " + Request["Destino"] : "No Derivado. ";
-            string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
+            string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedItem.Text : "");
             string resultadoAuditoria = resultadoDerivacion + " " + observacion;
             
             LoteDerivacion lote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), int.Parse(Request["idLote"]));
@@ -165,7 +164,7 @@ namespace WebLab.Derivaciones
 
             if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
             {
-                lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Transportista", ddlTransporte.SelectedValue);
+                lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Transportista", ddlTransporte.SelectedItem.Text);
                 DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
                 lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
                 lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);

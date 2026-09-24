@@ -31,8 +31,9 @@
             
             <div class="row">
                     <div class="col-lg-12">
-                    <img alt="" src="../App_Themes/default/images/pdf.jpg" />&nbsp;
-                        <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" OnClick="lnkPDF_Click">Descargar PDF</asp:LinkButton><br />
+                   <%-- <img alt="" src="../App_Themes/default/images/pdf.jpg" />&nbsp;
+                        <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" OnClick="lnkPDF_Click">Descargar PDF</asp:LinkButton><br />--%>
+                        <asp:LinkButton ID="lnkDerivar" runat="server" CssClass="myLittleLink" OnClick="lnkDerivar_Click">Derivar Lote para la descarga de PDF</asp:LinkButton><br />
                 </div>
             </div>
             <div class="row">

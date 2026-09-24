@@ -118,7 +118,7 @@
                             <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
                             <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
                             <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
-                            <img alt="" src="../App_Themes/default/images/verde.gif" /> Recibido&nbsp;
+                            <img alt="" src="../App_Themes/default/principal/images/tilde_verde.gif" /> Recibido&nbsp;
 
 							</td>
 					</tr>
@@ -132,7 +132,7 @@
                                                                 BorderWidth="1px" CellPadding="2" 
                                                                 EmptyDataText="No se encontraron protocolos para los parametros de busqueda ingresados" 
                                                                 Font-Size="9pt" ForeColor="#666666" 
-                                                                PageSize="20" Width="100%">
+                                                                PageSize="20" Width="100%" AllowPaging="True" onpageindexchanging="gvLista_PageIndexChanging">
                                                                 <RowStyle BackColor="White" Font-Names="Arial" Font-Size="8pt" 
                                                                     ForeColor="#333333" />
                                                                 <Columns>
@@ -152,7 +152,7 @@
                                                                         <ItemStyle HorizontalAlign="Center" Width="5%" />
                                                                     </asp:BoundField>
                                                                     <asp:BoundField DataField="paciente" HeaderText="Apellidos y Nombres / Producto">
-                                                                        <ItemStyle Width="15%" HorizontalAlign="Left" />
+                                                                        <ItemStyle Width="20%" HorizontalAlign="Left" />
                                                                     </asp:BoundField>
                                                                     <asp:BoundField DataField="determinacion" HeaderText="Analisis">
                                                                         <ItemStyle Width="20%" HorizontalAlign="Left" />
@@ -161,13 +161,13 @@
                                                                         <ItemStyle HorizontalAlign="Left" Width="15%" />
                                                                     </asp:BoundField>
                                                                     <asp:BoundField DataField="resultado" HeaderText="Resultado">
-                                                                        <ItemStyle Width="35%" HorizontalAlign="Left" Font-Bold="True" 
+                                                                        <ItemStyle Width="30%" HorizontalAlign="Left" Font-Bold="True" 
                                                                             ForeColor="Black" />
                                                                     </asp:BoundField>
                                                                 </Columns>
                                                                 <PagerSettings Mode="NumericFirstLast" Position="Top" />
                                                                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                                                                <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" />
+                                                                <PagerStyle BackColor="#E6E6E6" ForeColor="Black" HorizontalAlign="Right" CssClass="GridPager"/>
                                                                 <SelectedRowStyle BackColor="White" Font-Bold="True" ForeColor="#333333" />
                                                                 <HeaderStyle BackColor="#3A93D2" Font-Bold="False" Font-Names="Arial" 
                                                                     Font-Size="8pt" ForeColor="White" />

@@ -308,6 +308,7 @@ namespace WebLab.Derivaciones
              WHERE " + parametros + condicion; //"  and estado = " + estado;
             //siempre verifica que no tenga lote porque es "Crear lote"
             //if(estado == 0) //Pendiente de derivar
+            if(Request["tipo"] == "informe")
                 m_strSQL += " and idlote = 0 ";//No tiene que tener lote asociado
             
             

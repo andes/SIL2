@@ -29,7 +29,7 @@ namespace WebLab.Derivaciones
                 oUsuario = (Usuario)new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                 if (!IsPostBack)
                 {
-                    //VerificaPermisos("Lista de Lotes"); ???
+                    VerificaPermisos("Consultas"); 
                     txtFechaDesde.Value = DateTime.Now.AddDays(-7).ToShortDateString();
                     txtFechaHasta.Value = DateTime.Now.ToShortDateString();
 
@@ -187,7 +187,7 @@ namespace WebLab.Derivaciones
                     case "3": //Recibido
                         {
                             Image hlnk = new Image();
-                            hlnk.ImageUrl = "~/App_Themes/default/images/verde.gif";
+                            hlnk.ImageUrl = "~/App_Themes/default/principal/images/tilde_verde.gif";
                             row.Cells[0].Controls.Add(hlnk);
                         }
                         break;
@@ -234,8 +234,13 @@ namespace WebLab.Derivaciones
                         and RI.idEfector<> RI.idEfectorDeriva and RI.idEfector= " + oUsuario.IdEfector.IdEfector.ToString() + " ) " +
                "    ORDER BY E.nombre";
             oUtil.CargarCombo(ddlEfectorDestino, m_ssql, "idEfector", "nombre");
-            ddlEfectorDestino.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+            ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
         }
 
+        protected void gvLista_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvLista.PageIndex = e.NewPageIndex;
+            CargarGrilla();
+        }
     }
 }

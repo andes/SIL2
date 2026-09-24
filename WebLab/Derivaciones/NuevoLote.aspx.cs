@@ -124,7 +124,9 @@ namespace WebLab.Derivaciones
 
         }
 
-        
-
+        protected void lnkDerivar_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("../Derivaciones/LoteList.aspx" , false);
+        }
     }
 }

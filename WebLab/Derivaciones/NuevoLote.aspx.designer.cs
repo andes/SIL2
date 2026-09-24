@@ -33,13 +33,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Label lblLote;
 
         /// <summary>
-        /// lnkPDF control.
+        /// lnkDerivar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPDF;
+        protected global::System.Web.UI.WebControls.LinkButton lnkDerivar;
 
         /// <summary>
         /// HyperLink1 control.
