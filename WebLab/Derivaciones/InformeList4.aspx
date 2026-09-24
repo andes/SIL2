@@ -110,29 +110,39 @@
 				<table  width="1000px"  >
                     <tr>
                         <td class="myLabelLitlle" style="vertical-align: top" colspan="3">
-                        Referencias:
-                            <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
-                            <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
-                            <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
-                            <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
-                            <img alt="" src="../App_Themes/default/principal/images/tildeverde.png" /> Recibido&nbsp;<br />
-                            &nbsp;<br />
+                            <asp:Panel ID="pnlReferenciasAlta" runat="server">
+                                Referencias:
+                                    <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
+                                    <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
+                                    &nbsp;<br /> </asp:Panel>
+                            <asp:Panel ID="pnlReferenciaEdit" runat="server" >
+                                Referencias:
+                                    <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
+                                    <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
+                                    <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
+                                    <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
+                                    <span class="glyphicon glyphicon-inbox"></span> Recibido&nbsp;&nbsp;<br />
+                            </asp:Panel>
+                           
+                     
                         </td>
+                        
 				    </tr>
                     <tr>
 				        <td style="vertical-align: top" colspan="3">
                             <asp:Panel id="Panel1"   runat="server">
-                                <table class="myTabla">
-                                    <tr style="vertical-align: sub">
-                                        <td>
+                                <table class="myTabla" width="1000px">
+                                    <tr style="vertical-align: middle">
+                                        <td align="right">
                                             <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary"  Width="100" Text="Crear Lote" 
                                              onclick="btnGuardar_Click"  ValidationGroup="0" />
-                                                &nbsp;&nbsp;
-                                            <asp:Button ID="btnNoEnviado" runat="server" CssClass="btn btn-danger" Width="200" Text="Marcar como no enviado" 
-                                                ValidationGroup="1" OnClick="btnNoEnviado_Click"/>
-                                                &nbsp;&nbsp;
-                                            <asp:Button ID="btnImprimir" runat="server" CssClass="btn btn-warning" Width="100" Text="Imprimir" OnClientClick="window.print(); return false;" />
+                                              &nbsp;&nbsp;
+                                            <asp:Button ID="btnImprimir" runat="server" CssClass="btn btn-primary" Width="100" Text="Imprimir" OnClientClick="window.print(); return false;" />
 
+                                                &nbsp;&nbsp;
+                                            <asp:Button ID="btnNoEnviado" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Marcar No enviado" 
+                                                ValidationGroup="1" OnClick="btnNoEnviado_Click"/>
+                                              
                                             <asp:Button
                                                 ID="btnActualizar"
                                                 runat="server"
@@ -276,14 +286,7 @@
                                          <asp:TemplateField>
                                            <ItemStyle Width="5%" HorizontalAlign="Center" />
                                            <ItemTemplate>
-                                                <asp:Image ID="estado" runat="server" 
-                                                    ImageUrl='<%# 
-                                                    Eval("estado").ToString() == "0" ? "~/App_Themes/default/images/pendiente.png" :
-                                                    Eval("estado").ToString() == "1" ? "~/App_Themes/default/images/enviado.png" :
-                                                    Eval("estado").ToString() == "2" ? "~/App_Themes/default/images/block.png" :
-                                                    Eval("estado").ToString() == "3" ? "~/App_Themes/default/principal/images/tildeverde.png" :
-                                                    Eval("estado").ToString() == "4" ? "~/App_Themes/default/images/reloj-de-arena.png" :
-                                                    "~/App_Themes/default/images/transparente.jpg"%>'  />
+                                               <asp:Literal ID="estado" runat="server" />
                                            </ItemTemplate>
                                        </asp:TemplateField>
 

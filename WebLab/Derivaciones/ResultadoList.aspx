@@ -87,7 +87,7 @@
 					<tr>
                         <td class="myLabelIzquierda">Efector Destino:</td>
                         <td>
-                            <asp:DropDownList ID="ddlEfectorDestino" runat="server"  class="form-control input-sm" ></asp:DropDownList>
+                            <asp:DropDownList ID="ddlEfectorDestino" runat="server"  class="form-control input-sm"  Width="250px" ></asp:DropDownList>
                         </td>
 						<%--<td class="myLabelIzquierda" >
                                             Nombres/s:</td>
@@ -96,7 +96,7 @@
                                                 Width="300px"></asp:TextBox>
                         </td>--%>
 						
-						<td align="left">
+						<td align="right">
                             <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" Width="100px"
                                 OnClick="btnBuscar_Click1" TabIndex="15" Text="Buscar"
                                 ValidationGroup="0" />
@@ -118,7 +118,7 @@
                             <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
                             <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
                             <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
-                            <img alt="" src="../App_Themes/default/principal/images/tilde_verde.gif" /> Recibido&nbsp;
+                            <span class="glyphicon glyphicon-inbox"></span> Recibido&nbsp;
 
 							</td>
 					</tr>

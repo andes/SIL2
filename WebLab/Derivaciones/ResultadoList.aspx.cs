@@ -186,8 +186,8 @@ namespace WebLab.Derivaciones
                         break;
                     case "3": //Recibido
                         {
-                            Image hlnk = new Image();
-                            hlnk.ImageUrl = "~/App_Themes/default/principal/images/tilde_verde.gif";
+                            Label hlnk = new Label();
+                            hlnk.CssClass = "glyphicon glyphicon-inbox";
                             row.Cells[0].Controls.Add(hlnk);
                         }
                         break;

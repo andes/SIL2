@@ -44,6 +44,8 @@ namespace WebLab.Derivaciones
                 HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
                 gvLista.Visible = true;
                 gvListaEdit.Visible = false;
+                pnlReferenciasAlta.Visible = true;
+                pnlReferenciaEdit.Visible = false;
             }
             else
             {
@@ -65,8 +67,10 @@ namespace WebLab.Derivaciones
                     HFIdEfectorDerivacion.Value = oLote.IdEfectorDestino.IdEfector.ToString();
                     gvLista.Visible = false;
                     gvListaEdit.Visible = true;
+                    pnlReferenciasAlta.Visible = false;
+                    pnlReferenciaEdit.Visible = true;
 
-                    if(oLote.Estado != 1 || oLote.Estado != 3 ) //Solo lectura
+                    if (oLote.Estado != 1 || oLote.Estado != 3 ) //Solo lectura
                     {
                         lnkMarcar.Enabled = false;
                         lnkDesMarcar.Enabled = false;
@@ -122,7 +126,37 @@ namespace WebLab.Derivaciones
                 {
                     chk.InputAttributes["onchange"] = "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
                 }
-                
+
+                string estado = DataBinder.Eval(e.Row.DataItem, "estado").ToString();
+
+                Literal lblEstado = (Literal)e.Row.FindControl("estado");
+
+                if (lblEstado != null)
+                {
+                    switch (estado)
+                    {
+                        case "0":
+                            lblEstado.Text = "<img src='../App_Themes/default/images/pendiente.png' />";
+                            break;
+
+                        case "1":
+                            lblEstado.Text = "<img src='../App_Themes/default/images/enviado.png' />";
+                            break;
+
+                        case "2":
+                            lblEstado.Text = "<img src='../App_Themes/default/images/block.png' />";
+                            break;
+
+                        case "3":
+                            lblEstado.Text = "<span class='glyphicon glyphicon-inbox' title='Recibido'></span>";
+                            break;
+
+                        case "4":
+                            lblEstado.Text = "<img src='../App_Themes/default/images/reloj-de-arena.png' />";
+                            break;
+                    }
+
+                }
             }
         }
 

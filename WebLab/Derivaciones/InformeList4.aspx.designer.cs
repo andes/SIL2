@@ -78,6 +78,24 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.HiddenField HFIdEfectorDerivacion;
 
         /// <summary>
+        /// pnlReferenciasAlta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlReferenciasAlta;
+
+        /// <summary>
+        /// pnlReferenciaEdit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlReferenciaEdit;
+
+        /// <summary>
         /// Panel1 control.
         /// </summary>
         /// <remarks>
@@ -96,15 +114,6 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Button btnGuardar;
 
         /// <summary>
-        /// btnNoEnviado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnNoEnviado;
-
-        /// <summary>
         /// btnImprimir control.
         /// </summary>
         /// <remarks>
@@ -112,6 +121,15 @@ namespace WebLab.Derivaciones
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnImprimir;
+
+        /// <summary>
+        /// btnNoEnviado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNoEnviado;
 
         /// <summary>
         /// btnActualizar control.
