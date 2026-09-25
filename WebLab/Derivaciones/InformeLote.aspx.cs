@@ -72,7 +72,7 @@ namespace WebLab.Derivaciones
         private void Inicializar()
         {
             lblTitulo.Text = "LOTE NUMERO "+ Request["idLote"];
-            lblSubtitulo.Text = "EFECTOR DESTINO: " + Request["Destino"];
+            lblSubtitulo.Text = "Efector Destino: " + Request["Destino"];
         }
         
         private void CargarListas()

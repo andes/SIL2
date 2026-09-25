@@ -13,7 +13,7 @@
  
 <body style="background-color: #ffffff;">
     <form id="form1" runat="server">      
-    <div align="left" style="width:1200px">
+    <div align="left" style="width:700px">
         <div class="panel panel-default">
             <div class="panel-heading">
                   <b > <asp:Label ID="lblTitulo" runat="server" Text="" /></b> 
@@ -22,7 +22,7 @@
             </div>
 
 			<div class="panel-body">
-				 <table  width="1000px"  >
+				 <table>
 					<tr>
 					<td style="vertical-align: auto" colspan="3">
                          <asp:Panel id="Panel1"   runat="server">

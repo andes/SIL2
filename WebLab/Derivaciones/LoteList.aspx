@@ -2,12 +2,16 @@
 
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
-    <link type="text/css" rel="stylesheet" href="../script/jquery-ui-1.7.1.custom.css" />
+ 
+    
+    <link type="text/css" rel="stylesheet" href="../script/jquery-ui-1.7.1.custom.css" /> 
     <script type="text/javascript" src="../script/jquery.min.js"></script>
     <script type="text/javascript" src="../script/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../script/jquery.ui.datepicker-es.js"></script>
+   
     <script type="text/javascript" src="../script/Mascara.js"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>
+  
     <script type="text/javascript"> 
 
         $(function () {
@@ -36,30 +40,7 @@
             input.value = input.value.replace(/\D/g, '');
         }
 
-        function CambiarEstado(IdLote, Efector){
-            $('<iframe src="InformeLote.aspx?IdLote=' + IdLote + '&Destino='+ Efector + '" />').dialog({
-                title: 'Cambiar Estado',
-                autoOpen: true,
-                width: 800,
-                height: 400,
-                modal: true,
-                resizable: false,
-                autoResize: true,
-                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
-
-                buttons: {
-                    'Cerrar': function () {
-                        $(this).dialog('close');
-                        document.getElementById('<%= btnBuscar.ClientID %>').click();
-                      }
-                  },
-                  overlay: {
-                      opacity: 0.5,
-                      background: "black"
-                  }
-
-              }).width(800);
-        }
+     
     </script>
 </asp:Content>
 
@@ -277,5 +258,33 @@
         </table>
      
     </div>
+    <script src="../script/Resources/jquery.min.js" type="text/javascript"></script>
+    <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />
+    <script src="../script/Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        function CambiarEstado(IdLote, Efector) {
+            $('<iframe src="InformeLote.aspx?IdLote=' + IdLote + '&Destino=' + Efector + '" />').dialog({
+                title: 'Cambiar Estado',
+                autoOpen: true,
+                width: 750,
+                height: 450,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
 
+                buttons: {
+                    'Cerrar': function () {
+                        $(this).dialog('close');
+                        document.getElementById('<%= btnBuscar.ClientID %>').click();
+                }
+            },
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+
+        }).width(800);
+        }
+    </script>
 </asp:Content>

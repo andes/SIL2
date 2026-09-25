@@ -19,7 +19,7 @@
 <body style="background-color: #ffffff;">
     <form id="form1" runat="server">
 
-        <div align="left" style="width: 85%" class="form-inline">
+        <div align="left" style="width: 400px" class="form-inline">
             <div class="panel panel-default">
                
                 <div class="panel-body">

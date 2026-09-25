@@ -47,8 +47,8 @@
             $('<iframe src="DerivacionAnular.aspx?Lista=' + listaIdDetalle  +'" />').dialog({
                 title: 'Marcar como no enviado',
                 autoOpen: true,
-                width: 690,
-                height: 350,
+                width: 500,
+                height: 410,
                 modal: true,
                 resizable: false,
                 autoResize: true,
@@ -65,7 +65,7 @@
                     background: "black"
                 }
 
-            }).width(800);
+            }).width(500);
 
 
         }
