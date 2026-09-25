@@ -218,6 +218,8 @@ namespace WebLab
                         }
                     }
 
+                    //25.09.2026 Verificamos que no tenga Lotes pendientes de Envio
+                    VerificarLotesPendientesEnvio();
                 }
                 else
                     Response.Redirect("AccesoDenegado.aspx?mensaje=Efector no Habilitado. Verifique con el administrador.", false);
@@ -533,6 +535,38 @@ namespace WebLab
         {  CargarGrillaSISA();
             gvProtocolosxSISA.Visible = true; ;
 
+        }
+        private void VerificarLotesPendientesEnvio()
+        {
+
+            if (Session["idUsuario"] == null)
+                Response.Redirect("FinSesion.aspx");
+
+            Usuario oUser = (Usuario) new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+            string m_strSQL = " SELECT * FROM LAB_LoteDerivacion WHERE estado = 1 AND   idEfectorOrigen = @idEfector AND fechaRegistro < CAST(GETDATE() AS DATE) AND baja = 0 ";
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
+            {
+                cmd.Parameters.AddWithValue("@idEfector", oUser.IdEfector.IdEfector);
+                conn.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarLotePendiente", "$('#modalLotePendiente').modal('show');", true);
+                        return;
+                    }
+                }
+            }
+
+        }
+
+        protected void btnAceptar_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Derivaciones/LoteList.aspx");
         }
     }
 }

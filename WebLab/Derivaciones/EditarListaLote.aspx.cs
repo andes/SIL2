@@ -110,7 +110,8 @@ namespace WebLab.Derivaciones
         }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            CargarGrilla();
+            if(Page.IsValid)
+                CargarGrilla();
         }
 
         protected void btnGuardar_Click(object sender, EventArgs e)
@@ -141,7 +142,7 @@ namespace WebLab.Derivaciones
                             if (lista.Count > 0)
                             {
                                 //verificamos resultado predefinido para cambiar el valor del resultadoCar correctamente
-                                if (oDetalle.ResultadoCar != "Pendiente de derivar") oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
+                                if (oDetalle.ResultadoCar != "Pendiente de derivar") oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", " - Pendiente para enviar");
                                 else oDetalle.ResultadoCar = "Pendiente para enviar ";
 
                                 oDetalle.ConResultado = true;
@@ -232,6 +233,19 @@ namespace WebLab.Derivaciones
             cvGeneral.ErrorMessage = "*Seleccione una fila";
         }
 
-       
+        //protected void cvBuscar_ServerValidate(object source, ServerValidateEventArgs args)
+        //{
+        //    args.IsValid = true;
+        //    DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+        //    DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
+        //    TimeSpan diasDiferencia = fecha2 - fecha1;
+        //    if (diasDiferencia.TotalDays >60)
+        //    {
+        //        cvBuscar.ErrorMessage = "El rango de fechas no puede superar los 60 días.";
+        //        args.IsValid = false;
+        //    }
+            
+               
+        //}
     }
 }

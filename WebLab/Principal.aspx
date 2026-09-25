@@ -15,7 +15,11 @@
     <link rel="shortcut icon" href="website/website/images/icolabo.ico">
  <%-- <link rel="stylesheet" href="website/style.css">--%>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-   
+   <style>
+    #modalLotePendiente .modal-dialog {
+        margin-top: 15%;
+    }
+</style>
       </asp:Content>
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">  
     
@@ -410,6 +414,31 @@ width="290px" CellPadding="4" ForeColor="#333333" BorderColor="#CCCCCC" BorderSt
     
                                                                                        
        </div>
+
+
+
+    <!-- Modal lote pendiente -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalLotePendiente">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Tiene lotes pendientes de envío</h4>
+      </div>
+      <div class="modal-body">
+       
+              Hay lotes creados que todavía no fueron derivados.  Por favor, revise los lotes pendientes y defina la acción correspondiente.
+           
+      </div>
+      <div class="modal-footer">
+          <div align="right">
+              <asp:Button runat="server"  ID="btnAceptar" CssClass="btn btn-success" Text="Aceptar" Width="100px" OnClick="btnAceptar_Click"  UseSubmitBehavior="true"  CausesValidation="false" />
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->
 </asp:Content>
 
 
