@@ -34,49 +34,51 @@ namespace WebLab.Protocolos
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            try
+            if (Page.IsValid)
             {
-                lblErrorAPI.Text = "";
-                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+                try
+                {
+                    lblErrorAPI.Text = "";
+                    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
-                ///Buscar especilista
-                string apellido = txtApellido.Text;
-                string nombre = txtNombre.Text;
-                string s_urlWFC = oCon.UrlMatriculacion;
-                string s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido;// + "&codigoProfesion=1 ";
+                    ///Buscar especilista
+                    string apellido = txtApellido.Text;
+                    string nombre = txtNombre.Text;
+                    string s_urlWFC = oCon.UrlMatriculacion;
+                    string s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido;// + "&codigoProfesion=1 ";
 
                 
-                if (Request["desde"] != null && Request["desde"].ToString() == "ProtocoloList")
-                {
-                    string matricula = txtMatricula.Text;
-                    s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido+ "&numeroMatricula="+matricula;
+                    if (Request["desde"] != null && Request["desde"].ToString() == "ProtocoloList") //Agregamos la matriculacion en la busqueda
+                    {
+                        s_url +=  "&numeroMatricula=" + txtMatricula.Text;
+                    }
+
+
+                        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
+                    HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
+                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                    Stream st = ws1.GetResponseStream();
+                    StreamReader sr = new StreamReader(st);
+
+                    string s = sr.ReadToEnd();
+                    if (s != "0")
+                    {
+                        DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
+                        gvMedico.DataSource = t;
+                        gvMedico.DataBind();
+                    }
                 }
-
-
-                    System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
-                HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
-                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
-                Stream st = ws1.GetResponseStream();
-                StreamReader sr = new StreamReader(st);
-
-                string s = sr.ReadToEnd();
-                if (s != "0")
+                catch (Exception ex)
                 {
-                    DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
-                    gvMedico.DataSource = t;
-                    gvMedico.DataBind();
+                    lblErrorAPI.Visible = true;
+                    lblErrorAPI.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
                 }
+                //}
             }
-            catch (Exception ex)
-            {
-                lblErrorAPI.Visible = true;
-                lblErrorAPI.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
-            }
-            //}
-
+          
 
         }
         public static DataTable GetJSONToDataTableUsingMethod(string JSONData)
@@ -194,7 +196,24 @@ namespace WebLab.Protocolos
           
         }
 
-        
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = false;
 
+            if(divMatricula.Visible) 
+            {
+                if (txtApellido.Text != "" || txtNombre.Text != "" || txtMatricula.Text != "")//al menos uno de los 3 campos tiene que tener valor para buscar
+                    args.IsValid = true;
+                else
+                    cvGeneral.ErrorMessage = "Ingrese un valor en los campos Apellido, Nombre o Matricula";
+            }
+            else 
+            {
+                if (txtApellido.Text != "" || txtNombre.Text != "")//al menos uno de los dos campos tiene que tener valor
+                    args.IsValid = true;
+                else
+                    cvGeneral.ErrorMessage = "Ingrese un valor en los campos Apellido o Nombre";
+            }
+        }
     }
 }

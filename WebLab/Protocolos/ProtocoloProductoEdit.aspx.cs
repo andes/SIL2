@@ -1697,13 +1697,22 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            switch (Request["Desde"].ToString())
+            
+            if(Request["Operacion"] == "Alta")
             {
-                case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=ListaProducto"); break;
-                case "Control": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control"); break;
-                case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
+                Response.Redirect("../Default.aspx");
             }
-                   }
+            else
+            {
+                switch (Request["Desde"].ToString())
+                {
+                    case "ProtocoloList": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=ListaProducto"); break;
+                    case "Control": Response.Redirect("ProtocoloList.aspx?idServicio=" + Session["idServicio"].ToString() + "&Tipo=Control"); break;
+                    case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
+                }
+            }
+            
+        }
       
 
     
