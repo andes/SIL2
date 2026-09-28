@@ -266,32 +266,7 @@ namespace WebLab.Protocolos
         /// </remarks>
         protected global::Anthem.LinkButton lnkBorrarMatriculaEspecialista;
 
-        /// <summary>
-        /// lblNomApeEspecialista control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.Label lblNomApeEspecialista;
-
-        /// <summary>
-        /// lnkBuscarEspecialista control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.LinkButton lnkBuscarEspecialista;
-
-        /// <summary>
-        /// lnkBorrarMatriculaEspecialista control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.LinkButton lnkBorrarMatriculaEspecialista;
+        
 
         /// <summary>
         /// txtNombre control.
@@ -311,15 +286,7 @@ namespace WebLab.Protocolos
         /// </remarks>
         protected global::Anthem.HiddenField HFObraSocial;
 
-        /// <summary>
-        /// lblObraSocial control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.HiddenField HFObraSocial;
-
+       
         /// <summary>
         /// lblObraSocial control.
         /// </summary>
