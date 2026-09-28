@@ -329,7 +329,7 @@ namespace Business.Data.Laboratorio
 
 			string m_strSQL =
 			  //select distinct STRING_AGG(Det.idItem ,' | ')  as Item ---> (No esta disponible en SQL 2014)
-			  @" SELECT  STUFF(( SELECT ' | ' + CAST(Det.idItem AS VARCHAR(20))
+			  @" SELECT  STUFF(( SELECT distinct ' | ' + CAST(Det.idItem AS VARCHAR(20))
                     from LAB_Derivacion D
                         inner join LAB_DetalleProtocolo as Det on Det.idDetalleProtocolo = D.idDetalleProtocolo
                     where 

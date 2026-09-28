@@ -582,11 +582,11 @@
                             <asp:Panel ID="pnlReferencia" Visible="false" runat="server" Width="300px">
                            <span class="label label-default">Dentro de V.R</span>
                                 <span class="label label-danger">Fuera de V.R</span>
-                            </asp:Panel> 
+                            </asp:Panel>  <asp:CheckBox ID="chkCerrarSinResultados" runat="server" CssClass="myLabelIzquierda" 
+                                Text="Terminar protocolo" Visible="False" 
+                                ToolTip="Da por terminado el protocolo con analisis sin resultados"  />
                         <br />
-                             <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-primary" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
-                                  Visible="False" 
-                                Width="180px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+                           
 
 
                          
@@ -626,7 +626,10 @@
                              
                                  
      <div class="footer" align="right">	
-  
+    <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-info" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
+                                  Visible="False" 
+                                Width="160px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+
                            <asp:Button ID="btnRestringirAcceso" AccessKey="N" runat="server" CssClass="btn btn-danger" Text="No Publicar"  Visible="false" OnClientClick="ProtocoloPermisos();return false;" 
                                 Width="130px" OnClick="btnRestringirAcceso_Click"/>
                            <%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />

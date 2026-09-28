@@ -121,7 +121,7 @@ namespace WebLab.Resultados
                         tituloAntecedente.Visible = false;
                         btnDesValidar.Visible = false;            
                         pnlAntecedentes.Visible = false;
-                        //chkCerrarSinResultados.Visible = false;
+                        chkCerrarSinResultados.Visible = false;
                         btnCerrarSinResultados.Visible = false;
                         chkFormula.Checked = oCon.AplicarFormulaDefecto;
                         pnlHC.Visible = false;
@@ -151,7 +151,7 @@ namespace WebLab.Resultados
                         btnMostrarResultados.Visible = false;
                         imgDiagnostico.Visible = false;
                         btnDesValidar.Visible = false;
-                        //   chkCerrarSinResultados.Visible = false;
+                        chkCerrarSinResultados.Visible = false;
                         btnCerrarSinResultados.Visible = false;
                         chkFormula.Checked = oCon.AplicarFormulaDefecto;
                         pnlHC.Visible = false;
@@ -180,7 +180,7 @@ namespace WebLab.Resultados
                        
                         btnValidarPendiente.Visible = true;
                         btnValidarPendienteImprimir.Visible = true;
-                        //chkCerrarSinResultados.Visible = true;                    
+                       chkCerrarSinResultados.Visible = true;                    
                         chkFormula.Visible = false;
                         chkFormula.Checked = false;
                         lblFormula.Visible = false;
@@ -1263,6 +1263,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
             .Add(Expression.In("IdItem.IdItem", idsItems.ToArray()))
             .Add(Expression.Eq("IdEfector", oUser.IdEfector))
             .Add(Expression.Eq("Baja", false))
+            .AddOrder(Order.Asc("IdResultadoItem"))
             .List();
 
             var resultadosPorItem = listaResultados
@@ -1838,7 +1839,7 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                                                 if (!resultadosPorItem.TryGetValue(m_idItem, out resultados))                                                
                                                     resultados = new List<ResultadoItem>();                                                
                                                 ///fin caro PF
-                                           
+
                                                 if (resultados.Count > 0)
                                                 {
                                                     DropDownList ddl1 = new DropDownList();
@@ -3230,15 +3231,15 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                     }
                 }
 
-                //if ((Request["Operacion"].ToString() == "Valida") && (chkCerrarSinResultados.Checked))
+                if ((Request["Operacion"].ToString() == "Valida") && (chkCerrarSinResultados.Checked))
                 
-                //    {
-                //    oProtocolo.Estado = 2;
-                //    //if (oProtocolo.IdTipoServicio.IdTipoServicio==3) oProtocolo.exportarDatos();
-                //    oProtocolo.GrabarAuditoriaProtocolo("Terminado", int.Parse(Session["idUsuario"].ToString())); // agrego auditoria de cierre de protocolo
-                //    if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
-                //        oProtocolo.Estado = 3; //Acceso Restringido
-                //}
+                    {
+                    oProtocolo.Estado = 2;
+                    //if (oProtocolo.IdTipoServicio.IdTipoServicio==3) oProtocolo.exportarDatos();
+                    oProtocolo.GrabarAuditoriaProtocolo("Terminado", int.Parse(Session["idUsuario"].ToString())); // agrego auditoria de cierre de protocolo
+                    if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
+                        oProtocolo.Estado = 3; //Acceso Restringido
+                }
 
                 oProtocolo.Save();
             }
