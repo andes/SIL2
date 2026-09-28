@@ -380,6 +380,7 @@ namespace WebLab.Items
                         crit.Add(Expression.Eq("IdItem", oItem));
                         crit.Add(Expression.Eq("Baja", false));
                         crit.Add(Expression.Eq("IdEfector", oEfector));
+                        crit.AddOrder(Order.Asc("IdResultadoItem")); 
 
                         string sDatos = "";
                         IList items = crit.List();
@@ -413,9 +414,24 @@ namespace WebLab.Items
                 if (ddlResultadoPorDefecto.Items.Count == 1)
                     tResultadoDefecto.Visible = false;
 
-                
-                gvResultadosPredefinidos.DataSource = LeerDatosRP();
-                gvResultadosPredefinidos.DataBind(); 
+                DataTable dt = (DataTable)LeerDatosRP();
+
+                gvResultadosPredefinidos.DataSource = dt;
+                gvResultadosPredefinidos.DataBind();
+
+                if (ddlResultadoPorDefecto.Items.Count == 1)
+                    tResultadoDefecto.Visible = false;
+                else
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (Convert.ToBoolean(row["resultadoDefecto"]))
+                        {
+                            ddlResultadoPorDefecto.SelectedValue = row["idResultadoItem"].ToString();
+                            break;
+                        }
+                    }
+                }
             }
 
         }
@@ -431,7 +447,7 @@ namespace WebLab.Items
 
         private object LeerDatosRP()
         {
-            string m_strSQL = " SELECT idResultadoItem, resultado, isnull(e.nombre,'') as efectorDeriva,case when estadoValidacion = 'D' then 'Definitivo' else 'Preliminar' end as Estado " +
+            string m_strSQL = " SELECT idResultadoItem, resultado, isnull(e.nombre,'') as efectorDeriva,case when estadoValidacion = 'D' then 'Definitivo' else 'Preliminar' end as Estado , resultadoDefecto " +
                               " FROM LAB_ResultadoItem rI  with (nolock) " +
                               " LEFT JOIN  Sys_efector e with (nolock)  ON e.idEfector=rI.idEfectorDeriva  "+
                               " WHERE (baja = 0) and idItem=" + Request["id"].ToString() + " and rI.idEfector = " + Request["idEfector"].ToString() +
@@ -527,7 +543,9 @@ namespace WebLab.Items
                 GuardarRP();
 
                 CargarListasRPDefecto();
-                /// Response.Redirect("ItemEdit2.aspx", false);                
+
+                lblMensajeRP.Visible = true;
+                lblMensajeRP.UpdateAfterCallBack = true;
 
             }
         }
@@ -566,7 +584,7 @@ namespace WebLab.Items
                 ICriteria critNew = m_session.CreateCriteria(typeof(ResultadoItem));
                 critNew.Add(Expression.Eq("IdItem", oItem));
                 critNew.Add(Expression.Eq("IdEfector", oEfectorPrincipal));
-
+                critNew.AddOrder(Order.Asc("IdResultadoItem"));  
                 //   string sDatos = "";
                 IList itemsNew = critNew.List();
 
@@ -2897,8 +2915,12 @@ namespace WebLab.Items
                     
                 }
                 lblMensajeRpD.Text = "El resultado por defecto ha sido guardado";
+                lblMensajeRPEfector.Text = "El resultado por defecto ha sido guardado";
                 lblMensajeRpD.Visible = true;
+                lblMensajeRPEfector.Visible = true;
                 lblMensajeRpD.UpdateAfterCallBack = true;
+                lblMensajeRPEfector.UpdateAfterCallBack = true;
+
             }
         }
 

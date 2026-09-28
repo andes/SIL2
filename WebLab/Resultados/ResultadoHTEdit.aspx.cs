@@ -329,7 +329,8 @@ namespace WebLab.Resultados
                     @"FROM ResultadoItem r
       WHERE r.IdItem.IdItem IN (:idsItem)
       AND r.IdEfector.IdEfector = :idEfector
-      AND r.Baja = 0")
+      AND r.Baja = 0
+       ORDER BY r.IdResultadoItem")
                     .SetParameterList("idsItem", listaItemIds)
                     .SetInt32("idEfector", oUser.IdEfector.IdEfector)
                     .List();

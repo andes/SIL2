@@ -1201,6 +1201,9 @@
 					</tr>
 						
 						<tr>
+                            <td colspan="2">
+                                <anthem:Label ID="lblMensajeRP" Visible="false" runat="server" ForeColor="#990000" Text="Los resultados predefinidos han sido guardados"></anthem:Label>
+                            </td>
                             <td align="right"  colspan="3">
                                             <anthem:Button ID="btnGuardarRP" runat="server" Text="Guardar" 
                                                 onclick="btnGuardarRP_Click" CssClass="btn btn-primary" Width="100px"  ValidationGroup="0" />
@@ -1259,6 +1262,12 @@
                             <anthem:Button ID="btnGuardarRPDefecto" runat="server" CssClass="btn btn-primary" Width="100px" 
                                 onclick="btnGuardarRPDefecto_Click" Text="Guardar" ValidationGroup="0" 
                                  />
+                        </td>
+                 <td>
+                            <anthem:Label ID="lblMensajeRPEfector" runat="server" ForeColor="#990000" 
+                                Visible="False">
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </anthem:Label>
                         </td>
                     </tr>
     </table>

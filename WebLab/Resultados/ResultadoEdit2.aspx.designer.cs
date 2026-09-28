@@ -832,13 +832,13 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Panel pnlReferencia;
         
         /// <summary>
-        /// btnCerrarSinResultados control.
+        /// chkCerrarSinResultados control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCerrarSinResultados;
+        protected global::System.Web.UI.WebControls.CheckBox chkCerrarSinResultados;
         
         /// <summary>
         /// chkWhonet control.
@@ -875,6 +875,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
+        
+        /// <summary>
+        /// btnCerrarSinResultados control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCerrarSinResultados;
         
         /// <summary>
         /// btnRestringirAcceso control.
