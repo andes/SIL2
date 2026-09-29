@@ -34,6 +34,7 @@ namespace WebLab.Protocolos
                     if (Request["accion"] != null && Request["accion"].ToString() == "recupera")
                     {
                         lblMotivo.Text = "Motivo de recuperación";
+                        btnGuardar.Text = "Recuperar";
                     }
                     else
                     {
