@@ -47,7 +47,8 @@ namespace WebLab.Items
 
                 CargarListas();
             }
-
+            lblMensaje.Text = "";
+            lblMensaje.UpdateAfterCallBack = true;
 
         }
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
@@ -200,7 +201,11 @@ namespace WebLab.Items
                     m_condicion += " and Ie.sininsumo=0";
                 if (ddlEstado.SelectedValue == "S")
                     m_condicion += " and Ie.sininsumo=1";
-                        }
+            }
+
+            if(ddlItem.SelectedValue != "0" && ddlItem.SelectedValue != "")  m_condicion += " and I.idItem=" + ddlItem.SelectedValue;
+
+            
 
 
 
@@ -449,10 +454,82 @@ namespace WebLab.Items
 
         protected void ddlArea_SelectedIndexChanged(object sender, EventArgs e)
         {
+
+            //Actualizo items
+            CargarItem();
             CargarGrilla();
         }
 
         protected void ddlEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
+
+        private void CargarItem()
+        {
+            if (Session["idUsuario"].ToString() != null)
+            {
+                Usuario oUser = new Usuario();
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+                Utility oUtil = new Utility();
+                string condicion = "";
+
+                if (ddlArea.SelectedValue != "0")
+                    condicion = " and I.idArea=" + ddlArea.SelectedValue;
+
+                 string m_ssql = @" select I.idItem, I.nombre + ' (' + I.codigo + ')' as nombre from Lab_Item as I  (nolock) 
+                                   inner join lab_itemEfector as IE on IE.idItem= I.idItem and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() +
+                                @" where I.baja=0  AND IE.idEfector=Ie.idEfectorDerivacion " + condicion +  " order by I.nombre";
+                oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
+                ddlItem.Items.Insert(0, new ListItem("Todos", "0"));
+                ddlItem.UpdateAfterCallBack = true;
+
+            }
+            else Response.Redirect("../FinSesion.aspx", false);
+        }
+
+        protected void txtCodigo_TextChanged(object sender, EventArgs e)
+        {
+            if (txtCodigo.Text != "") 
+            {
+                Item oItem = new Item();
+                Area oArea = new Area();
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Item));
+                crit.Add(Expression.Eq("Codigo", txtCodigo.Text));
+                crit.Add(Expression.Eq("Baja", false));
+                if (ddlArea.SelectedValue != "0")
+                    crit.Add(Expression.Eq("IdArea", (Area)oArea.Get(typeof(Area), int.Parse(ddlArea.SelectedValue))));
+
+
+                oItem = (Item)crit.UniqueResult();
+                if (oItem != null)
+                {
+                    ddlItem.SelectedValue = oItem.IdItem.ToString();
+
+                }
+                else
+                {
+                    lblMensaje.Text = "El codigo " + txtCodigo.Text.ToUpper() + " no existe. ";
+                    ddlItem.SelectedValue = "0";
+                    txtCodigo.Text = "";
+                    txtCodigo.UpdateAfterCallBack = true;
+
+                }
+
+                ddlItem.UpdateAfterCallBack = true;
+            }
+            else
+            {
+                ddlItem.SelectedValue = "0";
+                ddlItem.UpdateAfterCallBack = true;
+            }
+           
+        }
+
+        protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarGrilla();
         }
