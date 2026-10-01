@@ -95,13 +95,23 @@
                             </td>
 
           </tr>
+          <tr>
+              <td class="myLabelIzquierda">Analisis:  </td>
+              <td>
+                  <anthem:TextBox ID="txtCodigo" runat="server" class="form-control input-sm" Style="text-transform: uppercase" 
+                      OnTextChanged="txtCodigo_TextChanged" Width="88px" AutoCallBack="True" TabIndex="6" ></anthem:TextBox>
+                  <anthem:DropDownList ID="ddlItem" runat="server" class="form-control input-sm" TabIndex="7" width="240" OnSelectedIndexChanged="ddlItem_SelectedIndexChanged" AutoPostBack="true">
+                  </anthem:DropDownList>
+                  <anthem:Label ID="lblMensaje" runat="server" ></anthem:Label>
+              </td>
+          </tr>
 
           <tr>	 <td class="myLabelIzquierda">
                                                         Estado:</td>
 						<td>
                                         
                             <anthem:DropDownList ID="ddlEstado" runat="server" 
-                                ToolTip="Seleccione el area" TabIndex="5" class="form-control input-sm" 
+                                ToolTip="Seleccione el area" TabIndex="8" class="form-control input-sm" 
                                 AutoPostBack="True" OnSelectedIndexChanged="ddlEstado_SelectedIndexChanged" >
                                 <asp:ListItem Value="T">Todas</asp:ListItem>
                                 <asp:ListItem Value="D">Disponible</asp:ListItem>
@@ -115,7 +125,7 @@
                             Fecha Desde: </td>
                    	<td class="myLabelIzquierda" > <input id="txtFechaDesde" runat="server" type="text" maxlength="10" 
                          onblur="valFecha(this)" 
-                        onkeyup="mascara(this,'/',patron,true)" tabindex="2" class="form-control input-sm"
+                        onkeyup="mascara(this,'/',patron,true)" tabindex="9" class="form-control input-sm"
                                 style="width: 100px"  />
 					
                           <%--  Fecha Hasta: 
