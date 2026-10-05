@@ -4586,6 +4586,20 @@
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Derivaciones\DerivacionAnular.aspx.cs">
+      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\DerivacionAnular.aspx.designer.cs">
+      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\EditarListaLote.aspx.cs">
+      <DependentUpon>EditarListaLote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\EditarListaLote.aspx.designer.cs">
+      <DependentUpon>EditarListaLote.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Derivaciones\InformeList4.aspx.cs">
       <DependentUpon>InformeList4.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
