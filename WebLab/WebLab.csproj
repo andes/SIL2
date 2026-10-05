@@ -4586,6 +4586,13 @@
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Derivaciones\InformeList4.aspx.cs">
+      <DependentUpon>InformeList4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList4.aspx.designer.cs">
+      <DependentUpon>InformeList4.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Derivaciones\LoteList.aspx.cs">
       <DependentUpon>LoteList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
