@@ -30,13 +30,26 @@
                 <td>  Nombre:</td>
                 <td>
         <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm" Width="280px"></asp:TextBox></td>
+                
                 </tr>
+           
         </table>
+        <div id="divMatricula" Visible="false" runat="server">
+            <table>
+                 <tr>
+                <td>  Matricula:</td>
+                <td>
+                    <asp:TextBox ID="txtMatricula" runat="server"  class="form-control input-sm" Width="100px"></asp:TextBox>
+                </td>
+            </tr>
+            </table>
+        </div>
       
+        <asp:CustomValidator ID="cvGeneral" runat="server" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
         
        
         <br />
-        <asp:Button ID="btnBuscar" CssClass="btn btn-primary" Width="80px" runat="server" OnClick="btnBuscar_Click" Text="Buscar" />
+        <asp:Button ID="btnBuscar" CssClass="btn btn-primary" Width="80px" runat="server" OnClick="btnBuscar_Click" Text="Buscar" ValidationGroup="0" />
         <br />
         <asp:Label ID="lblErrorAPI" runat="server" Font-Bold="True"  CssClass="myLabelIzquierdaGde"  ForeColor="Red" Visible="False" ></asp:Label>
         <asp:GridView ID="gvMedico" runat="server" AutoGenerateColumns="False" DataKeyNames="matriculaNumero" OnRowCommand="gvMedico_RowCommand" OnRowDataBound="gvMedico_RowDataBound" CssClass="table table-bordered bs-table"

@@ -774,7 +774,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                 lblCodigo.Text = oItem.Codigo;
                 hiditem.Value = oItem.IdItem.ToString();
                 Utility oUtil = new Utility();
-                string m_ssql = @"select   resultado from LAB_ResultadoItem with (nolock) where iditem =" + oItem.IdItem.ToString()+ " and idEfector= "+oUser.IdEfector.IdEfector.ToString() +" order by resultado";
+                string m_ssql = @"select   resultado from LAB_ResultadoItem with (nolock) where iditem =" + oItem.IdItem.ToString()+ " and idEfector= "+oUser.IdEfector.IdEfector.ToString() + " order by idResultadoItem";
 
                 oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
                 ddlResultado.Items.Insert(0, new ListItem("--Seleccione--", "0"));

@@ -2506,6 +2506,7 @@
     <Content Include="Protocolos\DerivacionProcesa.aspx" />
     <Content Include="Protocolos\Derivacion.aspx" />
     <Content Include="Protocolos\DerivacionScreening.aspx" />
+    <Content Include="Protocolos\ObraSocialBuscar.aspx" />
     <Content Include="Protocolos\MedicoSel.aspx" />
     <Content Include="Protocolos\ObraSocialSel.aspx" />
     <Content Include="Protocolos\PesquisaNeonatal.ascx" />
@@ -2650,6 +2651,7 @@
     <Content Include="script\chosen\chosen.min.css" />
     <Content Include="script\chosen\chosen.proto.js" />
     <Content Include="script\chosen\chosen.proto.min.js" />
+    <Content Include="script\jquery-1.9.1.js" />
     <Content Include="script\Resources\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_55_fbec88_40x100.png" />
     <Content Include="script\Resources\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -4584,27 +4586,6 @@
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Derivaciones\DerivacionAnular.aspx.cs">
-      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Derivaciones\DerivacionAnular.aspx.designer.cs">
-      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Derivaciones\InformeList4.aspx.cs">
-      <DependentUpon>InformeList4.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Derivaciones\InformeList4.aspx.designer.cs">
-      <DependentUpon>InformeList4.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Derivaciones\EditarListaLote.aspx.cs">
-      <DependentUpon>EditarListaLote.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Derivaciones\EditarListaLote.aspx.designer.cs">
-      <DependentUpon>EditarListaLote.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Derivaciones\LoteList.aspx.cs">
       <DependentUpon>LoteList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5496,6 +5477,13 @@
     </Compile>
     <Compile Include="Protocolos\Family.cs" />
     <Compile Include="Protocolos\Identifier.cs" />
+    <Compile Include="Protocolos\ObraSocialBuscar.aspx.cs">
+      <DependentUpon>ObraSocialBuscar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Protocolos\ObraSocialBuscar.aspx.designer.cs">
+      <DependentUpon>ObraSocialBuscar.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Protocolos\MedicoSel.aspx.cs">
       <DependentUpon>MedicoSel.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

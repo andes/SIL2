@@ -259,7 +259,7 @@
                             <asp:Label  ID="lblAdjunto" runat="server" Text="El protocolo tiene archivos adjuntos"></asp:Label>
                                                                 
                                                                   
-                            </span>                                    
+                            </span>                                    <h6> <asp:Label ID="lblEstadoAnulado" runat="server" Font-Bold="True" Font-Size="8pt" Visible="false" Text="ANULADO" class="label label-default" ></asp:Label></h6>
                                                                  </asp:Panel>
                                                                     
                                                   
@@ -306,7 +306,9 @@
                                                         <asp:CustomValidator ID="cvValidacionInput" runat="server" ErrorMessage="Debe completar al menos un analisis" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                                                              <anthem:Label ID="lblErrorMedico" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="False"></anthem:Label>
                                                     </td>
+                                               
                                                 </tr>
+                                               
                                             
                                             </table>
                                         </asp:Panel>

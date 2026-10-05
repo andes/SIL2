@@ -51,15 +51,43 @@
                 }
             }            
     </script>   
+
+   
+
        <style type="text/css">
-#CeldaContenedor > * {
-    display: inline-block; /* Hace que los controles se alineen en una sola línea */
-    float: left; /* Alinea los controles a la izquierda */
-}
-#CeldaContenedor {
-    text-align: left; /* Alinea todo el contenido a la izquierda */
-}
-</style>
+            #CeldaContenedor > * {
+                display: inline-block; /* Hace que los controles se alineen en una sola línea */
+                float: left; /* Alinea los controles a la izquierda */
+            }
+            #CeldaContenedor {
+                text-align: left; /* Alinea todo el contenido a la izquierda */
+            }
+
+           #btnSubir {
+                display: none;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 9999;
+
+                width: 45px;
+                height: 45px;
+
+                border: none;
+                border-radius: 50%;
+                background: #1976d2; /*#1976d2;*/ /* ##2b3e4c NQN #2b3e4c SE VE MUY OSCURO*/
+                color: white;
+                cursor: pointer;
+                font-size: 20px;
+
+                box-shadow: 0 2px 8px rgba(0,0,0,.3);
+            }
+
+            #btnSubir:hover {
+                background: #1976d2;/*#1565c0;*/
+                opacity:80%;
+            }
+        </style>
     </asp:Content>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">               
@@ -448,7 +476,6 @@
 <asp:HiddenField runat="server" ID="HFIdProtocolo" /> 
 <asp:HiddenField runat="server" ID="HFNumeroAislamiento" /> 
                             <asp:HiddenField runat="server" ID="HFOperacion" /> 
-
                            
                             <div id="tabContainer">  
                              <asp:Panel ID="pnlResultados" runat="server" > 
@@ -479,7 +506,7 @@
 						 
 
         <div onkeydown="enterToTab(event)"  id="tab1" >   
-        
+        <button type="button" id="btnSubir" title="Volver arriba ">↑<%--<image alt="subir" src="../script/moverfilas/arriba.gif"></image>--%></button>
         <table width="90%">
         	<tr>						
 						<td>   <asp:Button ID="btnMostrarResultados" runat="server" Visible="false"
@@ -582,11 +609,11 @@
                             <asp:Panel ID="pnlReferencia" Visible="false" runat="server" Width="300px">
                            <span class="label label-default">Dentro de V.R</span>
                                 <span class="label label-danger">Fuera de V.R</span>
-                            </asp:Panel> 
+                            </asp:Panel>  <asp:CheckBox ID="chkCerrarSinResultados" runat="server" CssClass="myLabelIzquierda" 
+                                Text="Terminar protocolo" Visible="False" 
+                                ToolTip="Da por terminado el protocolo con analisis sin resultados"  />
                         <br />
-                             <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-primary" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
-                                  Visible="False" 
-                                Width="180px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+                           
 
 
                          
@@ -604,6 +631,10 @@
 						</td>
 						<td align="right" style="vertical-align: top" colspan="1"> 
                           
+                             <asp:Button ID="btnAplicarFormula2" runat="server" CssClass="btn btn-danger"
+                                Text="F(x) Calcular Fórmulas"  AccessKey="F" ToolTip="Alt+Shift+F"
+                                onclick="btnAplicarFormula_Click" Visible="False" Font-Size="8" Width="200px" TabIndex="600" /> 
+                              &nbsp;&nbsp;
                            <asp:Button ID="btnValidarImprimir" AccessKey="I" runat="server" CssClass="btn btn-primary" ToolTip="Alt+Shift+I:Validar e Imprimir en impresora seleccionada" Text="Validar + Imprimir" 
                                 onclick="btnValidarImprimir_Click" ValidationGroup="0" Visible="False" 
                                 Width="180px" />
@@ -626,7 +657,10 @@
                              
                                  
      <div class="footer" align="right">	
-  
+    <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-info" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
+                                  Visible="False" 
+                                Width="160px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+
                            <asp:Button ID="btnRestringirAcceso" AccessKey="N" runat="server" CssClass="btn btn-danger" Text="No Publicar"  Visible="false" OnClientClick="ProtocoloPermisos();return false;" 
                                 Width="130px" OnClick="btnRestringirAcceso_Click"/>
                            <%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
@@ -1218,9 +1252,9 @@
                 if (form.elements[i].name.indexOf("TreeView2") == -1)
                     if (form.elements[i].name.indexOf("chkCerrarSinResultados") == -1)
                         if (form.elements[i].name.indexOf("chkWhonet") == -1)
-                        
-                 if (form.elements[i].name.indexOf("F")==-1) 
-                    form.elements[i].checked = 1;                                       
+                            if (form.elements[i].name.indexOf("chkMecanismoResistencia") == -1)
+                                 if (form.elements[i].name.indexOf("F")==-1) 
+                                    form.elements[i].checked = 1;                                       
             }
         }
     }
@@ -1232,8 +1266,9 @@
                 if (form.elements[i].name.indexOf("TreeView2") == -1)
                     if (form.elements[i].name.indexOf("chkCerrarSinResultados") == -1)
                         if (form.elements[i].name.indexOf("chkWhonet") == -1)
-                    if (form.elements[i].name.indexOf("F")==-1) 
-                        form.elements[i].checked = 0;
+                            if (form.elements[i].name.indexOf("chkMecanismoResistencia") == -1)
+                                if (form.elements[i].name.indexOf("F")==-1) 
+                                    form.elements[i].checked = 0;
             }
         }
     } 
@@ -1859,8 +1894,49 @@
         }).width(670);
     }
 
-    </script>
+</script>
 
+     <script type="text/javascript">
+        
+         (function () {
+
+             function inicializarBotonSubir() {
+
+                 var btn = document.getElementById("btnSubir");
+
+                 if (!btn)
+                     return;
+
+                 window.onscroll = function () {
+
+                     if (document.documentElement.scrollTop > 150 ||
+                         document.body.scrollTop > 150) {
+
+                         btn.style.display = "block";
+                     }
+                     else {
+                         btn.style.display = "none";
+                     }
+                 };
+
+                 btn.onclick = function () {
+
+                     window.scrollTo({
+                         top: 0,
+                         behavior: "smooth"
+                     });
+
+                     return false;
+                 };
+             }
+
+             if (document.readyState === "loading")
+                 document.addEventListener("DOMContentLoaded", inicializarBotonSubir);
+             else
+                 inicializarBotonSubir();
+
+         })();
+     </script>
 
 
 </asp:Content>
