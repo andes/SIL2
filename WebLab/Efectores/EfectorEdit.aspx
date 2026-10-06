@@ -31,7 +31,7 @@
                              </td>
 			</tr>
 			 <tr>
-				<td class="myLabelIzquierda" >Zona:</td>
+				<td class="myLabelIzquierda" >Dependencia:</td>
 				<td  >
                     <asp:DropDownList ID="ddlZona" runat="server" class="form-control input-sm"
                         TabIndex="2" ToolTip="Seleccione la zona">

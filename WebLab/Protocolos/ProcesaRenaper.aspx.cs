@@ -983,6 +983,7 @@ string mensaje = ex.ToString();
             {
                 string tipo = "MPI";
                 imgAndes.Visible = false;
+                lblMensaje.Visible = true;
                 imgRenaper.Visible = false; lblFechaDomicilio.Visible = false;
                 GrabarLogAcceso(tipo, Request["dni"].ToString());
 
@@ -1028,83 +1029,128 @@ string mensaje = ex.ToString();
                         {
 
                             string responseBody = objReader.ReadToEnd();
- 
-                                var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
-                                var resultado2 = lista?.FirstOrDefault();
 
-                                if (resultado2 != null)
+                            // ==================================================
+                            // CAMBIO:
+                            // MPI puede devolver un array de resultados [...]
+                            // o un objeto OperationOutcome {...}
+                            // ==================================================
+
+                            
+
+                            ResultadoMPIModel resultado2 = null;
+
+                            if (!string.IsNullOrWhiteSpace(responseBody))
+                            {
+                                string json = responseBody.Trim();
+
+                                if (json.StartsWith("["))
                                 {
-                                    lblValidador.Visible = true;
-                                    lblValidador.Text = "Paciente VALIDADO POR " + tipo;
-                                    ok = true;
-
-                                    txtDNI.Text = Request["dni"]?.ToString();
-
-                                    // Nombre y apellido
-                                    var nombreData = resultado2.Name?.FirstOrDefault();
-                                    txtApellido.Text = nombreData?.Family?.FirstOrDefault()?.ToUpper() ?? "";
-                                    txtNombre.Text = string.Join(" ", nombreData?.Given ?? new List<string>()).ToUpper();
-
-                                    // Fecha nacimiento
-                                    txtFechaNacimiento.Value = resultado2.BirthDate.ToString("dd/MM/yyyy");
-
-                                    // Domicilio (toma el primero)
-                                    var direccion = resultado2.Address?.FirstOrDefault();
-
-                                    txtCalle.Value = direccion?.Line?.FirstOrDefault() ?? "SIN DATOS";
-                                    txtCiudad.Value = string.IsNullOrEmpty(direccion?.City) ? "SIN DATOS" : direccion.City;
-                                    txtProvincia.Value = string.IsNullOrEmpty(direccion?.State) ? "SIN DATOS" : direccion.State;
-                                    txtPais.Value = string.IsNullOrEmpty(direccion?.Country) ? "SIN DATOS" : direccion.Country;
-                                    txtCodigoPostal.Value = string.IsNullOrEmpty(direccion?.PostalCode) ? "SIN DATOS" : direccion.PostalCode;
-
-                                    // CUIL
-                                    txtCuil.Value = resultado2.Identifier?
-                                        .FirstOrDefault(x => x.System.Contains("cuil"))?.Value ?? "";
-
-                                    // Campos que ya no existen en este JSON
-                                    txtBarrio.Value = "SIN DATOS";
-                                    fallecimiento.Text = "";
-                                    fechaDomicilio.Text = "";
-
-                                    txtTelefono.Value = resultado2.Telecom?
-                                        .Where(x => x.System == "phone")
-                                        .OrderBy(x => x.Rank)
-                                        .FirstOrDefault()
-                                        ?.Value ?? "SIN DATOS";
-
-                                    var sexo = resultado2.Gender?.ToLower();
-
-                                    if (sexo == "female")
-                                    {
-                                        txtSexo.Value = "FEMENINO";
-                                        ddlSexo.SelectedValue = "2";
-                                    }
-                                    else if (sexo == "male")
-                                    {
-                                        txtSexo.Value = "MASCULINO";
-                                        ddlSexo.SelectedValue = "3";
-                                    }
-                                    else if (sexo == "other")
-                                    {
-                                        txtSexo.Value = "X";
-                                        ddlSexo.SelectedValue = "0";
-                                    }
-                                    else
-                                    {
-                                        txtSexo.Value = "SIN DATOS";
-                                        ddlSexo.SelectedValue = "0";
-                                    }
-                                    /// traer al paciente si no es nuevo, es modificacion
-                                    int id = Convert.ToInt32(Request.QueryString["id"]);
-                                    //datos del Paciente           
-                                    Paciente pac = new Paciente();
-                                    if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
-                                    txtTelefono.Value = pac.InformacionContacto;
-                              
-                                
+                                    var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
+                                    resultado2 = lista?.FirstOrDefault();
                                 }
                                 else
-                                    ok = false;
+                                {
+                                    resultado2 = null;
+                                }
+                            }
+
+                            if (resultado2 != null)
+                            {
+                                lblValidador.Visible = true;
+                                lblValidador.Text = "Paciente VALIDADO POR " + tipo;
+                                ok = true;
+
+                                // continúa todo tu código actual...
+                            }
+                            else
+                            {
+                                ok = false;
+                            }
+                            // ==================================================
+                            // FIN DEL CAMBIO
+                            // ==================================================
+
+                            //var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
+                            //    var resultado2 = lista?.FirstOrDefault();
+
+                            if (resultado2 != null)
+                            {
+                                lblValidador.Visible = true;
+                                lblValidador.Text = "Paciente VALIDADO POR " + tipo;
+                                ok = true;
+
+                                txtDNI.Text = Request["dni"]?.ToString();
+
+                                // Nombre y apellido
+                                var nombreData = resultado2.Name?.FirstOrDefault();
+                                txtApellido.Text = nombreData?.Family?.FirstOrDefault()?.ToUpper() ?? "";
+                                txtNombre.Text = string.Join(" ", nombreData?.Given ?? new List<string>()).ToUpper();
+
+                                // Fecha nacimiento
+                                txtFechaNacimiento.Value = resultado2.BirthDate.ToString("dd/MM/yyyy");
+
+                                // Domicilio (toma el primero)
+                                var direccion = resultado2.Address?.FirstOrDefault();
+
+                                txtCalle.Value = direccion?.Line?.FirstOrDefault() ?? "SIN DATOS";
+                                txtCiudad.Value = string.IsNullOrEmpty(direccion?.City) ? "SIN DATOS" : direccion.City;
+                                txtProvincia.Value = string.IsNullOrEmpty(direccion?.State) ? "SIN DATOS" : direccion.State;
+                                txtPais.Value = string.IsNullOrEmpty(direccion?.Country) ? "SIN DATOS" : direccion.Country;
+                                txtCodigoPostal.Value = string.IsNullOrEmpty(direccion?.PostalCode) ? "SIN DATOS" : direccion.PostalCode;
+
+                                // CUIL
+                                txtCuil.Value = resultado2.Identifier?
+                                    .FirstOrDefault(x => x.System.Contains("cuil"))?.Value ?? "";
+
+                                // Campos que ya no existen en este JSON
+                                txtBarrio.Value = "SIN DATOS";
+                                fallecimiento.Text = "";
+                                fechaDomicilio.Text = "";
+
+                                txtTelefono.Value = resultado2.Telecom?
+                                    .Where(x => x.System == "phone")
+                                    .OrderBy(x => x.Rank)
+                                    .FirstOrDefault()
+                                    ?.Value ?? "SIN DATOS";
+
+                                var sexo = resultado2.Gender?.ToLower();
+
+                                if (sexo == "female")
+                                {
+                                    txtSexo.Value = "FEMENINO";
+                                    ddlSexo.SelectedValue = "2";
+                                }
+                                else if (sexo == "male")
+                                {
+                                    txtSexo.Value = "MASCULINO";
+                                    ddlSexo.SelectedValue = "3";
+                                }
+                                else if (sexo == "other")
+                                {
+                                    txtSexo.Value = "X";
+                                    ddlSexo.SelectedValue = "0";
+                                }
+                                else
+                                {
+                                    txtSexo.Value = "SIN DATOS";
+                                    ddlSexo.SelectedValue = "0";
+                                }
+                                /// traer al paciente si no es nuevo, es modificacion
+                                int id = Convert.ToInt32(Request.QueryString["id"]);
+                                //datos del Paciente           
+                                Paciente pac = new Paciente();
+                                if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
+                                txtTelefono.Value = pac.InformacionContacto;
+
+
+                            }
+                            else
+                            {
+                                lblMensaje.Text =  "NO SE ENCONTRO INFORMACION EN MPI";
+                                lblMensaje.Visible = true;
+                                ok = false;
+                            }
                                    
                            
 
