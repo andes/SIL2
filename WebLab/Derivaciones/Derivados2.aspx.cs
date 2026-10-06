@@ -212,7 +212,7 @@ namespace WebLab.Derivaciones
 
                     if (dt.Rows.Count > 0)
                     {
-                        if (dt.Rows.Count <= 5000)
+                        //if (dt.Rows.Count <= 5000) //LAB-158 se limita el filtro de fecha de las derivaciones por un rango de un año
                         {
                             if (Request["tipo"] == "informe")
                                 Response.Redirect("InformeList4.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
@@ -220,11 +220,11 @@ namespace WebLab.Derivaciones
                                 if (Request["tipo"] == "resultado")
                                         Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
                         }
-                        else
-                        {
-                            cvBotonBuscar.IsValid = false;
-                            cvBotonBuscar.ErrorMessage = "La búsqueda ha superado el límite de procesamiento para la operación que desea realizar. Acote los filtros de búsqueda. Si cree que este mensaje es un error, póngase en contacto con el soporte del SIL.";
-                        }
+                        //else
+                        //{
+                        //    cvBotonBuscar.IsValid = false;
+                        //    cvBotonBuscar.ErrorMessage = "La búsqueda ha superado el límite de procesamiento para la operación que desea realizar. Acote los filtros de búsqueda. Si cree que este mensaje es un error, póngase en contacto con el soporte del SIL.";
+                        //}
                     }
                     else
                     {
