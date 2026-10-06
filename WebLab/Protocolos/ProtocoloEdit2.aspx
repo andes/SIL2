@@ -306,9 +306,7 @@
                                                         <asp:CustomValidator ID="cvValidacionInput" runat="server" ErrorMessage="Debe completar al menos un analisis" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                                                              <anthem:Label ID="lblErrorMedico" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="False"></anthem:Label>
                                                     </td>
-                                               
                                                 </tr>
-                                               
                                             
                                             </table>
                                         </asp:Panel>
@@ -639,7 +637,12 @@
                                      
                                  </td>
                                              <td class="auto-style1">                                               
-                                            
+                                            Diag. Del Efector:<anthem:DropDownList ID="ddlDiagEfector" runat="server" Width="450px"
+                                                
+                                                TextDuringCallBack="Cargando ..." 
+                               class="form-control input-sm" TabIndex="20" />  <anthem:Button ID="btnAgregarDiagEfector" CssClass="btn btn-primary" Width="90px" runat="server" Text="Agregar" OnClick="btnAgregarDiagEfector_Click" 
+                                                  />
+                                                 <br />
                                                Diagnósticos encontrados<anthem:ListBox ID="lstDiagnosticos" runat="server" AutoCallBack="True" 
                                                      class="form-control input-sm"  Height="90px" Width="750px">
                                                </anthem:ListBox>

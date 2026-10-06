@@ -1688,9 +1688,6 @@ namespace WebLab.Resultados
                                     }
                                 }
                                 break;
-
-
-                           
                             default:
                                 {
                     

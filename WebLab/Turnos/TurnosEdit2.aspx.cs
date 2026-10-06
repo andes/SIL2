@@ -574,12 +574,62 @@ ORDER BY cantidad desc";
             //    chkImprimir.Visible = false;lnkReimprimirComprobante.Visible = false;
             //}
             ///////////////Fin de Impresoras///////////////////
-
+            CargarDiagnosticosEfector();
             m_ssql = null;
             oUtil = null;
         }
+        private void CargarDiagnosticosEfector()
+        {
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
+            Utility oUtil = new Utility();
+            string m_ssql = @" SELECT D.idDiagnostico , Codigo + ' - ' + Nombre as nombre
+FROM Sys_CIE10 c with (nolock)
+inner join LAB_DiagnosticoEfector D with (nolock) on d.idDiagnostico = c.ID
+where D.idEfector = " + oUser.IdEfector.IdEfector.ToString() + " order by c.Nombre";
 
+            oUtil.CargarCombo(ddlDiagEfector, m_ssql, "idDiagnostico", "nombre", connReady);
+
+            ddlDiagEfector.Items.Insert(0, new ListItem("Seleccione", "0"));
+        }
+        protected void btnAgregarDiagEfector_Click(object sender, EventArgs e)
+        {
+            lblMensajeDiagnostico.Visible = false;
+
+            if (ddlDiagEfector.SelectedValue != "")
+            {
+                bool agrego = true;
+
+                // Verifica si el diagnóstico ya fue agregado
+                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
+                {
+                    if (lstDiagnosticosFinal.Items[i].Value == ddlDiagEfector.SelectedValue)
+                    {
+                        agrego = false;
+                        break;
+                    }
+                }
+
+                if (agrego)
+                {
+                    ListItem item = new ListItem(
+                        ddlDiagEfector.SelectedItem.Text,
+                        ddlDiagEfector.SelectedValue
+                    );
+
+                    lstDiagnosticosFinal.Items.Add(item);
+                    lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                }
+                else
+                {
+                    lblMensajeDiagnostico.Visible = true;
+                    lblMensajeDiagnostico.Text =
+                        "Alerta: Diagnóstico ya ingresado para el paciente.";
+                }
+            }
+
+            lblMensajeDiagnostico.UpdateAfterCallBack = true;
+        }
 
 
         protected void btnSelObraSocial_Click(object sender, EventArgs e)

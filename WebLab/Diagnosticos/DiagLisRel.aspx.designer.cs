@@ -7,37 +7,82 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Protocolos {
+namespace WebLab.Diagnosticos {
     
     
-    public partial class ProtocoloEliminar {
+    public partial class DiagLisRel {
         
         /// <summary>
-        /// Head1 control.
+        /// ddlEfector control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlHead Head1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEfector;
         
         /// <summary>
-        /// form1 control.
+        /// txtCodigo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::Anthem.TextBox txtCodigo;
         
         /// <summary>
-        /// lblTitulo control.
+        /// txtNombre control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTitulo;
+        protected global::Anthem.TextBox txtNombre;
+        
+        /// <summary>
+        /// btnBuscar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Button btnBuscar;
+        
+        /// <summary>
+        /// lstDiag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.ListBox lstDiag;
+        
+        /// <summary>
+        /// btnAgregar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Button btnAgregar;
+        
+        /// <summary>
+        /// btnSacar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Button btnSacar;
+        
+        /// <summary>
+        /// btnSacarTodos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Button btnSacarTodos;
         
         /// <summary>
         /// estatus control.
@@ -46,32 +91,16 @@ namespace WebLab.Protocolos {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label estatus;
-        /// <summary>
-        /// lblMotivo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMotivo;
-        /// <summary>
-        /// txtMotivoBaja control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMotivoBaja;
+        protected global::Anthem.Label estatus;
         
         /// <summary>
-        /// rfvtxtMotivoBaja control.
+        /// lstDiagVinculado control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtMotivoBaja;
+        protected global::Anthem.ListBox lstDiagVinculado;
         
         /// <summary>
         /// btnGuardar control.

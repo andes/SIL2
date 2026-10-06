@@ -368,6 +368,13 @@
                                          </tr>
                                          <tr>
                                            <td class="auto-style9" colspan="3" >
+                                                Diag. Del Efector:<anthem:DropDownList ID="ddlDiagEfector" runat="server" Width="450px"
+                                                
+                                                TextDuringCallBack="Cargando ..." 
+                               class="form-control input-sm" TabIndex="20" />  <anthem:Button ID="btnAgregarDiagEfector" CssClass="btn btn-primary" Width="90px" runat="server" Text="Agregar" OnClick="btnAgregarDiagEfector_Click" 
+                                                  />
+                                                 <br />
+
                                                Diagnosticos encontrados</td>
                                                                                 
                                          </tr>
@@ -376,6 +383,8 @@
                                                <anthem:ListBox ID="lstDiagnosticos" runat="server" AutoCallBack="True" 
                                                    CssClass="form-control input-sm" Height="150px" Width="800px">
                                                </anthem:ListBox>
+                                                 <anthem:Label ID="lblMensajeDiagnostico" runat="server" Visible="false" Text="Label" Font-Bold="True" ForeColor="#CC0000"></anthem:Label>
+
                                              </td>
                                              <td class="auto-style7">
                                                  <anthem:ImageButton ID="btnAgregarDiagnostico" runat="server" 
