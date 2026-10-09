@@ -51,6 +51,15 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Label lblSubtitulo;
 
         /// <summary>
+        /// hfEfectorDestino control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfEfectorDestino;
+
+        /// <summary>
         /// Panel1 control.
         /// </summary>
         /// <remarks>
@@ -87,15 +96,6 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.DropDownList ddlTransporte;
 
         /// <summary>
-        /// txtObservacion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
-
-        /// <summary>
         /// txtFecha control.
         /// </summary>
         /// <remarks>
@@ -130,6 +130,15 @@ namespace WebLab.Derivaciones
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHora;
+
+        /// <summary>
+        /// txtObservacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
 
         /// <summary>
         /// cvGeneral control.

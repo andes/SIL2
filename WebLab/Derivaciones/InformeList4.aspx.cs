@@ -36,53 +36,84 @@ namespace WebLab.Derivaciones
 
         private void Inicializar()
         {
-            if (Request["Tipo"] == "Alta")
+            LoteDerivacion oLote;
+            Efector oEfector;
+            switch (Request["Tipo"])
             {
-                lblTitulo.Text = "NUEVO LOTE";
-                lblSubTitulo.Visible = true;
-                pnlNroLote.Visible = false;
-                HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
-                gvLista.Visible = true;
-                gvListaEdit.Visible = false;
-                pnlReferenciasAlta.Visible = true;
-                pnlReferenciaEdit.Visible = false;
-            }
-            else
-            {
-                if (Request["Tipo"] == "Modifica")
-                {
-                    LoteDerivacion oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", int.Parse(Request["idLote"].ToString()));
-                    Efector oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", oLote.IdEfectorDestino.IdEfector);
+                case "Alta":
+                    pnlNroLote.Visible = false;
+
+                    lblTitulo.Text = "NUEVO LOTE";
+                    lblSubTitulo.Visible = true;
                    
+                    HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
+                    
+                    gvLista.Visible = true;
+                    gvListaEdit.Visible = false;
+                    break;
+
+                case "Modifica":
+                     oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", int.Parse(Request["idLote"].ToString()));
+                     oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", oLote.IdEfectorDestino.IdEfector);
+                    
+                    pnlNroLote.Visible = true;
+
                     lblTitulo.Text = "MODIFICACION DE LOTE ";
                     lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
-                    pnlNroLote.Visible = true;
+                    lblEstadoLote.Text = "ESTADO: " + oLote.descripcionEstadoLote();
                     lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
                     lblSubTitulo.Visible = true;
+                  
                     HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
+                    
                     btnAgregarDeterminaciones.Visible = (oLote.Estado == 1);
                     btnGuardar.Visible = false;
                     btnNoEnviado.Visible = false;
+                    btnExcluir.Visible = true;
+
                     HFIdLote.Value = Request["idLote"].ToString();
                     HFIdEfectorDerivacion.Value = oLote.IdEfectorDestino.IdEfector.ToString();
+                    
                     gvLista.Visible = false;
                     gvListaEdit.Visible = true;
-                    pnlReferenciasAlta.Visible = false;
-                    pnlReferenciaEdit.Visible = true;
+                  
+                  
+                    break;
 
-                    if (oLote.Estado != 1 || oLote.Estado != 3 ) //Solo lectura
-                    {
-                        lnkMarcar.Enabled = false;
-                        lnkDesMarcar.Enabled = false;
-                    }
-                }
+                case "Consulta":
+
+                     oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", int.Parse(Request["idLote"].ToString()));
+                     oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", oLote.IdEfectorDestino.IdEfector);
+
+                    pnlNroLote.Visible = true;
+
+                    lblTitulo.Text = "CONSULTA DE LOTE ";
+                    lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
+                    lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
+                    lblSubTitulo.Visible = true;
+                   
+                    HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
+                    
+                    btnAgregarDeterminaciones.Visible = false;
+                    btnGuardar.Visible = false;
+                    btnNoEnviado.Visible = false;
+                    btnExcluir.Visible = false;
+
+                    gvLista.Visible = false;
+                    gvListaEdit.Visible = true;
+
+                    linkSeleccionar.Visible = false;
+
+                    break;
             }
+           
         }
+
         protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
+                LinkButton CmdEliminar = (LinkButton)e.Row.Cells[11].Controls[1];
               
                 CmdEliminar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdEliminar.CommandName = "Eliminar";
@@ -127,36 +158,36 @@ namespace WebLab.Derivaciones
                     chk.InputAttributes["onchange"] = "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
                 }
 
-                string estado = DataBinder.Eval(e.Row.DataItem, "estado").ToString();
+                //string estado = DataBinder.Eval(e.Row.DataItem, "estado").ToString();
 
-                Literal lblEstado = (Literal)e.Row.FindControl("estado");
+                //Literal lblEstado = (Literal)e.Row.FindControl("estado");
 
-                if (lblEstado != null)
-                {
-                    switch (estado)
-                    {
-                        case "0":
-                            lblEstado.Text = "<img src='../App_Themes/default/images/pendiente.png' />";
-                            break;
+                //if (lblEstado != null)
+                //{
+                //    switch (estado)
+                //    {
+                //        case "0":
+                //            lblEstado.Text = "<img src='../App_Themes/default/images/pendiente.png' />";
+                //            break;
 
-                        case "1":
-                            lblEstado.Text = "<img src='../App_Themes/default/images/enviado.png' />";
-                            break;
+                //        case "1":
+                //            lblEstado.Text = "<img src='../App_Themes/default/images/enviado.png' />";
+                //            break;
 
-                        case "2":
-                            lblEstado.Text = "<img src='../App_Themes/default/images/block.png' />";
-                            break;
+                //        case "2":
+                //            lblEstado.Text = "<img src='../App_Themes/default/images/block.png' />";
+                //            break;
 
-                        case "3":
-                            lblEstado.Text = "<span class='glyphicon glyphicon-inbox' title='Recibido'></span>";
-                            break;
+                //        case "3":
+                //            lblEstado.Text = "<span class='glyphicon glyphicon-inbox' title='Recibido'></span>";
+                //            break;
 
-                        case "4":
-                            lblEstado.Text = "<img src='../App_Themes/default/images/reloj-de-arena.png' />";
-                            break;
-                    }
+                //        case "4":
+                //            lblEstado.Text = "<img src='../App_Themes/default/images/reloj-de-arena.png' />";
+                //            break;
+                //    }
 
-                }
+                //}
             }
         }
 

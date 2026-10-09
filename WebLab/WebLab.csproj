@@ -3077,6 +3077,7 @@
     <Content Include="website\tesis.html" />
     <Content Include="script\chosen\composer.json" />
     <Content Include="script\chosen\LICENSE.md" />
+    <Content Include="DescargarPdf.ashx" />
     <None Include="Service References\IntAutenticacion\configuration.svcinfo" />
     <None Include="Service References\IntAutenticacion\configuration91.svcinfo" />
     <None Include="Service References\IntAutorizacion\configuration.svcinfo" />
@@ -4641,6 +4642,9 @@
     </Compile>
     <Compile Include="Derivaciones\InformeList2.aspx.designer.cs">
       <DependentUpon>InformeList2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DescargarPdf.ashx.cs">
+      <DependentUpon>DescargarPdf.ashx</DependentUpon>
     </Compile>
     <Compile Include="Diagnosticos\DiagEdit.aspx.cs">
       <DependentUpon>DiagEdit.aspx</DependentUpon>

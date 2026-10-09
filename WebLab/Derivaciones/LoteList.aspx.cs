@@ -50,7 +50,7 @@ namespace WebLab.Derivaciones
                     VerificaPermisos("Lista de Lotes");
                     Inicializar();
                     CargarListas();
-                    RecuperarSesion();
+                    IniciarValores();
                     CargarGrilla();
                 }
             }
@@ -71,7 +71,7 @@ namespace WebLab.Derivaciones
             gvLista.Columns[2].SortExpression = expresion;
         }
 
-        private void RecuperarSesion() { 
+        private void IniciarValores() { 
             if(Request["Parametros"] != null)
             {
                 string str_condicion = Request["Parametros"].ToString();
@@ -100,30 +100,14 @@ namespace WebLab.Derivaciones
                     ddlEfectorDestino.SelectedValue  = ObtenerParametro(" AND L.idEfectorDestino = ", str_condicion);
 
 
-                if (str_condicion.Contains(" AND L.estado  IN ("))
-                {
-                    string condicion = " AND L.estado  IN (";
-                    int inicio = str_condicion.IndexOf(condicion) + condicion.Length;
-                    int fin = str_condicion.IndexOf(")", inicio);
+                if (str_condicion.Contains(" AND L.estado="))
+                    ddlEstado.SelectedValue = ObtenerParametro(" AND L.estado=", str_condicion);
 
-                    string idEstados = str_condicion.Substring(inicio, fin - inicio).Trim();
+                if (str_condicion.Contains(" AND L.baja = 0"))
+                    ddlEstado.SelectedValue = "0";
 
-                    string[] estados = idEstados.Split(',');
-
-                    for (int i = 0; i < chkEstados.Items.Count; i++)
-                    {
-                        chkEstados.Items[i].Selected = false;
-
-                        for (int j = 0; j < estados.Length; j++)
-                        {
-                            if (chkEstados.Items[i].Value == estados[j].Trim())
-                            {
-                                chkEstados.Items[i].Selected = true;
-                                break;
-                            }
-                        }
-                    }
-                }
+                if (str_condicion.Contains(" AND L.baja = 1"))
+                    ddlEstado.SelectedValue = "7";
 
             }
 
@@ -234,7 +218,7 @@ namespace WebLab.Derivaciones
         #endregion
 
         #region Inicializar
-        private string consultaEfectorDestino(int efectorOrigen = 0)
+        private string ConsultaEfectorDestino(int efectorOrigen = 0)
         {
             string consulta = @"select distinct E.idEfector, E.nombre  
                     from sys_efector E (nolock) 
@@ -261,10 +245,11 @@ namespace WebLab.Derivaciones
                 txtFechaHasta.Value = DateTime.Now.ToShortDateString();
 
                 //Estados de lotes
-                msql = "Select idEstado, nombre  from LAB_LoteDerivacionEstado where baja = 0";
-                oUtil.CargarCheckBox(chkEstados, msql, "idEstado", "nombre", connReady);
-                chkEstados.Items.Insert(0, new ListItem("TODOS", "0"));
-                chkEstados.SelectedIndex = 1;
+                msql = "Select idEstado, UPPER(nombre) AS nombre  from LAB_LoteDerivacionEstado where baja = 0";
+                oUtil.CargarCombo(ddlEstado, msql, "idEstado", "nombre", connReady);
+                ddlEstado.Items.Insert(0, new ListItem("TODOS LOS ACTIVOS", "0"));
+                ddlEstado.Items.Insert(0, new ListItem("ELIMINADOS", "7"));
+                ddlEstado.SelectedIndex = 1;
 
                 //Efector origen y destino
                 if (oUser.IdEfector.IdEfector == 227) //SUBSECRETARIA DE SALUD
@@ -278,7 +263,7 @@ namespace WebLab.Derivaciones
                     oUtil.CargarCombo(ddlEfectorOrigen, msql, "idEfector", "nombre", connReady);
                     ddlEfectorOrigen.Items.Insert(0, new ListItem("--TODOS--", "0"));
 
-                    msql = consultaEfectorDestino();
+                    msql = ConsultaEfectorDestino();
                     oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
                     ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
                 }
@@ -288,7 +273,7 @@ namespace WebLab.Derivaciones
                     oUtil.CargarCombo(ddlEfectorOrigen, msql, "idEfector", "nombre", connReady);
                     //DESTINO: Si es efector no subsecretaria de salud solo los efectores a los que el efector origen puede derivar
 
-                    msql = consultaEfectorDestino(oUser.IdEfector.IdEfector);
+                    msql = ConsultaEfectorDestino(oUser.IdEfector.IdEfector);
 
                     oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
                     ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
@@ -310,7 +295,7 @@ namespace WebLab.Derivaciones
 
         private string Parametros()
         {
-            string str_condicion = " L.baja = 0 ";
+            string str_condicion = " 1=1 ";
 
             if (txtFechaDesde.Value != "")
             {
@@ -336,23 +321,14 @@ namespace WebLab.Derivaciones
             if (ddlEfectorDestino.SelectedValue != "0")
                 str_condicion += " AND L.idEfectorDestino = " + ddlEfectorDestino.SelectedValue;
 
+            if (ddlEstado.SelectedValue == "0")
+                str_condicion += " AND L.baja = 0";
 
-            if (!chkEstados.Items[0].Selected)
-            {
-                string idEstados = "";
-                for (int i = 0; i < chkEstados.Items.Count; i++)
-                {
-                    if (chkEstados.Items[i].Selected)
-                    {
-                        if(idEstados == "")
-                            idEstados += chkEstados.Items[i].Value;
-                        else
-                            idEstados += ","+ chkEstados.Items[i].Value;
-                    }
-                }
+            if (ddlEstado.SelectedValue == "7")
+                str_condicion += " AND L.baja = 1";
 
-                str_condicion += " AND L.estado  IN ( " + idEstados + " )";
-            } 
+            if (ddlEstado.SelectedValue != "7" && ddlEstado.SelectedValue != "0")
+                str_condicion += " AND L.estado=" + ddlEstado.SelectedValue;
 
             return str_condicion;
         }
@@ -392,13 +368,13 @@ namespace WebLab.Derivaciones
             Utility oUtil = new Utility();
             if (efectorOrigen != 0)
             {
-                msql = consultaEfectorDestino(efectorOrigen);
+                msql = ConsultaEfectorDestino(efectorOrigen);
                 oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
                 ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
             }
             else
             {
-                msql = consultaEfectorDestino();
+                msql = ConsultaEfectorDestino();
                 oUtil.CargarCombo(ddlEfectorDestino, msql, "idEfector", "nombre", connReady);
                 ddlEfectorDestino.Items.Insert(0, new ListItem("--TODOS--", "0"));
             }
@@ -662,13 +638,19 @@ namespace WebLab.Derivaciones
                 int idLote = int.Parse(e.Row.Cells[0].Text);
                 LoteDerivacion  oLote = (LoteDerivacion) new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", idLote);
 
-                if ((oLote.Estado == 1 || oLote.Estado == 3))
-                     CmdCambiarEstado.Visible = true; 
-                else
-                     CmdCambiarEstado.Visible = false; 
+                if ((oLote.Estado == 1 || oLote.Estado == 3))  CmdCambiarEstado.Visible = true; 
+                else  CmdCambiarEstado.Visible = false; 
 
-                if (oLote.Estado == 1 || oLote.Estado == 3)
-                    CmdPDFControl.Visible = false;
+                if (oLote.Estado == 2)  CmdPDFControl.Visible = true; 
+                else CmdPDFControl.Visible = false;
+
+                if (oLote.Estado != 1)
+                {
+                    CmdModificar.CommandName = "Consulta";
+                    Image imgEditar = (Image)CmdModificar.FindControl("imgEditar");
+                    imgEditar.ImageUrl = "~/App_Themes/default/images/zoom.png";
+                }
+
 
             }
         }
@@ -700,6 +682,10 @@ namespace WebLab.Derivaciones
                         Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument +  "&Tipo=Modifica&Parametros=" + str_condicion, false); 
 
                     break;
+                case "Consulta":
+                    Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument + "&Tipo=Consulta&Parametros=" + str_condicion, false);
+
+                    break;
                 case "CambiarEstado":
                     {
                         if (TieneDerivaciones(idLote))
@@ -729,24 +715,6 @@ namespace WebLab.Derivaciones
 
 
         #endregion
-
-
-        protected void chkEstados_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (chkEstados.Items[0].Selected)
-            {
-                for (int i = 0; i < chkEstados.Items.Count; i++)
-                {
-                    chkEstados.Items[i].Selected = true;
-                }
-                chkEstados.Items[0].Selected = false;
-            }
-            else
-            {
-                chkEstados.Items[0].Selected = false;
-            }
-        }
-
-       
+               
     }
 }

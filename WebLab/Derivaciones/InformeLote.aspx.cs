@@ -26,7 +26,8 @@ namespace WebLab.Derivaciones
     {
         public Usuario oUser = new Usuario();
         public CrystalReportSource oCr = new CrystalReportSource();
-
+        public Configuracion oC = new Configuracion();
+        
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -55,7 +56,7 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
+                oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
                 if (!Page.IsPostBack)
                 {
                     Inicializar();
@@ -99,8 +100,30 @@ namespace WebLab.Derivaciones
             if (Page.IsValid)
             {
                 Guardar();
-                btnGuardar.Enabled = false;
-                lblMensaje.Text = "Se guardaron los cambios correctamente";
+
+
+                if (ddlEstados.SelectedValue == "2")
+                {
+                    string url = ResolveUrl("../DescargarPdf.ashx")
+                        + "?informe=DerivacionLote.rpt"
+                        + "&consulta=derivacionPDF"
+                        + "&idLote=" + Server.UrlEncode(Request["idLote"])
+                        + "&efectorOrigen=" + Server.UrlEncode(hfEfectorDestino.Value);
+
+                    ScriptManager.RegisterStartupScript(
+                        this,
+                        GetType(),
+                        "descargarPDF",
+                        "var enlace = document.createElement('a');" +
+                        "enlace.href = '" + url + "';" +
+                        "enlace.style.display = 'none';" +
+                        "document.body.appendChild(enlace);" +
+                        "enlace.click();" +
+                        "document.body.removeChild(enlace);",
+                        true
+                    );
+                }
+
             }
         }
         
@@ -122,7 +145,10 @@ namespace WebLab.Derivaciones
             DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900"); //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
             lote.FechaEnvio = fechaResultado;
             lote.Save();
-                   
+
+            hfEfectorDestino.Value = lote.IdEfectorDestino.IdEfector.ToString();
+
+
             ISession m_session = NHibernateHttpModule.CurrentSession;
             ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
             string ssql_Protocolo = @" IdLote=" + lote.IdLoteDerivacion + 
@@ -169,6 +195,10 @@ namespace WebLab.Derivaciones
                 lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
                 lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
             }
+
+            btnGuardar.Enabled = false;
+            lblMensaje.Text = "Se guardaron los cambios correctamente";
+
         }
         #endregion
 
@@ -223,5 +253,7 @@ namespace WebLab.Derivaciones
 
             }
         }
+
+        
     }
 }

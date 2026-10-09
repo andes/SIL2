@@ -82,12 +82,12 @@
                                         <asp:TextBox ID="txtLoteHasta" runat="server" MaxLength="9" TabIndex="4" class="form-control input-sm" Onkeyup="soloNumeros(this)" Style="width: 100px" />
                                     </td>
                                 </tr>
-                               <%-- <tr>
+                                <tr>
                                     <td class="myLabelIzquierda">Estado:</td>
                                     <td>
                                         <asp:DropDownList ID="ddlEstado" runat="server" class="form-control input-sm" TabIndex="5"></asp:DropDownList>
                                     </td>
-                                </tr>--%>
+                                </tr>-
                                 <tr>
                                     <td class="myLabelIzquierda">Efector Origen:</td>
                                     <td>
@@ -99,12 +99,12 @@
                                         <asp:DropDownList ID="ddlEfectorDestino" runat="server" ToolTip="Seleccione el efector" TabIndex="7" Width="250px" class="form-control input-sm"></asp:DropDownList>
                                     </td>
                                 </tr>
-                                 <tr>
+                               <%--  <tr>
                                     <td class="myLabelIzquierda">Estado:</td>
                                     <td>
                                         <asp:CheckBoxList ID="chkEstados" runat="server" RepeatDirection="Horizontal"  CssClass="checkbox checkbox-inline" OnSelectedIndexChanged="chkEstados_SelectedIndexChanged" AutoPostBack="true"/>
                                     </td>
-                                </tr>
+                                </tr>--%>
                             </table>
                         </div>
 
@@ -171,18 +171,18 @@
                                                     <asp:BoundField DataField="fechaGeneracion" HeaderText="Fecha Gen." SortExpression="fechaGeneracion"/>
                                                     <asp:BoundField DataField="fechaEnvio" HeaderText="Fecha Envio" SortExpression="fechaEnvio"/>
                                                     <asp:BoundField DataField="fechaIngreso" HeaderText="Fecha Ing." SortExpression="fechaIngreso" />
-                                                    <asp:TemplateField HeaderText="Modificar">
+                                                    <asp:TemplateField HeaderText="Modificar/Consultar">
                                                         <ItemTemplate>
                                                             <asp:LinkButton runat="server" ID="lnkEdit"  >
-                                                                <asp:Image  runat="server" ImageUrl='~/App_Themes/default/images/editar.jpg'  />
+                                                                <asp:Image  runat="server" ID="imgEditar" ImageUrl='~/App_Themes/default/images/editar.jpg'  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Cambiar estado">
+                                                    <asp:TemplateField HeaderText="Derivar">
                                                         <ItemTemplate>
                                                            <asp:LinkButton runat="server" ID="lnkCambiarEstado" >
-                                                                <asp:Image  runat="server" ImageUrl='~/App_Themes/default/images/actualizar.gif'  />
+                                                                <asp:Image  runat="server" ImageUrl='../App_Themes/default/images/enviado.png'  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />

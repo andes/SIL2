@@ -78,26 +78,53 @@
         }
        
     </script>
+    <style type="text/css">
+        @media print {
+                /* Ocultar todo por defecto */
+                body * {
+                    visibility: hidden;
+                }
 
+                /* Mostrar únicamente el contenido elegido */
+                #contenidoImprimir,
+                #contenidoImprimir * {
+                    visibility: visible;
+                }
+
+                #contenidoImprimir {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                }
+
+                /* Ocultar botones al imprimir */
+                .no-imprimir {
+                    display: none !important;
+                }
+}
+    </style>
 </asp:Content>
  
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
 <div align="left" style="width:1050px">
-        <div class="panel panel-default">
+        <div class="panel panel-default" id="contenidoImprimir">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-md-6">
-                    <b><asp:Label  ID="lblTitulo" Text="" runat="server"></asp:Label></b> 
+                        <b> <asp:Label ID="lblTitulo" Text="" runat="server"></asp:Label></b>
                         <br />
-                        <asp:Label ID="lblSubTitulo" Text="" runat="server" visible="false"></asp:Label>
+                        <b> <asp:Label ID="lblEstadoLote" Text="" runat="server"></asp:Label></b>
+                        <br />
+                        <asp:Label ID="lblSubTitulo" Text="" runat="server" Visible="false"></asp:Label>
                     </div>
-                     <div class="col-md-6" align="right"  rowspan="4">
-                    <asp:Panel runat="server" ID="pnlNroLote" >
-                    <h3>
-                        <span class="label label-default"><asp:Label ID="lblNroLote" runat="server" ></asp:Label> </span>
-                    </h3>
-                </asp:Panel>
-                </div>
+                    <div class="col-md-6" align="right" rowspan="4">
+                        <asp:Panel runat="server" ID="pnlNroLote">
+                            <h3><span class="label label-default">
+                                <asp:Label ID="lblNroLote" runat="server"></asp:Label>
+                            </span></h3>
+                        </asp:Panel>
+                    </div>
                 </div>
                 
                
@@ -108,14 +135,14 @@
                 <asp:HiddenField ID="HFIdLote" runat="server" />
                 <asp:HiddenField ID="HFIdEfectorDerivacion" runat="server" />
 				<table  width="1000px"  >
-                    <tr>
-                        <td class="myLabelLitlle" style="vertical-align: top" colspan="3">
-                            <asp:Panel ID="pnlReferenciasAlta" runat="server">
+                 <%--   <tr>
+                        <td class="myLabelLitlle no-imprimir" style="vertical-align: top" colspan="3" >
+                            <asp:Panel ID="pnlReferenciasAlta" runat="server" >
                                 Referencias:
                                     <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
                                     <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
                                     &nbsp;<br /> </asp:Panel>
-                            <asp:Panel ID="pnlReferenciaEdit" runat="server" >
+                            <asp:Panel ID="pnlReferenciaEdit" runat="server">
                                 Referencias:
                                     <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
                                     <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
@@ -127,22 +154,29 @@
                      
                         </td>
                         
-				    </tr>
+				    </tr>--%>
                     <tr>
-				        <td style="vertical-align: top" colspan="3">
-                            <asp:Panel id="Panel1"   runat="server">
+				        <td style="vertical-align: top" colspan="3" class="no-imprimir">
+                            <asp:Panel id="Panel1"   runat="server" >
                                 <table class="myTabla" width="1000px">
                                     <tr style="vertical-align: middle">
                                         <td align="right">
-                                            <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary"  Width="100" Text="Crear Lote" 
-                                             onclick="btnGuardar_Click"  ValidationGroup="0" />
-                                              &nbsp;&nbsp;
+                                            <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary" Width="100" Text="Crear Lote"
+                                                OnClick="btnGuardar_Click" ValidationGroup="0" />
+                                            &nbsp;&nbsp;
                                             <asp:Button ID="btnImprimir" runat="server" CssClass="btn btn-primary" Width="100" Text="Imprimir" OnClientClick="window.print(); return false;" />
 
-                                                &nbsp;&nbsp;
-                                            <asp:Button ID="btnNoEnviado" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Marcar No enviado" 
-                                                ValidationGroup="1" OnClick="btnNoEnviado_Click"/>
-                                              
+                                            &nbsp;&nbsp;
+                                            <asp:Button ID="btnNoEnviado" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Marcar No enviado"
+                                                ValidationGroup="1" OnClick="btnNoEnviado_Click" />
+
+                                             &nbsp;&nbsp;
+                                            <asp:Button ID="btnExcluir" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Excluir del lote"
+                                                ValidationGroup="1" OnClick="btnNoEnviado_Click" Visible="false"  />
+
+                                            &nbsp;&nbsp;
+                                             <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200"
+                                                 OnClientClick="AgregarDeterminaciones(); return false; " OnClick="btnAgregarDeterminaciones_Click" />
                                             <asp:Button
                                                 ID="btnActualizar"
                                                 runat="server"
@@ -157,36 +191,29 @@
 			        </tr>
 
 				    <tr>
-					    <td class="myLabelIzquierdaGde" colspan="3"> <hr /></td>
+					    <td class="myLabelIzquierdaGde no-imprimir" colspan="3"> <hr /></td>
 				    </tr>
-                    <tr>
-                      <td></td>
-                      <td> </td>  
-                        <td align="right">
-                            <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200"
-                                OnClientClick="AgregarDeterminaciones(); return false; " OnClick="btnAgregarDeterminaciones_Click"/>
-                        </td>
-                    </tr>
-                    <tr><td> <br /></td></tr>
+                   
+                    <tr><td class="no-imprimir"> <br /></td></tr>
 				    <tr>
-					    <td colspan="2">
+					    <td colspan="2" class="no-imprimir">
                             <asp:CustomValidator ID="cvGeneral" runat="server" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                             <asp:CustomValidator ID="cvNoEnviado" runat="server" OnServerValidate="cvNoEnviado_ServerValidate" ValidationGroup="1"></asp:CustomValidator>
-                             <div class="mylabelizquierda" >Seleccionar:                                           
+                             <div class="mylabelizquierda" runat="server" id="linkSeleccionar">Seleccionar:                                           
                                 <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  onclick="lnkMarcar_Click">Todas</asp:LinkButton>&nbsp;
                                 <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"   onclick="lnkDesMarcar_Click" >Ninguna</asp:LinkButton>
                                     &nbsp;&nbsp;
                               </div>
                         </td>
 						
-					    <td align="right">
+					    <td align="right" class="no-imprimir">
                             <asp:Label ID="CantidadRegistros" runat="server"  forecolor="Blue" />
                         </td>
 				    </tr>
 
 				    <tr>
 					    <td colspan="3">
-                            <div  style="width:100%;height:450pt;overflow:scroll;;overflow-x:hidden;border:1px solid #CCCCCC; background-color: #F3F3F3;"> 
+                            <div   style="width:100%;height:450pt;overflow:scroll;;overflow-x:hidden;border:1px solid #CCCCCC; background-color: #F3F3F3;"> 
                                 <!-- Lista para el alta de lote -->
                                 <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
                                     DataKeyNames="idDetalleProtocolo"   Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
@@ -201,17 +228,6 @@
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" HorizontalAlign="Center" />
                                     </asp:TemplateField>
-
-                                         <asp:TemplateField>
-                                           <ItemStyle Width="5%" HorizontalAlign="Center" />
-                                           <ItemTemplate>
-                                                <asp:Image ID="estado" runat="server" 
-                                                    ImageUrl='<%# 
-                                                    Eval("estado").ToString() == "0" ? "~/App_Themes/default/images/pendiente.png" :
-                                                    Eval("estado").ToString() == "2" ? "~/App_Themes/default/images/block.png" :
-                                                    "~/App_Themes/default/images/transparente.jpg"%>'  />
-                                           </ItemTemplate>
-                                       </asp:TemplateField>
 
                                     <asp:BoundField DataField="numero"  HeaderText="Protocolo" >
                                         <ItemStyle Width="5%" HorizontalAlign="Center" />
@@ -271,19 +287,12 @@
             
                                     <asp:TemplateField HeaderText="Sel." >
                                         <ItemTemplate>
-                                            <asp:CheckBox ID="chkSel" runat="server" EnableViewState="true" 
-                                                OnCheckedChanged="chkSel_CheckedChanged"   AutoPostBack="true"
-                                                Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> ' 
-                                               Enabled='<%# Convert.ToInt32(Eval("estado")) == 0 || 
-                                                            Convert.ToInt32(Eval("estado")) == 2 || 
-                                                            Convert.ToInt32(Eval("estado")) == 4 %>'
-                                              
-                                               />
+                                            <asp:CheckBox ID="chkSel" runat="server" EnableViewState="true"  />
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" HorizontalAlign="Center" />
                                     </asp:TemplateField>
 
-                                         <asp:TemplateField>
+                                         <asp:TemplateField Visible="false">
                                            <ItemStyle Width="5%" HorizontalAlign="Center" />
                                            <ItemTemplate>
                                                <asp:Literal ID="estado" runat="server" />
@@ -327,11 +336,11 @@
 						
 				    </tr>
 				    <tr>
-					    <td colspan="3"><hr /></td>
+					    <td colspan="3" class="no-imprimir"><hr /></td>
 				    </tr>
 				    <tr>
 					    <td colspan="3">
-                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink"  >Regresar</asp:HyperLink>
+                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink no-imprimir">Regresar</asp:HyperLink>
                         </td>
 				    </tr>
 				</table>

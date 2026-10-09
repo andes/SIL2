@@ -44,7 +44,7 @@
                     <asp:RequiredFieldValidator ID="rfvtxtMotivoBaja" runat="server" ErrorMessage="Debe ingresar una observacion" ControlToValidate="txtObservacion" ValidationGroup="0"></asp:RequiredFieldValidator>
 
                     <br />
-                    <asp:Button ID="btnGuardar" runat="server" OnClick="btnGuardar_Click" Text="Anular" ValidationGroup="0" Width="100px" CssClass="btn btn-danger" />
+                    <asp:Button ID="btnGuardar" runat="server" OnClick="btnGuardar_Click" Text="Guardar" ValidationGroup="0" Width="100px" CssClass="btn btn-primary" />
                     <asp:Label ID="lblMensaje" runat="server" />
 
                 </div>
