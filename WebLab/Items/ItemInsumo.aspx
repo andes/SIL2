@@ -98,8 +98,23 @@
           <tr>
               <td class="myLabelIzquierda">Analisis:  </td>
               <td>
-                  <anthem:TextBox ID="txtCodigo" runat="server" class="form-control input-sm" Style="text-transform: uppercase" 
-                      OnTextChanged="txtCodigo_TextChanged" Width="88px" AutoCallBack="True" TabIndex="6" ></anthem:TextBox>
+                  <anthem:TextBox ID="txtCodigo" 
+                      runat="server" 
+                      class="form-control input-sm" 
+                      Style="text-transform: uppercase" 
+                      OnTextChanged="txtCodigo_TextChanged" 
+                      Width="88px" 
+                      AutoCallBack="True"
+                      TabIndex="6" 
+                      AutoUpdateAfterCallBack="true"
+                      onkeydown="if(event.keyCode==13){document.getElementById('<%= btnBuscarCodigo.ClientID %>').click(); return false;}">
+
+                      ></anthem:TextBox>
+                  <asp:Button
+                    ID="btnBuscarCodigo"
+                    runat="server"
+                    OnClick="btnBuscarCodigo_Click"
+                    Style="display:none" />
                   <anthem:DropDownList ID="ddlItem" runat="server" class="form-control input-sm" TabIndex="7" width="240" OnSelectedIndexChanged="ddlItem_SelectedIndexChanged" AutoPostBack="true">
                   </anthem:DropDownList>
                   <anthem:Label ID="lblMensaje" runat="server" ></anthem:Label>

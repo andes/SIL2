@@ -23,15 +23,15 @@ namespace WebLab.Items
 {
     public partial class ItemInsumo : System.Web.UI.Page
     {
-     //   private int cantidad = 0;
-       // public string mensagitoInicial = ""; string mensagitoProcesa = "";
+        //   private int cantidad = 0;
+        // public string mensagitoInicial = ""; string mensagitoProcesa = "";
 
         public Usuario oUser = new Usuario();
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"]!= null)
-            oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             else
                 Response.Redirect("../FinSesion.aspx", false);
 
@@ -42,7 +42,7 @@ namespace WebLab.Items
             if (!Page.IsPostBack)
             {
 
-                    VerificaPermisos("Auditoria de Insumo");
+                VerificaPermisos("Auditoria de Insumo");
 
 
                 CargarListas();
@@ -77,7 +77,7 @@ namespace WebLab.Items
                     //    return;
                     //}
                     //else
-                        args.IsValid = true;
+                    args.IsValid = true;
                 }
             }
             else args.IsValid = false;
@@ -110,8 +110,8 @@ namespace WebLab.Items
             //}
             //else
             //    args.IsValid = false;
-                 
-       }
+
+        }
 
         private void CargarListas()
         {
@@ -134,7 +134,7 @@ namespace WebLab.Items
                      "order by E.nombre";
 
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
-              //  ddlEfector.Items.Insert(0, new ListItem("Seleccione Efector", "0"));
+                //  ddlEfector.Items.Insert(0, new ListItem("Seleccione Efector", "0"));
             }
             else
             {
@@ -142,7 +142,8 @@ namespace WebLab.Items
                 oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre", connReady);
             }
 
-          
+
+            CargarItem(); //Traigo todos los items al principio para poder buscarlos sin area
 
         }
 
@@ -181,8 +182,8 @@ namespace WebLab.Items
 
             gvLista.DataSource = LeerDatos();
             gvLista.DataBind();
-        //    PonerImagenes();
-         
+            //    PonerImagenes();
+
             PintarReferencias();
         }
 
@@ -190,7 +191,7 @@ namespace WebLab.Items
         private DataTable LeerDatos()
         {
             string m_condicion = "";
-          
+
             if (ddlArea.SelectedValue != "0") m_condicion += " and I.idArea=" + ddlArea.SelectedValue;
 
             m_condicion += " and Ie.idEfector=" + ddlEfector.SelectedValue;
@@ -205,7 +206,7 @@ namespace WebLab.Items
 
             if(ddlItem.SelectedValue != "0" && ddlItem.SelectedValue != "")  m_condicion += " and I.idItem=" + ddlItem.SelectedValue;
 
-            
+
 
 
 
@@ -218,14 +219,14 @@ namespace WebLab.Items
 
 
             DataSet Ds = new DataSet();
-               SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             //SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
 
             // 
-             lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " determinaciones encontrados";
+            lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " determinaciones encontrados";
 
 
             return Ds.Tables[0];
@@ -235,27 +236,27 @@ namespace WebLab.Items
         {
             CargarArea();
 
-          
+
         }
 
         protected void lnkMarcar_Click(object sender, EventArgs e)
         {
             MarcarSeleccionados(true);
             PintarReferencias();
-        } 
+        }
         private void PintarReferencias()
         {
             int celda = 4;
             foreach (GridViewRow row in gvLista.Rows)
-            {           
+            {
                 switch (row.Cells[celda].Text)
                 {
                     case "True": //sin insumo
-                        {
+                        { 
                             for (int i = 0;  i < gvLista.Columns.Count; i++)
                             { row.Cells[i].BackColor = Color.LightPink;
                             }
-                             
+
                             System.Web.UI.WebControls.Image hlnk = new System.Web.UI.WebControls.Image();
                             hlnk.ImageUrl = "../App_Themes/default/images/rojo.gif";
                             hlnk.ToolTip = "Sin insumo";
@@ -270,7 +271,7 @@ namespace WebLab.Items
                             row.Cells[celda].Controls.Add(hlnk);
                         }
                         break;
-                   
+
                 }
             }
         }
@@ -290,12 +291,12 @@ namespace WebLab.Items
             }
         }
 
-     
+
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             Guardar();
             CargarGrilla();
-          
+
         }
 
         private void Guardar()
@@ -370,7 +371,7 @@ namespace WebLab.Items
                         }
                     }// chececk
                 }// primero    
-            }    
+            }
         }
 
         private void ActualizarProtocolos(Item  oItem, string s_tipo, Usuario oUser)
@@ -402,8 +403,8 @@ namespace WebLab.Items
             m_strSQL += str_condicion;
 
             DataSet Ds = new DataSet();
-               SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-        //    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            //    SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
@@ -422,7 +423,7 @@ namespace WebLab.Items
                     ActualizaEstadoProtocolo(detalle.IdProtocolo);
                 }
             }
-             
+
         }
 
         private void ActualizaEstadoProtocolo(Protocolo oRegistro)
@@ -478,9 +479,9 @@ namespace WebLab.Items
                 if (ddlArea.SelectedValue != "0")
                     condicion = " and I.idArea=" + ddlArea.SelectedValue;
 
-                 string m_ssql = @" select I.idItem, I.nombre + ' (' + I.codigo + ')' as nombre from Lab_Item as I  (nolock) 
+                string m_ssql = @" select I.idItem, I.nombre + ' (' + I.codigo + ')' as nombre from Lab_Item as I  (nolock) 
                                    inner join lab_itemEfector as IE on IE.idItem= I.idItem and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() +
-                                @" where I.baja=0  AND IE.idEfector=Ie.idEfectorDerivacion " + condicion +  " order by I.nombre";
+                               @" where I.baja=0  AND IE.idEfector=Ie.idEfectorDerivacion " + condicion +  " order by I.nombre";
                 oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
                 ddlItem.Items.Insert(0, new ListItem("Todos", "0"));
                 ddlItem.UpdateAfterCallBack = true;
@@ -488,8 +489,19 @@ namespace WebLab.Items
             }
             else Response.Redirect("../FinSesion.aspx", false);
         }
-
-        protected void txtCodigo_TextChanged(object sender, EventArgs e)
+        /// 13.10.2026 Filtrado por Analisis
+        // Se utiliza un método común de búsqueda para permitir buscar el código ingresado
+        // tanto cuando cambia el texto como al presionar Enter, incluso si el código
+        // es el mismo que ya estaba ingresado.
+        protected void btnBuscarCodigo_Click(object sender, EventArgs e)
+        {
+            BuscarItemPorCodigo();
+        }
+        protected void txtCodigo_TextChanged(object sender, EventArgs e) 
+        {
+            BuscarItemPorCodigo();
+        }
+        private void BuscarItemPorCodigo()
         {
             if (txtCodigo.Text != "") 
             {
@@ -526,7 +538,7 @@ namespace WebLab.Items
                 ddlItem.SelectedValue = "0";
                 ddlItem.UpdateAfterCallBack = true;
             }
-           
+            
         }
 
         protected void ddlItem_SelectedIndexChanged(object sender, EventArgs e)

@@ -51,6 +51,15 @@ namespace WebLab.Items
         protected global::Anthem.TextBox txtCodigo;
 
         /// <summary>
+        /// btnBuscarCodigo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnBuscarCodigo;
+
+        /// <summary>
         /// ddlItem control.
         /// </summary>
         /// <remarks>
