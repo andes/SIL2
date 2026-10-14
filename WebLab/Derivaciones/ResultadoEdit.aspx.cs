@@ -408,7 +408,8 @@ namespace WebLab.Derivaciones
                 oDetalle.Resultado =valorItem;
                 oDetalle.IdUsuarioResultado = int.Parse(Session["idUsuario"].ToString());
                 oDetalle.FechaResultado = DateTime.Now;                                                
-                oDetalle.Save();                
+                oDetalle.Save();
+                oDet.GrabarAuditoriaDetalleExtra("Resultado", int.Parse(Session["idUsuario"].ToString()), valorItem);
             }
         }
 
