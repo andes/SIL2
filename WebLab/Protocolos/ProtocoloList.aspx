@@ -75,8 +75,6 @@
             width: 16%;
             height: 28px;
         }
-
-       
     </style>
   
  
@@ -802,6 +800,7 @@ function PreguntoEliminar(idProtocolo) {
 
 
     var $this = $(this);
+
     $('<iframe src="ProtocoloEliminar.aspx?id=' + idProtocolo + '" />').dialog({
         title: 'Anular Protocolo',
         autoOpen: true,
@@ -890,10 +889,7 @@ function muestraSelect() {
             background: "black"
         }
     }).width(800);
-    }
-
-   
-  
+}
     var postBackBuscarObraSocial = function () {
         <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscarObraSocial, "") %>;
       };
@@ -973,8 +969,7 @@ function muestraSelect() {
             }
         }).width(600);
     }
-
-</script>
+    </script>
 
  
     </table>

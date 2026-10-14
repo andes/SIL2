@@ -51,18 +51,14 @@
                 }
             }            
     </script>   
-
-   
-
        <style type="text/css">
-            #CeldaContenedor > * {
-                display: inline-block; /* Hace que los controles se alineen en una sola línea */
-                float: left; /* Alinea los controles a la izquierda */
-            }
-            #CeldaContenedor {
-                text-align: left; /* Alinea todo el contenido a la izquierda */
-            }
-
+#CeldaContenedor > * {
+    display: inline-block; /* Hace que los controles se alineen en una sola línea */
+    float: left; /* Alinea los controles a la izquierda */
+}
+#CeldaContenedor {
+    text-align: left; /* Alinea todo el contenido a la izquierda */
+}
            #btnSubir {
                 display: none;
                 position: fixed;
@@ -87,7 +83,7 @@
                 background: #1976d2;/*#1565c0;*/
                 opacity:80%;
             }
-        </style>
+</style>
     </asp:Content>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">               
@@ -476,6 +472,7 @@
 <asp:HiddenField runat="server" ID="HFIdProtocolo" /> 
 <asp:HiddenField runat="server" ID="HFNumeroAislamiento" /> 
                             <asp:HiddenField runat="server" ID="HFOperacion" /> 
+
                            
                             <div id="tabContainer">  
                              <asp:Panel ID="pnlResultados" runat="server" > 
@@ -1894,7 +1891,7 @@
         }).width(670);
     }
 
-</script>
+    </script>
 
      <script type="text/javascript">
         

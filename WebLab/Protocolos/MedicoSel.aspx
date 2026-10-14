@@ -30,9 +30,7 @@
                 <td>  Nombre:</td>
                 <td>
         <asp:TextBox ID="txtNombre" runat="server" class="form-control input-sm" Width="280px"></asp:TextBox></td>
-                
                 </tr>
-           
         </table>
         <div id="divMatricula" Visible="false" runat="server">
             <table>

@@ -232,17 +232,13 @@ namespace WebLab.Protocolos
                             pnlLista.Visible = false;
                             gvLista.Visible = false;
                             pnlNavegacion.Visible = false;
-                           
+
                         }
-                       
-                       
 
                         if(Request["idPaciente"] != null) //Cambio de paciente
                         {
                             HFModificarPaciente.Value = "Si";
                         }
-
-
                     }
                     else
 
@@ -1100,7 +1096,6 @@ namespace WebLab.Protocolos
                 //chkImprimir.Visible = false;
                 //chkRecordarConfiguracion.Visible = false;
 
-                //14.08.2026 El parametro ModificarProtocoloTerminado aplica solo a protocolos activos.
                // Si esta anulado no se puede modificar independientemente del estado(no procesado, en proceso, terminado o restringido)
                 if (oRegistro.Estado == 2 && !oRegistro.Baja) btnGuardar.Visible = oC.ModificarProtocoloTerminado;
             }
@@ -1278,8 +1273,8 @@ where pd.tipo='B' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
                 hplModificarPaciente.Enabled = false;
                 hplActualizarPaciente.Enabled = false;
             }
-            
-                
+
+
             return result;
         }
 
@@ -1695,8 +1690,8 @@ ORDER BY numeroP";
 
             chkNotificar.Checked = true;
             chkNotificar.Enabled = oC.HabilitaNoPublicacion;
+            CargarDiagnosticosEfector();
 
-          
             m_ssql = null;
             oUtil = null;
         }
@@ -2184,7 +2179,8 @@ ORDER BY numeroP";
 
         private void ImprimirCodigoBarrasAreas(Protocolo oProt, string s_listaAreas, string impresora)
         {////Genera con area y muestra
-            string[] tabla = s_listaAreas.Split(','); for (int i = 0; i < tabla.Length; i++)
+            string[] tabla = s_listaAreas.Split(',');
+            for (int i = 0; i < tabla.Length; i++)
             {
                 string s_area = tabla[i].ToUpper(); string s_idarea = ""; string s_tipoMuestra = "";
 
@@ -4963,7 +4959,20 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
             
         }
+        private void CargarDiagnosticosEfector()
+        {
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
+            Utility oUtil = new Utility();
+          string   m_ssql = @" SELECT D.idDiagnostico , Codigo + ' - ' + Nombre as nombre
+FROM Sys_CIE10 c with (nolock)
+inner join LAB_DiagnosticoEfector D with (nolock) on d.idDiagnostico = c.ID
+where D.idEfector = " + oUser.IdEfector.IdEfector.ToString() + " order by c.Nombre";
+
+            oUtil.CargarCombo(ddlDiagEfector, m_ssql, "idDiagnostico", "nombre", connReady);
+
+            ddlDiagEfector.Items.Insert(0, new ListItem("Seleccione", "0"));
+        }
         private void CargarDiagnosticosFrecuentes()
         {
             Utility oUtil = new Utility();
@@ -5769,6 +5778,45 @@ System.Net.ServicePointManager.SecurityProtocol =
             //entonces guardamos ffee del protocolo destino
             if(resultado != null && !string.IsNullOrEmpty(resultado.ToString()))
                 GuardarProtocoloFicha(protocoloDestino, resultado.ToString());
+        }
+
+        protected void btnAgregarDiagEfector_Click(object sender, EventArgs e)
+        {
+            lblMensajeDiagnostico.Visible = false;
+
+            if (ddlDiagEfector.SelectedValue != "")
+            {
+                bool agrego = true;
+
+                // Verifica si el diagnóstico ya fue agregado
+                for (int i = 0; i < lstDiagnosticosFinal.Items.Count; i++)
+                {
+                    if (lstDiagnosticosFinal.Items[i].Value == ddlDiagEfector.SelectedValue)
+                    {
+                        agrego = false;
+                        break;
+                    }
+                }
+
+                if (agrego)
+                {
+                    ListItem item = new ListItem(
+                        ddlDiagEfector.SelectedItem.Text,
+                        ddlDiagEfector.SelectedValue
+                    );
+
+                    lstDiagnosticosFinal.Items.Add(item);
+                    lstDiagnosticosFinal.UpdateAfterCallBack = true;
+                }
+                else
+                {
+                    lblMensajeDiagnostico.Visible = true;
+                    lblMensajeDiagnostico.Text =
+                        "Alerta: Diagnóstico ya ingresado para el paciente.";
+                }
+            }
+
+            lblMensajeDiagnostico.UpdateAfterCallBack = true;
         }
     }
 

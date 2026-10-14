@@ -60,11 +60,11 @@ namespace WebLab.Protocolos
                     }
                 }
                 else Response.Redirect("../FinSesion.aspx", false);
-
+                
                 //else Response.Redirect("../FinSesion.aspx", false);
 
             }
-           }
+        }
         protected void Page_Unload(object sender, EventArgs e)
         {
             if (this.oCr.ReportDocument != null)
@@ -477,7 +477,7 @@ namespace WebLab.Protocolos
             {
                 if (chkRecordarFiltro.Checked) AlmacenarSesion();
               
-                CargarGrilla(Request["Tipo"].ToString()); 
+                CargarGrilla(Request["Tipo"].ToString());
                 CurrentPageLabel.Text = " ";
             }
             else
@@ -546,11 +546,10 @@ namespace WebLab.Protocolos
                     string listaM = getListaMuestra();
                     if (listaM != "") str_condicion += " AND P.idMuestra  in  (" + listaM + ")"; // ddlMuestra.SelectedValue;
                 }
+                
 
-               
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
-           
             if (Request["Tipo"].ToString() != "ListaProducto") //18.08.026 si cargo sesion en 'No paciente' no Corresponden estos filtros
             {
                 //06.08.2026 Se utiliza el identificador de la obra social seleccionada como criterio de búsqueda
@@ -568,7 +567,6 @@ namespace WebLab.Protocolos
                 if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
                 if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in (" + ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
             }
-           
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
             if (ddlSectorServicio.SelectedValue != "0") str_condicion += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
             if (txtFechaDesde.Value != "")            {
@@ -597,7 +595,7 @@ namespace WebLab.Protocolos
                 if (ddlEstado.SelectedValue != "4")
                     str_condicion += " AND P.baja=0 AND P.estado=" + ddlEstado.SelectedValue;
                 else
-                 str_condicion += " AND P.baja=1"; 
+                    str_condicion += " AND P.baja=1";
             }
             
 
@@ -841,6 +839,9 @@ namespace WebLab.Protocolos
            
             if (e.Row.Cells.Count > 1)
             {
+
+            
+
                 if (e.Row.RowType ==  DataControlRowType.DataRow)
                 {
                     LinkButton CmdModificar = (LinkButton)e.Row.Cells[13].Controls[1];
@@ -914,8 +915,11 @@ namespace WebLab.Protocolos
             }  
         }
 
-        private void PintarReferencias() //14.08.2026 Lo hacemos estatico para no tener que llamar despues de un postback
+        private void PintarReferencias()
         {
+          
+
+            
             foreach (GridViewRow row in gvLista.Rows)
             {                
                     switch (row.Cells[0].Text)
@@ -948,7 +952,7 @@ namespace WebLab.Protocolos
                             row.Cells[0].Controls.Add(hlnk);
                         }
                         break;
-                    }
+                }
 
                     switch (row.Cells[1].Text)
                     {
@@ -975,10 +979,12 @@ namespace WebLab.Protocolos
                     row.BackColor = System.Drawing.Color.LightGray;
                 }
             }
-
+        
         }
         private void PintarReferenciasNoPacientes()
         {
+
+
 
             foreach (GridViewRow row in gvListaProducto.Rows)
             {
@@ -1040,7 +1046,6 @@ namespace WebLab.Protocolos
 
             }
         }
-       
         protected void btnImprimir_Click(object sender, EventArgs e)
         {
            
@@ -1801,8 +1806,5 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             lblCantNoProcesado.Text = cantNoProcesado.ToString();
             lblCantTerminado.Text = cantTerminado.ToString();
         }
-
-       
-        
     }
 }

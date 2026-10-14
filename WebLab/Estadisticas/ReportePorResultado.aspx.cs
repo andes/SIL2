@@ -288,19 +288,43 @@ namespace WebLab.Estadisticas
 
         }
 
+        //private string getListaSector()
+        //{
+        //    string lista = "";
+        //    for (int i = 0; i < this.lstSector.Items.Count; i++)
+        //    {
+        //        if (lstSector.Items[i].Selected)
+        //        {
+        //            if (lista == "")
+        //                lista = lstSector.Items[i].Value;
+        //            else
+        //                lista += "," + lstSector.Items[i].Value;
+        //        }
+        //    }
+        //    return lista;
+        //}
         private string getListaSector()
         {
             string lista = "";
-            for (int i = 0; i < this.lstSector.Items.Count; i++)
+            int seleccionados = 0;
+
+            for (int i = 0; i < lstSector.Items.Count; i++)
             {
                 if (lstSector.Items[i].Selected)
                 {
+                    seleccionados++;
+
                     if (lista == "")
                         lista = lstSector.Items[i].Value;
                     else
                         lista += "," + lstSector.Items[i].Value;
                 }
             }
+
+            // Todos seleccionados = sin filtro
+            if (seleccionados == lstSector.Items.Count)
+                return "";
+
             return lista;
         }
 
@@ -318,11 +342,25 @@ namespace WebLab.Estadisticas
         {
             MarcarSeleccionados(false);
         }
-
         private string getListaDiagnostico()
         {
+            string lista = "";
+            int seleccionados = 0;
 
-            string lista = ""; 
+            // Contar diagnósticos seleccionados
+            for (int i = 0; i < lstDiag.Items.Count; i++)
+            {
+                if (lstDiag.Items[i].Selected)
+                    seleccionados++;
+            }
+
+            // Si están todos seleccionados, devolver vacío
+            //if (seleccionados == lstDiag.Items.Count)
+            //    return "";
+            if (seleccionados == lstDiag.Items.Count && chkSinDiag.Checked)
+                return "";
+
+            // Armar lista de diagnósticos seleccionados
             for (int i = 0; i < lstDiag.Items.Count; i++)
             {
                 if (lstDiag.Items[i].Selected)
@@ -332,18 +370,44 @@ namespace WebLab.Estadisticas
                     else
                         lista += "," + lstDiag.Items[i].Value;
                 }
-               
-
             }
+
+            // Sin diagnóstico
             if (chkSinDiag.Checked)
+            {
                 if (lista == "")
-                    lista  = "-9";
+                    lista = "-9";
                 else
                     lista += ",-9";
+            }
 
-           
             return lista;
         }
+        //private string getListaDiagnostico()
+        //{
+
+        //    string lista = ""; 
+        //    for (int i = 0; i < lstDiag.Items.Count; i++)
+        //    {
+        //        if (lstDiag.Items[i].Selected)
+        //        {
+        //            if (lista == "")
+        //                lista = lstDiag.Items[i].Value;
+        //            else
+        //                lista += "," + lstDiag.Items[i].Value;
+        //        }
+
+
+        //    }
+        //    if (chkSinDiag.Checked)
+        //        if (lista == "")
+        //            lista  = "-9";
+        //        else
+        //            lista += ",-9";
+
+
+        //    return lista;
+        //}
         private string getListaOrigen()
         {
             string lista = "";
@@ -359,6 +423,7 @@ namespace WebLab.Estadisticas
             }
             return lista;
         }
+       
         protected void lnkExcel_Click1(object sender, EventArgs e)
         {            
         }
@@ -461,29 +526,7 @@ namespace WebLab.Estadisticas
             if (tabla.Rows.Count > 0)
             {
                 Utility.ExportDataTableToXlsx(tabla, lblAnalisis.Text);
-
-                //StringBuilder sb = new StringBuilder();
-                //StringWriter sw = new StringWriter(sb);
-                //HtmlTextWriter htw = new HtmlTextWriter(sw);
-                //Page pagina = new Page();
-                //HtmlForm form = new HtmlForm();
-                //GridView dg = new GridView();
-                //dg.EnableViewState = false;
-                //dg.DataSource = tabla;
-                //dg.DataBind();
-                //pagina.EnableEventValidation = false;
-                //pagina.DesignerInitialize();
-                //pagina.Controls.Add(form);
-                //form.Controls.Add(dg);
-                //pagina.RenderControl(htw);
-                //Response.Clear();
-                //Response.Buffer = true;
-                //Response.ContentType = "application/vnd.ms-excel";
-                //Response.AddHeader("Content-Disposition", "attachment;filename=" + lblAnalisis.Text + ".xls");
-                //Response.Charset = "UTF-8";
-                //Response.ContentEncoding = Encoding.Default;
-                //Response.Write(sb.ToString());
-                //Response.End();
+ 
             }
         }
 
@@ -631,16 +674,17 @@ namespace WebLab.Estadisticas
             //if (listadiag != "")
             //    m_strCondicion += " and PD.iddiagnostico in ( " + listadiag +")";
 
-         
+
             if (listadiag != "")
-                m_strCondicion +=  " and ( exists  (select 1 from lab_protocoloDiagnostico Di with (nolock)  where P.idProtocolo= Di.idprotocolo and iddiagnostico in (" + listadiag + ") ) ";
+            {
+                m_strCondicion += " and ( exists  (select 1 from lab_protocoloDiagnostico Di with (nolock)  where P.idProtocolo= Di.idprotocolo and iddiagnostico in (" + listadiag + ") ) ";
 
 
-            if (listadiag.Contains("-9"))
-                m_strCondicion += " or not exists (select idprotocolo from lab_protocoloDiagnostico Di with (nolock) where P.idProtocolo = Di.idprotocolo) )";
-            else
-                m_strCondicion += " ) ";
- 
+                if (listadiag.Contains("-9"))
+                    m_strCondicion += " or not exists (select idprotocolo from lab_protocoloDiagnostico Di with (nolock) where P.idProtocolo = Di.idprotocolo) )";
+                else
+                    m_strCondicion += " ) ";
+            }
 
 
 
@@ -678,7 +722,10 @@ namespace WebLab.Estadisticas
             }
 
             m_strCondicion += " and P.idOrigen in (" + getListaOrigen() + ")";
-            m_strCondicion += " and P.idSector in (" + getListaSector() + ")";
+
+            string listaSectores = getListaSector();
+            if (listaSectores!="")
+            m_strCondicion += " and P.idSector in (" + listaSectores + ")";
 
             DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
             DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);

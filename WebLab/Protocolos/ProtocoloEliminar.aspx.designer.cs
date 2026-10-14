@@ -7,13 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Protocolos
-{
-
-
-    public partial class ProtocoloEliminar
-    {
-
+namespace WebLab.Protocolos {
+    
+    
+    public partial class ProtocoloEliminar {
+        
         /// <summary>
         /// Head1 control.
         /// </summary>
@@ -22,7 +20,7 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlHead Head1;
-
+        
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -31,7 +29,7 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-
+        
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -40,7 +38,7 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-
+        
         /// <summary>
         /// estatus control.
         /// </summary>
@@ -49,7 +47,6 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label estatus;
-
         /// <summary>
         /// lblMotivo control.
         /// </summary>
@@ -58,7 +55,6 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMotivo;
-
         /// <summary>
         /// txtMotivoBaja control.
         /// </summary>
@@ -67,7 +63,7 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMotivoBaja;
-
+        
         /// <summary>
         /// rfvtxtMotivoBaja control.
         /// </summary>
@@ -76,7 +72,7 @@ namespace WebLab.Protocolos
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvtxtMotivoBaja;
-
+        
         /// <summary>
         /// btnGuardar control.
         /// </summary>

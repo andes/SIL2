@@ -70,8 +70,7 @@ namespace WebLab.Protocolos
 
             }
 
-        } 
-        
+        }
         private void Recuperar()
         {
             string s_idCaso = Request["id"].ToString();

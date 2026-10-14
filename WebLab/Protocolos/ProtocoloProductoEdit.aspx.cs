@@ -1697,7 +1697,6 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            
             if(Request["Operacion"] == "Alta")
             {
                 Response.Redirect("../Default.aspx");
@@ -1711,8 +1710,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     case "AltaDerivacionMultiEfectorLote": Response.Redirect("DerivacionMultiEfectorLote.aspx?idEfectorSolicitante=" + Request["idEfectorSolicitante"].ToString() + "&idServicio=1&idLote=" + Request["idLote"]); break;
                 }
             }
-            
-        }
+                   }
       
 
     

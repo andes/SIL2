@@ -60,33 +60,6 @@ namespace WebLab
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlRecepcion;
 
         /// <summary>
-        /// lblProximoProtocolo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProximoProtocolo;
-
-        /// <summary>
-        /// lblProximoProtocolo1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblProximoProtocolo1;
-
-        /// <summary>
-        /// lnkUltimoNumeroSector control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkUltimoNumeroSector;
-
-        /// <summary>
         /// pnlProtocolo control.
         /// </summary>
         /// <remarks>
@@ -114,14 +87,14 @@ namespace WebLab
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlSeguimiento;
 
         /// <summary>
-        /// seguimientoCovid control.
+        /// lnkDocumentosRDL control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::WebLab.seguimientoCovid seguimientoCovid;
-
+        protected global::System.Web.UI.WebControls.LinkButton lnkDocumentosRDL;
+        
         /// <summary>
         /// Div1 control.
         /// </summary>

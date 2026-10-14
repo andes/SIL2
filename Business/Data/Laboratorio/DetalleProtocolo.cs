@@ -1818,7 +1818,29 @@ namespace Business.Data.Laboratorio
             }
         }
 		
-       
+        public void GuardarDerivacion(Usuario oUser)
+        {
+            if (this.IdItem.esDerivado(oUser.IdEfector))
+            {
+                Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
+                oRegistro.IdDetalleProtocolo = this;
+                oRegistro.Estado = 0;
+                oRegistro.Observacion = "";// txtObservacion.Text;
+                oRegistro.IdUsuarioRegistro = oUser.IdUsuario;//int.Parse(Session["idUsuario"].ToString());
+                oRegistro.FechaRegistro = DateTime.Now;
+                oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+
+                oRegistro.IdEfectorDerivacion = this.IdItem.GetIDEfectorDerivacion(oUser.IdEfector);  // se graba el efector configurado en ese momento.
+                oRegistro.IdProtocoloOrigen = IdProtocolo.IdProtocolo; //Guardo el idProtocolo de origen
+                oRegistro.IdProtocoloDestino = 0;
+                oRegistro.Save();
+
+                // graba el resultado en ResultadCar  "Pendiente de derivar"
+                this.ResultadoCar = "Pendiente de derivar";   
+                this.Save();
+                this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
+            }
+        }
 
         //public void ActualizoResultado(Protocolo oRegistro, Protocolo oAnterior, int idLoteDerivacion)
         //{

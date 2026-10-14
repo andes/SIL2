@@ -13,6 +13,7 @@ using NHibernate;
 using System.Collections;
 using NHibernate.Expression;
 using System.Drawing;
+using System.Configuration;
 
 namespace WebLab.Resultados
 {
@@ -57,27 +58,56 @@ namespace WebLab.Resultados
             }
           
         }
+        //        private void CargarPerfilAntibiotico()
+        //        {
+        //            Utility oUtil = new Utility();
+        //            ///Carga los perfiles de  Antibioticos
+        //            string m_ssql = @" SELECT DISTINCT PA.idPerfilAntibiotico, PA.nombre
+        //FROM         LAB_PerfilAntibiotico AS PA with (nolock) INNER JOIN
+        //                      LAB_DetallePerfilAntibiotico AS DPA with (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
+        //                      LAB_Antibiotico AS A with (nolock) ON DPA.idAntibiotico = A.idAntibiotico
+        //WHERE     (PA.baja = 0)
+        //ORDER BY PA.nombre";
+        //            oUtil.CargarCombo(ddlPerfilAntibiotico, m_ssql, "idPerfilAntibiotico", "nombre");
+        //            //ddlPerfilAntibiotico.Items.Insert(0, new ListItem("--SELECCIONE PERFIL ANTIBIOTICOS--", "0"));
+        //            ddlPerfilAntibiotico.Items.Insert(0, new ListItem("--TODOS LOS ANTIBIOTICOS--", "0"));
+        //            //////////////////////////////                              
+        //        }
         private void CargarPerfilAntibiotico()
         {
-            Utility oUtil = new Utility();
-            ///Carga los perfiles de  Antibioticos
-            string m_ssql = @" SELECT DISTINCT PA.idPerfilAntibiotico, PA.nombre
-FROM         LAB_PerfilAntibiotico AS PA with (nolock) INNER JOIN
-                      LAB_DetallePerfilAntibiotico AS DPA with (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
-                      LAB_Antibiotico AS A with (nolock) ON DPA.idAntibiotico = A.idAntibiotico
-WHERE     (PA.baja = 0)
-ORDER BY PA.nombre";
-            oUtil.CargarCombo(ddlPerfilAntibiotico, m_ssql, "idPerfilAntibiotico", "nombre");
-            //ddlPerfilAntibiotico.Items.Insert(0, new ListItem("--SELECCIONE PERFIL ANTIBIOTICOS--", "0"));
-            ddlPerfilAntibiotico.Items.Insert(0, new ListItem("--TODOS LOS ANTIBIOTICOS--", "0"));
-            //////////////////////////////                              
+            string connReady =
+                ConfigurationManager.ConnectionStrings["SIL_ReadOnly"]
+                    .ConnectionString;
+
+            string sql = @"
+        SELECT DISTINCT
+            PA.idPerfilAntibiotico,
+            PA.nombre
+        FROM LAB_PerfilAntibiotico PA WITH (NOLOCK)       
+        WHERE PA.baja = 0
+        ORDER BY PA.nombre";
+
+            Business.Helpers.ComboCache.CargarCombo(
+                ddlPerfilAntibiotico,
+                "CAT_PerfilAntibiotico",
+                sql,
+                "idPerfilAntibiotico",
+                "nombre",
+                connReady,
+                "--TODOS LOS ANTIBIOTICOS--",
+                "0"
+            );
         }
 
         private void CargarMecanismos(Protocolo oProtocolo, Germen oGermen, Item oItem, int v, int n)
         {
             Utility oUtil = new Utility();
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
             string m_ssql = @"SELECT idMecanismoResistencia, sigla as nombre FROM LAB_MecanismoResistencia with (nolock)  order by nombre";
-            oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");
+            ///oUtil.CargarCheckBox(chkMecanismoResistencia, m_ssql, "idMecanismoResistencia", "nombre");                         
+
+            Business.Helpers.ComboCache.CargarCheckBox(                chkMecanismoResistencia,                "CAT_MecanismoResistencia",                m_ssql,                "idMecanismoResistencia",                "nombre",                connReady            );
+
 
             for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
             {
@@ -163,28 +193,74 @@ WHERE ATB.numeroAislamiento=" + s_numeroAislamiento +" and  ATB.idMetodologia=" 
             CargarListaAntibiotico();
            
         }
-
-
         private void CargarListaAntibiotico()
         {
-            Utility oUtil = new Utility();
-            ///Carga los antibioticos para la solapa Antibiograma
+            string idPerfil = ddlPerfilAntibiotico.SelectedValue;
 
-            string m_ssql = "";
-            if (ddlPerfilAntibiotico.SelectedValue == "0") ///Todos los antibioticos            
-                m_ssql = " SELECT idAntibiotico , descripcion FROM LAB_Antibiotico with (nolock) where baja=0 order by descripcion ";
-            
-            else            
-                m_ssql = @" SELECT DISTINCT A.idAntibiotico, A.descripcion
-FROM         LAB_PerfilAntibiotico AS PA with (nolock) INNER JOIN
-                      LAB_DetallePerfilAntibiotico AS DPA with (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
-                      LAB_Antibiotico AS A with (nolock) ON DPA.idAntibiotico = A.idAntibiotico
-WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ")  ORDER BY A.descripcion";
-            
+            string connReady =
+                ConfigurationManager.ConnectionStrings["SIL_ReadOnly"]
+                    .ConnectionString;
 
-            oUtil.CargarCombo(ddlAntibiotico, m_ssql, "idAntibiotico", "descripcion");
-            ddlAntibiotico.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+            string sql;
+            string cacheKey;
+
+            if (idPerfil == "0")
+            {
+                sql = @"
+            SELECT idAntibiotico, descripcion
+            FROM LAB_Antibiotico WITH (NOLOCK)
+            WHERE baja = 0
+            ORDER BY descripcion";
+
+                cacheKey = "CAT_Antibioticos_Todos";
+            }
+            else
+            {
+                sql = @"
+            SELECT DISTINCT
+                A.idAntibiotico,
+                A.descripcion
+            FROM LAB_DetallePerfilAntibiotico DPA WITH (NOLOCK)
+            INNER JOIN LAB_Antibiotico A WITH (NOLOCK)
+                ON A.idAntibiotico = DPA.idAntibiotico
+            WHERE DPA.idPerfilAntibiotico = " + idPerfil + @"
+            ORDER BY A.descripcion";
+
+                cacheKey = "CAT_Antibioticos_Perfil_" + idPerfil;
+            }
+
+            Business.Helpers.ComboCache.CargarCombo(
+                ddlAntibiotico,
+                cacheKey,
+                sql,
+                "idAntibiotico",
+                "descripcion",
+                connReady,
+                "--Seleccione--",
+                "0"
+            );
         }
+
+        //        private void CargarListaAntibiotico()
+        //        {
+        //            Utility oUtil = new Utility();
+        //            ///Carga los antibioticos para la solapa Antibiograma
+
+        //            string m_ssql = "";
+        //            if (ddlPerfilAntibiotico.SelectedValue == "0") ///Todos los antibioticos            
+        //                m_ssql = " SELECT idAntibiotico , descripcion FROM LAB_Antibiotico with (nolock) where baja=0 order by descripcion ";
+
+        //            else            
+        //                m_ssql = @" SELECT DISTINCT A.idAntibiotico, A.descripcion
+        //FROM         LAB_PerfilAntibiotico AS PA with (nolock) INNER JOIN
+        //                      LAB_DetallePerfilAntibiotico AS DPA with (nolock) ON PA.idPerfilAntibiotico = DPA.idPerfilAntibiotico INNER JOIN
+        //                      LAB_Antibiotico AS A with (nolock) ON DPA.idAntibiotico = A.idAntibiotico
+        //WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ")  ORDER BY A.descripcion";
+
+
+        //            oUtil.CargarCombo(ddlAntibiotico, m_ssql, "idAntibiotico", "descripcion");
+        //            ddlAntibiotico.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+        //        }
         protected void btnGuardarAntibiograma_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
@@ -385,49 +461,100 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 lbl.Font.Italic = true;
             }
         }
-
-        protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
+        protected void CustomValidator1_ServerValidate(    object source,    ServerValidateEventArgs args)
         {
-                      //////////////////
-          string s_iditem = Request["idItem"].ToString();
-            string s_idProtocolo = Request["idProtocolo"].ToString();
-            string s_idGermen = Request["idGermen"].ToString();
+            try
+            {
+                ///Se agrega control con numeroAislamiento
+                int idItem = int.Parse(Request["idItem"]);
+                int idProtocolo = int.Parse(Request["idProtocolo"]);
+                int idGermen = int.Parse(Request["idGermen"]);
+                int idMetodo = int.Parse(Request["idMetodo"]);
+                int idAntibiotico = int.Parse(ddlAntibiotico.SelectedValue);
+                int numeroAislamiento = int.Parse( Request["numeroAislamiento"].ToString());
 
-            string s_idMetodo = Request["idMetodo"].ToString();
+                ISession session = NHibernateHttpModule.CurrentSession;
 
-            Protocolo oProtocolo = new Protocolo();
-            oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
+                Protocolo oProtocolo = (Protocolo)session.Load(
+                    typeof(Protocolo),
+                    idProtocolo
+                );
 
-            Germen oGermen = new Germen();
-            oGermen = (Germen)oGermen.Get(typeof(Germen), int.Parse(s_idGermen));
+                Germen oGermen = (Germen)session.Load(
+                    typeof(Germen),
+                    idGermen
+                );
 
+                Antibiotico oAntibiotico = (Antibiotico)session.Load(
+                    typeof(Antibiotico),
+                    idAntibiotico
+                );
 
-            Antibiotico oAntibiotico = new Antibiotico();
-            oAntibiotico = (Antibiotico)oAntibiotico.Get(typeof(Antibiotico), int.Parse(ddlAntibiotico.SelectedValue));
+                ICriteria crit = session.CreateCriteria(typeof(Antibiograma));
 
-            ////////////////
+                crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+                crit.Add(Expression.Eq("IdMetodologia", idMetodo));
+                crit.Add(Expression.Eq("IdGermen", oGermen));
+                crit.Add(Expression.Eq("IdItem", idItem));
+                crit.Add(Expression.Eq("IdAntibiotico", oAntibiotico));
+                crit.Add(Expression.Eq("NumeroAislamiento", numeroAislamiento));
 
+                // Solo necesitamos saber si existe.
+                crit.SetMaxResults(1);
 
-            Antibiograma oATB = new Antibiograma();
-            ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(Antibiograma));
+                IList lista = crit.List();
 
-         
-            crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
-            crit.Add(Expression.Eq("IdMetodologia", int.Parse(s_idMetodo)));
-            crit.Add(Expression.Eq("IdGermen", oGermen));
-            crit.Add(Expression.Eq("IdItem", int.Parse(s_iditem)));
-
-            crit.Add(Expression.Eq("IdAntibiotico", oAntibiotico));
-              IList lista = crit.List();
-            if (lista.Count > 0)
-                 args.IsValid=false;
-            else
-                  args.IsValid=true;
-
-
-              
+                args.IsValid = (lista.Count == 0);
+            }
+            catch
+            {
+                args.IsValid = false;
+                throw;
+            }
         }
+
+        //protected void CustomValidator1_ServerValidate(object source, ServerValidateEventArgs args)
+        //{
+        //              //////////////////
+        //  string s_iditem = Request["idItem"].ToString();
+        //    string s_idProtocolo = Request["idProtocolo"].ToString();
+        //    string s_idGermen = Request["idGermen"].ToString();
+
+        //    string s_idMetodo = Request["idMetodo"].ToString();
+
+        //    Protocolo oProtocolo = new Protocolo();
+        //    oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
+
+        //    Germen oGermen = new Germen();
+        //    oGermen = (Germen)oGermen.Get(typeof(Germen), int.Parse(s_idGermen));
+
+
+        //    Antibiotico oAntibiotico = new Antibiotico();
+        //    oAntibiotico = (Antibiotico)oAntibiotico.Get(typeof(Antibiotico), int.Parse(ddlAntibiotico.SelectedValue));
+
+        //    ////////////////
+
+
+        //    Antibiograma oATB = new Antibiograma();
+        //    ISession m_session = NHibernateHttpModule.CurrentSession;
+        //    ICriteria crit = m_session.CreateCriteria(typeof(Antibiograma));
+
+
+        //    crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+        //    crit.Add(Expression.Eq("IdMetodologia", int.Parse(s_idMetodo)));
+        //    crit.Add(Expression.Eq("IdGermen", oGermen));
+        //    crit.Add(Expression.Eq("IdItem", int.Parse(s_iditem)));
+
+        //    crit.Add(Expression.Eq("IdAntibiotico", oAntibiotico));
+        //      IList lista = crit.List();
+        //    if (lista.Count > 0)
+        //         args.IsValid=false;
+        //    else
+        //          args.IsValid=true;
+
+
+
+        //}
 
         protected void btnGuardarMecanismo_Click(object sender, EventArgs e)
         {
@@ -464,8 +591,164 @@ WHERE     (PA.idPerfilAntibiotico = " + ddlPerfilAntibiotico.SelectedValue + ") 
                 lblMensajeMecanismo.Text = "Ha ocurrido un error. Avise al administrador";
             }
         }
+        private void GuardarMecanismo(    Protocolo oProtocolo,    Germen oGermen,    int idmetodologia,    int iditem,    int numeroAislamiento)
+        {
+            try
+            {
+                ISession session = NHibernateHttpModule.CurrentSession;
 
-        private void GuardarMecanismo(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem, int n)
+                int idUsuario = int.Parse(Session["idUsuario"].ToString());
+
+                // -----------------------------------------------------
+                // 1. IDs seleccionados actualmente en pantalla
+                // -----------------------------------------------------
+                List<int> idsSeleccionados = new List<int>();
+
+                for (int i = 0; i < chkMecanismoResistencia.Items.Count; i++)
+                {
+                    if (chkMecanismoResistencia.Items[i].Selected)
+                    {
+                        idsSeleccionados.Add(
+                            int.Parse(chkMecanismoResistencia.Items[i].Value)
+                        );
+                    }
+                }
+
+                // -----------------------------------------------------
+                // 2. Traer UNA SOLA VEZ los mecanismos ya guardados
+                // -----------------------------------------------------
+                ICriteria crit = session.CreateCriteria(
+                    typeof(ProtocoloAtbMecanismo)
+                );
+
+                crit.Add(Expression.Eq("IdProtocolo", oProtocolo));
+                crit.Add(Expression.Eq("IdGermen", oGermen));
+                crit.Add(Expression.Eq("IdItem", iditem));
+                crit.Add(Expression.Eq("IdMetodologia", idmetodologia));
+                crit.Add(Expression.Eq(
+                    "NumeroAislamiento",
+                    numeroAislamiento
+                ));
+
+                IList listaExistentes = crit.List();
+
+                Dictionary<int, ProtocoloAtbMecanismo> existentes =
+                    new Dictionary<int, ProtocoloAtbMecanismo>();
+
+                foreach (ProtocoloAtbMecanismo registro in listaExistentes)
+                {
+                    int idMecanismo =
+                        registro.IdMecanismoResistencia.IdMecanismoResistencia;
+
+                    existentes[idMecanismo] = registro;
+                }
+
+                // -----------------------------------------------------
+                // 3. Obtener mecanismos seleccionados que son nuevos
+                // -----------------------------------------------------
+                List<int> idsNuevos = new List<int>();
+
+                foreach (int idMecanismo in idsSeleccionados)
+                {
+                    if (!existentes.ContainsKey(idMecanismo))
+                        idsNuevos.Add(idMecanismo);
+                }
+
+                // -----------------------------------------------------
+                // 4. Traer objetos MecanismoResistencia nuevos
+                //    en UNA SOLA consulta
+                // -----------------------------------------------------
+                Dictionary<int, MecanismoResistencia> mecanismosNuevos =
+                    new Dictionary<int, MecanismoResistencia>();
+
+                if (idsNuevos.Count > 0)
+                {
+                    ICriteria critMecanismos =
+                        session.CreateCriteria(typeof(MecanismoResistencia));
+
+                    critMecanismos.Add(
+                        Expression.In(
+                            "IdMecanismoResistencia",
+                            idsNuevos.ToArray()
+                        )
+                    );
+
+                    IList listaMecanismos = critMecanismos.List();
+
+                    foreach (MecanismoResistencia mecanismo in listaMecanismos)
+                    {
+                        mecanismosNuevos[
+                            mecanismo.IdMecanismoResistencia
+                        ] = mecanismo;
+                    }
+                }
+
+                // -----------------------------------------------------
+                // 5. Agregar nuevos
+                // -----------------------------------------------------
+                foreach (int idMecanismo in idsNuevos)
+                {
+                    MecanismoResistencia oM;
+
+                    if (!mecanismosNuevos.TryGetValue(
+                            idMecanismo,
+                            out oM))
+                        continue;
+
+                    ProtocoloAtbMecanismo oRegistro =
+                        new ProtocoloAtbMecanismo();
+
+                    oRegistro.IdProtocolo = oProtocolo;
+                    oRegistro.IdGermen = oGermen;
+                    oRegistro.IdMetodologia = idmetodologia;
+                    oRegistro.IdItem = iditem;
+                    oRegistro.IdMecanismoResistencia = oM;
+                    oRegistro.NumeroAislamiento = numeroAislamiento;
+
+                    oRegistro.Save();
+
+                    oProtocolo.GrabarAuditoriaDetalleProtocolo(
+                        "Graba",
+                        idUsuario,
+                        "ATB: " + oGermen.Nombre + " - Mecanismo",
+                        oM.Nombre
+                    );
+                }
+
+                // -----------------------------------------------------
+                // 6. Eliminar los que estaban guardados y fueron
+                //    desmarcados
+                // -----------------------------------------------------
+                foreach (
+                    KeyValuePair<int, ProtocoloAtbMecanismo> item
+                    in existentes)
+                {
+                    if (idsSeleccionados.Contains(item.Key))
+                        continue;
+
+                    ProtocoloAtbMecanismo oRegistro = item.Value;
+
+                    string nombreMecanismo =
+                        oRegistro.IdMecanismoResistencia.Nombre;
+
+                    oRegistro.Delete();
+
+                    oProtocolo.GrabarAuditoriaDetalleProtocolo(
+                        "Elimina",
+                        idUsuario,
+                        "ATB: " + oGermen.Nombre + " - Mecanismo",
+                        nombreMecanismo
+                    );
+                }
+            }
+            catch (Exception)
+            {
+                lblMensajeMecanismo.Visible = true;
+                lblMensajeMecanismo.Text =
+                    "Ha ocurrido un error. Avise al administrador";
+            }
+        }
+        private void GuardarMecanismo_old(Protocolo oProtocolo, Germen oGermen, int idmetodologia, int iditem, int n)
         {
             try
             {
