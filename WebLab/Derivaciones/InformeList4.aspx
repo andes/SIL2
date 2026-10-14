@@ -69,14 +69,6 @@
 
 
         }
-
-        function PreguntoCambiarEstado() {
-            if (confirm('Al desmarcar la determinacion se excluirá del lote.'))
-                return true;
-            else
-                return false;
-        }
-       
     </script>
     <style type="text/css">
         @media print {
@@ -172,7 +164,7 @@
 
                                              &nbsp;&nbsp;
                                             <asp:Button ID="btnExcluir" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Excluir del lote"
-                                                ValidationGroup="1" OnClick="btnNoEnviado_Click" Visible="false"  />
+                                                ValidationGroup="2" OnClick="btnExcluir_Click" Visible="false"  />
 
                                             &nbsp;&nbsp;
                                              <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200"
@@ -199,6 +191,7 @@
 					    <td colspan="2" class="no-imprimir">
                             <asp:CustomValidator ID="cvGeneral" runat="server" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
                             <asp:CustomValidator ID="cvNoEnviado" runat="server" OnServerValidate="cvNoEnviado_ServerValidate" ValidationGroup="1"></asp:CustomValidator>
+                            <asp:CustomValidator ID="cvExcluir" runat="server" OnServerValidate="cvExcluir_ServerValidate" ValidationGroup="2"></asp:CustomValidator>
                              <div class="mylabelizquierda" runat="server" id="linkSeleccionar">Seleccionar:                                           
                                 <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  onclick="lnkMarcar_Click">Todas</asp:LinkButton>&nbsp;
                                 <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"   onclick="lnkDesMarcar_Click" >Ninguna</asp:LinkButton>
@@ -280,8 +273,7 @@
                                   <asp:GridView ID="gvListaEdit" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
                                     DataKeyNames="idDetalleProtocolo"   Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
                                     EmptyDataText ="No se encontraron protocolos para los parametros de busqueda ingresados" BorderColor="#3A93D2" 
-                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal"
-                                      OnRowDataBound="gvListaEdit_RowDataBound">
+                                    BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal">
                                     <RowStyle BackColor="#F7F6F3" ForeColor="#333333" Font-Names="Arial"  Font-Size="8pt" />
                                     <Columns>
             

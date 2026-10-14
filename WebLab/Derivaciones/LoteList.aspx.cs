@@ -620,11 +620,10 @@ namespace WebLab.Derivaciones
             {
                 LinkButton CmdModificar = (LinkButton)e.Row.Cells[10].Controls[1];
                 CmdModificar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdModificar.CommandName = "Modificar";
-                
-                LinkButton CmdCambiarEstado = (LinkButton)e.Row.Cells[11].Controls[1];
-                CmdCambiarEstado.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                CmdCambiarEstado.CommandName = "CambiarEstado";
+
+                LinkButton CmdDerivar = (LinkButton)e.Row.Cells[11].Controls[1];
+                CmdDerivar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                CmdDerivar.CommandName = "CambiarEstado";
 
 
                 LinkButton CmdAuditoria = (LinkButton)e.Row.Cells[12].Controls[1];
@@ -635,24 +634,59 @@ namespace WebLab.Derivaciones
                 CmdPDFControl.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdPDFControl.CommandName = "PDFControl";
 
+                LinkButton CmdAnular = (LinkButton)e.Row.Cells[14].Controls[1];
+                CmdAnular.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                CmdAnular.CommandName = "Anular";
+                CmdAnular.ToolTip = "Anular";
+
                 int idLote = int.Parse(e.Row.Cells[0].Text);
-                LoteDerivacion  oLote = (LoteDerivacion) new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", idLote);
+                LoteDerivacion oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", idLote);
 
-                if ((oLote.Estado == 1 || oLote.Estado == 3))  CmdCambiarEstado.Visible = true; 
-                else  CmdCambiarEstado.Visible = false; 
+                //Cuando se deriva:
+                CmdDerivar.Visible = oLote.Estado == 1 || oLote.Estado == 3;
+                
+                //Cuando se descarga pdf de control:
+                CmdPDFControl.Visible = oLote.Estado == 2;
 
-                if (oLote.Estado == 2)  CmdPDFControl.Visible = true; 
-                else CmdPDFControl.Visible = false;
-
-                if (oLote.Estado != 1)
+                if (oLote.Baja) //Solo puede consultar, no anula, no pdf, no deriva
                 {
+                    //Solo Consulta
                     CmdModificar.CommandName = "Consulta";
+                    CmdModificar.ToolTip = "Consultar";
                     Image imgEditar = (Image)CmdModificar.FindControl("imgEditar");
                     imgEditar.ImageUrl = "~/App_Themes/default/images/zoom.png";
+                    //No anula
+                    CmdAnular.Visible = false;
+                    //No deriva
+                    CmdDerivar.Visible = false;
+                    //No saca pdf 
+                    CmdPDFControl.Visible = false;
                 }
+                else
+                {
+                    if (oLote.Estado != 1) //Puede consultar,  no anular
+                    {
+                        //Solo Consulta
+                        CmdModificar.CommandName = "Consulta";
+                        CmdModificar.ToolTip = "Consultar";
+                        Image imgEditar = (Image)CmdModificar.FindControl("imgEditar");
+                        imgEditar.ImageUrl = "~/App_Themes/default/images/zoom.png";
+                        //No anula
+                        CmdAnular.Visible = false;
+                    }
+                    else //Puede derivar, puede modificar, puede anular
+                    {
+                        //En modificacion
+                        CmdModificar.CommandName = "Modificar";
+                        CmdModificar.ToolTip = "Modificar";
+                        //En anulacion
+                        CmdAnular.Visible = true;
+                        
+                    }
 
-
+                }
             }
+            
         }
 
         private bool TieneDerivaciones(int idLote)

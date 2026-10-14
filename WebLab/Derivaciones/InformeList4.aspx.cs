@@ -140,125 +140,8 @@ namespace WebLab.Derivaciones
 
             }
         }
-        protected bool HacerCheck(int estado)
-        {
-            bool check = false;
-            if ((Request["Tipo"] == "Modifica") && (estado == 4)) check =  true; //Dejar checkeados aquellos que ya estan en el lote
-            
-            return check;
 
-        }
-        protected void gvListaEdit_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                CheckBox chk = (CheckBox)e.Row.FindControl("chkSel");
-                if (chk != null)
-                {
-                    chk.InputAttributes["onchange"] = "if(!PreguntoCambiarEstado(this)) { this.checked = !this.checked; return false; }";
-                }
-
-                //string estado = DataBinder.Eval(e.Row.DataItem, "estado").ToString();
-
-                //Literal lblEstado = (Literal)e.Row.FindControl("estado");
-
-                //if (lblEstado != null)
-                //{
-                //    switch (estado)
-                //    {
-                //        case "0":
-                //            lblEstado.Text = "<img src='../App_Themes/default/images/pendiente.png' />";
-                //            break;
-
-                //        case "1":
-                //            lblEstado.Text = "<img src='../App_Themes/default/images/enviado.png' />";
-                //            break;
-
-                //        case "2":
-                //            lblEstado.Text = "<img src='../App_Themes/default/images/block.png' />";
-                //            break;
-
-                //        case "3":
-                //            lblEstado.Text = "<span class='glyphicon glyphicon-inbox' title='Recibido'></span>";
-                //            break;
-
-                //        case "4":
-                //            lblEstado.Text = "<img src='../App_Themes/default/images/reloj-de-arena.png' />";
-                //            break;
-                //    }
-
-                //}
-            }
-        }
-
-        protected void chkSel_CheckedChanged(object sender, EventArgs e)
-        {
-            
-            CheckBox chkStatus = (CheckBox)sender;
-            GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
-
-            string[] idDetalles = gvListaEdit.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
-            foreach (string idDetalleProtocolo in idDetalles)
-            {
-                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
-
-                ISession m_session = NHibernateHttpModule.CurrentSession;
-                ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
-                crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
-
-                IList lista = crit.List();
-                if (lista.Count > 0)
-                {
-                    string resultadoDerivacion = "Pendiente de derivar";
-
-                    if (oDetalle.ResultadoCar != "Pendiente para enviar ") 
-                        resultadoDerivacion = oDetalle.ResultadoCar.Replace(" - Pendiente para enviar", " - Pendiente de derivar");
-
-                    oDetalle.ResultadoCar = resultadoDerivacion;
-                    oDetalle.ConResultado = false;
-                    oDetalle.IdUsuarioResultado = 0;
-                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                    oDetalle.Save();
-
-
-                    foreach (Derivacion oDeriva in lista)
-                    {
-                        oDeriva.Estado = 0;
-                        oDeriva.IdUsuarioRegistro = oUser.IdUsuario;
-                        oDeriva.FechaRegistro = DateTime.Now;
-                        oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
-                        oDeriva.Idlote = 0;
-                        oDeriva.Observacion = "";
-                        oDeriva.Save();
-                    }
-
-                    /*Actualiza estado de protocolo*/
-                    if (oDetalle.IdProtocolo.Estado < 2)
-                    {
-                        if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
-                            oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
-                        else
-                        {
-                            if (oDetalle.IdProtocolo.EnProceso())
-                            {
-                                oDetalle.IdProtocolo.Estado = 1;//en proceso
-                                                                // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                            }
-                            else
-                                oDetalle.IdProtocolo.Estado = 0;
-                        }
-                        oDetalle.IdProtocolo.Save();
-                    }
-
-                    oDetalle.GrabarAuditoriaDetalleExtra("Elimina", oUser.IdUsuario, "Eliminado del lote");
-
-                }
-
-            }
-
-            CargarGrilla();
-            
-        }
+       
         private void Eliminar(object detalle)
         {
             string[] idDetalles = detalle.ToString().Split('|');
@@ -343,6 +226,7 @@ namespace WebLab.Derivaciones
                     break;
 
                 case "Modifica":
+                case "Consulta":
                     m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
                     m_strSQL += " WHERE   idLote= " + Request["idLote"] ; 
                     m_strSQL += @" GROUP BY
@@ -498,19 +382,7 @@ namespace WebLab.Derivaciones
 
         protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = false;
-            
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
-
-                if (chk != null && chk.Checked)
-                {
-                    args.IsValid = true;
-                    break;
-                }
-            }
-            cvGeneral.ErrorMessage = "*Seleccione una fila";
+            ValidarSeleccion(args, gvLista, false);
         }
 
         protected void lnkDesMarcar_Click(object sender, EventArgs e)
@@ -568,26 +440,63 @@ namespace WebLab.Derivaciones
         {
             CargarGrilla();
         }
-        protected void cvNoEnviado_ServerValidate(object source, ServerValidateEventArgs args)
+
+        //Validaciones
+        private void ValidarSeleccion(ServerValidateEventArgs args, GridView grilla, bool validarLoteVacio)
         {
             args.IsValid = false;
             HFListaDetalles.Value = "";
-            foreach (GridViewRow row in gvLista.Rows)
+
+            int cantSeleccionados = 0;
+
+            foreach (GridViewRow row in grilla.Rows)
             {
                 CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+
                 if (chk != null && chk.Checked)
                 {
-                    args.IsValid = true;
-                    string idDetalle = gvLista.DataKeys[row.RowIndex].Value.ToString();
+                    cantSeleccionados++;
+
+                    string idDetalle = grilla.DataKeys[row.RowIndex].Value.ToString();
+
                     if (HFListaDetalles.Value == "")
                         HFListaDetalles.Value = idDetalle;
                     else
-                        HFListaDetalles.Value = HFListaDetalles.Value + "|" + idDetalle;
+                        HFListaDetalles.Value += "|" + idDetalle;
                 }
             }
-            cvNoEnviado.ErrorMessage = "*Seleccione una fila";
+
+            // Validacion para saber si selecciono filas
+            if (cantSeleccionados == 0)
+            {
+                args.IsValid = false;
+                return;
+            }
+
+            // Valida que el lote no quede vacio
+            if (validarLoteVacio && cantSeleccionados == grilla.Rows.Count)
+            {
+                HFListaDetalles.Value = "";
+                args.IsValid = false;
+                return;
+            }
+
+            args.IsValid = true;
+        }
+        protected void cvNoEnviado_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            ValidarSeleccion(args, gvLista, false);
         }
 
-       
+        protected void btnExcluir_Click(object sender, EventArgs e)
+        {
+            if (Page.IsValid)
+                btnNoEnviado_Click(sender, e);
+        }
+
+        protected void cvExcluir_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            ValidarSeleccion(args, gvListaEdit, true);
+        }
     }
 }

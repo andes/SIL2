@@ -2046,6 +2046,7 @@
     <Content Include="Derivaciones\InformeLote.aspx" />
     <Content Include="Derivaciones\GestionarLote.aspx" />
     <Content Include="Derivaciones\InformeList2.aspx" />
+    <Content Include="Derivaciones\LoteEliminar.aspx" />
     <Content Include="Diagnosticos\DiagEdit.aspx" />
     <Content Include="Diagnosticos\DiagList.aspx" />
     <Content Include="Efectores\EfectorEdit.aspx" />
@@ -4642,6 +4643,13 @@
     </Compile>
     <Compile Include="Derivaciones\InformeList2.aspx.designer.cs">
       <DependentUpon>InformeList2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\LoteEliminar.aspx.cs">
+      <DependentUpon>LoteEliminar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\LoteEliminar.aspx.designer.cs">
+      <DependentUpon>LoteEliminar.aspx</DependentUpon>
     </Compile>
     <Compile Include="DescargarPdf.ashx.cs">
       <DependentUpon>DescargarPdf.ashx</DependentUpon>

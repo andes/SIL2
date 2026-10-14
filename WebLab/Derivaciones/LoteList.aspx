@@ -40,6 +40,28 @@
             input.value = input.value.replace(/\D/g, '');
         }
 
+
+        function PreguntoEliminar(idLote) {
+            $('<iframe src="LoteEliminar.aspx?id=' + idLote + '" />').dialog({
+                title: 'Anular Lote',
+                autoOpen: true,
+                width: 500,
+                height: 300,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                },
+                //Al cerrar que haga postback para que actualice en el listado considerando los anulados
+                close: function () {
+                  <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscar, "") %>;
+                }
+
+            }).width(700);
+
+        }
      
     </script>
 </asp:Content>
@@ -109,9 +131,9 @@
                         </div>
 
                         <div class="panel-footer">
-                           
-                                            <asp:CustomValidator ID="cvValidar" runat="server" OnServerValidate="cvValidar_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                                       
+
+                            <asp:CustomValidator ID="cvValidar" runat="server" OnServerValidate="cvValidar_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+
                             <asp:Panel ID="pnlLista" runat="server">
                                 <table style="width: 100%;">
                                     <tr>
@@ -149,9 +171,7 @@
                                                 GridLines="Horizontal"
                                                 OnPageIndexChanging="gvLista_PageIndexChanging"
                                                 PageSize="20" Width="100%" BackColor="White"
-                                               
-                                                OnRowDataBound="gvLista_RowDataBound" OnRowCommand="gvLista_RowCommand"
-                                                >
+                                                OnRowDataBound="gvLista_RowDataBound" OnRowCommand="gvLista_RowCommand">
                                                 <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
                                                 <Columns>
                                                     <asp:BoundField DataField="numero" HeaderText="Nro." SortExpression="numero">
@@ -171,9 +191,9 @@
                                                     <asp:BoundField DataField="fechaGeneracion" HeaderText="Fecha Gen." SortExpression="fechaGeneracion"/>
                                                     <asp:BoundField DataField="fechaEnvio" HeaderText="Fecha Envio" SortExpression="fechaEnvio"/>
                                                     <asp:BoundField DataField="fechaIngreso" HeaderText="Fecha Ing." SortExpression="fechaIngreso" />
-                                                    <asp:TemplateField HeaderText="Modificar/Consultar">
+                                                    <asp:TemplateField HeaderText="Modificar/ Consultar">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkEdit"  >
+                                                            <asp:LinkButton runat="server" ID="lnkEdit">
                                                                 <asp:Image  runat="server" ID="imgEditar" ImageUrl='~/App_Themes/default/images/editar.jpg'  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
@@ -181,7 +201,7 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Derivar">
                                                         <ItemTemplate>
-                                                           <asp:LinkButton runat="server" ID="lnkCambiarEstado" >
+                                                           <asp:LinkButton runat="server" ID="lnkCambiarEstado" ToolTip="Derivar lote">
                                                                 <asp:Image  runat="server" ImageUrl='../App_Themes/default/images/enviado.png'  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
@@ -190,7 +210,7 @@
 
                                                     <asp:TemplateField HeaderText="Auditoria">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFAuditoria" >
+                                                            <asp:LinkButton runat="server" ID="lnkPDFAuditoria" ToolTip="Auditoria de lote" >
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
@@ -198,13 +218,19 @@
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Informe Derivacion">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" >
+                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" ToolTip="Informe de derivacion" >
                                                                  <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="60px" />
                                                     </asp:TemplateField>
-
+                                                    <asp:TemplateField HeaderText="Anular">
+                                                        <ItemTemplate >
+                                                            <asp:LinkButton ID="Eliminar"  OnClientClick='<%# string.Format("PreguntoEliminar({0}); return false;", Eval("numero")) %>' runat="server"   Width="20px" >
+                                                                <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                                    </asp:TemplateField>
                                                 </Columns>
 
                                                 <PagerSettings Mode="NumericFirstLast" Position="Top" />
