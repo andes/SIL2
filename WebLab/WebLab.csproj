@@ -6409,15 +6409,6 @@
     <Content Include="Formulas\ControlEdit.aspx" />
     <Content Include="Formulas\FormulaEdit.aspx" />
     <Content Include="Formulas\FormulaList.aspx" />
-    <Content Include="FusionCharts\FCF_Area2D.swf" />
-    <Content Include="FusionCharts\FCF_Column2D.swf" />
-    <Content Include="FusionCharts\FCF_Column3D.swf" />
-    <Content Include="FusionCharts\FCF_Line.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3D.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3DLineDY.swf" />
-    <Content Include="FusionCharts\FCF_Pie3D.swf" />
-    <Content Include="FusionCharts\FCF_StackedColumn3D.swf" />
-    <Content Include="FusionCharts\FusionCharts.js" />
     <Content Include="Help\CSS\Arbol.css" />
     <Content Include="Help\CSS\emx_nav_left.css" />
     <Content Include="Help\CSS\ftiens4.js" />
