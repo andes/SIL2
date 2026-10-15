@@ -122,6 +122,12 @@ $(function () {
 						<td  >
                             &nbsp;</td>
 					</tr>
+                     <tr>
+                         <td> Efector:</td>
+                         <td> <anthem:DropDownList ID="ddlEfector" runat="server" class="form-control input-sm" 
+                                TabIndex="3" ToolTip="Seleccione el efector" >
+                            </anthem:DropDownList></td>
+                     </tr>
 					<tr>
 						<td  colspan="4" >
                             <asp:Panel ID="pnlAnalisis" runat="server">

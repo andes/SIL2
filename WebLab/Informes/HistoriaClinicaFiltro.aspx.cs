@@ -42,6 +42,7 @@ namespace WebLab.Informes
                             pnlAnalisis.Visible = false;
                             lblTitulo.Text = "HISTORIAL DE RESULTADOS";
                             rvAnalisis.Enabled = false;
+                            CargarEfector();
                         } break;
                     case "PacienteCompleto":
                         {
@@ -49,6 +50,7 @@ namespace WebLab.Informes
                             pnlAnalisis.Visible = false;
                             lblTitulo.Text = "HISTORIAL DE VISITAS";
                             rvAnalisis.Enabled = false;
+                            CargarEfector();
                         } break;
 
                     case "PacienteForense":
@@ -76,6 +78,7 @@ namespace WebLab.Informes
                             rvAnalisis.Enabled = true;
                             CargarArea();
                             CargarItem();
+                            CargarEfector();
                         }
                         break;
                 }
@@ -137,10 +140,17 @@ namespace WebLab.Informes
             m_ssql = null;
             oUtil = null;
         }
-        private void CargarGrilla2()
+        private void CargarEfector()
         {
-            
-            
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            string m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E " +
+                    " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
+                    "order by E.nombre";
+
+            Business.Helpers.ComboCache.CargarCombo(ddlEfector, $"CAT_Efector", m_ssql, "idEfector", "nombre", connReady);
+            ddlEfector.Items.Insert(0, new ListItem("-- Todos --", "0"));
+
         }
 
         private void CargarGrilla()
@@ -214,6 +224,8 @@ namespace WebLab.Informes
                     if (txtNombreMadre.Text != "") str_condicionMadre += " AND nombre like '%" + oUtil.SacaComillas(txtNombreMadre.Text) + "%'";
                     str_condicionMadre += " ) ";
                 }
+
+                 if (ddlEfector.SelectedValue != "0") str_condicion += " and P.idEfector=" + ddlEfector.SelectedValue;
                 /////////////////////////////////////////////////////////////////////////////////////////
                 string m_strSQL = @" SELECT distinct P.idPaciente, case when Pa.idEstado=2 then Pa.numeroAdic+'(s/dni)'  else convert(varchar,Pa.numeroDocumento) end as numeroDocumento, Pa.apellido + ', ' + Pa.nombre as paciente, 
                                    convert(varchar(10), Pa.fechaNacimiento,103) as fechaNacimiento 
@@ -242,36 +254,43 @@ namespace WebLab.Informes
                 adapter.Fill(Ds1);
                 if (Ds1.Tables[0].Rows.Count == 0)
                 {
-                if (Request["Tipo"].ToString() != "Analisis") //analisis es solo para pacientes
-                {
-                    try { 
-                    //aca hago la busqueda primero dentro de las muestras de no pacientes, con el numero de protocolo o de origen, si no encuentro sigo con la busqueda de pacientes
-                    m_strSQL = @" SELECT distinct  P.idProtocolo, P.numero, Pa.nombre + ', ' + P.descripcionProducto as producto,  P.numeroOrigen as numeroOrigen, 
-                                       convert(varchar(10), P.fecha, 103) as fechaProtocolo  
-                                       FROM LAB_Protocolo P (nolock)
-                                       INNER JOIN LAB_Muestra Pa (nolock) ON Pa.idMuestra = P.idMuestra 
-                                      WHERE P.idtipoServicio=5 and P.baja=0 " + str_condicion;
+                    if (Request["Tipo"].ToString() != "Analisis") //analisis es solo para pacientes
+                    {
+                        try { 
+                        //aca hago la busqueda primero dentro de las muestras de no pacientes, con el numero de protocolo o de origen, si no encuentro sigo con la busqueda de pacientes
+                        m_strSQL = @" SELECT distinct  P.idProtocolo, P.numero, Pa.nombre + ', ' + P.descripcionProducto as producto,  P.numeroOrigen as numeroOrigen, 
+                                           convert(varchar(10), P.fecha, 103) as fechaProtocolo  
+                                           FROM LAB_Protocolo P (nolock)
+                                           INNER JOIN LAB_Muestra Pa (nolock) ON Pa.idMuestra = P.idMuestra 
+                                          WHERE P.idtipoServicio=5 and P.baja=0 " + str_condicion;
 
-                    DataSet Ds = new DataSet();
-                    //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                    //SqlDataAdapter adapter = new SqlDataAdapter();
-                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                    adapter.Fill(Ds);
+                        DataSet Ds = new DataSet();
+                        //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                        //SqlDataAdapter adapter = new SqlDataAdapter();
+                        adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                        adapter.Fill(Ds);
 
 
-                    gvListaProducto.DataSource = Ds.Tables[0];
-                    gvListaProducto.DataBind();
-                    gvLista.Visible = false;
-                    gvListaProducto.Visible = true;
+                        gvListaProducto.DataSource = Ds.Tables[0];
+                        gvListaProducto.DataBind();
+                        gvLista.Visible = false;
+                        gvListaProducto.Visible = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            gvLista.DataSource = Ds1.Tables[0];
+                            gvLista.DataBind();
+                            gvListaProducto.Visible = false;
+                            gvLista.Visible = true;
+                        }
                     }
-                    catch (Exception ex)
+                    else //No hay resultados que muestre cartel
                     {
                         gvLista.DataSource = Ds1.Tables[0];
                         gvLista.DataBind();
                         gvListaProducto.Visible = false;
                         gvLista.Visible = true;
                     }
-                }
                 
 
                 }
@@ -350,12 +369,18 @@ namespace WebLab.Informes
                         }
                         if (ddlNumero.SelectedValue == "Origen") { if (txtProtocolo.Text != "") m_parametro += " AND P.numeroOrigen='" + txtProtocolo.Text + "'"; }
                         if (ddlNumero.SelectedValue == "Tarjeta") { if (txtProtocolo.Text != "") m_parametro += " AND S.numeroTarjeta='" + txtProtocolo.Text + "'"; }
+                        string str_efector = "0";
+                        if (ddlEfector.SelectedValue != "0")
+                        {
+                            m_parametro += " AND P.idEfector=" + ddlEfector.SelectedValue;
+                            str_efector = ddlEfector.SelectedValue;
+                        }
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         switch (Request["Tipo"].ToString() )
                         {
                             case "Analisis":                              //por analisis
-                            Response.Redirect("HistoriaClinica.aspx?idPaciente=" + e.CommandArgument.ToString() + "&fechaDesde=" + txtFechaDesde.Value + "&fechaHasta=" + txtFechaHasta.Value + "&idAnalisis=" + ddlItem.SelectedValue); break;
+                            Response.Redirect("HistoriaClinica.aspx?idPaciente=" + e.CommandArgument.ToString() + "&fechaDesde=" + txtFechaDesde.Value + "&fechaHasta=" + txtFechaHasta.Value + "&idAnalisis=" + ddlItem.SelectedValue + "&idEfector=" + str_efector ); break;
                             case "PacienteCompleto":
                             Response.Redirect("../Resultados/Procesa.aspx?idServicio="+ddlServicio.SelectedValue+"&ModoCarga=LP&Operacion=HC&Parametros=" + m_parametro + "&idArea=0&idHojaTrabajo=0&validado=0&modo=Normal&Desde=HistoriaClinicaFiltro&Tipo=PacienteCompleto", false);break;
                             case "PacienteForense":

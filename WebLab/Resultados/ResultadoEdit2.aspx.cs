@@ -1162,7 +1162,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 Caro 22.07.2026    
                 Se excluye busqueda de antecedentes para no pacientes.
 
-
+                Vane 14.10.2026
+                Se muestra el icono de adjunto para derivaciones
             */
             string conexion = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
             string s_operacion = Request["Operacion"] ?? "";
@@ -1565,8 +1566,37 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                                 }
                             }
                         }
-						///fin modificacion 07.09.2026
-                       }
+
+                        ////////////////////                                        
+                        ///IMAGENES ADJUNTAS - 14.10.2026 Poder adjuntar en derivacion
+                        if (s_operacion != "HC")
+                        {
+                            ImageButton btnImagen = new ImageButton();
+                            btnImagen.TabIndex = short.Parse("500");
+                            btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
+                            if (tieneAdjuntoNoVisible)
+                            {
+                                btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                btnImagen.ToolTip = "Adjunto no imprimible para " + lbl1.Text.Replace("&nbsp;", "");
+                            }
+                            else
+                            {
+                                if (tieneAdjuntoVisible)
+                                {
+                                    btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                    btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
+                                }
+                                else
+                                {
+                                    btnImagen.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
+                                    btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
+                                }
+                            }
+                            btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + s_idTiposervicio + ",'" + s_operacion + "'); return false");
+                            objCellImagenes.Controls.Add(btnImagen);
+                        }
+                        ///fin modificacion 07.09.2026
+                    }
                     if (m_trajoMuestra == "No")
                     {
                         Label lblSinMuestra = new Label();
@@ -1672,7 +1702,36 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                                 }
                             }
                         }
-						///07.09.2026 fin modificacion
+
+                        ////////////////////                                        
+                        ///IMAGENES ADJUNTAS - 14.10.2026 poder adjuntar en derivacion
+                        if (s_operacion != "HC")
+                        {
+                            ImageButton btnImagen = new ImageButton();
+                            btnImagen.TabIndex = short.Parse("500");
+                            btnImagen.ID = "IMG" + i_iddetalleProtocolo.ToString();
+                            if (tieneAdjuntoNoVisible)
+                            {
+                                btnImagen.ImageUrl = "~/App_Themes/default/images/obs_cargado.png";
+                                btnImagen.ToolTip = "Adjunto no imprimible para " + lbl1.Text.Replace("&nbsp;", "");
+                            }
+                            else
+                            {
+                                if (tieneAdjuntoVisible)
+                                {
+                                    btnImagen.ImageUrl = "~/App_Themes/default/images/obs_validado.png";
+                                    btnImagen.ToolTip = "Adjunto imprimible para " + lbl1.Text.Replace("&nbsp;", "");
+                                }
+                                else
+                                {
+                                    btnImagen.ImageUrl = "~/App_Themes/default/images/obs_normal.png";
+                                    btnImagen.ToolTip = "Subir adjunto  para " + lbl1.Text.Replace("&nbsp;", "");
+                                }
+                            }
+                            btnImagen.Attributes.Add("onClick", "javascript: AdjuntoEdit (" + i_iddetalleProtocolo.ToString() + "," + s_idTiposervicio + ",'" + s_operacion + "'); return false");
+                            objCellImagenes.Controls.Add(btnImagen);
+                        }
+                        ///07.09.2026 fin modificacion
                     }
                     //}
                     else
