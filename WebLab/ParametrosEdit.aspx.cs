@@ -22,6 +22,7 @@ using CrystalDecisions.Shared;
 using System.Web.Script.Serialization;
 using System.Text;
 using System.IO;
+using Business.Helpers;
 
 namespace WebLab
 {
@@ -103,9 +104,11 @@ namespace WebLab
             txtUrlServicioSISA.Enabled = false;
             txtUrlMuestraSISA.Enabled = false;
             txtUrlResultadoSISA.Enabled = false;
+            btnFeriado.Enabled = false;
 
             if (oUser.IdEfector.IdEfector.ToString() == "227")
             {
+                btnFeriado.Enabled = true;
                 ddlRenaper.Enabled = true;
                 txtUrlRenaper.Enabled = true;
                 ddlAndes.Enabled = true;
@@ -1617,12 +1620,19 @@ order by I.codigo, I.nombre
         protected void btnReinializacion_Click(object sender, EventArgs e)
         {
           
-            ReprocesarFichas();
+     ///       ReprocesarFichas();
             EjecutarMantenimiento();
+            BorrarCache();
 
             /////
 
         }
+
+        private void BorrarCache()
+        {
+            CatalogoCache.ClearCatalogos();
+        }
+
         private void EjecutarMantenimiento()
         {
             DataSet Ds = new DataSet();

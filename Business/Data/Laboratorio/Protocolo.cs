@@ -1898,10 +1898,45 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
 
         }
 
+        public string getListaAreasCodigoBarras(string selectedArea)
+        {
+            string lista = "";/// "-1";            
 
-        
+ 
 
-      
+            string m_ssql = @"
+ SELECT distinct
+    CASE
+        WHEN CHARINDEX('-', numeroP) > 0
+            THEN CONVERT(VARCHAR, idArea) + ';' +
+                 SUBSTRING(numeroP, CHARINDEX('-', numeroP) + 1, LEN(numeroP))
+        ELSE
+            CONVERT(VARCHAR, idArea)
+    END AS idArea,
+    area AS nombre
+FROM vta_LAB_GeneraCodigoBarras A WITH (NOLOCK)
+where  A.idArea  =" + selectedArea + @"  
+and A.idProtocolo =  " + this.IdProtocolo.ToString();
+
+            if (selectedArea == "0")
+                m_ssql = @"select '-1' as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta with (nolock) where idArea = -1   and idEfector = " + this.IdEfector.IdEfector.ToString();
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_ssql, conn);
+            adapter.Fill(Ds);
+
+            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            {
+                if (lista == "")
+                    lista = Ds.Tables[0].Rows[i][0].ToString();
+                else
+                    lista += "," + Ds.Tables[0].Rows[i][0].ToString();
+            }
+
+            return lista;
+        }
 
         public string getMuestra()
         {
@@ -2211,7 +2246,110 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
         }
 
 
+
         public bool ValidadoTotal(string s_operacion, int i_idusuario)
+        {
+            bool validado = true;
+
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+
+            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+
+            crit.Add(Expression.Eq("IdProtocolo", this));
+            crit.Add(Expression.Eq("IdEfector", this.IdEfector));
+            crit.Add(Expression.Eq("Informable", true));//Caro:// Solo considera detalles informables para validar el cierre
+
+            IList detalle = crit.List();
+
+            if (detalle.Count > 0)
+            {
+                foreach (DetalleProtocolo oDetalle in detalle)
+                {
+                    // =====================================================
+                    // 1. ESTADO DE VALIDACION
+                    // =====================================================
+
+                    // P = Provisorio -> NO permite cerrar el protocolo
+                    if (oDetalle.EstadoValidacion == "P")
+                    {
+                        validado = false;
+                        break;
+                    }
+
+
+                    // =====================================================
+                    // 2. YA VALIDADO
+                    // =====================================================
+
+                    if ((oDetalle.IdUsuarioValida > 0) ||
+                        (oDetalle.IdUsuarioValidaObservacion > 0))
+                    {
+                        continue;
+                    }
+
+
+                    // =====================================================
+                    // 3. SIN MUESTRA
+                    // =====================================================
+
+                    if (oDetalle.TrajoMuestra == "No")
+                    {
+                        validado = true;
+
+                        if (s_operacion == "Carga")
+                        {
+                            oDetalle.IdUsuarioResultado = i_idusuario;
+                            oDetalle.FechaResultado = DateTime.Now;
+                        }
+                        else
+                        {
+                            oDetalle.IdUsuarioValida = i_idusuario;
+                            oDetalle.FechaValida = DateTime.Now;
+                        }
+
+                        oDetalle.Save();
+
+                        continue;
+                    }
+
+
+                    // =====================================================
+                    // 4. DERIVACION
+                    // =====================================================
+
+                    Derivacion oDeriva = new Derivacion();
+
+                    oDeriva = (Derivacion)oDeriva.Get(
+                        typeof(Derivacion),
+                        "IdDetalleProtocolo",
+                        oDetalle
+                    );
+
+                    if (oDeriva != null)
+                    {
+                        if (oDeriva.Estado >= 1)
+                        {
+                            validado = true;
+                        }
+                        else
+                        {
+                            validado = false;
+                        }
+                    }
+                    else
+                    {
+                        validado = false;
+                    }
+
+                    if (!validado)
+                        break;
+                }
+            }
+
+            return validado;
+        }
+
+        public bool ValidadoTotal_old(string s_operacion, int i_idusuario)
         {
             bool validado = true;
             ISession m_session = NHibernateHttpModule.CurrentSession;
@@ -2225,6 +2363,9 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
             {
                 foreach (DetalleProtocolo oDetalle in detalle)
                 {
+
+
+
                     if ((oDetalle.IdUsuarioValida > 0)||(oDetalle.IdUsuarioValidaObservacion > 0))
                         validado = true;
                     else
@@ -2620,17 +2761,33 @@ and dp.trajoMuestra = 'Si'
         public string getListaAreasCodigoBarras()
         {
             string lista = "";/// "-1";            
-            string m_ssql = @"select -1 as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta   with (nolock) where  idArea=-1 and idEfector =" + this.IdEfector.IdEfector.ToString() + @"
+//            string m_ssql = @"select -1 as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta   with (nolock) where  idArea=-1 and idEfector =" + this.IdEfector.IdEfector.ToString() + @"
+//union
+//select idArea, nombre from Lab_Area  A with (nolock)
+//                            WHERE 
+//                            baja=0
+//                            and exists (select 1 from LAB_ConfiguracionAreaEtiqueta E with (nolock) where E.idArea=A.idArea and E.idEfector =" + this.IdEfector.IdEfector.ToString()+@" ) 
+//                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
+//                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
+//                                        where dp.idProtocolo = " + this.IdProtocolo.ToString() + @"
+//                                        and dp.trajoMuestra = 'Si'
+//                                        and p.idarea = A.idArea) ";
+
+
+            string m_ssql = @"select '-1' as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta   with (nolock) where  idArea=-1 and idEfector =" + this.IdEfector.IdEfector.ToString() + @"
 union
-select idArea, nombre from Lab_Area  A with (nolock)
-                            WHERE 
-                            baja=0
-                            and exists (select 1 from LAB_ConfiguracionAreaEtiqueta E with (nolock) where E.idArea=A.idArea and E.idEfector =" + this.IdEfector.IdEfector.ToString()+@" ) 
-                            and exists (select 1 from lab_detalleprotocolo dp with (nolock)
-                                        inner  join lab_item P with (nolock) on dp.idsubitem = p.iditem
-                                        where dp.idProtocolo = " + this.IdProtocolo.ToString() + @"
-                                        and dp.trajoMuestra = 'Si'
-                                        and p.idarea = A.idArea) ";
+ SELECT distinct
+    CASE
+        WHEN CHARINDEX('-', numeroP) > 0
+            THEN CONVERT(VARCHAR, idArea) + ';' +
+                 SUBSTRING(numeroP, CHARINDEX('-', numeroP) + 1, LEN(numeroP))
+        ELSE
+            CONVERT(VARCHAR, idArea)
+    END AS idArea,
+    area AS nombre
+FROM vta_LAB_GeneraCodigoBarras A WITH (NOLOCK)
+where exists (select 1 from LAB_ConfiguracionAreaEtiqueta E with (nolock) where E.idArea=A.idArea and E.idEfector =" + this.IdEfector.IdEfector.ToString() + @" ) 
+and A.idProtocolo =  " + this.IdProtocolo.ToString() ;
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;

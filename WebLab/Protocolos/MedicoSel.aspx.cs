@@ -24,6 +24,9 @@ namespace WebLab.Protocolos
             {
                 Session["matricula"] = null;
                 Session["apellidoNombre"] = null;
+                Session["nombreApellido"] = null;
+                if (Request["desde"]!= null && Request["desde"].ToString() == "ProtocoloList")
+                    divMatricula.Visible = true;
             }
         }
 
@@ -31,40 +34,51 @@ namespace WebLab.Protocolos
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            try
+            if (Page.IsValid)
             {
-                lblErrorAPI.Text = "";
-                Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-
-                ///Buscar especilista
-                string apellido = txtApellido.Text;
-                string nombre = txtNombre.Text;
-                string s_urlWFC = oCon.UrlMatriculacion;
-                string s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido;// + "&codigoProfesion=1 ";
-                System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
-                HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
-                JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
-
-                Stream st = ws1.GetResponseStream();
-                StreamReader sr = new StreamReader(st);
-
-                string s = sr.ReadToEnd();
-                if (s != "0")
+                try
                 {
-                    DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
-                    gvMedico.DataSource = t;
-                    gvMedico.DataBind();
-                }
-            }
-            catch (Exception ex)
-            {
-                lblErrorAPI.Visible = true;
-                lblErrorAPI.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
-            }
-            //}
+                    lblErrorAPI.Text = "";
+                    Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
 
+                    ///Buscar especilista
+                    string apellido = txtApellido.Text;
+                    string nombre = txtNombre.Text;
+                    string s_urlWFC = oCon.UrlMatriculacion;
+                    string s_url = s_urlWFC + "nombre=" + nombre + "&apellido=" + apellido;// + "&codigoProfesion=1 ";
+
+                
+                    if (Request["desde"] != null && Request["desde"].ToString() == "ProtocoloList") //Agregamos la matriculacion en la busqueda
+                    {
+                        s_url +=  "&numeroMatricula=" + txtMatricula.Text;
+                    }
+
+
+                        System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(s_url);
+                    HttpWebResponse ws1 = (HttpWebResponse)request.GetResponse();
+                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                    Stream st = ws1.GetResponseStream();
+                    StreamReader sr = new StreamReader(st);
+
+                    string s = sr.ReadToEnd();
+                    if (s != "0")
+                    {
+                        DataTable t = GetDataTableMatriculaciones(s); //GetJSONToDataTableUsingMethod(s);
+                        gvMedico.DataSource = t;
+                        gvMedico.DataBind();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    lblErrorAPI.Visible = true;
+                    lblErrorAPI.Text = "Ha ocurrido un error: " + ex.Message.ToString() + ". Comuniquese con el administrador.";
+                }
+                //}
+            }
+          
 
         }
         public static DataTable GetJSONToDataTableUsingMethod(string JSONData)
@@ -177,11 +191,29 @@ namespace WebLab.Protocolos
                 Session["matricula"] = e.CommandArgument.ToString();
                 LinkButton boton = (LinkButton)e.CommandSource;
                 Session["apellidoNombre"] = boton.Attributes["apellido"] + " " + boton.Attributes["nombre"];
+                Session["nombreApellido"] = boton.Attributes["nombre"] + " " + boton.Attributes["apellido"];
             }
           
         }
 
-        
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = false;
 
+            if(divMatricula.Visible) 
+            {
+                if (txtApellido.Text != "" || txtNombre.Text != "" || txtMatricula.Text != "")//al menos uno de los 3 campos tiene que tener valor para buscar
+                    args.IsValid = true;
+                else
+                    cvGeneral.ErrorMessage = "Ingrese un valor en los campos Apellido, Nombre o Matricula";
+            }
+            else 
+            {
+                if (txtApellido.Text != "" || txtNombre.Text != "")//al menos uno de los dos campos tiene que tener valor
+                    args.IsValid = true;
+                else
+                    cvGeneral.ErrorMessage = "Ingrese un valor en los campos Apellido o Nombre";
+            }
+        }
     }
 }

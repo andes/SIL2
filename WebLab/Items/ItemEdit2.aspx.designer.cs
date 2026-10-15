@@ -1086,6 +1086,15 @@ namespace WebLab.Items
         protected global::System.Web.UI.WebControls.DropDownList ddlEstadoPredefinido;
 
         /// <summary>
+        /// lblMensajeRP control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblMensajeRP;
+
+        /// <summary>
         /// btnGuardarRP control.
         /// </summary>
         /// <remarks>
@@ -1156,6 +1165,15 @@ namespace WebLab.Items
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnGuardarRPDefecto;
+
+        /// <summary>
+        /// lblMensajeRPEfector control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblMensajeRPEfector;
 
         /// <summary>
         /// pnlRecomendacion control.

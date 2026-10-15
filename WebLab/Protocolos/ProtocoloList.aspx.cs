@@ -242,7 +242,14 @@ namespace WebLab.Protocolos
                 m_ssql += " and idTipoServicio>0";
             oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
 
-             
+            //if (Request["Tipo"].ToString() == "Control")
+            //{
+            //    chkArea.Visible = true;
+            //    m_ssql = "SELECT idArea, nombre FROM LAB_Area with (nolock)  where baja=0 and idTipoServicio="+ Request["idServicio"].ToString() + "   order by nombre ";                
+            //    cacheKey = $"CAT_CHKArea_{Request["idServicio"]}";
+            //    Business.Helpers.ComboCache.CargarCheckBox(chkArea, cacheKey, m_ssql, "idArea", "nombre", connReady);
+            //    MarcarlistaAreas();
+            //}
 
 
 
@@ -283,15 +290,18 @@ namespace WebLab.Protocolos
 
 
             //////////////////////////Carga de combos de ObraSocial//////////////////////////////////////////
-            if (Request["Tipo"].ToString() != "ListaProducto")  // si es no paciente no se cargan las obras sociales
+            if (Request["Tipo"].ToString() == "ListaProducto")  // si es no paciente no se cargan las obras sociales
             {
-                m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
-                ///oUtil.CargarCombo(ddlObraSocial, m_ssql, "nombre", "nombre", connReady);
-                cacheKey = $"CAT_OS_{oUser.IdEfector.IdEfector}";
-                Business.Helpers.ComboCache.CargarCombo(ddlObraSocial, cacheKey, m_ssql, "nombre", "nombre", connReady);
+                btnBorrarObraSocial.Enabled = false;
+                btnBuscarObraSocial.Enabled = false;
+                    
+                //m_ssql = "select distinct nombreObraSocial as nombre from LAB_Protocolo with (nolock)  where baja=0 and idEfector=" + oUser.IdEfector.IdEfector.ToString() + " order by nombreObraSocial ";
+                /////oUtil.CargarCombo(ddlObraSocial, m_ssql, "nombre", "nombre", connReady);
+                //cacheKey = $"CAT_OS_{oUser.IdEfector.IdEfector}";
+                //Business.Helpers.ComboCache.CargarCombo(ddlObraSocial, cacheKey, m_ssql, "nombre", "nombre", connReady);
                 
             }
-            ddlObraSocial.Items.Insert(0, new ListItem("--Todos--", "0"));
+            //ddlObraSocial.Items.Insert(0, new ListItem("--Todos--", "0"));
             //////////////////////////////////////////////////////////////////////////////////////////////////
             if (Request["Tipo"].ToString() != "ListaProducto")  // si es no paciente no se carga 
             {
@@ -413,13 +423,15 @@ namespace WebLab.Protocolos
             s_valores += ";ddlOrigen:" + ddlOrigen.SelectedValue;           
             s_valores += ";ddlPrioridad:" + ddlPrioridad.SelectedValue;
             s_valores += ";ddlEfector:" + ddlEfectorSolicitante.SelectedValue;
-            s_valores += ";txtEspecialista:" + txtEspecialista.Text;
             s_valores += ";txtDni:" +txtDni.Value;
             s_valores += ";txtApellido:" +txtApellido.Text;
             s_valores += ";txtNombre:" + txtNombre.Text;
             s_valores += ";ddlEstado:" + ddlEstado.SelectedValue;
             s_valores += ";txtNroOrigen:" + txtNroOrigen.Text;
-            
+            s_valores += ";lblObraSocial:" + lblObraSocial.Text;
+            s_valores += ";lblNomApeEspecialista:" + lblNomApeEspecialista.Text;
+            s_valores += ";HFMatricula:" + HFEspecialista.Value;
+            s_valores += ";HFidObraSocial:" + HFObraSocial.Value;
             Session["FiltroProtocolo"] = s_valores;
         }
 
@@ -448,14 +460,16 @@ namespace WebLab.Protocolos
 
                         case "ddlPrioridad": ddlPrioridad.SelectedValue = s_control[1].ToString(); break;
                         case "ddlEfector": ddlEfectorSolicitante.SelectedValue = s_control[1].ToString(); break;
-                        case "txtEspecialista": txtEspecialista.Text = s_control[1].ToString(); break;
 
 
+                        case "HFMatricula": HFEspecialista.Value = s_control[1].ToString(); if (HFEspecialista.Value != "") lnkBorrarMatriculaEspecialista.Visible = true; break;
+                        case "HFidObraSocial": HFObraSocial.Value = s_control[1].ToString(); if (HFObraSocial.Value != "") btnBorrarObraSocial.Visible = true;  break;
                         case "txtDni": txtDni.Value = s_control[1].ToString(); break;
                         case "txtApellido": txtApellido.Text = s_control[1].ToString(); break;
                         case "txtNombre": txtNombre.Text = s_control[1].ToString(); break;
                         case "ddlEstado": ddlEstado.SelectedValue = s_control[1].ToString(); break;
-                      
+                        case "lblObraSocial": lblObraSocial.Text = s_control[1].ToString(); break;
+                        case "lblNomApeEspecialista": lblNomApeEspecialista.Text = s_control[1].ToString(); break;
 
                     }
                 }
@@ -475,33 +489,41 @@ namespace WebLab.Protocolos
             }
             else
             {
-                PintarReferencias();
+                //PintarReferencias(); //14.08.2026 genero los valores estaticos en aspx para no llamar a PintarReferencias en cada postback 
                 PintarReferenciasNoPacientes();
             }
             
         }
         private void CargarGrilla(string tipo)
         {
+
             if (tipo == "Lista")
             {
+                DataTable dt;
                 if (Request["idServicio"].ToString() == "6")
                 {
-                    gvLista.DataSource = LeerDatos(12);
+                    dt = LeerDatos(12);
                     gvLista.Columns[4].HeaderText = "Nro. Caso";
                     gvLista.Columns[5].HeaderText = "Origen";
                     gvLista.Columns[6].HeaderText = "Muestra";
                     gvLista.Columns[9].HeaderText = "Solicitante";
                 }
                 else
-                    gvLista.DataSource = LeerDatos(0);
+                    dt = LeerDatos(0);
+
+
+                gvLista.DataSource = dt;
                 gvLista.DataBind();
-                PintarReferencias();
+                //PintarReferencias();//14.08.2026 genero los valores estaticos en aspx para no llamar a PintarReferencias en cada postback 
+                CalcularCantidades(dt);
             }
             else
             {
-                gvListaProducto.DataSource = LeerDatos(9);
+                DataTable dt = LeerDatos(9);
+                gvListaProducto.DataSource = dt;
                 gvListaProducto.DataBind();
                 PintarReferenciasNoPacientes();
+                CalcularCantidades(dt);
             }
                          
         }
@@ -535,9 +557,23 @@ namespace WebLab.Protocolos
 
                 //if (ddlMuestra.SelectedValue != "0") str_condicion += " AND P.idMuestra = " + ddlMuestra.SelectedValue;
             }
-
-            if (ddlObraSocial.SelectedValue != "0") str_condicion += " AND P.nombreObraSocial='" + ddlObraSocial.SelectedValue+ "'";
-            if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in ("+ ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
+            if (Request["Tipo"].ToString() != "ListaProducto") //18.08.026 si cargo sesion en 'No paciente' no Corresponden estos filtros
+            {
+                //06.08.2026 Se utiliza el identificador de la obra social seleccionada como criterio de búsqueda
+                if (HFObraSocial.Value != "" ) str_condicion += " AND P.nombreObraSocial='" + HFObraSocial.Value + "'";
+               
+                if (HFEspecialista.Value != "") //14.08.2026 el especialista se carga como 'Apeliido y Nombre' en el alta pero si fue cargado desde FFEE esta como 'Nombre y Apellido'
+                {
+                    string[] especialista = HFEspecialista.Value.Split('|');
+                    str_condicion += " AND (P.Especialista = '" + especialista[0].Trim() + "' OR P.Especialista = '" + especialista[1].Trim() + "' )";
+                }
+                if (txtDni.Value != "") str_condicion += " AND Pa.numeroDocumento = '" + txtDni.Value + "'";
+                if (txtApellido.Text != "") str_condicion += " AND Pa.apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
+                if (txtNombre.Text != "") str_condicion += " AND Pa.nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
+                if (ddlOrigen.SelectedValue != "0") str_condicion += " AND P.idOrigen = " + ddlOrigen.SelectedValue;
+                if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
+                if (chkFactura.Checked) str_condicion += " AND P.nombreObraSocial not in (" + ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
+            }
             if (ddlServicio.SelectedValue != "0") str_condicion += " AND P.idTipoServicio = " + ddlServicio.SelectedValue; else       str_condicion += " AND P.idTipoServicio in (1,3,4)";
             if (ddlSectorServicio.SelectedValue != "0") str_condicion += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
             if (txtFechaDesde.Value != "")            {
@@ -553,13 +589,10 @@ namespace WebLab.Protocolos
             if (txtNroOrigen.Text != "") str_condicion += " And P.numeroOrigen='" + txtNroOrigen.Text + "'";
             if (txtNroOrigen2.Text != "") str_condicion += " And P.numeroOrigen2='" + txtNroOrigen2.Text + "'";
 
-            if (ddlOrigen.SelectedValue != "0") str_condicion += " AND P.idOrigen = " + ddlOrigen.SelectedValue;
-            if (ddlPrioridad.SelectedValue != "0") str_condicion += " AND P.idPrioridad = " + ddlPrioridad.SelectedValue;
+           
             if (ddlEfectorSolicitante.SelectedValue != "0") str_condicion += " AND P.idEfectorSolicitante = " + ddlEfectorSolicitante.SelectedValue;
-            if (txtEspecialista.Text != "") str_condicion += " AND P.matriculaEspecialista = '" + txtEspecialista.Text + "'";
-            if (txtDni.Value != "") str_condicion += " AND Pa.numeroDocumento = '" + txtDni.Value + "'";
-            if (txtApellido.Text != "") str_condicion += " AND Pa.apellido like '%" + txtApellido.Text.TrimEnd() + "%'";
-            if (txtNombre.Text != "") str_condicion += " AND Pa.nombre like '%" + txtNombre.Text.TrimEnd() + "%'";
+            
+            
             if (ddlEstado.SelectedValue == "-1")
             {
                 str_condicion += " AND P.baja=0";
@@ -612,6 +645,13 @@ namespace WebLab.Protocolos
             cmd.Parameters["@tipoorden"].Value = ddlOrden.SelectedValue;
             else
                 cmd.Parameters["@tipoorden"].Value = "ASC";
+
+            //if (tipo == 5) ///control
+            //{
+            //    cmd.Parameters.Add("@listaAreas", SqlDbType.NVarChar);
+            //    cmd.Parameters["@listaAreas"].Value = getlistaAreas();
+            //}
+
             cmd.Connection = conn;
 
 
@@ -629,6 +669,33 @@ namespace WebLab.Protocolos
 
             return Ds.Tables[0];
         }
+
+        //private object getlistaAreas()
+        //{
+        //    string lista = "";
+        //    for (int i = 0; i < chkArea.Items.Count; i++)
+        //    {
+        //        if (chkArea.Items[i].Selected)
+        //        {
+        //            if (lista == "")
+        //                lista = chkArea.Items[i].Value;
+        //            else
+        //                lista += "," + chkArea.Items[i].Value;
+        //        }
+        //    }
+        //    return lista;
+        //}
+
+        //private void MarcarlistaAreas()
+        //{
+            
+        //    for (int i = 0; i < chkArea.Items.Count; i++)
+        //    {                
+        //            chkArea.Items[i].Selected = true;
+             
+        //    }
+            
+        //}
 
         private string getListaMuestra()
         {
@@ -697,7 +764,7 @@ namespace WebLab.Protocolos
                 case "Imprimir":
                     {
                         Imprimir(e.CommandArgument, "I");
-                        PintarReferencias();
+                        //PintarReferencias(); 
                         break;
                     }
                 case "Pdf":
@@ -823,50 +890,66 @@ namespace WebLab.Protocolos
                     CmdModificar.CommandName = "Modificar";
                     CmdModificar.ToolTip = "Modificar";
 
+                    if (Permiso == 1)
+                    {
+                        CmdModificar.ToolTip = "Consultar";
+                    }
 
-                    //ImageButton CmdImprimir = (ImageButton)e.Row.Cells[14].Controls[1];
-                    //CmdImprimir.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                    //CmdImprimir.CommandName = "Imprimir";
-                    //CmdImprimir.ToolTip = "Imprimir";
+                    if (ddlEstado.SelectedValue != "4")
+                    {
+                        LinkButton CmdEliminar = (LinkButton)e.Row.Cells[14].Controls[1];
+                        CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdEliminar.CommandName = "Anular";
+                        CmdEliminar.ToolTip = "Anular";
 
+                        if (Permiso == 1)
+                        {
+                            CmdEliminar.Visible = false;
+                        }
+                        if (oC != null)
+                        {
 
-                    //ImageButton CmdPdf = (ImageButton)e.Row.Cells[15].Controls[1];
-                    //CmdPdf.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                    //CmdPdf.CommandName = "Pdf";
-                    //CmdPdf.ToolTip = "Enviar a PDF";
+                            if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
+                            else
+                                CmdEliminar.Visible = false;
+                        }
+                    }
+                    else
+                    {
+                        //Color gris
+                        e.Row.BackColor = System.Drawing.Color.LightGray;
+                        LinkButton CmdRecuperar = (LinkButton)e.Row.Cells[14].Controls[1];
+                        CmdRecuperar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.CommandName = "Recuperar";
+                        CmdRecuperar.ToolTip = "Recuperar";
 
-                    LinkButton CmdEliminar = (LinkButton)e.Row.Cells[14].Controls[1];
-                    CmdEliminar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
-                    CmdEliminar.CommandName = "Anular";
-                    CmdEliminar.ToolTip = "Anular";
+                        if (Permiso == 1)
+                        {
+                            CmdRecuperar.Visible = false;
+                        }
+
+                        CmdRecuperar.Text = "<span class='glyphicon glyphicon-repeat'></span>";
+                        string idProtocolo = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.OnClientClick = string.Format("PreguntoRecuperar(\"{0}\"); return false;", idProtocolo);
+                    }
+                   
 
                     LinkButton CmdAdjuntar = (LinkButton)e.Row.Cells[15].Controls[1];
                     CmdAdjuntar.CommandArgument = this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                     CmdAdjuntar.CommandName = "Adjuntar";
                     CmdAdjuntar.ToolTip = "Adjuntar";
 
-                    if (Permiso == 1)
-                    {
-                        CmdEliminar.Visible = false;
-                        CmdModificar.ToolTip = "Consultar";
-                    }
+                   
 
-
-                    if (e.Row.Cells[16].Text == "1") // tiene Adjunto
+                    bool tieneAnexo = Convert.ToInt32(DataBinder.Eval(e.Row.DataItem, "tieneAnexo")) == 1;
+                    if (tieneAnexo)
                         e.Row.Cells[15].BackColor = System.Drawing.Color.Green;
 
 
 
                     //        Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
                     //oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdConfiguracion", 1);
-                    if (oC != null)
-                    {
-
-                        if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
-                        else
-                            CmdEliminar.Visible = false;
-                    }
-                    e.Row.Cells[16].Visible = false;
+                    
                 }
 
 
@@ -932,6 +1015,10 @@ namespace WebLab.Protocolos
 
                     }                
 
+                if(ddlEstado.SelectedValue == "4")
+                {
+                    row.BackColor = System.Drawing.Color.LightGray;
+                }
             }
         
         }
@@ -993,9 +1080,12 @@ namespace WebLab.Protocolos
                         break;
 
                 }
+                if (ddlEstado.SelectedValue == "4")
+                {
+                    row.BackColor = System.Drawing.Color.LightGray;
+                }
 
             }
-
         }
         protected void btnImprimir_Click(object sender, EventArgs e)
         {
@@ -1535,12 +1625,43 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
                     CmdModificar.CommandName = "Modificar";
                     CmdModificar.ToolTip = "Modificar";
 
+                    if (ddlEstado.SelectedValue != "4")
+                    {
+                        LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
+                        CmdEliminar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdEliminar.CommandName = "Anular";
+                        CmdEliminar.ToolTip = "Anular";
+
+                        if (Permiso == 1)
+                        {
+                            CmdEliminar.Visible = false;
+                        }
+                        if (oC != null)
+                        {
+
+                            if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
+                            else
+                                CmdEliminar.Visible = false;
+                        }
+                    }
+                    else
+                    {
+                        LinkButton CmdRecuperar = (LinkButton)e.Row.Cells[12].Controls[1];
+                        CmdRecuperar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.CommandName = "Recuperar";
+                        CmdRecuperar.ToolTip = "Recuperar";
+
+                        if (Permiso == 1)
+                        {
+                            CmdRecuperar.Visible = false;
+                        }
+
+                        CmdRecuperar.Text = "<span class='glyphicon glyphicon-repeat'></span>";
+                        string idProtocolo = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
+                        CmdRecuperar.OnClientClick = string.Format("PreguntoRecuperar(\"{0}\"); return false;", idProtocolo);
+                    }
 
 
-                    LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
-                    CmdEliminar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
-                    CmdEliminar.CommandName = "Anular";
-                    CmdEliminar.ToolTip = "Anular";
 
                     LinkButton CmdAdjuntar= (LinkButton)e.Row.Cells[13].Controls[1];
                     CmdAdjuntar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
@@ -1551,24 +1672,12 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
                     CmdReplicar.CommandArgument = this.gvListaProducto.DataKeys[e.Row.RowIndex].Value.ToString();
                     CmdReplicar.CommandName = "Replicar";
                     CmdReplicar.ToolTip = "Replicar";
+
                     if (Permiso == 1)
                     {
-                        CmdEliminar.Visible = false;
                         CmdModificar.ToolTip = "Consultar";
                     }
-                  
-
-                    if (oC != null)
-                    {
-                        if (oC.EliminarProtocoloTerminado) CmdEliminar.Visible = true;
-                        else
-                            CmdEliminar.Visible = false;
-                    }
-
-
                 }
-                
-
             }
 
         }
@@ -1657,5 +1766,86 @@ where I.idArea =" + ddlArea.SelectedValue + @" and I.baja = 0 and IE.informable 
             }
         }
 
+        protected void btnBorrarObraSocial_Click(object sender, EventArgs e)
+        {
+            //06.08.2026 borra la selección realizada de la Obra social y su identificador interno ( y las sesiones)
+            lblObraSocial.Text ="";
+            lblObraSocial.UpdateAfterCallBack = true;
+            Session["obraSocial"] = null;
+            btnBorrarObraSocial.Visible = false;
+            btnBorrarObraSocial.UpdateAfterCallBack = true;
+            HFObraSocial.Value = "";
+            HFObraSocial.UpdateAfterCallBack = true;
+        }
+
+
+        protected void btnBuscarObraSocial_Click(object sender, EventArgs e)
+        {
+            //06.08.2026 Se muestra en el TextBox txtObraSocial la descripción de la obra social seleccionada
+            // y se guarda en un identificador el id de la obra social para utilizarlo en la busqueda
+
+            if (Session["obraSocial"] != null)
+            {
+                if(Session["obraSocial"].ToString() == "") //es cuando queda vacio el valor de la obra social en el protocolo
+                    Session["obraSocial"]=" " ; //con un espacio??
+                lblObraSocial.Text = Session["obraSocial"].ToString();
+                lblObraSocial.UpdateAfterCallBack = true;
+                btnBorrarObraSocial.Visible = true;
+                btnBorrarObraSocial.UpdateAfterCallBack = true;
+                HFObraSocial.Value = Session["obraSocial"].ToString();
+                HFObraSocial.UpdateAfterCallBack = true;
+
+            }
+
+        }
+
+        protected void lnkBuscarEspecialista_Click(object sender, EventArgs e)
+        {
+            //06.08.2026 Se muestra en el TextBox txtNomApeEspecialista el Nombre y Apellido del especialista
+            if (Session["matricula"] != null && Session["apellidoNombre"] != null && Session["nombreApellido"] != null)
+            {
+                lblNomApeEspecialista.Text = Session["apellidoNombre"].ToString();
+                lblNomApeEspecialista.UpdateAfterCallBack = true;
+                lnkBorrarMatriculaEspecialista.Visible = true;
+                lnkBorrarMatriculaEspecialista.UpdateAfterCallBack = true;
+                HFEspecialista.Value = Session["apellidoNombre"].ToString() + "|" + Session["nombreApellido"].ToString();
+                HFEspecialista.UpdateAfterCallBack = true;
+            }
+        }
+
+        protected void lnkBorrarMatriculaEspecialista_Click(object sender, EventArgs e)
+        {
+            //06.08.2026 borra la selección realizada del especialista y la matricula asociada ( y las sesiones)
+
+            lblNomApeEspecialista.Text = "";
+            lblNomApeEspecialista.UpdateAfterCallBack = true;
+            Session["matricula"] = null;
+            Session["apellidoNombre"] = null;
+            Session["nombreApellido"] = null;
+            lnkBorrarMatriculaEspecialista.Visible = false;
+            lnkBorrarMatriculaEspecialista.UpdateAfterCallBack = true;
+            HFEspecialista.Value = "";
+            HFEspecialista.UpdateAfterCallBack = true;
+        }
+
+        private void CalcularCantidades(DataTable dt)
+        {
+            //06.08.2026 En las referencias con el nombre de los estados agregar las cantidades por cada caso
+            // La funcion esta aparte de PINTARREFERENCIAS() porque la grilla al estar paginada 
+            // si contamos por gvlista.rows solo cuenta las filas de la pagina actual
+            int cantNoProcesado = 0, cantEnProceso = 0, cantTerminado = 0;
+            foreach (DataRow row in dt.Rows)
+            {
+                switch (row["estado"].ToString())
+                {
+                    case "0": cantNoProcesado++; break;
+                    case "1": cantEnProceso++; break;
+                    case "2": cantTerminado++; break;
+                }
+            }
+            lblCantEnProceso.Text = cantEnProceso.ToString();
+            lblCantNoProcesado.Text = cantNoProcesado.ToString();
+            lblCantTerminado.Text = cantTerminado.ToString();
+        }
     }
 }

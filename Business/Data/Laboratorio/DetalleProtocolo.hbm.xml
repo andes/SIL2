@@ -57,7 +57,7 @@
    <property column="ideventomuestraSISA" type="Int32" name="IdeventomuestraSISA" not-null="true" />
 
     <property column="informable" type="Boolean" name="Informable" not-null="true" />
-    
+    <property column="estadoValidacion" type="String" name="EstadoValidacion" not-null="true" length="1" />
 
   </class>
 </hibernate-mapping>

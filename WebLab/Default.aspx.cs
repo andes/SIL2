@@ -136,7 +136,7 @@ namespace WebLab
         //    }
 
         //}
- 
+
 
 
         //private void IdentificarSSO_new()
@@ -153,7 +153,7 @@ namespace WebLab
         //        Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
         //        oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdConfiguracion", 1);
         //        ////validacion de usuario externo
-            
+
         //            Usuario oUser = new Usuario();
 
         //        oUser = oUser.buscarUsuarioLocal(Salud.Security.SSO.SSOHelper.CurrentIdentity.Username, Salud.Security.SSO.SSOHelper.CurrentIdentity.Surname, Salud.Security.SSO.SSOHelper.CurrentIdentity.FirstName, oCon.IdEfector);
@@ -176,7 +176,7 @@ namespace WebLab
         //            }
         //            else
         //                Response.Redirect("AccesoDenegado.htm");
-               
+
 
         //    }
 
@@ -254,13 +254,13 @@ namespace WebLab
         //    }
         //}
 
-        //private void CrearLogAcceso(int idUsuarioLogueado)
-        //{
-        //    LogAcceso RegistroAcceso = new LogAcceso();
-        //    RegistroAcceso.IdUsuario = idUsuarioLogueado;
-        //    RegistroAcceso.Fecha = DateTime.Now;
-        //    RegistroAcceso.Save();
-        //}
+        private void CrearLogAcceso(int idUsuarioLogueado)
+        {
+            LogAcceso RegistroAcceso = new LogAcceso();
+            RegistroAcceso.IdUsuario = idUsuarioLogueado;
+            RegistroAcceso.Fecha = DateTime.Now;
+            RegistroAcceso.Save();
+        }
 
         private void CrearPermisos(int p)
         {

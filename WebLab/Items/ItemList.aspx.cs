@@ -190,7 +190,8 @@ LAB_ValorReferencia as Vr
  SELECT I.idItem, I.codigo, I.nombre, CASE WHEN I.idCategoria = '0' THEN 'Simple' ELSE 'Compuesta' END AS categoria,
  case when I.tipo='P' then 'Practica' else 'Determinacion'  end as tipo,
  A.nombre AS area, UM.nombre AS umedida, M.metodo as metodo,
-                            I.requiereMuestra, I2.codigo AS referencia  , I.codigoNomenclador            
+                         case when       I.imprimeMuestra=0 then 'N' else 'S' end as imprimeMuestra , case when I.etiquetaAdicional =0 then 'N' else 'S' end as etiquetaAdicional
+, I2.codigo AS referencia  , I.codigoNomenclador            
                             FROM         LAB_Item AS I 
                             LEFT OUTER JOIN     LAB_Item AS I2 ON I.idItemReferencia = I2.idItem 
                             LEFT OUTER JOIN    LAB_UnidadMedida AS UM ON I.idUnidadMedida = UM.idUnidadMedida 
@@ -202,7 +203,8 @@ LAB_ValorReferencia as Vr
                                 CASE WHEN I.idCategoria = '0' THEN 'Simple' ELSE 'Compuesta' END AS categoria,
                                 case when I.tipo='P' then 'Practica' else 'Determinacion'  end as tipo,
                             A.nombre AS area, UM.nombre AS umedida, 
-                            I.requiereMuestra, I2.codigo AS referencia, case when  IE.idEfector=IE.idEfectorDerivacion then '' else E.nombre end as EfectorDerivado  , I.codigoNomenclador            
+                           case when       I.imprimeMuestra=0 then 'N' else 'S' end as imprimeMuestra , case when I.etiquetaAdicional =0 then 'N' else 'S' end as etiquetaAdicional, 
+                            I2.codigo AS referencia, case when  IE.idEfector=IE.idEfectorDerivacion then '' else E.nombre end as EfectorDerivado  , I.codigoNomenclador            
                             FROM         LAB_Item AS I 
                             LEFT OUTER JOIN     LAB_Item AS I2 ON I.idItemReferencia = I2.idItem 
                             LEFT OUTER JOIN    LAB_UnidadMedida AS UM ON I.idUnidadMedida = UM.idUnidadMedida 
@@ -213,14 +215,11 @@ LAB_ValorReferencia as Vr
             }
                              
             DataSet Ds = new DataSet();
-            //    SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
 
-            // 
-            // 
              
              
             return Ds.Tables[0];

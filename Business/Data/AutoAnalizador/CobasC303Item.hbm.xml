@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.0">
+	<class name="Business.Data.AutoAnalizador.CobasC303Item,Business" table="LAB_CobasC303Item">
+
+		<id name="IdCobasC303Item" column="idCobasC303Item" type="Int32" unsaved-value="0">
+			<generator class="native"/>
+		</id>
+		<property column="ItemCobas" type="String" name="ItemCobas" not-null="true" length="50" />
+		<property column="idItemSil" type="Int32" name="IdItemSil" not-null="true" />
+		<property column="habilitado" type="Boolean" name="Habilitado" not-null="true" />
+		
+	</class>
+</hibernate-mapping>

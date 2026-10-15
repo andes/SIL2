@@ -18,7 +18,7 @@
 
                    <script type="text/javascript">                     
                                       
-
+                       
   
   
 
@@ -59,6 +59,30 @@
 #CeldaContenedor {
     text-align: left; /* Alinea todo el contenido a la izquierda */
 }
+           #btnSubir {
+                display: none;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 9999;
+
+                width: 45px;
+                height: 45px;
+
+                border: none;
+                border-radius: 50%;
+                background: #1976d2; /*#1976d2;*/ /* ##2b3e4c NQN #2b3e4c SE VE MUY OSCURO*/
+                color: white;
+                cursor: pointer;
+                font-size: 20px;
+
+                box-shadow: 0 2px 8px rgba(0,0,0,.3);
+            }
+
+            #btnSubir:hover {
+                background: #1976d2;/*#1565c0;*/
+                opacity:80%;
+            }
 </style>
     </asp:Content>
 
@@ -479,7 +503,7 @@
 						 
 
         <div onkeydown="enterToTab(event)"  id="tab1" >   
-        
+        <button type="button" id="btnSubir" title="Volver arriba ">↑<%--<image alt="subir" src="../script/moverfilas/arriba.gif"></image>--%></button>
         <table width="90%">
         	<tr>						
 						<td>   <asp:Button ID="btnMostrarResultados" runat="server" Visible="false"
@@ -582,11 +606,14 @@
                             <asp:Panel ID="pnlReferencia" Visible="false" runat="server" Width="300px">
                            <span class="label label-default">Dentro de V.R</span>
                                 <span class="label label-danger">Fuera de V.R</span>
-                            </asp:Panel> 
-                        
-                            <asp:CheckBox ID="chkCerrarSinResultados" runat="server" CssClass="myLabelIzquierda" 
+                            </asp:Panel>  <asp:CheckBox ID="chkCerrarSinResultados" runat="server" CssClass="myLabelIzquierda" 
                                 Text="Terminar protocolo" Visible="False" 
                                 ToolTip="Da por terminado el protocolo con analisis sin resultados"  />
+                        <br />
+                           
+
+
+                         
                         
 						<asp:CheckBox ID="chkWhonet" runat="server" CssClass="myLabelIzquierda" 
                                 Text="Informa Whonet" Visible="False" 
@@ -594,13 +621,17 @@
                         
 						<asp:RadioButtonList ID="rdbImprimir" RepeatDirection="Horizontal" runat="server" CssClass="myLabel" 
                                 Font-Names="Arial" Font-Size="8pt">
-                                <asp:ListItem Selected="True" Value="0">Imprimir sólo seleccionados</asp:ListItem>
-                                <asp:ListItem Value="1">Imprimir todos validados</asp:ListItem>
+                                <asp:ListItem Value="0">Imprimir sólo seleccionados</asp:ListItem>
+                                <asp:ListItem  Selected="True" Value="1">Imprimir todos validados</asp:ListItem>
                             </asp:RadioButtonList>
                          
 						</td>
 						<td align="right" style="vertical-align: top" colspan="1"> 
                           
+                             <asp:Button ID="btnAplicarFormula2" runat="server" CssClass="btn btn-danger"
+                                Text="F(x) Calcular Fórmulas"  AccessKey="F" ToolTip="Alt+Shift+F"
+                                onclick="btnAplicarFormula_Click" Visible="False" Font-Size="8" Width="200px" TabIndex="600" /> 
+                              &nbsp;&nbsp;
                            <asp:Button ID="btnValidarImprimir" AccessKey="I" runat="server" CssClass="btn btn-primary" ToolTip="Alt+Shift+I:Validar e Imprimir en impresora seleccionada" Text="Validar + Imprimir" 
                                 onclick="btnValidarImprimir_Click" ValidationGroup="0" Visible="False" 
                                 Width="180px" />
@@ -623,7 +654,10 @@
                              
                                  
      <div class="footer" align="right">	
-  
+    <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-info" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
+                                  Visible="False" 
+                                Width="160px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+
                            <asp:Button ID="btnRestringirAcceso" AccessKey="N" runat="server" CssClass="btn btn-danger" Text="No Publicar"  Visible="false" OnClientClick="ProtocoloPermisos();return false;" 
                                 Width="130px" OnClick="btnRestringirAcceso_Click"/>
                            <%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
@@ -680,31 +714,59 @@
                                                
                                              
           <div id="tab5" >
-            <asp:Panel  ID="pnlMicroOrganismo" runat="server" Height="500px" >    
+            <asp:Panel  ID="pnlMicroOrganismo" runat="server" Width="400px" Height="500px" >    
 
              
            <asp:DropDownList class="form-control input-sm" ID="ddlPracticaAislamiento"  Width="350px" runat="server"> </asp:DropDownList> 
                    <asp:RangeValidator ID="rvPracticaAislamiento" ControlToValidate="ddlPracticaAislamiento" MinimumValue="1" MaximumValue="999999" ValidationGroup="AIS" runat="server" ErrorMessage="*"></asp:RangeValidator>
              
-          <table width="850">           
+          <table    width="400px">           
                 <tr>
-                <td style="vertical-align: top" height="100%" width="400px">
-                
-                 
-                </td>
+                <td style="vertical-align: top" height="100%" width="100%">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                 Nro. Aislamiento:
+<asp:TextBox 
+    ID="txtNumeroAislamiento" 
+    runat="server" 
+    CssClass="form-control input-sm"
+    Width="50px"
+    MaxLength="3">
+</asp:TextBox>
+
+<asp:RangeValidator
+    ID="rvNumeroAislamiento"
+    ControlToValidate="txtNumeroAislamiento"
+    MinimumValue="1"
+    MaximumValue="999"
+    ValidationGroup="AIS"
+    runat="server"
+    ErrorMessage="*"
+    Type="Integer">
+</asp:RangeValidator><asp:CustomValidator
+    ID="cvNumeroAislamiento"
+    runat="server"
+    ValidationGroup="AIS"
+    Display="Dynamic"
+    ForeColor="Red"
+    ErrorMessage="El número de aislamiento ya existe."
+    OnServerValidate="cvNumeroAislamiento_ServerValidate">
+</asp:CustomValidator>
+                <%--</td>
                 </tr>
 
                  
                 <tr>
-                <td style="vertical-align: top">
-              Microorganismo: &nbsp; &nbsp; <anthem:TextBox ID="txtCodigoMicroorganismo" runat="server" class="form-control input-sm"
+                <td style="vertical-align: top">--%>
+                  
+              Microorganismo:   <anthem:TextBox ID="txtCodigoMicroorganismo" runat="server" CssClass="form-control input-sm"
                         ontextchanged="txtCodigoMicroorganismo_TextChanged" Width="60px" AutoCallBack="True"  TabIndex="1" 
                         ToolTip="Ingrese el codigo de microorganismo"></anthem:TextBox>
 
-                    <anthem:DropDownList class="form-control input-sm" Width="400px" ID="ddlAislamiento" runat="server"></anthem:DropDownList>
+                    <anthem:DropDownList CssClass="form-control input-sm" Width="350px" ID="ddlAislamiento" runat="server"></anthem:DropDownList>
                     
                        <asp:RangeValidator ID="rvAislamiento" ControlToValidate="ddlAislamiento" MinimumValue="1" MaximumValue="999999" ValidationGroup="AIS" runat="server" ErrorMessage="*" Type="Integer"></asp:RangeValidator>
                          <asp:Button  CssClass="btn btn-danger" Width="80px" ID="btnAgregarGermen" ValidationGroup="AIS"  runat="server" Text="Agregar" onclick="btnAgregarGermen_Click"/>
+                        </div>
                                                                     </td>
                 </tr>
                 
@@ -725,12 +787,12 @@
                     <td>
                         <asp:GridView ID="gvAislamientos" runat="server" AutoGenerateColumns="False" CellPadding="1" 
                             CssClass="table table-bordered bs-table" 
-                            DataKeyNames="idProtocoloGermen"  onrowcommand="gvAislamientos_RowCommand" onrowdatabound="gvAislamientos_RowDataBound1" Width="100%">
+                            DataKeyNames="idProtocoloGermen"  onrowcommand="gvAislamientos_RowCommand" onrowdatabound="gvAislamientos_RowDataBound1" Width="400px">
                             <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                             <RowStyle BackColor="White" ForeColor="#333333" />
                             <Columns>
                                 <asp:BoundField DataField="item" HeaderText="" />
-                                <asp:BoundField DataField="numeroAislamiento" HeaderText="Nro.Aisl." />
+                                <asp:BoundField DataField="numeroAislamiento" HeaderText="Nro." />
                                 <asp:BoundField DataField="germen" HeaderText="Aislamiento" />
                                 <asp:TemplateField HeaderText="">
                                     <ItemTemplate>
@@ -742,7 +804,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Observaciones">
                                     <ItemTemplate>
-                                        <asp:TextBox ID="txtObservacionesAislamiento" runat="server" TextMode="MultiLine" class="form-control input-sm"  Text='<%# DataBinder.Eval(Container.DataItem, "observaciones") %>' Width="400px"></asp:TextBox>
+                                        <asp:TextBox ID="txtObservacionesAislamiento" runat="server" TextMode="MultiLine" class="form-control input-sm"  Text='<%# DataBinder.Eval(Container.DataItem, "observaciones") %>' Width="250px"></asp:TextBox>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Valida">
@@ -1092,7 +1154,7 @@
                                                           <td >
                                                             <asp:Button ID="Button4"  CssClass="btn btn-primary" ToolTip="Auditoría del Protocolo" runat="server" Text="Ver Auditoria"  Width="150px" 
                        OnClientClick="AuditoriaView(); return false;" />
-                                                        <small>      Desde acá puede ver la trazabilidad (los movimientos realizados por lo usuarios) del protocolo.</small>
+                                                        <small>      Desde acá puede ver la trazabilidad (los movimientos realizados por los usuarios/ recibidos desde instrumentos) del protocolo.</small>
                                                           <hr />
                                                              
                        
@@ -1187,9 +1249,9 @@
                 if (form.elements[i].name.indexOf("TreeView2") == -1)
                     if (form.elements[i].name.indexOf("chkCerrarSinResultados") == -1)
                         if (form.elements[i].name.indexOf("chkWhonet") == -1)
-                        
-                 if (form.elements[i].name.indexOf("F")==-1) 
-                    form.elements[i].checked = 1;                                       
+                            if (form.elements[i].name.indexOf("chkMecanismoResistencia") == -1)
+                                 if (form.elements[i].name.indexOf("F")==-1) 
+                                    form.elements[i].checked = 1;                                       
             }
         }
     }
@@ -1201,8 +1263,9 @@
                 if (form.elements[i].name.indexOf("TreeView2") == -1)
                     if (form.elements[i].name.indexOf("chkCerrarSinResultados") == -1)
                         if (form.elements[i].name.indexOf("chkWhonet") == -1)
-                    if (form.elements[i].name.indexOf("F")==-1) 
-                        form.elements[i].checked = 0;
+                            if (form.elements[i].name.indexOf("chkMecanismoResistencia") == -1)
+                                if (form.elements[i].name.indexOf("F")==-1) 
+                                    form.elements[i].checked = 0;
             }
         }
     } 
@@ -1337,11 +1400,12 @@
             } catch (E) {
             }
         }
-
+        //AntecedentesView2
 
         var $this = $(this);
         $('<iframe src="AntecedentesView2.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
             title: 'Antecedentes del Paciente',
+           
             autoOpen: true,
             width:750,
             height: 490,
@@ -1620,7 +1684,7 @@
             }
         }   
         var $this = $(this);
-        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
+        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '&operacion=Carga"/>').dialog({
             title: 'Practicas Pedidas',
             autoOpen: true,
             width: 800,
@@ -1829,6 +1893,47 @@
 
     </script>
 
+     <script type="text/javascript">
+        
+         (function () {
+
+             function inicializarBotonSubir() {
+
+                 var btn = document.getElementById("btnSubir");
+
+                 if (!btn)
+                     return;
+
+                 window.onscroll = function () {
+
+                     if (document.documentElement.scrollTop > 150 ||
+                         document.body.scrollTop > 150) {
+
+                         btn.style.display = "block";
+                     }
+                     else {
+                         btn.style.display = "none";
+                     }
+                 };
+
+                 btn.onclick = function () {
+
+                     window.scrollTo({
+                         top: 0,
+                         behavior: "smooth"
+                     });
+
+                     return false;
+                 };
+             }
+
+             if (document.readyState === "loading")
+                 document.addEventListener("DOMContentLoaded", inicializarBotonSubir);
+             else
+                 inicializarBotonSubir();
+
+         })();
+     </script>
 
 
 </asp:Content>

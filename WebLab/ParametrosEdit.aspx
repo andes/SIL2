@@ -1723,7 +1723,7 @@ $("#tabContainer").tabs({ selected: currTab });
 
         	<div class="panel-footer">	
                                                
-            <asp:Button ID="btnReinializacion" runat="server" Width="150px" CssClass="btn btn-info" Text="Mantenimiento" Visible="false"  onclick="btnReinializacion_Click" />
+            <asp:Button ID="btnReinializacion" runat="server" Width="150px" CssClass="btn btn-info" Text="Mantenimiento" Visible="true"  onclick="btnReinializacion_Click" />
                                                
             <asp:Button ID="btnGuardar" runat="server" Width="90px" CssClass="btn btn-info" Text="Actualizar" onclick="btnGuardar_Click" />
                 </div>

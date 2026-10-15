@@ -229,13 +229,40 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.TextBox txtApellido;
         
         /// <summary>
-        /// txtEspecialista control.
+        /// HFEspecialista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.TextBox txtEspecialista;
+        protected global::Anthem.HiddenField HFEspecialista;
+        
+        /// <summary>
+        /// lblNomApeEspecialista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblNomApeEspecialista;
+        
+        /// <summary>
+        /// lnkBuscarEspecialista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.LinkButton lnkBuscarEspecialista;
+        
+        /// <summary>
+        /// lnkBorrarMatriculaEspecialista control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.LinkButton lnkBorrarMatriculaEspecialista;
         
         /// <summary>
         /// txtNombre control.
@@ -247,13 +274,40 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.TextBox txtNombre;
         
         /// <summary>
-        /// ddlObraSocial control.
+        /// HFObraSocial control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlObraSocial;
+        protected global::Anthem.HiddenField HFObraSocial;
+        
+        /// <summary>
+        /// lblObraSocial control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblObraSocial;
+        
+        /// <summary>
+        /// btnBuscarObraSocial control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnBuscarObraSocial;
+        
+        /// <summary>
+        /// btnBorrarObraSocial control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.LinkButton btnBorrarObraSocial;
         
         /// <summary>
         /// txtNroOrigen2 control.
@@ -317,6 +371,33 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlLista;
+        
+        /// <summary>
+        /// lblCantNoProcesado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblCantNoProcesado;
+        
+        /// <summary>
+        /// lblCantEnProceso control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblCantEnProceso;
+        
+        /// <summary>
+        /// lblCantTerminado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.Label lblCantTerminado;
         
         /// <summary>
         /// ddlOrden control.

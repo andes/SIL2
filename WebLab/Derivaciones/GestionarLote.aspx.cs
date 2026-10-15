@@ -73,6 +73,11 @@ namespace WebLab.Derivaciones
                " FROM  Sys_Efector AS E " +
                " where E.idEfector IN  (SELECT DISTINCT idEfectorDerivacion FROM lab_itemEfector AS IE " +
                " WHERE Ie.disponible=1 and IE.idEfector<>Ie.idEfectorDerivacion and  IE.idEfector=" + oUser.IdEfector.IdEfector.ToString() +")" +
+               //19.08.2026 Agregamos los efectores de derivacion de los resultados predefinidos
+               " UNION " +
+               " SELECT E.idEfector, E.nombre " +
+               " FROM  Sys_Efector AS E " +
+               " where E.idEfector IN ( SELECT DISTINCT idEfectorDeriva FROM   LAB_ResultadoItem AS RI WHERE RI.baja= 0  and RI.idEfector<> RI.idEfectorDeriva and RI.idEfector= " + oUser.IdEfector.IdEfector.ToString() + " ) " +
                " ORDER BY E.nombre";
             
             oUtil.CargarCombo(ddlEfector, m_ssql, "idEfector", "nombre");

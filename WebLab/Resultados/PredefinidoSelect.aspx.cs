@@ -45,7 +45,7 @@ namespace WebLab.Resultados
                     crit.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
                     crit.Add(Expression.Eq("IdEfector", oDetalle.IdProtocolo.IdEfector));
                     crit.Add(Expression.Eq("Baja", false));
-
+                    crit.AddOrder(Order.Asc("IdResultadoItem"));
                     IList resultados = crit.List();
 
                     foreach (ResultadoItem oResultado in resultados)
