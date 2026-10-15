@@ -26,25 +26,29 @@ namespace Business.Helpers
                 ddl.Items.Insert(0, new ListItem(textoInicial, valorInicial));
         }
 
-        public static void CargarCheckBox(
-          CheckBoxList chk,
-          string cacheKey,
-          string sql,
-          string valueField,
-          string textField,
-          string conexion
-          )
-            {
-                DataTable dt = CatalogoCache.GetDataTable(
-                    cacheKey,
-                    sql,
-                    conexion
-                );
 
-                chk.DataSource = dt;
-                chk.DataValueField = valueField;
-                chk.DataTextField = textField;
-                chk.DataBind();
-            }
-    }
+
+        public static void CargarCheckBox(
+       CheckBoxList chk,
+       string cacheKey,
+       string sql,
+       string valueField,
+       string textField,
+       string conexion
+       )
+        {
+            DataTable dt = CatalogoCache.GetDataTable(
+                cacheKey,
+                sql,
+                conexion
+            );
+
+            chk.DataSource = dt;
+            chk.DataValueField = valueField;
+            chk.DataTextField = textField;
+            chk.DataBind();
+        }
+    
+
+}
 }

@@ -224,7 +224,11 @@ namespace WebLab.Resultados
                         btnGuardar.Text = "Validar";
                         btnValidarImprimir.Visible = true;
                         rdbImprimir.Visible = true;
-                      //  imgImprimir.Visible = true;
+                        
+                        if (Request["idServicio"].ToString() == "3") //30.09.2026 Se imprime todo el protocolo (no analisis seleccionados)
+                            rdbImprimir.Visible = false;
+
+                        //  imgImprimir.Visible = true;
                         imgPdf.Visible = true;
                         lnkMarcar.Visible = true;
                         lnkDesmarcar.Visible = true;
@@ -571,8 +575,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             if (dt == null)
             {
                 string m_strSQL =
-                    @"SELECT DISTINCT 
-                P.idProtocolo,
+                    @"SELECT   P.idProtocolo,
                 P.numero as numero,
                 CONVERT(varchar(10),P.fecha,103) as fecha
               FROM Lab_Protocolo P WITH (NOLOCK)
