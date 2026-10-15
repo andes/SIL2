@@ -234,7 +234,7 @@ namespace Business.Data
         {
             AuditoriaUsuario  oRegistro = new AuditoriaUsuario();
             oRegistro.IdUsuario = iduser; // usuario afectado que esta modificando, consultando , etc.
-            oRegistro.Username = username;
+            oRegistro.Username = username; // 
             oRegistro.Accion = accion;
             oRegistro.Fecha = DateTime.Now;
             oRegistro.Hora = DateTime.Now.ToLongTimeString();

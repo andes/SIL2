@@ -2553,9 +2553,12 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
 
                  ObraSocial oObraSocial = new ObraSocial();
-                oRegistro.IdObraSocial =   (ObraSocial)oObraSocial.Get(typeof(ObraSocial), -1); 
+                oRegistro.IdObraSocial =   (ObraSocial)oObraSocial.Get(typeof(ObraSocial), -1);
                 
-                oRegistro.NombreObraSocial = lblObraSocial.Text;
+                    oRegistro.NombreObraSocial = lblObraSocial.Text;
+                
+
+                
                 oRegistro.CodOs = int.Parse(CodOS.Value);
                 oRegistro.IdOrigen = (Origen)oOrigen.Get(typeof(Origen), int.Parse(this.ddlOrigen.SelectedValue));
                 oRegistro.IdPrioridad = (Prioridad)oPri.Get(typeof(Prioridad), int.Parse(this.ddlPrioridad.SelectedValue));
@@ -5784,7 +5787,7 @@ System.Net.ServicePointManager.SecurityProtocol =
         {
             lblMensajeDiagnostico.Visible = false;
 
-            if (ddlDiagEfector.SelectedValue != "")
+            if (ddlDiagEfector.SelectedValue != "0")
             {
                 bool agrego = true;
 
@@ -5814,6 +5817,13 @@ System.Net.ServicePointManager.SecurityProtocol =
                     lblMensajeDiagnostico.Text =
                         "Alerta: Diagnóstico ya ingresado para el paciente.";
                 }
+            }
+            
+                   else
+                {
+                lblMensajeDiagnostico.Visible = true;
+                lblMensajeDiagnostico.Text =
+                    "Selecione un diagnostico";
             }
 
             lblMensajeDiagnostico.UpdateAfterCallBack = true;

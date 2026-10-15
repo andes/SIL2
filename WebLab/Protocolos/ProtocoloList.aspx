@@ -101,8 +101,10 @@
 				<div class="panel-body">	
 					<table  width="1150px" align="center" >
 					
-				<%--  <asp:ImageButton ID="Editar" runat="server" 
-                                                                                ImageUrl="~/App_Themes/default/images/editar.jpg" ommandName="Editar" />--%>
+				<%-- <asp:DropDownList ID="ddlObraSocial" runat="server" class="form-control input-sm" 
+                                                TabIndex="17" Width="400px" >
+                                               
+                                            </asp:DropDownList>--%>
 					
 					<tr >
 						<td class="myLabelIzquierda" >Servicio:</td>
@@ -325,9 +327,12 @@
                                                             <td align="left">
                                                               
                                                                 <asp:CustomValidator ID="cvFechas" runat="server" ErrorMessage="Fechas de inicio y de fin" onservervalidate="cvFechas_ServerValidate" ValidationGroup="0">Debe ingresar fechas de inicio y fin</asp:CustomValidator>
+                                                             <%-- <p>Filtrar protocolos que contengan determinaciones de las siguientes areas:</p>
+                                                                <asp:CheckBoxList ID="chkArea" runat="server" Visible="False" RepeatColumns="2">
+                                                                </asp:CheckBoxList>--%>
                                                               
                                                             </td>
-                                                            <td align="right">
+                                                            <td align="right" valign="bottom" >
                                                              
                                                                  &nbsp;&nbsp;&nbsp;
                                                                  <asp:Button ID="btnBuscarControl" runat="server" CssClass="btn btn-primary"

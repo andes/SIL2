@@ -575,8 +575,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             if (dt == null)
             {
                 string m_strSQL =
-                    @"SELECT DISTINCT 
-                P.idProtocolo,
+                    @"SELECT   P.idProtocolo,
                 P.numero as numero,
                 CONVERT(varchar(10),P.fecha,103) as fecha
               FROM Lab_Protocolo P WITH (NOLOCK)
