@@ -241,15 +241,19 @@ namespace WebLab.Derivaciones
                 string msql;
 
                 //Fechas
-                txtFechaDesde.Value = DateTime.Now.AddDays(-7).ToShortDateString();
+                if (Request["FechaPendiente"] != null) txtFechaDesde.Value = Request["FechaPendiente"];
+                else txtFechaDesde.Value = DateTime.Now.AddDays(-7).ToShortDateString();
+                
                 txtFechaHasta.Value = DateTime.Now.ToShortDateString();
 
                 //Estados de lotes
                 msql = "Select idEstado, UPPER(nombre) AS nombre  from LAB_LoteDerivacionEstado where baja = 0";
                 oUtil.CargarCombo(ddlEstado, msql, "idEstado", "nombre", connReady);
                 ddlEstado.Items.Insert(0, new ListItem("TODOS LOS ACTIVOS", "0"));
-                ddlEstado.Items.Insert(0, new ListItem("ELIMINADOS", "7"));
-                ddlEstado.SelectedIndex = 1;
+                ddlEstado.Items.Insert(7, new ListItem("ELIMINADOS", "7"));
+
+                if (Request["FechaPendiente"] != null) ddlEstado.SelectedValue = "1";
+                else ddlEstado.SelectedValue = "0";
 
                 //Efector origen y destino
                 if (oUser.IdEfector.IdEfector == 227) //SUBSECRETARIA DE SALUD
