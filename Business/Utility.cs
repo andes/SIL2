@@ -543,6 +543,9 @@ namespace Business
 
         }
 
+
+
+
         public void CargarCombo(DropDownList Combo, IList lista, String CampoId, String CampoDetalle)
         {
             Combo.DataTextField = CampoDetalle;

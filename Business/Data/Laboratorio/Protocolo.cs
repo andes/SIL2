@@ -1898,10 +1898,45 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
 
         }
 
+        public string getListaAreasCodigoBarras(string selectedArea)
+        {
+            string lista = "";/// "-1";            
 
-        
+ 
 
-      
+            string m_ssql = @"
+ SELECT distinct
+    CASE
+        WHEN CHARINDEX('-', numeroP) > 0
+            THEN CONVERT(VARCHAR, idArea) + ';' +
+                 SUBSTRING(numeroP, CHARINDEX('-', numeroP) + 1, LEN(numeroP))
+        ELSE
+            CONVERT(VARCHAR, idArea)
+    END AS idArea,
+    area AS nombre
+FROM vta_LAB_GeneraCodigoBarras A WITH (NOLOCK)
+where  A.idArea  =" + selectedArea + @"  
+and A.idProtocolo =  " + this.IdProtocolo.ToString();
+
+            if (selectedArea == "0")
+                m_ssql = @"select '-1' as idArea, 'Etiqueta General' from LAB_ConfiguracionAreaEtiqueta with (nolock) where idArea = -1   and idEfector = " + this.IdEfector.IdEfector.ToString();
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_ssql, conn);
+            adapter.Fill(Ds);
+
+            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            {
+                if (lista == "")
+                    lista = Ds.Tables[0].Rows[i][0].ToString();
+                else
+                    lista += "," + Ds.Tables[0].Rows[i][0].ToString();
+            }
+
+            return lista;
+        }
 
         public string getMuestra()
         {
