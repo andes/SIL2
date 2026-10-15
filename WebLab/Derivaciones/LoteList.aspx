@@ -2,12 +2,16 @@
 
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
-    <link type="text/css" rel="stylesheet" href="../script/jquery-ui-1.7.1.custom.css" />
+ 
+    
+    <link type="text/css" rel="stylesheet" href="../script/jquery-ui-1.7.1.custom.css" /> 
     <script type="text/javascript" src="../script/jquery.min.js"></script>
     <script type="text/javascript" src="../script/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../script/jquery.ui.datepicker-es.js"></script>
+   
     <script type="text/javascript" src="../script/Mascara.js"></script>
     <script type="text/javascript" src="../script/ValidaFecha.js"></script>
+  
     <script type="text/javascript"> 
 
         $(function () {
@@ -35,6 +39,30 @@
         function soloNumeros(input) {
             input.value = input.value.replace(/\D/g, '');
         }
+
+
+        function PreguntoEliminar(idLote) {
+            $('<iframe src="LoteEliminar.aspx?id=' + idLote + '" />').dialog({
+                title: 'Anular Lote',
+                autoOpen: true,
+                width: 500,
+                height: 300,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                overlay: {
+                    opacity: 0.5,
+                    background: "black"
+                },
+                //Al cerrar que haga postback para que actualice en el listado considerando los anulados
+                close: function () {
+                  <%= this.Page.ClientScript.GetPostBackEventReference(btnBuscar, "") %>;
+                }
+
+            }).width(700);
+
+        }
+     
     </script>
 </asp:Content>
 
@@ -81,7 +109,7 @@
                                     <td>
                                         <asp:DropDownList ID="ddlEstado" runat="server" class="form-control input-sm" TabIndex="5"></asp:DropDownList>
                                     </td>
-                                </tr>
+                                </tr>-
                                 <tr>
                                     <td class="myLabelIzquierda">Efector Origen:</td>
                                     <td>
@@ -93,19 +121,40 @@
                                         <asp:DropDownList ID="ddlEfectorDestino" runat="server" ToolTip="Seleccione el efector" TabIndex="7" Width="250px" class="form-control input-sm"></asp:DropDownList>
                                     </td>
                                 </tr>
+                               <%--  <tr>
+                                    <td class="myLabelIzquierda">Estado:</td>
+                                    <td>
+                                        <asp:CheckBoxList ID="chkEstados" runat="server" RepeatDirection="Horizontal"  CssClass="checkbox checkbox-inline" OnSelectedIndexChanged="chkEstados_SelectedIndexChanged" AutoPostBack="true"/>
+                                    </td>
+                                </tr>--%>
                             </table>
                         </div>
 
                         <div class="panel-footer">
-                           
-                                            <asp:CustomValidator ID="cvValidar" runat="server" OnServerValidate="cvValidar_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
-                                       
+
+                            <asp:CustomValidator ID="cvValidar" runat="server" OnServerValidate="cvValidar_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+
                             <asp:Panel ID="pnlLista" runat="server">
                                 <table style="width: 100%;">
                                     <tr>
-                                        <td align="right">
-                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
+                                        <td align="left" style="vertical-align: top" >
+                                            <div class="panel-body">
+                                                <table width="100%" align="center">
+                                                    <tr>
+                                                        <td align="right">
+                                                            <img alt="" src="../App_Themes/default/images/excelPeq.gif" />
+                                                            <asp:LinkButton ID="lnkExcel" runat="server" CssClass="myLittleLink" OnClick="lnkExcel_Click" ValidationGroup="0">Exportar a Excel</asp:LinkButton>
+                                                            <label>Orden:</label><asp:DropDownList ID="ddlOrden" runat="server">
+                                                                   <asp:ListItem Selected="True" Value="Asc">Ascendente</asp:ListItem>
+                                                                   <asp:ListItem Value="Desc">Descendente</asp:ListItem>
+                                                               </asp:DropDownList>
+                                                            <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-primary" OnClick="btnBuscar_Click" TabIndex="8" Text="Buscar" ValidationGroup="0" Width="77px" />
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
                                         </td>
+                                       
                                     </tr>
                                     <tr>
                                         <td>&nbsp;<asp:Label ID="CantidadRegistros" runat="server" ForeColor="Blue" />
@@ -122,8 +171,7 @@
                                                 GridLines="Horizontal"
                                                 OnPageIndexChanging="gvLista_PageIndexChanging"
                                                 PageSize="20" Width="100%" BackColor="White"
-                                                AllowSorting="True"
-                                                OnSorting="gvLista_Sorting">
+                                                OnRowDataBound="gvLista_RowDataBound" OnRowCommand="gvLista_RowCommand">
                                                 <PagerStyle HorizontalAlign="Center" CssClass="GridPager" />
                                                 <Columns>
                                                     <asp:BoundField DataField="numero" HeaderText="Nro." SortExpression="numero">
@@ -133,32 +181,56 @@
                                                         <ItemStyle HorizontalAlign="Center" Width="10%" />
                                                     </asp:BoundField>
                                                     <asp:BoundField DataField="efectorOrigen" HeaderText="Efector Origen" SortExpression="efectorOrigen" />
-                                                    <asp:BoundField DataField="idEfectorOrigen" Visible="false" />
+                                                    <asp:BoundField DataField="idEfectorOrigen">
+                                                        <ItemStyle CssClass="hidden" />
+                                                        <HeaderStyle CssClass="hidden" />
+                                                    </asp:BoundField>
                                                     <asp:BoundField DataField="efectorDestino" HeaderText="Efector Destino" SortExpression="efectorDestino" />
                                                     <asp:BoundField DataField="estado" HeaderText="Estado" SortExpression="estado" />
                                                     <asp:BoundField DataField="username" HeaderText="Usuario Gen." SortExpression="username" />
                                                     <asp:BoundField DataField="fechaGeneracion" HeaderText="Fecha Gen." SortExpression="fechaGeneracion"/>
                                                     <asp:BoundField DataField="fechaEnvio" HeaderText="Fecha Envio" SortExpression="fechaEnvio"/>
                                                     <asp:BoundField DataField="fechaIngreso" HeaderText="Fecha Ing." SortExpression="fechaIngreso" />
-                                                    <asp:TemplateField HeaderText="Auditoria">
+                                                    <asp:TemplateField HeaderText="Modificar/ Consultar">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFAuditoria" OnCommand="lnkPDFAuditoria_Command" CommandArgument='<%# Eval("numero") %>'
-                                                                CommandName='<%# Eval("idEfectorOrigen") %>'>
-                                                                 <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
+                                                            <asp:LinkButton runat="server" ID="lnkEdit">
+                                                                <asp:Image  runat="server" ID="imgEditar" ImageUrl='~/App_Themes/default/images/editar.jpg'  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Reimprimir">
+                                                    <asp:TemplateField HeaderText="Derivar">
                                                         <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" OnCommand="lnkPDFImprimir_Command" CommandArgument='<%# Eval("numero") %>'
-                                                                CommandName='<%# Eval("idEfectorOrigen") %>'>
-                                                                 <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
+                                                           <asp:LinkButton runat="server" ID="lnkCambiarEstado" ToolTip="Derivar lote">
+                                                                <asp:Image  runat="server" ImageUrl='../App_Themes/default/images/enviado.png'  />
                                                             </asp:LinkButton>
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
                                                     </asp:TemplateField>
 
+                                                    <asp:TemplateField HeaderText="Auditoria">
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton runat="server" ID="lnkPDFAuditoria" ToolTip="Auditoria de lote" >
+                                                                 <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
+                                                            </asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Informe Derivacion">
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton runat="server" ID="lnkPDFImprimir" ToolTip="Informe de derivacion" >
+                                                                 <asp:Image  runat="server" ImageUrl="~/App_Themes/default/images/pdf.jpg"  />
+                                                            </asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="60px" />
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField HeaderText="Anular">
+                                                        <ItemTemplate >
+                                                            <asp:LinkButton ID="Eliminar"  OnClientClick='<%# string.Format("PreguntoEliminar({0}); return false;", Eval("numero")) %>' runat="server"   Width="20px" >
+                                                                <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                                    </asp:TemplateField>
                                                 </Columns>
 
                                                 <PagerSettings Mode="NumericFirstLast" Position="Top" />
@@ -184,7 +256,7 @@
             </tr>
 
             <tr>
-                <td colspan="5">
+               <%-- <td colspan="5">
 
                     <asp:Panel ID="pnlImpresion" runat="server">
                         <table style="width: 100%; vertical-align: top;">
@@ -206,11 +278,39 @@
                         </table>
                     </asp:Panel>
 
-                </td>
+                </td>--%>
 
             </tr>
         </table>
      
     </div>
+    <script src="../script/Resources/jquery.min.js" type="text/javascript"></script>
+    <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet" type="text/css" />
+    <script src="../script/Resources/jQuery-ui-1.8.18.min.js" type="text/javascript"></script>
+    <script language="javascript" type="text/javascript">
+        function CambiarEstado(IdLote, Efector) {
+            $('<iframe src="InformeLote.aspx?IdLote=' + IdLote + '&Destino=' + Efector + '" />').dialog({
+                title: 'Cambiar Estado',
+                autoOpen: true,
+                width: 750,
+                height: 450,
+                modal: true,
+                resizable: false,
+                autoResize: true,
+                open: function (event, ui) { jQuery('.ui-dialog-titlebar-close').hide(); },
 
+                buttons: {
+                    'Cerrar': function () {
+                        $(this).dialog('close');
+                        document.getElementById('<%= btnBuscar.ClientID %>').click();
+                }
+            },
+            overlay: {
+                opacity: 0.5,
+                background: "black"
+            }
+
+        }).width(800);
+        }
+    </script>
 </asp:Content>

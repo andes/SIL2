@@ -2038,12 +2038,15 @@
     <Content Include="Consulta\Procesa.aspx" />
     <Content Include="Consulta\ResultadoView.aspx" />
     <Content Include="controldecambios.html" />
+    <Content Include="Derivaciones\DerivacionAnular.aspx" />
+    <Content Include="Derivaciones\InformeList4.aspx" />
     <Content Include="Derivaciones\EditarListaLote.aspx" />
     <Content Include="Derivaciones\LoteList.aspx" />
     <Content Include="Derivaciones\NuevoLote.aspx" />
     <Content Include="Derivaciones\InformeLote.aspx" />
     <Content Include="Derivaciones\GestionarLote.aspx" />
     <Content Include="Derivaciones\InformeList2.aspx" />
+    <Content Include="Derivaciones\LoteEliminar.aspx" />
     <Content Include="Diagnosticos\DiagEdit.aspx" />
     <Content Include="Diagnosticos\DiagList.aspx" />
     <Content Include="Efectores\EfectorEdit.aspx" />
@@ -3075,6 +3078,7 @@
     <Content Include="website\tesis.html" />
     <Content Include="script\chosen\composer.json" />
     <Content Include="script\chosen\LICENSE.md" />
+    <Content Include="DescargarPdf.ashx" />
     <None Include="Service References\IntAutenticacion\configuration.svcinfo" />
     <None Include="Service References\IntAutenticacion\configuration91.svcinfo" />
     <None Include="Service References\IntAutorizacion\configuration.svcinfo" />
@@ -4584,12 +4588,26 @@
     <Compile Include="ControlResultados\ProtocoloList.aspx.designer.cs">
       <DependentUpon>ProtocoloList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Derivaciones\DerivacionAnular.aspx.cs">
+      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\DerivacionAnular.aspx.designer.cs">
+      <DependentUpon>DerivacionAnular.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Derivaciones\EditarListaLote.aspx.cs">
       <DependentUpon>EditarListaLote.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Derivaciones\EditarListaLote.aspx.designer.cs">
       <DependentUpon>EditarListaLote.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList4.aspx.cs">
+      <DependentUpon>InformeList4.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\InformeList4.aspx.designer.cs">
+      <DependentUpon>InformeList4.aspx</DependentUpon>
     </Compile>
     <Compile Include="Derivaciones\LoteList.aspx.cs">
       <DependentUpon>LoteList.aspx</DependentUpon>
@@ -4625,6 +4643,16 @@
     </Compile>
     <Compile Include="Derivaciones\InformeList2.aspx.designer.cs">
       <DependentUpon>InformeList2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Derivaciones\LoteEliminar.aspx.cs">
+      <DependentUpon>LoteEliminar.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Derivaciones\LoteEliminar.aspx.designer.cs">
+      <DependentUpon>LoteEliminar.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="DescargarPdf.ashx.cs">
+      <DependentUpon>DescargarPdf.ashx</DependentUpon>
     </Compile>
     <Compile Include="Diagnosticos\DiagEdit.aspx.cs">
       <DependentUpon>DiagEdit.aspx</DependentUpon>
@@ -6381,15 +6409,6 @@
     <Content Include="Formulas\ControlEdit.aspx" />
     <Content Include="Formulas\FormulaEdit.aspx" />
     <Content Include="Formulas\FormulaList.aspx" />
-    <Content Include="FusionCharts\FCF_Area2D.swf" />
-    <Content Include="FusionCharts\FCF_Column2D.swf" />
-    <Content Include="FusionCharts\FCF_Column3D.swf" />
-    <Content Include="FusionCharts\FCF_Line.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3D.swf" />
-    <Content Include="FusionCharts\FCF_MSColumn3DLineDY.swf" />
-    <Content Include="FusionCharts\FCF_Pie3D.swf" />
-    <Content Include="FusionCharts\FCF_StackedColumn3D.swf" />
-    <Content Include="FusionCharts\FusionCharts.js" />
     <Content Include="Help\CSS\Arbol.css" />
     <Content Include="Help\CSS\emx_nav_left.css" />
     <Content Include="Help\CSS\ftiens4.js" />

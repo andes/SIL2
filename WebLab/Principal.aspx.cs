@@ -21,8 +21,7 @@ namespace WebLab
 {
     public partial class Principal : System.Web.UI.Page
     {
-      
-   
+
         protected void Page_Load(object sender, EventArgs e)
         {
            
@@ -218,6 +217,8 @@ namespace WebLab
                         }
                     }
 
+                    //25.09.2026 Verificamos que no tenga Lotes pendientes de Envio
+                    VerificarLotesPendientesEnvio();
                 }
                 else
                     Response.Redirect("AccesoDenegado.aspx?mensaje=Efector no Habilitado. Verifique con el administrador.", false);
@@ -584,6 +585,96 @@ namespace WebLab
         {  CargarGrillaSISA();
             gvProtocolosxSISA.Visible = true; ;
 
+        }
+        private void VerificarLotesPendientesEnvio()
+        {
+
+            if (Session["idUsuario"] == null) Response.Redirect("FinSesion.aspx");
+            
+            if (VerificaPermisos("Lista de Lotes") == 0) return;
+
+            Usuario oUser = (Usuario) new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+
+            int idUsuario = oUser.IdUsuario;
+            int idEfector = oUser.IdEfector.IdEfector;
+
+            // Consultar si el aviso ya se mostró hoy.
+            string strSQL = @"
+                SELECT COUNT(*)
+                FROM LAB_LoteDerivacionAviso
+                WHERE idUsuario = @idUsuario
+                  AND idEfector = @idEfector
+                  AND fechaAviso >= CAST(GETDATE() AS DATE)
+                  AND fechaAviso < DATEADD(DAY, 1, CAST(GETDATE() AS DATE))";
+
+            
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(strSQL, conn))
+            {
+                cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
+                cmd.Parameters.AddWithValue("@idEfector", idEfector);
+
+                conn.Open();
+
+                if ((int)cmd.ExecuteScalar() > 0)
+                    return;
+            }
+
+            // Verificar si hay pendientes para mostrar
+            strSQL = @"
+                SELECT TOP 1 fechaRegistro
+                FROM LAB_LoteDerivacion
+                WHERE estado = 1
+                  AND idEfectorOrigen = @idEfector
+                  AND fechaRegistro < CAST(GETDATE() AS DATE)
+                  AND baja = 0 
+                 ORDER BY fechaRegistro";
+
+            bool hayPendientes = false;
+
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(strSQL, conn))
+            {
+                cmd.Parameters.AddWithValue("@idEfector", oUser.IdEfector.IdEfector);
+                conn.Open();
+
+                object resultado = cmd.ExecuteScalar();
+
+                if (resultado != null && resultado != DBNull.Value)
+                {
+                    DateTime fechaRegistro = Convert.ToDateTime(resultado);
+                    ViewState["FechaRegistro"] = fechaRegistro;
+                    hayPendientes = true;
+                }
+
+            }
+
+            if (!hayPendientes)
+                return;
+
+            // Registrar el aviso
+            strSQL = @"
+                    INSERT INTO dbo.LAB_LoteDerivacionAviso
+                        (idUsuario, idEfector, fechaAviso)
+                    VALUES
+                        (@idUsuario, @idEfector, GETDATE());";
+
+            using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
+            using (SqlCommand cmd = new SqlCommand(strSQL, conn))
+            {
+                cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
+                cmd.Parameters.AddWithValue("@idEfector", idEfector);
+                cmd.ExecuteNonQuery();
+            }
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarLotePendiente", "$('#modalLotePendiente').modal('show');", true);
+
+        }
+
+        protected void btnAceptar_Click(object sender, EventArgs e)
+        {
+            DateTime fecha = (DateTime)ViewState["FechaRegistro"];
+            Response.Redirect("Derivaciones/LoteList.aspx?FechaPendiente=" + fecha.ToShortDateString());
         }
     }
 }

@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab {
-    
-    
-    public partial class Principal {
-        
+namespace WebLab
+{
+
+
+    public partial class Principal
+    {
+
         /// <summary>
         /// ToolkitScriptManager1 control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::AjaxControlToolkit.ToolkitScriptManager ToolkitScriptManager1;
-        
+
         /// <summary>
         /// lnkCambioEfector control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkCambioEfector;
-        
+
         /// <summary>
         /// divAlerta control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divAlerta;
-        
+
         /// <summary>
         /// lblAlerta control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAlerta;
-        
+
         /// <summary>
         /// pnlTurno control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlTurno;
-        
+
         /// <summary>
         /// pnlRecepcion control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlRecepcion;
-        
+
         /// <summary>
         /// pnlProtocolo control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlProtocolo;
-        
+
         /// <summary>
         /// pnlTurnoRecepcion control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlTurnoRecepcion;
-        
+
         /// <summary>
         /// pnlDocumentosRDL control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlDocumentosRDL;
-        
+
         /// <summary>
         /// lnkDocumentosRDL control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkDocumentosRDL;
-        
+
         /// <summary>
         /// LinkButton1 control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
-        
+
         /// <summary>
         /// pnlSeguimiento control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlSeguimiento;
-        
+
         /// <summary>
         /// seguimientoCovid control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::WebLab.seguimientoCovid seguimientoCovid;
-        
+
         /// <summary>
         /// mensajeria control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl mensajeria;
-        
+
         /// <summary>
         /// imgAgregarMensaje control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgAgregarMensaje;
-        
+
         /// <summary>
         /// DataList1 control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DataList DataList1;
-        
+
         /// <summary>
         /// PeticionList1 control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::WebLab.PeticionList PeticionList1;
-        
+
         /// <summary>
         /// Div1 control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl Div1;
-        
+
         /// <summary>
         /// btnProtocoloEfector control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnProtocoloEfector;
-        
+
         /// <summary>
         /// gvProtocolosxEfector control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvProtocolosxEfector;
-        
+
         /// <summary>
         /// btnSISA control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSISA;
-        
+
         /// <summary>
         /// gvProtocolosxSISA control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvProtocolosxSISA;
-        
+
         /// <summary>
         /// pnlNuevoUsuario control.
         /// </summary>
@@ -218,5 +220,14 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlNuevoUsuario;
+
+        /// <summary>
+        /// btnAceptar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAceptar;
     }
 }

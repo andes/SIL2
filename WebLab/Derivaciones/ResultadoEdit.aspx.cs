@@ -45,7 +45,7 @@ namespace WebLab.Derivaciones
         {
             Utility oUtil = new Utility();
             ///Carga de combos de areas
-            string m_ssql = " SELECT DISTINCT idItem, determinacion FROM vta_LAB_DerivacionesEnviadas " +
+            string m_ssql = " SELECT DISTINCT idItem, determinacion FROM vta_LAB_Derivaciones " +
                             " WHERE  " + Request["Parametros"].ToString() + " ORDER BY determinacion";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "determinacion");
@@ -285,7 +285,7 @@ namespace WebLab.Derivaciones
             }
 
             string m_strSQL = " SELECT numero, convert(varchar(10),fecha,103) as fecha,convert(varchar,dni) + ' - ' + apellido + ' ' + nombre  AS PACIENTE, " +
-                              " determinacion, efectorDerivacion, IDDETALLEprotocolo, RESULTADO, IDusuarioResultado, fechaResultado FROM [vta_LAB_DerivacionesEnviadas]" +                              
+                              " determinacion, efectorDerivacion, IDDETALLEprotocolo, RESULTADO, IDusuarioResultado, fechaResultado FROM [vta_LAB_Derivaciones]" +                              
                               " WHERE  " +s_condicion+ 
                               " ORDER BY NUMERO ";     
 

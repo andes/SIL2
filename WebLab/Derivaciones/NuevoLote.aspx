@@ -29,12 +29,12 @@
                     <div class=" col-lg-12  "> <h4><asp:Label ID="lblLote" Text="Observaciones" runat="server"/></h4>   <br />  </div>
             </div>
             
-            <div class="row">
+            <%-- <div class="row"> //Vane: La descarga del pdf se hace cuando se deriva
                     <div class="col-lg-12">
-                    <img alt="" src="../App_Themes/default/images/pdf.jpg" />&nbsp;
+                   <img alt="" src="../App_Themes/default/images/pdf.jpg" />&nbsp;
                         <asp:LinkButton ID="lnkPDF" runat="server" CssClass="myLittleLink" OnClick="lnkPDF_Click">Descargar PDF</asp:LinkButton><br />
                 </div>
-            </div>
+            </div>--%>
             <div class="row">
                 <br />
                 <div class="col-lg-12">
