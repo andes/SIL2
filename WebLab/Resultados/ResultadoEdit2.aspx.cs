@@ -224,7 +224,11 @@ namespace WebLab.Resultados
                         btnGuardar.Text = "Validar";
                         btnValidarImprimir.Visible = true;
                         rdbImprimir.Visible = true;
-                      //  imgImprimir.Visible = true;
+                        
+                        if (Request["idServicio"].ToString() == "3") //30.09.2026 Se imprime todo el protocolo (no analisis seleccionados)
+                            rdbImprimir.Visible = false;
+
+                        //  imgImprimir.Visible = true;
                         imgPdf.Visible = true;
                         lnkMarcar.Visible = true;
                         lnkDesmarcar.Visible = true;

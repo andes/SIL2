@@ -171,7 +171,7 @@ namespace WebLab.HojasTrabajo
 
                 Utility oUtil = new Utility();
                 ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
-                string m_ssql = @"select I.idItem, I.nombre from Lab_Item as I 
+                string m_ssql = @"select I.idItem, I.nombre + ' (' + I.codigo + ')' as nombre from Lab_Item as I 
                  inner join lab_itemEfector as IE on IE.idItem= I.idItem and IE.idEfector= " + oUser.IdEfector.IdEfector.ToString() +
                      @" where I.baja=0 AND IE.idEfector=Ie.idEfectorDerivacion and I.idArea= " + ddlAreaDeterminacion.SelectedValue + " and I.idCategoria=0 order by I.nombre";
                 oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");
