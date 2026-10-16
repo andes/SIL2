@@ -34,6 +34,7 @@ namespace WebLab.Derivaciones
                 Response.Redirect("../FinSesion.aspx", false);
         }
 
+        #region Inicializar
         private void Inicializar()
         {
             LoteDerivacion oLote;
@@ -101,6 +102,7 @@ namespace WebLab.Derivaciones
 
                     gvLista.Visible = false;
                     gvListaEdit.Visible = true;
+                    gvListaEdit.Columns[0].Visible = false;
 
                     linkSeleccionar.Visible = false;
 
@@ -108,7 +110,83 @@ namespace WebLab.Derivaciones
             }
            
         }
+        private void CargarGrilla()
+        {
+            if (Request["Tipo"] == "Alta")
+            {
+                gvLista.DataSource = GetDataSet();
+                gvLista.DataBind();
+                CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
+            }
+            else
+            {
+                gvListaEdit.DataSource = GetDataSet();
+                gvListaEdit.DataBind();
+                CantidadRegistros.Text = gvListaEdit.Rows.Count.ToString() + " registros encontrados";
+            }
 
+        }
+        public DataTable GetDataSet()
+        {
+            //20.08.2026 Derivacion automatica
+            //Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica
+            // agrupo con pipe los idDetalles a derivar pero solo muestro 1 derivacion 
+            string m_strSQL = " SELECT " +
+                 " STUFF(( " +
+                 "     SELECT '|' + CAST(v2.idDetalleProtocolo AS varchar(20)) " + //si tengo varios iddetalle del mismo iditem los agrupo
+                 "     FROM vta_LAB_Derivaciones v2 " +
+                 "     WHERE v2.idProtocolo = vta.idProtocolo " +
+                 "       AND v2.idItem = vta.idItem " +
+                 "     FOR XML PATH('') " +
+                 " ), 1, 1, '') AS idDetalleProtocolo, " +
+                 " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
+                 " apellido + ' '+ nombre as paciente, determinacion,  username, " +
+                 " fechaNacimiento as edad, unidadEdad, sexo, " +
+                 " solicitante as especialista, isnull(idlote,0) as idLote ";
+
+            switch (Request["Tipo"])
+            {
+
+                case "Alta":
+                    m_strSQL += "   , observacion, efectorderivacion, isnull(mot.descripcion,'') as motivo ";
+                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
+                    m_strSQL += " LEFT JOIN LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+                    m_strSQL += " WHERE " + Request["Parametros"].ToString();
+
+                    if (Request["Estado"] == "-1") // estado pendiente de derivar y No enviado
+                        m_strSQL += " AND estado IN (0,2) ";
+                    else
+                        m_strSQL += " AND estado IN ( " + Request["Estado"] + " ) ";
+
+                    m_strSQL += " and isnull(idlote,0) = 0 "; //que traiga derivaciones sin lote
+
+                    m_strSQL += @" GROUP BY
+                                    vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
+                                    vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
+                                    mot.descripcion ";
+                    m_strSQL += " ORDER BY numero ";
+                    break;
+
+                case "Modifica":
+                case "Consulta":
+                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
+                    m_strSQL += " WHERE   idLote= " + Request["idLote"];
+                    m_strSQL += @" GROUP BY
+                                vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion,
+                                vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo,  vta.solicitante, vta.idlote";
+                    m_strSQL += " ORDER BY numero ";
+                    break;
+
+            }
+
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
+        }
         protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
@@ -140,8 +218,6 @@ namespace WebLab.Derivaciones
 
             }
         }
-
-       
         private void Eliminar(object detalle)
         {
             string[] idDetalles = detalle.ToString().Split('|');
@@ -166,86 +242,39 @@ namespace WebLab.Derivaciones
             }
             
         }
-        
-        private void CargarGrilla()
+
+        #endregion
+
+        protected void lnkDesMarcar_Click(object sender, EventArgs e)
         {
-            if(Request["Tipo"] == "Alta")
+            MarcarSeleccionados(false);
+        }
+        protected void lnkMarcar_Click(object sender, EventArgs e)
+        {
+            MarcarSeleccionados(true);
+        }
+        private void MarcarSeleccionados(bool p)
+        {
+            GridView gv; string control = "";
+            if (Request["Tipo"] == "Alta")
             {
-                gvLista.DataSource = GetDataSet();
-                gvLista.DataBind();
-                CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
+                gv = gvLista;
+                control = "CheckBox1";
             }
             else
             {
-                gvListaEdit.DataSource = GetDataSet();
-                gvListaEdit.DataBind();
-                CantidadRegistros.Text = gvListaEdit.Rows.Count.ToString() + " registros encontrados";
+                gv = gvListaEdit;
+                control = "chkSel";
             }
 
-        }
-
-        public DataTable GetDataSet()
-        {
-            //20.08.2026 Derivacion automatica
-            //Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica
-            // agrupo con pipe los idDetalles a derivar pero solo muestro 1 derivacion 
-            string m_strSQL = " SELECT " +
-                 " STUFF(( " +
-                 "     SELECT '|' + CAST(v2.idDetalleProtocolo AS varchar(20)) " + //si tengo varios iddetalle del mismo iditem los agrupo
-                 "     FROM vta_LAB_Derivaciones v2 " +
-                 "     WHERE v2.idProtocolo = vta.idProtocolo " +
-                 "       AND v2.idItem = vta.idItem " +
-                 "     FOR XML PATH('') " +
-                 " ), 1, 1, '') AS idDetalleProtocolo, " +
-                 " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
-                 " apellido + ' '+ nombre as paciente, determinacion,  username, " +
-                 " fechaNacimiento as edad, unidadEdad, sexo, " +
-                 " solicitante as especialista, isnull(idlote,0) as idLote ";
-
-            switch (Request["Tipo"])
+            foreach (GridViewRow row in gv.Rows)
             {
-
-                  case "Alta":
-                    m_strSQL += "   , observacion, efectorderivacion, isnull(mot.descripcion,'') as motivo ";
-                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
-                    m_strSQL += " LEFT JOIN LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
-                    m_strSQL += " WHERE " + Request["Parametros"].ToString(); 
-
-                    if(Request["Estado"] == "-1" ) // estado pendiente de derivar y No enviado
-                         m_strSQL += " AND estado IN (0,2) ";
-                    else
-                        m_strSQL += " AND estado IN ( " + Request["Estado"] + " ) ";
-
-                    m_strSQL += " and isnull(idlote,0) = 0 "; //que traiga derivaciones sin lote
-
-                    m_strSQL += @" GROUP BY
-                                    vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
-                                    vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
-                                    mot.descripcion ";
-                    m_strSQL += " ORDER BY numero ";
-                    break;
-
-                case "Modifica":
-                case "Consulta":
-                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
-                    m_strSQL += " WHERE   idLote= " + Request["idLote"] ; 
-                    m_strSQL += @" GROUP BY
-                                vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion,
-                                vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo,  vta.solicitante, vta.idlote";
-                    m_strSQL += " ORDER BY numero ";
-                    break;
-
+                CheckBox a = ((CheckBox)(row.Cells[0].FindControl(control)));
+                if (a.Checked == !p)
+                    ((CheckBox)(row.Cells[0].FindControl(control))).Checked = p;
             }
 
-
-            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-            adapter.Fill(Ds);
-            return Ds.Tables[0];
         }
-
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
@@ -305,25 +334,24 @@ namespace WebLab.Derivaciones
                             {
                                 string resultadoDerivacion = "", resultadoCar = "";
 
-                                switch (estado)  //19.08.2026 estado de derivacion 1 enviado y 3 recibido no pasan por esta pantalla
+                                if (estado == 0)
                                 {
-                                    case 0: //Si ResultadoCar es igual a "Pendiente de derivar" es derivacion comun ino es derivacion automatica
-                                        if (oDetalle.ResultadoCar != "Pendiente de derivar") resultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
-                                        break;
-                                    case 2:  //Si el ResultadoCar empieza con 'No derivado' es derivacion comun  sino es automatica
-                                        if (!oDetalle.ResultadoCar.StartsWith("No Derivado:"))
-                                        {
-                                            int fin = oDetalle.ResultadoCar.IndexOf(" - No Derivado:");
-                                            if (fin > 0) resultadoCar = oDetalle.ResultadoCar.Substring(0, fin);
-                                        }
-                                        break;
+                                    if (oDetalle.ResultadoCar != "Pendiente de derivar")
+                                        resultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
                                 }
-                                if (resultadoCar == "") //Es derivacion comun, piso resultadoCar
-                                    resultadoDerivacion = "Pendiente para enviar ";
-                                else // Es derivacion automatica: Agrego los nuevos valores al resultadoCar
+                                else if (estado == 2)
                                 {
-                                    resultadoDerivacion = resultadoCar + " - Pendiente para enviar";
+                                    if (!oDetalle.ResultadoCar.StartsWith("No Derivado:"))
+                                    {
+                                        int fin = oDetalle.ResultadoCar.IndexOf(" - No Derivado:");
+                                        if (fin > 0)
+                                            resultadoCar = oDetalle.ResultadoCar.Substring(0, fin);
+                                    }
                                 }
+
+                                resultadoDerivacion = resultadoCar == ""
+                                    ? "Pendiente para enviar "
+                                    : resultadoCar + " - Pendiente para enviar";
 
                                 oDetalle.ResultadoCar = resultadoDerivacion;
                                 oDetalle.ConResultado = true;
@@ -374,50 +402,10 @@ namespace WebLab.Derivaciones
             else 
                 Response.Redirect("../FinSesion.aspx", false);
         }
-		
         protected void btnAgregarDeterminaciones_Click(object sender, EventArgs e)
         {
             CargarGrilla();
         }
-
-        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            ValidarSeleccion(args, gvLista, false);
-        }
-
-        protected void lnkDesMarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(false);
-        }
-
-        protected void lnkMarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(true);
-        }
-
-        private void MarcarSeleccionados(bool p)
-        {
-            GridView gv; string control = "";
-            if (Request["Tipo"] == "Alta")
-            { 
-                gv = gvLista;
-                control = "CheckBox1";
-            }
-            else
-            { 
-                gv = gvListaEdit;
-                control = "chkSel";
-            }
-
-            foreach (GridViewRow row in gv.Rows)
-            {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl(control)));
-                if (a.Checked == !p)
-                    ((CheckBox)(row.Cells[0].FindControl(control))).Checked = p;
-            }
-
-        }
-
         protected void btnNoEnviado_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
@@ -434,22 +422,60 @@ namespace WebLab.Derivaciones
                     true);
             }
         }
-
-
         protected void btnActualizar_Click(object sender, EventArgs e)
         {
             CargarGrilla();
         }
 
+
         //Validaciones
-        private void ValidarSeleccion(ServerValidateEventArgs args, GridView grilla, bool validarLoteVacio)
+        #region Validaciones
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
         {
             args.IsValid = false;
-            HFListaDetalles.Value = "";
 
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    break;
+                }
+            }
+            cvGeneral.ErrorMessage = "*Seleccione una fila";
+        }
+        protected void cvNoEnviado_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            //Determinaciones que no estan en un lote
+            args.IsValid = false;
+            HFListaDetalles.Value = "";
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    string idDetalle = gvLista.DataKeys[row.RowIndex].Value.ToString();
+                    if (HFListaDetalles.Value == "")
+                        HFListaDetalles.Value = idDetalle;
+                    else
+                        HFListaDetalles.Value = HFListaDetalles.Value + "|" + idDetalle;
+                }
+            }
+            cvNoEnviado.ErrorMessage = "*Seleccione una fila";
+        }
+
+        protected void cvExcluir_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            //Determinaciones que que estan en un lote
+
+            args.IsValid = false;
+            HFListaDetalles.Value = "";
             int cantSeleccionados = 0;
 
-            foreach (GridViewRow row in grilla.Rows)
+            foreach (GridViewRow row in gvListaEdit.Rows)
             {
                 CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
 
@@ -457,7 +483,7 @@ namespace WebLab.Derivaciones
                 {
                     cantSeleccionados++;
 
-                    string idDetalle = grilla.DataKeys[row.RowIndex].Value.ToString();
+                    string idDetalle = gvListaEdit.DataKeys[row.RowIndex].Value.ToString();
 
                     if (HFListaDetalles.Value == "")
                         HFListaDetalles.Value = idDetalle;
@@ -469,34 +495,24 @@ namespace WebLab.Derivaciones
             // Validacion para saber si selecciono filas
             if (cantSeleccionados == 0)
             {
+                HFListaDetalles.Value = "";
                 args.IsValid = false;
+                cvExcluir.ErrorMessage = "*Seleccione una fila";
                 return;
             }
 
             // Valida que el lote no quede vacio
-            if (validarLoteVacio && cantSeleccionados == grilla.Rows.Count)
+            if (cantSeleccionados == gvListaEdit.Rows.Count)
             {
                 HFListaDetalles.Value = "";
                 args.IsValid = false;
+                cvExcluir.ErrorMessage = "*El lote debe contener al menos una determinación. No puede quedar vacío";
                 return;
             }
 
             args.IsValid = true;
         }
-        protected void cvNoEnviado_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            ValidarSeleccion(args, gvLista, false);
-        }
+        #endregion
 
-        protected void btnExcluir_Click(object sender, EventArgs e)
-        {
-            if (Page.IsValid)
-                btnNoEnviado_Click(sender, e);
-        }
-
-        protected void cvExcluir_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            ValidarSeleccion(args, gvListaEdit, true);
-        }
     }
 }

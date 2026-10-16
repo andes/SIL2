@@ -13,6 +13,30 @@
             else
                 return false;
         }
+
+        function envolverEncabezadoImpresion() {
+            try {
+                /* Envuelve la fila de encabezado de la grilla en thead para que se repita en cada página impresa */
+                jQuery('.contenedorLista table').filter(':visible').each(function () {
+                    var $t = jQuery(this);
+                    if ($t.children('thead').length === 0) {
+                        var $fila = $t.children('tr').first();
+                        if ($fila.length) { $fila.wrap('<thead></thead>'); }
+                    }
+                });
+            } catch (e) { }
+        }
+
+        /* Se ejecuta tanto con el botón Imprimir como con Ctrl+P del navegador */
+        if (window.addEventListener) {
+            window.addEventListener('beforeprint', envolverEncabezadoImpresion, false);
+        }
+
+        function imprimirListado() {
+            envolverEncabezadoImpresion();
+            window.print();
+            return false;
+        }
        
         function AgregarDeterminaciones() {
             var idLoteDerivacion = document.getElementById('<%= HFIdLote.ClientID %>').value;
@@ -71,35 +95,110 @@
         }
     </script>
     <style type="text/css">
+        /* =================== PANTALLA =================== */
+        @media screen {
+            /* Wrapper de la página */
+            .pagina-ancho {
+                width: 1050px;
+            }
+
+            /* Contenedor con scroll para la lista (altura fija solo en pantalla) */
+            .contenedorLista {
+                width: 100%;
+                height: 450pt;
+                overflow: scroll;
+                overflow-x: hidden;
+                border: 1px solid #CCCCCC;
+                background-color: #F3F3F3;
+            }
+        }
+
+        /* =================== IMPRESIÓN =================== */
         @media print {
-                /* Ocultar todo por defecto */
-                body * {
-                    visibility: hidden;
-                }
+            @page {
+                margin: 1.5cm;
+            }
 
-                /* Mostrar únicamente el contenido elegido */
-                #contenidoImprimir,
-                #contenidoImprimir * {
-                    visibility: visible;
-                }
+            html, body {
+                width: auto !important;
+                height: auto !important;
+                overflow: visible !important;
+                background: #fff !important;
+                margin: 0 !important;
+                border: none !important;
+            }
 
-                #contenidoImprimir {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                }
+            body * {
+                visibility: hidden;
+            }
 
-                /* Ocultar botones al imprimir */
-                .no-imprimir {
-                    display: none !important;
-                }
-}
+            #contenidoImprimir,
+            #contenidoImprimir * {
+                visibility: visible;
+            }
+            
+            form > div > table {
+                display: none !important;
+            }
+
+            form > div[style*="lavender"] {
+                display: none !important;
+            }
+
+            /* Ocultar botones y controles de la página */
+            .no-imprimir {
+                display: none !important;
+            }
+
+            /* El panel arranca en el borde de la hoja (sin espacio del header/menú/pie) */
+            #contenidoImprimir {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100% !important;
+                margin: 0;
+                padding: 0;
+                border: none !important;
+                box-shadow: none !important;
+                background: #fff !important;
+            }
+
+            /* Anchos fijos del layout (table width="1000px", grilla 98%) no deben desbordar la hoja */
+            #contenidoImprimir table {
+                width: 100% !important;
+            }
+
+            /* El contenedor de la lista no debe recortar ni ocupar altura fija (elimina el hueco de media página) */
+            .contenedorLista {
+                width: 100% !important;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                overflow-x: visible !important;
+                border: none !important;
+                background: none !important;
+            }
+
+            /* Columnas que no se imprimen (Sel., Eliminar) */
+            .col-imprimir-oculta {
+                display: none !important;
+            }
+
+            /* Filas enteras de la grilla */
+            .contenedorLista table tr {
+                page-break-inside: avoid;
+            }
+
+            #contenidoImprimir .panel-body > table > tr,
+            #contenidoImprimir .panel-body > table > tbody > tr {
+                page-break-inside: auto !important;
+            }
+        }
     </style>
 </asp:Content>
  
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
-<div align="left" style="width:1050px">
+<div align="left" class="pagina-ancho">
         <div class="panel panel-default" id="contenidoImprimir">
             <div class="panel-heading">
                 <div class="row">
@@ -127,26 +226,6 @@
                 <asp:HiddenField ID="HFIdLote" runat="server" />
                 <asp:HiddenField ID="HFIdEfectorDerivacion" runat="server" />
 				<table  width="1000px"  >
-                 <%--   <tr>
-                        <td class="myLabelLitlle no-imprimir" style="vertical-align: top" colspan="3" >
-                            <asp:Panel ID="pnlReferenciasAlta" runat="server" >
-                                Referencias:
-                                    <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
-                                    <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
-                                    &nbsp;<br /> </asp:Panel>
-                            <asp:Panel ID="pnlReferenciaEdit" runat="server">
-                                Referencias:
-                                    <img alt="" src="../App_Themes/default/images/pendiente.png" /> Pendiente de derivar&nbsp;
-                                    <img alt="" src="../App_Themes/default/images/block.png" /> No enviado&nbsp;
-                                    <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Pendiente para enviar&nbsp;
-                                    <img alt="" src="../App_Themes/default/images/enviado.png" /> Enviado&nbsp;
-                                    <span class="glyphicon glyphicon-inbox"></span> Recibido&nbsp;&nbsp;<br />
-                            </asp:Panel>
-                           
-                     
-                        </td>
-                        
-				    </tr>--%>
                     <tr>
 				        <td style="vertical-align: top" colspan="3" class="no-imprimir">
                             <asp:Panel id="Panel1"   runat="server" >
@@ -156,7 +235,7 @@
                                             <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary" Width="100" Text="Crear Lote"
                                                 OnClick="btnGuardar_Click" ValidationGroup="0" />
                                             &nbsp;&nbsp;
-                                            <asp:Button ID="btnImprimir" runat="server" CssClass="btn btn-primary" Width="100" Text="Imprimir" OnClientClick="window.print(); return false;" />
+                                            <asp:Button ID="btnImprimir" runat="server" CssClass="btn btn-primary" Width="100" Text="Imprimir" ToolTip="Ctrl+P" OnClientClick="return imprimirListado();" />
 
                                             &nbsp;&nbsp;
                                             <asp:Button ID="btnNoEnviado" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Marcar No enviado"
@@ -164,7 +243,7 @@
 
                                              &nbsp;&nbsp;
                                             <asp:Button ID="btnExcluir" runat="server" CssClass="btn btn-danger" Width="130" Font-Size="8" Text="Excluir del lote"
-                                                ValidationGroup="2" OnClick="btnExcluir_Click" Visible="false"  />
+                                                ValidationGroup="2" OnClick="btnNoEnviado_Click" Visible="false"  />
 
                                             &nbsp;&nbsp;
                                              <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200"
@@ -206,7 +285,7 @@
 
 				    <tr>
 					    <td colspan="3">
-                            <div   style="width:100%;height:450pt;overflow:scroll;;overflow-x:hidden;border:1px solid #CCCCCC; background-color: #F3F3F3;"> 
+                            <div class="contenedorLista">
                                 <!-- Lista para el alta de lote -->
                                 <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
                                     DataKeyNames="idDetalleProtocolo"   Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
@@ -216,10 +295,11 @@
                                     <Columns>
             
                                     <asp:TemplateField HeaderText="Sel." >
+                                        <HeaderStyle CssClass="col-imprimir-oculta" />
                                         <ItemTemplate>
                                             <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true" />
                                         </ItemTemplate>
-                                        <ItemStyle Width="5%" HorizontalAlign="Center" />
+                                        <ItemStyle Width="5%" HorizontalAlign="Center" CssClass="col-imprimir-oculta" />
                                     </asp:TemplateField>
 
                                     <asp:BoundField DataField="numero"  HeaderText="Protocolo" >
@@ -253,11 +333,12 @@
                                         <ItemTemplate> <asp:Label ID="lbl_estado" runat="server" Text='<%# Eval("estado") %>'/> </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField>
+                                        <HeaderStyle CssClass="col-imprimir-oculta" />
                                         <ItemTemplate>
                                             <asp:LinkButton ID="Eliminar" OnClientClick="return PreguntoEliminar();" runat="server" Text="" Width="20px" CommandName="Eliminar" CommandArgument='<%# Eval("idDetalleProtocolo") %>'>
                                                 <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>
                                         </ItemTemplate>
-                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" CssClass="col-imprimir-oculta" />
                                     </asp:TemplateField>
                                    </Columns>
                                 <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
@@ -278,10 +359,11 @@
                                     <Columns>
             
                                     <asp:TemplateField HeaderText="Sel." >
+                                        <HeaderStyle CssClass="col-imprimir-oculta" />
                                         <ItemTemplate>
                                             <asp:CheckBox ID="chkSel" runat="server" EnableViewState="true"  />
                                         </ItemTemplate>
-                                        <ItemStyle Width="5%" HorizontalAlign="Center" />
+                                        <ItemStyle Width="5%" HorizontalAlign="Center" CssClass="col-imprimir-oculta" />
                                     </asp:TemplateField>
 
                                          <asp:TemplateField Visible="false">
