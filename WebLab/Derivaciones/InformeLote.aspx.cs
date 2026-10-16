@@ -101,6 +101,8 @@ namespace WebLab.Derivaciones
             {
                 Guardar();
 
+                Utility oUtil = new Utility();
+                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones_" + Request["idLote"]);
 
                 if (ddlEstados.SelectedValue == "2")
                 {
@@ -108,7 +110,8 @@ namespace WebLab.Derivaciones
                         + "?informe=DerivacionLote.rpt"
                         + "&consulta=derivacionPDF"
                         + "&idLote=" + Server.UrlEncode(Request["idLote"])
-                        + "&efectorOrigen=" + Server.UrlEncode(hfEfectorDestino.Value);
+                        + "&efectorOrigen=" + Server.UrlEncode(hfEfectorDestino.Value)
+                        + "&nombrePDF=" + nombrePDF;
 
                     ScriptManager.RegisterStartupScript(
                         this,

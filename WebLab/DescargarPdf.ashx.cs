@@ -26,6 +26,7 @@ namespace WebLab
 
             string informe = context.Request.QueryString["informe"];
             string consulta = context.Request.QueryString["consulta"];
+            string nombrePDF = context.Request.QueryString["nombrePDF"];
             
             ReportDocument reporte = new ReportDocument();
 
@@ -54,7 +55,7 @@ namespace WebLab
 
                     context.Response.Clear();
                     context.Response.ContentType = "application/pdf";
-                    context.Response.AddHeader( "Content-Disposition", "attachment; filename=" + Path.GetFileNameWithoutExtension(informe) + ".pdf");
+                    context.Response.AddHeader( "Content-Disposition", "attachment; filename=" + nombrePDF + ".pdf");
                     context.Response.BinaryWrite(memoria.ToArray());
                     context.Response.Flush();
                 }
