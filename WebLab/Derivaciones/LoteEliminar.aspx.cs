@@ -20,31 +20,25 @@ namespace WebLab.Derivaciones
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
-            { 
-                string s_iditem = Request["id"].ToString();
-                LoteDerivacion oLote = new LoteDerivacion();
-                oLote = (LoteDerivacion)oLote.Get(typeof(LoteDerivacion), int.Parse(s_iditem));
-
-                lblTitulo.Text = "Nro. Lote " + oLote.IdLoteDerivacion.ToString();
-                if (oLote.Baja)
+            if (Session["idUsuario"] != null) {
+                if (!Page.IsPostBack)
                 {
-                    if (Request["accion"] != null && Request["accion"].ToString() == "recupera")
-                    {
-                        lblMotivo.Text = "Motivo de recuperación";
-                        btnGuardar.Text = "Recuperar";
-                    }
-                    else
+                    string s_iditem = Request["id"].ToString();
+                    LoteDerivacion oLote = new LoteDerivacion();
+                    oLote = (LoteDerivacion)oLote.Get(typeof(LoteDerivacion), int.Parse(s_iditem));
+
+                    lblTitulo.Text = "Nro. Lote " + oLote.IdLoteDerivacion.ToString();
+                    if (oLote.Baja)
                     {
                         estatus.Text = "El caso ha sido anulado. Ver auditoria";
                         estatus.Visible = true;
                         btnGuardar.Text = "Recuperar";
                         btnGuardar.Visible = false;
                     }
-                  
                 }
             }
-
+            else
+                Response.Redirect("../FinSesion.aspx", false);
         }
 
         private void Eliminar()
@@ -56,6 +50,7 @@ namespace WebLab.Derivaciones
             {
                 oLote = (LoteDerivacion)oLote.Get(typeof(LoteDerivacion), int.Parse(s_idCaso));
                 oLote.Baja = true;
+                oLote.Observacion = txtMotivoBaja.Text;
                 oLote.Save();
                 string accion = txtMotivoBaja.Text;
 
@@ -64,44 +59,57 @@ namespace WebLab.Derivaciones
 
                 oLote.GrabarAuditoriaLoteDerivacion("Anula", int.Parse(Session["idUsuario"].ToString()),"Motivo baja" ,accion);
 
-                //FALTA --> Liberar derivaciones
+                //Libero derivaciones
+
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
+                crit.Add(Expression.Eq("Idlote", int.Parse(s_idCaso)));
+                IList lista = crit.List();
+                foreach (Derivacion oDeriva in lista)
+                {
+                    oDeriva.Estado = 0;
+                    oDeriva.Idlote = 0;
+                    oDeriva.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+                    oDeriva.FechaRegistro = DateTime.Now;
+                    oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
+                    oDeriva.IdMotivoCancelacion = 0;
+
+                    DetalleProtocolo oDetalle = oDeriva.IdDetalleProtocolo;
+                    oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
+                    oDetalle.ConResultado = false;
+                    oDetalle.IdUsuarioResultado = int.Parse(Session["idUsuario"].ToString());
+                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+                    oDetalle.GrabarAuditoriaDetalleProtocolo("Desvincula del lote", int.Parse(Session["idUsuario"].ToString()));
+                    /*Actualiza estado de protocolo*/
+                    if (oDetalle.IdProtocolo.Estado < 2)
+                    {
+                        if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", int.Parse(Session["idUsuario"].ToString())))
+                            oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                        else
+                        {
+                            if (oDetalle.IdProtocolo.EnProceso())
+                            {
+                                oDetalle.IdProtocolo.Estado = 1;//en proceso
+                            }
+                            else
+                                oDetalle.IdProtocolo.Estado = 0;
+                        }
+                        oDetalle.IdProtocolo.Save();
+                    }
+                }
+                
             }
 
         } 
         
-        private void Recuperar()
-        {
-            string s_idCaso = Request["id"].ToString();
-
-            LoteDerivacion oLote = new LoteDerivacion();
-            if (s_idCaso != "")
-            {
-                oLote = (LoteDerivacion)oLote.Get(typeof(LoteDerivacion), int.Parse(s_idCaso));
-                oLote.Baja = false;
-                oLote.Save();
-                string accion = txtMotivoBaja.Text;
-                if (accion.Length > 50)
-                    accion = accion.Substring(0, 50);
-
-                oLote.GrabarAuditoriaLoteDerivacion("Recupera", int.Parse(Session["idUsuario"].ToString()),"Motivo recupera", accion);
-            }
-
-        }
+        
         
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
-                if (Request["accion"] != null && Request["accion"].ToString() == "recupera")
-                {
-                    Recuperar();
-                    estatus.Text = "El caso ha sido recuperado";
-                }
-                else
-                {
-                    Eliminar();
-                    estatus.Text = "El caso ha sido anulado";
-                }
+                Eliminar();
+                estatus.Text = "El caso ha sido anulado";
             }
         }
     }
