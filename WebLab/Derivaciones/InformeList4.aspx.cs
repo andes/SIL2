@@ -477,7 +477,7 @@ namespace WebLab.Derivaciones
 
             foreach (GridViewRow row in gvListaEdit.Rows)
             {
-                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                CheckBox chk = row.FindControl("chkSel") as CheckBox;
 
                 if (chk != null && chk.Checked)
                 {
