@@ -1162,7 +1162,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 Caro 22.07.2026    
                 Se excluye busqueda de antecedentes para no pacientes.
 
-
+                Vane 14.10.2026
+                Se muestra el icono de adjunto para derivaciones
             */
             string conexion = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
             string s_operacion = Request["Operacion"] ?? "";

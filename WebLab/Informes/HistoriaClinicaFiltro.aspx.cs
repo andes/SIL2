@@ -254,21 +254,21 @@ namespace WebLab.Informes
                 adapter.Fill(Ds1);
                 if (Ds1.Tables[0].Rows.Count == 0)
                 {
-                if (Request["Tipo"].ToString() != "Analisis") //analisis es solo para pacientes
-                {
-                    try { 
-                    //aca hago la busqueda primero dentro de las muestras de no pacientes, con el numero de protocolo o de origen, si no encuentro sigo con la busqueda de pacientes
-                    m_strSQL = @" SELECT distinct  P.idProtocolo, P.numero, Pa.nombre + ', ' + P.descripcionProducto as producto,  P.numeroOrigen as numeroOrigen, 
-                                       convert(varchar(10), P.fecha, 103) as fechaProtocolo  
-                                       FROM LAB_Protocolo P (nolock)
-                                       INNER JOIN LAB_Muestra Pa (nolock) ON Pa.idMuestra = P.idMuestra 
-                                      WHERE P.idtipoServicio=5 and P.baja=0 " + str_condicion;
+                    if (Request["Tipo"].ToString() != "Analisis") //analisis es solo para pacientes
+                    {
+                        try { 
+                        //aca hago la busqueda primero dentro de las muestras de no pacientes, con el numero de protocolo o de origen, si no encuentro sigo con la busqueda de pacientes
+                        m_strSQL = @" SELECT distinct  P.idProtocolo, P.numero, Pa.nombre + ', ' + P.descripcionProducto as producto,  P.numeroOrigen as numeroOrigen, 
+                                           convert(varchar(10), P.fecha, 103) as fechaProtocolo  
+                                           FROM LAB_Protocolo P (nolock)
+                                           INNER JOIN LAB_Muestra Pa (nolock) ON Pa.idMuestra = P.idMuestra 
+                                          WHERE P.idtipoServicio=5 and P.baja=0 " + str_condicion;
 
-                    DataSet Ds = new DataSet();
-                    //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                    //SqlDataAdapter adapter = new SqlDataAdapter();
-                    adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                    adapter.Fill(Ds);
+                        DataSet Ds = new DataSet();
+                        //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                        //SqlDataAdapter adapter = new SqlDataAdapter();
+                        adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+                        adapter.Fill(Ds);
 
 
                     gvListaProducto.DataSource = Ds.Tables[0];
