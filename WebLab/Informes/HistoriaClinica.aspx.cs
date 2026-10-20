@@ -196,6 +196,8 @@ namespace WebLab.Informes
             cmd.Parameters.Add("@idPaciente", SqlDbType.NVarChar);
             cmd.Parameters["@idPaciente"].Value = Request["idPaciente"].ToString();
 
+            cmd.Parameters.Add("@idEfector", SqlDbType.NVarChar);
+            cmd.Parameters["@idEfector"].Value = Request["idEfector"].ToString();
             cmd.Connection = conn;
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);

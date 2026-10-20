@@ -42,6 +42,7 @@ namespace WebLab.Informes
                             pnlAnalisis.Visible = false;
                             lblTitulo.Text = "HISTORIAL DE RESULTADOS";
                             rvAnalisis.Enabled = false;
+                            CargarEfector();
                         } break;
                     case "PacienteCompleto":
                         {
@@ -49,6 +50,7 @@ namespace WebLab.Informes
                             pnlAnalisis.Visible = false;
                             lblTitulo.Text = "HISTORIAL DE VISITAS";
                             rvAnalisis.Enabled = false;
+                            CargarEfector();
                         } break;
 
                     case "PacienteForense":
@@ -76,6 +78,7 @@ namespace WebLab.Informes
                             rvAnalisis.Enabled = true;
                             CargarArea();
                             CargarItem();
+                            CargarEfector();
                         }
                         break;
                 }
@@ -137,10 +140,17 @@ namespace WebLab.Informes
             m_ssql = null;
             oUtil = null;
         }
-        private void CargarGrilla2()
+        private void CargarEfector()
         {
-            
-            
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+            string m_ssql = "select distinct E.idEfector, E.nombre  from sys_efector E " +
+                    " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
+                    "order by E.nombre";
+
+            Business.Helpers.ComboCache.CargarCombo(ddlEfector, $"CAT_Efector_LAB", m_ssql, "idEfector", "nombre", connReady);
+            ddlEfector.Items.Insert(0, new ListItem("-- Todos --", "0"));
+
         }
 
         private void CargarGrilla()
@@ -214,6 +224,8 @@ namespace WebLab.Informes
                     if (txtNombreMadre.Text != "") str_condicionMadre += " AND nombre like '%" + oUtil.SacaComillas(txtNombreMadre.Text) + "%'";
                     str_condicionMadre += " ) ";
                 }
+
+                 if (ddlEfector.SelectedValue != "0") str_condicion += " and P.idEfector=" + ddlEfector.SelectedValue;
                 /////////////////////////////////////////////////////////////////////////////////////////
                 string m_strSQL = @" SELECT distinct P.idPaciente, case when Pa.idEstado=2 then Pa.numeroAdic+'(s/dni)'  else convert(varchar,Pa.numeroDocumento) end as numeroDocumento, Pa.apellido + ', ' + Pa.nombre as paciente, 
                                    convert(varchar(10), Pa.fechaNacimiento,103) as fechaNacimiento 
@@ -270,8 +282,15 @@ namespace WebLab.Informes
                         gvLista.DataBind();
                         gvListaProducto.Visible = false;
                         gvLista.Visible = true;
+                        }
                     }
-                }
+                    else //No hay resultados que muestre cartel
+                    {
+                        gvLista.DataSource = Ds1.Tables[0];
+                        gvLista.DataBind();
+                        gvListaProducto.Visible = false;
+                        gvLista.Visible = true;
+                    }
                 
 
                 }
@@ -350,12 +369,18 @@ namespace WebLab.Informes
                         }
                         if (ddlNumero.SelectedValue == "Origen") { if (txtProtocolo.Text != "") m_parametro += " AND P.numeroOrigen='" + txtProtocolo.Text + "'"; }
                         if (ddlNumero.SelectedValue == "Tarjeta") { if (txtProtocolo.Text != "") m_parametro += " AND S.numeroTarjeta='" + txtProtocolo.Text + "'"; }
+                        string str_efector = "0";
+                        if (ddlEfector.SelectedValue != "0")
+                        {
+                            m_parametro += " AND P.idEfector=" + ddlEfector.SelectedValue;
+                            str_efector = ddlEfector.SelectedValue;
+                        }
                         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         switch (Request["Tipo"].ToString() )
                         {
                             case "Analisis":                              //por analisis
-                            Response.Redirect("HistoriaClinica.aspx?idPaciente=" + e.CommandArgument.ToString() + "&fechaDesde=" + txtFechaDesde.Value + "&fechaHasta=" + txtFechaHasta.Value + "&idAnalisis=" + ddlItem.SelectedValue); break;
+                            Response.Redirect("HistoriaClinica.aspx?idPaciente=" + e.CommandArgument.ToString() + "&fechaDesde=" + txtFechaDesde.Value + "&fechaHasta=" + txtFechaHasta.Value + "&idAnalisis=" + ddlItem.SelectedValue + "&idEfector=" + str_efector ); break;
                             case "PacienteCompleto":
                             Response.Redirect("../Resultados/Procesa.aspx?idServicio="+ddlServicio.SelectedValue+"&ModoCarga=LP&Operacion=HC&Parametros=" + m_parametro + "&idArea=0&idHojaTrabajo=0&validado=0&modo=Normal&Desde=HistoriaClinicaFiltro&Tipo=PacienteCompleto", false);break;
                             case "PacienteForense":
