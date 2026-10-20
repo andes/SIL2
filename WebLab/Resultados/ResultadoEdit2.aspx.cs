@@ -1566,7 +1566,6 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                                 }
                             }
                         }
-
                         ////////////////////                                        
                         ///IMAGENES ADJUNTAS - 14.10.2026 Poder adjuntar en derivacion
                         if (s_operacion != "HC")
@@ -1596,7 +1595,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                             objCellImagenes.Controls.Add(btnImagen);
                         }
                         ///fin modificacion 07.09.2026
-                    }
+                       }
                     if (m_trajoMuestra == "No")
                     {
                         Label lblSinMuestra = new Label();
@@ -1702,7 +1701,6 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                                 }
                             }
                         }
-
                         ////////////////////                                        
                         ///IMAGENES ADJUNTAS - 14.10.2026 poder adjuntar en derivacion
                         if (s_operacion != "HC")

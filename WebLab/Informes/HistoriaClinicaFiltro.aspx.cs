@@ -148,7 +148,7 @@ namespace WebLab.Informes
                     " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
                     "order by E.nombre";
 
-            Business.Helpers.ComboCache.CargarCombo(ddlEfector, $"CAT_Efector", m_ssql, "idEfector", "nombre", connReady);
+            Business.Helpers.ComboCache.CargarCombo(ddlEfector, $"CAT_Efector_LAB", m_ssql, "idEfector", "nombre", connReady);
             ddlEfector.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
         }
@@ -271,17 +271,17 @@ namespace WebLab.Informes
                         adapter.Fill(Ds);
 
 
-                        gvListaProducto.DataSource = Ds.Tables[0];
-                        gvListaProducto.DataBind();
-                        gvLista.Visible = false;
-                        gvListaProducto.Visible = true;
-                        }
-                        catch (Exception ex)
-                        {
-                            gvLista.DataSource = Ds1.Tables[0];
-                            gvLista.DataBind();
-                            gvListaProducto.Visible = false;
-                            gvLista.Visible = true;
+                    gvListaProducto.DataSource = Ds.Tables[0];
+                    gvListaProducto.DataBind();
+                    gvLista.Visible = false;
+                    gvListaProducto.Visible = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        gvLista.DataSource = Ds1.Tables[0];
+                        gvLista.DataBind();
+                        gvListaProducto.Visible = false;
+                        gvLista.Visible = true;
                         }
                     }
                     else //No hay resultados que muestre cartel

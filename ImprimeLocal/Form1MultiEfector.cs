@@ -236,7 +236,7 @@ namespace ImprimeLocal
                             string reg_FIS = Convert.ToString(item["NumeroOrigen2"]);
                             string sTipoEtiqueta = Convert.ToString(item["tipoEtiqueta"]);
                             string sFuenteBarCode = Convert.ToString(item["FuenteBarCode"]);
-
+                           
                             ticket.TipoEtiqueta = sTipoEtiqueta;
 
                             if (!string.IsNullOrEmpty(reg_Origen) &&
@@ -272,7 +272,8 @@ namespace ImprimeLocal
                                     );
                                 }
                             }
-
+                            float fontsizeCB = (float)nmFontSizeCB.Value;
+                            ticket.FontSizeCodigoBarras = (int)fontsizeCB;  //8 para heller- 10 actual
                             ticket.AddCodigoBarras(reg_numero, sFuenteBarCode);
 
                             ticket.AddFooterLine(reg_numero);
@@ -567,9 +568,11 @@ namespace ImprimeLocal
 
                         ticket.TipoEtiqueta = sTipoEtiqueta;
                         if (reg_Origen.Length > 11) reg_Origen = reg_Origen.Substring(0, 10);
-
+                        if (reg_apellido.Length > 26) reg_apellido = reg_apellido.Substring(0, 25);
 
                         ticket.AddHeaderLine(reg_apellido.ToUpper());
+
+
                         ticket.AddSubHeaderLine(reg_sexo + " " + reg_edad + " " + reg_NumeroDocumento + " " + reg_Fecha + " " + reg_FIS);
                        /* if ((imprimeProtocoloOrigen) || (imprimeProtocoloSector))
                         {
@@ -905,6 +908,7 @@ namespace ImprimeLocal
             Configuracion oC = new Configuracion();
             oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oEfector);
 
+        
             //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
 
             //    oProt.GrabarAuditoriaProtocolo("Imprime Código de Barras", oProt.IdUsuarioRegistro.IdUsuario);
@@ -937,10 +941,10 @@ namespace ImprimeLocal
             bool imprimePacienteApellido = oConBarra.PacienteApellido;
             bool imprimePacienteSexo = oConBarra.PacienteSexo;
             bool imprimePacienteEdad = oConBarra.PacienteEdad;
-           
+
+            sFuenteBarCode = "Code128"; ///fuerzo fuente para Heller
 
 
-        
 
             DataTable Dt = new DataTable();
             Dt = (DataTable)oProt.GetDataSetCodigoBarras("Protocolo", s_listaAreas, oProt.IdTipoServicio.IdTipoServicio, adicionalGeneral);
@@ -1055,7 +1059,7 @@ namespace ImprimeLocal
 
                 System.Configuration.Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                 string equipo = comboBoximp.Text;   //config.AppSettings.Settings["impresora"].Value;
-           
+                sFuenteBarCode = "Code128"; ///fuerzo fuente para Heller
 
                 ticket.PrintTicket2(equipo, sFuenteBarCode, oC.TipoEtiqueta,0);
                 /////fin de impresion de archivos
@@ -1296,8 +1300,8 @@ namespace ImprimeLocal
             DataTable Dt = new DataTable();
             Dt = (DataTable)oProt.GetDataSetCodigoBarras("Protocolo", s_listaAreas, 3, adicionalGeneral);
 
-          
 
+            sFuenteBarCode = "Code128"; ///fuerzo fuente para Heller
 
 
             foreach (DataRow item in Dt.Rows)
@@ -1579,11 +1583,27 @@ where p.baja=0 and p.estado=0 and p.idEfectorsolicitante = " + ddlEfector.Select
 
                 config.AppSettings.Settings["margenDerecho"].Value =
                     nmMargenDerecho.Value.ToString();
+            
 
-                config.Save(ConfigurationSaveMode.Modified);
+            config.Save(ConfigurationSaveMode.Modified);
 
                 ConfigurationManager.RefreshSection("appSettings");
              
+        }
+
+        private void nmFontSizeCB_ValueChanged(object sender, EventArgs e)
+        {
+            Configuration config =
+            ConfigurationManager.OpenExeConfiguration(
+                ConfigurationUserLevel.None);
+
+           
+            config.AppSettings.Settings["fontSizeCB"].Value =
+                nmMargenDerecho.Value.ToString();
+
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
         //private void timer2_Tick(object sender, EventArgs e)

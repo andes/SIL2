@@ -355,6 +355,24 @@ namespace WebLab.Protocolos {
         protected global::System.Web.UI.WebControls.CustomValidator cvFechas;
         
         /// <summary>
+        /// rdbSeleccionarAreas control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RadioButtonList rdbSeleccionarAreas;
+        
+        /// <summary>
+        /// chkArea control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.CheckBoxList chkArea;
+        
+        /// <summary>
         /// btnBuscarControl control.
         /// </summary>
         /// <remarks>

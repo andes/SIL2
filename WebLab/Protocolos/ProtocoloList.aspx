@@ -327,9 +327,15 @@
                                                             <td align="left">
                                                               
                                                                 <asp:CustomValidator ID="cvFechas" runat="server" ErrorMessage="Fechas de inicio y de fin" onservervalidate="cvFechas_ServerValidate" ValidationGroup="0">Debe ingresar fechas de inicio y fin</asp:CustomValidator>
-                                                             <%-- <p>Filtrar protocolos que contengan determinaciones de las siguientes areas:</p>
-                                                                <asp:CheckBoxList ID="chkArea" runat="server" Visible="False" RepeatColumns="2">
-                                                                </asp:CheckBoxList>--%>
+                                                             <p>Filtrar protocolos que contengan determinaciones de las siguientes areas:</p>
+                                                                  <anthem:RadioButtonList ID="rdbSeleccionarAreas" runat="server" Font-Size="9pt"
+                                                 AutoCallBack="True" 
+                                                 onselectedindexchanged="rdbSeleccionarAreas_SelectedIndexChanged" RepeatDirection="Horizontal">
+                                                 <asp:ListItem Value="1">Marcar Todas</asp:ListItem>
+                                                 <asp:ListItem Value="0">Desmarcar Todas</asp:ListItem>
+                                             </anthem:RadioButtonList>  
+                                                                <anthem:CheckBoxList ID="chkArea" runat="server" Visible="False" RepeatColumns="2">
+                                                                </anthem:CheckBoxList>
                                                               
                                                             </td>
                                                             <td align="right" valign="bottom" >

@@ -242,14 +242,17 @@ namespace WebLab.Protocolos
                 m_ssql += " and idTipoServicio>0";
             oUtil.CargarCombo(ddlServicio, m_ssql, "idTipoServicio", "nombre", connReady);
 
-            //if (Request["Tipo"].ToString() == "Control")
-            //{
-            //    chkArea.Visible = true;
-            //    m_ssql = "SELECT idArea, nombre FROM LAB_Area with (nolock)  where baja=0 and idTipoServicio="+ Request["idServicio"].ToString() + "   order by nombre ";                
-            //    cacheKey = $"CAT_CHKArea_{Request["idServicio"]}";
-            //    Business.Helpers.ComboCache.CargarCheckBox(chkArea, cacheKey, m_ssql, "idArea", "nombre", connReady);
-            //    MarcarlistaAreas();
-            //}
+            if (Request["Tipo"].ToString() == "Control")
+            {
+                chkArea.Visible = true;
+                m_ssql = "SELECT idArea, nombre FROM LAB_Area with (nolock)  where baja=0 and idTipoServicio=" + Request["idServicio"].ToString() + "   order by nombre ";
+                if (Request["idServicio"].ToString()=="5")///para no pacientes
+                     m_ssql = "SELECT idArea, nombre FROM LAB_Area with (nolock)  where baja=0  order by nombre ";
+
+                cacheKey = $"CAT_CHKArea_{Request["idServicio"]}";
+                Business.Helpers.ComboCache.CargarCheckBox(chkArea, cacheKey, m_ssql, "idArea", "nombre", connReady);
+                MarcarlistaAreas(true);
+            }
 
 
 
@@ -412,7 +415,14 @@ namespace WebLab.Protocolos
             m_ssql = null;
             oUtil = null;
         }
-
+        protected void rdbSeleccionarAreas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (rdbSeleccionarAreas.SelectedValue == "1")
+                MarcarlistaAreas(true);
+            else
+                MarcarlistaAreas(false);
+            chkArea.UpdateAfterCallBack = true;
+        }
         private void AlmacenarSesion()
         {
             string s_valores = "txtFechaDesde:" + txtFechaDesde.Value;
@@ -646,11 +656,11 @@ namespace WebLab.Protocolos
             else
                 cmd.Parameters["@tipoorden"].Value = "ASC";
 
-            //if (tipo == 5) ///control
-            //{
-            //    cmd.Parameters.Add("@listaAreas", SqlDbType.NVarChar);
-            //    cmd.Parameters["@listaAreas"].Value = getlistaAreas();
-            //}
+            if (tipo == 5) ///control
+            {
+                cmd.Parameters.Add("@listaAreas", SqlDbType.NVarChar);
+                cmd.Parameters["@listaAreas"].Value = getlistaAreas();
+            }
 
             cmd.Connection = conn;
 
@@ -670,32 +680,32 @@ namespace WebLab.Protocolos
             return Ds.Tables[0];
         }
 
-        //private object getlistaAreas()
-        //{
-        //    string lista = "";
-        //    for (int i = 0; i < chkArea.Items.Count; i++)
-        //    {
-        //        if (chkArea.Items[i].Selected)
-        //        {
-        //            if (lista == "")
-        //                lista = chkArea.Items[i].Value;
-        //            else
-        //                lista += "," + chkArea.Items[i].Value;
-        //        }
-        //    }
-        //    return lista;
-        //}
+        private object getlistaAreas()
+        {
+            string lista = "";
+            for (int i = 0; i < chkArea.Items.Count; i++)
+            {
+                if (chkArea.Items[i].Selected)
+                {
+                    if (lista == "")
+                        lista = chkArea.Items[i].Value;
+                    else
+                        lista += "," + chkArea.Items[i].Value;
+                }
+            }
+            return lista;
+        }
 
-        //private void MarcarlistaAreas()
-        //{
-            
-        //    for (int i = 0; i < chkArea.Items.Count; i++)
-        //    {                
-        //            chkArea.Items[i].Selected = true;
-             
-        //    }
-            
-        //}
+        private void MarcarlistaAreas(bool marca)
+        {
+
+            for (int i = 0; i < chkArea.Items.Count; i++)
+            {
+                chkArea.Items[i].Selected = marca;
+
+            }
+
+        }
 
         private string getListaMuestra()
         {
