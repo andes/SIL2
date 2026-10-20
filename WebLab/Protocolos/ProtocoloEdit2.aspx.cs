@@ -2563,7 +2563,6 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 oRegistro.IdOrigen = (Origen)oOrigen.Get(typeof(Origen), int.Parse(this.ddlOrigen.SelectedValue));
                 oRegistro.IdPrioridad = (Prioridad)oPri.Get(typeof(Prioridad), int.Parse(this.ddlPrioridad.SelectedValue));
                 oRegistro.Observacion = txtObservacion.Text;
-                oRegistro.ObservacionResultado = "";
                 oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
                 if (Request["Operacion"].ToString() != "Modifica")
                 {
@@ -2571,6 +2570,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     oRegistro.FechaRegistro = DateTime.Now;
                     oRegistro.IpCarga = "";
                     oRegistro.Impres = ddlImpresoraEtiqueta.SelectedItem.Text;
+                    oRegistro.ObservacionResultado = ""; //20.10.2026 En alta: instanciar valor //En Modificacion: mantener el valor cargado
                 }
 
                 ///separar medico
