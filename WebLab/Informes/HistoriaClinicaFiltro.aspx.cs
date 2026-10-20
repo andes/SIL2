@@ -148,7 +148,7 @@ namespace WebLab.Informes
                     " INNER JOIN lab_Configuracion C on C.idEfector=E.idEfector " +
                     "order by E.nombre";
 
-            Business.Helpers.ComboCache.CargarCombo(ddlEfector, $"CAT_Efector", m_ssql, "idEfector", "nombre", connReady);
+            Business.Helpers.ComboCache.CargarCombo(ddlEfector, $"CAT_Efector_LAB", m_ssql, "idEfector", "nombre", connReady);
             ddlEfector.Items.Insert(0, new ListItem("-- Todos --", "0"));
 
         }
