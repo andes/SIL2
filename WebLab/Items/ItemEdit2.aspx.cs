@@ -3504,12 +3504,16 @@ namespace WebLab.Items
         private string SanitizarHTML()
         {
             Utility utility = new Utility();
+            //20.10.2026 No guardar |
+            hfHtml.Value = hfHtml.Value.Replace("%7C", "").Replace("|",""); //%7C equivale a |
             return utility.SanitizarHTML(Server, hfHtml.Value);
         }
 
         protected void cvObservaciones_ServerValidate(object source, ServerValidateEventArgs args)
         {
             Utility utility = new Utility();
+            //20.10.2026 No guardar |
+            hfHtml.Value = hfHtml.Value.Replace("%7C", "").Replace("|", ""); //%7C equivale a |
             args.IsValid = (utility.SanitizarHTML(Server, hfHtml.Value)).Length <= 4000;
         }
     }
