@@ -100,14 +100,16 @@ namespace WebLab.Derivaciones
                     ddlEfectorDestino.SelectedValue  = ObtenerParametro(" AND L.idEfectorDestino = ", str_condicion);
 
 
-                if (str_condicion.Contains(" AND L.estado="))
-                    ddlEstado.SelectedValue = ObtenerParametro(" AND L.estado=", str_condicion);
-
-                if (str_condicion.Contains(" AND L.baja = 0"))
-                    ddlEstado.SelectedValue = "0";
-
                 if (str_condicion.Contains(" AND L.baja = 1"))
                     ddlEstado.SelectedValue = "7";
+                else
+                {
+                    if (str_condicion.Contains(" AND L.estado="))
+                        ddlEstado.SelectedValue = ObtenerParametro(" AND L.estado=", str_condicion);
+                    else 
+                    if (str_condicion.Contains(" AND L.baja = 0"))
+                        ddlEstado.SelectedValue = "0";
+                }
 
             }
 
@@ -327,12 +329,13 @@ namespace WebLab.Derivaciones
 
             if (ddlEstado.SelectedValue == "0")
                 str_condicion += " AND L.baja = 0";
-
-            if (ddlEstado.SelectedValue == "7")
-                str_condicion += " AND L.baja = 1";
-
-            if (ddlEstado.SelectedValue != "7" && ddlEstado.SelectedValue != "0")
-                str_condicion += " AND L.estado=" + ddlEstado.SelectedValue;
+            else
+            {
+                if (ddlEstado.SelectedValue != "7")
+                    str_condicion += " AND L.estado=" + ddlEstado.SelectedValue + " AND L.baja = 0 ";
+                else
+                    str_condicion += " AND L.baja = 1";
+            }
 
             return str_condicion;
         }
@@ -622,19 +625,19 @@ namespace WebLab.Derivaciones
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                LinkButton CmdModificar = (LinkButton)e.Row.Cells[10].Controls[1];
+                LinkButton CmdModificar = (LinkButton)e.Row.Cells[12].Controls[1];
                 CmdModificar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
 
-                LinkButton CmdDerivar = (LinkButton)e.Row.Cells[11].Controls[1];
+                LinkButton CmdDerivar = (LinkButton)e.Row.Cells[13].Controls[1];
                 CmdDerivar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdDerivar.CommandName = "CambiarEstado";
 
 
-                LinkButton CmdAuditoria = (LinkButton)e.Row.Cells[12].Controls[1];
+                LinkButton CmdAuditoria = (LinkButton)e.Row.Cells[10].Controls[1];
                 CmdAuditoria.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdAuditoria.CommandName = "Auditoria";
 
-                LinkButton CmdPDFControl = (LinkButton)e.Row.Cells[13].Controls[1];
+                LinkButton CmdPDFControl = (LinkButton)e.Row.Cells[11].Controls[1];
                 CmdPDFControl.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
                 CmdPDFControl.CommandName = "PDFControl";
 
@@ -648,23 +651,22 @@ namespace WebLab.Derivaciones
 
                 //Cuando se deriva:
                 CmdDerivar.Visible = oLote.Estado == 1 || oLote.Estado == 3;
+                CmdDerivar.Text = "<span class='glyphicon glyphicon-send'></span>";
                 
                 //Cuando se descarga pdf de control:
                 CmdPDFControl.Visible = oLote.Estado == 2;
 
-                if (oLote.Baja) //Solo puede consultar, no anula, no pdf, no deriva
+                if (oLote.Baja) //no anula, no pdf, no deriva
                 {
-                    //Solo Consulta
-                    CmdModificar.CommandName = "Consulta";
-                    CmdModificar.ToolTip = "Consultar";
-                    Image imgEditar = (Image)CmdModificar.FindControl("imgEditar");
-                    imgEditar.ImageUrl = "~/App_Themes/default/images/zoom.png";
+                    CmdModificar.Visible = false;
                     //No anula
                     CmdAnular.Visible = false;
                     //No deriva
                     CmdDerivar.Visible = false;
                     //No saca pdf 
                     CmdPDFControl.Visible = false;
+                    //Color gris
+                    e.Row.BackColor = System.Drawing.Color.LightGray;
                 }
                 else
                 {
@@ -672,9 +674,8 @@ namespace WebLab.Derivaciones
                     {
                         //Solo Consulta
                         CmdModificar.CommandName = "Consulta";
-                        CmdModificar.ToolTip = "Consultar";
-                        Image imgEditar = (Image)CmdModificar.FindControl("imgEditar");
-                        imgEditar.ImageUrl = "~/App_Themes/default/images/zoom.png";
+                        CmdModificar.ToolTip = "Consulta";
+                        CmdModificar.Text = "<span class='glyphicon glyphicon-search'></span>";
                         //No anula
                         CmdAnular.Visible = false;
                     }
@@ -683,6 +684,7 @@ namespace WebLab.Derivaciones
                         //En modificacion
                         CmdModificar.CommandName = "Modificar";
                         CmdModificar.ToolTip = "Modificar";
+                        CmdModificar.Text = "<span class='glyphicon glyphicon-pencil'></span>";
                         //En anulacion
                         CmdAnular.Visible = true;
                         

@@ -109,7 +109,7 @@
                                     <td>
                                         <asp:DropDownList ID="ddlEstado" runat="server" class="form-control input-sm" TabIndex="5"></asp:DropDownList>
                                     </td>
-                                </tr>-
+                                </tr>
                                 <tr>
                                     <td class="myLabelIzquierda">Efector Origen:</td>
                                     <td>
@@ -121,12 +121,7 @@
                                         <asp:DropDownList ID="ddlEfectorDestino" runat="server" ToolTip="Seleccione el efector" TabIndex="7" Width="250px" class="form-control input-sm"></asp:DropDownList>
                                     </td>
                                 </tr>
-                               <%--  <tr>
-                                    <td class="myLabelIzquierda">Estado:</td>
-                                    <td>
-                                        <asp:CheckBoxList ID="chkEstados" runat="server" RepeatDirection="Horizontal"  CssClass="checkbox checkbox-inline" OnSelectedIndexChanged="chkEstados_SelectedIndexChanged" AutoPostBack="true"/>
-                                    </td>
-                                </tr>--%>
+                             
                             </table>
                         </div>
 
@@ -180,34 +175,21 @@
                                                     <asp:BoundField DataField="fechaRegistro" HeaderText="Fecha" SortExpression="fechaRegistro">
                                                         <ItemStyle HorizontalAlign="Center" Width="10%" />
                                                     </asp:BoundField>
-                                                    <asp:BoundField DataField="efectorOrigen" HeaderText="Efector Origen" SortExpression="efectorOrigen" />
+                                                    <asp:BoundField DataField="efectorOrigen" HeaderText="Efector Origen" SortExpression="efectorOrigen"  >          
+                                                        <ItemStyle Width="15%" />
+                                                         </asp:BoundField>
                                                     <asp:BoundField DataField="idEfectorOrigen">
                                                         <ItemStyle CssClass="hidden" />
                                                         <HeaderStyle CssClass="hidden" />
                                                     </asp:BoundField>
-                                                    <asp:BoundField DataField="efectorDestino" HeaderText="Efector Destino" SortExpression="efectorDestino" />
+                                                    <asp:BoundField DataField="efectorDestino" HeaderText="Efector Destino" SortExpression="efectorDestino" >
+                                                         <ItemStyle Width="15%" />
+                                                         </asp:BoundField>
                                                     <asp:BoundField DataField="estado" HeaderText="Estado" SortExpression="estado" />
                                                     <asp:BoundField DataField="username" HeaderText="Usuario Gen." SortExpression="username" />
                                                     <asp:BoundField DataField="fechaGeneracion" HeaderText="Fecha Gen." SortExpression="fechaGeneracion"/>
                                                     <asp:BoundField DataField="fechaEnvio" HeaderText="Fecha Envio" SortExpression="fechaEnvio"/>
                                                     <asp:BoundField DataField="fechaIngreso" HeaderText="Fecha Ing." SortExpression="fechaIngreso" />
-                                                    <asp:TemplateField HeaderText="Modificar/ Consultar">
-                                                        <ItemTemplate>
-                                                            <asp:LinkButton runat="server" ID="lnkEdit">
-                                                                <asp:Image  runat="server" ID="imgEditar" ImageUrl='~/App_Themes/default/images/editar.jpg'  />
-                                                            </asp:LinkButton>
-                                                        </ItemTemplate>
-                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
-                                                    </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Derivar">
-                                                        <ItemTemplate>
-                                                           <asp:LinkButton runat="server" ID="lnkCambiarEstado" ToolTip="Derivar lote">
-                                                                <asp:Image  runat="server" ImageUrl='../App_Themes/default/images/enviado.png'  />
-                                                            </asp:LinkButton>
-                                                        </ItemTemplate>
-                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
-                                                    </asp:TemplateField>
-
                                                     <asp:TemplateField HeaderText="Auditoria">
                                                         <ItemTemplate>
                                                             <asp:LinkButton runat="server" ID="lnkPDFAuditoria" ToolTip="Auditoria de lote" >
@@ -224,7 +206,23 @@
                                                         </ItemTemplate>
                                                         <ItemStyle Height="20px" HorizontalAlign="Center" Width="60px" />
                                                     </asp:TemplateField>
-                                                    <asp:TemplateField HeaderText="Anular">
+                                                    <asp:TemplateField >
+                                                        <ItemTemplate>
+                                                            <asp:LinkButton runat="server" ID="lnkEdit">
+                                                            </asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                                    </asp:TemplateField>
+                                                    <asp:TemplateField >
+                                                        <ItemTemplate>
+                                                           <asp:LinkButton runat="server" ID="lnkCambiarEstado" ToolTip="Derivar lote">
+                                                            </asp:LinkButton>
+                                                        </ItemTemplate>
+                                                        <ItemStyle Height="20px" HorizontalAlign="Center" Width="40px" />
+                                                    </asp:TemplateField>
+
+                                                    
+                                                    <asp:TemplateField >
                                                         <ItemTemplate >
                                                             <asp:LinkButton ID="Eliminar"  OnClientClick='<%# string.Format("PreguntoEliminar({0}); return false;", Eval("numero")) %>' runat="server"   Width="20px" >
                                                                 <span class="glyphicon glyphicon-remove"></span></asp:LinkButton>

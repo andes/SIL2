@@ -48,6 +48,7 @@ namespace WebLab.Derivaciones
             LoteDerivacion oLote = new LoteDerivacion();
             if (s_idCaso != "")
             {
+                // Baja de lote
                 oLote = (LoteDerivacion)oLote.Get(typeof(LoteDerivacion), int.Parse(s_idCaso));
                 oLote.Baja = true;
                 oLote.Observacion = txtMotivoBaja.Text;
@@ -60,30 +61,47 @@ namespace WebLab.Derivaciones
                 oLote.GrabarAuditoriaLoteDerivacion("Anula", int.Parse(Session["idUsuario"].ToString()),"Motivo baja" ,accion);
 
                 //Libero derivaciones
+                Usuario oUser = (Usuario) new Usuario().Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
                 ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
-                crit.Add(Expression.Eq("Idlote", int.Parse(s_idCaso)));
+                string ssql_Protocolo = @" IdLote=" + int.Parse(s_idCaso) +
+                    " and {alias}.IdDetalleProtocolo " + // Traer la derivacion que tiene asociada un DetalleProtocolo
+                    " in (Select IdDetalleProtocolo From LAB_DetalleProtocolo  where IdEfector=" + oUser.IdEfector.IdEfector + ")";
+                crit.Add(Expression.Sql(ssql_Protocolo));
+
+
                 IList lista = crit.List();
                 foreach (Derivacion oDeriva in lista)
                 {
                     oDeriva.Estado = 0;
                     oDeriva.Idlote = 0;
-                    oDeriva.IdUsuarioRegistro = int.Parse(Session["idUsuario"].ToString());
+                    oDeriva.IdUsuarioRegistro = oUser.IdUsuario;
                     oDeriva.FechaRegistro = DateTime.Now;
                     oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
                     oDeriva.IdMotivoCancelacion = 0;
+                    oDeriva.Save();
 
                     DetalleProtocolo oDetalle = oDeriva.IdDetalleProtocolo;
-                    oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
-                    oDetalle.ConResultado = false;
-                    oDetalle.IdUsuarioResultado = int.Parse(Session["idUsuario"].ToString());
-                    oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
-                    oDetalle.GrabarAuditoriaDetalleProtocolo("Desvincula del lote", int.Parse(Session["idUsuario"].ToString()));
+                    //Derivacion comun
+                    if(oDetalle.ResultadoCar == "Pendiente para enviar "){
+                        oDetalle.ConResultado = false;
+                        oDetalle.FechaResultado = DateTime.Parse("01/01/1900");
+                        oDetalle.ResultadoCar = "Pendiente de derivar";
+                        oDetalle.IdUsuarioResultado = oUser.IdUsuario;
+                    }
+                    else
+                    { //Derivacion automatica (a apartir de un resultado predefinido) //no tiene que cambiar ConResultado , FechaResultado
+                        oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente para enviar", " - Pendiente de derivar");
+                    }
+                   
+                    oDetalle.Save();
+                   
+                    oDetalle.GrabarAuditoriaDetalleProtocolo("Desvincula del lote", oUser.IdUsuario);
                     /*Actualiza estado de protocolo*/
                     if (oDetalle.IdProtocolo.Estado < 2)
                     {
-                        if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", int.Parse(Session["idUsuario"].ToString())))
+                        if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion",  oUser.IdUsuario))
                             oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
                         else
                         {
