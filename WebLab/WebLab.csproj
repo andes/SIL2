@@ -4976,11 +4976,6 @@
       <DependentUpon>Resultado.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Informes\Resultado2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resultado2.rpt</DependentUpon>
-    </Compile>
     <Compile Include="Informes\ResultadoA5.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
