@@ -104,6 +104,7 @@ namespace WebLab.Derivaciones
                 Utility oUtil = new Utility();
                 string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones_" + Request["idLote"]);
 
+                //Descarga automatica del PDF
                 if (ddlEstados.SelectedValue == "2")
                 {
                     string url = ResolveUrl("../DescargarPdf.ashx")
@@ -137,7 +138,7 @@ namespace WebLab.Derivaciones
             int idUsuario = oUser.IdUsuario;
             int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
             string resultadoDerivacion = (estadoLote == 2) ? "Derivado: " + Request["Destino"] : "No Derivado. ";
-            string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedItem.Text : "");
+            string observacion = txtObservacion.Text + " " + (estadoLote == 2 ? ddlTransporte.SelectedItem.Text : "");
             string resultadoAuditoria = resultadoDerivacion + " " + observacion;
             
             LoteDerivacion lote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), int.Parse(Request["idLote"]));
@@ -181,6 +182,9 @@ namespace WebLab.Derivaciones
                 oDet.ConResultado = true;
                 oDet.IdUsuarioResultado = idUsuario;
                 oDet.FechaResultado = fechaResultado;
+
+                if (estadoLote == 3) oDet.ResultadoCar = oDet.ResultadoCar + " " + observacion;
+              
                 oDet.Save();
 
                 //Inserta auditoria del detalle del protocolo
