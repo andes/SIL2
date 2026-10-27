@@ -51,13 +51,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.DropDownList ddlTransporte;
 
         /// <summary>
-        /// lblErrorTransporte control.
+        /// rvTransporte control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorTransporte;
+        protected global::Anthem.RequiredFieldValidator rvTransporte;
 
         /// <summary>
         /// txtObservacion control.
@@ -69,13 +69,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.TextBox txtObservacion;
 
         /// <summary>
-        /// lblErrorMotivo control.
+        /// rfvObservacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorMotivo;
+        protected global::Anthem.RequiredFieldValidator rfvObservacion;
 
         /// <summary>
         /// txtFecha control.
@@ -87,13 +87,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.TextBox txtFecha;
 
         /// <summary>
-        /// RequiredFieldValidator1 control.
+        /// rfvFecha control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
+        protected global::Anthem.RequiredFieldValidator rfvFecha;
 
         /// <summary>
         /// txtHora control.
@@ -105,13 +105,22 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.TextBox txtHora;
 
         /// <summary>
-        /// RequiredFieldValidator2 control.
+        /// rfvHora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
+        protected global::Anthem.RequiredFieldValidator rfvHora;
+
+        /// <summary>
+        /// hidToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
 
         /// <summary>
         /// btnGuardar control.
@@ -123,13 +132,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Button btnGuardar;
 
         /// <summary>
-        /// lblErrorLista control.
+        /// cvFilas control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorLista;
+        protected global::System.Web.UI.WebControls.CustomValidator cvFilas;
 
         /// <summary>
         /// lnkMarcar control.

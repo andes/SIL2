@@ -1,8 +1,9 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InformeLote.aspx.cs" Inherits="WebLab.Derivaciones.InformeLote" MasterPageFile="~/Site1.Master" %>
+<%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">  
    <script type="text/javascript">
-       function validarFormulario(s, args) {
+     <%--  function validarFormulario(s, args) {
            if (typeof (Page_ClientValidate) == 'function') {
                var esValido = Page_ClientValidate('0');
                if (!esValido) {
@@ -73,7 +74,7 @@
            return todoOk; 
        }
 
-       function habilitaTransporte() {
+     function habilitaTransporte() {
         //Habilita la seleccion del listado desplegable donde estan los transportes
 
            var ddl = document.getElementById('<%= ddlEstados.ClientID %>');
@@ -108,7 +109,7 @@
            } 
        }
 
-       function verificaSeleccion() {
+     function verificaSeleccion() {
             //Esta funcion revisa que se haya selecionado un transporte
            var lista_transporte = document.getElementById('<%= ddlTransporte.ClientID %>');
            var labelErrorTransporte = document.getElementById('<%= lblErrorTransporte.ClientID %>');
@@ -137,11 +138,11 @@
            }
        }
 
-       function ejecutarHabilitaciones() {
+        function ejecutarHabilitaciones() {
            habilitaTransporte();
            habilitaFechaRetiro();
        }
-       <%--document.addEventListener("DOMContentLoaded", function () {
+     document.addEventListener("DOMContentLoaded", function () {
            var txtFecha = document.getElementById('<%= txtFecha.ClientID %>');
            var txtHora = document.getElementById('<%= txtHora.ClientID %>');
 
@@ -204,7 +205,7 @@
                              <table style="border-spacing:1em 0; border-collapse: separate">
                                  <tr style="vertical-align: sub">
                                      <td >Marcar como: </td>
-                                     <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  onchange="ejecutarHabilitaciones()" /> 
+                                     <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged" AutoPostBack="true" /> 
                                          <asp:RangeValidator id="Range1"
                                                ControlToValidate="ddlEstados"
                                                MinimumValue="2"
@@ -215,47 +216,57 @@
                                      </td>
                                     
                                      <td >Retira transporte:</td>
-                                     <td > <asp:DropDownList ID="ddlTransporte" runat="server" class="form-control input-sm" onchange="verificaSeleccion()"></asp:DropDownList>    
+                                     <td > <asp:DropDownList ID="ddlTransporte" runat="server" class="form-control input-sm" ></asp:DropDownList>    
                                          <%-- <asp:RadioButtonList runat="server" ID="rb_transportista" CssClass="radio-inline" Visible="false"> 
                                             <asp:ListItem Text="Transportista Tramitar" Selected="True" />   
                                             <asp:ListItem Text="Otro" />
                                          </asp:RadioButtonList>--%>
+                                         <anthem:RequiredFieldValidator ID="rvTransporte" runat="server" ControlToValidate="ddlTransporte" ValidationGroup="0" ErrorMessage="* Seleccione un transporte"  InitialValue="-- SELECCIONE --" ></anthem:RequiredFieldValidator>
+                                      
 
                                      </td>
-                                     <td> <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lblErrorTransporte" CssClass="hidden"></asp:Label></td>
+                                    <%-- <td> <anthem:RequiredFieldValidator ID="rvTransporte" runat="server" ControlToValidate="ddlTransporte" ValidationGroup="0" ErrorMessage="* Seleccione un transporte"></anthem:RequiredFieldValidator>
+                                        <%-- <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lblErrorTransporte" CssClass="hidden">/asp:Label></td>--%>
                                     
                                  </tr>
                                  <tr style="vertical-align: sub">
                                       <td>Observaciones:</td>
                                       <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
-                                            <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lblErrorMotivo" CssClass="hidden"></asp:Label>
+                                          
+                                           <%-- <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lblErrorMotivo" CssClass="hidden"></asp:Label>--%>
+                                  
+                                        <anthem:RequiredFieldValidator
+                                            ID="rfvObservacion"
+                                            runat="server"
+                                            ControlToValidate="txtObservacion"
+                                            ErrorMessage="* Ingrese un motivo de cancelacion"
+                                            ForeColor="Red"
+                                            Display="Dynamic"
+                                            ValidationGroup="0" />
+<%--                                       <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>--%>
                                      </td>
-                                     <%-- <td>
-                                        
-                                       <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>
-                                     </td>--%>
                                      <td>Fecha y Hora de retiro:</td>
                                     
                                       <td >
                                             <asp:TextBox id="txtFecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
                                             
-                                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+                                            <anthem:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</anthem:RequiredFieldValidator>
                                     </td>
 
                                      <td>
                                          <asp:TextBox id="txtHora"  runat="server"  class="form-control input-sm"  TextMode="Time"> </asp:TextBox>
                                          
-                                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
+                                         <anthem:RequiredFieldValidator ID="rfvHora" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</anthem:RequiredFieldValidator>
                                         
                                      </td>
 
-
+                                     
 
 
 
                                      <td align="left">
+                                         <input id="hidToken" type="hidden" runat="server" />
                                          <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar" enabled="false"
-                                             OnClientClick="return validarFormulario();"
                                              onclick="btnGuardar_Click" ValidationGroup="0" />
 
                                      </td>
@@ -266,7 +277,7 @@
                     </td>
 						
 				</tr>
-
+                    
 					<tr>
 						<td class="myLabelIzquierdaGde" colspan="3">
                                             <hr /></td>
@@ -275,7 +286,8 @@
 					<tr>
 
 						<td colspan="2">
-                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
+<%--                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>--%>
+                            <asp:CustomValidator ID="cvFilas" runat="server" OnServerValidate="cvFilas_ServerValidate" ErrorMessage="* Seleccione una fila" ValidationGroup="0" ></asp:CustomValidator>
                             <br />
                             <div class="mylabelizquierda" >Seleccionar:                                           
                                 <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
@@ -306,7 +318,6 @@
                                    <asp:TemplateField HeaderText="Sel."  >
                                         <ItemTemplate>
                                            <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true"  Enabled='<%# habilitarCheckBoxSegunEstado(Convert.ToInt32(Eval("estado"))) %>' 
-                                               onchange="checkLote(this);"
                                                />
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" HorizontalAlign="Center" />
