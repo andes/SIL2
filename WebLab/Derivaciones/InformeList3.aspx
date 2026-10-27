@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InformeList3.aspx.cs" Inherits="WebLab.Derivaciones.InformeList3" MasterPageFile="~/Site1.Master" %>
-<%--<%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>--%>
+<%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 
 <asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">
   <script type="text/javascript" src="../script/jquery.min.js"></script> 
@@ -7,10 +7,10 @@
   <link href="../script/Resources/jquery-ui-1.8.20.css" rel="stylesheet"  type="text/css" />
     <script type="text/javascript">
 
-        function validarFormulario() {
+        <%--    function validarFormulario() {
             var todoOk = false;
             var validatorEstado = document.getElementById('<%= rvEstado.ClientID %>');
-            <%--var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');--%> //--> Cambio TextBox por DropDownList
+            var txtObservacion = document.getElementById('<%= txtObservacion.ClientID %>');//--> Cambio TextBox por DropDownList
             var motivoCancelacion = document.getElementById('<%= ddlMotivoCancelacion.ClientID%>');
             var estado = document.getElementById('<%= ddlEstado.ClientID %>');
             var label = document.getElementById('<%= lblErrorMotivo.ClientID %>');
@@ -44,8 +44,7 @@
             return todoOk;
 
         }
-
-
+        
         function validarGrilla() {
             var todoOk = hayCheckSeleccionado();
 
@@ -60,7 +59,7 @@
             var labelGrilla = document.getElementById('<%= lblErrorLista.ClientID %>');
             labelGrilla.className = 'hidden';
         }
-
+        
         function reseteaLabelErrorMotivo() {
             var labelMotivo = document.getElementById('<%= lblErrorMotivo.ClientID %>');
             labelMotivo.className = 'hidden';
@@ -89,7 +88,7 @@
             }
         }
 
-        function activaMotivos(estado) {
+       function activaMotivos(estado) {
             var motivos = document.getElementById('<%= ddlMotivoCancelacion.ClientID %>');
             if (estado.value == 2) {
                 //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
@@ -97,7 +96,9 @@
             } else {
                 motivos.disabled = true;
             }
-        }
+        }--%>
+
+
         function seleccionarTodos(seleccionar) {
             var grid = document.getElementById('<%= gvLista.ClientID %>');
             if (!grid) return;
@@ -110,13 +111,14 @@
                 }
             });
             //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
-            if (seleccionar && document.getElementById('<%= lblErrorLista.ClientID %>').className == 'exposed') {
+            <%--if (seleccionar && document.getElementById('<%= lblErrorLista.ClientID %>').className == 'exposed') {
                 reseteaLabelErrorGrilla();
-            }
+            }--%>
         }
-        //function validarSeleccionPDF(sender, args) {
-        //    args.IsValid = hayCheckSeleccionado();
-        //}
+
+       <%--  function validarSeleccionPDF(sender, args) {
+            args.IsValid = hayCheckSeleccionado();
+        }
 
         function hayCheckSeleccionado() {
             var gridView = document.getElementById('<%= gvLista.ClientID %>');
@@ -127,7 +129,8 @@
                 if (chk && chk.checked) return true;
             }
             return false;
-        }
+        }--%>
+
         function PreguntoEliminar() {
             if (confirm('¿Está seguro de eliminar el registro?'))
                 return true;
@@ -163,49 +166,48 @@
         }
     </script>
 
- <script type="text/javascript">
-     var formElements = [];
-
+  <%-- <script type="text/javascript">
      document.addEventListener("DOMContentLoaded", function () {
-         formElements = document.querySelectorAll("input, select, textarea");
-
-         // Guardamos los valores originales al cargar la página
-         formElements.forEach(function (el) {
-             const tipo = el.type?.toLowerCase();
-             el.dataset.originalValue = (tipo === "checkbox") ? el.checked.toString() : el.value;
-         });
-
-         // Submit nativo (por si alguien lo dispara sin pasar por el botón)
-         document.forms[0].addEventListener("submit", evaluarCambios);
-     });
-
-     function evaluarCambios() {
          const hdnDatos = document.getElementById('<%= hdnDatosModificados.ClientID %>');
-        const hdnGrid = document.getElementById('<%= gvLista.ClientID %>'); // ver nota abajo
-         let cambioGeneral = false;
-         let cambioEnGrid = false;
+        const hdnGrid = document.getElementById('<%= gvLista.ClientID %>');
+          const formElements = document.querySelectorAll("input, select, textarea");
 
-         formElements.forEach(function (el) {
-             const tipo = el.type?.toLowerCase();
+          // Guardamos los valores originales al cargar la página
+          formElements.forEach(function (el) {
+              const tipo = el.type?.toLowerCase();
+              if (tipo === "checkbox") {
+                  el.dataset.originalValue = el.checked.toString();
+              } else {
+                  el.dataset.originalValue = el.value;
+              }
+          });
 
-             // Ignorar botones y hidden (ViewState, __EVENTTARGET, los propios hdn, etc.)
-             if (tipo === "submit" || tipo === "button" || tipo === "hidden" || tipo === "image") return;
+          //Cuando se hace submit se evalua si hubo cambios (en la modificación)
+          const form = document.forms[0];
+          form.addEventListener("submit", function () {
+              let cambioGeneral = false;
+              let cambioEnGrid = false;
 
-             const original = el.dataset.originalValue;
-             const actual = (tipo === "checkbox") ? el.checked.toString() : el.value;
+              formElements.forEach(function (el) {
+                  const tipo = el.type?.toLowerCase();
+                  const original = el.dataset.originalValue;
+                  const actual = (tipo === "checkbox") ? el.checked.toString() : el.value;
 
-             if (original !== actual) {
-                 cambioGeneral = true;
-                 if (tipo === "checkbox" && el.closest("table")?.id?.includes("gv")) {
-                     cambioEnGrid = true;
-                 }
-             }
-         });
+                  if (original !== actual) {
+                      cambioGeneral = true;
 
-         hdnDatos.value = cambioGeneral ? "true" : "false";
-         hdnGrid.value = cambioEnGrid ? "true" : "false";
-     }
- </script>
+                      // Detectar si el checkbox pertenece a un GridView (ajustá si tu GridView tiene otro ID)
+                      if (tipo === "checkbox" && el.closest("table")?.id?.includes("gv")) {
+                          cambioEnGrid = true;
+                      }
+                  }
+              });
+
+              hdnDatos.value = cambioGeneral ? "true" : "false";
+              hdnGrid.value = cambioEnGrid ? "true" : "false";
+          });
+      });
+  </script> --%>
 
 
     
@@ -255,7 +257,7 @@
                                     <tr style="vertical-align: sub">
                                         <td>Marcar como:</td>
                                         <td >
-                                             <asp:DropDownList ID="ddlEstado" runat="server"  class="form-control input-sm" onchange="activaMotivos(this);"> </asp:DropDownList> 
+                                             <asp:DropDownList ID="ddlEstado" runat="server"  class="form-control input-sm" OnSelectedIndexChanged="ddlEstado_SelectedIndexChanged" AutoPostBack="true"> </asp:DropDownList> 
                                              <asp:RangeValidator id="rvEstado"
                                                ControlToValidate="ddlEstado"
                                                MinimumValue="1"
@@ -268,12 +270,15 @@
                                         <td>
                                             Motivo Cancelaci&oacute;n: </td>
                                         <td>
-                                            <asp:DropDownList ID="ddlMotivoCancelacion" runat="server" class="form-control input-sm" onchange="return validaObservacion(this);" />
-
+                                            <asp:DropDownList ID="ddlMotivoCancelacion" runat="server" class="form-control input-sm" />
+                                            <anthem:RangeValidator 
+                                                ID="rvMotivoCancelacion" runat="server" ControlToValidate="ddlMotivoCancelacion" 
+                                                ErrorMessage="* Seleccione un motivo" MaximumValue="99999" MinimumValue="1" Type="Integer" 
+                                                ValidationGroup="0"></anthem:RangeValidator>
                                         </td>
-                                        <td>
+                                       <%-- <td>
                                             <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lblErrorMotivo" CssClass="hidden"></asp:Label>
-                                        </td>
+                                        </td>--%>
                                         <td>
                                             Observaci&oacute;n:
                                         </td>
@@ -282,7 +287,7 @@
                                         </td>
                                         <td>
                                             <asp:Button ID="btnGuardar" runat="server" CausesValidation="true" CssClass="btn btn-primary"  Width="100" Text="Guardar" 
-                                             onclick="btnGuardar_Click" OnClientClick="return validarFormulario();" ValidationGroup="0" /></td>
+                                             onclick="btnGuardar_Click"  ValidationGroup="0" /></td>
                                     </tr>
                                   
                                 </table>
@@ -316,7 +321,8 @@
                     <tr><td> <br /></td></tr>
 				    <tr>
 					    <td colspan="2">
-                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
+                            <%--<asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label--%>
+                            <asp:CustomValidator id="cvGeneral" runat="server" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0" ></asp:CustomValidator>
                              <div class="mylabelizquierda" >Seleccionar:                                           
                             <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
                             <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
@@ -344,7 +350,7 @@
                                         <ItemTemplate>
                                             <asp:CheckBox ID="CheckBox1" runat="server" EnableViewState="true" 
                                                 Enabled='<%# HabilitarCheck(Convert.ToInt32(Eval("estado")), Convert.ToInt32(Eval("idLote"))) %> ' 
-                                                onchange='<%# string.Format("checkDeterminaciones(this, {0});", Eval("estado")) %>'
+                                                OnCheckedChanged="CheckBox1_CheckedChanged" AutoPostBack="true"
                                                 Checked='<%# HacerCheck(Convert.ToInt32(Eval("estado")))%> '/>
                                         </ItemTemplate>
                                         <ItemStyle Width="5%" 

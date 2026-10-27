@@ -85,27 +85,17 @@ namespace WebLab.Derivaciones
         private void PreventingDoubleSubmit(Button button)
         {
             StringBuilder sb = new StringBuilder();
-
-            // 1) Validación propia del botón (lo que estaba en OnClientClick)
-            string existente = (button.OnClientClick ?? string.Empty).Trim();
-            if (existente.Length > 0)
-            {
-                sb.Append("if ((function(){ " + existente + " }).call(this) === false) { return false; } ");
-            }
-
-            sb.Append("if (typeof(Page_ClientValidate) == 'function') { ");
-            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) { return false; } } ");
-
-
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
             sb.Append("this.value = 'Procesando...';");
             sb.Append("this.disabled = true;");
             sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
-            sb.Append("return false;");
+            sb.Append("return true;");
 
-            // Se limpia OnClientClick para que no se concatene dos veces
-            button.OnClientClick = string.Empty;
-            button.UseSubmitBehavior = false;
-            button.Attributes["onclick"] = sb.ToString();
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
         }
 
         private bool IsTokenValid()
@@ -177,6 +167,16 @@ namespace WebLab.Derivaciones
             lnkDesMarcar.Enabled = valor;
             txtFecha.Enabled = valor;
             txtHora.Enabled = valor;
+            /// 27.10.2026 Agregamos los validores tambien
+            rfvFecha.Enabled = valor;
+            rfvHora.Enabled = valor;
+            rvTransporte.Enabled = valor;
+
+            rfvObservacion.Enabled = false;
+            rvTransporte.UpdateAfterCallBack = true;
+            rfvFecha.UpdateAfterCallBack = true;
+            rfvObservacion.UpdateAfterCallBack = true;
+            rfvHora.UpdateAfterCallBack = true;
         }
 
         private void CargarControles()
@@ -347,29 +347,36 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
-                int idLote = verificarDeterminaciones();
-                if (idLote == 0) //No trajo ningun id Lote con error
+                if (Page.IsValid)
                 {
-                    if (IsTokenValid())
+                    int idLote = verificarDeterminaciones();
+                    if (idLote == 0) //No trajo ningun id Lote con error
                     {
-                        if (Guardar())
+                        if (IsTokenValid())
                         {
-                            ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
-                        }
-                        else
-                        {
-                            ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
+                            if (Guardar())
+                            {
+                                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                                
+                                /// los controles los dejamos por defecto activados
+                                activarControles(true);
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
 
+                            }
+                            CargarGrilla();
+                            limpiarForm();
                         }
-                        CargarGrilla();
-                        limpiarForm();
+
                     }
-                    
+                    else
+                    { //Es el idLote con error
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
+                    }
                 }
-                else
-                { //Es el idLote con error
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
-                }
+               
 
             }
             else
@@ -526,8 +533,54 @@ namespace WebLab.Derivaciones
             Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica" , false);
         }
 
+
         #endregion
 
-      
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e) 
+        {
+
+            if(ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
+            {
+                ddlTransporte.Enabled = true;
+                rvTransporte.Enabled = true;
+                txtFecha.Enabled = true;
+                txtHora.Enabled = true;
+                rfvObservacion.Enabled = false; // observacion no es obligagtoria en derivacion
+                rfvFecha.Enabled = true;
+                rfvHora.Enabled = true;
+            }
+            else
+            {
+                ddlTransporte.Enabled = false;
+                rvTransporte.Enabled = false;
+                ddlTransporte.SelectedValue = "-- SELECCIONE --";
+                txtFecha.Enabled = false;
+                txtHora.Enabled = false;
+                rfvObservacion.Enabled = true; // es obligatorio 
+                rfvFecha.Enabled = false;
+                rfvHora.Enabled = false;
+            }
+            rvTransporte.UpdateAfterCallBack = true;
+            rfvObservacion.UpdateAfterCallBack = true;
+            rfvFecha.UpdateAfterCallBack = true;
+            rfvHora.UpdateAfterCallBack = true;
+        }
+
+        protected void cvFilas_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = false;
+
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    break;
+                }
+            }
+        }
     }
 }

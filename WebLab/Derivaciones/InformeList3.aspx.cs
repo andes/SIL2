@@ -51,7 +51,7 @@ namespace WebLab.Derivaciones
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            PreventingDoubleSubmit(btnGuardar);  //en cada request, porque los atributos no se guardan en ViewState
+          
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] != null)
@@ -59,7 +59,7 @@ namespace WebLab.Derivaciones
                     oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     CargarListas();
                     SetToken();
-                   
+                    PreventingDoubleSubmit(btnGuardar);  
                     if (Request["Tipo"] == "Alta")
                     {
                         int estado = Convert.ToInt32(Request["Estado"]);
@@ -98,30 +98,17 @@ namespace WebLab.Derivaciones
         private void PreventingDoubleSubmit(Button button)
         {
             StringBuilder sb = new StringBuilder();
-
-            // 1) Validación propia del botón (la que estaba en OnClientClick)
-            string existente = (button.OnClientClick ?? string.Empty).Trim();
-            if (existente.Length > 0)
-            {
-                // Se envuelve en una función para respetar "return ..." y "this"
-                sb.Append("if ((function(){ " + existente + " }).call(this) === false) { return false; } ");
-            }
-
-            // 2) Validadores de ASP.NET (si existen en la página)
-            sb.Append("if (typeof(Page_ClientValidate) == 'function') { ");
-            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) { return false; } } ");
-            // 2.5) Evaluar cambios del formulario (antes de modificar el botón)
-            sb.Append("if (typeof(evaluarCambios) == 'function') { evaluarCambios(); } ");
-            // 3) Prevención de doble submit
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
             sb.Append("this.value = 'Procesando...';");
             sb.Append("this.disabled = true;");
             sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
-            sb.Append("return false;");
+            sb.Append("return true;");
 
-            // Se limpia OnClientClick para que no se concatene dos veces
-            button.OnClientClick = string.Empty;
-            button.UseSubmitBehavior = false;
-            button.Attributes["onclick"] = sb.ToString();
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
         }
 
         private bool IsTokenValid()
@@ -213,8 +200,8 @@ namespace WebLab.Derivaciones
             oUtil.CargarCombo(ddlMotivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
             ddlMotivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
-            
-            
+            rvMotivoCancelacion.Enabled = false; //inicio no obligatorio, cambia a obligatorio cuando seleccione el estado "No Enviado".
+
         }
         private void habilitarImpresion()
         {
@@ -254,9 +241,9 @@ namespace WebLab.Derivaciones
 
 
             if (gvLista.Rows.Count <= 0)
-            {
                 activarControles(false);
-            }
+            else
+                activarControles(true); //si actualiza la grilla despues de cargar determinaciones
 
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
 
@@ -485,11 +472,11 @@ namespace WebLab.Derivaciones
                 if (Session["idUsuario"] != null)
                 {
                     //Se verifica que se hayan realizados cambios
-                    if (hdnDatosModificados.Value == "false")
-                    {
-                     //   ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
-                    }
-                    else
+                    //if (hdnDatosModificados.Value == "false")
+                    //{
+                    //   ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
+                    //}
+                    //else
                     {
                         int idUsuario = int.Parse(Session["idUsuario"].ToString());
                         Usuario oUser = new Usuario();
@@ -862,7 +849,76 @@ namespace WebLab.Derivaciones
 
         protected void btnAgregarDeterminaciones_Click(object sender, EventArgs e)
         {
+            SetToken(); //actualizo los tokens cuando se vuelve del modal
             CargarGrilla();
         }
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            //valida que selecciono un item
+            args.IsValid = false;
+            
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    break;
+                }
+            }
+            cvGeneral.ErrorMessage = "*Seleccione una fila";
+
+        }
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+
+        protected void ddlEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddlEstado.SelectedValue == "2") //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
+            {
+                ddlMotivoCancelacion.Enabled = true;
+                rvMotivoCancelacion.Enabled = true;
+            }
+            else
+            { 
+                ddlMotivoCancelacion.Enabled = false;
+                rvMotivoCancelacion.Enabled = false;
+                ddlMotivoCancelacion.SelectedValue = "0";
+            }
+            rvMotivoCancelacion.UpdateAfterCallBack = true;
+        }
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+
+        protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Request["Tipo"] == "Modifica")
+            {
+                CheckBox chkStatus = (CheckBox)sender;
+                if (!chkStatus.Checked) 
+                {
+                    GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
+                    int estado = Convert.ToInt32(((Label)(row.Cells[row.RowIndex].FindControl("lbl_estado"))).Text);
+                    if(estado  == 4)
+                    {
+                        string script = "  alert('Al desmarcar la determinacion se excluirá del lote.') ";
+
+                        ScriptManager.RegisterStartupScript(
+                            this,
+                            this.GetType(),
+                            "aviso",
+                            script,
+                            true);
+                    }
+                }
+                   
+            }
+           
+        }
+
+        
     }
 }
