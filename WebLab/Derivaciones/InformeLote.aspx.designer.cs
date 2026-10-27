@@ -114,6 +114,15 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
 
         /// <summary>
+        /// hidToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
+
+        /// <summary>
         /// btnGuardar control.
         /// </summary>
         /// <remarks>

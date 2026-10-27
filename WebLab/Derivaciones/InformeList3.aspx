@@ -21,8 +21,6 @@
             reseteaLabelErrorGrilla();
 
             //Verifico los estados para el armado del Lote
-            //console.log("estado.value", estado.value);
-            //console.log("motivoCancelacion.value", motivoCancelacion.value);
             switch (estado.value) {
                 case "0": //Opcion  --Seleccion--
                     validatorEstado.style.visibility = 'visible';
@@ -43,7 +41,6 @@
                     todoOk = validarGrilla();
                     break;
             }
-            //console.log("final validacion ", todoOk);
             return todoOk;
 
         }
@@ -78,21 +75,15 @@
             }// agrego que si la determinacion ya esta en un Lote mande un alerta
             else {
 
-                //console.log(estado);
                 const params = new URLSearchParams(window.location.search);
-               // console.log(params);
                 const tipo = params.get("Tipo");
-               // console.log(tipo);
                 if (estado == '4' && tipo == 'Modifica') { //Estado 4 es Pendiente de envio
-                    console.log(window.location.search);
                     alert("Al desmarcar la determinacion se excluirá del lote.");
                 }
             }
         }
 
         function validaObservacion(text) {
-            //console.log("validaObservacion", text);
-            //console.log("validaObservacion value", text.value);
             if (text.value != "0") { /* if (text.value.trim()) {//--> Cambio TextBox por DropDownList */
                 reseteaLabelErrorMotivo();
             }
@@ -100,8 +91,6 @@
 
         function activaMotivos(estado) {
             var motivos = document.getElementById('<%= ddlMotivoCancelacion.ClientID %>');
-            console.log(motivos);
-            console.log(estado.value);
             if (estado.value == 2) {
                 //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
                 motivos.disabled = false;
@@ -174,48 +163,49 @@
         }
     </script>
 
-  <script type="text/javascript">
-      document.addEventListener("DOMContentLoaded", function () {
-        const hdnDatos = document.getElementById('<%= hdnDatosModificados.ClientID %>');
-        const hdnGrid = document.getElementById('<%= gvLista.ClientID %>');
-        const formElements = document.querySelectorAll("input, select, textarea");
+ <script type="text/javascript">
+     var formElements = [];
 
-        // Guardamos los valores originales al cargar la página
-        formElements.forEach(function (el) {
-            const tipo = el.type?.toLowerCase();
-            if (tipo === "checkbox") {
-                el.dataset.originalValue = el.checked.toString();
-            } else {
-                el.dataset.originalValue = el.value;
-            }
-        });
+     document.addEventListener("DOMContentLoaded", function () {
+         formElements = document.querySelectorAll("input, select, textarea");
 
-        //Cuando se hace submit se evalua si hubo cambios (en la modificación)
-        const form = document.forms[0];
-        form.addEventListener("submit", function () {
-            let cambioGeneral = false;
-            let cambioEnGrid = false;
+         // Guardamos los valores originales al cargar la página
+         formElements.forEach(function (el) {
+             const tipo = el.type?.toLowerCase();
+             el.dataset.originalValue = (tipo === "checkbox") ? el.checked.toString() : el.value;
+         });
 
-            formElements.forEach(function (el) {
-                const tipo = el.type?.toLowerCase();
-                const original = el.dataset.originalValue;
-                const actual = (tipo === "checkbox") ? el.checked.toString() : el.value;
+         // Submit nativo (por si alguien lo dispara sin pasar por el botón)
+         document.forms[0].addEventListener("submit", evaluarCambios);
+     });
 
-                if (original !== actual) {
-                    cambioGeneral = true;
+     function evaluarCambios() {
+         const hdnDatos = document.getElementById('<%= hdnDatosModificados.ClientID %>');
+        const hdnGrid = document.getElementById('<%= gvLista.ClientID %>'); // ver nota abajo
+         let cambioGeneral = false;
+         let cambioEnGrid = false;
 
-                    // Detectar si el checkbox pertenece a un GridView (ajustá si tu GridView tiene otro ID)
-                    if (tipo === "checkbox" && el.closest("table")?.id?.includes("gv")) {
-                        cambioEnGrid = true;
-                    }
-                }
-            });
+         formElements.forEach(function (el) {
+             const tipo = el.type?.toLowerCase();
 
-            hdnDatos.value = cambioGeneral ? "true" : "false";
-            hdnGrid.value = cambioEnGrid ? "true" : "false";
-        });
-    });
-  </script>
+             // Ignorar botones y hidden (ViewState, __EVENTTARGET, los propios hdn, etc.)
+             if (tipo === "submit" || tipo === "button" || tipo === "hidden" || tipo === "image") return;
+
+             const original = el.dataset.originalValue;
+             const actual = (tipo === "checkbox") ? el.checked.toString() : el.value;
+
+             if (original !== actual) {
+                 cambioGeneral = true;
+                 if (tipo === "checkbox" && el.closest("table")?.id?.includes("gv")) {
+                     cambioEnGrid = true;
+                 }
+             }
+         });
+
+         hdnDatos.value = cambioGeneral ? "true" : "false";
+         hdnGrid.value = cambioEnGrid ? "true" : "false";
+     }
+ </script>
 
 
     
@@ -320,6 +310,7 @@
                             <asp:HiddenField ID="HFIdLote" runat="server" />
                             <asp:HiddenField ID="HFIdEfectorDerivacion" runat="server" />
                             <asp:Button ID="btnAgregarDeterminaciones" runat="server" Text="Agregar Determinaciones" Visible="false" CssClass="btn btn-primary" Width="200" OnClientClick="AgregarDeterminaciones(); return false; " OnClick="btnAgregarDeterminaciones_Click"/>
+                            <input id="hidToken" type="hidden" runat="server" />
                         </td>
                     </tr>
                     <tr><td> <br /></td></tr>

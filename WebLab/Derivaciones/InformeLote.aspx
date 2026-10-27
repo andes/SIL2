@@ -254,6 +254,7 @@
 
 
                                      <td align="left">
+                                         <input id="hidToken" type="hidden" runat="server" />
                                          <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar" enabled="false"
                                              OnClientClick="return validarFormulario();"
                                              onclick="btnGuardar_Click" ValidationGroup="0" />
