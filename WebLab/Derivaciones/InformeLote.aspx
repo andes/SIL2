@@ -290,8 +290,8 @@
                             <asp:CustomValidator ID="cvFilas" runat="server" OnServerValidate="cvFilas_ServerValidate" ErrorMessage="* Seleccione una fila" ValidationGroup="0" ></asp:CustomValidator>
                             <br />
                             <div class="mylabelizquierda" >Seleccionar:                                           
-                                <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" onclick="lnkMarcar_Click" OnClientClick="reseteaLabelErrorLote()">Todas</asp:LinkButton>&nbsp;
-                                <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0"  onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
+                                <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  onclick="lnkMarcar_Click" >Todas</asp:LinkButton>&nbsp;
+                                <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"   onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
                                 &nbsp;&nbsp;
                                             
                              </div>

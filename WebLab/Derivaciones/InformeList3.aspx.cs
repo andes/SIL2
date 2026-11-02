@@ -230,7 +230,7 @@ namespace WebLab.Derivaciones
             txtObservacion.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
-            //ddl_motivoCancelacion.Enabled = valor;
+            ddlMotivoCancelacion.Enabled = valor;
             ddlEstado.Enabled = valor;
         }
 
@@ -242,8 +242,11 @@ namespace WebLab.Derivaciones
 
             if (gvLista.Rows.Count <= 0)
                 activarControles(false);
-            else
-                activarControles(true); //si actualiza la grilla despues de cargar determinaciones
+            else//si actualiza la grilla despues de cargar determinaciones
+            {
+                if(Request["Tipo"] == "Modifica")
+                    activarControles(true); 
+            }
 
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
 
