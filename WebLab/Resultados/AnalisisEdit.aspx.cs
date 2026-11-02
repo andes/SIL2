@@ -406,7 +406,7 @@ namespace WebLab.Resultados
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
                         oDetalle.EstadoValidacion = "";
                         GuardarDetallePractica(oDetalle);
-                        
+
                         // GuardarDerivacion(oDetalle);
                         //oDetalle.GuardarDerivacion(oUser);
                     }
@@ -415,53 +415,67 @@ namespace WebLab.Resultados
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
                             if (trajomuestra == "true")
-                            { 
-                                oDetalle.TrajoMuestra = "No";
-                                oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
-                            }
-                            else // (trajomuestra == "false"
                             {
-                                /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
-                                 * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
-                                 * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
-                                 * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
-                                 */
-
-                                oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
-                                bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
-                                oDetalle.TrajoMuestra = "Si";
-                                
-                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem && 
-                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio ==3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+                                if (oDetalle.TrajoMuestra == "Si") // estaba grabado Si
                                 {
-                                    /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
-                                    * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
-                                    */
-
-                                    //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
-                                    if (!oDetalle.ConResultado)
-                                    { 
-                                        oDetalle.IdUsuarioValida = 0; 
-                                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                                    }
-
-                                    //Caso 2: Es derivacion.
-                                    //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
-                                    if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                    oDetalle.TrajoMuestra = "No";
+                                    oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
+                                    //02.11.2026  Cambio de “Con muestra” a “Sin muestra” . Si tiene derivacion asociada pendiente se elimina.
+                                    Business.Data.Laboratorio.Derivacion oDev = new Business.Data.Laboratorio.Derivacion();
+                                    oDev = (Business.Data.Laboratorio.Derivacion)oDev.Get(typeof(Business.Data.Laboratorio.Derivacion), "IdDetalleProtocolo", oDetalle);
+                                    if (oDev != null)
                                     {
-                                        oDetalle.IdUsuarioValida = 0;
-                                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
+                                        oDev.Delete();
                                     }
-
-                                    /*  Si es un analisis Compuesto Regenero analisis.
-                                     *  Considero que si el analisis es Derivacion no se debe regenerar
-                                     *  Considero idItem = idSubItem
-                                     */
-
-                                    if ( oItem.IdCategoria == 1 )
-                                        GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                 }
-                                
+
+                              
+                            }
+                            else // // Cambia a Con Muestra (trajomuestra == "false"
+                            {
+                                if (oDetalle.TrajoMuestra == "No") // Anteriormente estaba Sin Muestra
+                                {
+                                    oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
+                                    oDetalle.TrajoMuestra = "Si";
+
+                                    /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                                    * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                                    * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                                    * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                                    */
+                                    if (oDetalle.IdItem == oDetalle.IdSubItem &&
+                                   (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio == 3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+                                    {
+                                        /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
+                                        * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
+                                        */
+
+                                        //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
+                                        if (!oDetalle.ConResultado)
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+
+                                        //Caso 2: Es derivacion. 
+                                        //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
+                                        if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+
+                                        /*  Si es un analisis Compuesto Regenero analisis.
+                                         *  Considero idItem = idSubItem
+                                         */
+
+                                        if (oItem.IdCategoria == 1)
+                                            GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
+                                    }
+                                    oDetalle.GuardarDerivacion(oUser); //2.11.2026 si no es practica verifica si es derivable y genera la derivacion
+                                }
+                                   
                             }
                             oDetalle.Save();
                         }
@@ -498,8 +512,17 @@ namespace WebLab.Resultados
                         }
                         if (noesta)
                         {
-                            oDetalle.Delete();                            
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", oUser.IdUsuario); //20.08.2029 usar el oUser logueado (idUsuarioValida en validacion o idUsuario en carga)
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()));
+                            //02.11.2026  Se borra si existe la derivacion asociada pendiente (se verifico en serverValidate que no esta en gestion)
+                            Business.Data.Laboratorio.Derivacion oDev = new Business.Data.Laboratorio.Derivacion();
+                            oDev = (Business.Data.Laboratorio.Derivacion)oDev.Get(typeof(Business.Data.Laboratorio.Derivacion), "IdDetalleProtocolo", oDetalle);
+                            if (oDev != null)
+                            {
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
+                                oDev.Delete(); //Primero borro la derivacion para tener la referencia del detalle
+                            }
+
+                            oDetalle.Delete();
                         }
                     }
                 }
@@ -616,8 +639,9 @@ namespace WebLab.Resultados
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
                 oDet.GuardarValorReferencia();
-                //Guarda Derivacion              
-                oDet.GuardarDerivacion(oUser);
+                //Guarda Derivacion
+                if (oDet.TrajoMuestra == "Si")  //02.11.2026 Se genera derivacion solo si trajo muestra
+                     oDet.GuardarDerivacion(oUser);
 
             }
             else
@@ -840,7 +864,7 @@ namespace WebLab.Resultados
            
                 if (!ValidarEliminarDeterminacionConAislamientos())
             {
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //que no borre los datos cargados si da un error
                 args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage =
                         "No se puede eliminar una determinación que posee aislamientos asociados.";
@@ -850,7 +874,7 @@ namespace WebLab.Resultados
 
             if (!VerificarAnalisisContenidos())
             {
-                TxtDatos.Value = "";
+                //TxtDatos.Value = ""; //que no borre los datos cargados si da un error
                 args.IsValid = false;
 
                 return;
@@ -867,6 +891,139 @@ namespace WebLab.Resultados
                 
                 else args.IsValid = true;            
             }
+
+            
+            //02.11.2026 Validamos que las determinaciones tildadas como "Sin Muestra" tengan la derivacion asociada como "Pendiente de derivar" (no esta en lote)
+            //Caso contrario: Con derivación en gestión, se envia un mensaje que no puede marcarlas como "Sin Muestra"
+            string codigoSinMuestra = ValidarDeterminacionSinMuestraConDerivacion();
+            if (codigoSinMuestra == "") args.IsValid = true;
+            else
+            {
+                args.IsValid = false;
+                this.cvValidacionInput.ErrorMessage = "Codigo " + codigoSinMuestra + ": No se puede cambiar a sin muestra porque la determinación está en gestión de derivación";
+                return;
+            }
+
+            //02.11.2026 Validamos que el codigo que se borro de la grilla no tenga una derivacion en gestion
+            //Caso contrario: Con derivacion en gestion, mostramos el error no puede continuar
+            string codigoEliminado = ValidarDeterminacionEliminarConDerivacion();
+            if (codigoEliminado == "") args.IsValid = true;
+            else
+            {
+                args.IsValid = false;
+                this.cvValidacionInput.ErrorMessage = "Codigo " + codigoEliminado + ": No es posible eliminar. La determinación tiene una derivación vinculada";
+                return;
+            }
+            
+        }
+
+        private string ValidarDeterminacionEliminarConDerivacion()
+        {
+            // Obtener los codigos que permanecen en la grilla
+            List<string> codigosVista = new List<string>();
+
+            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            {
+                string[] registros = TxtDatosCargados.Value.Split(';');
+
+                foreach (string registro in registros)
+                {
+                    if (!string.IsNullOrEmpty(registro))
+                    {
+                        string[] datos = registro.Split('#');
+
+                        if (datos.Length > 0 && datos[0] != "")
+                            codigosVista.Add(datos[0]);
+                    }
+                }
+            }
+
+            // Traemos todos los codigos que tienen derivaciones en gestion
+            string idProtocolo = Request["idProtocolo"].ToString();
+
+            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+            string sql = @"
+                SELECT DISTINCT ie.codigo
+                FROM LAB_DetalleProtocolo dp WITH (NOLOCK)
+                INNER JOIN LAB_Item ie WITH (NOLOCK) ON ie.iditem = dp.iditem
+                INNER JOIN LAB_Derivacion d WITH (NOLOCK) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
+                WHERE dp.idProtocolo = @idProtocolo
+                    AND d.estado <> 0";
+
+            using (SqlCommand comando = new SqlCommand(sql, conexion))
+            {
+                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
+
+                using (SqlDataReader reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string codigo = reader["codigo"].ToString();
+
+                        // Si tiene derivacion en gestion y ya no esta en la grilla, no se puede eliminar
+                        if (!codigosVista.Contains(codigo))
+                            return codigo;
+                    }
+                }
+            }
+
+            return "";
+        }
+
+        private string ValidarDeterminacionSinMuestraConDerivacion() //Devuelve el codigo de la determinacion que no puede cambiar de estado
+        {
+            // Obtener los codigos de la grilla que se marcaron como "Sin Muestra"
+            List<string> codigosVista = new List<string>();
+
+            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            {
+                string[] registros = TxtDatosCargados.Value.Split(';');
+
+                foreach (string registro in registros)
+                {
+                    if (!string.IsNullOrEmpty(registro))
+                    {
+                        string[] datos = registro.Split('#');
+
+                        if (datos.Length > 0)
+                        {
+                            if (datos[1] == "true") //"S/Muestra": Esta marcado sin muestra
+                                codigosVista.Add(datos[0]);
+                        }
+                    }
+                }
+            }
+
+            //Traemos todos los codigos que tiene derivacion en gestion
+            string idProtocolo = Request["idProtocolo"].ToString();
+            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+            string sql = @"
+                    SELECT DISTINCT ie.codigo
+                    FROM LAB_DetalleProtocolo dp  with (nolock)
+                    INNER JOIN LAB_Item ie  with (nolock) ON ie.iditem = dp.iditem
+                    INNER JOIN LAB_Derivacion d   with (nolock) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
+                    WHERE dp.idProtocolo = @idProtocolo
+                      AND d.estado <> 0"; //Estado 0: Pendiente de derivar (No esta en gestion)
+
+            using (SqlCommand comando = new SqlCommand(sql, conexion))
+            {
+                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
+
+                using (SqlDataReader reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string codigo = reader["codigo"].ToString();
+
+                        if (codigosVista.Contains(codigo))
+                            return codigo;
+                    }
+                }
+            }
+
+            return "";
         }
 
 

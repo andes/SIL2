@@ -3109,7 +3109,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         GuardarDetallePractica(oDetalle);
 
                         // GuardarDerivacion(oDetalle);
-                        oDetalle.GuardarDerivacion(oUser);
+                        if(oDetalle.TrajoMuestra == "Si") oDetalle.GuardarDerivacion(oUser); //2.11.2026 Se genera derivacion solo si trajo muestra
 
 
 
@@ -3140,6 +3140,15 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                     oDetalle.TrajoMuestra = "No";
                                     oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
                                     oDetalle.Save();
+                                    //02.11.2026  Cambio de “Con muestra” a “Sin muestra” . Si tiene derivacion asociada pendiente se elimina.
+                                    Business.Data.Laboratorio.Derivacion oDev = new Business.Data.Laboratorio.Derivacion();
+                                    oDev = (Business.Data.Laboratorio.Derivacion) oDev.Get(typeof(Business.Data.Laboratorio.Derivacion), "IdDetalleProtocolo", oDetalle);
+                                    if(oDev != null)
+                                    {
+                                        oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
+                                        oDev.Delete();
+                                    }
+                                    
                                 }
                             }
                             else  // si  trajo muestra
@@ -3182,6 +3191,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                             GuardarDetallePractica(oDetalle, true);  //regenera=true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                         } 
                                     }
+
+                                    //02.11.2026 Cambio de “Sin muestra” a “Con muestra” si es derivable tiene que generar la derivacion
+                                    oDetalle.GuardarDerivacion(oUser);
                                 }
                             }
 
@@ -3212,7 +3224,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
             if (Request["Operacion"].ToString() != "Alta")
             {
-                // Modificacion de protocolo en proceso: Elimina los detalles que no se ingresaron por pantalla         
+                // Modificacion de protocolo en proceso: Elimina los detalles que no se ingresaron por pantalla y sus derivaciones pendientes de derivar(ya verificado en serverValidate)        
                 //  ISession m_session = NHibernateHttpModule.CurrentSession;
                 ICriteria critBorrado = m_session.CreateCriteria(typeof(DetalleProtocolo));
                 critBorrado.Add(Expression.Eq("IdProtocolo", oRegistro));
@@ -3238,8 +3250,17 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         }
                         if (noesta)
                         {
-                            oDetalle.Delete();
                             oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()));
+                            //02.11.2026  Se borra si existe la derivacion asociada pendiente (se verifico en serverValidate que no en gestion)
+                            Business.Data.Laboratorio.Derivacion oDev = new Business.Data.Laboratorio.Derivacion();
+                            oDev = (Business.Data.Laboratorio.Derivacion)oDev.Get(typeof(Business.Data.Laboratorio.Derivacion), "IdDetalleProtocolo", oDetalle);
+                            if(oDev != null)
+                            {
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
+                                oDev.Delete(); //Primero borro la derivacion para tener la referencia del detalle
+                            }
+                            
+                            oDetalle.Delete();
                         }
                     }
                 }
@@ -4444,10 +4465,142 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     this.cvValidacionInput.ErrorMessage = "Debe seleccionar un medico del listado";
                     return;
                 }
+
+                
+                if(operacion == "Modifica")
+                {
+                    //02.11.2026 Validamos que las determinaciones tildadas como "Sin Muestra" tengan la derivacion asociada como "Pendiente de derivar" (no esta en lote)
+                    //Caso contrario: Con derivación en gestión, se envia un mensaje que no puede marcarlas como "Sin Muestra"
+                    string codigo = ValidarDeterminacionSinMuestraConDerivacion();
+                    if(codigo == "") args.IsValid = true;
+                    else
+                    {
+                        args.IsValid = false;
+                        this.cvValidacionInput.ErrorMessage = "Codigo " + codigo + ": No se puede cambiar a sin muestra porque la determinación está en gestión de derivación";
+                        return;
+                    }
+
+                    //02.11.2026 Validamos que el codigo que se borro de la grilla no tenga una derivacion en gestion
+                    //Caso contrario: Con derivacion en gestion, mostramos el error no puede continuar
+                    string codigoEliminado = ValidarDeterminacionEliminarConDerivacion();
+                    if (codigoEliminado == "") args.IsValid = true;
+                    else
+                    {
+                        args.IsValid = false;
+                        this.cvValidacionInput.ErrorMessage = "Codigo " + codigoEliminado + ": No es posible eliminar. La determinación tiene una derivación vinculada";
+                        return;
+                    }
+                }
             }
         }
+        private string ValidarDeterminacionEliminarConDerivacion()
+        {
+            // Obtener los codigos que permanecen en la grilla
+            List<string> codigosVista = new List<string>();
 
-        
+            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            {
+                string[] registros = TxtDatosCargados.Value.Split(';');
+
+                foreach (string registro in registros)
+                {
+                    if (!string.IsNullOrEmpty(registro))
+                    {
+                        string[] datos = registro.Split('#');
+
+                        if (datos.Length > 0 && datos[0] != "")
+                            codigosVista.Add(datos[0]);
+                    }
+                }
+            }
+
+            // Traemos todos los codigos que tienen derivaciones en gestion
+            string idProtocolo = Request["idProtocolo"].ToString();
+
+            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+            string sql = @"
+                SELECT DISTINCT ie.codigo
+                FROM LAB_DetalleProtocolo dp WITH (NOLOCK)
+                INNER JOIN LAB_Item ie WITH (NOLOCK) ON ie.iditem = dp.iditem
+                INNER JOIN LAB_Derivacion d WITH (NOLOCK) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
+                WHERE dp.idProtocolo = @idProtocolo
+                    AND d.estado <> 0";
+
+            using (SqlCommand comando = new SqlCommand(sql, conexion))
+            {
+                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
+
+                using (SqlDataReader reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string codigo = reader["codigo"].ToString();
+
+                        // Si tiene derivacion en gestion y ya no esta en la grilla, no se puede eliminar
+                        if (!codigosVista.Contains(codigo))
+                            return codigo;
+                    }
+                }
+            }
+
+            return "";
+        }
+
+        private string ValidarDeterminacionSinMuestraConDerivacion() //Devuelve el codigo de la determinacion que no puede cambiar de estado
+        {
+            // Obtener los codigos de la grilla que se marcaron como "Sin Muestra"
+            List<string> codigosVista = new List<string>();
+
+            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            {
+                string[] registros = TxtDatosCargados.Value.Split(';');
+
+                foreach (string registro in registros)
+                {
+                    if (!string.IsNullOrEmpty(registro))
+                    {
+                        string[] datos = registro.Split('#');
+
+                        if (datos.Length > 0)
+                        {
+                            if (datos[1] == "true") //"S/Muestra": Esta marcado sin muestra
+                                codigosVista.Add(datos[0]);
+                        }
+                    }
+                }
+            }
+
+            //Traemos todos los codigos que tiene derivacion en gestion
+            string idProtocolo = Request["idProtocolo"].ToString();
+            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+            string sql = @"
+                    SELECT DISTINCT ie.codigo
+                    FROM LAB_DetalleProtocolo dp  with (nolock)
+                    INNER JOIN LAB_Item ie  with (nolock) ON ie.iditem = dp.iditem
+                    INNER JOIN LAB_Derivacion d   with (nolock) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
+                    WHERE dp.idProtocolo = @idProtocolo
+                      AND d.estado <> 0"; //Estado 0: Pendiente de derivar (No esta en gestion)
+
+            using (SqlCommand comando = new SqlCommand(sql, conexion))
+            {
+                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
+
+                using (SqlDataReader reader = comando.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string codigo = reader["codigo"].ToString();
+
+                        if (codigosVista.Contains(codigo))
+                            return codigo;
+                    }
+                }
+            }
+
+            return "";
+        }
 
         private bool ValidarEliminarDeterminacionConAislamientos()
         {
