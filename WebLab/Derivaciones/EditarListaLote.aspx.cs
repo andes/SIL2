@@ -10,11 +10,15 @@ using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Collections;
+using System.Text;
+
 namespace WebLab.Derivaciones
 {
     public partial class EditarListaLote : System.Web.UI.Page
     {
         public Usuario oUsuario;
+        private Random random = new Random();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -25,7 +29,8 @@ namespace WebLab.Derivaciones
                 {
                     HFIdEfectorDerivacion.Value = Request["idEfectorDerivacion"].ToString();
                     CargarListas();
-                    
+                    PreventingDoubleSubmit(btnGuardar);
+                    SetToken();
                     txtFechaDesde.Value = DateTime.Now.AddDays(-30).ToShortDateString();
                     txtFechaHasta.Value = DateTime.Now.ToShortDateString();
                 }
@@ -113,6 +118,35 @@ namespace WebLab.Derivaciones
             CargarGrilla();
         }
 
+        private void PreventingDoubleSubmit(Button button)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+            sb.Append("this.value = 'Procesando...';");
+            sb.Append("this.disabled = true;");
+            sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+            sb.Append("return true;");
+
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
+        }
+
+        private bool IsTokenValid()
+        {
+            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+            SetToken();
+            return result;
+        }
+
+        private void SetToken()
+        {
+            double next = random.Next();
+            hidToken.Value = next + "";
+            Session["NextToken"] = next;
+        }
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             lblMensaje.Text = "";
