@@ -59,6 +59,9 @@
     <Reference Include="EPPlus">
       <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlSanitizationLibrary">
+      <HintPath>..\WebLab\Bin\HtmlSanitizationLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.0.1, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Referencias\Iesi.Collections.dll</HintPath>

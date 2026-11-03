@@ -150,9 +150,16 @@
                         <asp:BoundField DataField="unidad" HeaderText="U.Med">
                             <ItemStyle HorizontalAlign="Center" />
                         </asp:BoundField>
-                        <asp:BoundField DataField="ValorReferencia" HeaderText="V.Referencia">
+                       <%-- <asp:BoundField DataField="ValorReferencia" HeaderText="V.Referencia">
                             <ItemStyle HorizontalAlign="Center" />
-                        </asp:BoundField>
+                        </asp:BoundField>--%>
+                        <asp:TemplateField HeaderText="V.Referencia">
+                            <ItemTemplate>
+                                <asp:Literal ID="litValorReferencia" runat="server"
+                                    Text='<%# Eval("ValorReferencia") %>' Mode="PassThrough" /> <!-- Mode="PassThrough" permite interpretar las etiquetas HTML en lugar de mostrarlas como texto. -->
+                            </ItemTemplate>
+                            <ItemStyle HorizontalAlign="Center" />
+                        </asp:TemplateField>
                         <asp:BoundField DataField="metodo" HeaderText="Metodo">
                             <ItemStyle HorizontalAlign="Center" />
                         </asp:BoundField>

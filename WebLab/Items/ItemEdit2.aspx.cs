@@ -51,12 +51,13 @@ namespace WebLab.Items
         }
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            oCr.CacheDuration = 0;
-            oCr.EnableCaching = false;
-            //oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
             if (Session["idUsuario"] != null)
+            { 
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-            //     oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1, "IdEfector", oEfector);
+                oCr.Report.FileName = "";
+                oCr.CacheDuration = 0;
+                oCr.EnableCaching = false;
+            }
             else
                 Response.Redirect("../FinSesion.aspx", false);
 
@@ -1355,8 +1356,9 @@ namespace WebLab.Items
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-             
-            oRegistro.Observacion =   this.txtObservaciones.Text.Replace("|", "");
+            //oRegistro.Observacion = this.txtObservaciones.Text;
+
+            oRegistro.Observacion = SanitizarHTML();
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
             oRegistro.IdPresentacion = int.Parse(ddlPresentacionItem.SelectedValue);
@@ -1397,7 +1399,8 @@ namespace WebLab.Items
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-            oRegistro.Observacion = this.txtObservaciones.Text.Replace("|","");
+            //oRegistro.Observacion = this.txtObservaciones.Text;
+            oRegistro.Observacion = SanitizarHTML();
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1456,7 +1459,8 @@ namespace WebLab.Items
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text.Replace("|", "");
+                    //oRegistro.Observacion = this.txtObservaciones.Text;
+                    oRegistro.Observacion = SanitizarHTML();
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1516,7 +1520,8 @@ namespace WebLab.Items
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text.Replace("|", "");
+                    //oRegistro.Observacion = this.txtObservaciones.Text;
+                    oRegistro.Observacion = SanitizarHTML();
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 
@@ -3491,11 +3496,25 @@ namespace WebLab.Items
             IList items = crit.List();
             foreach (ItemEfector itemEfector in items)
             {
-                oReg.GrabarAuditoriaDetalleItem(accion, oUser,  "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(),"");
+                oReg.GrabarAuditoriaDetalleItem(accion, oUser, "Limite de turnos. Efector: " + itemEfector.IdEfector.Nombre, txtLimite.Value.ToString(), "");
                 itemEfector.LimiteTurnosDia = int.Parse(txtLimite.Value.ToString());
                 itemEfector.Save();
             }
+        }
+        private string SanitizarHTML()
+        {
+            Utility utility = new Utility();
+            //20.10.2026 No guardar |
+            hfHtml.Value = hfHtml.Value.Replace("%7C", "").Replace("|",""); //%7C equivale a |
+            return utility.SanitizarHTML(Server, hfHtml.Value);
+        }
 
+        protected void cvObservaciones_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            Utility utility = new Utility();
+            //20.10.2026 No guardar |
+            hfHtml.Value = hfHtml.Value.Replace("%7C", "").Replace("|", ""); //%7C equivale a |
+            args.IsValid = (utility.SanitizarHTML(Server, hfHtml.Value)).Length <= 4000;
         }
     }
 }
