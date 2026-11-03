@@ -774,7 +774,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                 lblCodigo.Text = oItem.Codigo;
                 hiditem.Value = oItem.IdItem.ToString();
                 Utility oUtil = new Utility();
-                string m_ssql = @"select   resultado from LAB_ResultadoItem with (nolock) where iditem =" + oItem.IdItem.ToString()+ " and idEfector= "+oUser.IdEfector.IdEfector.ToString() +" order by resultado";
+                string m_ssql = @"select   resultado from LAB_ResultadoItem with (nolock) where iditem =" + oItem.IdItem.ToString()+ " and idEfector= "+oUser.IdEfector.IdEfector.ToString() + " order by idResultadoItem";
 
                 oUtil.CargarCombo(ddlResultado, m_ssql, "resultado", "resultado");
                 ddlResultado.Items.Insert(0, new ListItem("--Seleccione--", "0"));
@@ -865,11 +865,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                 { }
 
         }
-
- 
-
- 
-      
+          
   
   
       
@@ -907,7 +903,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
         private void GuardarResultado(string m_idDetalleProtocolo, string valorItem, bool valida )
         {
 
-           
+            ISession m_session = NHibernateHttpModule.CurrentSession;
             DetalleProtocolo oDetalle = new DetalleProtocolo();
            
                 oDetalle = (DetalleProtocolo)oDetalle.Get(typeof(DetalleProtocolo), int.Parse(m_idDetalleProtocolo));
@@ -931,6 +927,63 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                             oDetalle.ConResultado = false;
                         }
                         break;
+
+                    case 3://Predefinido
+                        {
+                           if (valida)
+                            {
+                                if (valorItem != "")
+                                {
+                                    oDetalle.ResultadoCar = valorItem;
+                                    ICriteria crit2 = m_session.CreateCriteria(typeof(ResultadoItem));
+
+                                    crit2.Add(Expression.Eq("IdItem", oDetalle.IdSubItem));
+                                    crit2.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                                    crit2.Add(Expression.Eq("Resultado", valorItem));
+
+                                    IList detalleResultadoItem = crit2.List();
+
+                                    if (detalleResultadoItem.Count > 0)
+                                    {
+                                        ResultadoItem oRes = (ResultadoItem)detalleResultadoItem[0];
+
+                                        if ((oRes.IdEfectorDeriva > 0) && (oRes.IdEfectorDeriva != oDetalle.IdEfector.IdEfector))
+                                            oDetalle.GuardarDerivacion(oUser, oRes.IdEfectorDeriva);
+
+                                        oDetalle.EstadoValidacion = oRes.EstadoValidacion;
+                                    }
+                                    else
+                                    {
+                                        // El resultado no está configurado en ResultadoItem                                               
+                                        oDetalle.EstadoValidacion = "";
+                                    }
+
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoCar = "";
+                                    oDetalle.ConResultado = false;
+                                    oDetalle.EstadoValidacion = "";
+                                }
+                            }
+                            else
+                            {
+                                if (valorItem != "")
+                                {
+                                    oDetalle.ResultadoCar = valorItem;
+                                    oDetalle.ConResultado = true;
+                                }
+                                else
+                                {
+                                    oDetalle.ResultadoCar = "";
+                                    oDetalle.ConResultado = false;
+                                    oDetalle.EstadoValidacion = "";
+                                }
+                            }
+                        }
+                        break;
+
                     default:
                         if (valorItem != "")
                         {
@@ -944,43 +997,9 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                         }
                         break;
                 }
-
-                int pres = oDetalle.IdSubItem.GetPresentacionEfector(oDetalle.IdEfector);
-
-                string valorRef = oDetalle.CalcularValoresReferencia(pres);
-                string m_metodo = "";
-                string m_valorReferencia = "";
-                
-
-                if (valorRef != null)
-                {
-                    string[] arr = valorRef.Split(("|").ToCharArray());
-                    switch (arr.Length)
-                    {
-                        case 1: m_valorReferencia = arr[0].Trim().ToString(); break;
-                        case 2:
-                            {
-                                m_valorReferencia = arr[0].Trim().ToString();
-                                m_metodo = arr[1].Trim().ToString();
-                            }
-                            break;
-                    }
-                    oDetalle.Metodo = m_metodo;
-                    oDetalle.ValorReferencia = m_valorReferencia;
-                }
+             
                 string operacion = Request["Operacion"].ToString();
-                string s_unidadMedida = "";
-                int i_unidadMedida = oDetalle.IdSubItem.IdUnidadMedida;
-                if (i_unidadMedida > 0)
-                {
-                    UnidadMedida oUnidad = new UnidadMedida();
-                    oUnidad = (UnidadMedida)oUnidad.Get(typeof(UnidadMedida), i_unidadMedida);
-                    s_unidadMedida = oUnidad.Nombre;
-                }
-
-                oDetalle.UnidadMedida = s_unidadMedida;
-                //oDetalle.Metodo = m_metodo;
-                //oDetalle.ValorReferencia = m_valorReferencia;
+            
                 bool grabar = true;
                 string s_operacion = "Valida";
                 if (!valida) s_operacion = "Carga";
@@ -1131,21 +1150,41 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                 //Usuario oUser = new Usuario();
                 //oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
 
-
                 Protocolo oRegistro = new Protocolo();
-                oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), "Numero", int.Parse(txtNumero.Text), "IdEfector",oUser.IdEfector );
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Protocolo));
+                crit.Add(Expression.Eq("Numero", int.Parse(txtNumero.Text)));
+                crit.Add(Expression.Eq("IdEfector", oUser.IdEfector));
+                crit.Add(Expression.Eq("Baja", false));
+                oRegistro = (Protocolo)crit.UniqueResult();
+                
+
+                if (oRegistro != null)
+                {
+                //    Protocolo oRegistro = new Protocolo();
+                //oRegistro = (Protocolo)oRegistro.Get(typeof(Protocolo), "Numero", int.Parse(txtNumero.Text), "IdEfector",oUser.IdEfector );
 
                 Item oItem = new Item();
 
                 oItem = (Item)oItem.Get(typeof(Item), int.Parse(Request["idItem"].ToString()));
 
-                if (oRegistro != null)
-                {
                     DetalleProtocolo oDProtocolo = new DetalleProtocolo();
                     oDProtocolo = (DetalleProtocolo)oDProtocolo.Get(typeof(DetalleProtocolo), "IdProtocolo", oRegistro, "IdSubItem", oItem);
 
-                  
+                    ///Caro: control de derivacion                    
+                    Derivacion oDeriva = new Derivacion();
+                    oDeriva = (Derivacion)oDeriva.Get(typeof(Derivacion), "IdDetalleProtocolo", oDProtocolo);
+
                     string res = oDProtocolo.ResultadoCar;
+
+                    if (oDeriva!= null)
+                    {
+                        lblError.Text = "El resultado tiene una derivacion asociada no puede modificar.";
+                        lblError.Visible = true;
+                        lblError.UpdateAfterCallBack = true;
+
+                        return;
+                    }
 
                     Agregar(oDProtocolo);
 
@@ -1166,10 +1205,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                                 btnHabilitar.Visible = true;
                                 btnHabilitar.UpdateAfterCallBack = true;
                             }
-
-    }
-
-
+                        }
                      }
 
                    
@@ -1180,7 +1216,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
             }
             catch
             {
-                lblError.Text = "Numero no encontrado";
+                lblError.Text = "Error al buscar numero";
                 lblError.UpdateAfterCallBack = true;
             }
 

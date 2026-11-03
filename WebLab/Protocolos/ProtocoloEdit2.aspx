@@ -259,7 +259,7 @@
                             <asp:Label  ID="lblAdjunto" runat="server" Text="El protocolo tiene archivos adjuntos"></asp:Label>
                                                                 
                                                                   
-                            </span>                                    
+                            </span>                                    <h6> <asp:Label ID="lblEstadoAnulado" runat="server" Font-Bold="True" Font-Size="8pt" Visible="false" Text="ANULADO" class="label label-default" ></asp:Label></h6>
                                                                  </asp:Panel>
                                                                     
                                                   
@@ -287,10 +287,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                    <td> <label>
+                                                    <td valign="top"> <label>
                                                         Obra social:
                                                         </label>
-                                                       <asp:Label ID="lblObraSocial" runat="server" Text="Label"></asp:Label>
+                                                       <asp:Label ID="lblObraSocial"  runat="server" Text="Label"></asp:Label>
                                                          <%--   <asp:Button ID="btnSelObraSocial"  ToolTip="" runat="server" Text="O.S"  CssClass="btn btn-primary" 
                                                                 Width="50px"   
                        OnClientClick="SelObraSocial(); return false;" OnClick="btnSelObraSocial_Click" />--%>
@@ -304,6 +304,7 @@
                                                     <td><label>Teléfono Contacto</label>:
                                                         <asp:TextBox ID="txtTelefono" runat="server" class="form-control input-sm" Width="200px"></asp:TextBox>
                                                         <asp:CustomValidator ID="cvValidacionInput" runat="server" ErrorMessage="Debe completar al menos un analisis" Font-Size="12pt" onservervalidate="cvValidacionInput_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                                                             <anthem:Label ID="lblErrorMedico" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="False"></anthem:Label>
                                                     </td>
                                                 </tr>
                                             
@@ -469,7 +470,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" ><hr />
-                                                        <anthem:Label ID="lblErrorMedico" runat="server" Font-Bold="True" Font-Size="12pt" ForeColor="#CC3300" Text="Label" Visible="False"></anthem:Label>
+                                                   
                                                     </td>
 					</tr>
 					
@@ -484,6 +485,7 @@
     <li><a href="#tab1">Analisis</a></li>    
     <li><a href="#tab2">Diagnósticos<img alt="tiene diagnostico" runat="server" id="diag" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>
    <li  id="tab3Titulo" runat="server"><a href="#tab3" >Etiquetas</a></li> 
+                                  
        
     <li id="tituloCalidad" runat="server"><a  href="#tab5">Incidencias<img alt="tiene incidencias" runat="server" id="inci" visible="false" style="border:none;" src="~/App_Themes/default/images/red_pin.gif" /></a></li>
     
@@ -635,7 +637,12 @@
                                      
                                  </td>
                                              <td class="auto-style1">                                               
-                                            
+                                            Diag. Del Efector:<anthem:DropDownList ID="ddlDiagEfector" runat="server" Width="450px"
+                                                
+                                                TextDuringCallBack="Cargando ..." 
+                               class="form-control input-sm" TabIndex="20" />  <anthem:Button ID="btnAgregarDiagEfector" CssClass="btn btn-primary" Width="90px" runat="server" Text="Agregar" OnClick="btnAgregarDiagEfector_Click" 
+                                                  />
+                                                 <br />
                                                Diagnósticos encontrados<anthem:ListBox ID="lstDiagnosticos" runat="server" AutoCallBack="True" 
                                                      class="form-control input-sm"  Height="90px" Width="750px">
                                                </anthem:ListBox>
@@ -645,6 +652,7 @@
                                              </td>                                         
                                              <td style="vertical-align: top">
                                             
+                                                 <br />
                                                  <br />
 &nbsp;<anthem:ImageButton ID="btnAgregarDiagnostico" runat="server" ToolTip="Agregar diagnostico"
                                                      ImageUrl="~/App_Themes/default/images/añadir.jpg" 

@@ -19,6 +19,7 @@ using System.IO;
 using NHibernate;
 using NHibernate.Expression;
 using Business.Data;
+using System.Text;
 
 namespace WebLab.Derivaciones
 {
@@ -27,7 +28,7 @@ namespace WebLab.Derivaciones
         public Usuario oUser = new Usuario();
         public CrystalReportSource oCr = new CrystalReportSource();
         Configuracion oCon = new Configuracion();
-
+        private Random random = new Random();
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -50,13 +51,15 @@ namespace WebLab.Derivaciones
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+          
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] != null)
                 {
                     oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     CargarListas();
-
+                    SetToken();
+                    PreventingDoubleSubmit(btnGuardar);  
                     if (Request["Tipo"] == "Alta")
                     {
                         int estado = Convert.ToInt32(Request["Estado"]);
@@ -74,6 +77,10 @@ namespace WebLab.Derivaciones
                             HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
                             ddlEstado.SelectedIndex = 2;
                             ddlMotivoCancelacion.Enabled = false;
+                            lnkPDF.Visible = false; //24.08.2026 Corrige BUG: en modificacion de lote no existe el request por lo que da error al imprimir
+                            btnAgregarDeterminaciones.Visible = true;
+                            HFIdLote.Value = Request["idLote"].ToString();
+                            HFIdEfectorDerivacion.Value = Request["Destino"].ToString();
                         }
 
                     }
@@ -88,7 +95,93 @@ namespace WebLab.Derivaciones
             
         }
 
+        private void PreventingDoubleSubmit(Button button)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+            sb.Append("this.value = 'Procesando...';");
+            sb.Append("this.disabled = true;");
+            sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+            sb.Append("return true;");
 
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
+        }
+
+        private bool IsTokenValid()
+        {
+            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+            SetToken();
+            return result;
+        }
+
+        private void SetToken()
+        {
+            double next = random.Next();
+            hidToken.Value = next + "";
+            Session["NextToken"] = next;
+        }
+
+        protected void gvLista_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
+                //La key podria ser compuesta this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+              
+                CmdEliminar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
+                CmdEliminar.CommandName = "Eliminar";
+
+                int estado = Convert.ToInt32(((Label)(e.Row.Cells[0].FindControl("lbl_estado"))).Text);
+                if (Request["Tipo"] == "Modifica" || estado != 0) //Solo se elimina cuando no esta asociado a un lote
+                {
+                    CmdEliminar.Visible = false;
+                }
+                
+            }
+        }
+        protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Eliminar")
+            {
+                GridViewRow row = ((Control)e.CommandSource).NamingContainer as GridViewRow;
+
+                if (row == null)
+                    return;
+                
+                Eliminar(e.CommandArgument);
+                CargarGrilla();
+
+            }
+        }
+
+        private void Eliminar(object detalle)
+        {
+            string[] idDetalles = detalle.ToString().Split('|');
+
+            foreach (string idDetalleProtocolo in idDetalles)
+            {
+                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                
+                ISession m_session = NHibernateHttpModule.CurrentSession;
+                ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
+                crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
+                object oDerivacion = crit.UniqueResult();
+
+
+                if (oDerivacion != null) {
+                    oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivado", oUser.IdUsuario);
+                    oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", ""); 
+                    oDetalle.Save();
+                    ((Derivacion)(oDerivacion)).Delete();
+                }
+                
+            }
+            
+        }
         #region carga
        
         private void CargarListas()
@@ -107,8 +200,8 @@ namespace WebLab.Derivaciones
             oUtil.CargarCombo(ddlMotivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
             ddlMotivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
-            
-            
+            rvMotivoCancelacion.Enabled = false; //inicio no obligatorio, cambia a obligatorio cuando seleccione el estado "No Enviado".
+
         }
         private void habilitarImpresion()
         {
@@ -137,26 +230,104 @@ namespace WebLab.Derivaciones
             txtObservacion.Enabled = valor;
             lnkMarcar.Enabled = valor;
             lnkDesMarcar.Enabled = valor;
-            //ddl_motivoCancelacion.Enabled = valor;
+            ddlMotivoCancelacion.Enabled = valor;
             ddlEstado.Enabled = valor;
         }
 
         private void CargarGrilla()
         {
-            gvLista.DataSource = GetDataSet("","");
+            gvLista.DataSource = GetDataSet("", Request["Tipo"] );
             gvLista.DataBind();
 
 
             if (gvLista.Rows.Count <= 0)
-            {
                 activarControles(false);
+            else//si actualiza la grilla despues de cargar determinaciones
+            {
+                if(Request["Tipo"] == "Modifica")
+                    activarControles(true); 
             }
 
             CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
 
         }
 
-        public DataTable GetDataSet(string s_lista, string s_donde)
+        public DataTable GetDataSet(string s_lista, string tipo)
+        {
+            //20.08.2026 Derivacion automatica
+            //Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica
+            // agrupo con pipe los idDetalles a derivar pero solo muestro 1 derivacion 
+
+            string m_strSQL = " SELECT " +
+                  " STUFF(( " +
+                  "     SELECT '|' + CAST(v2.idDetalleProtocolo AS varchar(20)) " + //si tengo varios iddetalle del mismo iditem los agrupo
+                  "     FROM vta_LAB_Derivaciones v2 " +
+                  "     WHERE v2.idProtocolo = vta.idProtocolo " +
+                  "       AND v2.idItem = vta.idItem " +
+                  "     FOR XML PATH('') " +
+                  " ), 1, 1, '') AS idDetalleProtocolo, " +
+                  " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
+                  " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, " +
+                  " fechaNacimiento as edad, unidadEdad, sexo, observacion, " +
+                  " solicitante as especialista, isnull(idlote,0) as idLote ";
+
+            switch (tipo)
+            {
+
+                case "pdf":
+                    m_strSQL += " , idTipoServicio , TipoProducto , de.descripcion as estadoDerivacion";
+                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
+                    m_strSQL += " inner join LAB_DerivacionEstado de on de.idEstado = vta.estado ";
+                    m_strSQL += " WHERE " + Request["Parametros"].ToString() +
+                               "  and estado= " + int.Parse(Request["Estado"]) +
+                               "  and idDetalleProtocolo in (" + s_lista.Replace("|", ",") + ") ";
+                    m_strSQL += @" GROUP BY
+                                    vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
+                                    vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
+                                    idTipoServicio, TipoProducto,  de.descripcion ";
+
+                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
+                    break;
+                case "Alta":
+                    m_strSQL += " , isnull(mot.descripcion,'') as motivo ";
+                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
+                    m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+                    m_strSQL += " WHERE " + Request["Parametros"].ToString() + "  and estado = " + int.Parse(Request["Estado"]);
+
+                    if (int.Parse(Request["Estado"]) == 0) m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
+
+                    m_strSQL += @" GROUP BY
+                                    vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
+                                    vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
+                                    mot.descripcion ";
+                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
+                    break;
+
+                case "Modifica":
+
+                    m_strSQL += " , isnull(mot.descripcion,'') as motivo ";
+                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
+                    m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+                    m_strSQL += " WHERE    " +
+                              "  (estado = 4 and idLote= " + Request["idLote"] + ")"; //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
+                    m_strSQL += @" GROUP BY
+                                vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
+                                vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
+                                mot.descripcion ";
+                    m_strSQL += " ORDER BY estado desc, efectorDerivacion,numero desc";
+                    break;
+
+            }
+
+
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
+        }
+   /*    public DataTable GetDataSet_old(string s_lista, string s_donde)
         {
             
             int estado = Convert.ToInt16(Request["Estado"]);
@@ -227,7 +398,7 @@ namespace WebLab.Derivaciones
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             return Ds.Tables[0];
-        }
+        }*/
 
         protected string CargarImagenEstado(int estado)
         {
@@ -299,16 +470,16 @@ namespace WebLab.Derivaciones
         #region Guardar
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
+            if (Page.IsValid && IsTokenValid())
             {
                 if (Session["idUsuario"] != null)
                 {
                     //Se verifica que se hayan realizados cambios
-                    if (hdnDatosModificados.Value == "false")
-                    {
-                        ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
-                    }
-                    else
+                    //if (hdnDatosModificados.Value == "false")
+                    //{
+                    //   ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
+                    //}
+                    //else
                     {
                         int idUsuario = int.Parse(Session["idUsuario"].ToString());
                         Usuario oUser = new Usuario();
@@ -317,7 +488,7 @@ namespace WebLab.Derivaciones
 
                         if (int.Parse(ddlEstado.SelectedValue) == 2)
                         {
-                            GuardarDerivaciones(lote, oUser.IdUsuario); //con idLote=0
+                            Guardar(lote); 
 
                             if (Request["Tipo"] == "Modifica")
                                 lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
@@ -339,7 +510,7 @@ namespace WebLab.Derivaciones
                                     lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
                                 }
                             }
-                            GuardarDerivaciones(lote, oUser.IdUsuario);
+                            Guardar(lote);
                             Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
                         }
                     }
@@ -368,7 +539,42 @@ namespace WebLab.Derivaciones
             return lote;
         }
 
-        private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion lote, int idUsuario)
+        private void Guardar(Business.Data.Laboratorio.LoteDerivacion lote)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                    foreach (GridViewRow row in gvLista.Rows)
+                    {
+                        int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+                        bool chequeado = ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked;
+                        //int idLote = lote.IdLoteDerivacion;
+                        int desasociaLote = -1;
+
+
+                        //CASOS: Se evalua el estado anterior de las determinaciones
+                        // 1 - Esta chequeado -> Se asocia al lote
+                        if ((estado == 0 || estado == 2 || estado == 4) && chequeado) desasociaLote = 0;
+                        // 2 - No esta chequeado y tiene estado "Pendiente para enviar" (4) 
+                        if (estado == 4 && !chequeado)  desasociaLote = 1;
+
+
+                        if(desasociaLote != -1)
+                        {
+                            string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
+                            foreach (string idDetalleProtocolo in idDetalles)
+                            {
+                                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                                ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
+                            }
+                        }
+                    }
+                }
+            else 
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+		
+		
+	/*	    private void GuardarDerivaciones(Business.Data.Laboratorio.LoteDerivacion lote, int idUsuario)
         {
             if (Session["idUsuario"] != null)
             {
@@ -397,12 +603,12 @@ namespace WebLab.Derivaciones
             else 
                 Response.Redirect("../FinSesion.aspx", false);
         }
-
-        private void ActualizarDetalleProtocolo(GridViewRow row, int idLote = 0,  int desasociaLote = 0)
+*/
+        private void ActualizarDetalleProtocolo(DetalleProtocolo oDetalle, int idLote, int estado,  int desasociaLote)
         {
-            int idDetalle = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
+            //int idDetalle = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
             string accion = Request["Tipo"].ToString();
-            DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), idDetalle);
+            //DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), idDetalleProtocolo);
             //int numeroProtocolo = oDetalle.IdProtocolo.Numero;
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
@@ -412,8 +618,8 @@ namespace WebLab.Derivaciones
             IList lista = crit.List();
             if (lista.Count > 0)
             {
-                int estadoSeleccionado;
-                string resultadoDerivacion;
+                int estadoSeleccionado =  Convert.ToInt32(ddlEstado.SelectedValue);//Estado seleccionado => 2	No Enviado - 4  Pendiente para enviar
+                string resultadoDerivacion="";
                 string observacion = txtObservacion.Text;
                 int idUsuarioRegistro = oUser.IdUsuario;  //Convert.ToInt32(Session["idUsuario"]);
                 int idUsuarioResultado = oUser.IdUsuario;
@@ -422,18 +628,24 @@ namespace WebLab.Derivaciones
                 int MotivoCancelacion = int.Parse(ddlMotivoCancelacion.SelectedItem.Value);
                 bool conResultado = true;
 
-                
+                string resultadoCar = LimpiarEstadoDerivacion(oDetalle.ResultadoCar);
 
                 if (desasociaLote == 0)
                 {
-                    estadoSeleccionado = Convert.ToInt32(ddlEstado.SelectedValue);//Estado seleccionado => 2	No Enviado - 4  Pendiente para enviar
-                    resultadoDerivacion = (estadoSeleccionado == 2) ? "No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text : "Pendiente para enviar ";
+                    if (resultadoCar == "") //Es derivacion comun, piso resultadoCar
+                        resultadoDerivacion = (estadoSeleccionado == 2) ? "No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text : "Pendiente para enviar ";
+                    else // Es derivacion automatica: Agrego los nuevos valores al resultadoCar
+                    {  if (estadoSeleccionado == 2) resultadoDerivacion = resultadoCar + " - No Derivado:" + ddlMotivoCancelacion.SelectedItem.Text;
+                        else resultadoDerivacion = resultadoCar + " - Pendiente para enviar";
+                    }
+                   
                 }
-                else
+                else//Se desasocia del lote y se setean a vacio los valores correspondientes
                 {
-                    //Se desasocia del lote y se setean a vacio los valores correspondientes
+                    //El unico estado para evaluar de la derivacion es estado=4 (Pendiente para enviar) los otros estados no desasocian lote
+                    if (resultadoCar == "") resultadoDerivacion = "Pendiente de derivar";
+                    else resultadoDerivacion = oDetalle.ResultadoCar.Replace(" - Pendiente para enviar", " - Pendiente de derivar");
                     estadoSeleccionado = 0;
-                    resultadoDerivacion = "";
                     observacion = string.Empty;
                     idLote = 0;
                     idUsuarioResultado = 0;
@@ -502,11 +714,11 @@ namespace WebLab.Derivaciones
                         {
                             if(estadoSeleccionado == 2) //Se selecciono "No Enviado"
                             {
-                                oDetalle.GrabarAuditoriaDetalleExtra("No Derivado", idUsuarioRegistro, resultadoDerivacion); //que se grabe el motivo de cancelacion
+                                oDetalle.GrabarAuditoriaDetalleExtra("No Derivado", idUsuarioRegistro, "No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text); //que se grabe el motivo de cancelacion
                             }
                             else //Se selecciono "Pendiente para enviar"
                             {
-                                oDetalle.GrabarAuditoriaDetalleExtra(accion, idUsuarioRegistro, resultadoDerivacion + ": Lote  " + idLote);
+                                oDetalle.GrabarAuditoriaDetalleExtra(accion, idUsuarioRegistro, "Pendiente para enviar: Lote " + idLote);
 
                             }
                             continue;
@@ -515,10 +727,10 @@ namespace WebLab.Derivaciones
 
                         //Auditoria:  Para la modificacion, si se selecciono "Pendiente para enviar", y antes tenian estado "Pendiente de derivar" o "No Enviado"
                         // Si ya tiene estado "Pendiente para derivar" no le hacemos auditoria
-                        int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+                        //int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
                         if (accion == "Modifica" && estadoSeleccionado == 4 && (estado == 0 || estado == 2))
                         {
-                            oDetalle.GrabarAuditoriaDetalleExtra(accion, idUsuarioRegistro, resultadoDerivacion + ": Lote  " + idLote);
+                            oDetalle.GrabarAuditoriaDetalleExtra(accion, idUsuarioRegistro, "Pendiente para enviar: Lote " + idLote);
                         }
                     }
                     else
@@ -531,6 +743,44 @@ namespace WebLab.Derivaciones
                     #endregion
                 }
             }
+        }
+
+        private string LimpiarEstadoDerivacion(string resultadoCar)
+        {
+            if (string.IsNullOrEmpty(resultadoCar))
+                return "";
+
+            string resultado = resultadoCar.Trim();
+
+            string[] leyendas = {
+                    " - No Derivado:",
+                    " - Pendiente de derivar",
+                    " - Pendiente para enviar",
+                    " - Enviado",
+                    " - No Enviado",
+                    " - Recibido",
+                    "No Derivado:",
+                    "Pendiente de derivar",
+                    "Pendiente para enviar",
+                    "Enviado",
+                    "No Enviado",
+                    "Recibido"
+                };
+
+            int posicion = resultado.Length;
+
+            foreach (string leyenda in leyendas)
+            {
+                int indice = resultado.IndexOf(leyenda,StringComparison.OrdinalIgnoreCase);
+
+                if (indice >= 0 && indice < posicion)
+                    posicion = indice;
+            }
+
+            if (posicion < resultado.Length)
+                resultado = resultado.Substring(0, posicion).TrimEnd();
+
+            return resultado;
         }
         #endregion
 
@@ -600,5 +850,78 @@ namespace WebLab.Derivaciones
         }
         #endregion
 
+        protected void btnAgregarDeterminaciones_Click(object sender, EventArgs e)
+        {
+            SetToken(); //actualizo los tokens cuando se vuelve del modal
+            CargarGrilla();
+        }
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+
+        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            //valida que selecciono un item
+            args.IsValid = false;
+            
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    break;
+                }
+            }
+            cvGeneral.ErrorMessage = "*Seleccione una fila";
+
+        }
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+
+        protected void ddlEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ddlEstado.SelectedValue == "2") //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
+            {
+                ddlMotivoCancelacion.Enabled = true;
+                rvMotivoCancelacion.Enabled = true;
+            }
+            else
+            { 
+                ddlMotivoCancelacion.Enabled = false;
+                rvMotivoCancelacion.Enabled = false;
+                ddlMotivoCancelacion.SelectedValue = "0";
+            }
+            rvMotivoCancelacion.UpdateAfterCallBack = true;
+        }
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+
+        protected void CheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Request["Tipo"] == "Modifica")
+            {
+                CheckBox chkStatus = (CheckBox)sender;
+                if (!chkStatus.Checked) 
+                {
+                    GridViewRow row = (GridViewRow)chkStatus.NamingContainer;
+                    int estado = Convert.ToInt32(((Label)(row.Cells[row.RowIndex].FindControl("lbl_estado"))).Text);
+                    if(estado  == 4)
+                    {
+                        string script = "  alert('Al desmarcar la determinacion se excluirá del lote.') ";
+
+                        ScriptManager.RegisterStartupScript(
+                            this,
+                            this.GetType(),
+                            "aviso",
+                            script,
+                            true);
+                    }
+                }
+                   
+            }
+           
+        }
+
+        
     }
 }

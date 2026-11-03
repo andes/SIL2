@@ -377,7 +377,7 @@ namespace WebLab.Resultados
         }             
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (ddlTipoFicha.SelectedValue == "")
+            if (ddlTipoFicha.SelectedValue == "0")
                 SubirSISAdesdeAPI();
             else
                 SubirSISAdesdeAPI_Ficha();

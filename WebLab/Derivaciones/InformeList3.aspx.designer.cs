@@ -69,13 +69,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.DropDownList ddlMotivoCancelacion;
 
         /// <summary>
-        /// lblErrorMotivo control.
+        /// rvMotivoCancelacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorMotivo;
+        protected global::Anthem.RangeValidator rvMotivoCancelacion;
 
         /// <summary>
         /// txtObservacion control.
@@ -105,13 +105,49 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.LinkButton lnkPDF;
 
         /// <summary>
-        /// lblErrorLista control.
+        /// HFIdLote control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorLista;
+        protected global::System.Web.UI.WebControls.HiddenField HFIdLote;
+
+        /// <summary>
+        /// HFIdEfectorDerivacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFIdEfectorDerivacion;
+
+        /// <summary>
+        /// btnAgregarDeterminaciones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAgregarDeterminaciones;
+
+        /// <summary>
+        /// hidToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
+
+        /// <summary>
+        /// cvGeneral control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvGeneral;
 
         /// <summary>
         /// lnkMarcar control.

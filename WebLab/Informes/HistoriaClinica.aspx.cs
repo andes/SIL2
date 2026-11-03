@@ -67,7 +67,7 @@ namespace WebLab.Informes
                     }
                 }
                 else
-                 Response.Redirect("../Estadisticas/SinDatos.aspx", false);
+                 Response.Redirect("../Estadisticas/SinDatos.aspx?Desde=../Informes/HistoriaClinicaFiltro.aspx?Tipo=Analisis", false); //Correcion porque al volver daba error porque le faltaba Request desde
             }
         }
         protected void Page_Unload(object sender, EventArgs e)
@@ -196,6 +196,8 @@ namespace WebLab.Informes
             cmd.Parameters.Add("@idPaciente", SqlDbType.NVarChar);
             cmd.Parameters["@idPaciente"].Value = Request["idPaciente"].ToString();
 
+            cmd.Parameters.Add("@idEfector", SqlDbType.NVarChar);
+            cmd.Parameters["@idEfector"].Value = Request["idEfector"].ToString();
             cmd.Connection = conn;
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);

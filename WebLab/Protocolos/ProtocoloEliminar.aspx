@@ -34,7 +34,7 @@
                
                    <br />
 
-                                Motivo de anulación:
+                                <asp:Label ID="lblMotivo" Text="Motivo de anulación:" runat="server"></asp:Label>
                               
                    <br /><asp:TextBox ID="txtMotivoBaja" class="form-control input-sm" runat="server" MaxLength="500" Width="350px" Rows="3" TextMode="MultiLine"></asp:TextBox>
                                 <br />
