@@ -19,6 +19,7 @@ using System.IO;
 using NHibernate;
 using NHibernate.Expression;
 using Business.Data;
+using System.Text;
 
 namespace WebLab.Derivaciones
 {
@@ -26,6 +27,7 @@ namespace WebLab.Derivaciones
     {
         public Usuario oUser = new Usuario();
         public CrystalReportSource oCr = new CrystalReportSource();
+        private Random random = new Random();
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
@@ -48,11 +50,12 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-
+               
                 if (!Page.IsPostBack)
                 {
+                    PreventingDoubleSubmit(btnGuardar);
+                    SetToken();
                     int estado = Convert.ToInt32(Request["Estado"]);
-
                     if (estado == 1 || estado == 3)
                     {
                         activarControles(true);
@@ -79,8 +82,35 @@ namespace WebLab.Derivaciones
 
 
 
+        private void PreventingDoubleSubmit(Button button)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+            sb.Append("this.value = 'Procesando...';");
+            sb.Append("this.disabled = true;");
+            sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+            sb.Append("return true;");
 
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
+        }
 
+        private bool IsTokenValid()
+        {
+            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+            SetToken();
+            return result;
+        }
+
+        private void SetToken()
+        {
+            double next = random.Next();
+            hidToken.Value = next + "";
+            Session["NextToken"] = next;
+        }
 
         private DataTable GetData(string m_strSQL)
         {
@@ -137,6 +167,16 @@ namespace WebLab.Derivaciones
             lnkDesMarcar.Enabled = valor;
             txtFecha.Enabled = valor;
             txtHora.Enabled = valor;
+            /// 27.10.2026 Agregamos los validores tambien
+            rfvFecha.Enabled = valor;
+            rfvHora.Enabled = valor;
+            rvTransporte.Enabled = valor;
+
+            rfvObservacion.Enabled = false;
+            rvTransporte.UpdateAfterCallBack = true;
+            rfvFecha.UpdateAfterCallBack = true;
+            rfvObservacion.UpdateAfterCallBack = true;
+            rfvHora.UpdateAfterCallBack = true;
         }
 
         private void CargarControles()
@@ -307,25 +347,36 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
-                int idLote = verificarDeterminaciones();
-                if (idLote == 0) //No trajo ningun id Lote con error
+                if (Page.IsValid)
                 {
-                    if (Guardar())
+                    int idLote = verificarDeterminaciones();
+                    if (idLote == 0) //No trajo ningun id Lote con error
                     {
-                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
-                    }
-                    else
-                    {
-                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
+                        if (IsTokenValid())
+                        {
+                            if (Guardar())
+                            {
+                                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+                                
+                                /// los controles los dejamos por defecto activados
+                                activarControles(true);
+                            }
+                            else
+                            {
+                                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
+
+                            }
+                            CargarGrilla();
+                            limpiarForm();
+                        }
 
                     }
-                    CargarGrilla();
-                    limpiarForm();
+                    else
+                    { //Es el idLote con error
+                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
+                    }
                 }
-                else
-                { //Es el idLote con error
-                    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
-                }
+               
 
             }
             else
@@ -359,7 +410,7 @@ namespace WebLab.Derivaciones
         private bool Guardar()
         {
             bool seGuardoEnBd = false;
-            if(verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
+            if (verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
             {
                 foreach (GridViewRow row in gvLista.Rows)
                 {
@@ -379,13 +430,13 @@ namespace WebLab.Derivaciones
                         //Se cambia el estado del lote LAB_LoteDerivacion
                         lote.Estado = estadoLote;
                         lote.Observacion = observacion;
-                        lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
+                        lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0;
                         //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
                         string fecha_hora = txtFecha.Text + " " + txtHora.Text;
                         DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                         lote.FechaEnvio = fechaResultado;
                         lote.Save();
-                   
+
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                         //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
@@ -393,47 +444,47 @@ namespace WebLab.Derivaciones
                         string ssql_Protocolo = " IdLote=" + lote.IdLoteDerivacion + " and {alias}.IdDetalleProtocolo in (Select IdDetalleProtocolo From LAB_DetalleProtocolo  where IdEfector=" + oUser.IdEfector.IdEfector + ")";
                         crit.Add(Expression.Sql(ssql_Protocolo));
                         IList lista = crit.List();
-                        
+
                         foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                         {
                             #region Derivacion 
-                                //Cambia el estado de las derivaciones LAB_Derivacion 
+                            //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                                /*
-                                 Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                                 1 : Creado
-                                 2 : Derivado
-                                 3 : Cancelado
+                            /*
+                                Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                                1 : Creado
+                                2 : Derivado
+                                3 : Cancelado
 
-                                 Estado de la derivacion LAB_DerivacionEstado
-                                 0 : Pendiente de derivar
-                                 1 : Enviado
-                                 2 : No Enviado
-                                 3 : Recibido
-                                 4 : Pendiente para enviar
-                               */
+                                Estado de la derivacion LAB_DerivacionEstado
+                                0 : Pendiente de derivar
+                                1 : Enviado
+                                2 : No Enviado
+                                3 : Recibido
+                                4 : Pendiente para enviar
+                            */
                             int estadoAnterior = oDeriva.Estado;
-                                oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
-                                oDeriva.Save();
-                                #endregion
+                            oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
+                            oDeriva.Save();
+                            #endregion
 
 
                             #region cambio_codificacion_a_derivacion
                             //Cambia el resultado de LAB_DetalleProtocolo
                             DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
 
-                            string aux_resultadoCar="";
+                            string aux_resultadoCar = "";
                             //Si el resultado anterior era 'pendiente de derivar'
-                            if (estadoAnterior == 4 && oDet.ResultadoCar != "Pendiente para enviar ")   aux_resultadoCar = oDet.ResultadoCar.Replace("- Pendiente para enviar", "");
+                            if (estadoAnterior == 4 && oDet.ResultadoCar != "Pendiente para enviar ") aux_resultadoCar = oDet.ResultadoCar.Replace("- Pendiente para enviar", "");
 
                             //Si el resultado anterior era 'No derivado.'
-                            if(estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
+                            if (estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
 
                             //if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
                             //    if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
                             //    else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
 
-                            oDet.ResultadoCar = (aux_resultadoCar != "") ? aux_resultadoCar + " - " + resultadoDerivacion  : resultadoDerivacion;
+                            oDet.ResultadoCar = (aux_resultadoCar != "") ? aux_resultadoCar + " - " + resultadoDerivacion : resultadoDerivacion;
                             //oDet.ResultadoCar = resultadoDerivacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
@@ -443,13 +494,13 @@ namespace WebLab.Derivaciones
                             oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
                             #endregion
                         }
-                   
 
-                   
-                    
-                    //Inserta auditoria del lote
-                    lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
-                    lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Observacion", txtObservacion.Text);
+
+
+
+                        //Inserta auditoria del lote
+                        lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
+                        lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Observacion", txtObservacion.Text);
 
                         if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
                         {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
@@ -463,10 +514,6 @@ namespace WebLab.Derivaciones
                         seGuardoEnBd = true;
                     }
                 }
-            }
-            else
-            {
-
             }
 
             return seGuardoEnBd;
@@ -486,8 +533,54 @@ namespace WebLab.Derivaciones
             Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica" , false);
         }
 
+
         #endregion
 
-      
+
+        /// 27.10.2026 pasamos las funciones js a aspx.cs
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e) 
+        {
+
+            if(ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
+            {
+                ddlTransporte.Enabled = true;
+                rvTransporte.Enabled = true;
+                txtFecha.Enabled = true;
+                txtHora.Enabled = true;
+                rfvObservacion.Enabled = false; // observacion no es obligagtoria en derivacion
+                rfvFecha.Enabled = true;
+                rfvHora.Enabled = true;
+            }
+            else
+            {
+                ddlTransporte.Enabled = false;
+                rvTransporte.Enabled = false;
+                ddlTransporte.SelectedValue = "-- SELECCIONE --";
+                txtFecha.Enabled = false;
+                txtHora.Enabled = false;
+                rfvObservacion.Enabled = true; // es obligatorio 
+                rfvFecha.Enabled = false;
+                rfvHora.Enabled = false;
+            }
+            rvTransporte.UpdateAfterCallBack = true;
+            rfvObservacion.UpdateAfterCallBack = true;
+            rfvFecha.UpdateAfterCallBack = true;
+            rfvHora.UpdateAfterCallBack = true;
+        }
+
+        protected void cvFilas_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = false;
+
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    break;
+                }
+            }
+        }
     }
 }
