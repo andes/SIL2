@@ -96,6 +96,15 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.DropDownList ddlTransporte;
 
         /// <summary>
+        /// rvTransporte control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RequiredFieldValidator rvTransporte;
+
+        /// <summary>
         /// txtFecha control.
         /// </summary>
         /// <remarks>
@@ -111,7 +120,7 @@ namespace WebLab.Derivaciones
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFecha;
+        protected global::Anthem.RequiredFieldValidator rfvFecha;
 
         /// <summary>
         /// txtHora control.
@@ -129,7 +138,7 @@ namespace WebLab.Derivaciones
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHora;
+        protected global::Anthem.RequiredFieldValidator rfvHora;
 
         /// <summary>
         /// txtObservacion control.
@@ -141,6 +150,15 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.TextBox txtObservacion;
 
         /// <summary>
+        /// rfvObservacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RequiredFieldValidator rfvObservacion;
+
+        /// <summary>
         /// cvGeneral control.
         /// </summary>
         /// <remarks>
@@ -148,6 +166,15 @@ namespace WebLab.Derivaciones
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvGeneral;
+
+        /// <summary>
+        /// hidToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
 
         /// <summary>
         /// btnGuardar control.

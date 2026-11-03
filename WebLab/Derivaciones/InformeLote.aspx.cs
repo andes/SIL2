@@ -31,16 +31,9 @@ namespace WebLab.Derivaciones
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (Session["idUsuario"] != null)
-            {
-                oCr.Report.FileName = "";
-                oCr.CacheDuration = 0;
-                oCr.EnableCaching = false;
-            }
-            else
-            {
-                Response.Redirect("../FinSesion.aspx", false);
-            }
+            oCr.Report.FileName = "";
+            oCr.CacheDuration = 0;
+            oCr.EnableCaching = false;
         }
 
         protected void Page_Unload(object sender, EventArgs e)
@@ -57,7 +50,7 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-               
+
                 if (!Page.IsPostBack)
                 {
                     PreventingDoubleSubmit(btnGuardar);
@@ -121,11 +114,15 @@ namespace WebLab.Derivaciones
 
         private DataTable GetData(string m_strSQL)
         {
-            lblTitulo.Text = "LOTE NUMERO "+ Request["idLote"];
-            lblSubtitulo.Text = "Efector Destino: " + Request["Destino"];
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;//LAB-130 usar conexion principal no la de consulta
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
+            adapter.Fill(Ds);
+            return Ds.Tables[0];
         }
-        
-        private void CargarListas()
+
+        private void CargarGrilla()
         {
             DataTable dt;
             int estado = Convert.ToInt32(Request["Estado"]);
@@ -143,7 +140,7 @@ namespace WebLab.Derivaciones
                                 " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
 
             dt = GetData(m_strSQL);
-             
+
 
             if (dt.Rows.Count > 0)
             {
@@ -217,27 +214,130 @@ namespace WebLab.Derivaciones
             DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
             txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
             txtHora.Text = miFecha.ToString("HH:mm");
-            /////////////////Estados de lote /////////////////
-            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
-            string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
-            string cacheKey = "CAT_EstadosLote";
-            Business.Helpers.ComboCache.CargarCombo(ddlEstados, cacheKey, m_ssql, "idEstado", "nombre", connReady);
-            // Transportista
-            ddlTransporte.Items.Add(new ListItem("-- SELECCIONE --","0"));
-            ddlTransporte.Items.Add(new ListItem("Público","1"));
-            ddlTransporte.Items.Add(new ListItem("Privado", "2"));
+            //Date1.Text = miFecha.Date.ToString("yyyy-MM-dd");
+            //Time1.Text = miFecha.ToString("HH:mm");
         }
 
-        #region Guardar
-        protected void btnGuardar_Click(object sender, EventArgs e)
+        protected string ObtenerImagenEstado(int estado)
         {
-            lblMensaje.Text = "";
-            if (Page.IsValid)
+            //Estados de Lote
+            switch (estado)
             {
-                Guardar();
+                case 1:
+                    return "../App_Themes/default/images/reloj-de-arena.png";
+                case 2:
+                    return "~/App_Themes/default/images/enviado.png";
+                case 3:
+                    return "../App_Themes/default/images/block.png";
+                default:
+                    return "";
+            }
+        }
+
+        protected bool habilitarCheckBoxSegunEstado(int estado)
+        {
+            switch (estado)
+            {
+                case 1:
+                    return true;
+                case 2:
+                    return false;
+                case 3:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        protected string habilitarEditarSegunEstado(int estado)
+        {
+            if (estado == 1)
+                return "~/App_Themes/default/images/editar.jpg";
+            else
+                return "";
+
+        }
+
+
+        #region Marca
+        protected void lnkMarcar_Click(object sender, EventArgs e)
+        {
+            MarcarSeleccionados(true);
+        }
+
+        protected void lnkDesMarcar_Click(object sender, EventArgs e)
+        {
+            MarcarSeleccionados(false);
+        }
+
+        private void MarcarSeleccionados(bool p)
+        {
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                if (a.Checked == !p)
+                    ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
+            }
+        }
+
+
+        #endregion
+
+        #region PDF
+
+
+
+        protected void lnkPDF_Command(object sender, CommandEventArgs e)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                string idLote = (((System.Web.UI.WebControls.LinkButton)sender).CommandArgument).ToString();
+                GenerarPDF(idLote);
+            }
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
+
+        }
+
+
+        private void GenerarPDF(string idLote)
+        {
+
+            string m_strSQL = Business.Data.Laboratorio.LoteDerivacion.derivacionPDF(int.Parse(idLote));
+
+            DataTable dt = GetData(m_strSQL);
+
+            if (dt.Rows.Count > 0)
+            {
+                string informe = "../Informes/DerivacionLote.rpt";
+                Configuracion oCon = new Configuracion();
+                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+                ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
+                encabezado1.Value = oCon.EncabezadoLinea1;
+
+                ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+                encabezado2.Value = oCon.EncabezadoLinea2;
+
+                ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+                encabezado3.Value = oCon.EncabezadoLinea3;
+
+                oCr.Report.FileName = informe;
+                oCr.ReportDocument.SetDataSource(dt);
+                oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
+                oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
+                oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
+                oCr.DataBind();
 
                 Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones_" + Request["idLote"]);
+                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones" + idLote);
+                oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
+            }
+            else
+                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('No se encontraron datos para el numero de lote ingresado');", true);
+        }
 
 
         #endregion
@@ -257,7 +357,7 @@ namespace WebLab.Derivaciones
                             if (Guardar())
                             {
                                 ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
-                                
+
                                 /// los controles los dejamos por defecto activados
                                 activarControles(true);
                             }
@@ -276,14 +376,38 @@ namespace WebLab.Derivaciones
                         ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
                     }
                 }
-               
+
 
             }
-        }
-        
-      
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
 
-        private void Guardar()
+        }
+
+        private int verificarDeterminaciones()
+        {
+            int tieneDeterminaciones = 0;
+            //Verificamos que en lote no se hayan descartados todas sus determinaciones asi no se Deriva vacio
+            if (Convert.ToInt32(ddlEstados.SelectedValue) == 2)
+            {
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked)
+                    {
+                        int idLote = Convert.ToInt32(row.Cells[2].Text);
+                        DataTable dt = GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
+                        if (dt.Rows.Count == 0)
+                            return idLote;
+                    }
+                }
+            }
+            return tieneDeterminaciones;
+        }
+
+        private bool Guardar()
         {
             bool seGuardoEnBd = false;
             if (verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
@@ -345,8 +469,9 @@ namespace WebLab.Derivaciones
                             #endregion
 
 
-                //Cambia el resultado de LAB_DetalleProtocolo
-                DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
+                            #region cambio_codificacion_a_derivacion
+                            //Cambia el resultado de LAB_DetalleProtocolo
+                            DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
 
                             string aux_resultadoCar = "";
                             //Si el resultado anterior era 'pendiente de derivar'
@@ -377,68 +502,46 @@ namespace WebLab.Derivaciones
                         lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
                         lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Observacion", txtObservacion.Text);
 
-            if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
-            {
-                lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Transportista", ddlTransporte.SelectedItem.Text);
-                DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
-                lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
-                lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
+                        if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
+                        {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+                            lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Transportista", ddlTransporte.SelectedValue);
+                            DateTime f = new DateTime(Convert.ToInt16(txtFecha.Text.Substring(0, 4)), Convert.ToInt16(txtFecha.Text.Substring(5, 2)), Convert.ToInt16(txtFecha.Text.Substring(8, 2)));
+                            lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Fecha", f.ToString("dd/MM/yyyy")); //que las fechas tengan el mismo formato
+                            lote.GrabarAuditoriaLoteDerivacion("Fecha y Hora retiro", idUsuario, "Hora", txtHora.Text);
+                        }
+
+
+                        seGuardoEnBd = true;
+                    }
+                }
             }
 
-            btnGuardar.Enabled = false;
-            lblMensaje.Text = "Se guardaron los cambios correctamente";
-
+            return seGuardoEnBd;
         }
         #endregion
 
 
-
-        protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
+        private void limpiarForm()
         {
-            args.IsValid = true;
-
-            if (ddlEstados.SelectedValue == "2" )
-            {
-                if (ddlTransporte.SelectedValue == "0")
-                {
-                    args.IsValid = false;
-                    cvGeneral.ErrorMessage = "* Seleccionar transporte";
-                    return;
-                }
-            }
-
+            txtObservacion.Text = string.Empty;
+            ddlEstados.SelectedIndex = 0;
         }
 
-        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
+        #region Editar
+        protected void lnkEdit_Command(object sender, CommandEventArgs e)
         {
-            if(ddlEstados.SelectedValue != "0")
-            {
-                if(ddlEstados.SelectedValue == "2") //Derivado
-                {
-                    ddlTransporte.Enabled = true;
-                    txtFecha.Enabled = true;
-                    rfvFecha.Enabled = true;
-                    txtHora.Enabled = true;
-                    rfvHora.Enabled = true;
-                }
-                else //Descartado
-                {
-                    ddlTransporte.Enabled = false;
-                    txtFecha.Enabled = false;
-                    rfvFecha.Enabled = false;
-                    txtHora.Enabled = false;
-                    rfvHora.Enabled = false;
-                }
+            Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica", false);
+        }
 
 
         #endregion
 
 
         /// 27.10.2026 pasamos las funciones js a aspx.cs
-        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e) 
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if(ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
+            if (ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
             {
                 ddlTransporte.Enabled = true;
                 rvTransporte.Enabled = true;

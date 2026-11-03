@@ -15,24 +15,6 @@ namespace WebLab.Derivaciones
     {
 
         /// <summary>
-        /// head1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlHead head1;
-
-        /// <summary>
-        /// form1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-
-        /// <summary>
         /// lblTitulo control.
         /// </summary>
         /// <remarks>
@@ -51,13 +33,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Label lblSubtitulo;
 
         /// <summary>
-        /// rvTransporte control.
+        /// hfEfectorDestino control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.RequiredFieldValidator rvTransporte;
+        protected global::System.Web.UI.WebControls.HiddenField hfEfectorDestino;
 
         /// <summary>
         /// Panel1 control.
@@ -69,13 +51,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Panel Panel1;
 
         /// <summary>
-        /// rfvObservacion control.
+        /// ddlEstados control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Anthem.RequiredFieldValidator rfvObservacion;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEstados;
 
         /// <summary>
         /// Range1 control.
@@ -87,6 +69,51 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RangeValidator Range1;
 
         /// <summary>
+        /// ddlTransporte control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTransporte;
+
+        /// <summary>
+        /// rvTransporte control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RequiredFieldValidator rvTransporte;
+
+        /// <summary>
+        /// txtObservacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
+
+        /// <summary>
+        /// rfvObservacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RequiredFieldValidator rfvObservacion;
+
+        /// <summary>
+        /// txtFecha control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFecha;
+
+        /// <summary>
         /// rfvFecha control.
         /// </summary>
         /// <remarks>
@@ -96,7 +123,7 @@ namespace WebLab.Derivaciones
         protected global::Anthem.RequiredFieldValidator rfvFecha;
 
         /// <summary>
-        /// txtFecha control.
+        /// txtHora control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
@@ -123,13 +150,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
 
         /// <summary>
-        /// rfvFecha control.
+        /// btnGuardar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFecha;
+        protected global::System.Web.UI.WebControls.Button btnGuardar;
 
         /// <summary>
         /// cvFilas control.
@@ -141,48 +168,39 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.CustomValidator cvFilas;
 
         /// <summary>
-        /// rfvHora control.
+        /// lnkMarcar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvHora;
+        protected global::System.Web.UI.WebControls.LinkButton lnkMarcar;
 
         /// <summary>
-        /// txtObservacion control.
+        /// lnkDesMarcar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
+        protected global::System.Web.UI.WebControls.LinkButton lnkDesMarcar;
 
         /// <summary>
-        /// cvGeneral control.
+        /// CantidadRegistros control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvGeneral;
+        protected global::System.Web.UI.WebControls.Label CantidadRegistros;
 
         /// <summary>
-        /// btnGuardar control.
+        /// gvLista control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardar;
-
-        /// <summary>
-        /// lblMensaje control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMensaje;
+        protected global::System.Web.UI.WebControls.GridView gvLista;
     }
 }

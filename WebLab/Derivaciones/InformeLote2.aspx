@@ -53,7 +53,8 @@
                                     
                                      <td >Retira transporte:</td>
                                      <td > <asp:DropDownList ID="ddlTransporte" runat="server" class="form-control input-sm" ></asp:DropDownList>    
-                                     </td>
+                                    <anthem:RequiredFieldValidator ID="rvTransporte" runat="server" ControlToValidate="ddlTransporte" ValidationGroup="0" ErrorMessage="* Seleccione un transporte"  InitialValue="-- SELECCIONE --" ></anthem:RequiredFieldValidator>
+                                         </td>
                                     
                                     
                                  </tr>
@@ -63,20 +64,27 @@
                                       <td >
                                             <asp:TextBox id="txtFecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
                                             
-                                            <asp:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</asp:RequiredFieldValidator>
+                                            <anthem:RequiredFieldValidator ID="rfvFecha" runat="server" ControlToValidate="txtFecha" ErrorMessage="Fecha" ValidationGroup="0">*Error en Fecha</anthem:RequiredFieldValidator>
                                     </td>
 
                                      <td>
                                          <asp:TextBox id="txtHora"  runat="server"  class="form-control input-sm"  TextMode="Time"> </asp:TextBox>
                                          
-                                         <asp:RequiredFieldValidator ID="rfvHora" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</asp:RequiredFieldValidator>
+                                         <anthem:RequiredFieldValidator ID="rfvHora" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</anthem:RequiredFieldValidator>
                                         
                                      </td>
                                  </tr>
                                  <tr style="vertical-align: sub">
                                       <td>Observaciones:</td>
                                       <td colspan="3"><asp:TextBox ID="txtObservacion" runat="server" MaxLength="3000" class="form-control input-sm" width="500px" ></asp:TextBox>
-                                            
+                                            <anthem:RequiredFieldValidator
+                                            ID="rfvObservacion"
+                                            runat="server"
+                                            ControlToValidate="txtObservacion"
+                                            ErrorMessage="* Ingrese un motivo de cancelacion"
+                                            ForeColor="Red"
+                                            Display="Dynamic"
+                                            ValidationGroup="0" /> 
                                      </td>
 
                                  </tr>
@@ -85,6 +93,7 @@
                                      </td> </tr>
                                  <tr>
                                        <td align="left">
+                                            <input id="hidToken" type="hidden" runat="server" />
                                          <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar"  onclick="btnGuardar_Click" ValidationGroup="0" />
                                      </td>
                                      <td>

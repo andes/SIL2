@@ -19,6 +19,7 @@ using System.IO;
 using NHibernate;
 using NHibernate.Expression;
 using Business.Data;
+using System.Text;
 
 namespace WebLab.Derivaciones
 {
@@ -27,7 +28,8 @@ namespace WebLab.Derivaciones
         public Usuario oUser = new Usuario();
         public CrystalReportSource oCr = new CrystalReportSource();
         public Configuracion oC = new Configuracion();
-        
+        private Random random = new Random();
+
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
@@ -59,6 +61,8 @@ namespace WebLab.Derivaciones
                 oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
                 if (!Page.IsPostBack)
                 {
+                    PreventingDoubleSubmit(btnGuardar);
+                    SetToken();
                     Inicializar();
                     CargarListas();
                 }
@@ -69,7 +73,35 @@ namespace WebLab.Derivaciones
             }
         }
 
+        private void PreventingDoubleSubmit(Button button)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+            sb.Append("this.value = 'Procesando...';");
+            sb.Append("this.disabled = true;");
+            sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+            sb.Append("return true;");
 
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
+        }
+
+        private bool IsTokenValid()
+        {
+            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+            SetToken();
+            return result;
+        }
+
+        private void SetToken()
+        {
+            double next = random.Next();
+            hidToken.Value = next + "";
+            Session["NextToken"] = next;
+        }
         private void Inicializar()
         {
             lblTitulo.Text = "LOTE NUMERO "+ Request["idLote"];
@@ -99,33 +131,36 @@ namespace WebLab.Derivaciones
             lblMensaje.Text = "";
             if (Page.IsValid)
             {
-                Guardar();
-
-                Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones_" + Request["idLote"]);
-
-                //Descarga automatica del PDF
-                if (ddlEstados.SelectedValue == "2")
+                if (IsTokenValid()) 
                 {
-                    string url = ResolveUrl("../DescargarPdf.ashx")
-                        + "?informe=DerivacionLote.rpt"
-                        + "&consulta=derivacionPDF"
-                        + "&idLote=" + Server.UrlEncode(Request["idLote"])
-                        + "&efectorOrigen=" + Server.UrlEncode(hfEfectorDestino.Value)
-                        + "&nombrePDF=" + nombrePDF;
+                    Guardar();
 
-                    ScriptManager.RegisterStartupScript(
-                        this,
-                        GetType(),
-                        "descargarPDF",
-                        "var enlace = document.createElement('a');" +
-                        "enlace.href = '" + url + "';" +
-                        "enlace.style.display = 'none';" +
-                        "document.body.appendChild(enlace);" +
-                        "enlace.click();" +
-                        "document.body.removeChild(enlace);",
-                        true
-                    );
+                    Utility oUtil = new Utility();
+                    string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones_" + Request["idLote"]);
+
+                    //Descarga automatica del PDF
+                    if (ddlEstados.SelectedValue == "2")
+                    {
+                        string url = ResolveUrl("../DescargarPdf.ashx")
+                            + "?informe=DerivacionLote.rpt"
+                            + "&consulta=derivacionPDF"
+                            + "&idLote=" + Server.UrlEncode(Request["idLote"])
+                            + "&efectorOrigen=" + Server.UrlEncode(hfEfectorDestino.Value)
+                            + "&nombrePDF=" + nombrePDF;
+
+                        ScriptManager.RegisterStartupScript(
+                            this,
+                            GetType(),
+                            "descargarPDF",
+                            "var enlace = document.createElement('a');" +
+                            "enlace.href = '" + url + "';" +
+                            "enlace.style.display = 'none';" +
+                            "document.body.appendChild(enlace);" +
+                            "enlace.click();" +
+                            "document.body.removeChild(enlace);",
+                            true
+                        );
+                    }
                 }
 
             }
@@ -244,20 +279,28 @@ namespace WebLab.Derivaciones
                 if(ddlEstados.SelectedValue == "2") //Derivado
                 {
                     ddlTransporte.Enabled = true;
+                    rvTransporte.Enabled = true;
                     txtFecha.Enabled = true;
                     rfvFecha.Enabled = true;
                     txtHora.Enabled = true;
                     rfvHora.Enabled = true;
+                    rfvObservacion.Enabled = false; // observacion no es obligagtoria en derivacion
                 }
                 else //Descartado
                 {
                     ddlTransporte.Enabled = false;
+                    rvTransporte.Enabled = false;
+                    ddlTransporte.SelectedValue = "-- SELECCIONE --";
                     txtFecha.Enabled = false;
                     rfvFecha.Enabled = false;
                     txtHora.Enabled = false;
                     rfvHora.Enabled = false;
+                    rfvObservacion.Enabled = true; // es obligatorio 
                 }
-
+                rvTransporte.UpdateAfterCallBack = true;
+                rfvObservacion.UpdateAfterCallBack = true;
+                rfvFecha.UpdateAfterCallBack = true;
+                rfvHora.UpdateAfterCallBack = true;
             }
         }
 
