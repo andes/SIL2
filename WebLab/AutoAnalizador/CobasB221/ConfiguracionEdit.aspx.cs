@@ -64,8 +64,9 @@ namespace WebLab.AutoAnalizador.CobasB221
         private object LeerDatos()
         {
             string m_strSQL = @" SELECT     M.idCobasb221Item, I.codigo, I.nombre, M.idCobas, M.habilitado as Habilitado
-                                 FROM  LAB_CobasB221Item AS M 
-                                 INNER JOIN LAB_Item AS I ON M.idItem = I.idItem Order by I.nombre ";
+                                 FROM  LAB_CobasB221Item AS M with (nolock)
+                                 INNER JOIN LAB_Item AS I with (nolock)
+                                ON M.idItem = I.idItem Order by I.nombre ";
 
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -82,22 +83,14 @@ namespace WebLab.AutoAnalizador.CobasB221
         {
             Utility oUtil = new Utility();
 
-            string m_ssql = "select idArea, nombre from Lab_Area where baja=0 and idtiposervicio=1 order by nombre";
+            string m_ssql = "select idArea, nombre from Lab_Area with (nolock) where baja=0 and idtiposervicio=1 order by nombre";
             oUtil.CargarCombo(ddlArea, m_ssql, "idArea", "nombre");
 
-            CargarItem();
-            //ddlArea.Items.Insert(0, new ListItem("Seleccione Area", "0"));
-
-
+            CargarItem(); 
             m_ssql = null;
             oUtil = null;
         }
-
-
-
-
-
-
+         
         private void GuardarDetalleConfiguracion()
         {
             Cobasb221Item oDetalle = new Cobasb221Item();
@@ -105,9 +98,6 @@ namespace WebLab.AutoAnalizador.CobasB221
             oDetalle.IdItem = int.Parse(ddlItem.SelectedValue);
             oDetalle.Habilitado = true;
             oDetalle.Save();
-
-
-
         }
 
 
@@ -222,8 +212,8 @@ namespace WebLab.AutoAnalizador.CobasB221
         {
             Utility oUtil = new Utility();
             ///Carga de combos de Item sin el item que se está configurando y solo las determinaciones simples
-            string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item 
-                where baja=0  and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
+            string m_ssql = @"select idItem, nombre + ' - ' + codigo as nombre from Lab_Item with (nolock)
+                          where baja=0  and idCategoria=0 and idArea=" + ddlArea.SelectedValue +
                        " order by nombre";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "nombre");

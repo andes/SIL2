@@ -74,7 +74,12 @@ namespace WebLab.Resultados
                          LlenarTabla(Session["idProtocolo"].ToString());
                         if (oRegistro.IdTipoServicio.IdTipoServicio==3)
                             LlenarTablaATB(Session["idProtocolo"].ToString());
-                        CargarListas();
+                        ///    CargarListas();
+                        /// 
+                        imgPdf.Visible = true;
+                        lblRestringido.Visible = false;
+                        imgRestringido.Visible = false;
+
                     }
                     else
                     {     //acceso bloqueado
@@ -150,23 +155,23 @@ namespace WebLab.Resultados
 
         }
 
-        private void CargarListas()
-        {
-           Utility oUtil = new Utility();
+        //private void CargarListas()
+        //{
+        //   Utility oUtil = new Utility();
             
-           ///////////////Impresoras////////////////////////
+        //   ///////////////Impresoras////////////////////////
 
-           string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
-            oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
-            if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
+        //   string m_ssql = "SELECT idImpresora, nombre FROM LAB_Impresora ";
+        //    oUtil.CargarCombo(ddlImpresora, m_ssql, "nombre", "nombre");
+        //    if (Session["Impresora"] != null) ddlImpresora.SelectedValue = Session["Impresora"].ToString();
 
-            ///////////////Fin de Impresoras///////////////////
-            //pnlReferencia.Visible = true;
-            imgPdf.Visible = true;
-            lblRestringido.Visible = false;
-            imgRestringido.Visible = false;
+        //    ///////////////Fin de Impresoras///////////////////
+        //    //pnlReferencia.Visible = true;
+        //    imgPdf.Visible = true;
+        //    lblRestringido.Visible = false;
+        //    imgRestringido.Visible = false;
             
-        }
+        //}
 
  
 
@@ -712,6 +717,51 @@ namespace WebLab.Resultados
                         
                         objCellResultado.ColumnSpan = 1;
                         objCellResultado.Controls.Add(lblDerivacion);
+                        if (m_usuariovalida != "")
+                        {
+                            if (oDetalle.IdProtocolo.IdTipoServicio.IdTipoServicio != 5)
+                            {
+
+                                string resultadoAnterior = "";
+                                if (resultadosAnteriores.ContainsKey(oDetalle.IdSubItem.IdItem))
+                                    resultadoAnterior = resultadosAnteriores[oDetalle.IdSubItem.IdItem];
+
+                                if (resultadoAnterior != "")
+                                {
+                                    hayAntecedente = true;
+                                    Label olblResultadoAnterior = new Label();
+                                    olblResultadoAnterior.TabIndex = short.Parse("500");
+                                    olblResultadoAnterior.Font.Size = FontUnit.Point(8);
+                                    //olblResultadoAnterior.CssClass = "myLittleLink";
+                                    olblResultadoAnterior.Attributes.Add("onClick", "javascript: AntecedenteView (" + oDetalle.IdSubItem.IdItem.ToString() + "," + oDetalle.IdProtocolo.IdPaciente.IdPaciente.ToString() + ",800,540); return false");
+                                    olblResultadoAnterior.ToolTip = "Haga clic aqui para ver gráfico de evolución";
+                                    olblResultadoAnterior.Width = Unit.Pixel(30);
+                                    olblResultadoAnterior.Text = resultadoAnterior;
+
+                                    objCellResultadoAnterior.Controls.Add(olblResultadoAnterior);
+
+                                }
+
+                            }
+                            Label lblPersona = new Label();
+                            lblPersona.Text = m_usuariovalida + " " + oDetalle.FechaValida.ToString("dd/MM/yyyy HH:mm:ss");
+                            lblPersona.Font.Size = FontUnit.Point(7);
+                            lblPersona.Font.Italic = true;
+                            objCellPersona.Controls.Add(lblPersona);
+////07.09.2026 - VR Y METODO EN DERIVACION
+                            Label lblValoresReferencia = new Label();
+                            lblValoresReferencia.Font.Italic = true;
+                            lblValoresReferencia.Font.Size = FontUnit.Point(8);
+                            if (valorReferencia != "")
+                            {// muestra el valor guardado 
+                                lblValoresReferencia.Text = valorReferencia;
+                                if (m_metodo != "")
+                                    lblValoresReferencia.Text += Environment.NewLine + m_metodo;
+                            }
+
+                            objCellValoresReferencia.Controls.Add(lblValoresReferencia);
+							///FIN ////07.09.2026 - VR Y METODO EN DERIVACION
+                        }
                     }
                     else
                     {//No es derivado                     

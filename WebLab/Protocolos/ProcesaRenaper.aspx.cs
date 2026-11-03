@@ -60,10 +60,216 @@ namespace WebLab.Protocolos
 
         }
 
+        private bool ConectarRenaperXRoad()
+        {
+            bool ok = false;
+            try
+            {
+                string dni = Request["dni"] != null ? Request["dni"].ToString() : "";
+                string sexo = Request["sexo"] != null ? Request["sexo"].ToString() : "";
+                GrabarLogAcceso("RENAPER", Request["dni"].ToString());
+
+                long nrodocumento = long.Parse(Request["dni"].ToString());
+                ///   string sexo = Request["sexo"].ToString();
+
+                string rutaCert = ConfigurationManager.AppSettings["RutaCert"].ToString();
+                string BaseUrl = ConfigurationManager.AppSettings["BaseUrlXroad"].ToString();
+                string Serv = "GP-RENAPER/WS_RENAPER_DOCUMENTO/";
+                string clie = ConfigurationManager.AppSettings["ClienteXroad"].ToString();
+                string param = nrodocumento.ToString() + "/" + sexo.ToUpper();
+                string host = BaseUrl + Serv + param;
+
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.ServerCertificateValidationCallback = (snder, cert, chain, error) => true;
+                ///ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(host);
+
+                //certificado
+                X509Certificate certificate = new X509Certificate(rutaCert, "", X509KeyStorageFlags.Exportable | X509KeyStorageFlags.MachineKeySet
+                  | X509KeyStorageFlags.PersistKeySet);
+
+                req.ClientCertificates = new X509CertificateCollection() { certificate };
+                req.ContentType = "application/json";
+                req.AllowAutoRedirect = true;
+                req.Timeout = 10 * 1000;
+                req.Method = "GET";
+                req.Headers.Add("X-Road-Client", clie);
 
 
-    
-        private bool  ConectarRenaperXRoad ()
+                Protocolos.ProcesaRenaper.ResultadoRenaperModel resultado2;
+
+                using (WebResponse response = req.GetResponse())
+                {
+                    JavaScriptSerializer jsonSerializer = new JavaScriptSerializer();
+
+                    using (Stream strReader = response.GetResponseStream())
+                    using (StreamReader objReader = new StreamReader(strReader))
+                    {
+                        string responseBody = objReader.ReadToEnd();
+
+                        //// Deserializamos siempre la respuesta de RENAPER.
+                        //resultado2 =
+                        //    jsonSerializer.Deserialize<Protocolos.ProcesaRenaper.ResultadoRenaperModel>(
+                        //        responseBody);
+                        // Primero obtenemos solamente resultado y mensaje
+                        Dictionary<string, object> respuesta =
+                            jsonSerializer.Deserialize<Dictionary<string, object>>(responseBody);
+
+                        string resultado = "";
+                        string mensaje = "";
+
+                        if (respuesta.ContainsKey("resultado") && respuesta["resultado"] != null)
+                            resultado = respuesta["resultado"].ToString();
+
+                        if (respuesta.ContainsKey("mensaje") && respuesta["mensaje"] != null)
+                            mensaje = respuesta["mensaje"].ToString();
+
+                        // Recién si RENAPER informa que la consulta fue correcta,
+                        // deserializamos al modelo completo.
+                        if (resultado.ToUpper() == "CORRECTO")
+
+                        //  if (resultado2 != null)
+                        {
+                            // RENAPER encontró información
+                            //if (resultado2.resultado.ToUpper() == "CORRECTO")
+                            //{
+
+
+                            resultado2 =
+                               jsonSerializer.Deserialize<Protocolos.ProcesaRenaper.ResultadoRenaperModel>(
+                                    responseBody);
+                            Protocolos.ProcesaRenaper.PersonaRenaperModel persona_d = resultado2.data;
+
+                            if (persona_d != null)
+                            {
+                                ok = true;
+
+                                txtDNI.Text = Request["dni"].ToString();
+
+                                txtApellido.Text = persona_d.apellido.ToUpper();
+                                txtNombre.Text = persona_d.nombres.ToUpper();
+
+                                txtFechaNacimiento.Value = persona_d.fecha_nacimiento;
+
+                                txtCalle.Value =
+                                    persona_d.calle + " " + persona_d.numero;
+
+                                txtCuil.Value = persona_d.cuil;
+
+                                if (persona_d.ciudad == "")
+                                    txtCiudad.Value = "SIN DATOS";
+                                else
+                                    txtCiudad.Value = persona_d.ciudad;
+
+                                if (persona_d.provincia == "")
+                                    txtProvincia.Value = "SIN DATOS";
+                                else
+                                    txtProvincia.Value = persona_d.provincia;
+
+                                if (persona_d.pais == "")
+                                    txtPais.Value = "SIN DATOS";
+                                else
+                                    txtPais.Value = persona_d.pais;
+
+                                if (persona_d.codigo_postal == "")
+                                    txtCodigoPostal.Value = "SIN DATOS";
+                                else
+                                    txtCodigoPostal.Value = persona_d.codigo_postal;
+
+                                if (persona_d.monoblock == "")
+                                    txtBarrio.Value = "SIN DATOS";
+                                else
+                                    txtBarrio.Value = persona_d.monoblock;
+
+                                fallecimiento.Text = persona_d.mensaje_fallecido;
+                                fechaDomicilio.Text = persona_d.emision;
+
+                                // Sexo
+                                if (Request["sexo"].ToString() == "F")
+                                {
+                                    ddlSexo.SelectedValue = "2";
+                                  //  ddlSexoLegal.SelectedValue = "2";
+                                }
+                                else if (Request["sexo"].ToString() == "X")
+                                {
+                                    ddlSexo.SelectedValue = "0";
+                                    //ddlSexoLegal.SelectedValue = "0";
+                                }
+                                else
+                                {
+                                    ddlSexo.SelectedValue = "3";
+                                    //ddlSexoLegal.SelectedValue = "3";
+                                }
+
+                                // Validado por RENAPER
+                                idEstado.Value = "3";
+
+                                // Si el paciente ya existe, recuperar teléfono
+                                int id = Convert.ToInt32(Request.QueryString["id"]);
+
+                                Paciente pac = new Paciente();
+
+                                if (id != 0)
+                                {
+                                    pac = (Paciente)pac.Get(typeof(Paciente), id);
+
+                                    if (pac != null)
+                                        txtTelefono.Value = pac.InformacionContacto;
+                                }
+                            }
+                        }
+                        //else
+                        if (resultado.ToUpper() == "ERROR")
+                        {
+                            // RENAPER respondió correctamente pero no encontró información.
+                            // Ejemplo:
+                            // resultado = "error"
+                            // mensaje = "NO SE ENCONTRO INFORMACION"
+                            lblMensaje.Text = mensaje;/// "NO SE ENCONTRO INFORMACION";
+                            lblMensaje.Visible = true;
+                            ok = false;
+
+                            // Acá resultado2 conserva la respuesta de RENAPER.
+                            // Podés utilizar resultado2.mensaje para mostrar
+                            // un mensaje amigable en la interfaz.
+                        }
+                    }
+                }
+
+            }
+            catch (WebException ex)
+            {
+                ok = false;
+
+                string mensaje =
+                    "Message: " + ex.Message +
+                    " | Status: " + ex.Status +
+                    " | InnerException: " +
+                    (ex.InnerException != null ? ex.InnerException.Message : "NULL");
+
+                lblMensaje.Text = "ERROR DE CONEXION WEB: " + mensaje;
+                lblMensaje.Visible = true;
+
+                GrabarLogAcceso("RENAPER_ERROR", mensaje);
+            }
+            catch (Exception ex)
+            {
+              
+
+                string mensaje = ex.Message;
+                lblMensaje.Text = "ERROR DE CONEXION: " + mensaje;/// "NO SE ENCONTRO INFORMACION";
+                lblMensaje.Visible = true;
+                ok = false;
+                GrabarLogAcceso("RENAPER_ERROR", mensaje);
+            }
+
+            return ok;
+        }
+
+
+        private bool  ConectarRenaperXRoad_old ()
         {
             bool ok = false;
             try
@@ -274,33 +480,37 @@ string mensaje = ex.ToString();
                 }
                 else
                 {
-
-                    if (oCon.ConectaRenaper)
-                    {
+                    if (Request["master"] != null)  ///si se llama desde el promp solo para validar renaper
                         conOK = ConectarRenaperXRoad();
-                        if (!conOK)// si no funcionó la conexion con renaper se fija se está activado MPI
+                    else  // cuando se ingresa un paciente nuevo
+                    {
+
+                        if (oCon.ConectaRenaper)
+                        {
+                            conOK = ConectarRenaperXRoad();
+                            if (!conOK)// si no funcionó la conexion con renaper se fija se está activado MPI
+                                if (oCon.ConectaMPI)
+                                {
+                                    //    conOK = SolicitarServicioMPI();
+                                    conOK = ConectarMPIXRoad();
+                                    if (!conOK)
+                                        HabilitaCargaManual();
+                                }
+                        }
+                        else
+                        {
                             if (oCon.ConectaMPI)
                             {
-                                //    conOK = SolicitarServicioMPI();
                                 conOK = ConectarMPIXRoad();
+                                ///conOK = SolicitarServicioMPI();
                                 if (!conOK)
                                     HabilitaCargaManual();
                             }
-                    }
-                    else
-                    {
-                        if (oCon.ConectaMPI)
-                        {
-                            conOK = ConectarMPIXRoad();
-                            ///conOK = SolicitarServicioMPI();
-                            if (!conOK)
+                            else
                                 HabilitaCargaManual();
                         }
-                        else
-                           HabilitaCargaManual();
+
                     }
-
-
                 }
 
 
@@ -777,6 +987,7 @@ string mensaje = ex.ToString();
             {
                 string tipo = "MPI";
                 imgAndes.Visible = false;
+                lblMensaje.Visible = true;
                 imgRenaper.Visible = false; lblFechaDomicilio.Visible = false;
                 GrabarLogAcceso(tipo, Request["dni"].ToString());
 
@@ -822,83 +1033,128 @@ string mensaje = ex.ToString();
                         {
 
                             string responseBody = objReader.ReadToEnd();
- 
-                                var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
-                                var resultado2 = lista?.FirstOrDefault();
 
-                                if (resultado2 != null)
+                            // ==================================================
+                            // CAMBIO:
+                            // MPI puede devolver un array de resultados [...]
+                            // o un objeto OperationOutcome {...}
+                            // ==================================================
+
+                            
+
+                            ResultadoMPIModel resultado2 = null;
+
+                            if (!string.IsNullOrWhiteSpace(responseBody))
+                            {
+                                string json = responseBody.Trim();
+
+                                if (json.StartsWith("["))
                                 {
-                                    lblValidador.Visible = true;
-                                    lblValidador.Text = "Paciente VALIDADO POR " + tipo;
-                                    ok = true;
-
-                                    txtDNI.Text = Request["dni"]?.ToString();
-
-                                    // Nombre y apellido
-                                    var nombreData = resultado2.Name?.FirstOrDefault();
-                                    txtApellido.Text = nombreData?.Family?.FirstOrDefault()?.ToUpper() ?? "";
-                                    txtNombre.Text = string.Join(" ", nombreData?.Given ?? new List<string>()).ToUpper();
-
-                                    // Fecha nacimiento
-                                    txtFechaNacimiento.Value = resultado2.BirthDate.ToString("dd/MM/yyyy");
-
-                                    // Domicilio (toma el primero)
-                                    var direccion = resultado2.Address?.FirstOrDefault();
-
-                                    txtCalle.Value = direccion?.Line?.FirstOrDefault() ?? "SIN DATOS";
-                                    txtCiudad.Value = string.IsNullOrEmpty(direccion?.City) ? "SIN DATOS" : direccion.City;
-                                    txtProvincia.Value = string.IsNullOrEmpty(direccion?.State) ? "SIN DATOS" : direccion.State;
-                                    txtPais.Value = string.IsNullOrEmpty(direccion?.Country) ? "SIN DATOS" : direccion.Country;
-                                    txtCodigoPostal.Value = string.IsNullOrEmpty(direccion?.PostalCode) ? "SIN DATOS" : direccion.PostalCode;
-
-                                    // CUIL
-                                    txtCuil.Value = resultado2.Identifier?
-                                        .FirstOrDefault(x => x.System.Contains("cuil"))?.Value ?? "";
-
-                                    // Campos que ya no existen en este JSON
-                                    txtBarrio.Value = "SIN DATOS";
-                                    fallecimiento.Text = "";
-                                    fechaDomicilio.Text = "";
-
-                                    txtTelefono.Value = resultado2.Telecom?
-                                        .Where(x => x.System == "phone")
-                                        .OrderBy(x => x.Rank)
-                                        .FirstOrDefault()
-                                        ?.Value ?? "SIN DATOS";
-
-                                    var sexo = resultado2.Gender?.ToLower();
-
-                                    if (sexo == "female")
-                                    {
-                                        txtSexo.Value = "FEMENINO";
-                                        ddlSexo.SelectedValue = "2";
-                                    }
-                                    else if (sexo == "male")
-                                    {
-                                        txtSexo.Value = "MASCULINO";
-                                        ddlSexo.SelectedValue = "3";
-                                    }
-                                    else if (sexo == "other")
-                                    {
-                                        txtSexo.Value = "X";
-                                        ddlSexo.SelectedValue = "0";
-                                    }
-                                    else
-                                    {
-                                        txtSexo.Value = "SIN DATOS";
-                                        ddlSexo.SelectedValue = "0";
-                                    }
-                                    /// traer al paciente si no es nuevo, es modificacion
-                                    int id = Convert.ToInt32(Request.QueryString["id"]);
-                                    //datos del Paciente           
-                                    Paciente pac = new Paciente();
-                                    if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
-                                    txtTelefono.Value = pac.InformacionContacto;
-                              
-                                
+                                    var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
+                                    resultado2 = lista?.FirstOrDefault();
                                 }
                                 else
-                                    ok = false;
+                                {
+                                    resultado2 = null;
+                                }
+                            }
+
+                            if (resultado2 != null)
+                            {
+                                lblValidador.Visible = true;
+                                lblValidador.Text = "Paciente VALIDADO POR " + tipo;
+                                ok = true;
+
+                                // continúa todo tu código actual...
+                            }
+                            else
+                            {
+                                ok = false;
+                            }
+                            // ==================================================
+                            // FIN DEL CAMBIO
+                            // ==================================================
+
+                            //var lista = JsonConvert.DeserializeObject<List<ResultadoMPIModel>>(responseBody);
+                            //    var resultado2 = lista?.FirstOrDefault();
+
+                            if (resultado2 != null)
+                            {
+                                lblValidador.Visible = true;
+                                lblValidador.Text = "Paciente VALIDADO POR " + tipo;
+                                ok = true;
+
+                                txtDNI.Text = Request["dni"]?.ToString();
+
+                                // Nombre y apellido
+                                var nombreData = resultado2.Name?.FirstOrDefault();
+                                txtApellido.Text = nombreData?.Family?.FirstOrDefault()?.ToUpper() ?? "";
+                                txtNombre.Text = string.Join(" ", nombreData?.Given ?? new List<string>()).ToUpper();
+
+                                // Fecha nacimiento
+                                txtFechaNacimiento.Value = resultado2.BirthDate.ToString("dd/MM/yyyy");
+
+                                // Domicilio (toma el primero)
+                                var direccion = resultado2.Address?.FirstOrDefault();
+
+                                txtCalle.Value = direccion?.Line?.FirstOrDefault() ?? "SIN DATOS";
+                                txtCiudad.Value = string.IsNullOrEmpty(direccion?.City) ? "SIN DATOS" : direccion.City;
+                                txtProvincia.Value = string.IsNullOrEmpty(direccion?.State) ? "SIN DATOS" : direccion.State;
+                                txtPais.Value = string.IsNullOrEmpty(direccion?.Country) ? "SIN DATOS" : direccion.Country;
+                                txtCodigoPostal.Value = string.IsNullOrEmpty(direccion?.PostalCode) ? "SIN DATOS" : direccion.PostalCode;
+
+                                // CUIL
+                                txtCuil.Value = resultado2.Identifier?
+                                    .FirstOrDefault(x => x.System.Contains("cuil"))?.Value ?? "";
+
+                                // Campos que ya no existen en este JSON
+                                txtBarrio.Value = "SIN DATOS";
+                                fallecimiento.Text = "";
+                                fechaDomicilio.Text = "";
+
+                                txtTelefono.Value = resultado2.Telecom?
+                                    .Where(x => x.System == "phone")
+                                    .OrderBy(x => x.Rank)
+                                    .FirstOrDefault()
+                                    ?.Value ?? "SIN DATOS";
+
+                                var sexo = resultado2.Gender?.ToLower();
+
+                                if (sexo == "female")
+                                {
+                                    txtSexo.Value = "FEMENINO";
+                                    ddlSexo.SelectedValue = "2";
+                                }
+                                else if (sexo == "male")
+                                {
+                                    txtSexo.Value = "MASCULINO";
+                                    ddlSexo.SelectedValue = "3";
+                                }
+                                else if (sexo == "other")
+                                {
+                                    txtSexo.Value = "X";
+                                    ddlSexo.SelectedValue = "0";
+                                }
+                                else
+                                {
+                                    txtSexo.Value = "SIN DATOS";
+                                    ddlSexo.SelectedValue = "0";
+                                }
+                                /// traer al paciente si no es nuevo, es modificacion
+                                int id = Convert.ToInt32(Request.QueryString["id"]);
+                                //datos del Paciente           
+                                Paciente pac = new Paciente();
+                                if (id != 0) pac = (Paciente)pac.Get(typeof(Paciente), id);
+                                txtTelefono.Value = pac.InformacionContacto;
+
+
+                            }
+                            else
+                            {
+                                lblMensaje.Text =  "NO SE ENCONTRO INFORMACION EN MPI";
+                                lblMensaje.Visible = true;
+                                ok = false;
+                            }
                                    
                            
 

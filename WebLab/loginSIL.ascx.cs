@@ -283,7 +283,7 @@ namespace WebLab
                         string hash = GenerarSHA256(Login1.Password);
 
                         // Insertar o actualizar
-                        GuardarCredencialContingencia(oUser.IdUsuario, hash);                       
+                         GuardarCredencialContingencia(oUser.IdUsuario, hash);                       
                         Session["FechaLogin"] = DateTime.Now;                       
                         autentica = true;
 
@@ -357,12 +357,10 @@ namespace WebLab
         private void GuardarCredencialContingencia(int idUsuario, string password)
         {
             string hash = password;
+             
+              SqlConnection cn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
 
-            string conn = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
 
-            using (SqlConnection cn = new SqlConnection(conn))
-            {
-                cn.Open();
 
                 string sql = @"
 IF EXISTS (SELECT 1
@@ -382,15 +380,16 @@ BEGIN
     VALUES
         (@IdUsuario, @PasswordHash, GETDATE(), GETDATE())
 END";
+            using (SqlCommand cmd = new SqlCommand(sql, cn))
+            {
+                cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
+                cmd.Parameters.AddWithValue("@PasswordHash", hash);
 
-                using (SqlCommand cmd = new SqlCommand(sql, cn))
-                {
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@PasswordHash", hash);
-
-                    cmd.ExecuteNonQuery();
-                }
+                cmd.ExecuteNonQuery();
             }
+
+
+
         }
         private bool ValidarContingencia(int idUsuario, string password)
         {
