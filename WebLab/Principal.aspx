@@ -39,7 +39,9 @@
             padding: 15px 20px 25px 20px;
             max-width: 1400px;
         }
-
+        #modalLotePendiente .modal-dialog {
+        margin-top: 15%;
+        }
 
         /* =====================================================
            SESION
@@ -854,5 +856,31 @@
 
 
     </div>
-
+    <style>
+        #modalLotePendiente .modal-dialog {
+            margin-top: 15%;
+        }
+    </style>
+     <!-- Modal lote pendiente -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modalLotePendiente">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Tiene lotes pendientes de envío</h4>
+      </div>
+      <div class="modal-body">
+       
+              Hay lotes creados que todavía no fueron derivados.  Por favor, revise los lotes pendientes y defina la acción correspondiente.
+           
+      </div>
+      <div class="modal-footer">
+          <div align="right">
+              <asp:Button runat="server"  ID="btnAceptar" CssClass="btn btn-success" Text="Aceptar" Width="100px" OnClick="btnAceptar_Click"  UseSubmitBehavior="true"  CausesValidation="false" />
+          </div>
+        
+      </div>
+    </div>
+  </div>
+</div><!-- /.modal -->
 </asp:Content>

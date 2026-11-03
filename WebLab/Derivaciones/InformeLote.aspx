@@ -184,25 +184,18 @@
     <div align="left" style="width:1200px">
         <div class="panel panel-default">
             <div class="panel-heading">
-                  <b >LOTES</b> 
+                  <b > <asp:Label ID="lblTitulo" runat="server" Text="" /></b> 
+                <br />
+                 <asp:Label ID="lblSubtitulo" runat="server" Text="" ></asp:Label>
+                <asp:HiddenField ID="hfEfectorDestino" runat="server" />
             </div>
 
 			<div class="panel-body">
-				 <table  width="1000px"  >
+				 <table>
 					<tr>
-					<td class="myLabelLitlle" style="vertical-align: top" colspan="3">
-                            Referencias de lote:
-                                <img alt="" src="../App_Themes/default/images/reloj-de-arena.png" /> Creado&nbsp;
-                                <img alt="" src="../App_Themes/default/images/enviado.png" /> Derivado&nbsp;
-                                <img alt="" src="../App_Themes/default/images/block.png" /> Descartado&nbsp;<br />
-                                &nbsp;<br />
-                        </td>
-						
-					</tr>
-				<tr>
 					<td style="vertical-align: auto" colspan="3">
                          <asp:Panel id="Panel1"   runat="server">
-                             <table style="border-spacing:1em 0; border-collapse: separate">
+                             <table class="tabla-compacta" >
                                  <tr style="vertical-align: sub">
                                      <td >Marcar como: </td>
                                      <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged" AutoPostBack="true" /> 
@@ -402,17 +395,11 @@
                             </div>
                         </td>
 						
-					</tr>
-					<tr>
-						<td colspan="3"><hr /></td>
-					</tr>
-					<tr>
-						<td colspan="3">
-                            <asp:HyperLink ID="HyperLink1" runat="server" CssClass="myLink" NavigateUrl="~/Derivaciones/GestionarLote.aspx">Regresar</asp:HyperLink>
-                        </td>
-					</tr>
-					</table>
+				</tr>
+			  </table>
             </div>
         </div>
  </div>
- </asp:Content>
+   </form>
+</body>
+</html>

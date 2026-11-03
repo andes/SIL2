@@ -50,7 +50,7 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-               
+
                 if (!Page.IsPostBack)
                 {
                     PreventingDoubleSubmit(btnGuardar);
@@ -140,7 +140,7 @@ namespace WebLab.Derivaciones
                                 " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
 
             dt = GetData(m_strSQL);
-             
+
 
             if (dt.Rows.Count > 0)
             {
@@ -257,7 +257,7 @@ namespace WebLab.Derivaciones
                 return "";
 
         }
-         
+
 
         #region Marca
         protected void lnkMarcar_Click(object sender, EventArgs e)
@@ -280,7 +280,7 @@ namespace WebLab.Derivaciones
             }
         }
 
-        
+
         #endregion
 
         #region PDF
@@ -332,7 +332,7 @@ namespace WebLab.Derivaciones
                 oCr.DataBind();
 
                 Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+idLote);
+                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones" + idLote);
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
             }
             else
@@ -357,7 +357,7 @@ namespace WebLab.Derivaciones
                             if (Guardar())
                             {
                                 ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
-                                
+
                                 /// los controles los dejamos por defecto activados
                                 activarControles(true);
                             }
@@ -376,7 +376,7 @@ namespace WebLab.Derivaciones
                         ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
                     }
                 }
-               
+
 
             }
             else
@@ -385,7 +385,7 @@ namespace WebLab.Derivaciones
             }
 
         }
-        
+
         private int verificarDeterminaciones()
         {
             int tieneDeterminaciones = 0;
@@ -398,9 +398,9 @@ namespace WebLab.Derivaciones
                     if (a.Checked)
                     {
                         int idLote = Convert.ToInt32(row.Cells[2].Text);
-                        DataTable dt =  GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
-                        if(dt.Rows.Count ==  0)  
-                            return  idLote;
+                        DataTable dt = GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
+                        if (dt.Rows.Count == 0)
+                            return idLote;
                     }
                 }
             }
@@ -530,7 +530,7 @@ namespace WebLab.Derivaciones
         #region Editar
         protected void lnkEdit_Command(object sender, CommandEventArgs e)
         {
-            Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica" , false);
+            Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica", false);
         }
 
 
@@ -538,10 +538,10 @@ namespace WebLab.Derivaciones
 
 
         /// 27.10.2026 pasamos las funciones js a aspx.cs
-        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e) 
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if(ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
+            if (ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
             {
                 ddlTransporte.Enabled = true;
                 rvTransporte.Enabled = true;
