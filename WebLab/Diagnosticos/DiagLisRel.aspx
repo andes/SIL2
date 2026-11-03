@@ -24,11 +24,12 @@
                             </asp:DropDownList>
                     <br />
                     Codigo:    <anthem:TextBox ID="txtCodigo" runat="server" class="form-control input-sm" Width="400px" ></anthem:TextBox>
+                     <anthem:CustomValidator ID="cvFiltros" runat="server" ErrorMessage="Debe buscar por codigo o nombre" OnServerValidate="cvFiltros_ServerValidate" ValidationGroup="1"></anthem:CustomValidator>
                     <br />
                     Que contenga: <anthem:TextBox ID="txtNombre" runat="server" class="form-control input-sm" Width="400px" ></anthem:TextBox>
                     
                                     <anthem:Button ID="btnBuscar" runat="server"  
-                                        Text="Buscar" CssClass="btn btn-primary" Width="100px" OnClick="btnBuscar_Click" />
+                                        Text="Buscar" CssClass="btn btn-primary" Width="100px" OnClick="btnBuscar_Click" ValidationGroup="1" />
 		
                     <hr />
 		

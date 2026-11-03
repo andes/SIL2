@@ -40,7 +40,7 @@ namespace WebLab.Diagnosticos
                 {
                      VerificaPermisos("Diagnosticos Vinculados");  
                     CargarListas();
-                    Buscar();
+                ///    Buscar();
                     CargarGrilla();
 
                  
@@ -185,23 +185,28 @@ where  exists (select 1 from LAB_DiagnosticoEfector R where R.idDiagnostico= E.i
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            Buscar();
+            if (Page.IsValid)
+            {
+                Buscar();
+            }
         }
 
         private void Buscar()
         {
-            string m_strCondicion = " where 1=1";
-            string m_strSQL = @"select E.id,  E.codigo +'-'+ E.nombre as nombre    
-                         from Sys_cie10 E ";
-            if (txtCodigo.Text != "")
-                m_strCondicion += @" and upper(E.codigo) like '%" + txtCodigo.Text.ToUpper() + "%'";
-            if (txtNombre.Text != "")
-                m_strCondicion += @" and upper(E.nombre) like '%" + txtNombre.Text.ToUpper() + "%'";
-            m_strSQL = m_strSQL + m_strCondicion + @"  order by E.nombre";
             
+                string m_strCondicion = " where 1=1";
+                string m_strSQL = @"select E.id,  E.codigo +'-'+ E.nombre as nombre    
+                         from Sys_cie10 E ";
+                if (txtCodigo.Text != "")
+                    m_strCondicion += @" and upper(E.codigo) like '%" + txtCodigo.Text.ToUpper() + "%'";
+                if (txtNombre.Text != "")
+                    m_strCondicion += @" and upper(E.nombre) like '%" + txtNombre.Text.ToUpper() + "%'";
+                m_strSQL = m_strSQL + m_strCondicion + @"  order by E.nombre";
 
-            oUtil.CargarListBox(lstDiag, m_strSQL, "id", "nombre");
-            lstDiag.UpdateAfterCallBack = true;
+
+                oUtil.CargarListBox(lstDiag, m_strSQL, "id", "nombre");
+                lstDiag.UpdateAfterCallBack = true;
+           
         }
 
         
@@ -246,6 +251,17 @@ where  exists (select 1 from LAB_DiagnosticoEfector R where R.idDiagnostico= E.i
             {
                 lstDiagVinculado.Items.Remove(lstDiagVinculado.SelectedItem);
                 lstDiagVinculado.UpdateAfterCallBack = true;
+            }
+        }
+
+        protected void cvFiltros_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if ((txtCodigo.Text=="") && (txtNombre.Text==""))
+            {
+                args.IsValid = false;
+                this.cvFiltros.ErrorMessage =
+                    "Debe buscar por codigo o nombre";
+                return;
             }
         }
     }

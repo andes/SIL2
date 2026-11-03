@@ -2553,14 +2553,16 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
 
                  ObraSocial oObraSocial = new ObraSocial();
-                oRegistro.IdObraSocial =   (ObraSocial)oObraSocial.Get(typeof(ObraSocial), -1); 
+                oRegistro.IdObraSocial =   (ObraSocial)oObraSocial.Get(typeof(ObraSocial), -1);
                 
-                oRegistro.NombreObraSocial = lblObraSocial.Text;
+                    oRegistro.NombreObraSocial = lblObraSocial.Text;
+                
+
+                
                 oRegistro.CodOs = int.Parse(CodOS.Value);
                 oRegistro.IdOrigen = (Origen)oOrigen.Get(typeof(Origen), int.Parse(this.ddlOrigen.SelectedValue));
                 oRegistro.IdPrioridad = (Prioridad)oPri.Get(typeof(Prioridad), int.Parse(this.ddlPrioridad.SelectedValue));
                 oRegistro.Observacion = txtObservacion.Text;
-                oRegistro.ObservacionResultado = "";
                 oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
                 if (Request["Operacion"].ToString() != "Modifica")
                 {
@@ -2568,6 +2570,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     oRegistro.FechaRegistro = DateTime.Now;
                     oRegistro.IpCarga = "";
                     oRegistro.Impres = ddlImpresoraEtiqueta.SelectedItem.Text;
+                    oRegistro.ObservacionResultado = ""; //20.10.2026 En alta: instanciar valor //En Modificacion: mantener el valor cargado
                 }
 
                 ///separar medico
@@ -5784,7 +5787,7 @@ System.Net.ServicePointManager.SecurityProtocol =
         {
             lblMensajeDiagnostico.Visible = false;
 
-            if (ddlDiagEfector.SelectedValue != "")
+            if (ddlDiagEfector.SelectedValue != "0")
             {
                 bool agrego = true;
 
@@ -5814,6 +5817,13 @@ System.Net.ServicePointManager.SecurityProtocol =
                     lblMensajeDiagnostico.Text =
                         "Alerta: Diagnóstico ya ingresado para el paciente.";
                 }
+            }
+            
+                   else
+                {
+                lblMensajeDiagnostico.Visible = true;
+                lblMensajeDiagnostico.Text =
+                    "Selecione un diagnostico";
             }
 
             lblMensajeDiagnostico.UpdateAfterCallBack = true;

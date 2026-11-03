@@ -1154,7 +1154,7 @@
                                                           <td >
                                                             <asp:Button ID="Button4"  CssClass="btn btn-primary" ToolTip="Auditoría del Protocolo" runat="server" Text="Ver Auditoria"  Width="150px" 
                        OnClientClick="AuditoriaView(); return false;" />
-                                                        <small>      Desde acá puede ver la trazabilidad (los movimientos realizados por lo usuarios) del protocolo.</small>
+                                                        <small>      Desde acá puede ver la trazabilidad (los movimientos realizados por los usuarios/ recibidos desde instrumentos) del protocolo.</small>
                                                           <hr />
                                                              
                        

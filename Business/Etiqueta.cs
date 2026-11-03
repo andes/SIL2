@@ -383,7 +383,7 @@ namespace Business
                 if (TipoEtiqueta == "5x2.5")
                 {
                     ///gfx.DrawString(line, printFont_Numero, myBrush, leftMargin + 40, 5, new StringFormat(StringFormatFlags.DirectionVertical));
-                    gfx.DrawString(lineachiquita, printFont_Numero, myBrush, leftMargin + 42, 4, new StringFormat(StringFormatFlags.DirectionVertical));
+                    gfx.DrawString(lineachiquita, printFont_Numero, myBrush, leftMargin + 46, 4, new StringFormat(StringFormatFlags.DirectionVertical));
                     // gfx.DrawString(line, printFont_Numero, myBrush, leftMargin+12, 24, new StringFormat(StringFormatFlags.DirectionRightToLeft)); //cambio plottier numero abajo
 
                 }

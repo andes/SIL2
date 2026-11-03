@@ -596,7 +596,7 @@ where D.idEfector = " + oUser.IdEfector.IdEfector.ToString() + " order by c.Nomb
         {
             lblMensajeDiagnostico.Visible = false;
 
-            if (ddlDiagEfector.SelectedValue != "")
+            if (ddlDiagEfector.SelectedValue != "0")
             {
                 bool agrego = true;
 
@@ -626,6 +626,12 @@ where D.idEfector = " + oUser.IdEfector.IdEfector.ToString() + " order by c.Nomb
                     lblMensajeDiagnostico.Text =
                         "Alerta: Diagnóstico ya ingresado para el paciente.";
                 }
+            }
+            else
+            {
+                lblMensajeDiagnostico.Visible = true;
+                lblMensajeDiagnostico.Text =
+                    "Selecione un diagnostico";
             }
 
             lblMensajeDiagnostico.UpdateAfterCallBack = true;

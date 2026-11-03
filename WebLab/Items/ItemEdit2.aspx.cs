@@ -1356,7 +1356,7 @@ namespace WebLab.Items
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
              
-            oRegistro.Observacion =   this.txtObservaciones.Text;
+            oRegistro.Observacion =   this.txtObservaciones.Text.Replace("|", "");
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
             oRegistro.IdPresentacion = int.Parse(ddlPresentacionItem.SelectedValue);
@@ -1397,7 +1397,7 @@ namespace WebLab.Items
             if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
             if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-            oRegistro.Observacion = this.txtObservaciones.Text;
+            oRegistro.Observacion = this.txtObservaciones.Text.Replace("|","");
             oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
             oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1456,7 +1456,7 @@ namespace WebLab.Items
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text;
+                    oRegistro.Observacion = this.txtObservaciones.Text.Replace("|", "");
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 
@@ -1516,7 +1516,7 @@ namespace WebLab.Items
                     if (txtValorMinimoVR.Text != "") oRegistro.ValorMinimo = decimal.Parse(txtValorMinimoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
                     if (txtValorMaximoVR.Text != "") oRegistro.ValorMaximo = decimal.Parse(txtValorMaximoVR.Text, System.Globalization.CultureInfo.InvariantCulture);
 
-                    oRegistro.Observacion = this.txtObservaciones.Text;
+                    oRegistro.Observacion = this.txtObservaciones.Text.Replace("|", "");
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
 

@@ -51,13 +51,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Label lblSubtitulo;
 
         /// <summary>
-        /// hfEfectorDestino control.
+        /// rvTransporte control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfEfectorDestino;
+        protected global::Anthem.RequiredFieldValidator rvTransporte;
 
         /// <summary>
         /// Panel1 control.
@@ -69,13 +69,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Panel Panel1;
 
         /// <summary>
-        /// ddlEstados control.
+        /// rfvObservacion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEstados;
+        protected global::Anthem.RequiredFieldValidator rfvObservacion;
 
         /// <summary>
         /// Range1 control.
@@ -87,13 +87,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RangeValidator Range1;
 
         /// <summary>
-        /// ddlTransporte control.
+        /// rfvFecha control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTransporte;
+        protected global::Anthem.RequiredFieldValidator rfvFecha;
 
         /// <summary>
         /// txtFecha control.
@@ -102,7 +102,25 @@ namespace WebLab.Derivaciones
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFecha;
+        protected global::System.Web.UI.WebControls.TextBox txtHora;
+
+        /// <summary>
+        /// rfvHora control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Anthem.RequiredFieldValidator rfvHora;
+
+        /// <summary>
+        /// hidToken control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
 
         /// <summary>
         /// rfvFecha control.
@@ -114,13 +132,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFecha;
 
         /// <summary>
-        /// txtHora control.
+        /// cvFilas control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtHora;
+        protected global::System.Web.UI.WebControls.CustomValidator cvFilas;
 
         /// <summary>
         /// rfvHora control.

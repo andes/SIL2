@@ -26,14 +26,16 @@ namespace Business.Helpers
                 ddl.Items.Insert(0, new ListItem(textoInicial, valorInicial));
         }
 
+
+
         public static void CargarCheckBox(
-          CheckBoxList chk,
-          string cacheKey,
-          string sql,
-          string valueField,
-          string textField,
-          string conexion
-          )
+       CheckBoxList chk,
+       string cacheKey,
+       string sql,
+       string valueField,
+       string textField,
+       string conexion
+       )
         {
             DataTable dt = CatalogoCache.GetDataTable(
                 cacheKey,
@@ -46,5 +48,7 @@ namespace Business.Helpers
             chk.DataTextField = textField;
             chk.DataBind();
         }
-    }
+    
+
+}
 }

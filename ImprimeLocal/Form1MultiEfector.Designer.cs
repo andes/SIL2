@@ -80,6 +80,8 @@
             this.label21 = new System.Windows.Forms.Label();
             this.nmMargenDerecho = new System.Windows.Forms.NumericUpDown();
             this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.nmFontSizeCB = new System.Windows.Forms.NumericUpDown();
             this.tabControl1.SuspendLayout();
             this.Protocolos.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -91,6 +93,7 @@
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nmMargenDerecho)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmFontSizeCB)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -613,7 +616,7 @@
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(175, 18);
             this.label18.TabIndex = 32;
-            this.label18.Text = "Version Mayo-2026 MultiEfector";
+            this.label18.Text = "Version Agosto-2026 MultiEfector";
             // 
             // lblIdEfector
             // 
@@ -627,11 +630,11 @@
             // 
             // txtmensajes
             // 
-            this.txtmensajes.Location = new System.Drawing.Point(7, 96);
+            this.txtmensajes.Location = new System.Drawing.Point(7, 123);
             this.txtmensajes.Margin = new System.Windows.Forms.Padding(2);
             this.txtmensajes.Multiline = true;
             this.txtmensajes.Name = "txtmensajes";
-            this.txtmensajes.Size = new System.Drawing.Size(351, 190);
+            this.txtmensajes.Size = new System.Drawing.Size(351, 163);
             this.txtmensajes.TabIndex = 34;
             // 
             // label21
@@ -663,12 +666,37 @@
             this.label22.TabIndex = 37;
             this.label22.Text = "Margen Derecho (mm): ";
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(15, 89);
+            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(121, 13);
+            this.label23.TabIndex = 39;
+            this.label23.Text = "Tamaño Codigo Barras: ";
+            // 
+            // nmFontSizeCB
+            // 
+            this.nmFontSizeCB.Location = new System.Drawing.Point(137, 89);
+            this.nmFontSizeCB.Name = "nmFontSizeCB";
+            this.nmFontSizeCB.Size = new System.Drawing.Size(62, 20);
+            this.nmFontSizeCB.TabIndex = 38;
+            this.nmFontSizeCB.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nmFontSizeCB.ValueChanged += new System.EventHandler(this.nmFontSizeCB_ValueChanged);
+            // 
             // Form1MultiEfector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SkyBlue;
             this.ClientSize = new System.Drawing.Size(370, 341);
+            this.Controls.Add(this.label23);
+            this.Controls.Add(this.nmFontSizeCB);
             this.Controls.Add(this.label22);
             this.Controls.Add(this.nmMargenDerecho);
             this.Controls.Add(this.label21);
@@ -700,6 +728,7 @@
             this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nmMargenDerecho)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nmFontSizeCB)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -757,6 +786,8 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.NumericUpDown nmMargenDerecho;
         private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.NumericUpDown nmFontSizeCB;
     }
 }
 

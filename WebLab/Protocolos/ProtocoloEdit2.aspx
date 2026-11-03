@@ -287,10 +287,10 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                    <td> <label>
+                                                    <td valign="top"> <label>
                                                         Obra social:
                                                         </label>
-                                                       <asp:Label ID="lblObraSocial" runat="server" Text="Label"></asp:Label>
+                                                       <asp:Label ID="lblObraSocial"  runat="server" Text="Label"></asp:Label>
                                                          <%--   <asp:Button ID="btnSelObraSocial"  ToolTip="" runat="server" Text="O.S"  CssClass="btn btn-primary" 
                                                                 Width="50px"   
                        OnClientClick="SelObraSocial(); return false;" OnClick="btnSelObraSocial_Click" />--%>
@@ -652,6 +652,7 @@
                                              </td>                                         
                                              <td style="vertical-align: top">
                                             
+                                                 <br />
                                                  <br />
 &nbsp;<anthem:ImageButton ID="btnAgregarDiagnostico" runat="server" ToolTip="Agregar diagnostico"
                                                      ImageUrl="~/App_Themes/default/images/añadir.jpg" 

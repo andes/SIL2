@@ -81,7 +81,7 @@ namespace WebLab.Protocolos
 
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.ServerCertificateValidationCallback = (snder, cert, chain, error) => true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+                ///ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(host);
@@ -241,12 +241,16 @@ namespace WebLab.Protocolos
             }
             catch (WebException ex)
             {
-                ///ok = false;
-
-                string mensaje = ex.Message;
-                lblMensaje.Text ="ERROR DE CONEXION: " + mensaje;/// "NO SE ENCONTRO INFORMACION";
-                lblMensaje.Visible = true;
                 ok = false;
+
+                string mensaje =
+                    "Message: " + ex.Message +
+                    " | Status: " + ex.Status +
+                    " | InnerException: " +
+                    (ex.InnerException != null ? ex.InnerException.Message : "NULL");
+
+                lblMensaje.Text = "ERROR DE CONEXION WEB: " + mensaje;
+                lblMensaje.Visible = true;
 
                 GrabarLogAcceso("RENAPER_ERROR", mensaje);
             }

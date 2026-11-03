@@ -1141,7 +1141,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 
                 
                 oRegistro.Observacion = txtObservacion.Text;
-                oRegistro.ObservacionResultado = "";
+                
                 oRegistro.IdMuestra = int.Parse(ddlMuestra.SelectedValue);
                 oRegistro.IdConservacion= int.Parse(ddlConservacion.SelectedValue); 
                 oRegistro.DescripcionProducto = txtDescripcionProducto.Text;
@@ -1149,6 +1149,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 {
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
+                    oRegistro.ObservacionResultado = ""; //20.10.2026 En alta: instanciar valor //En Modificacion: mantener el valor cargado
                     AlmacenarSesion(oC);
                 }
 

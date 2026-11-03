@@ -89,8 +89,8 @@
                         </td>
 					</tr>
                 <tr>
-                    <td> <asp:Button ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" CssClass="btn btn-primary" Text="Buscar" Width="77px" ValidationGroup="1" />
-                      
+                    <td> <asp:Button ID="btnBuscar" runat="server" OnClick="btnBuscar_Click" CssClass="btn btn-primary" Text="Buscar" Width="77px" />
+                       <input id="hidToken" type="hidden" runat="server" />
                     </td>
                    <%-- <td>
                         <asp:CustomValidator ID="cvBuscar" runat="server"  OnServerValidate="cvBuscar_ServerValidate" ValidationGroup="1"></asp:CustomValidator>
