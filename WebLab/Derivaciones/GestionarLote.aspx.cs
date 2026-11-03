@@ -153,7 +153,7 @@ namespace WebLab.Derivaciones
 
             if (dt.Rows.Count > 0)
             {
-                Response.Redirect("InformeLote.aspx?Parametros=" + parametros + "&Estado=" + estado, false);
+                Response.Redirect("InformeLote2.aspx?Parametros=" + parametros + "&Estado=" + estado, false);
             }
             else
             {
