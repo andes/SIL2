@@ -30,7 +30,7 @@ namespace WebLab.Resultados
         {
             if (!Page.IsPostBack)
             {
-                if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO") IdentificarSSO();
+              //  if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO") IdentificarSSO();
                 
                 if (Session["idUsuario"] != null)
                 {
@@ -38,9 +38,7 @@ namespace WebLab.Resultados
                         Nuevaforma();
                     else
                     {
-                        //if (Request["ModoCarga"].ToString() == "ANDA")
-                        //    Nuevaforma2();
-                        //else
+                        
                             CargarGrilla();
                     }
                
@@ -80,29 +78,15 @@ namespace WebLab.Resultados
         {   
             string param=  Request["Parametros"].ToString();
             param = param.Replace("prefijoSector", "prefijoSector +");
-          int tar= param.IndexOf("S.numeroTarjeta");
-
-
-
-
-
+            int tar= param.IndexOf("S.numeroTarjeta");
             string ordenProtocolo = "";
-            //Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-            //if (oC.TipoNumeracionProtocolo == 0)
-                //m_strSQL += " order by  numero ";
+            
                 ordenProtocolo += ", P.numero ";
-            //if (oC.TipoNumeracionProtocolo == 1)
-            //    ordenProtocolo += " ,  P.numerodiario ";
-            //if (oC.TipoNumeracionProtocolo == 2)
-            //    ordenProtocolo += ",P.prefijosector, P.numerosector ";
-            //if (oC.TipoNumeracionProtocolo == 3)
-            //    ordenProtocolo += ",P.numeroTipoServicio ";
-
+            
 
             string m_strSQL = " Select distinct  P.idProtocolo " + ordenProtocolo +// +  // ,  dbo.NumeroProtocolo(P.idProtocolo) as numero, P.fecha 
                                       "  from Lab_Protocolo P with (nolock) " + // +str_condicion;
-                                        " INNER JOIN lAB_DetalleProtocolo DP with (nolock) on DP.idProtocolo= P.idProtocolo " +
-                        //" INNER JOIN LAB_iTEM I on i.iditem= dp.idsubitem " +
+                                        " INNER JOIN lAB_DetalleProtocolo DP with (nolock) on DP.idProtocolo= P.idProtocolo " +            
                                         " WHERE P.baja=0 and " + param; // Request["Parametros"].ToString();
 
             if (tar > -1)
@@ -226,28 +210,11 @@ namespace WebLab.Resultados
             else
 
                 m_strSQL += Request["orden"].ToString();
-            //    else
-            //    {
-            //       //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
-            //            if (oC.TipoNumeracionProtocolo == 0)
-            //                //m_strSQL += " order by  numero ";
-            //                m_strSQL += " order by  P.numero ";
-            //            if (oC.TipoNumeracionProtocolo == 1)
-            //                m_strSQL += " order by  P.numerodiario ";
-            //            if (oC.TipoNumeracionProtocolo == 2)
-            //                m_strSQL += " order by P.prefijosector, P.numerosector ";
-            //            if (oC.TipoNumeracionProtocolo == 3)
-            //                m_strSQL += " order by P.numeroTipoServicio ";
-            //}
+          
+            
 
 
-
-
-
-
-
-            DataSet Ds = new DataSet();
-            //   SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            DataSet Ds = new DataSet();            
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
@@ -372,96 +339,8 @@ namespace WebLab.Resultados
 
         }
 
-
-
-        private int IdentificarUsuarioSSO()
-        {
-            Salud.Security.SSO.SSOHelper.Authenticate();
-            if (Salud.Security.SSO.SSOHelper.CurrentIdentity == null)
-            {
-                // 1.1. No lo está. Debe redirigir al sitio de SSO
-                // Redirigir ...
-                return 0;
-                //pnlSinUsuario.Visible = true;
-            }
-            else
-            {
-                return Salud.Security.SSO.SSOHelper.CurrentIdentity.Id;
-
-            }
-        }
-
-        private void CrearLogAcceso(int idUsuarioLogueado)
-        {
-            LogAcceso RegistroAcceso = new LogAcceso();
-            RegistroAcceso.IdUsuario = idUsuarioLogueado;
-            RegistroAcceso.Fecha = DateTime.Now;
-            RegistroAcceso.Save();
-        }
-
-        private void CrearPermisos(int p)
-        {
-            string m_strSQL = " SELECT  M.objeto, P.permiso " +
-                              " FROM Sys_Perfil " +
-                              " INNER JOIN   Sys_Usuario AS U ON Sys_Perfil.idPerfil = U.idPerfil " +
-                              " INNER JOIN   Sys_Permiso AS P ON Sys_Perfil.idPerfil = P.idPerfil " +
-                              " INNER JOIN   Sys_Menu AS M ON P.idMenu = M.idMenu " +
-                              " WHERE (M.habilitado = 1)  AND (M.idModulo = 2) and  (U.activo=1 )  AND (U.idUsuario =" + p.ToString() + ")";
-
-           // using (SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection)
-            //{
-                DataSet Ds = new DataSet();
-                SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-                SqlDataAdapter adapter = new SqlDataAdapter();
-                adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
-                adapter.Fill(Ds);
-
-                DataTable dtPermisos = Ds.Tables[0];
-                ArrayList l_permisos;
-                l_permisos = new ArrayList();
-                foreach (DataRow dr in dtPermisos.Rows)
-                {
-                    l_permisos.Add(dr.ItemArray[0].ToString() + ":" + dr.ItemArray[1].ToString());
-                    Session["s_permiso"] = l_permisos;
-                }
-                //conn.Close();
-            //}
-
-        }
-
-        private void IdentificarSSO()
-        {
-            ///////Simula Log In//////
-            //string sessionId = "admin";
-            //HttpContext.Current.User = new GenericPrincipal(new Salud.Security.SSO.SSOIdentity(new HttpCookie("SSO_AUTH_COOKIE", sessionId)), null);
-            ////////////////////////////            
-            int idUsuarioLogueado = IdentificarUsuarioSSO();
-            if (idUsuarioLogueado == 0)
-                Salud.Security.SSO.SSOHelper.RedirectToSSOPage("Login.aspx", Request.Url.ToString());
-            else
-            {
-                Usuario oUser = new Usuario();
-                oUser = (Usuario)oUser.Get(typeof(Usuario), "Username", Salud.Security.SSO.SSOHelper.CurrentIdentity.Username);
-                if (oUser != null)
-                {
-                    idUsuarioLogueado = oUser.IdUsuario;
-
-                    string s_perfil = oUser.IdPerfil.Nombre;
-
-                    //object perfil = Salud.Security.SSO.SSOHelper.CurrentIdentity.GetSetting(s_perfil);
-                    //if (perfil == null) Salud.Security.SSO.SSOHelper.RedirectToErrorPage(403,0,"El usuario no tiene permisos de acceso al sistema de laboratorio. Comuniquese con el Administrador del Sistema.");
-                    //else
-                    //{    
-                    CrearLogAcceso(idUsuarioLogueado);
-                    CrearPermisos(idUsuarioLogueado);
-                    Session["idUsuario"] = idUsuarioLogueado;
-//                    Response.Redirect("Principal.aspx", false);
-                }
-                else
-                    Response.Redirect("../AccesoDenegado.htm");
-            }
-
-        }
+         
+ 
 
 
     }

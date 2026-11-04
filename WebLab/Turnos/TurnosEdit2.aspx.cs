@@ -459,28 +459,93 @@ namespace WebLab.Turnos
         {
             CargarDiagnosticosFrecuentes();
         }
+
+
         private void CargarDiagnosticosFrecuentes()
         {
-            Utility oUtil = new Utility();
+            ///nueva funcion con caché
+            int idEfector = oUser.IdEfector.IdEfector;
 
+            string cacheKey = "DiagnosticosFrecuentes_" + idEfector;
 
-            //  btnGuardarImprimir.Visible = oC.GeneraComprobanteProtocolo;
+            // Buscar primero en caché
+            DataTable dt = HttpRuntime.Cache[cacheKey] as DataTable;
+
+            if (dt == null)
+            {
+                string sql = @"
+            SELECT TOP 20
+                c.ID,
+                c.Codigo + ' - ' + c.Nombre AS nombre,
+                COUNT(*) AS cantidad
+            FROM Sys_CIE10 c WITH (NOLOCK)
+            INNER JOIN LAB_ProtocoloDiagnostico p WITH (NOLOCK)
+                ON c.ID = p.idDiagnostico
+            WHERE c.tipo = 'DIAG'
+              AND p.idEfector = @idEfector
+            GROUP BY c.ID, c.Codigo, c.Nombre
+            ORDER BY cantidad DESC";
+
+                dt = new DataTable();
+
+                using (SqlConnection conn = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["SIL_ReadOnly"]
+                        .ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.Add("@idEfector", SqlDbType.Int)
+                            .Value = idEfector;
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(dt);
+                        }
+                    }
+                }
+
+                // Guardar en caché durante 120 minutos
+                HttpRuntime.Cache.Insert(
+                    cacheKey,
+                    dt,
+                    null,
+                    DateTime.Now.AddMinutes(120),
+                    System.Web.Caching.Cache.NoSlidingExpiration
+                );
+            }
+
+            // Cargar el ListBox desde la caché o desde SQL
             lstDiagnosticos.Items.Clear();
 
-            ///Carga de combos de tipos de servicios
-            //string m_ssql = @"SELECT ID, Codigo + ' - ' + Nombre as nombre FROM Sys_CIE10 
-            //    WHERE (ID IN (SELECT DISTINCT idDiagnostico FROM LAB_ProtocoloDiagnostico where idEfector="+oUser.IdEfector.IdEfector.ToString()+@")) ORDER BY Nombre";
-            string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
-FROM Sys_CIE10 c with (nolock) 
-inner join LAB_ProtocoloDiagnostico p with (nolock)  on c.id = p.idDiagnostico
-where  c.tipo='DIAG' and  p.idEfector=" + oUser.IdEfector.IdEfector.ToString()+ @"
-group by id, codigo, nombre
-ORDER BY cantidad desc";
-            oUtil.CargarListBox(lstDiagnosticos, m_ssql, "id", "nombre");
+            lstDiagnosticos.DataSource = dt;
+            lstDiagnosticos.DataTextField = "nombre";
+            lstDiagnosticos.DataValueField = "ID";
+            lstDiagnosticos.DataBind();
+
             lstDiagnosticos.UpdateAfterCallBack = true;
-
-
         }
+        //        private void CargarDiagnosticosFrecuentes()
+        //        {
+        //            Utility oUtil = new Utility();
+
+
+        //            //  btnGuardarImprimir.Visible = oC.GeneraComprobanteProtocolo;
+        //            lstDiagnosticos.Items.Clear();
+
+        //            ///Carga de combos de tipos de servicios
+        //            //string m_ssql = @"SELECT ID, Codigo + ' - ' + Nombre as nombre FROM Sys_CIE10 
+        //            //    WHERE (ID IN (SELECT DISTINCT idDiagnostico FROM LAB_ProtocoloDiagnostico where idEfector="+oUser.IdEfector.IdEfector.ToString()+@")) ORDER BY Nombre";
+        //            string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
+        //FROM Sys_CIE10 c with (nolock) 
+        //inner join LAB_ProtocoloDiagnostico p with (nolock)  on c.id = p.idDiagnostico
+        //where  c.tipo='DIAG' and  p.idEfector=" + oUser.IdEfector.IdEfector.ToString()+ @"
+        //group by id, codigo, nombre
+        //ORDER BY cantidad desc";
+        //            oUtil.CargarListBox(lstDiagnosticos, m_ssql, "id", "nombre");
+        //            lstDiagnosticos.UpdateAfterCallBack = true;
+
+
+        //        }
 
         private void CargarListas()
         {
@@ -534,8 +599,7 @@ ORDER BY cantidad desc";
                         inner join lab_ItemEfector as IE with (nolock)  on IE.idItem= I.iditem and IE.idEfector= " + s_idEfector +//MultiEfector
                         @" INNER JOIN Lab_area A with (nolock)  ON A.idArea= I.idArea  
                      where A.baja=0 and I.baja=0 and IE.disponible =1 and A.idtipoServicio= " + m_idtiposervicio + " AND (I.tipo= 'P') order by I.nombre ";
-            //NHibernate.Cfg.Configuration oConf = new NHibernate.Cfg.Configuration();
-            //String strconn = oConf.GetProperty("hibernate.connection.connection_string");
+    
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
             SqlDataAdapter da = new SqlDataAdapter(m_ssql, conn);
             DataSet ds = new DataSet();
@@ -653,17 +717,7 @@ where D.idEfector = " + oUser.IdEfector.IdEfector.ToString() + " order by c.Nomb
 
             lblObraSocial.Text = oObraSocial.Nombre;
 
-            //if (Request["idProtocolo"] != null)
-            //{
-            //    TxtDatos.Value = "";
-            //    TxtDatosCargados.Value = "";
-            //    Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
-            //    oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
-
-            //    MostrarDeterminaciones(oRegistro);
-            //}
-            //else
-            //    TxtDatos.Value = "";
+           
         }
 
         private void MostrarPaciente()

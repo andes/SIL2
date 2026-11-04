@@ -1787,6 +1787,7 @@ namespace WebLab.Resultados
               
                 }
                 ///saco afuera del foreach
+                oProtocolo.FechaFinalizacion = DateTime.Parse("01/01/1900");
                 if (Request["Operacion"].ToString() != "Valida")
                 {
                     if (oProtocolo.Estado == 0)
@@ -1802,6 +1803,7 @@ namespace WebLab.Resultados
                 {
                     if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
                     {
+                        oProtocolo.FechaFinalizacion = DateTime.Now;
                         oProtocolo.Estado = 2;  //validado total (cerrado);   
                         if (!oProtocolo.Notificarresultado)
                             oProtocolo.Estado = 3; //Acceso Restringido       
