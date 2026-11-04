@@ -41,8 +41,9 @@ namespace Business.Data.Laboratorio
 		private DateTime m_fecha; 
 		private DateTime m_fechaorden; 
 		private DateTime m_fecharetiro; 
-		private Paciente m_idpaciente; 
-		private Efector m_idefectorsolicitante; 
+		private Paciente m_idpaciente;
+        private DateTime m_fechafinalizacion;
+        private Efector m_idefectorsolicitante; 
 		private int m_idespecialistasolicitante; 
 		private ObraSocial m_idobrasocial; 
 		private Origen m_idorigen; 
@@ -124,6 +125,7 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
         private int m_estado;
 		private Usuario m_idusuarioregistro; 
 		private DateTime m_fecharegistro;
+        
         private string m_observacionResultado;
         private string m_descripcionProducto;
         private int m_idmuestra;
@@ -157,8 +159,9 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
 			m_idtiposervicio = new TipoServicio(); 
 			m_fecha = DateTime.MinValue; 
 			m_fechaorden = DateTime.MinValue; 
-			m_fecharetiro = DateTime.MinValue; 
-			m_idpaciente = new Paciente(); 
+			m_fecharetiro = DateTime.MinValue;
+            m_fechafinalizacion = DateTime.MinValue;
+            m_idpaciente = new Paciente(); 
 			m_idefectorsolicitante = new Efector(); 
 			m_idespecialistasolicitante = 0; 
 			m_idobrasocial = new ObraSocial(); 
@@ -234,7 +237,8 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
 			DateTime fecha, 
 			DateTime fechaorden, 
 			DateTime fecharetiro, 
-			Paciente idpaciente, 
+            DateTime fechafinalizacion,
+            Paciente idpaciente, 
 			Efector idefectorsolicitante, 
 			int idespecialistasolicitante, 
 			ObraSocial idobrasocial, 
@@ -315,6 +319,7 @@ and exists (select iditem from  LAB_ConfiguracionSISA  (nolock)  where iditem = 
             m_fechainiciosintomas = fechainiciosintomas;
             m_fechaultimocontacto = fechaultimocontacto;
             m_notificarresultado = notificarresultado;
+            m_fechafinalizacion = fechafinalizacion;
 
         }
 		#endregion // End Required Fields Only Constructor
@@ -587,6 +592,18 @@ inner join lab_detalleprotocolo DP on DPP.iddetalleprotocolo = DP.iddetalleproto
 			}
 
 		}
+
+
+        public DateTime FechaFinalizacion
+        {
+            get { return m_fechafinalizacion; }
+            set
+            {
+                m_isChanged |= (m_fechafinalizacion != value);
+                m_fechafinalizacion = value;
+            }
+
+        }
 
         public DateTime FechaInicioSintomas
         {
@@ -1539,17 +1556,17 @@ inner join LAB_CasoFiliacion as CF on Cf.idCasoFiliacion = CFP.idCasoFiliacion
 
 
 
-        public string GetNumero()
-        {  
-            Configuracion oC = new Configuracion();   oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
-            switch (oC.TipoNumeracionProtocolo )
-            {
-                case 0:  return this.Numero.ToString();
-                case 1:  return this.NumeroDiario.ToString(); 
-                case 2:  return this.PrefijoSector+ this.NumeroSector.ToString();
-                default: return this.NumeroTipoServicio.ToString();
-            }
-        }
+        //public string GetNumero()
+        //{  
+        //    Configuracion oC = new Configuracion();   oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
+        //    switch (oC.TipoNumeracionProtocolo )
+        //    {
+        //        case 0:  return this.Numero.ToString();
+        //        case 1:  return this.NumeroDiario.ToString(); 
+        //        case 2:  return this.PrefijoSector+ this.NumeroSector.ToString();
+        //        default: return this.NumeroTipoServicio.ToString();
+        //    }
+        //}
 
         public int GetResultadosPendientes()
         {
@@ -2246,10 +2263,44 @@ and A.idProtocolo =  " + this.IdProtocolo.ToString();
         }
 
 
+        private HashSet<int> ObtenerAreasTerminadas()
+        {
+            HashSet<int> areas = new HashSet<int>();
 
+            string sql = @"
+        SELECT idArea
+        FROM dbo.LAB_ProtocoloAreaEstado
+        WHERE idProtocolo = @idProtocolo
+          AND estado = 'T'";
+
+            SqlConnection conn =
+                (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+
+            using (SqlCommand cmd = new SqlCommand(sql, conn))
+            {
+                cmd.Parameters.Add("@idProtocolo", SqlDbType.Int)
+                    .Value = this.IdProtocolo;
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                        areas.Add(Convert.ToInt32(dr["idArea"]));
+                }
+            }
+
+            return areas;
+        }
         public bool ValidadoTotal(string s_operacion, int i_idusuario)
         {
             bool validado = true;
+            HashSet<int> areasTerminadas = ObtenerAreasTerminadas();
+
+            // Solo aplicar este circuito si existen áreas cerradas manualmente.
+            if (areasTerminadas.Count == 0)
+                return false;
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
 
@@ -2265,6 +2316,16 @@ and A.idProtocolo =  " + this.IdProtocolo.ToString();
             {
                 foreach (DetalleProtocolo oDetalle in detalle)
                 {
+
+
+                    // Obtener el idArea real de la determinación.
+                    // Adaptar esta propiedad al mapeo de SIL2.
+                    int idArea = oDetalle.IdItem.IdArea.IdArea;
+
+                    // Área cerrada manualmente: no exigir validación.
+                    if (areasTerminadas.Contains(idArea))
+                        continue;
+
                     // =====================================================
                     // 1. ESTADO DE VALIDACION
                     // =====================================================
@@ -3512,6 +3573,18 @@ and   P.Baja = 0 and P.Estado > 0  and P.IdPaciente = " + s_idPaciente + "   and
             return s_resultadoAnterior;
 
         }
-    
+
+        public bool DebeAgregarActoBioquimico()
+        {   /// solo para pacientes: no para no paciente
+            ///solo origen ambulatorio o guardia
+            /// 
+            if (this.IdTipoServicio.IdTipoServicio == 1 || this.IdTipoServicio.IdTipoServicio == 3)
+                
+                    return this.IdOrigen != null &&
+                       (this.IdOrigen.IdOrigen == 1 ||
+                        this.IdOrigen.IdOrigen == 3);
+            else
+                return false;
+        }
     }
 }

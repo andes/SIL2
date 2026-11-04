@@ -1304,7 +1304,8 @@ namespace Business.Data
             {
                 foreach (Protocolo oDetalle in detalle)
                 {
-                    result = oDetalle.GetNumero() + " - " + oDetalle.Fecha.ToShortDateString(); break;
+                    //result = oDetalle.GetNumero() + " - " + oDetalle.Fecha.ToShortDateString(); break;
+                    result = oDetalle.Numero.ToString() + " - " + oDetalle.Fecha.ToShortDateString(); break;
 
                 }
             }
@@ -1413,7 +1414,7 @@ namespace Business.Data
                 {
                     if (oDetalle != protocolo)
                     {
-                        result = oDetalle.GetNumero() + " - " + oDetalle.Fecha.ToShortDateString(); break;
+                        result = oDetalle.Numero.ToString() + " - " + oDetalle.Fecha.ToShortDateString(); break;
                     }
 
                 }

@@ -36,7 +36,7 @@ namespace WebLab.Resultados
                 lblMetodo.Text = oMetodo.Codigo;
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
-                lblProtocolo.Text = oProtocolo.GetNumero();
+                lblProtocolo.Text = oProtocolo.Numero.ToString();
 
                 Germen oGermen = new Germen();
                 oGermen = (Germen)oGermen.Get(typeof(Germen), int.Parse(s_idGermen));

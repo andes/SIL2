@@ -260,10 +260,10 @@ namespace WebLab.Resultados
             int len = oRegistro.FechaRegistro.ToString().Length - 11;
             lblHoraRegistro.Text = oRegistro.FechaRegistro.ToString().Substring(11, oRegistro.FechaRegistro.ToString().Length - 11);
             lblFecha.Text = oRegistro.Fecha.ToShortDateString();
-            lblProtocolo.Text =   oRegistro.GetNumero().ToString();  
-          
+            lblProtocolo.Text = oRegistro.Numero.ToString();
+
             //hplProtocolo.NavigateUrl = "../Protocolos/ProtocoloEdit2.aspx?idServicio=" + oRegistro.IdTipoServicio.IdTipoServicio.ToString()+ "&Operacion=Modifica&idProtocolo=" +oRegistro.IdProtocolo.ToString();
-            
+
             if (oRegistro.IdEfector == oRegistro.IdEfectorSolicitante)
                 lblOrigen.Text = oRegistro.IdOrigen.Nombre;
             else

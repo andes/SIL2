@@ -535,6 +535,14 @@ select * from areas order by nombre ";
                 else
                     ddlVerificaIngreso.SelectedValue = "0";
 
+                if (oC.CargaAutomaticaActoBioquimico)
+                    ddlCargaAutomaticaActoBioquimico.SelectedValue = "1";
+                else
+                    ddlCargaAutomaticaActoBioquimico.SelectedValue = "0";
+
+
+                
+
 
                 txtUrlServicioSISA.Text = oC.UrlServicioSISA;
                 txtUrlMuestraSISA.Text = oC.URLMuestraSISA;
@@ -1069,6 +1077,10 @@ order by I.codigo, I.nombre
               
                 if (ddlEnfermedadBase.SelectedValue == "0") oC.HabilitaEnfermedadBase = false;
                 else oC.HabilitaEnfermedadBase = true;
+
+                if (ddlCargaAutomaticaActoBioquimico.SelectedValue == "0") oC.CargaAutomaticaActoBioquimico = false;
+                else oC.CargaAutomaticaActoBioquimico = true;
+                
 
                 if (ddlPreValidacion.SelectedValue == "0") oC.PreValida = false;
               else oC.PreValida = true;

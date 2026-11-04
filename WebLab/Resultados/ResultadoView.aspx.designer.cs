@@ -211,6 +211,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.Label lblFecha;
         
         /// <summary>
+        /// btnVerTiempos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnVerTiempos;
+        
+        /// <summary>
         /// lblSolicitante control.
         /// </summary>
         /// <remarks>
