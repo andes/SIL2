@@ -156,5 +156,8 @@
 
     <property column="verificaIngresoAnterior" type="Boolean" name="VerificaIngresoAnterior" not-null="true" />
     <property column="habilitaEnfermedadBase" type="Boolean" name="HabilitaEnfermedadBase" not-null="true" />
+
+
+    <property column="cargaAutomaticaActoBioquimico" type="Boolean" name="CargaAutomaticaActoBioquimico" not-null="true" />
   </class>
 </hibernate-mapping>
