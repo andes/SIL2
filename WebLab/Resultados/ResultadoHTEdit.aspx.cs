@@ -1803,7 +1803,7 @@ namespace WebLab.Resultados
                 {
                     if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
                     {
-                        oProtocolo.FechaFinalizacion = DateTime.Now;
+                        if   ( oProtocolo.Estado < 2)oProtocolo.FechaFinalizacion = DateTime.Now;
                         oProtocolo.Estado = 2;  //validado total (cerrado);   
                         if (!oProtocolo.Notificarresultado)
                             oProtocolo.Estado = 3; //Acceso Restringido       

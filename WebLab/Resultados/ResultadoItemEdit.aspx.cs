@@ -2412,7 +2412,7 @@ namespace WebLab.Resultados
                 {
                     if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(Session["idUsuarioValida"].ToString())))
                     {
-                        oProtocolo.FechaFinalizacion = DateTime.Now;
+                        if  (   oProtocolo.Estado <2) oProtocolo.FechaFinalizacion = DateTime.Now;
                         oProtocolo.Estado = 2;  //validado total (cerrado);   
 
                         if (!oProtocolo.Notificarresultado)
