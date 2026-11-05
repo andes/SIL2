@@ -952,10 +952,13 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                     //    btnVerTiempos.Visible = false;
                         imgPdf.Visible = false; btnRestringirAcceso.Visible = false;
                         ///si se muestra la opcion de cerrar area no se cierra el protocolo.
-                        if (btnCerrarArea.Visible)
-                            btnCerrarSinResultados.Visible = false;
-                        else
-                        btnCerrarSinResultados.Visible = true;
+                        if (esValida)
+                        {
+                            if (btnCerrarArea.Visible)
+                                btnCerrarSinResultados.Visible = false;
+                            else
+                                btnCerrarSinResultados.Visible = true;
+                        }
                     }
                     break;
                 case 1:
@@ -964,11 +967,13 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                         lblEstado1.Text = "EN PROCESO";
                         btnRestringirAcceso.Visible = false;
                         ///si se muestra la opcion de cerrar area no se cierra el protocolo.
-                        if (btnCerrarArea.Visible)
-                            btnCerrarSinResultados.Visible = false;
-                        else
-                            btnCerrarSinResultados.Visible = true;
-                        
+                        if (esValida)
+                        {
+                            if (btnCerrarArea.Visible)
+                                btnCerrarSinResultados.Visible = false;
+                            else
+                                btnCerrarSinResultados.Visible = true;
+                        }
                     }
                     
                     break;
@@ -1048,6 +1053,9 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                     pnlAntibiograma.Enabled = false;
                 else
                     pnlAntibiograma.Enabled = true;
+
+                btnCerrarArea.Visible = false;
+                btnCerrarSinResultados.Visible = false;
 
             }
 
@@ -3391,7 +3399,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 }
                 else
                 {
-                    if (validacierre)///agrego si verifica el cierre o no
+                    //   if (validacierre)///agrego si verifica el cierre o no
+                    if ((validacierre) && (Request["Operacion"].ToString() == "Valida") && (!chkCerrarSinResultados.Checked))
                     {
                         if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString())))
                         {
@@ -3413,10 +3422,10 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                     }
                 }
 
-                if ((Request["Operacion"].ToString() == "Valida") && (chkCerrarSinResultados.Checked))
-                
-                    {
+                if ((Request["Operacion"].ToString() == "Valida") && (chkCerrarSinResultados.Checked))                
+                 {
                     oProtocolo.Estado = 2;
+                    oProtocolo.FechaFinalizacion = DateTime.Now;
                     //if (oProtocolo.IdTipoServicio.IdTipoServicio==3) oProtocolo.exportarDatos();
                     oProtocolo.GrabarAuditoriaProtocolo("Terminado", int.Parse(Session["idUsuario"].ToString())); // agrego auditoria de cierre de protocolo
                     if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
@@ -6534,7 +6543,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                     oProtocolo.GrabarAuditoriaProtocolo("Terminado", id_user); // agrego auditoria de cierre de protocolo
                 }
             }
-            Avanzar(0);//refresca pantalla
+            Avanzar(1);//refresca pantalla
         }
 
         protected void btnCerrarArea_Click(object sender, EventArgs e)
@@ -6608,7 +6617,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 }
             }
 
-            Avanzar(0); // Refresca pantalla
+            //Avanzar(0); // Refresca pantalla
+            Avanzar(1); // avanza pantalla
         }
     }
 }
