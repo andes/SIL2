@@ -224,12 +224,6 @@ document.onkeydown=checkKeyCode;
   font-family: Arial;
    text-align:center;">Versión MultiEfector Nov 2026-03.<a href="<%= Page.ResolveUrl("~/controldecambios.html") %>"  target="_blank" >Ver Cambios Version</a></p>
 
-       	<p style="color: #747377;
-  font-weight: normal;
-  font-size: 14px;
-  font-family: Arial;
-   text-align:center;"><a href="<%= Page.ResolveUrl("~/controldecambios.html") %>"  target="_blank" >Ver Condiciones de uso</a></p>
-
      
 	</div>	</form>
 </body>

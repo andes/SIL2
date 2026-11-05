@@ -2298,9 +2298,9 @@ and A.idProtocolo =  " + this.IdProtocolo.ToString();
             bool validado = true;
             HashSet<int> areasTerminadas = ObtenerAreasTerminadas();
 
-            // Solo aplicar este circuito si existen áreas cerradas manualmente.
-            if (areasTerminadas.Count == 0)
-                return false;
+            //// Solo aplicar este circuito si existen áreas cerradas manualmente.
+            //if (areasTerminadas.Count == 0)
+            //    return false;
 
             ISession m_session = NHibernateHttpModule.CurrentSession;
 
