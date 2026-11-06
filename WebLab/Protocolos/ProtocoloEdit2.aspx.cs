@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Web;
 using WebLab.Resultados;
+using System.Linq;
 
 namespace WebLab.Protocolos
 {
@@ -1183,7 +1184,7 @@ where  pd.tipo='D' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         }
 
-        private void MostrarDeterminaciones(Protocolo oRegistro)
+        private void MostrarDeterminaciones_old(Protocolo oRegistro)
         {
             ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
             //dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
@@ -1234,6 +1235,91 @@ where  pd.tipo='D' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
             TxtDatosCargados.Value = sDatos;
 
              
+        }
+
+        private void MostrarDeterminaciones(Protocolo oRegistro)
+        {
+            //05.11.2026 Vamos a traer de la base las determinaciones como sus derivaciones asociadas (para guardarlas en memoria)
+
+            string m_strSQL = @"
+            SELECT
+                DP.idDetalleProtocolo AS IdDetalleProtocolo,
+                I.codigo AS Codigo,
+                I.nombre AS Nombre,
+                DP.TrajoMuestra AS TrajoMuestra,
+
+                CASE
+                    WHEN DP.idUsuarioValida > 0
+                      OR DP.idUsuarioValidaObservacion > 0 THEN 2
+                    WHEN DP.idUsuarioResultado > 0
+                      OR DP.idUsuarioObservacion > 0
+                      OR DP.enviado = 2 THEN 1
+                    ELSE 0
+                END AS Estado,
+                D.idDerivacion AS IdDerivacion,
+        		D.estado as EstadoDerivacion
+
+            FROM LAB_DetalleProtocolo DP with (nolock)
+            INNER JOIN LAB_Item I with (nolock)
+                ON I.idItem = DP.idItem
+            LEFT JOIN LAB_Derivacion D with (nolock)
+                ON D.idDetalleProtocolo = DP.idDetalleProtocolo
+            WHERE DP.idProtocolo = @idProtocolo
+            ORDER BY DP.idDetalleProtocolo";
+            ISession m_session = NHibernateHttpModule.CurrentSession;
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
+            {
+                cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
+
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(Ds);
+                }
+            }
+
+            string sDatos = "", sDerivacion = "";
+            string sDatosTablaOriginal = "";
+
+            if (Ds.Tables[0] != null)
+            {
+                DataTable dt = Ds.Tables[0];
+                for(int i=0;i<dt.Rows.Count; i++)
+                {
+                    if (sDatos == "")
+                        sDatos = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+                    else
+                        sDatos += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+
+                    if(sDerivacion == "")
+                    {
+                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
+                            sDerivacion = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
+                    }
+                    else
+                    {
+                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
+                            sDerivacion += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
+                    }
+
+
+                    //Guardamos una copia con todos los valores, para que al querer recuperar los tengamos en memoria
+                    string registro = (i + 1) + "#" +
+                                        dt.Rows[i]["Codigo"] + "#" +
+                                        dt.Rows[i]["Nombre"] + "#" +
+                                        dt.Rows[i]["TrajoMuestra"] + "#" +
+                                        dt.Rows[i]["Estado"];
+
+                    sDatosTablaOriginal += (sDatosTablaOriginal == "" ? "" : "@") + registro;
+                }
+                
+            }
+
+            TxtDatosCargados.Value = sDatos;
+            TxtDatosDerivacion.Value = sDerivacion;
+            TxtDatosTablaOriginal.Value = sDatosTablaOriginal;
         }
 
         private void MostrarEnfermedadBase(Protocolo oRegistro)
@@ -4222,9 +4308,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
         }
 
         protected void cvValidacionInput_ServerValidate(object source, ServerValidateEventArgs args)
-        { 
-           
-            
+        {
             TxtDatosCargados.Value = TxtDatos.Value;
 
             string sDatos = "";
@@ -4590,57 +4674,323 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
         }
         private string ValidarDeterminacionEliminarConDerivacion()
         {
-            // Obtener los codigos que permanecen en la grilla
-            List<string> codigosVista = new List<string>();
-
-            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            if (TxtDatosDerivacion.Value != "")
             {
-                string[] registros = TxtDatosCargados.Value.Split(';');
+                // 1. Obtener los registros actuales.
+                string[] tablaActual = TxtDatos.Value.Split('@');
 
-                foreach (string registro in registros)
+                HashSet<string> codigosActuales = new HashSet<string>();
+
+                for (int i = 0; i < tablaActual.Length; i++)
                 {
-                    if (!string.IsNullOrEmpty(registro))
-                    {
-                        string[] datos = registro.Split('#');
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
 
-                        if (datos.Length > 0 && datos[0] != "")
-                            codigosVista.Add(datos[0]);
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                        codigosActuales.Add(fila[1]);
+                }
+
+                // 2. Construir diccionario con los registros originales.
+                Dictionary<string, string[]> detallesOriginalesDict =
+                    TxtDatosTablaOriginal.Value
+                        .Split('@')
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('#'))
+                        .Where(x => x.Length > 1 && !string.IsNullOrEmpty(x[1]))
+                        .ToDictionary(x => x[1], x => x);
+
+                // 3. Detectar códigos eliminados.
+                HashSet<string> codigosEliminados = new HashSet<string>(
+                    detallesOriginalesDict.Keys.Except(codigosActuales)
+                );
+
+                if (codigosEliminados.Count == 0)
+                    return "";
+
+                // 4. Construir diccionario de derivaciones.
+                Dictionary<string, string[]> derivacionesDict =
+                    TxtDatosDerivacion.Value
+                        .Split(';')
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('#'))
+                        .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+                        .GroupBy(x => x[0])
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                // 5. Identificar cuáles eliminaciones deben recuperarse.
+                System.Text.StringBuilder codigosRecuperados =
+                    new System.Text.StringBuilder();
+
+                System.Text.StringBuilder tablaReconstruida =
+                    new System.Text.StringBuilder();
+
+                int numeroFilaMaximo = 0;
+
+                // Obtener el máximo de las filas originales.
+                foreach (string[] detalle in detallesOriginalesDict.Values)
+                {
+                    int numeroFila;
+
+                    if (int.TryParse(detalle[0], out numeroFila) &&
+                        numeroFila > numeroFilaMaximo)
+                    {
+                        numeroFilaMaximo = numeroFila;
                     }
                 }
-            }
 
-            // Traemos todos los codigos que tienen derivaciones en gestion
-            string idProtocolo = Request["idProtocolo"].ToString();
-
-            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-
-            string sql = @"
-                SELECT DISTINCT ie.codigo
-                FROM LAB_DetalleProtocolo dp WITH (NOLOCK)
-                INNER JOIN LAB_Item ie WITH (NOLOCK) ON ie.iditem = dp.iditem
-                INNER JOIN LAB_Derivacion d WITH (NOLOCK) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
-                WHERE dp.idProtocolo = @idProtocolo
-                    AND d.estado <> 0";
-
-            using (SqlCommand comando = new SqlCommand(sql, conexion))
-            {
-                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
-
-                using (SqlDataReader reader = comando.ExecuteReader())
+                // Obtener también el máximo de las filas actuales ocupadas.
+                for (int i = 0; i < tablaActual.Length; i++)
                 {
-                    while (reader.Read())
-                    {
-                        string codigo = reader["codigo"].ToString();
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
 
-                        // Si tiene derivacion en gestion y ya no esta en la grilla, no se puede eliminar
-                        if (!codigosVista.Contains(codigo))
-                            return codigo;
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                    {
+                        int numeroFila;
+
+                        if (int.TryParse(fila[0], out numeroFila) &&
+                            numeroFila > numeroFilaMaximo)
+                        {
+                            numeroFilaMaximo = numeroFila;
+                        }
                     }
                 }
+
+                // Verificar cuáles eliminaciones tienen derivaciones activas.
+                foreach (string codigo in codigosEliminados)
+                {
+                    string[] derivacion;
+
+                    if (derivacionesDict.TryGetValue(codigo, out derivacion))
+                    {
+                        int estadoDerivacion;
+
+                        if (int.TryParse(derivacion[2], out estadoDerivacion) &&
+                            estadoDerivacion > 0)
+                        {
+                            if (codigosRecuperados.Length > 0)
+                                codigosRecuperados.Append(", ");
+
+                            codigosRecuperados.Append(codigo);
+                        }
+                    }
+                }
+
+                // No hay determinaciones que recuperar.
+                if (codigosRecuperados.Length == 0)
+                    return "";
+
+                // 6. Reconstruir la tabla conservando los registros actuales.
+                // Se excluye la última fila vacía.
+                for (int i = 0; i < tablaActual.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
+
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                    {
+                        if (tablaReconstruida.Length > 0)
+                            tablaReconstruida.Append("@");
+
+                        tablaReconstruida.Append(tablaActual[i]);
+                    }
+                }
+
+                // 7. Incorporar las determinaciones recuperadas.
+                string[] codigosARecuperar = codigosRecuperados.ToString().Split(',');
+
+                for (int i = 0; i < codigosARecuperar.Length; i++)
+                {
+                    string codigo = codigosARecuperar[i].Trim();
+                    string[] detalleOriginal;
+
+                    if (detallesOriginalesDict.TryGetValue(codigo, out detalleOriginal))
+                    {
+                        numeroFilaMaximo++;
+
+                        detalleOriginal = (string[])detalleOriginal.Clone();
+                        detalleOriginal[0] = numeroFilaMaximo.ToString();
+
+                        if (tablaReconstruida.Length > 0)
+                            tablaReconstruida.Append("@");
+                        detalleOriginal[3] = detalleOriginal[3] == "Si" ? "false" : "true";
+                        tablaReconstruida.Append(string.Join("#", detalleOriginal));
+                    }
+                }
+
+                // 8. Agregar nuevamente la fila vacía final.
+                numeroFilaMaximo++;
+
+                if (tablaReconstruida.Length > 0)
+                    tablaReconstruida.Append("@");
+
+                tablaReconstruida.Append(numeroFilaMaximo);
+                tablaReconstruida.Append("###false#0@");
+
+                TxtDatos.Value = tablaReconstruida.ToString();
+
+                return codigosRecuperados.ToString();
             }
 
             return "";
         }
+        //private string ValidarDeterminacionEliminarConDerivacion()
+        //{
+        //    if (TxtDatosDerivacion.Value != "")
+        //    {
+        //        // 1. Obtener los registros actuales, excluyendo la última fila vacía.
+        //        string[] tablaActual = TxtDatos.Value.Split('@');
+
+        //        HashSet<string> codigosActuales = new HashSet<string>();
+
+        //        for (int i = 0; i < tablaActual.Length; i++)
+        //        {
+        //            if (string.IsNullOrEmpty(tablaActual[i]))
+        //                continue;
+
+        //            string[] fila = tablaActual[i].Split('#');
+
+        //            if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+        //                codigosActuales.Add(fila[1]);
+        //        }
+
+        //        // 2. Construir diccionario con los registros originales.
+        //        Dictionary<string, string[]> detallesOriginalesDict =
+        //            TxtDatosTablaOriginal.Value
+        //                .Split('@')
+        //                .Where(x => !string.IsNullOrEmpty(x))
+        //                .Select(x => x.Split('#'))
+        //                .Where(x => x.Length > 1 && !string.IsNullOrEmpty(x[1]))
+        //                .ToDictionary(x => x[1], x => x);
+
+        //        // 3. Detectar códigos eliminados.
+        //        HashSet<string> codigosEliminados = new HashSet<string>(detallesOriginalesDict.Keys.Except(codigosActuales));
+
+        //        if (codigosEliminados.Count == 0)
+        //            return "";
+
+        //        // 4. Construir diccionario de derivaciones.
+        //        Dictionary<string, string[]> derivacionesDict =
+        //            TxtDatosDerivacion.Value
+        //                .Split(';')
+        //                .Where(x => !string.IsNullOrEmpty(x))
+        //                .Select(x => x.Split('#'))
+        //                .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+        //                .GroupBy(x => x[0])
+        //                .ToDictionary(g => g.Key, g => g.First());
+
+        //        // 5. Identificar cuáles eliminaciones deben recuperarse.
+        //        System.Text.StringBuilder codigosRecuperados =  new System.Text.StringBuilder();
+
+        //        System.Text.StringBuilder tablaReconstruida = new System.Text.StringBuilder();
+
+        //        //Buscando el último número de fila utilizado para continuar la numeración sin sobrescribir registros.
+        //        int numeroFilaMaximo = 0;
+
+        //        foreach (string[] detalle in detallesOriginalesDict.Values)
+        //        {
+        //            int numeroFila;
+
+        //            if (int.TryParse(detalle[0], out numeroFila) &&  numeroFila > numeroFilaMaximo)
+        //            {
+        //                numeroFilaMaximo = numeroFila;
+        //            }
+        //        }
+
+        //        foreach (string codigo in codigosEliminados)
+        //        {
+        //            string[] derivacion;
+
+        //            if (derivacionesDict.TryGetValue(codigo, out derivacion))
+        //            {
+        //                int estadoDerivacion;
+
+        //                if (int.TryParse(derivacion[2], out estadoDerivacion) &&
+        //                    estadoDerivacion > 0)
+        //                {
+        //                    if (codigosRecuperados.Length > 0)
+        //                        codigosRecuperados.Append(", ");
+
+        //                    codigosRecuperados.Append(codigo);
+        //                }
+        //            }
+        //        }
+
+        //        // No hay determinaciones que recuperar.
+        //        if (codigosRecuperados.Length == 0)
+        //            return "";
+        //        System.Diagnostics.Debug.WriteLine("Máximo original/actual: " + numeroFilaMaximo);
+
+
+        //        // 6. Reconstruir la tabla conservando los registros actuales.  // Se excluye la última fila vacía para generarla nuevamente.
+        //        for (int i = 0; i < tablaActual.Length; i++)
+        //        {
+        //            System.Diagnostics.Debug.WriteLine("Fila actual: " + tablaActual[i]);
+        //            if (string.IsNullOrEmpty(tablaActual[i]))
+        //                continue;
+
+        //            string[] fila = tablaActual[i].Split('#');
+
+        //            // Ignorar la fila vacía final.
+        //            if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+        //            {
+        //                int numeroFila;
+
+        //                if (int.TryParse(fila[0], out numeroFila) &&
+        //                    numeroFila > numeroFilaMaximo)
+        //                {
+        //                    numeroFilaMaximo = numeroFila;
+        //                }
+        //            }
+        //        }
+
+        //        // 7. Incorporar las determinaciones recuperadas.  // Se asignan nuevos números para no pisar filas actuales.
+        //        string[] filasRecuperadas = tablaReconstruida.ToString().Split('@');
+
+        //        // Las filas recuperadas se agregan al final con número nuevo.
+        //        string[] codigosARecuperar = codigosRecuperados.ToString().Split(',');
+
+        //        for (int i = 0; i < codigosARecuperar.Length; i++)
+        //        {
+        //            string codigo = codigosARecuperar[i].Trim();
+        //            string[] detalleOriginal;
+
+        //            if (detallesOriginalesDict.TryGetValue(codigo, out detalleOriginal))
+        //            {
+        //                numeroFilaMaximo++;
+
+        //                detalleOriginal = (string[])detalleOriginal.Clone();
+        //                detalleOriginal[0] = numeroFilaMaximo.ToString();
+
+        //                if (tablaReconstruida.Length > 0)
+        //                    tablaReconstruida.Append("@");
+
+        //                tablaReconstruida.Append(string.Join("#", detalleOriginal));
+        //            }
+        //        }
+
+        //        // 8. Agregar nuevamente la fila vacía final.
+        //        //numeroFilaMaximo++;
+
+        //        //if (tablaReconstruida.Length > 0)
+        //        //    tablaReconstruida.Append("@");
+
+        //        //tablaReconstruida.Append(numeroFilaMaximo);
+        //        //tablaReconstruida.Append("###false#0@");
+
+        //        TxtDatos.Value = tablaReconstruida.ToString();
+
+        //        return   codigosRecuperados.ToString() ;
+        //    }
+        //    else return "";
+        //}
+
 
         private string ValidarDeterminacionSinMuestraConDerivacion() //Devuelve el codigo de la determinacion que no puede cambiar de estado
         {
