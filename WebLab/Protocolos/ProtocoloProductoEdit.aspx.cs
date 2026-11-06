@@ -16,6 +16,7 @@ using System.Configuration;
 using System.Security.Principal;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace WebLab.Protocolos
 {
@@ -370,45 +371,127 @@ IncidenciaEdit1.MostrarDatosdelProtocolo(
             txtObservacion.Text = oRegistro.Observacion;
 
 
-            ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
-            //dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
-            DetalleProtocolo oDetalle = new DetalleProtocolo();
+            /* ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
+             //dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
+             DetalleProtocolo oDetalle = new DetalleProtocolo();
+             ISession m_session = NHibernateHttpModule.CurrentSession;
+             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+             crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+             crit.AddOrder ( Order.Asc("IdDetalleProtocolo"));
+
+             IList items = crit.List();
+             string pivot = "";
+             string sDatos = "";
+             foreach (DetalleProtocolo oDet in items)
+             {
+                 if (pivot != oDet.IdItem.Nombre)
+                 {
+
+
+                     string estado = "0";
+                     if (oDet.IdUsuarioValida > 0) //validado
+                         estado = "2";
+                     else
+                     {
+                         if ((oDet.IdUsuarioResultado > 0) || (oDet.Enviado == 2)) //cargado
+                             estado = "1";
+                     }
+
+                     if (sDatos == "")
+                         sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
+                     else
+                         sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
+                     pivot = oDet.IdItem.Nombre;                   
+                 }
+
+             }
+
+             TxtDatosCargados.Value = sDatos;*/
+
+            //05.11.2026 Vamos a traer de la base las determinaciones como sus derivaciones asociadas (para guardarlas en memoria)
+
+            string m_strSQL = @"
+            SELECT
+                DP.idDetalleProtocolo AS IdDetalleProtocolo,
+                I.codigo AS Codigo,
+                I.nombre AS Nombre,
+                DP.TrajoMuestra AS TrajoMuestra,
+
+                CASE
+                    WHEN DP.idUsuarioValida > 0
+                      OR DP.idUsuarioValidaObservacion > 0 THEN 2
+                    WHEN DP.idUsuarioResultado > 0
+                      OR DP.idUsuarioObservacion > 0
+                      OR DP.enviado = 2 THEN 1
+                    ELSE 0
+                END AS Estado,
+                D.idDerivacion AS IdDerivacion,
+        		D.estado as EstadoDerivacion
+
+            FROM LAB_DetalleProtocolo DP with (nolock)
+            INNER JOIN LAB_Item I with (nolock)
+                ON I.idItem = DP.idItem
+            LEFT JOIN LAB_Derivacion D with (nolock)
+                ON D.idDetalleProtocolo = DP.idDetalleProtocolo
+            WHERE DP.idProtocolo = @idProtocolo
+            ORDER BY DP.idDetalleProtocolo";
             ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-            crit.AddOrder ( Order.Asc("IdDetalleProtocolo"));
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
 
-            IList items = crit.List();
-            string pivot = "";
-            string sDatos = "";
-            foreach (DetalleProtocolo oDet in items)
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
             {
-                if (pivot != oDet.IdItem.Nombre)
-                {
-                   
+                cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
 
-                    string estado = "0";
-                    if (oDet.IdUsuarioValida > 0) //validado
-                        estado = "2";
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                {
+                    adapter.Fill(Ds);
+                }
+            }
+
+            string sDatos = "", sDerivacion = "";
+            string sDatosTablaOriginal = "";
+
+            if (Ds.Tables[0] != null)
+            {
+                DataTable dt = Ds.Tables[0];
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (sDatos == "")
+                        sDatos = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+                    else
+                        sDatos += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+
+                    if (sDerivacion == "")
+                    {
+                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
+                            sDerivacion = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
+                    }
                     else
                     {
-                        if ((oDet.IdUsuarioResultado > 0) || (oDet.Enviado == 2)) //cargado
-                            estado = "1";
+                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
+                            sDerivacion += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
                     }
 
-                    if (sDatos == "")
-                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
-                    else
-                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
-                    pivot = oDet.IdItem.Nombre;                   
+
+                    //Guardamos una copia con todos los valores, para que al querer recuperar los tengamos en memoria
+                    string registro = (i + 1) + "#" +
+                                        dt.Rows[i]["Codigo"] + "#" +
+                                        dt.Rows[i]["Nombre"] + "#" +
+                                        dt.Rows[i]["TrajoMuestra"] + "#" +
+                                        dt.Rows[i]["Estado"];
+
+                    sDatosTablaOriginal += (sDatosTablaOriginal == "" ? "" : "@") + registro;
                 }
 
             }
 
             TxtDatosCargados.Value = sDatos;
-            
+            TxtDatosDerivacion.Value = sDerivacion;
+            TxtDatosTablaOriginal.Value = sDatosTablaOriginal;
 
-            
+
+
             //chkRecordarConfiguracion.Visible = false;
 
             if (oRegistro.Estado==2)  btnGuardar.Visible = oC.ModificarProtocoloTerminado;          
@@ -1877,7 +1960,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
-                string muestra= fila[2].ToString();
+                string muestra= fila[3].ToString();
                 string conResultado = "false";
 
                 //Cargo el valor del resultado para no perderlo si da error la validacion
@@ -1990,6 +2073,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     if (codigo == "") args.IsValid = true;
                     else
                     {
+                        HFValidacionFallida.Value = "1";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Codigo " + codigo + ": No se puede cambiar a sin muestra porque la determinación está en gestión de derivación";
                         return;
@@ -2001,6 +2085,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     if (codigoEliminado == "") args.IsValid = true;
                     else
                     {
+                        HFValidacionFallida.Value = "1";
                         args.IsValid = false;
                         this.cvValidacionInput.ErrorMessage = "Codigo " + codigoEliminado + ": No es posible eliminar. La determinación tiene una derivación vinculada";
                         return;
@@ -2011,53 +2096,137 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
         private string ValidarDeterminacionEliminarConDerivacion()
         {
-            // Obtener los codigos que permanecen en la grilla
-            List<string> codigosVista = new List<string>();
-
-            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            if (TxtDatosDerivacion.Value != "")
             {
-                string[] registros = TxtDatosCargados.Value.Split(';');
+                // 1. Obtener los registros actuales.
+                string[] tablaActual = TxtDatos.Value.Split('@');
 
-                foreach (string registro in registros)
+                HashSet<string> codigosActuales = new HashSet<string>();
+
+                for (int i = 0; i < tablaActual.Length; i++)
                 {
-                    if (!string.IsNullOrEmpty(registro))
-                    {
-                        string[] datos = registro.Split('#');
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
 
-                        if (datos.Length > 0 && datos[0] != "")
-                            codigosVista.Add(datos[0]);
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                        codigosActuales.Add(fila[1]);
+                }
+
+                // 2. Construir diccionario con los registros originales.
+                Dictionary<string, string[]> detallesOriginalesDict =
+                    TxtDatosTablaOriginal.Value
+                        .Split('@')
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('#'))
+                        .Where(x => x.Length > 1 && !string.IsNullOrEmpty(x[1]))
+                        .ToDictionary(x => x[1], x => x);
+
+                // 3. Detectar códigos eliminados.
+                HashSet<string> codigosEliminados = new HashSet<string>(
+                    detallesOriginalesDict.Keys.Except(codigosActuales)
+                );
+
+                if (codigosEliminados.Count == 0)
+                    return "";
+
+                // 4. Construir diccionario de derivaciones.
+                Dictionary<string, string[]> derivacionesDict =
+                    TxtDatosDerivacion.Value
+                        .Split(';')
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('#'))
+                        .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+                        .GroupBy(x => x[0])
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                // 5. Identificar cuáles eliminaciones deben recuperarse.
+                System.Text.StringBuilder codigosRecuperados =
+                    new System.Text.StringBuilder();
+
+                foreach (string codigo in codigosEliminados)
+                {
+                    string[] derivacion;
+
+                    if (derivacionesDict.TryGetValue(codigo, out derivacion))
+                    {
+                        int estadoDerivacion;
+
+                        if (int.TryParse(derivacion[2], out estadoDerivacion) &&
+                            estadoDerivacion > 0)
+                        {
+                            if (codigosRecuperados.Length > 0)
+                                codigosRecuperados.Append(", ");
+
+                            codigosRecuperados.Append(codigo);
+                        }
                     }
                 }
-            }
 
-            // Traemos todos los codigos que tienen derivaciones en gestion
-            string idProtocolo = Request["idProtocolo"].ToString();
+                if (codigosRecuperados.Length == 0)
+                    return "";
 
-            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+                // 6. Reconstruir la tabla con los registros actuales.
+                System.Text.StringBuilder tablaReconstruida =
+                    new System.Text.StringBuilder();
 
-            string sql = @"
-                SELECT DISTINCT ie.codigo
-                FROM LAB_DetalleProtocolo dp WITH (NOLOCK)
-                INNER JOIN LAB_Item ie WITH (NOLOCK) ON ie.iditem = dp.iditem
-                INNER JOIN LAB_Derivacion d WITH (NOLOCK) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
-                WHERE dp.idProtocolo = @idProtocolo
-                    AND d.estado <> 0";
+                int indiceFila = 1;
 
-            using (SqlCommand comando = new SqlCommand(sql, conexion))
-            {
-                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
-
-                using (SqlDataReader reader = comando.ExecuteReader())
+                for (int i = 0; i < tablaActual.Length; i++)
                 {
-                    while (reader.Read())
-                    {
-                        string codigo = reader["codigo"].ToString();
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
 
-                        // Si tiene derivacion en gestion y ya no esta en la grilla, no se puede eliminar
-                        if (!codigosVista.Contains(codigo))
-                            return codigo;
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                    {
+                        if (tablaReconstruida.Length > 0)
+                            tablaReconstruida.Append("@");
+
+                        fila[0] = indiceFila.ToString();
+
+                        tablaReconstruida.Append(string.Join("#", fila));
+
+                        indiceFila++;
                     }
                 }
+
+                // 7. Incorporar las determinaciones recuperadas.
+                string[] codigosARecuperar = codigosRecuperados.ToString().Split(',');
+
+                for (int i = 0; i < codigosARecuperar.Length; i++)
+                {
+                    string codigo = codigosARecuperar[i].Trim();
+                    string[] detalleOriginal;
+
+                    if (detallesOriginalesDict.TryGetValue(codigo, out detalleOriginal))
+                    {
+                        detalleOriginal = (string[])detalleOriginal.Clone();
+                        detalleOriginal[0] = indiceFila.ToString();
+
+                        if (tablaReconstruida.Length > 0)
+                            tablaReconstruida.Append("@");
+
+                        detalleOriginal[3] = detalleOriginal[3] == "Si" ? "false" : "true";
+
+                        tablaReconstruida.Append(string.Join("#", detalleOriginal));
+
+                        indiceFila++;
+                    }
+                }
+
+                // 8. Agregar nuevamente la fila vacía final.
+                if (tablaReconstruida.Length > 0)
+                    tablaReconstruida.Append("@");
+
+                tablaReconstruida.Append(indiceFila);
+                tablaReconstruida.Append("###false#0@");
+
+                TxtDatos.Value = tablaReconstruida.ToString();
+
+                return codigosRecuperados.ToString();
             }
 
             return "";
@@ -2087,33 +2256,33 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 }
             }
 
-            //Traemos todos los codigos que tiene derivacion en gestion
-            string idProtocolo = Request["idProtocolo"].ToString();
-            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            // Construir diccionario de derivaciones.
+            Dictionary<string, string[]> derivacionesDict =
+                TxtDatosDerivacion.Value
+                    .Split(';')
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Select(x => x.Split('#'))
+                    .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+                    .GroupBy(x => x[0])
+                    .ToDictionary(g => g.Key, g => g.First());
 
-            string sql = @"
-                    SELECT DISTINCT ie.codigo
-                    FROM LAB_DetalleProtocolo dp  with (nolock)
-                    INNER JOIN LAB_Item ie  with (nolock) ON ie.iditem = dp.iditem
-                    INNER JOIN LAB_Derivacion d   with (nolock) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
-                    WHERE dp.idProtocolo = @idProtocolo
-                      AND d.estado <> 0"; //Estado 0: Pendiente de derivar (No esta en gestion)
 
-            using (SqlCommand comando = new SqlCommand(sql, conexion))
+            foreach (string codigo in codigosVista)
             {
-                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
-
-                using (SqlDataReader reader = comando.ExecuteReader())
+                // Verificamos si el código existe en el diccionario de derivaciones
+                if (derivacionesDict.ContainsKey(codigo))
                 {
-                    while (reader.Read())
-                    {
-                        string codigo = reader["codigo"].ToString();
+                    string[] datosDerivacion = derivacionesDict[codigo];
 
-                        if (codigosVista.Contains(codigo))
-                            return codigo;
+                    // Equivalente a: WHERE d.estado <> 0 (Estado 0: Pendiente de derivar)
+                    // Asumimos que el índice 2 es el EstadoDerivacion
+                    if (datosDerivacion.Length > 2 && datosDerivacion[2] != "0")
+                    {
+                        return codigo; // Retorna el primer código que cumple la condición
                     }
                 }
             }
+
 
             return "";
         }
