@@ -4723,44 +4723,6 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 System.Text.StringBuilder codigosRecuperados =
                     new System.Text.StringBuilder();
 
-                System.Text.StringBuilder tablaReconstruida =
-                    new System.Text.StringBuilder();
-
-                int numeroFilaMaximo = 0;
-
-                // Obtener el máximo de las filas originales.
-                foreach (string[] detalle in detallesOriginalesDict.Values)
-                {
-                    int numeroFila;
-
-                    if (int.TryParse(detalle[0], out numeroFila) &&
-                        numeroFila > numeroFilaMaximo)
-                    {
-                        numeroFilaMaximo = numeroFila;
-                    }
-                }
-
-                // Obtener también el máximo de las filas actuales ocupadas.
-                for (int i = 0; i < tablaActual.Length; i++)
-                {
-                    if (string.IsNullOrEmpty(tablaActual[i]))
-                        continue;
-
-                    string[] fila = tablaActual[i].Split('#');
-
-                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
-                    {
-                        int numeroFila;
-
-                        if (int.TryParse(fila[0], out numeroFila) &&
-                            numeroFila > numeroFilaMaximo)
-                        {
-                            numeroFilaMaximo = numeroFila;
-                        }
-                    }
-                }
-
-                // Verificar cuáles eliminaciones tienen derivaciones activas.
                 foreach (string codigo in codigosEliminados)
                 {
                     string[] derivacion;
@@ -4769,8 +4731,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     {
                         int estadoDerivacion;
 
-                        if (int.TryParse(derivacion[2], out estadoDerivacion) &&
-                            estadoDerivacion > 0)
+                        if (int.TryParse(derivacion[2], out estadoDerivacion) &&  estadoDerivacion > 0)
                         {
                             if (codigosRecuperados.Length > 0)
                                 codigosRecuperados.Append(", ");
@@ -4780,12 +4741,14 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     }
                 }
 
-                // No hay determinaciones que recuperar.
                 if (codigosRecuperados.Length == 0)
                     return "";
 
-                // 6. Reconstruir la tabla conservando los registros actuales.
-                // Se excluye la última fila vacía.
+                // 6. Reconstruir la tabla con los registros actuales.
+                System.Text.StringBuilder tablaReconstruida =  new System.Text.StringBuilder();
+
+                int indiceFila = 1;
+
                 for (int i = 0; i < tablaActual.Length; i++)
                 {
                     if (string.IsNullOrEmpty(tablaActual[i]))
@@ -4798,7 +4761,11 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         if (tablaReconstruida.Length > 0)
                             tablaReconstruida.Append("@");
 
-                        tablaReconstruida.Append(tablaActual[i]);
+                        fila[0] = indiceFila.ToString();
+
+                        tablaReconstruida.Append(string.Join("#", fila));
+
+                        indiceFila++;
                     }
                 }
 
@@ -4812,25 +4779,25 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
                     if (detallesOriginalesDict.TryGetValue(codigo, out detalleOriginal))
                     {
-                        numeroFilaMaximo++;
-
                         detalleOriginal = (string[])detalleOriginal.Clone();
-                        detalleOriginal[0] = numeroFilaMaximo.ToString();
+                        detalleOriginal[0] = indiceFila.ToString();
 
                         if (tablaReconstruida.Length > 0)
                             tablaReconstruida.Append("@");
+
                         detalleOriginal[3] = detalleOriginal[3] == "Si" ? "false" : "true";
+
                         tablaReconstruida.Append(string.Join("#", detalleOriginal));
+
+                        indiceFila++;
                     }
                 }
 
                 // 8. Agregar nuevamente la fila vacía final.
-                numeroFilaMaximo++;
-
                 if (tablaReconstruida.Length > 0)
                     tablaReconstruida.Append("@");
 
-                tablaReconstruida.Append(numeroFilaMaximo);
+                tablaReconstruida.Append(indiceFila);
                 tablaReconstruida.Append("###false#0@");
 
                 TxtDatos.Value = tablaReconstruida.ToString();
@@ -4840,158 +4807,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
             return "";
         }
-        //private string ValidarDeterminacionEliminarConDerivacion()
-        //{
-        //    if (TxtDatosDerivacion.Value != "")
-        //    {
-        //        // 1. Obtener los registros actuales, excluyendo la última fila vacía.
-        //        string[] tablaActual = TxtDatos.Value.Split('@');
-
-        //        HashSet<string> codigosActuales = new HashSet<string>();
-
-        //        for (int i = 0; i < tablaActual.Length; i++)
-        //        {
-        //            if (string.IsNullOrEmpty(tablaActual[i]))
-        //                continue;
-
-        //            string[] fila = tablaActual[i].Split('#');
-
-        //            if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
-        //                codigosActuales.Add(fila[1]);
-        //        }
-
-        //        // 2. Construir diccionario con los registros originales.
-        //        Dictionary<string, string[]> detallesOriginalesDict =
-        //            TxtDatosTablaOriginal.Value
-        //                .Split('@')
-        //                .Where(x => !string.IsNullOrEmpty(x))
-        //                .Select(x => x.Split('#'))
-        //                .Where(x => x.Length > 1 && !string.IsNullOrEmpty(x[1]))
-        //                .ToDictionary(x => x[1], x => x);
-
-        //        // 3. Detectar códigos eliminados.
-        //        HashSet<string> codigosEliminados = new HashSet<string>(detallesOriginalesDict.Keys.Except(codigosActuales));
-
-        //        if (codigosEliminados.Count == 0)
-        //            return "";
-
-        //        // 4. Construir diccionario de derivaciones.
-        //        Dictionary<string, string[]> derivacionesDict =
-        //            TxtDatosDerivacion.Value
-        //                .Split(';')
-        //                .Where(x => !string.IsNullOrEmpty(x))
-        //                .Select(x => x.Split('#'))
-        //                .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
-        //                .GroupBy(x => x[0])
-        //                .ToDictionary(g => g.Key, g => g.First());
-
-        //        // 5. Identificar cuáles eliminaciones deben recuperarse.
-        //        System.Text.StringBuilder codigosRecuperados =  new System.Text.StringBuilder();
-
-        //        System.Text.StringBuilder tablaReconstruida = new System.Text.StringBuilder();
-
-        //        //Buscando el último número de fila utilizado para continuar la numeración sin sobrescribir registros.
-        //        int numeroFilaMaximo = 0;
-
-        //        foreach (string[] detalle in detallesOriginalesDict.Values)
-        //        {
-        //            int numeroFila;
-
-        //            if (int.TryParse(detalle[0], out numeroFila) &&  numeroFila > numeroFilaMaximo)
-        //            {
-        //                numeroFilaMaximo = numeroFila;
-        //            }
-        //        }
-
-        //        foreach (string codigo in codigosEliminados)
-        //        {
-        //            string[] derivacion;
-
-        //            if (derivacionesDict.TryGetValue(codigo, out derivacion))
-        //            {
-        //                int estadoDerivacion;
-
-        //                if (int.TryParse(derivacion[2], out estadoDerivacion) &&
-        //                    estadoDerivacion > 0)
-        //                {
-        //                    if (codigosRecuperados.Length > 0)
-        //                        codigosRecuperados.Append(", ");
-
-        //                    codigosRecuperados.Append(codigo);
-        //                }
-        //            }
-        //        }
-
-        //        // No hay determinaciones que recuperar.
-        //        if (codigosRecuperados.Length == 0)
-        //            return "";
-        //        System.Diagnostics.Debug.WriteLine("Máximo original/actual: " + numeroFilaMaximo);
-
-
-        //        // 6. Reconstruir la tabla conservando los registros actuales.  // Se excluye la última fila vacía para generarla nuevamente.
-        //        for (int i = 0; i < tablaActual.Length; i++)
-        //        {
-        //            System.Diagnostics.Debug.WriteLine("Fila actual: " + tablaActual[i]);
-        //            if (string.IsNullOrEmpty(tablaActual[i]))
-        //                continue;
-
-        //            string[] fila = tablaActual[i].Split('#');
-
-        //            // Ignorar la fila vacía final.
-        //            if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
-        //            {
-        //                int numeroFila;
-
-        //                if (int.TryParse(fila[0], out numeroFila) &&
-        //                    numeroFila > numeroFilaMaximo)
-        //                {
-        //                    numeroFilaMaximo = numeroFila;
-        //                }
-        //            }
-        //        }
-
-        //        // 7. Incorporar las determinaciones recuperadas.  // Se asignan nuevos números para no pisar filas actuales.
-        //        string[] filasRecuperadas = tablaReconstruida.ToString().Split('@');
-
-        //        // Las filas recuperadas se agregan al final con número nuevo.
-        //        string[] codigosARecuperar = codigosRecuperados.ToString().Split(',');
-
-        //        for (int i = 0; i < codigosARecuperar.Length; i++)
-        //        {
-        //            string codigo = codigosARecuperar[i].Trim();
-        //            string[] detalleOriginal;
-
-        //            if (detallesOriginalesDict.TryGetValue(codigo, out detalleOriginal))
-        //            {
-        //                numeroFilaMaximo++;
-
-        //                detalleOriginal = (string[])detalleOriginal.Clone();
-        //                detalleOriginal[0] = numeroFilaMaximo.ToString();
-
-        //                if (tablaReconstruida.Length > 0)
-        //                    tablaReconstruida.Append("@");
-
-        //                tablaReconstruida.Append(string.Join("#", detalleOriginal));
-        //            }
-        //        }
-
-        //        // 8. Agregar nuevamente la fila vacía final.
-        //        //numeroFilaMaximo++;
-
-        //        //if (tablaReconstruida.Length > 0)
-        //        //    tablaReconstruida.Append("@");
-
-        //        //tablaReconstruida.Append(numeroFilaMaximo);
-        //        //tablaReconstruida.Append("###false#0@");
-
-        //        TxtDatos.Value = tablaReconstruida.ToString();
-
-        //        return   codigosRecuperados.ToString() ;
-        //    }
-        //    else return "";
-        //}
-
-
+     
         private string ValidarDeterminacionSinMuestraConDerivacion() //Devuelve el codigo de la determinacion que no puede cambiar de estado
         {
             // Obtener los codigos de la grilla que se marcaron como "Sin Muestra"
@@ -5016,33 +4832,33 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 }
             }
 
-            //Traemos todos los codigos que tiene derivacion en gestion
-            string idProtocolo = Request["idProtocolo"].ToString();
-            SqlConnection conexion = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+            // Construir diccionario de derivaciones.
+            Dictionary<string, string[]> derivacionesDict =
+                TxtDatosDerivacion.Value
+                    .Split(';')
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Select(x => x.Split('#'))
+                    .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+                    .GroupBy(x => x[0])
+                    .ToDictionary(g => g.Key, g => g.First());
 
-            string sql = @"
-                    SELECT DISTINCT ie.codigo
-                    FROM LAB_DetalleProtocolo dp  with (nolock)
-                    INNER JOIN LAB_Item ie  with (nolock) ON ie.iditem = dp.iditem
-                    INNER JOIN LAB_Derivacion d   with (nolock) ON d.idDetalleProtocolo = dp.idDetalleProtocolo
-                    WHERE dp.idProtocolo = @idProtocolo
-                      AND d.estado <> 0"; //Estado 0: Pendiente de derivar (No esta en gestion)
 
-            using (SqlCommand comando = new SqlCommand(sql, conexion))
+            foreach (string codigo in codigosVista)
             {
-                comando.Parameters.AddWithValue("@idProtocolo", idProtocolo);
-
-                using (SqlDataReader reader = comando.ExecuteReader())
+                // Verificamos si el código existe en el diccionario de derivaciones
+                if (derivacionesDict.ContainsKey(codigo))
                 {
-                    while (reader.Read())
-                    {
-                        string codigo = reader["codigo"].ToString();
+                    string[] datosDerivacion = derivacionesDict[codigo];
 
-                        if (codigosVista.Contains(codigo))
-                            return codigo;
+                    // Equivalente a: WHERE d.estado <> 0 (Estado 0: Pendiente de derivar)
+                    // Asumimos que el índice 2 es el EstadoDerivacion
+                    if (datosDerivacion.Length > 2 && datosDerivacion[2] != "0")
+                    {
+                        return codigo; // Retorna el primer código que cumple la condición
                     }
                 }
             }
+
 
             return "";
         }
