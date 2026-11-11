@@ -62,6 +62,7 @@ namespace WebLab.Resultados
             {
                 if (!Page.IsPostBack)
                 {
+                    HFValidacionFallida.Value = "0";
                     //SetToken();
                     Business.Data.Laboratorio.Protocolo oRegistro = new Business.Data.Laboratorio.Protocolo();
                     oRegistro = (Business.Data.Laboratorio.Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["idProtocolo"].ToString()));
@@ -98,51 +99,148 @@ namespace WebLab.Resultados
             ddlMuestra.SelectedValue = oRegistro.IdMuestra.ToString();
          
             CargarItems(oRegistro);
-         
-         
-            ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
-            //dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
-            DetalleProtocolo oDetalle = new DetalleProtocolo();
+
+
+
+
+            /* ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
+             //dtDeterminaciones = (System.Data.DataTable)(Session["Tabla1"]);
+             DetalleProtocolo oDetalle = new DetalleProtocolo();
+             ISession m_session = NHibernateHttpModule.CurrentSession;
+             ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+             crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+             crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
+
+             IList items = crit.List();
+             string pivot = "";
+             string sDatos = "";
+             HashSet<string> pivote = new HashSet<string>();
+
+             foreach (DetalleProtocolo oDet in items)
+             {
+                 //if (pivot != oDet.IdItem.Nombre) //Debo cambiar la manera que verifica los repetidos,
+                 // porque ahora cuando se regenera un subItem el IdDetalleProtocolo no es secuencial
+                 // Y en la vista del protocolo se ve "duplicado"
+                 if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego sin problemas de duplicados
+                 {
+                     string estado = "0";
+                     if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioValidaObservacion > 0)) //validado
+                         estado = "2";
+                     else
+                     {
+                         if ((oDet.IdUsuarioResultado > 0) || (oDet.IdUsuarioObservacion > 0) || (oDet.Enviado == 2)) //cargado
+                             estado = "1";
+                     }
+
+                     if (sDatos == "")
+                         sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
+                     else
+                         sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
+                     //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
+                     pivot = oDet.IdItem.Nombre;
+                 }
+
+             }
+
+             TxtDatosCargados.Value = sDatos;*/
+
+            //TxtDatos.Value = sDatos;
+
+            //05.11.2026 Vamos a traer de la base las determinaciones como sus derivaciones asociadas (para guardarlas en memoria)
+
+            string m_strSQL = @"
+            SELECT
+                I.codigo AS Codigo,
+                I.nombre AS Nombre,
+
+                CASE
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioValida > 0
+                            OR DP.idUsuarioValidaObservacion > 0 THEN 2
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 2 THEN 2
+
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 1 THEN 1
+
+                    ELSE 0
+                END AS Estado,
+                DP.trajoMuestra,
+                MAX(D.idDerivacion) AS IdDerivacion,
+                MAX(D.estado) AS EstadoDerivacion
+
+            FROM LAB_DetalleProtocolo DP WITH (NOLOCK)
+
+            INNER JOIN LAB_Item I with (nolock)  ON I.idItem = DP.idItem
+            LEFT JOIN LAB_Derivacion D with (nolock) ON D.idDetalleProtocolo = DP.idDetalleProtocolo
+            WHERE DP.idProtocolo = @idProtocolo
+            GROUP BY
+                I.codigo,
+                I.nombre,
+                DP.trajoMuestra
+            ORDER BY
+                I.codigo;";
             ISession m_session = NHibernateHttpModule.CurrentSession;
-            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
-            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
-            crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
+            DataSet Ds = new DataSet();
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
 
-            IList items = crit.List();
-            string pivot = "";
-            string sDatos = "";
-            HashSet<string> pivote = new HashSet<string>();
-
-            foreach (DetalleProtocolo oDet in items)
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
             {
-                //if (pivot != oDet.IdItem.Nombre) //Debo cambiar la manera que verifica los repetidos,
-                // porque ahora cuando se regenera un subItem el IdDetalleProtocolo no es secuencial
-                // Y en la vista del protocolo se ve "duplicado"
-                if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego sin problemas de duplicados
+                cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
+
+                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                 {
-                    string estado = "0";
-                    if ((oDet.IdUsuarioValida > 0) || (oDet.IdUsuarioValidaObservacion > 0)) //validado
-                        estado = "2";
+                    adapter.Fill(Ds);
+                }
+            }
+
+            string sDatos = "", sDerivacion = "";
+            string sDatosTablaOriginal = "";
+
+            if (Ds.Tables[0] != null)
+            {
+                DataTable dt = Ds.Tables[0];
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (sDatos == "")
+                        sDatos = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+                    else
+                        sDatos += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+
+                    if (sDerivacion == "")
+                    {
+                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
+                            sDerivacion = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
+                    }
                     else
                     {
-                        if ((oDet.IdUsuarioResultado > 0) || (oDet.IdUsuarioObservacion > 0) || (oDet.Enviado == 2)) //cargado
-                            estado = "1";
+                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
+                            sDerivacion += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
                     }
 
-                    if (sDatos == "")
-                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
-                    else
-                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
-                    //sDatos += "#" + oDet.IdItem.Codigo + "#" + oDet.IdItem.Nombre + "#" + oDet.TrajoMuestra + "@";                   
-                    pivot = oDet.IdItem.Nombre;
+
+                    //Guardamos una copia con todos los valores, para que al querer recuperar los tengamos en memoria
+                    string registro = (i + 1) + "#" +
+                                        dt.Rows[i]["Codigo"] + "#" +
+                                        dt.Rows[i]["Nombre"] + "#" +
+                                        dt.Rows[i]["TrajoMuestra"] + "#" +
+                                        dt.Rows[i]["Estado"];
+
+                    sDatosTablaOriginal += (sDatosTablaOriginal == "" ? "" : "@") + registro;
                 }
 
             }
 
             TxtDatosCargados.Value = sDatos;
-
-            //TxtDatos.Value = sDatos;
-
+            TxtDatosDerivacion.Value = sDerivacion;
+            TxtDatosTablaOriginal.Value = sDatosTablaOriginal;
 
         }
         
@@ -406,7 +504,7 @@ namespace WebLab.Resultados
                         oDetalle.Informable = oItem.GetInformableEfector(oUser.IdEfector);
                         oDetalle.EstadoValidacion = "";
                         GuardarDetallePractica(oDetalle);
-                        
+
                         // GuardarDerivacion(oDetalle);
                         //oDetalle.GuardarDerivacion(oUser);
                     }
@@ -415,53 +513,76 @@ namespace WebLab.Resultados
                         foreach (DetalleProtocolo oDetalle in listadetalle)
                         {
                             if (trajomuestra == "true")
-                            { 
-                                oDetalle.TrajoMuestra = "No";
-                                oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
-                            }
-                            else // (trajomuestra == "false"
                             {
-                                /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
-                                 * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
-                                 * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
-                                 * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
-                                 */
-
-                                oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
-                                bool antesSinMuestra = (oDetalle.TrajoMuestra == "No");
-                                oDetalle.TrajoMuestra = "Si";
-                                
-                                if (antesSinMuestra && oDetalle.IdItem == oDetalle.IdSubItem && 
-                                    (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio ==3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+                                if (oDetalle.TrajoMuestra == "Si") // estaba grabado Si
                                 {
-                                    /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
-                                    * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
-                                    */
-
-                                    //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
-                                    if (!oDetalle.ConResultado)
-                                    { 
-                                        oDetalle.IdUsuarioValida = 0; 
-                                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
-                                    }
-
-                                    //Caso 2: Es derivacion.
-                                    //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
-                                    if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                    oDetalle.TrajoMuestra = "No";
+                                    oDetalle.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
+                                    //02.11.2026  Cambio de “Con muestra” a “Sin muestra” . Si tiene derivacion asociada pendiente se elimina.
+                                    Business.Data.Laboratorio.Derivacion oDev = new Business.Data.Laboratorio.Derivacion();
+                                    oDev = (Business.Data.Laboratorio.Derivacion)oDev.Get(typeof(Business.Data.Laboratorio.Derivacion), "IdDetalleProtocolo", oDetalle);
+                                    if (oDev != null)
                                     {
-                                        oDetalle.IdUsuarioValida = 0;
-                                        oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
+                                        oDev.Delete();
+                                        // A DEFINIR: que hacer con determinaciones validadas que tenian derivacion
+                                        //automatica y se marcaron s/muestra
+                                        oDetalle.ResultadoCar = string.Empty;
+                                    }
+                                }
+
+                              
+                            }
+                            else // // Cambia a Con Muestra (trajomuestra == "false"
+                            {
+                                if (oDetalle.TrajoMuestra == "No") // Anteriormente estaba Sin Muestra
+                                {
+                                    oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario); //20.08.2026 guardar auditoria de cambio de muestra
+                                    oDetalle.TrajoMuestra = "Si";
+
+                                    /* Bug sobre la edición de determinaciones con la marca “sin muestra”:
+                                    * Si se genero el protocolo con un analisis "S/muestra" de una practica no se generan los idItem del diagrama
+                                    * (porque GuardarDetallePractica solo actualizaba TrajoMuestra del codigo de la practica)
+                                    * Correcion: si en Validacion se cambia a "Con muestra",se regeneran los detalles faltantes de la practica
+                                    */
+                                    if (oDetalle.IdItem == oDetalle.IdSubItem &&
+                                   (oRegistro.IdTipoServicio.IdTipoServicio == 1 || oRegistro.IdTipoServicio.IdTipoServicio == 3)) //Solo pasa en Labo y Microbiologia, en NO Pacientes se generan todos los items sin muesta
+                                    {
+                                        /* Si ValidadoTotal (en ProtocoloEdit2) cargó idUsuarioValida por un caso de
+                                        * "sin muestra"   se debe resetear idUsuarioValida para evitar inconsistencias 
+                                        */
+
+                                        //Caso 1:  el análisis aún no tiene resultados (simple o compuesto),
+                                        if (!oDetalle.ConResultado)
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+
+                                        //Caso 2: Es derivacion. 
+                                        //Los analisis Derivados no tienen IdUsuarioValida, solo idUsuarioResultado
+                                        if (oDetalle.ResultadoCar == "Pendiente de derivar")
+                                        {
+                                            oDetalle.IdUsuarioValida = 0;
+                                            oDetalle.FechaValida = DateTime.Parse("01/01/1900");
+                                        }
+
+                                        /*  Si es un analisis Compuesto Regenero analisis.
+                                         *  Considero idItem = idSubItem
+                                         */
+
+                                        if (oItem.IdCategoria == 1)
+                                            GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                     }
 
-                                    /*  Si es un analisis Compuesto Regenero analisis.
-                                     *  Considero que si el analisis es Derivacion no se debe regenerar
-                                     *  Considero idItem = idSubItem
-                                     */
+                                    //02.11.2026 Genero la derivacion 
+                                    oDetalle.GuardarDerivacion(oUser);
 
-                                    if ( oItem.IdCategoria == 1 )
-                                        GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
+                                    //11.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    if (oDetalle.IdItem != oDetalle.IdSubItem)
+                                        oDetalle.GuardarDerivacionPractica(oUser); 
                                 }
-                                
+                                   
                             }
                             oDetalle.Save();
                         }
@@ -498,8 +619,17 @@ namespace WebLab.Resultados
                         }
                         if (noesta)
                         {
-                            oDetalle.Delete();                            
-                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", oUser.IdUsuario); //20.08.2029 usar el oUser logueado (idUsuarioValida en validacion o idUsuario en carga)
+                            oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina", int.Parse(Session["idUsuario"].ToString()));
+                            //02.11.2026  Se borra si existe la derivacion asociada pendiente (se verifico en serverValidate que no esta en gestion)
+                            Business.Data.Laboratorio.Derivacion oDev = new Business.Data.Laboratorio.Derivacion();
+                            oDev = (Business.Data.Laboratorio.Derivacion)oDev.Get(typeof(Business.Data.Laboratorio.Derivacion), "IdDetalleProtocolo", oDetalle);
+                            if (oDev != null)
+                            {
+                                oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
+                                oDev.Delete(); //Primero borro la derivacion para tener la referencia del detalle
+                            }
+
+                            oDetalle.Delete();
                         }
                     }
                 }
@@ -616,8 +746,9 @@ namespace WebLab.Resultados
                 oDet.IdSubItem = oDet.IdItem;
                 oDet.Save();
                 oDet.GuardarValorReferencia();
-                //Guarda Derivacion              
-                oDet.GuardarDerivacion(oUser);
+                //Guarda Derivacion
+                if (oDet.TrajoMuestra == "Si")  //02.11.2026 Se genera derivacion solo si trajo muestra
+                     oDet.GuardarDerivacion(oUser);
 
             }
             else
@@ -644,6 +775,9 @@ namespace WebLab.Resultados
                                 {
                                     oDet.IdSubItem = oSItem;
                                     oDet.FechaResultado = DateTime.Parse("01/01/1900");
+                                    //10.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    oDet.Save();
+                                    oDet.GuardarDerivacionPractica(oUser);
                                 }
                                 else
                                 {
@@ -681,6 +815,8 @@ namespace WebLab.Resultados
                                     oDetalle.Save();
                                     oDetalle.GuardarSinInsumo();
                                     oDetalle.GuardarValorReferencia();
+                                    //10.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    oDetalle.GuardarDerivacionPractica(oUser);
                                 }
                             }
                             i = i + 1;
@@ -819,7 +955,8 @@ namespace WebLab.Resultados
             {
                 string[] fila = tabla[i].Split('#');
                 string codigo = fila[1].ToString();
-                string muestra = fila[2].ToString();
+                string nombre = fila[2].ToString();
+                string muestra = fila[3].ToString();
                 string conResultado = "false";
 
                 //Cargo el valor del resultado para no perderlo si da error la validacion
@@ -839,9 +976,9 @@ namespace WebLab.Resultados
             TxtDatosCargados.Value = sDatos;
            
                 if (!ValidarEliminarDeterminacionConAislamientos())
-            {
-                TxtDatos.Value = "";
-                args.IsValid = false;
+                {
+                    TxtDatos.Value = "";
+                    args.IsValid = false;
                     this.cvValidacionInput.ErrorMessage =
                         "No se puede eliminar una determinación que posee aislamientos asociados.";
                     return;
@@ -850,7 +987,7 @@ namespace WebLab.Resultados
 
             if (!VerificarAnalisisContenidos())
             {
-                TxtDatos.Value = "";
+                TxtDatos.Value = ""; 
                 args.IsValid = false;
 
                 return;
@@ -867,8 +1004,225 @@ namespace WebLab.Resultados
                 
                 else args.IsValid = true;            
             }
+
+            
+            //02.11.2026 Validamos que las determinaciones tildadas como "Sin Muestra" tengan la derivacion asociada como "Pendiente de derivar" (no esta en lote)
+            //Caso contrario: Con derivación en gestión, se envia un mensaje que no puede marcarlas como "Sin Muestra"
+            string codigoSinMuestra = ValidarDeterminacionSinMuestraConDerivacion();
+            if (codigoSinMuestra == "") args.IsValid = true;
+            else
+            {
+                HFValidacionFallida.Value = "1";
+                args.IsValid = false;
+                this.cvValidacionInput.ErrorMessage = "Codigo " + codigoSinMuestra + ": No se puede cambiar a sin muestra porque la determinación está en gestión de derivación";
+                return;
+            }
+
+            //02.11.2026 Validamos que el codigo que se borro de la grilla no tenga una derivacion en gestion
+            //Caso contrario: Con derivacion en gestion, mostramos el error no puede continuar
+            string codigoEliminado = ValidarDeterminacionEliminarConDerivacion();
+            if (codigoEliminado == "") args.IsValid = true;
+            else
+            {
+                HFValidacionFallida.Value = "1";
+                args.IsValid = false;
+                this.cvValidacionInput.ErrorMessage = "Codigo " + codigoEliminado + ": No es posible eliminar. La determinación tiene una derivación vinculada";
+                return;
+            }
+            
+        }
+        private string ValidarDeterminacionEliminarConDerivacion()
+        {
+            if (TxtDatosDerivacion.Value != "")
+            {
+                // 1. Obtener los registros actuales.
+                string[] tablaActual = TxtDatos.Value.Split('@');
+
+                HashSet<string> codigosActuales = new HashSet<string>();
+
+                for (int i = 0; i < tablaActual.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
+
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                        codigosActuales.Add(fila[1]);
+                }
+
+                // 2. Construir diccionario con los registros originales.
+                Dictionary<string, string[]> detallesOriginalesDict =
+                    TxtDatosTablaOriginal.Value
+                        .Split('@')
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('#'))
+                        .Where(x => x.Length > 1 && !string.IsNullOrEmpty(x[1]))
+                        .ToDictionary(x => x[1], x => x);
+
+                // 3. Detectar códigos eliminados.
+                HashSet<string> codigosEliminados = new HashSet<string>(
+                    detallesOriginalesDict.Keys.Except(codigosActuales)
+                );
+
+                if (codigosEliminados.Count == 0)
+                    return "";
+
+                // 4. Construir diccionario de derivaciones.
+                Dictionary<string, string[]> derivacionesDict =
+                    TxtDatosDerivacion.Value
+                        .Split(';')
+                        .Where(x => !string.IsNullOrEmpty(x))
+                        .Select(x => x.Split('#'))
+                        .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+                        .GroupBy(x => x[0])
+                        .ToDictionary(g => g.Key, g => g.First());
+
+                // 5. Identificar cuáles eliminaciones deben recuperarse.
+                System.Text.StringBuilder codigosRecuperados =
+                    new System.Text.StringBuilder();
+
+                foreach (string codigo in codigosEliminados)
+                {
+                    string[] derivacion;
+
+                    if (derivacionesDict.TryGetValue(codigo, out derivacion))
+                    {
+                        int estadoDerivacion;
+
+                        if (int.TryParse(derivacion[2], out estadoDerivacion) &&
+                            estadoDerivacion > 0)
+                        {
+                            if (codigosRecuperados.Length > 0)
+                                codigosRecuperados.Append(", ");
+
+                            codigosRecuperados.Append(codigo);
+                        }
+                    }
+                }
+
+                if (codigosRecuperados.Length == 0)
+                    return "";
+
+                // 6. Reconstruir la tabla con los registros actuales.
+                System.Text.StringBuilder tablaReconstruida =
+                    new System.Text.StringBuilder();
+
+                int indiceFila = 1;
+
+                for (int i = 0; i < tablaActual.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(tablaActual[i]))
+                        continue;
+
+                    string[] fila = tablaActual[i].Split('#');
+
+                    if (fila.Length > 1 && !string.IsNullOrEmpty(fila[1]))
+                    {
+                        if (tablaReconstruida.Length > 0)
+                            tablaReconstruida.Append("@");
+
+                        fila[0] = indiceFila.ToString();
+
+                        tablaReconstruida.Append(string.Join("#", fila));
+
+                        indiceFila++;
+                    }
+                }
+
+                // 7. Incorporar las determinaciones recuperadas.
+                string[] codigosARecuperar = codigosRecuperados.ToString().Split(',');
+
+                for (int i = 0; i < codigosARecuperar.Length; i++)
+                {
+                    string codigo = codigosARecuperar[i].Trim();
+                    string[] detalleOriginal;
+
+                    if (detallesOriginalesDict.TryGetValue(codigo, out detalleOriginal))
+                    {
+                        detalleOriginal = (string[])detalleOriginal.Clone();
+                        detalleOriginal[0] = indiceFila.ToString();
+
+                        if (tablaReconstruida.Length > 0)
+                            tablaReconstruida.Append("@");
+
+                        detalleOriginal[3] = detalleOriginal[3] == "Si" ? "false" : "true";
+
+                        tablaReconstruida.Append(string.Join("#", detalleOriginal));
+
+                        indiceFila++;
+                    }
+                }
+
+                // 8. Agregar nuevamente la fila vacía final.
+                if (tablaReconstruida.Length > 0)
+                    tablaReconstruida.Append("@");
+
+                tablaReconstruida.Append(indiceFila);
+                tablaReconstruida.Append("###false#0@");
+
+                TxtDatos.Value = tablaReconstruida.ToString();
+
+                return codigosRecuperados.ToString();
+            }
+
+            return "";
         }
 
+        private string ValidarDeterminacionSinMuestraConDerivacion() //Devuelve el codigo de la determinacion que no puede cambiar de estado
+        {
+            // Obtener los codigos de la grilla que se marcaron como "Sin Muestra"
+            List<string> codigosVista = new List<string>();
+
+            if (!string.IsNullOrEmpty(TxtDatosCargados.Value))
+            {
+                string[] registros = TxtDatosCargados.Value.Split(';');
+
+                foreach (string registro in registros)
+                {
+                    if (!string.IsNullOrEmpty(registro))
+                    {
+                        string[] datos = registro.Split('#');
+
+                        if (datos.Length > 0)
+                        {
+                            if (datos[1] == "true") //"S/Muestra": Esta marcado sin muestra
+                                codigosVista.Add(datos[0]);
+                        }
+                    }
+                }
+            }
+
+            // Construir diccionario de derivaciones.
+            Dictionary<string, string[]> derivacionesDict =
+                TxtDatosDerivacion.Value
+                    .Split(';')
+                    .Where(x => !string.IsNullOrEmpty(x))
+                    .Select(x => x.Split('#'))
+                    .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
+                    .GroupBy(x => x[0])
+                    .ToDictionary(g => g.Key, g => g.First());
+
+
+            foreach (string codigo in codigosVista)
+            {
+                // Verificamos si el código existe en el diccionario de derivaciones
+                if (derivacionesDict.ContainsKey(codigo))
+                {
+                    string[] datosDerivacion = derivacionesDict[codigo];
+
+                    // Equivalente a: WHERE d.estado <> 0 (Estado 0: Pendiente de derivar)
+                    // Asumimos que el índice 2 es el EstadoDerivacion
+                    if (datosDerivacion.Length > 2 && datosDerivacion[2] != "0")
+                    {
+                        return codigo; // Retorna el primer código que cumple la condición
+                    }
+                }
+            }
+
+
+            return "";
+        }
 
         private bool ValidarEliminarDeterminacionConAislamientos()
         {
