@@ -1842,6 +1842,29 @@ namespace Business.Data.Laboratorio
             }
         }
 
+        public void GuardarDerivacionPractica(Usuario oUser)
+        {
+            if (this.IdSubItem.esDerivado(oUser.IdEfector))
+            {
+                Business.Data.Laboratorio.Derivacion oRegistro = new Business.Data.Laboratorio.Derivacion();
+                oRegistro.IdDetalleProtocolo = this;
+                oRegistro.Estado = 0;
+                oRegistro.Observacion = "";// txtObservacion.Text;
+                oRegistro.IdUsuarioRegistro = oUser.IdUsuario;//int.Parse(Session["idUsuario"].ToString());
+                oRegistro.FechaRegistro = DateTime.Now;
+                oRegistro.FechaResultado = DateTime.Parse("01/01/1900");
+
+                oRegistro.IdEfectorDerivacion = this.IdSubItem.GetIDEfectorDerivacion(oUser.IdEfector);  // se graba el efector configurado en ese momento.
+                oRegistro.IdProtocoloOrigen = IdProtocolo.IdProtocolo; //Guardo el idProtocolo de origen
+                oRegistro.IdProtocoloDestino = 0;
+                oRegistro.Save();
+
+                // graba el resultado en ResultadCar  "Pendiente de derivar"
+                this.ResultadoCar = "Pendiente de derivar";
+                this.Save();
+                this.GrabarAuditoriaDetalleProtocolo("Graba Derivado", oUser.IdUsuario);
+            }
+        }
         //public void ActualizoResultado(Protocolo oRegistro, Protocolo oAnterior, int idLoteDerivacion)
         //{
 
@@ -1914,6 +1937,47 @@ namespace Business.Data.Laboratorio
                  oAnterior.GrabarAuditoriaDetalleProtocolo("Recepcion Derivacion", oUser.IdUsuario, "Lote " + idLoteDerivacion, "Protocolo " + oRegistro.Numero.ToString());
                 
             }
+        }
+
+
+        public void LimpiarEstadoDerivacion()
+        {
+            string resultadoCar = this.ResultadoCar;
+
+            if (string.IsNullOrEmpty(resultadoCar))
+                this.ResultadoCar = "";
+
+            string resultado = resultadoCar.Trim();
+
+            string[] leyendas = {
+                    " - No Derivado:",
+                    " - Pendiente de derivar",
+                    " - Pendiente para enviar",
+                    " - Enviado",
+                    " - No Enviado",
+                    " - Recibido",
+                    "No Derivado:",
+                    "Pendiente de derivar",
+                    "Pendiente para enviar",
+                    "Enviado",
+                    "No Enviado",
+                    "Recibido"
+                };
+
+            int posicion = resultado.Length;
+
+            foreach (string leyenda in leyendas)
+            {
+                int indice = resultado.IndexOf(leyenda, StringComparison.OrdinalIgnoreCase);
+
+                if (indice >= 0 && indice < posicion)
+                    posicion = indice;
+            }
+
+            if (posicion < resultado.Length)
+                resultado = resultado.Substring(0, posicion).TrimEnd();
+
+            this.ResultadoCar =  resultado;
         }
     }
 }

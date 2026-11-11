@@ -412,29 +412,43 @@ IncidenciaEdit1.MostrarDatosdelProtocolo(
 
             string m_strSQL = @"
             SELECT
-                DP.idDetalleProtocolo AS IdDetalleProtocolo,
                 I.codigo AS Codigo,
                 I.nombre AS Nombre,
-                DP.TrajoMuestra AS TrajoMuestra,
 
                 CASE
-                    WHEN DP.idUsuarioValida > 0
-                      OR DP.idUsuarioValidaObservacion > 0 THEN 2
-                    WHEN DP.idUsuarioResultado > 0
-                      OR DP.idUsuarioObservacion > 0
-                      OR DP.enviado = 2 THEN 1
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioValida > 0
+                            OR DP.idUsuarioValidaObservacion > 0 THEN 2
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 2 THEN 2
+
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 1 THEN 1
+
                     ELSE 0
                 END AS Estado,
-                D.idDerivacion AS IdDerivacion,
-        		D.estado as EstadoDerivacion
+                DP.trajoMuestra,
+                MAX(D.idDerivacion) AS IdDerivacion,
+                MAX(D.estado) AS EstadoDerivacion
 
-            FROM LAB_DetalleProtocolo DP with (nolock)
-            INNER JOIN LAB_Item I with (nolock)
-                ON I.idItem = DP.idItem
-            LEFT JOIN LAB_Derivacion D with (nolock)
-                ON D.idDetalleProtocolo = DP.idDetalleProtocolo
+            FROM LAB_DetalleProtocolo DP WITH (NOLOCK)
+
+            INNER JOIN LAB_Item I with (nolock)  ON I.idItem = DP.idItem
+            LEFT JOIN LAB_Derivacion D with (nolock) ON D.idDetalleProtocolo = DP.idDetalleProtocolo
             WHERE DP.idProtocolo = @idProtocolo
-            ORDER BY DP.idDetalleProtocolo";
+            GROUP BY
+                I.codigo,
+                I.nombre,
+                DP.trajoMuestra
+            ORDER BY
+                I.codigo;";
             ISession m_session = NHibernateHttpModule.CurrentSession;
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -1452,6 +1466,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                     oDetalle.TrajoMuestra = "Si";
                                     oDetalle.GuardarDerivacion(oUser);
                                     oDetalle.GrabarAuditoriaDetalleProtocolo("Con Muestra", oUser.IdUsuario);
+                                    //11.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    if (oDetalle.IdItem != oDetalle.IdSubItem)
+                                        oDetalle.GuardarDerivacionPractica(oUser);
                                 }
                                
                             }
@@ -1658,7 +1675,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                             if (i == 1)
                             {                                                     
                                 oDet.IdSubItem = (Item)oSItem.Get(typeof(Item), oSubitem.IdItemDeterminacion); 
-                                oDet.Save();                                                   
+                                oDet.Save();
+                                if (oDet.TrajoMuestra == "Si") //11.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    oDet.GuardarDerivacionPractica(oUser);
                             }
                             else
                             {
@@ -1681,6 +1700,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                 oDetalle.Save();
 
                                 GuardarValorReferencia(oDetalle);
+
+                                if (oDetalle.TrajoMuestra == "Si")//11.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    oDetalle.GuardarDerivacionPractica(oUser);
                             }
                             i = i + 1;                        
                         }//fin if

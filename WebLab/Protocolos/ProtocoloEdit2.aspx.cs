@@ -1243,29 +1243,43 @@ where  pd.tipo='D' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
             string m_strSQL = @"
             SELECT
-                DP.idDetalleProtocolo AS IdDetalleProtocolo,
                 I.codigo AS Codigo,
                 I.nombre AS Nombre,
-                DP.TrajoMuestra AS TrajoMuestra,
 
                 CASE
-                    WHEN DP.idUsuarioValida > 0
-                      OR DP.idUsuarioValidaObservacion > 0 THEN 2
-                    WHEN DP.idUsuarioResultado > 0
-                      OR DP.idUsuarioObservacion > 0
-                      OR DP.enviado = 2 THEN 1
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioValida > 0
+                            OR DP.idUsuarioValidaObservacion > 0 THEN 2
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 2 THEN 2
+
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 1 THEN 1
+
                     ELSE 0
                 END AS Estado,
-                D.idDerivacion AS IdDerivacion,
-        		D.estado as EstadoDerivacion
+                DP.trajoMuestra,
+                MAX(D.idDerivacion) AS IdDerivacion,
+                MAX(D.estado) AS EstadoDerivacion
 
-            FROM LAB_DetalleProtocolo DP with (nolock)
-            INNER JOIN LAB_Item I with (nolock)
-                ON I.idItem = DP.idItem
-            LEFT JOIN LAB_Derivacion D with (nolock)
-                ON D.idDetalleProtocolo = DP.idDetalleProtocolo
+            FROM LAB_DetalleProtocolo DP WITH (NOLOCK)
+
+            INNER JOIN LAB_Item I with (nolock)  ON I.idItem = DP.idItem
+            LEFT JOIN LAB_Derivacion D with (nolock) ON D.idDetalleProtocolo = DP.idDetalleProtocolo
             WHERE DP.idProtocolo = @idProtocolo
-            ORDER BY DP.idDetalleProtocolo";
+            GROUP BY
+                I.codigo,
+                I.nombre,
+                DP.trajoMuestra
+            ORDER BY
+                I.codigo;";
             ISession m_session = NHibernateHttpModule.CurrentSession;
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -3290,10 +3304,10 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                         GuardarDetallePractica(oDetalle);
 
                         // GuardarDerivacion(oDetalle);
-                        if(oDetalle.TrajoMuestra == "Si") oDetalle.GuardarDerivacion(oUser); //2.11.2026 Se genera derivacion solo si trajo muestra
+                       
 
 
-
+                        oDetalle.Save();
 
                         //si ya esta actualizo si trajo muestra o no
 
@@ -3375,6 +3389,10 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
                                     //02.11.2026 Cambio de “Sin muestra” a “Con muestra” si es derivable tiene que generar la derivacion
                                     oDetalle.GuardarDerivacion(oUser);
+
+                                    //11.11.2026 Genero la derivacion de det simple de practica
+                                    if (oDetalle.IdItem != oDetalle.IdSubItem)
+                                        oDetalle.GuardarDerivacionPractica(oUser);
                                 }
                             }
 
@@ -3580,10 +3598,11 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             // Modificación con regeneración(regenera = true) --> se omite si es Derivacion para no generar una nueva Derivacion
             if (!regenera &&  oDet.VerificarSiEsDerivable(oUser.IdEfector)) //oDet.IdItem.IdEfector.IdEfector != oDet.IdItem.IdEfectorDerivacion.IdEfector) //Si es un item derivable no busca hijos y guarda directamente.
             {
-                 oDet.IdSubItem = oDet.IdItem;
-                            oDet.Save();
+                oDet.IdSubItem = oDet.IdItem;
+                oDet.Save();
                 oDet.GuardarValorReferencia();
-                 
+                if (oDet.TrajoMuestra == "Si")
+                    oDet.GuardarDerivacion(oUser); //2.11.2026 Se genera derivacion solo si trajo muestra
             }
             else
             {
@@ -3608,6 +3627,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                 {
                                     oDet.IdSubItem = oSItem;
                                     oDet.FechaResultado = DateTime.Parse("01/01/1900");
+                                    //10.11.2026 Se genera derivacion en determinacion simple solo si trajo muestra
+                                    oDet.Save();
+                                    oDet.GuardarDerivacionPractica(oUser);
                                 }
                                 else
                                 {
@@ -3620,6 +3642,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                 oDet.GuardarValorReferencia();
                                 if (oDet.TrajoMuestra == "No")
                                     oDet.GrabarAuditoriaDetalleProtocolo("Sin Muestra", oUser.IdUsuario);
+
                             }
                             else
                             {
@@ -3648,6 +3671,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                     oDetalle.GuardarSinInsumo();
                                     oDetalle.GuardarValorReferencia();
                                     //GuardarValorReferencia(oDetalle);
+
+                                    //10.11.2026 Se genera derivacion en determinacion simple solo si trajo muestra
+                                    oDetalle.GuardarDerivacionPractica(oUser);
                                 }
                                  
                             }

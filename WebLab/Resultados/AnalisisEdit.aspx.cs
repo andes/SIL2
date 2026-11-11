@@ -150,29 +150,43 @@ namespace WebLab.Resultados
 
             string m_strSQL = @"
             SELECT
-                DP.idDetalleProtocolo AS IdDetalleProtocolo,
                 I.codigo AS Codigo,
                 I.nombre AS Nombre,
-                DP.TrajoMuestra AS TrajoMuestra,
 
                 CASE
-                    WHEN DP.idUsuarioValida > 0
-                      OR DP.idUsuarioValidaObservacion > 0 THEN 2
-                    WHEN DP.idUsuarioResultado > 0
-                      OR DP.idUsuarioObservacion > 0
-                      OR DP.enviado = 2 THEN 1
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioValida > 0
+                            OR DP.idUsuarioValidaObservacion > 0 THEN 2
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 2 THEN 2
+
+                    WHEN MAX(CASE
+                        WHEN DP.idUsuarioResultado > 0
+                            OR DP.idUsuarioObservacion > 0
+                            OR DP.enviado = 2 THEN 1
+                        ELSE 0
+                    END) = 1 THEN 1
+
                     ELSE 0
                 END AS Estado,
-                D.idDerivacion AS IdDerivacion,
-        		D.estado as EstadoDerivacion
+                DP.trajoMuestra,
+                MAX(D.idDerivacion) AS IdDerivacion,
+                MAX(D.estado) AS EstadoDerivacion
 
-            FROM LAB_DetalleProtocolo DP with (nolock)
-            INNER JOIN LAB_Item I with (nolock)
-                ON I.idItem = DP.idItem
-            LEFT JOIN LAB_Derivacion D with (nolock)
-                ON D.idDetalleProtocolo = DP.idDetalleProtocolo
+            FROM LAB_DetalleProtocolo DP WITH (NOLOCK)
+
+            INNER JOIN LAB_Item I with (nolock)  ON I.idItem = DP.idItem
+            LEFT JOIN LAB_Derivacion D with (nolock) ON D.idDetalleProtocolo = DP.idDetalleProtocolo
             WHERE DP.idProtocolo = @idProtocolo
-            ORDER BY DP.idDetalleProtocolo";
+            GROUP BY
+                I.codigo,
+                I.nombre,
+                DP.trajoMuestra
+            ORDER BY
+                I.codigo;";
             ISession m_session = NHibernateHttpModule.CurrentSession;
             DataSet Ds = new DataSet();
             SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -511,6 +525,8 @@ namespace WebLab.Resultados
                                     {
                                         oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
                                         oDev.Delete();
+                                        //¿Para derivaciones automaticas tenemos que dejar el resultadoCar solo con el resultado?
+                                        // A DEFINIR: oDetalle.LimpiarEstadoDerivacion();
                                     }
                                 }
 
@@ -557,7 +573,13 @@ namespace WebLab.Resultados
                                         if (oItem.IdCategoria == 1)
                                             GuardarDetallePractica(oDetalle, true); //true -->  se omite si es Derivacion para no generar una nueva Derivacion
                                     }
-                                    oDetalle.GuardarDerivacion(oUser); //2.11.2026 si no es practica verifica si es derivable y genera la derivacion
+
+                                    //02.11.2026 Genero la derivacion 
+                                    oDetalle.GuardarDerivacion(oUser);
+
+                                    //11.11.2026 Corregccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    if (oDetalle.IdItem != oDetalle.IdSubItem)
+                                        oDetalle.GuardarDerivacionPractica(oUser); 
                                 }
                                    
                             }
@@ -752,6 +774,9 @@ namespace WebLab.Resultados
                                 {
                                     oDet.IdSubItem = oSItem;
                                     oDet.FechaResultado = DateTime.Parse("01/01/1900");
+                                    //10.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    oDet.Save();
+                                    oDet.GuardarDerivacionPractica(oUser);
                                 }
                                 else
                                 {
@@ -789,6 +814,8 @@ namespace WebLab.Resultados
                                     oDetalle.Save();
                                     oDetalle.GuardarSinInsumo();
                                     oDetalle.GuardarValorReferencia();
+                                    //10.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    oDetalle.GuardarDerivacionPractica(oUser);
                                 }
                             }
                             i = i + 1;
