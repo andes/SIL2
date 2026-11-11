@@ -3342,6 +3342,9 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                                     {
                                         oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
                                         oDev.Delete();
+                                        // A DEFINIR: que hacer con determinaciones validadas que tenian derivacion
+                                        //automatica y se marcaron s/muestra?
+                                        oDetalle.ResultadoCar = string.Empty;
                                     }
                                     
                                 }

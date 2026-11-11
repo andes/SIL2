@@ -525,8 +525,9 @@ namespace WebLab.Resultados
                                     {
                                         oDetalle.GrabarAuditoriaDetalleProtocolo("Elimina Derivacion", oUser.IdUsuario);
                                         oDev.Delete();
-                                        //¿Para derivaciones automaticas tenemos que dejar el resultadoCar solo con el resultado?
-                                        // A DEFINIR: oDetalle.LimpiarEstadoDerivacion();
+                                        // A DEFINIR: que hacer con determinaciones validadas que tenian derivacion
+                                        //automatica y se marcaron s/muestra
+                                        oDetalle.ResultadoCar = string.Empty;
                                     }
                                 }
 
@@ -577,7 +578,7 @@ namespace WebLab.Resultados
                                     //02.11.2026 Genero la derivacion 
                                     oDetalle.GuardarDerivacion(oUser);
 
-                                    //11.11.2026 Corregccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
+                                    //11.11.2026 Correccion que se genere la derivación de las determinaciones simples contenidas en compuestas.
                                     if (oDetalle.IdItem != oDetalle.IdSubItem)
                                         oDetalle.GuardarDerivacionPractica(oUser); 
                                 }
