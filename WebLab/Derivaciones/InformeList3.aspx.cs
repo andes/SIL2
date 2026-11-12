@@ -26,75 +26,153 @@ namespace WebLab.Derivaciones
     public partial class InformeList3 : System.Web.UI.Page
     {
         public Usuario oUser = new Usuario();
-        public CrystalReportSource oCr = new CrystalReportSource();
-        Configuracion oCon = new Configuracion();
+        //public CrystalReportSource oCr = new CrystalReportSource();
+        //Configuracion oCon = new Configuracion();
         private Random random = new Random();
         protected void Page_PreInit(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                oCr.Report.FileName = "";
-                oCr.CacheDuration = 0;
-                oCr.EnableCaching = false;
+                //oCr.Report.FileName = "";
+                //oCr.CacheDuration = 0;
+                //oCr.EnableCaching = false;
             }
             else Response.Redirect("../FinSesion.aspx", false);
 
         }
-        protected void Page_Unload(object sender, EventArgs e)
-        {
-            if (this.oCr.ReportDocument != null)
-            {
-                this.oCr.ReportDocument.Close();
-                this.oCr.ReportDocument.Dispose();
-            }
-        }
+        //protected void Page_Unload(object sender, EventArgs e)
+        //{
+        //    if (this.oCr.ReportDocument != null)
+        //    {
+        //        this.oCr.ReportDocument.Close();
+        //        this.oCr.ReportDocument.Dispose();
+        //    }
+        //}
         protected void Page_Load(object sender, EventArgs e)
         {
           
-            if (!Page.IsPostBack)
+            if (Session["idUsuario"] != null)
             {
-                if (Session["idUsuario"] != null)
+                if (!Page.IsPostBack)
                 {
                     oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                    CargarListas();
                     SetToken();
-                    PreventingDoubleSubmit(btnGuardar);  
-                    if (Request["Tipo"] == "Alta")
-                    {
-                        int estado = Convert.ToInt32(Request["Estado"]);
-                        activarControles(estado == 0 || estado == 2);
-                        pnlNroLote.Visible = false;
-                        HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
-                    }
-                    else
-                    {
-                        if (Request["Tipo"] == "Modifica")
-                        {
-                            activarControles(true);
-                            lblNroLote.Text = "NUMERO DE LOTE " + Convert.ToInt32(Request["idLote"]);
-                            pnlNroLote.Visible = true;
-                            HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
-                            ddlEstado.SelectedIndex = 2;
-                            ddlMotivoCancelacion.Enabled = false;
-                            lnkPDF.Visible = false; //24.08.2026 Corrige BUG: en modificacion de lote no existe el request por lo que da error al imprimir
-                            btnAgregarDeterminaciones.Visible = true;
-                            HFIdLote.Value = Request["idLote"].ToString();
-                            HFIdEfectorDerivacion.Value = Request["Destino"].ToString();
-                        }
+                    PreventingDoubleSubmit(btnGuardar);
 
-                    }
+                    Inicializar();
+                    //CargarListas();
+                    
+                    //if (Request["Tipo"] == "Alta")
+                    //{
+                    //    int estado = Convert.ToInt32(Request["Estado"]);
+                    //    activarControles(estado == 0 || estado == 2);
+                    //    pnlNroLote.Visible = false;
+                    //    HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
+                    //}
+                    //else
+                    //{
+                    //    if (Request["Tipo"] == "Modifica")
+                    //    {
+                    //        activarControles(true);
+                    //        lblNroLote.Text = "NUMERO DE LOTE " + Convert.ToInt32(Request["idLote"]);
+                    //        pnlNroLote.Visible = true;
+                    //        HyperLink1.NavigateUrl = "~/Derivaciones/GestionarLote.aspx";
+                    //        ddlEstado.SelectedIndex = 2;
+                    //        ddlMotivoCancelacion.Enabled = false;
+                    //        lnkPDF.Visible = false; //24.08.2026 Corrige BUG: en modificacion de lote no existe el request por lo que da error al imprimir
+                    //        btnAgregarDeterminaciones.Visible = true;
+                    //        HFIdLote.Value = Request["idLote"].ToString();
+                    //        HFIdEfectorDerivacion.Value = Request["Destino"].ToString();
+                    //    }
+
+                    //}
                     CargarGrilla();
                     //habilitarImpresion(); //solo para derivaciones anteriores a lote
                 }
-                else
-                {
-                    Response.Redirect("../FinSesion.aspx", false);
-                }
+                
             }
-            
-        }
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
 
+        }
+        private void Inicializar()
+        {
+            LoteDerivacion oLote;
+            Efector oEfector;
+            switch (Request["Tipo"])
+            {
+                case "Alta":
+                    pnlNroLote.Visible = false;
+
+                    lblTitulo.Text = "NUEVO LOTE";
+                    lblSubTitulo.Visible = true;
+
+                    HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
+
+                    gvLista.Visible = true;
+                    gvListaEdit.Visible = false;
+                    break;
+
+                case "Modifica":
+                    oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", int.Parse(Request["idLote"].ToString()));
+                    oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", oLote.IdEfectorDestino.IdEfector);
+
+                    pnlNroLote.Visible = true;
+
+                    lblTitulo.Text = "MODIFICACION DE LOTE ";
+                    lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
+                    lblEstadoLote.Text = "ESTADO: " + oLote.descripcionEstadoLote();
+                    lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
+                    lblSubTitulo.Visible = true;
+
+                    HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
+
+                    btnAgregarDeterminaciones.Visible = (oLote.Estado == 1);
+                    btnGuardar.Visible = false;
+                    btnNoEnviado.Visible = false;
+                    btnExcluir.Visible = true;
+
+                    HFIdLote.Value = Request["idLote"].ToString();
+                    HFIdEfectorDerivacion.Value = oLote.IdEfectorDestino.IdEfector.ToString();
+
+                    gvLista.Visible = false;
+                    gvListaEdit.Visible = true;
+
+
+                    break;
+
+                case "Consulta":
+
+                    oLote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), "IdLoteDerivacion", int.Parse(Request["idLote"].ToString()));
+                    oEfector = (Efector)new Efector().Get(typeof(Efector), "IdEfector", oLote.IdEfectorDestino.IdEfector);
+
+                    pnlNroLote.Visible = true;
+
+                    lblTitulo.Text = "CONSULTA DE LOTE ";
+                    lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
+                    lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
+                    lblSubTitulo.Visible = true;
+
+                    HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
+
+                    btnAgregarDeterminaciones.Visible = false;
+                    btnGuardar.Visible = false;
+                    btnNoEnviado.Visible = false;
+                    btnExcluir.Visible = false;
+
+                    gvLista.Visible = false;
+                    gvListaEdit.Visible = true;
+                    gvListaEdit.Columns[0].Visible = false;
+
+                    linkSeleccionar.Visible = false;
+
+                    break;
+            }
+
+        }
         private void PreventingDoubleSubmit(Button button)
         {
             StringBuilder sb = new StringBuilder();
@@ -129,7 +207,7 @@ namespace WebLab.Derivaciones
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                LinkButton CmdEliminar = (LinkButton)e.Row.Cells[12].Controls[1];
+                LinkButton CmdEliminar = (LinkButton)e.Row.Cells[11].Controls[1];
                 //La key podria ser compuesta this.gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
               
                 CmdEliminar.CommandArgument = gvLista.DataKeys[e.Row.RowIndex].Value.ToString();
@@ -184,137 +262,152 @@ namespace WebLab.Derivaciones
         }
         #region carga
        
-        private void CargarListas()
-        {
-            Utility oUtil = new Utility();
-            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+        //private void CargarListas()
+        //{
+        //    Utility oUtil = new Utility();
+        //    string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
-            // Estados de las derivaciones
-            string m_ssql = "SELECT idEstado, descripcion FROM LAB_DerivacionEstado where baja=0 and idEstado in (2,4) ";
-            oUtil.CargarCombo(ddlEstado, m_ssql, "idEstado", "descripcion", connReady);
-            ddlEstado.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+        //    // Estados de las derivaciones
+        //    string m_ssql = "SELECT idEstado, descripcion FROM LAB_DerivacionEstado where baja=0 and idEstado in (2,4) ";
+        //    oUtil.CargarCombo(ddlEstado, m_ssql, "idEstado", "descripcion", connReady);
+        //    ddlEstado.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
-            oUtil = new Utility();
-            //Motivos de cancelacion LAB-75
-            m_ssql = "SELECT idMotivo, descripcion FROM LAB_DerivacionMotivoCancelacion WHERE baja = 0";
-            oUtil.CargarCombo(ddlMotivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
-            ddlMotivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
+        //    oUtil = new Utility();
+        //    //Motivos de cancelacion LAB-75
+        //    m_ssql = "SELECT idMotivo, descripcion FROM LAB_DerivacionMotivoCancelacion WHERE baja = 0";
+        //    oUtil.CargarCombo(ddlMotivoCancelacion, m_ssql, "idMotivo", "descripcion", connReady);
+        //    ddlMotivoCancelacion.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
-            rvMotivoCancelacion.Enabled = false; //inicio no obligatorio, cambia a obligatorio cuando seleccione el estado "No Enviado".
+        //    rvMotivoCancelacion.Enabled = false; //inicio no obligatorio, cambia a obligatorio cuando seleccione el estado "No Enviado".
 
-        }
-        private void habilitarImpresion()
-        {
-            if (Convert.ToInt32(Request["Estado"]) == 1)
-            {
-                gvLista.Columns[11].Visible = true;
-                lnkPDF.Visible = true;
-                ddlMotivoCancelacion.Enabled = false;
-            }
-            else
-            {
-                gvLista.Columns[11].Visible = false;
-                lnkPDF.Visible = false;
-            }
-        }
-        private void limpiarForm()
-        {
-            txtObservacion.Text = string.Empty;
-            ddlMotivoCancelacion.SelectedIndex = 0;
-            ddlEstado.SelectedIndex = 0;
-        }
+        //}
+        //private void habilitarImpresion()
+        //{
+        //    if (Convert.ToInt32(Request["Estado"]) == 1)
+        //    {
+        //        gvLista.Columns[11].Visible = true;
+        //        lnkPDF.Visible = true;
+        //        ddlMotivoCancelacion.Enabled = false;
+        //    }
+        //    else
+        //    {
+        //        gvLista.Columns[11].Visible = false;
+        //        lnkPDF.Visible = false;
+        //    }
+        //}
+        //private void limpiarForm()
+        //{
+        //    txtObservacion.Text = string.Empty;
+        //    ddlMotivoCancelacion.SelectedIndex = 0;
+        //    ddlEstado.SelectedIndex = 0;
+        //}
 
-        private void activarControles(bool valor)
-        {
-            btnGuardar.Enabled = valor;
-            txtObservacion.Enabled = valor;
-            lnkMarcar.Enabled = valor;
-            lnkDesMarcar.Enabled = valor;
-            ddlMotivoCancelacion.Enabled = valor;
-            ddlEstado.Enabled = valor;
-        }
+        //private void activarControles(bool valor)
+        //{
+        //    btnGuardar.Enabled = valor;
+        //    txtObservacion.Enabled = valor;
+        //    lnkMarcar.Enabled = valor;
+        //    lnkDesMarcar.Enabled = valor;
+        //    ddlMotivoCancelacion.Enabled = valor;
+        //    ddlEstado.Enabled = valor;
+        //}
 
         private void CargarGrilla()
         {
-            gvLista.DataSource = GetDataSet("", Request["Tipo"] );
-            gvLista.DataBind();
+
+            //gvLista.DataSource = GetDataSet("", Request["Tipo"] );
+            //gvLista.DataBind();
 
 
-            if (gvLista.Rows.Count <= 0)
-                activarControles(false);
-            else//si actualiza la grilla despues de cargar determinaciones
+            //if (gvLista.Rows.Count <= 0)
+            //    activarControles(false);
+            //else//si actualiza la grilla despues de cargar determinaciones
+            //{
+            //    if(Request["Tipo"] == "Modifica")
+            //        activarControles(true); 
+            //}
+
+            //CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
+
+            if (Request["Tipo"] == "Alta")
             {
-                if(Request["Tipo"] == "Modifica")
-                    activarControles(true); 
+                gvLista.DataSource = GetDataSet();
+                gvLista.DataBind();
+                CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
             }
-
-            CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
+            else
+            {
+                gvListaEdit.DataSource = GetDataSet();
+                gvListaEdit.DataBind();
+                CantidadRegistros.Text = gvListaEdit.Rows.Count.ToString() + " registros encontrados";
+            }
 
         }
 
-        public DataTable GetDataSet(string s_lista, string tipo)
+        public DataTable GetDataSet()
         {
             //20.08.2026 Derivacion automatica
             //Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica
             // agrupo con pipe los idDetalles a derivar pero solo muestro 1 derivacion 
 
             string m_strSQL = " SELECT " +
-                  " STUFF(( " +
-                  "     SELECT '|' + CAST(v2.idDetalleProtocolo AS varchar(20)) " + //si tengo varios iddetalle del mismo iditem los agrupo
-                  "     FROM vta_LAB_Derivaciones v2 " +
-                  "     WHERE v2.idProtocolo = vta.idProtocolo " +
-                  "       AND v2.idItem = vta.idItem " +
-                  "     FOR XML PATH('') " +
-                  " ), 1, 1, '') AS idDetalleProtocolo, " +
-                  " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
-                  " apellido + ' '+ nombre as paciente, determinacion, efectorderivacion, username, " +
-                  " fechaNacimiento as edad, unidadEdad, sexo, observacion, " +
-                  " solicitante as especialista, isnull(idlote,0) as idLote ";
+                     " STUFF(( " +
+                     "     SELECT '|' + CAST(v2.idDetalleProtocolo AS varchar(20)) " + //si tengo varios iddetalle del mismo iditem los agrupo
+                     "     FROM vta_LAB_Derivaciones v2 " +
+                     "     WHERE v2.idProtocolo = vta.idProtocolo " +
+                     "       AND v2.idItem = vta.idItem " +
+                     "     FOR XML PATH('') " +
+                     " ), 1, 1, '') AS idDetalleProtocolo, " +
+                     " estado, numero, convert(varchar(10), fecha,103) as fecha, dni, " +
+                     " apellido + ' '+ nombre as paciente, determinacion,  username, " +
+                     " fechaNacimiento as edad, unidadEdad, sexo, " +
+                     " solicitante as especialista, isnull(idlote,0) as idLote ";
 
-            switch (tipo)
+            switch (Request["Tipo"])
             {
 
-                case "pdf":
-                    m_strSQL += " , idTipoServicio , TipoProducto , de.descripcion as estadoDerivacion";
-                    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
-                    m_strSQL += " inner join LAB_DerivacionEstado de on de.idEstado = vta.estado ";
-                    m_strSQL += " WHERE " + Request["Parametros"].ToString() +
-                               "  and estado= " + int.Parse(Request["Estado"]) +
-                               "  and idDetalleProtocolo in (" + s_lista.Replace("|", ",") + ") ";
-                    m_strSQL += @" GROUP BY
-                                    vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
-                                    vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
-                                    idTipoServicio, TipoProducto,  de.descripcion ";
+                //case "pdf":
+                //    m_strSQL += " , idTipoServicio , TipoProducto , de.descripcion as estadoDerivacion";
+                //    m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
+                //    m_strSQL += " inner join LAB_DerivacionEstado de on de.idEstado = vta.estado ";
+                //    m_strSQL += " WHERE " + Request["Parametros"].ToString() +
+                //               "  and estado= " + int.Parse(Request["Estado"]) +
+                //               "  and idDetalleProtocolo in (" + s_lista.Replace("|", ",") + ") ";
+                //    m_strSQL += @" GROUP BY
+                //                    vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
+                //                    vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
+                //                    idTipoServicio, TipoProducto,  de.descripcion ";
 
-                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
-                    break;
+                //    m_strSQL += " ORDER BY efectorDerivacion,numero ";
+                //    break;
                 case "Alta":
-                    m_strSQL += " , isnull(mot.descripcion,'') as motivo ";
+                    m_strSQL += "   , observacion, efectorderivacion, isnull(mot.descripcion,'') as motivo ";
                     m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
-                    m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
-                    m_strSQL += " WHERE " + Request["Parametros"].ToString() + "  and estado = " + int.Parse(Request["Estado"]);
+                    m_strSQL += " LEFT JOIN LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
+                    m_strSQL += " WHERE " + Request["Parametros"].ToString();
 
-                    if (int.Parse(Request["Estado"]) == 0) m_strSQL += " and isnull(idlote,0) = 0 "; //Si se de alta un nuevo Lote, que no traiga determinaciones con lote
+                    if (Request["Estado"] == "-1") // estado pendiente de derivar y No enviado
+                        m_strSQL += " AND estado IN (0,2) ";
+                    else
+                        m_strSQL += " AND estado IN ( " + Request["Estado"] + " ) ";
+
+                    m_strSQL += " and isnull(idlote,0) = 0 "; //que traiga derivaciones sin lote
 
                     m_strSQL += @" GROUP BY
                                     vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
                                     vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
                                     mot.descripcion ";
-                    m_strSQL += " ORDER BY efectorDerivacion,numero ";
+                    m_strSQL += " ORDER BY numero ";
                     break;
 
                 case "Modifica":
-
-                    m_strSQL += " , isnull(mot.descripcion,'') as motivo ";
+                case "Consulta":
                     m_strSQL += " FROM  vta_LAB_Derivaciones vta ";
-                    m_strSQL += " left join LAB_DerivacionMotivoCancelacion mot on mot.idMotivo = vta.idMotivoCancelacion ";
-                    m_strSQL += " WHERE    " +
-                              "  (estado = 4 and idLote= " + Request["idLote"] + ")"; //y ya cargadas en el lote por si se necesitan dejar nuevamente como pendiente
+                    m_strSQL += " WHERE   idLote= " + Request["idLote"];
                     m_strSQL += @" GROUP BY
-                                vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion, vta.efectorderivacion,
-                                vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo, vta.observacion, vta.solicitante, vta.idlote,
-                                mot.descripcion ";
-                    m_strSQL += " ORDER BY estado desc, efectorDerivacion,numero desc";
+                                vta.idProtocolo, vta.idItem, vta.estado, vta.numero,  vta.fecha,  vta.dni, vta.apellido, vta.nombre, vta.determinacion,
+                                vta.username, vta.fechaNacimiento, vta.unidadEdad,  vta.sexo,  vta.solicitante, vta.idlote";
+                    m_strSQL += " ORDER BY numero ";
                     break;
 
             }
@@ -484,25 +577,26 @@ namespace WebLab.Derivaciones
                         int idUsuario = int.Parse(Session["idUsuario"].ToString());
                         Usuario oUser = new Usuario();
                         oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
-                        Business.Data.Laboratorio.LoteDerivacion lote = new Business.Data.Laboratorio.LoteDerivacion();
+                        LoteDerivacion lote = new LoteDerivacion();
 
-                        if (int.Parse(ddlEstado.SelectedValue) == 2)
+                        if (Request["Tipo"] == "Alta")
                         {
-                            Guardar(lote); 
+                            lote = GenerarLote(oUser.IdUsuario);
+                            //Guardar(lote); 
 
-                            if (Request["Tipo"] == "Modifica")
-                                lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
+                            //if (Request["Tipo"] == "Modifica")
+                            //    lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
 
-                            CargarGrilla();
-                            limpiarForm();
+                            //CargarGrilla();
+                            //limpiarForm();
                         }
                         else
                         {
-                            if (Request["Tipo"] == "Alta")
-                            {    //Genera Lote y cambia determinaciones
-                                lote = GenerarLote(oUser.IdUsuario);
-                            }
-                            else
+                            //if (Request["Tipo"] == "Alta")
+                            //{    //Genera Lote y cambia determinaciones
+                            //    lote = GenerarLote(oUser.IdUsuario);
+                            //}
+                            //else
                             {
                                 if (Request["Tipo"] == "Modifica")
                                 {
@@ -510,9 +604,10 @@ namespace WebLab.Derivaciones
                                     lote.GrabarAuditoriaLoteDerivacion("Modifica", idUsuario);//Se guarda auditoria de modificacion de lote
                                 }
                             }
+                        }
                             Guardar(lote);
                             Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
-                        }
+                        
                     }
 
                 }
@@ -539,7 +634,84 @@ namespace WebLab.Derivaciones
             return lote;
         }
 
-        private void Guardar(Business.Data.Laboratorio.LoteDerivacion lote)
+        private void Guardar(LoteDerivacion lote)
+        {
+            if (Session["idUsuario"] != null)
+            {
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    if (((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked)
+                    {
+                        int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+
+                        string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
+                        foreach (string idDetalleProtocolo in idDetalles)
+                        {
+                            DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                            string accion = Request["Tipo"].ToString();
+
+                            ISession m_session = NHibernateHttpModule.CurrentSession;
+                            ICriteria crit = m_session.CreateCriteria(typeof(Derivacion));
+                            crit.Add(Expression.Eq("IdDetalleProtocolo", oDetalle));
+
+                            IList lista = crit.List();
+                            if (lista.Count > 0)
+                            {
+                                string resultadoDerivacion = "";
+                                string resultadoCar = LimpiarEstadoDerivacion(oDetalle.ResultadoCar);
+                                //Guardar Crea lote, el estado de derivacion disponible solo es "Pendiente para enviar "
+                                resultadoDerivacion = (resultadoCar == "")  ? "Pendiente para enviar " : resultadoCar + " - Pendiente para enviar";
+
+                                oDetalle.ResultadoCar = resultadoDerivacion;
+                                oDetalle.ConResultado = true;
+                                oDetalle.IdUsuarioResultado = oUser.IdUsuario;
+                                oDetalle.FechaResultado = DateTime.Now;
+                                oDetalle.Save();
+
+
+                                foreach (Derivacion oDeriva in lista)
+                                {
+                                    oDeriva.Estado = 4;
+                                    oDeriva.IdUsuarioRegistro = oUser.IdUsuario;
+                                    oDeriva.FechaRegistro = DateTime.Now;
+                                    oDeriva.FechaResultado = DateTime.Parse("01/01/1900");
+                                    oDeriva.Idlote = lote.IdLoteDerivacion;
+                                    oDeriva.IdMotivoCancelacion = 0;
+                                    oDeriva.Save();
+                                }
+
+                                /*Actualiza estado de protocolo*/
+                                if (oDetalle.IdProtocolo.Estado < 2)
+                                {
+                                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
+                                        oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                                    else
+                                    {
+                                        if (oDetalle.IdProtocolo.EnProceso())
+                                        {
+                                            oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                                                            // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                        }
+                                        else
+                                            oDetalle.IdProtocolo.Estado = 0;
+                                    }
+                                    oDetalle.IdProtocolo.Save();
+                                }
+
+                                //Auditoria de Alta
+                                if (accion == "Alta")
+                                {
+                                    oDetalle.GrabarAuditoriaDetalleExtra(accion, oUser.IdUsuario, "Pendiente para enviar: Lote " + lote.IdLoteDerivacion);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                Response.Redirect("../FinSesion.aspx", false);
+        }
+        private void Guardar_old(Business.Data.Laboratorio.LoteDerivacion lote)
         {
             if (Session["idUsuario"] != null)
             {
@@ -564,7 +736,7 @@ namespace WebLab.Derivaciones
                             foreach (string idDetalleProtocolo in idDetalles)
                             {
                                 DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
-                                ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
+                               // ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
                             }
                         }
                     }
@@ -604,7 +776,7 @@ namespace WebLab.Derivaciones
                 Response.Redirect("../FinSesion.aspx", false);
         }
 */
-        private void ActualizarDetalleProtocolo(DetalleProtocolo oDetalle, int idLote, int estado,  int desasociaLote)
+      /*  private void ActualizarDetalleProtocolo(DetalleProtocolo oDetalle, int idLote, int estado,  int desasociaLote)
         {
             //int idDetalle = int.Parse(gvLista.DataKeys[row.RowIndex].Value.ToString());
             string accion = Request["Tipo"].ToString();
@@ -686,7 +858,7 @@ namespace WebLab.Derivaciones
 
                     #region estado_protocolo
                     /*Actualiza estado de protocolo*/
-                    if(oDetalle.IdProtocolo.Estado < 2)
+                   /* if(oDetalle.IdProtocolo.Estado < 2)
                     {
                         if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", idUsuarioRegistro))
                             oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
@@ -744,7 +916,7 @@ namespace WebLab.Derivaciones
                 }
             }
         }
-
+*/
         private string LimpiarEstadoDerivacion(string resultadoCar)
         {
             if (string.IsNullOrEmpty(resultadoCar))
@@ -782,55 +954,76 @@ namespace WebLab.Derivaciones
 
             return resultado;
         }
-        #endregion
 
-        #region PDF
-        private void MostrarInforme()
-        {
-            if (Session["idUsuario"] != null)
-            {
-
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-                oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-
-
-                DataTable dt = GetDataSet(GenerarListaProtocolos(), "pdf");
-
-                if (dt.Rows.Count > 0)
-                {
-                    string informe = "../Informes/ControlDerivacion.rpt";
-
-                    ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
-                    encabezado1.Value = oCon.EncabezadoLinea1;
-                    ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
-                    encabezado2.Value = oCon.EncabezadoLinea2;
-                    ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
-                    encabezado3.Value = oCon.EncabezadoLinea3;
-
-                    oCr.Report.FileName = informe;
-                    oCr.ReportDocument.SetDataSource(dt);
-                    oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
-                    oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
-                    oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
-                    oCr.DataBind();
-
-                    Utility oUtil = new Utility();
-                    string nombrePDF = oUtil.CompletarNombrePDF(oUser.IdEfector.IdEfector2.Trim() + "_Derivaciones");
-                    oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
-                }
-            }
-            else 
-                Response.Redirect("../FinSesion.aspx", false);
-        }
-
-        protected void lnkPDF_Click(object sender, EventArgs e)
+        protected void btnNoEnviado_Click(object sender, EventArgs e)
         {
             if (Page.IsValid)
             {
-                MostrarInforme();
+                string listaIdDetalle = HFListaDetalles.Value;
+                string idLote = (Request["idLote"] != null) ?  Request["idLote"].ToString() : "";
+                string script = "NoEnviarDeterminaciones('" + listaIdDetalle + "','"+ idLote+"');";
+
+                ScriptManager.RegisterStartupScript(
+                    this,
+                    this.GetType(),
+                    "NoEnviarDeterminaciones",
+                    script,
+                    true);
             }
-           
         }
+        protected void btnActualizar_Click(object sender, EventArgs e)
+        {
+            CargarGrilla();
+        }
+        #endregion
+
+        #region PDF
+        //private void MostrarInforme()
+        //{
+        //    if (Session["idUsuario"] != null)
+        //    {
+
+        //        oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+        //        oCon = (Configuracion)oCon.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+
+
+        //        DataTable dt = GetDataSet(GenerarListaProtocolos(), "pdf");
+
+        //        if (dt.Rows.Count > 0)
+        //        {
+        //            string informe = "../Informes/ControlDerivacion.rpt";
+
+        //            ParameterDiscreteValue encabezado1 = new ParameterDiscreteValue();
+        //            encabezado1.Value = oCon.EncabezadoLinea1;
+        //            ParameterDiscreteValue encabezado2 = new ParameterDiscreteValue();
+        //            encabezado2.Value = oCon.EncabezadoLinea2;
+        //            ParameterDiscreteValue encabezado3 = new ParameterDiscreteValue();
+        //            encabezado3.Value = oCon.EncabezadoLinea3;
+
+        //            oCr.Report.FileName = informe;
+        //            oCr.ReportDocument.SetDataSource(dt);
+        //            oCr.ReportDocument.ParameterFields[0].CurrentValues.Add(encabezado1);
+        //            oCr.ReportDocument.ParameterFields[1].CurrentValues.Add(encabezado2);
+        //            oCr.ReportDocument.ParameterFields[2].CurrentValues.Add(encabezado3);
+        //            oCr.DataBind();
+
+        //            Utility oUtil = new Utility();
+        //            string nombrePDF = oUtil.CompletarNombrePDF(oUser.IdEfector.IdEfector2.Trim() + "_Derivaciones");
+        //            oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
+        //        }
+        //    }
+        //    else 
+        //        Response.Redirect("../FinSesion.aspx", false);
+        //}
+
+        //protected void lnkPDF_Click(object sender, EventArgs e)
+        //{
+        //    if (Page.IsValid)
+        //    {
+        //        MostrarInforme();
+        //    }
+
+        //}
         private string GenerarListaProtocolos()
         {
             string m_lista = "";
@@ -878,21 +1071,21 @@ namespace WebLab.Derivaciones
 
         /// 27.10.2026 pasamos las funciones js a aspx.cs
 
-        protected void ddlEstado_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (ddlEstado.SelectedValue == "2") //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
-            {
-                ddlMotivoCancelacion.Enabled = true;
-                rvMotivoCancelacion.Enabled = true;
-            }
-            else
-            { 
-                ddlMotivoCancelacion.Enabled = false;
-                rvMotivoCancelacion.Enabled = false;
-                ddlMotivoCancelacion.SelectedValue = "0";
-            }
-            rvMotivoCancelacion.UpdateAfterCallBack = true;
-        }
+        //protected void ddlEstado_SelectedIndexChanged(object sender, EventArgs e)
+        //{
+        //    if (ddlEstado.SelectedValue == "2") //Si el estado es "No enviado" habilitar el ddl de motivos de cancelacion
+        //    {
+        //        ddlMotivoCancelacion.Enabled = true;
+        //        rvMotivoCancelacion.Enabled = true;
+        //    }
+        //    else
+        //    { 
+        //        ddlMotivoCancelacion.Enabled = false;
+        //        rvMotivoCancelacion.Enabled = false;
+        //        ddlMotivoCancelacion.SelectedValue = "0";
+        //    }
+        //    rvMotivoCancelacion.UpdateAfterCallBack = true;
+        //}
 
         /// 27.10.2026 pasamos las funciones js a aspx.cs
 
@@ -922,6 +1115,76 @@ namespace WebLab.Derivaciones
            
         }
 
+        #region Validaciones
         
+        protected void cvNoEnviado_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            //Determinaciones que no estan en un lote
+            args.IsValid = false;
+            HFListaDetalles.Value = "";
+            foreach (GridViewRow row in gvLista.Rows)
+            {
+                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+                if (chk != null && chk.Checked)
+                {
+                    args.IsValid = true;
+                    string idDetalle = gvLista.DataKeys[row.RowIndex].Value.ToString();
+                    if (HFListaDetalles.Value == "")
+                        HFListaDetalles.Value = idDetalle;
+                    else
+                        HFListaDetalles.Value = HFListaDetalles.Value + "|" + idDetalle;
+                }
+            }
+            cvNoEnviado.ErrorMessage = "*Seleccione una fila";
+        }
+
+        protected void cvExcluir_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            //Determinaciones que que estan en un lote
+
+            args.IsValid = false;
+            HFListaDetalles.Value = "";
+            int cantSeleccionados = 0;
+
+            foreach (GridViewRow row in gvListaEdit.Rows)
+            {
+                CheckBox chk = row.FindControl("chkSel") as CheckBox;
+
+                if (chk != null && chk.Checked)
+                {
+                    cantSeleccionados++;
+
+                    string idDetalle = gvListaEdit.DataKeys[row.RowIndex].Value.ToString();
+
+                    if (HFListaDetalles.Value == "")
+                        HFListaDetalles.Value = idDetalle;
+                    else
+                        HFListaDetalles.Value += "|" + idDetalle;
+                }
+            }
+
+            // Validacion para saber si selecciono filas
+            if (cantSeleccionados == 0)
+            {
+                HFListaDetalles.Value = "";
+                args.IsValid = false;
+                cvExcluir.ErrorMessage = "*Seleccione una fila";
+                return;
+            }
+
+            // Valida que el lote no quede vacio
+            if (cantSeleccionados == gvListaEdit.Rows.Count)
+            {
+                HFListaDetalles.Value = "";
+                args.IsValid = false;
+                cvExcluir.ErrorMessage = "*El lote debe contener al menos una determinación. No puede quedar vacío";
+                return;
+            }
+
+            args.IsValid = true;
+        }
+        #endregion
+
+
     }
 }

@@ -106,6 +106,15 @@ namespace WebLab.Derivaciones
                         }
                     }
                 }
+
+                if(Request["idLote"] != "")
+                {
+                    LoteDerivacion lote = new LoteDerivacion();
+                    lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), int.Parse(Request["idLote"].ToString()));
+                    lote.GrabarAuditoriaLoteDerivacion("Modifica", oUsuario.IdUsuario, "Se marcaron determinaciones como No Derivadas.");
+                }
+               
+
                 lblMensaje.Text = "Se guardaron los cambios";
             }
             

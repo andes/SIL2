@@ -719,11 +719,11 @@ namespace WebLab.Derivaciones
             switch (e.CommandName)
             {
                 case "Modificar":
-                        Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument +  "&Tipo=Modifica&Parametros=" + str_condicion, false); 
+                        Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument +  "&Tipo=Modifica&Parametros=" + str_condicion, false); 
 
                     break;
                 case "Consulta":
-                    Response.Redirect("InformeList4.aspx?idLote=" + e.CommandArgument + "&Tipo=Consulta&Parametros=" + str_condicion, false);
+                    Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Tipo=Consulta&Parametros=" + str_condicion, false);
 
                     break;
                 case "CambiarEstado":

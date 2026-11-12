@@ -1,8 +1,11 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InformeLote.aspx.cs" Inherits="WebLab.Derivaciones.InformeLote" MasterPageFile="~/Site1.Master" %>
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="InformeLote.aspx.cs" Inherits="WebLab.Derivaciones.InformeLote" %>
 <%@ Register assembly="Anthem" namespace="Anthem" tagprefix="anthem" %>
 
-<asp:Content ID="content1" ContentPlaceHolderID="head" runat="server">  
-   <script type="text/javascript">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="head1" runat="server">
      <%--  function validarFormulario(s, args) {
            if (typeof (Page_ClientValidate) == 'function') {
                var esValido = Page_ClientValidate('0');
@@ -173,15 +176,30 @@
            cambioFechaHorario(); //Llamar a la función al cargar la página
            txtFecha.addEventListener("change", cambioFechaHorario); //llamar la funcion el usuario cambia la fecha
        });--%>
-
+  
+    <link type="text/css" rel="stylesheet" href="../App_Themes/default/style.css" />
+    <link type="text/css" rel="stylesheet" href="../script/jquery-ui-1.7.1.custom.css" />
+    <link rel="stylesheet" href="../bootstrap-3.3.7-dist/css/bootstrap.min.css" />
+    <script type="text/javascript" src="../script/jquery.min.js"></script>
+    <script type="text/javascript" src="../script/jquery-ui.min.js"></script>
+    <style type="text/css">
+        .tabla-compacta {
+            border-collapse: separate;
+            border-spacing: 2px 0;
+        }
+        .tabla-compacta td {
+            padding: 2px 4px;
+        }
+    </style>
       
-   </script>
+ 
 
    
-</asp:Content>
+</head>
  
-<asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">          
-    <div align="left" style="width:1200px">
+<body style="background-color: #ffffff;">
+    <form id="form1" runat="server">        
+    <div align="left" style="width:700px">
         <div class="panel panel-default">
             <div class="panel-heading">
                   <b > <asp:Label ID="lblTitulo" runat="server" Text="" /></b> 
@@ -198,7 +216,7 @@
                              <table class="tabla-compacta" >
                                  <tr style="vertical-align: sub">
                                      <td >Marcar como: </td>
-                                     <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" enabled="false"  OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged" AutoPostBack="true" /> 
+                                     <td ><asp:DropDownList ID="ddlEstados" runat="server"  class="form-control input-sm" OnSelectedIndexChanged="ddlEstados_SelectedIndexChanged" AutoPostBack="true" /> 
                                          <asp:RangeValidator id="Range1"
                                                ControlToValidate="ddlEstados"
                                                MinimumValue="2"
@@ -214,7 +232,8 @@
                                             <asp:ListItem Text="Transportista Tramitar" Selected="True" />   
                                             <asp:ListItem Text="Otro" />
                                          </asp:RadioButtonList>--%>
-                                         <anthem:RequiredFieldValidator ID="rvTransporte" runat="server" ControlToValidate="ddlTransporte" ValidationGroup="0" ErrorMessage="* Seleccione un transporte"  InitialValue="-- SELECCIONE --" ></anthem:RequiredFieldValidator>
+                                         <anthem:RequiredFieldValidator ID="rvTransporte" runat="server" ControlToValidate="ddlTransporte" ValidationGroup="0" ErrorMessage="* Seleccione un transporte"  InitialValue="0" 
+                                           ></anthem:RequiredFieldValidator>
                                       
 
                                      </td>
@@ -222,23 +241,8 @@
                                         <%-- <asp:Label  Text="* Seleccione un transporte" runat="server" ID="lblErrorTransporte" CssClass="hidden">/asp:Label></td>--%>
                                     
                                  </tr>
-                                 <tr style="vertical-align: sub">
-                                      <td>Observaciones:</td>
-                                      <td><asp:TextBox ID="txtObservacion" runat="server" MaxLength="100" class="form-control input-sm"  ></asp:TextBox>
-                                          
-                                           <%-- <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lblErrorMotivo" CssClass="hidden"></asp:Label>--%>
-                                  
-                                        <anthem:RequiredFieldValidator
-                                            ID="rfvObservacion"
-                                            runat="server"
-                                            ControlToValidate="txtObservacion"
-                                            ErrorMessage="* Ingrese un motivo de cancelacion"
-                                            ForeColor="Red"
-                                            Display="Dynamic"
-                                            ValidationGroup="0" />
-<%--                                       <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>--%>
-                                     </td>
-                                     <td>Fecha y Hora de retiro:</td>
+                                    <tr style="vertical-align: sub">
+                                       <td>Fecha y Hora de retiro:</td>
                                     
                                       <td >
                                             <asp:TextBox id="txtFecha" runat="server" class="form-control input-sm"   TextMode="Date" ></asp:TextBox>
@@ -252,18 +256,45 @@
                                          <anthem:RequiredFieldValidator ID="rfvHora" runat="server" ControlToValidate="txtHora" ErrorMessage="Hora" ValidationGroup="0">*Error en Hora</anthem:RequiredFieldValidator>
                                         
                                      </td>
+                                    </tr>
+                                 <tr style="vertical-align: sub">
+                                      <td>Observaciones:</td>
+                                      <td colspan="3"><asp:TextBox ID="txtObservacion" runat="server" MaxLength="3000" class="form-control input-sm" width="500px" ></asp:TextBox>
+                                            <anthem:RequiredFieldValidator
+                                            ID="rfvObservacion"
+                                            runat="server"
+                                            ControlToValidate="txtObservacion"
+                                            ErrorMessage="* Ingrese un motivo de cancelacion"
+                                            ForeColor="Red"
+                                            Display="Dynamic"
+                                            ValidationGroup="0" />
+<%--                                       <asp:Label  Text="* Seleccione un motivo" runat="server" ID="lbl_ErrorMotivo" CssClass="hidden"></asp:Label>--%>
+                                     </td>
 
-                                     
-
-
-
-                                     <td align="left">
+                                      <%-- <td align="left">
                                          <input id="hidToken" type="hidden" runat="server" />
-                                         <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar" enabled="false"
+                                       <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar" enabled="false"
                                              onclick="btnGuardar_Click" ValidationGroup="0" />
 
-                                     </td>
+                                     </td>--%>
                                  </tr>
+                            
+                                 
+                             
+                                <%-- <tr><td colspan="3">
+                                         <asp:CustomValidator ID="cvGeneral" runat="server" OnServerValidate="cvGeneral_ServerValidate" ValidationGroup="0"></asp:CustomValidator>
+                                     </td> </tr>--%>
+                                 <tr>
+                                       <td align="left">
+                                            <input id="hidToken" type="hidden" runat="server" />
+                                         <asp:Button ID="btnGuardar" runat="server" CssClass="btn btn-primary"  Width="100" Text="Guardar"  onclick="btnGuardar_Click" ValidationGroup="0" />
+                                     </td>
+                                     <td>
+                                         <asp:Label ID="lblMensaje" runat="server" Text="" ></asp:Label>
+                                     </td>
+
+                                 </tr>
+                             
                              </table>
                            </asp:Panel>
 
@@ -271,18 +302,18 @@
 						
 				</tr>
                     
-					<tr>
+					<%--<tr>
 						<td class="myLabelIzquierdaGde" colspan="3">
                                             <hr /></td>
 						
 					</tr>
 					<tr>
 
-						<td colspan="2">
-<%--                            <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>--%>
+	 					<td colspan="2">
+                          <asp:Label Text="* Seleccione una fila" runat="server" ID="lblErrorLista" CssClass="hidden"></asp:Label>
                             <asp:CustomValidator ID="cvFilas" runat="server" OnServerValidate="cvFilas_ServerValidate" ErrorMessage="* Seleccione una fila" ValidationGroup="0" ></asp:CustomValidator>
                             <br />
-                            <div class="mylabelizquierda" >Seleccionar:                                           
+                           <div class="mylabelizquierda" style="display: none;" >Seleccionar:                                           
                                 <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  onclick="lnkMarcar_Click" >Todas</asp:LinkButton>&nbsp;
                                 <asp:LinkButton  ID="lnkDesMarcar" runat="server" CssClass="myLittleLink"   onclick="lnkDesMarcar_Click">Ninguna</asp:LinkButton>
                                 &nbsp;&nbsp;
@@ -304,7 +335,9 @@
                                 <asp:GridView ID="gvLista" runat="server" AutoGenerateColumns="False"  CssClass="table table-bordered bs-table" 
                                    DataKeyNames="numero"   Width="98%" CellPadding="0"  ForeColor="#666666" PageSize="1" 
                                    EmptyDataText ="No se encontraron lotes para los parametros de busqueda ingresados" BorderColor="#3A93D2" 
-                                   BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal" AlternatingRowStyle-HorizontalAlign="Center" AutoGenerateSelectButton="False" >
+                                   BorderStyle="Solid" BorderWidth="1px" GridLines="Horizontal" AlternatingRowStyle-HorizontalAlign="Center" AutoGenerateSelectButton="False" 
+                                    Visible="false"
+                                    >
                                   <RowStyle BackColor="#F7F6F3" ForeColor="#333333" Font-Names="Arial"  Font-Size="8pt" />
                                    <Columns >
             
@@ -395,7 +428,7 @@
                             </div>
                         </td>
 						
-				</tr>
+				</tr>--%>
 			  </table>
             </div>
         </div>

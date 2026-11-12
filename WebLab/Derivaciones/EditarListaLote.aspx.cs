@@ -217,6 +217,10 @@ namespace WebLab.Derivaciones
 
                 }
 
+                //Auditoria Modificacion de lote
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), idLote);
+                lote.GrabarAuditoriaLoteDerivacion("Modifica",idUsuarioRegistro, "Agrega determinaciones");
                 lblMensaje.Text = "Determinaciones agregadas al lote";
                 CargarGrilla();
             }

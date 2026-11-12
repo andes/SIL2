@@ -215,7 +215,7 @@ namespace WebLab.Derivaciones
                         //if (dt.Rows.Count <= 5000) //LAB-158 se limita el filtro de fecha de las derivaciones por un rango de un año
                         {
                             if (Request["tipo"] == "informe")
-                                Response.Redirect("InformeList4.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
+                                Response.Redirect("InformeList3.aspx?Parametros=" + str_condicion + "&Estado=" + rdbEstado.SelectedValue + "&Destino=" + ddlEfector.SelectedValue + "&Tipo=Alta", false);
                             else
                                 if (Request["tipo"] == "resultado")
                                         Response.Redirect("../Derivaciones/ResultadoEdit.aspx?Parametros=" + str_condicion, false);
