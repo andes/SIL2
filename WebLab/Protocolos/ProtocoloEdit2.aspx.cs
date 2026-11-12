@@ -1239,101 +1239,105 @@ where  pd.tipo='D' and pd.idProtocolo=" + oRegistro.IdProtocolo.ToString();
 
         private void MostrarDeterminaciones(Protocolo oRegistro)
         {
-            //05.11.2026 Vamos a traer de la base las determinaciones como sus derivaciones asociadas (para guardarlas en memoria)
-
-            string m_strSQL = @"
-            SELECT
-                I.codigo AS Codigo,
-                I.nombre AS Nombre,
-
-                CASE
-                    WHEN MAX(CASE
-                        WHEN DP.idUsuarioValida > 0
-                            OR DP.idUsuarioValidaObservacion > 0 THEN 2
-                        WHEN DP.idUsuarioResultado > 0
-                            OR DP.idUsuarioObservacion > 0
-                            OR DP.enviado = 2 THEN 1
-                        ELSE 0
-                    END) = 2 THEN 2
-
-                    WHEN MAX(CASE
-                        WHEN DP.idUsuarioResultado > 0
-                            OR DP.idUsuarioObservacion > 0
-                            OR DP.enviado = 2 THEN 1
-                        ELSE 0
-                    END) = 1 THEN 1
-
-                    ELSE 0
-                END AS Estado,
-                DP.trajoMuestra,
-                MAX(D.idDerivacion) AS IdDerivacion,
-                MAX(D.estado) AS EstadoDerivacion
-
-            FROM LAB_DetalleProtocolo DP WITH (NOLOCK)
-
-            INNER JOIN LAB_Item I with (nolock)  ON I.idItem = DP.idItem
-            LEFT JOIN LAB_Derivacion D with (nolock) ON D.idDetalleProtocolo = DP.idDetalleProtocolo
-            WHERE DP.idProtocolo = @idProtocolo
-            GROUP BY
-                I.codigo,
-                I.nombre,
-                DP.trajoMuestra
-            ORDER BY
-                I.codigo;";
+            //12.11.2026 Carga de grilla y carga de hiddens
+            ///Agregar a la tabla las determinaciones para mostrarlas en el gridview                             
+           
             ISession m_session = NHibernateHttpModule.CurrentSession;
-            DataSet Ds = new DataSet();
-            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
-            
-            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
-            {
-                cmd.Parameters.AddWithValue("@idProtocolo", oRegistro.IdProtocolo);
+            ICriteria crit = m_session.CreateCriteria(typeof(DetalleProtocolo));
+            crit.Add(Expression.Eq("IdProtocolo", oRegistro));
+            crit.AddOrder(Order.Asc("IdDetalleProtocolo"));
+            IList items = crit.List();
 
-                using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+            // 2) Todas las derivaciones del protocolo en una sola consulta (sin IN de ids)
+            IList derivaciones = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion))
+                .CreateAlias("IdDetalleProtocolo", "dp")
+                .Add(Expression.Eq("dp.IdProtocolo", oRegistro))
+                .List();
+
+            Dictionary<int, Business.Data.Laboratorio.Derivacion> derivacionesDict = new Dictionary<int, Business.Data.Laboratorio.Derivacion>();
+            foreach (Business.Data.Laboratorio.Derivacion d in derivaciones)
+                derivacionesDict[d.IdDetalleProtocolo.IdDetalleProtocolo] = d;
+
+
+            // 3) Primer recorrido: un codigo compuesto puede tener mas de un iddetalle con derivacion
+            // Guardamos el mayor estado de derivacion
+            Dictionary<int, Business.Data.Laboratorio.Derivacion> mejores = new Dictionary<int, Business.Data.Laboratorio.Derivacion>(); //conserva la derivación con mayor estado
+            Dictionary<int, int> estados = new Dictionary<int, int>();
+
+            foreach (DetalleProtocolo oDet in items)
+            {
+                int idItem = oDet.IdItem.IdItem;
+                // Calculamos el estado del detalle.
+                int estado = 0;
+
+                if (oDet.IdUsuarioValida > 0 || oDet.IdUsuarioValidaObservacion > 0)
+                    estado = 2;
+                else if (oDet.IdUsuarioResultado > 0 || oDet.IdUsuarioObservacion > 0 || oDet.Enviado == 2)
+                    estado = 1;
+
+                // Conservamos el estado más alto del ítem.
+                int estadoActual;
+                if (!estados.TryGetValue(idItem, out estadoActual) || estado > estadoActual)
+                    estados[idItem] = estado;
+
+                // Buscamos si este detalle tiene derivación.
+                Business.Data.Laboratorio.Derivacion oDeriva;
+                if (derivacionesDict.TryGetValue(oDet.IdDetalleProtocolo, out oDeriva))
                 {
-                    adapter.Fill(Ds);
+                    if (oDeriva != null)
+                    {
+                        Business.Data.Laboratorio.Derivacion mejorActual;
+                        if (!mejores.TryGetValue(idItem, out mejorActual) || oDeriva.Estado > mejorActual.Estado)
+                            mejores[idItem] = oDeriva;
+                    }
+
                 }
             }
 
+            //string pivot = "";
             string sDatos = "", sDerivacion = "";
-            string sDatosTablaOriginal = "";
-
-            if (Ds.Tables[0] != null)
+            string sDatosTablaOriginal = ""; ;
+            HashSet<string> pivote = new HashSet<string>();
+            int nro = 0;
+            // 4) Segundo recorrido: misma lógica del código original (pivote), en el orden original
+            foreach (DetalleProtocolo oDet in items)
             {
-                DataTable dt = Ds.Tables[0];
-                for(int i=0;i<dt.Rows.Count; i++)
+                if (pivote.Add(oDet.IdItem.Nombre)) // Si Add devuelve True es porque lo agrego sin problemas de duplicados
                 {
+                    nro++;
+                    int estado = estados[oDet.IdItem.IdItem];
+
                     if (sDatos == "")
-                        sDatos = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+                        sDatos = oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
                     else
-                        sDatos += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["TrajoMuestra"] + "#" + dt.Rows[i]["Estado"];
+                        sDatos += ";" + oDet.IdItem.Codigo + "#" + oDet.TrajoMuestra + "#" + estado;
 
-                    if(sDerivacion == "")
+                    // Recuperamos la mejor derivación del ítem.
+                    Business.Data.Laboratorio.Derivacion oDeriva;
+                    if (mejores.TryGetValue(oDet.IdItem.IdItem, out oDeriva))
                     {
-                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
-                            sDerivacion = dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
-                    }
-                    else
-                    {
-                        if (!(dt.Rows[i]["IdDerivacion"] is DBNull))
-                            sDerivacion += ";" + dt.Rows[i]["Codigo"] + "#" + dt.Rows[i]["IdDerivacion"] + "#" + dt.Rows[i]["EstadoDerivacion"];
+                        if (sDerivacion == "")
+                            sDerivacion = oDet.IdItem.Codigo + "#" + oDeriva.IdDerivacion + "#" + oDeriva.Estado;
+                        else
+                            sDerivacion += ";" + oDet.IdItem.Codigo + "#" + oDeriva.IdDerivacion + "#" + oDeriva.Estado;
                     }
 
-
-                    //Guardamos una copia con todos los valores, para que al querer recuperar los tengamos en memoria
-                    string registro = (i + 1) + "#" +
-                                        dt.Rows[i]["Codigo"] + "#" +
-                                        dt.Rows[i]["Nombre"] + "#" +
-                                        dt.Rows[i]["TrajoMuestra"] + "#" +
-                                        dt.Rows[i]["Estado"];
+                    // Copia original de las determinaciones.
+                    string registro = nro + "#" +
+                                      oDet.IdItem.Codigo + "#" +
+                                      oDet.IdItem.Nombre + "#" +
+                                      oDet.TrajoMuestra + "#" +
+                                      estado;
 
                     sDatosTablaOriginal += (sDatosTablaOriginal == "" ? "" : "@") + registro;
                 }
-                
+
             }
 
             TxtDatosCargados.Value = sDatos;
             TxtDatosDerivacion.Value = sDerivacion;
             TxtDatosTablaOriginal.Value = sDatosTablaOriginal;
+
         }
 
         private void MostrarEnfermedadBase(Protocolo oRegistro)
@@ -4722,14 +4726,23 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 }
 
                 // 2. Construir diccionario con los registros originales.
-                Dictionary<string, string[]> detallesOriginalesDict =
-                    TxtDatosTablaOriginal.Value
-                        .Split('@')
-                        .Where(x => !string.IsNullOrEmpty(x))
-                        .Select(x => x.Split('#'))
-                        .Where(x => x.Length > 1 && !string.IsNullOrEmpty(x[1]))
-                        .ToDictionary(x => x[1], x => x);
+                Dictionary<string, string[]> detallesOriginalesDict = new Dictionary<string, string[]>();
 
+                string[] registrosOriginales = TxtDatosTablaOriginal.Value.Split('@');
+
+                for (int i = 0; i < registrosOriginales.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(registrosOriginales[i]))
+                        continue;
+
+                    string[] datos = registrosOriginales[i].Split('#');
+
+                    if (datos.Length > 1 && !string.IsNullOrEmpty(datos[1]))
+                    {
+                        if (!detallesOriginalesDict.ContainsKey(datos[1]))
+                            detallesOriginalesDict.Add(datos[1], datos);
+                    }
+                }
                 // 3. Detectar códigos eliminados.
                 HashSet<string> codigosEliminados = new HashSet<string>(
                     detallesOriginalesDict.Keys.Except(codigosActuales)
@@ -4739,15 +4752,24 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     return "";
 
                 // 4. Construir diccionario de derivaciones.
-                Dictionary<string, string[]> derivacionesDict =
-                    TxtDatosDerivacion.Value
-                        .Split(';')
-                        .Where(x => !string.IsNullOrEmpty(x))
-                        .Select(x => x.Split('#'))
-                        .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
-                        .GroupBy(x => x[0])
-                        .ToDictionary(g => g.Key, g => g.First());
+                Dictionary<string, string[]> derivacionesDict = new Dictionary<string, string[]>();
 
+                string[] registrosDerivacion = TxtDatosDerivacion.Value.Split(';');
+
+                for (int i = 0; i < registrosDerivacion.Length; i++)
+                {
+                    if (string.IsNullOrEmpty(registrosDerivacion[i]))
+                        continue;
+
+                    string[] datos = registrosDerivacion[i].Split('#');
+
+                    if (datos.Length > 2 && !string.IsNullOrEmpty(datos[0]))
+                    {
+                        // Conservar el primer registro de cada código.
+                        if (!derivacionesDict.ContainsKey(datos[0]))
+                            derivacionesDict.Add(datos[0], datos);
+                    }
+                }
                 // 5. Identificar cuáles eliminaciones deben recuperarse.
                 System.Text.StringBuilder codigosRecuperados =
                     new System.Text.StringBuilder();
@@ -4862,14 +4884,25 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             }
 
             // Construir diccionario de derivaciones.
-            Dictionary<string, string[]> derivacionesDict =
-                TxtDatosDerivacion.Value
-                    .Split(';')
-                    .Where(x => !string.IsNullOrEmpty(x))
-                    .Select(x => x.Split('#'))
-                    .Where(x => x.Length > 2 && !string.IsNullOrEmpty(x[0]))
-                    .GroupBy(x => x[0])
-                    .ToDictionary(g => g.Key, g => g.First());
+            Dictionary<string, string[]> derivacionesDict = new Dictionary<string, string[]>();
+            if (!string.IsNullOrEmpty(TxtDatosDerivacion.Value))
+            {
+                string[] registrosDerivacion = TxtDatosDerivacion.Value.Split(';');
+
+                foreach (string registro in registrosDerivacion)
+                {
+                    if (!string.IsNullOrEmpty(registro))
+                    {
+                        string[] datos = registro.Split('#');
+                        if (datos.Length > 2 && !string.IsNullOrEmpty(datos[0]))
+                        {
+                            // Mantener el primer registro de cada codigo, igual que GroupBy().First()
+                            if (!derivacionesDict.ContainsKey(datos[0]))
+                                derivacionesDict.Add(datos[0], datos);
+                        }
+                    }
+                }
+            }
 
 
             foreach (string codigo in codigosVista)
@@ -4880,7 +4913,6 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     string[] datosDerivacion = derivacionesDict[codigo];
 
                     // Equivalente a: WHERE d.estado <> 0 (Estado 0: Pendiente de derivar)
-                    // Asumimos que el índice 2 es el EstadoDerivacion
                     if (datosDerivacion.Length > 2 && datosDerivacion[2] != "0")
                     {
                         return codigo; // Retorna el primer código que cumple la condición
