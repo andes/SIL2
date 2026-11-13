@@ -31,9 +31,16 @@ namespace WebLab.Derivaciones
 
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            oCr.Report.FileName = "";
-            oCr.CacheDuration = 0;
-            oCr.EnableCaching = false;
+            if (Session["idUsuario"] != null)
+            {
+                oCr.Report.FileName = "";
+                oCr.CacheDuration = 0;
+                oCr.EnableCaching = false;
+            }
+            else
+            {
+                Response.Redirect("../FinSesion.aspx", false);
+            }
         }
 
         protected void Page_Unload(object sender, EventArgs e)
@@ -55,19 +62,20 @@ namespace WebLab.Derivaciones
                 {
                     PreventingDoubleSubmit(btnGuardar);
                     SetToken();
-                    int estado = Convert.ToInt32(Request["Estado"]);
+                    Inicializar();
+                    CargarListas();
+                    //int estado = Convert.ToInt32(Request["Estado"]);
+                    //if (estado == 1 || estado == 3)
+                    //{
+                    //activarControles(true);
+                    //}
+                    //else
+                    //{
+                    //activarControles(false);
+                    //}
 
-                    if (estado == 1 || estado == 3)
-                    {
-                        activarControles(true);
-                    }
-                    else
-                    {
-                        activarControles(false);
-                    }
-
-                    CargarGrilla();
-                    CargarControles();
+                    //CargarGrilla();
+                    //CargarControles();
                 }
                 //else
                 //{
@@ -81,7 +89,30 @@ namespace WebLab.Derivaciones
             }
         }
 
+        private void Inicializar()
+        {
+            lblTitulo.Text = "LOTE NUMERO " + Request["idLote"];
+            lblSubtitulo.Text = "Efector Destino: " + Request["Destino"];
+            rfvObservacion.Enabled = false;
+            rfvObservacion.UpdateAfterCallBack = true;
+        }
 
+        private void CargarListas()
+        {
+            //Fecha y Hora de retiro del lote
+            DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
+            txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
+            txtHora.Text = miFecha.ToString("HH:mm");
+            /////////////////Estados de lote /////////////////
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+            string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
+            string cacheKey = "CAT_EstadosLote";
+            Business.Helpers.ComboCache.CargarCombo(ddlEstados, cacheKey, m_ssql, "idEstado", "nombre", connReady);
+            // Transportista
+            ddlTransporte.Items.Add(new ListItem("-- SELECCIONE --", "0"));
+            ddlTransporte.Items.Add(new ListItem("Público", "1"));
+            ddlTransporte.Items.Add(new ListItem("Privado", "2"));
+        }
 
         private void PreventingDoubleSubmit(Button button)
         {
@@ -123,165 +154,165 @@ namespace WebLab.Derivaciones
             return Ds.Tables[0];
         }
 
-        private void CargarGrilla()
-        {
-            DataTable dt;
-            int estado = Convert.ToInt32(Request["Estado"]);
-            string parametros = Request["Parametros"].ToString();
+        //private void CargarGrilla()
+        //{
+        //    DataTable dt;
+        //    int estado = Convert.ToInt32(Request["Estado"]);
+        //    string parametros = Request["Parametros"].ToString();
 
-            string m_strSQL = " SELECT idLoteDerivacion as numero, e.nombre as efectorderivacion, l.estado, l.idEfectorDestino as idEfectorDerivacion," +
-                                " fechaRegistro, " +
-                                " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
-                                "  l.observacion ,uEmi.username as usernameE, isnull(uRecep.username, '' )  as usernameR " +
-                                " FROM LAB_LoteDerivacion l " +
-                                " inner join Sys_Efector e on e.idEfector=l.idEfectorDestino " +
-                                " inner join Sys_Usuario uEmi on uEmi.idUsuario = idUsuarioRegistro " +
-                                " left join Sys_Usuario uRecep on uRecep.idUsuario = idUsuarioEnvio " +
-                                " where " + parametros + " AND baja = 0  AND estado = " + estado +
-                                " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
+        //    string m_strSQL = " SELECT idLoteDerivacion as numero, e.nombre as efectorderivacion, l.estado, l.idEfectorDestino as idEfectorDerivacion," +
+        //                        " fechaRegistro, " +
+        //                        " case when (fechaenvio = '1900-01-01 00:00:00.000' ) then null else fechaEnvio end as fechaEnvio, " +
+        //                        "  l.observacion ,uEmi.username as usernameE, isnull(uRecep.username, '' )  as usernameR " +
+        //                        " FROM LAB_LoteDerivacion l " +
+        //                        " inner join Sys_Efector e on e.idEfector=l.idEfectorDestino " +
+        //                        " inner join Sys_Usuario uEmi on uEmi.idUsuario = idUsuarioRegistro " +
+        //                        " left join Sys_Usuario uRecep on uRecep.idUsuario = idUsuarioEnvio " +
+        //                        " where " + parametros + " AND baja = 0  AND estado = " + estado +
+        //                        " ORDER BY l.idEfectorDestino, idLoteDerivacion ";
 
-            dt = GetData(m_strSQL);
-             
-
-            if (dt.Rows.Count > 0)
-            {
-                gvLista.DataSource = dt;
-            }
-            else
-            {
-                activarControles(false); //desactiva los controles porque no hay nada para derivar o cancelar
-            }
-
-            gvLista.DataBind();
-            CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
-        }
+        //    dt = GetData(m_strSQL);
 
 
-        private void activarControles(bool valor)
-        {
-            btnGuardar.Enabled = valor;
-            txtObservacion.Enabled = valor;
-            ddlEstados.Enabled = valor;
-            //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
-            ddlTransporte.Enabled = valor;
-            lnkMarcar.Enabled = valor;
-            lnkDesMarcar.Enabled = valor;
-            txtFecha.Enabled = valor;
-            txtHora.Enabled = valor;
-            /// 27.10.2026 Agregamos los validores tambien
-            rfvFecha.Enabled = valor;
-            rfvHora.Enabled = valor;
-            rvTransporte.Enabled = valor;
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        gvLista.DataSource = dt;
+        //    }
+        //    else
+        //    {
+        //        activarControles(false); //desactiva los controles porque no hay nada para derivar o cancelar
+        //    }
 
-            rfvObservacion.Enabled = false;
-            rvTransporte.UpdateAfterCallBack = true;
-            rfvFecha.UpdateAfterCallBack = true;
-            rfvObservacion.UpdateAfterCallBack = true;
-            rfvHora.UpdateAfterCallBack = true;
-        }
-
-        private void CargarControles()
-        {
-            CargarEstados();
-            CargarTransportistas();
-            CargarFechaHoraActual();
-        }
-        private void CargarEstados()
-        {  /////////////////Estados de lote /////////////////
-            Utility oUtil = new Utility();
-            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
-
-            string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
-            oUtil.CargarCombo(ddlEstados, m_ssql, "idEstado", "nombre", connReady);
-
-        }
+        //    gvLista.DataBind();
+        //    CantidadRegistros.Text = gvLista.Rows.Count.ToString() + " registros encontrados";
+        //}
 
 
-        private void CargarTransportistas()
-        {
-            ddlTransporte.Items.Add("-- SELECCIONE --");
-            //Vanesa: por ahora esta hardcodeado los transportitas, hacer mejora que lea de la base de datos
-            ddlTransporte.Items.Add("Público");
-            ddlTransporte.Items.Add("Privado");
+        //private void activarControles(bool valor)
+        //{
+        //    btnGuardar.Enabled = valor;
+        //    txtObservacion.Enabled = valor;
+        //    ddlEstados.Enabled = valor;
+        //    //rb_transportista.Enabled = true; //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
+        //    ddlTransporte.Enabled = valor;
+        //    lnkMarcar.Enabled = valor;
+        //    lnkDesMarcar.Enabled = valor;
+        //    txtFecha.Enabled = valor;
+        //    txtHora.Enabled = valor;
+        //    /// 27.10.2026 Agregamos los validores tambien
+        //    rfvFecha.Enabled = valor;
+        //    rfvHora.Enabled = valor;
+        //    rvTransporte.Enabled = valor;
+
+        //    rfvObservacion.Enabled = false;
+        //    rvTransporte.UpdateAfterCallBack = true;
+        //    rfvFecha.UpdateAfterCallBack = true;
+        //    rfvObservacion.UpdateAfterCallBack = true;
+        //    rfvHora.UpdateAfterCallBack = true;
+        //}
+
+        //private void CargarControles()
+        //{
+        //    CargarEstados();
+        //    CargarTransportistas();
+        //    CargarFechaHoraActual();
+        //}
+        //private void CargarEstados()
+        //{  /////////////////Estados de lote /////////////////
+        //    Utility oUtil = new Utility();
+        //    string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
+
+        //    string m_ssql = "SELECT idEstado, nombre FROM LAB_LoteDerivacionEstado where baja=0 and idEstado in (2,3) ";
+        //    oUtil.CargarCombo(ddlEstados, m_ssql, "idEstado", "nombre", connReady);
+
+        //}
 
 
-            //Utility oUtil = new Utility();
-            //string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
-            //string m_ssql = "";
-            //oUtil.CargarCombo(ddl_Transporte, m_ssql, "idEstado", "nombre", connReady);
-        }
-        private void CargarFechaHoraActual()
-        {
-            DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
-            txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
-            txtHora.Text = miFecha.ToString("HH:mm");
-            //Date1.Text = miFecha.Date.ToString("yyyy-MM-dd");
-            //Time1.Text = miFecha.ToString("HH:mm");
-        }
+        //private void CargarTransportistas()
+        //{
+        //    ddlTransporte.Items.Add("-- SELECCIONE --");
+        //    //Vanesa: por ahora esta hardcodeado los transportitas, hacer mejora que lea de la base de datos
+        //    ddlTransporte.Items.Add("Público");
+        //    ddlTransporte.Items.Add("Privado");
 
-        protected string ObtenerImagenEstado(int estado)
-        {
-            //Estados de Lote
-            switch (estado)
-            {
-                case 1:
-                    return "../App_Themes/default/images/reloj-de-arena.png";
-                case 2:
-                    return "~/App_Themes/default/images/enviado.png";
-                case 3:
-                    return "../App_Themes/default/images/block.png";
-                default:
-                    return "";
-            }
-        }
 
-        protected bool habilitarCheckBoxSegunEstado(int estado)
-        {
-            switch (estado)
-            {
-                case 1:
-                    return true;
-                case 2:
-                    return false;
-                case 3:
-                    return true;
-                default:
-                    return false;
-            }
-        }
+        //    //Utility oUtil = new Utility();
+        //    //string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
+        //    //string m_ssql = "";
+        //    //oUtil.CargarCombo(ddl_Transporte, m_ssql, "idEstado", "nombre", connReady);
+        //}
+        //private void CargarFechaHoraActual()
+        //{
+        //    DateTime miFecha = DateTime.UtcNow.AddHours(-3); //Hora estándar de Argentina	(UTC-03:00)
+        //    txtFecha.Text = miFecha.Date.ToString("yyyy-MM-dd");
+        //    txtHora.Text = miFecha.ToString("HH:mm");
+        //    //Date1.Text = miFecha.Date.ToString("yyyy-MM-dd");
+        //    //Time1.Text = miFecha.ToString("HH:mm");
+        //}
 
-        protected string habilitarEditarSegunEstado(int estado)
-        {
-            if (estado == 1)
-                return "~/App_Themes/default/images/editar.jpg";
-            else
-                return "";
+        //protected string ObtenerImagenEstado(int estado)
+        //{
+        //    //Estados de Lote
+        //    switch (estado)
+        //    {
+        //        case 1:
+        //            return "../App_Themes/default/images/reloj-de-arena.png";
+        //        case 2:
+        //            return "~/App_Themes/default/images/enviado.png";
+        //        case 3:
+        //            return "../App_Themes/default/images/block.png";
+        //        default:
+        //            return "";
+        //    }
+        //}
 
-        }
-         
+        //protected bool habilitarCheckBoxSegunEstado(int estado)
+        //{
+        //    switch (estado)
+        //    {
+        //        case 1:
+        //            return true;
+        //        case 2:
+        //            return false;
+        //        case 3:
+        //            return true;
+        //        default:
+        //            return false;
+        //    }
+        //}
+
+        //protected string habilitarEditarSegunEstado(int estado)
+        //{
+        //    if (estado == 1)
+        //        return "~/App_Themes/default/images/editar.jpg";
+        //    else
+        //        return "";
+
+        //}
+
 
         #region Marca
-        protected void lnkMarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(true);
-        }
+        //protected void lnkMarcar_Click(object sender, EventArgs e)
+        //{
+        //    MarcarSeleccionados(true);
+        //}
 
-        protected void lnkDesMarcar_Click(object sender, EventArgs e)
-        {
-            MarcarSeleccionados(false);
-        }
+        //protected void lnkDesMarcar_Click(object sender, EventArgs e)
+        //{
+        //    MarcarSeleccionados(false);
+        //}
 
-        private void MarcarSeleccionados(bool p)
-        {
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                if (a.Checked == !p)
-                    ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
-            }
-        }
+        //private void MarcarSeleccionados(bool p)
+        //{
+        //    foreach (GridViewRow row in gvLista.Rows)
+        //    {
+        //        CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //        if (a.Checked == !p)
+        //            ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
+        //    }
+        //}
 
-        
+
         #endregion
 
         #region PDF
@@ -333,7 +364,7 @@ namespace WebLab.Derivaciones
                 oCr.DataBind();
 
                 Utility oUtil = new Utility();
-                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones"+idLote);
+                string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones" + idLote);
                 oCr.ReportDocument.ExportToHttpResponse(ExportFormatType.PortableDocFormat, Response, true, nombrePDF);
             }
             else
@@ -346,37 +377,66 @@ namespace WebLab.Derivaciones
         #region Entrega
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
+            lblMensaje.Text = "";
             if (Session["idUsuario"] != null)
             {
-                if (Page.IsValid)
+                if (Page.IsValid )
                 {
-                    int idLote = verificarDeterminaciones();
-                    if (idLote == 0) //No trajo ningun id Lote con error
+                    //int idLote = verificarDeterminaciones();
+                    //if (idLote == 0) //No trajo ningun id Lote con error
                     {
                         if (IsTokenValid())
                         {
-                            if (Guardar())
-                            {
-                                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
-                                
-                                /// los controles los dejamos por defecto activados
-                                activarControles(true);
-                            }
-                            else
-                            {
-                                ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
 
+                            Guardar();
+                            
+                            ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('✅ Se guardaron los cambios con exito');", true);
+
+                            /// los controles los dejamos por defecto activados
+                            //activarControles(true);
+                            Utility oUtil = new Utility();
+                            string nombrePDF = oUtil.CompletarNombrePDF("Derivaciones_" + Request["idLote"]);
+
+                            //Descarga automatica del PDF
+                            if (ddlEstados.SelectedValue == "2")
+                            {
+                                string url = ResolveUrl("../DescargarPdf.ashx")
+                                    + "?informe=DerivacionLote.rpt"
+                                    + "&consulta=derivacionPDF"
+                                    + "&idLote=" + Server.UrlEncode(Request["idLote"])
+                                    + "&efectorOrigen=" + Server.UrlEncode(hfEfectorDestino.Value)
+                                    + "&nombrePDF=" + nombrePDF;
+
+                                ScriptManager.RegisterStartupScript(
+                                    this,
+                                    GetType(),
+                                    "descargarPDF",
+                                    "var enlace = document.createElement('a');" +
+                                    "enlace.href = '" + url + "';" +
+                                    "enlace.style.display = 'none';" +
+                                    "document.body.appendChild(enlace);" +
+                                    "enlace.click();" +
+                                    "document.body.removeChild(enlace);",
+                                    true
+                                );
                             }
-                            CargarGrilla();
-                            limpiarForm();
+                        
+                            //else
+                            //{
+                            //    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeOk", "alert('❌ ERROR: No se pudo guardar los datos.\\n Revisá los campos e intentá nuevamente');", true);
+
+                            //}
+                            //CargarGrilla();
+                            //limpiarForm();
                         }
 
                     }
-                    else
-                    { //Es el idLote con error
-                        ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
-                    }
+                    //else
+                    //{ //Es el idLote con error
+                    //    ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
+                    //}
                 }
+
 
             }
             else
@@ -385,47 +445,47 @@ namespace WebLab.Derivaciones
             }
 
         }
-        
-        private int verificarDeterminaciones()
-        {
-            int tieneDeterminaciones = 0;
-            //Verificamos que en lote no se hayan descartados todas sus determinaciones asi no se Deriva vacio
-            if (Convert.ToInt32(ddlEstados.SelectedValue) == 2)
-            {
-                foreach (GridViewRow row in gvLista.Rows)
-                {
-                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                    if (a.Checked)
-                    {
-                        int idLote = Convert.ToInt32(row.Cells[2].Text);
-                        DataTable dt =  GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
-                        if(dt.Rows.Count ==  0)  
-                            return  idLote;
-                    }
-                }
-            }
-            return tieneDeterminaciones;
-        }
 
-        private bool Guardar()
+        //private int verificarDeterminaciones()
+        //{
+        //    int tieneDeterminaciones = 0;
+        //    //Verificamos que en lote no se hayan descartados todas sus determinaciones asi no se Deriva vacio
+        //    if (Convert.ToInt32(ddlEstados.SelectedValue) == 2)
+        //    {
+        //        foreach (GridViewRow row in gvLista.Rows)
+        //        {
+        //            CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+        //            if (a.Checked)
+        //            {
+        //                int idLote = Convert.ToInt32(row.Cells[2].Text);
+        //                DataTable dt = GetData("select top 1 1 from vta_LAB_Derivaciones where idLote =" + idLote);
+        //                if (dt.Rows.Count == 0)
+        //                    return idLote;
+        //            }
+        //        }
+        //    }
+        //    return tieneDeterminaciones;
+        //}
+
+        private void Guardar()
         {
-            bool seGuardoEnBd = false;
-            if(verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
+            //bool seGuardoEnBd = false;
+            //if (verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
             {
-                foreach (GridViewRow row in gvLista.Rows)
+                //foreach (GridViewRow row in gvLista.Rows)
                 {
-                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
-                    if (a.Checked)
+                    //CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    //if (a.Checked)
                     {
 
-                        int idLote = Convert.ToInt32(row.Cells[2].Text);
+                        //int idLote = Convert.ToInt32(row.Cells[2].Text);
                         int idUsuario = oUser.IdUsuario;
                         int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
-                        string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + row.Cells[3].Text : "No Derivado. ";
+                        string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + Request["Destino"] : "No Derivado. ";
                         string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
                         string resultadoAuditoria = resultadoDerivacion + " " + observacion;
-                        LoteDerivacion lote = new LoteDerivacion();
-                        lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
+                        LoteDerivacion lote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), int.Parse(Request["idLote"]));
+                        //lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
                         //Se cambia el estado del lote LAB_LoteDerivacion
                         lote.Estado = estadoLote;
@@ -436,7 +496,9 @@ namespace WebLab.Derivaciones
                         DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                         lote.FechaEnvio = fechaResultado;
                         lote.Save();
-                   
+
+                        hfEfectorDestino.Value = lote.IdEfectorDestino.IdEfector.ToString();
+
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                         //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
@@ -489,6 +551,10 @@ namespace WebLab.Derivaciones
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
                             oDet.FechaResultado = fechaResultado;
+
+                            //Si es descartado que vean el motivo en la determinacion
+                          //  if (estadoLote == 3) oDet.ResultadoCar = oDet.ResultadoCar + " " + observacion;
+
                             oDet.Save();
                             //Inserta auditoria del detalle del protocolo
                             oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
@@ -511,12 +577,14 @@ namespace WebLab.Derivaciones
                         }
 
 
-                        seGuardoEnBd = true;
+                        //seGuardoEnBd = true;
+                        btnGuardar.Enabled = false;
+                        lblMensaje.Text = "Se guardaron los cambios correctamente";
                     }
                 }
             }
 
-            return seGuardoEnBd;
+            //return seGuardoEnBd;
         }
         #endregion
 
@@ -530,17 +598,17 @@ namespace WebLab.Derivaciones
         #region Editar
         protected void lnkEdit_Command(object sender, CommandEventArgs e)
         {
-            Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica" , false);
+            Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica", false);
         }
 
         #endregion
 
 
         /// 27.10.2026 pasamos las funciones js a aspx.cs
-        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e) 
+        protected void ddlEstados_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-            if(ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
+            if (ddlEstados.SelectedValue == "2") //Derivado  //Si va a generar el lote se tiene que habilitar la lista para elegir el transporte
             {
                 ddlTransporte.Enabled = true;
                 rvTransporte.Enabled = true;
@@ -554,7 +622,7 @@ namespace WebLab.Derivaciones
             {
                 ddlTransporte.Enabled = false;
                 rvTransporte.Enabled = false;
-                ddlTransporte.SelectedValue = "-- SELECCIONE --";
+                ddlTransporte.SelectedValue = "0";
                 txtFecha.Enabled = false;
                 txtHora.Enabled = false;
                 rfvObservacion.Enabled = true; // es obligatorio 
@@ -567,19 +635,21 @@ namespace WebLab.Derivaciones
             rfvHora.UpdateAfterCallBack = true;
         }
 
-        protected void cvFilas_ServerValidate(object source, ServerValidateEventArgs args)
-        {
-            args.IsValid = false;
+        //protected void cvFilas_ServerValidate(object source, ServerValidateEventArgs args)
+        //{
+        //    args.IsValid = false;
 
-            foreach (GridViewRow row in gvLista.Rows)
-            {
-                CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
-                if (chk != null && chk.Checked)
-                {
-                    args.IsValid = true;
-                    break;
-                }
-            }
-        }
+        //    foreach (GridViewRow row in gvLista.Rows)
+        //    {
+        //        CheckBox chk = row.FindControl("CheckBox1") as CheckBox;
+        //        if (chk != null && chk.Checked)
+        //        {
+        //            args.IsValid = true;
+        //            break;
+        //        }
+        //    }
+        //}
+
+     
     }
 }

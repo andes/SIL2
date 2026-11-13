@@ -115,7 +115,8 @@ namespace WebLab.Derivaciones
         }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
-            CargarGrilla();
+            if(Page.IsValid)
+                CargarGrilla();
         }
 
         private void PreventingDoubleSubmit(Button button)
@@ -151,7 +152,7 @@ namespace WebLab.Derivaciones
         {
             lblMensaje.Text = "";
 
-            if (Page.IsValid)
+            if (Page.IsValid && IsTokenValid())
             {
                 int idLote = int.Parse(Request["id"]);
                 int idUsuarioRegistro = oUsuario.IdUsuario;
@@ -175,7 +176,7 @@ namespace WebLab.Derivaciones
                             if (lista.Count > 0)
                             {
                                 //verificamos resultado predefinido para cambiar el valor del resultadoCar correctamente
-                                if (oDetalle.ResultadoCar != "Pendiente de derivar") oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", "");
+                                if (oDetalle.ResultadoCar != "Pendiente de derivar") oDetalle.ResultadoCar = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", " - Pendiente para enviar");
                                 else oDetalle.ResultadoCar = "Pendiente para enviar ";
 
                                 oDetalle.ConResultado = true;
@@ -216,6 +217,10 @@ namespace WebLab.Derivaciones
 
                 }
 
+                //Auditoria Modificacion de lote
+                LoteDerivacion lote = new LoteDerivacion();
+                lote = (LoteDerivacion) lote.Get(typeof(LoteDerivacion), idLote);
+                lote.GrabarAuditoriaLoteDerivacion("Modifica",idUsuarioRegistro, "Agrega determinaciones");
                 lblMensaje.Text = "Determinaciones agregadas al lote";
                 CargarGrilla();
             }
@@ -266,6 +271,5 @@ namespace WebLab.Derivaciones
             cvGeneral.ErrorMessage = "*Seleccione una fila";
         }
 
-       
     }
 }
