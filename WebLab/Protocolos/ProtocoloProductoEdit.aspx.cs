@@ -422,6 +422,8 @@ IncidenciaEdit1.MostrarDatosdelProtocolo(
                     }
 
                 }
+                if (oDet.IdItem.esDerivado(oRegistro.IdEfector) && (oDet.TrajoMuestra == "No")) //Si la derivacion no tiene muestra no existe en LAB_derivacion
+                    estados[idItem] = 2;
             }
 
             //string pivot = "";
