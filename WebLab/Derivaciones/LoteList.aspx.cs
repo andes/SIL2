@@ -710,49 +710,51 @@ namespace WebLab.Derivaciones
 
         protected void gvLista_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            string str_condicion = Parametros();
-
-            GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
-            int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
-            
-            int idLote = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[0].Text);
-            switch (e.CommandName)
+            if (e.CommandName != "Page")
             {
-                case "Modificar":
-                        Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument +  "&Tipo=Modifica&Parametros=" + str_condicion, false); 
+                string str_condicion = Parametros();
 
-                    break;
-                case "Consulta":
-                    Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Tipo=Consulta&Parametros=" + str_condicion, false);
+                GridViewRow fila = (GridViewRow)((Control)e.CommandSource).NamingContainer;
+                int idEfectorOrigen = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[3].Text);
+                int idLote = Convert.ToInt32(gvLista.Rows[fila.RowIndex].Cells[0].Text);
 
-                    break;
-                case "CambiarEstado":
-                    {
-                        if (TieneDerivaciones(idLote))
+                switch (e.CommandName)
+                {
+                    case "Modificar":
+                        Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Tipo=Modifica&Parametros=" + str_condicion, false);
+
+                        break;
+                    case "Consulta":
+                        Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Tipo=Consulta&Parametros=" + str_condicion, false);
+
+                        break;
+                    case "CambiarEstado":
                         {
-                            string efectorDestino = gvLista.Rows[fila.RowIndex].Cells[4].Text;
-                            string script = "CambiarEstado('" + e.CommandArgument + "' , '"+ efectorDestino + "');";
-                            ScriptManager.RegisterStartupScript( this, this.GetType(), "CambiarEstado",  script,true);
+                            if (TieneDerivaciones(idLote))
+                            {
+                                string efectorDestino = gvLista.Rows[fila.RowIndex].Cells[4].Text;
+                                string script = "CambiarEstado('" + e.CommandArgument + "' , '" + efectorDestino + "');";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "CambiarEstado", script, true);
+                            }
+                            else
+                            {
+                                string script = "alert('No se puede derivar Lote N° " + idLote + " no tiene determinaciones.');";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "mensajeError", script, true);
+                            }
+
+
                         }
-                        else
-                        {
-                            string script = "alert('No se puede derivar Lote N° " + idLote + " no tiene determinaciones.');";
-                            ScriptManager.RegisterStartupScript( this, this.GetType(), "mensajeError", script, true);
-                        }
-                        
-                            
-                    }
-                     break;
-                case "Auditoria":
+                        break;
+                    case "Auditoria":
                         PDFAuditoria(int.Parse(e.CommandArgument.ToString()), idEfectorOrigen);
-                    break;
-                case "PDFControl":
+                        break;
+                    case "PDFControl":
                         PDFControl(int.Parse(e.CommandArgument.ToString()), idEfectorOrigen);
-                     break;
-               
+                        break;
+
+                }
             }
         }
-
 
         #endregion
                
