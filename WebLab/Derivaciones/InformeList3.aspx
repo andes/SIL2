@@ -376,9 +376,14 @@
                    <%-- <b>DERIVACIONES</b> --%>
                           <b> <asp:Label ID="lblTitulo" Text="" runat="server"></asp:Label></b>
                         <br />
-                        <b> <asp:Label ID="lblEstadoLote" Text="" runat="server"></asp:Label></b>
-                        <br />
-                        <asp:Label ID="lblSubTitulo" Text="" runat="server" Visible="false"></asp:Label>
+                        <asp:Panel runat="server" ID="pnlDescripcionLote" Visible="false">
+                            <asp:Label ID="lblEstado" Text="Estado:" runat="server" > </asp:Label>
+                            <b> <asp:Label ID="lblEstadoLote" Text="" runat="server"></asp:Label></b>
+                            <br />
+                            <asp:Label ID="lblEfectorDestino" Text="Efector Destino:" runat="server"></asp:Label>
+                            <b> <asp:Label ID="lblSubTitulo" Text="" runat="server" ></asp:Label></b>
+                        </asp:Panel>
+                        
                     </div>
                      <div class="col-md-6" align="right"  rowspan="4">
                     <asp:Panel runat="server" ID="pnlNroLote" >

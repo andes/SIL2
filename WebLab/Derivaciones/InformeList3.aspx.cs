@@ -108,8 +108,8 @@ namespace WebLab.Derivaciones
                     pnlNroLote.Visible = false;
 
                     lblTitulo.Text = "NUEVO LOTE";
-                    lblSubTitulo.Visible = true;
-
+                    pnlDescripcionLote.Visible = false;
+                   
                     HyperLink1.NavigateUrl = "~/Derivaciones/Derivados2.aspx?tipo=informe";
 
                     gvLista.Visible = true;
@@ -123,10 +123,10 @@ namespace WebLab.Derivaciones
                     pnlNroLote.Visible = true;
 
                     lblTitulo.Text = "MODIFICACION DE LOTE ";
+                    pnlDescripcionLote.Visible = true;
                     lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
-                    lblEstadoLote.Text = "ESTADO: " + oLote.descripcionEstadoLote();
-                    lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
-                    lblSubTitulo.Visible = true;
+                    lblEstadoLote.Text = oLote.descripcionEstadoLote();
+                    lblSubTitulo.Text = oEfector.Nombre;
 
                     HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
 
@@ -152,10 +152,10 @@ namespace WebLab.Derivaciones
                     pnlNroLote.Visible = true;
 
                     lblTitulo.Text = "CONSULTA DE LOTE ";
+                    pnlDescripcionLote.Visible = true;
                     lblNroLote.Text = oLote.IdLoteDerivacion.ToString();
-                    lblSubTitulo.Text = "Efector Destino: " + oEfector.Nombre;
-                    lblSubTitulo.Visible = true;
-
+                    lblSubTitulo.Text = oEfector.Nombre;
+                    lblEstadoLote.Text = oLote.descripcionEstadoLote();
                     HyperLink1.NavigateUrl = "~/Derivaciones/LoteList.aspx?Parametros=" + Request["Parametros"].ToString();
 
                     btnAgregarDeterminaciones.Visible = false;
