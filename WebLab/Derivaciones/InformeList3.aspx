@@ -96,7 +96,7 @@
             } else {
                 motivos.disabled = true;
             }
-        }--%>
+        }
 
 
         function seleccionarTodos(seleccionar) {
@@ -111,12 +111,12 @@
                 }
             });
             //Si selecciono todas las derivaciones, deshabilito el error que no selecciono ninguna fila
-            <%--if (seleccionar && document.getElementById('<%= lblErrorLista.ClientID %>').className == 'exposed') {
+           if (seleccionar && document.getElementById('<%= lblErrorLista.ClientID %>').className == 'exposed') {
                 reseteaLabelErrorGrilla();
-            }--%>
+            }
         }
 
-       <%--  function validarSeleccionPDF(sender, args) {
+        function validarSeleccionPDF(sender, args) {
             args.IsValid = hayCheckSeleccionado();
         }
 
@@ -518,8 +518,8 @@
                             <asp:CustomValidator ID="cvExcluir" runat="server" OnServerValidate="cvExcluir_ServerValidate" ValidationGroup="2"></asp:CustomValidator>
                               
                             <div class="mylabelizquierda" runat="server" id="linkSeleccionar">Seleccionar:                                           
-                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink" ValidationGroup="0" OnClientClick="seleccionarTodos(true); return false;">Todas</asp:LinkButton>&nbsp;
-                            <asp:LinkButton runat="server" CssClass="myLittleLink" ValidationGroup="0"  ID="lnkDesMarcar" OnClientClick="seleccionarTodos(false); return false;" >Ninguna</asp:LinkButton>
+                            <asp:LinkButton  ID="lnkMarcar" runat="server" CssClass="myLittleLink"  OnClick= "lnkMarcar_Click">Todas</asp:LinkButton>&nbsp;
+                            <asp:LinkButton runat="server" CssClass="myLittleLink"  ID="lnkDesMarcar" OnClick="lnkDesMarcar_Click" >Ninguna</asp:LinkButton>
                                 &nbsp;&nbsp;
                                             
                                 </div>

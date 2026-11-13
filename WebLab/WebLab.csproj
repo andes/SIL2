@@ -2518,7 +2518,6 @@
     <Content Include="Protocolos\ProtocoloAdjuntar.aspx" />
     <Content Include="Protocolos\ProtocoloEditPesquisa.aspx" />
     <Content Include="Protocolos\ProtocoloEditForense.aspx" />
-    <Content Include="Protocolos\ProtocoloEditPesquisa_old.aspx" />
     <Content Include="Protocolos\ProtocoloEliminar.aspx" />
     <Content Include="Protocolos\ProtocoloList.ascx" />
     <Content Include="Protocolos\ProtocoloList.aspx" />
@@ -5595,13 +5594,6 @@
     </Compile>
     <Compile Include="Protocolos\ProtocoloEditForense.aspx.designer.cs">
       <DependentUpon>ProtocoloEditForense.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.cs">
-      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.designer.cs">
-      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
     </Compile>
     <Compile Include="Protocolos\ProtocoloEliminar.aspx.cs">
       <DependentUpon>ProtocoloEliminar.aspx</DependentUpon>

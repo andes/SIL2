@@ -1186,6 +1186,37 @@ namespace WebLab.Derivaciones
         }
         #endregion
 
+       
+        protected void lnkMarcar_Click(object sender, EventArgs e)
+        {
+            MarcarSeleccionados(true);
+        }
 
+        protected void lnkDesMarcar_Click(object sender, EventArgs e)
+        {
+            MarcarSeleccionados(false);
+        }
+        private void MarcarSeleccionados(bool p)
+        {
+            if (Request["Tipo"] == "Alta")
+            {
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("CheckBox1")));
+                    if (a.Checked == !p)
+                        ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked = p;
+                }
+            }
+            else
+            {
+                foreach (GridViewRow row in gvListaEdit.Rows)
+                {
+                    CheckBox a = ((CheckBox)(row.Cells[0].FindControl("chkSel")));
+                    if (a.Checked == !p)
+                        ((CheckBox)(row.Cells[0].FindControl("chkSel"))).Checked = p;
+                }
+            }
+        }
+        
     }
 }
