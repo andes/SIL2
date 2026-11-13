@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -1050,9 +1049,13 @@ namespace WebLab.Resultados
                     }
                 }
                 // 3. Detectar códigos eliminados.
-                HashSet<string> codigosEliminados = new HashSet<string>(
-                    detallesOriginalesDict.Keys.Except(codigosActuales)
-                );
+                HashSet<string> codigosEliminados = new HashSet<string>();
+
+                foreach (string codigo in detallesOriginalesDict.Keys)
+                {
+                    if (!codigosActuales.Contains(codigo))
+                        codigosEliminados.Add(codigo);
+                }
 
                 if (codigosEliminados.Count == 0)
                     return "";

@@ -16,7 +16,6 @@ using System.Configuration;
 using System.Security.Principal;
 using System.Text;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace WebLab.Protocolos
 {
@@ -2134,9 +2133,13 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     }
                 }
                 // 3. Detectar códigos eliminados.
-                HashSet<string> codigosEliminados = new HashSet<string>(
-                    detallesOriginalesDict.Keys.Except(codigosActuales)
-                );
+                HashSet<string> codigosEliminados = new HashSet<string>();
+
+                foreach (string codigo in detallesOriginalesDict.Keys)
+                {
+                    if (!codigosActuales.Contains(codigo))
+                        codigosEliminados.Add(codigo);
+                }
 
                 if (codigosEliminados.Count == 0)
                     return "";
