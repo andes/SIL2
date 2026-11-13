@@ -13,16 +13,20 @@ using NHibernate;
 using System.Collections;
 using NHibernate.Expression;
 using System.Drawing;
+using System.Text;
 
 namespace WebLab.Derivaciones
 {
     public partial class LoteEliminar : System.Web.UI.Page
     {
+        private Random random = new Random();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["idUsuario"] != null) {
                 if (!Page.IsPostBack)
                 {
+                    SetToken();
+                    PreventingDoubleSubmit(btnGuardar);
                     string s_iditem = Request["id"].ToString();
                     LoteDerivacion oLote = new LoteDerivacion();
                     oLote = (LoteDerivacion)oLote.Get(typeof(LoteDerivacion), int.Parse(s_iditem));
@@ -116,6 +120,8 @@ namespace WebLab.Derivaciones
                     }
                 }
                 
+                if (oLote.Baja) //inhabilitamos el btn Guardar para que no lo vuelvan a ejecutar repetidas veces
+                    btnGuardar.Enabled = false;
             }
 
         } 
@@ -124,11 +130,41 @@ namespace WebLab.Derivaciones
         
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (Page.IsValid)
+            if (Page.IsValid && IsTokenValid())
             {
                 Eliminar();
                 estatus.Text = "El caso ha sido anulado";
             }
+        }
+
+        private void PreventingDoubleSubmit(Button button)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("if (typeof(Page_ClientValidate) == ' ') { ");
+            sb.Append("var oldPage_IsValid = Page_IsValid; var oldPage_BlockSubmit = Page_BlockSubmit;");
+            sb.Append("if (Page_ClientValidate('" + button.ValidationGroup + "') == false) {");
+            sb.Append(" Page_IsValid = oldPage_IsValid; Page_BlockSubmit = oldPage_BlockSubmit; return false; }} ");
+            sb.Append("this.value = 'Procesando...';");
+            sb.Append("this.disabled = true;");
+            sb.Append(ClientScript.GetPostBackEventReference(button, null) + ";");
+            sb.Append("return true;");
+
+            string submit_Button_onclick_js = sb.ToString();
+            button.Attributes.Add("onclick", submit_Button_onclick_js);
+        }
+
+        private bool IsTokenValid()
+        {
+            bool result = double.Parse(hidToken.Value) == ((double)Session["NextToken"]);
+            SetToken();
+            return result;
+        }
+
+        private void SetToken()
+        {
+            double next = random.Next();
+            hidToken.Value = next + "";
+            Session["NextToken"] = next;
         }
     }
 }

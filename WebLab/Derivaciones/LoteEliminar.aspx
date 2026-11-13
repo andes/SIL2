@@ -38,7 +38,7 @@
                     <asp:RequiredFieldValidator ID="rfvtxtMotivoBaja" runat="server" ErrorMessage="Debe ingresar un motivo" ControlToValidate="txtMotivoBaja" ValidationGroup="0"></asp:RequiredFieldValidator>
 
                     <asp:Button ID="btnGuardar" runat="server" OnClick="btnGuardar_Click" Text="Anular" ValidationGroup="0" Width="100px" CssClass="btn btn-primary" />
-
+                    <input id="hidToken" type="hidden" runat="server" />
                 </div>
             </div>
         </div>
