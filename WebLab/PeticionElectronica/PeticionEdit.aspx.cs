@@ -1641,7 +1641,7 @@ and lab_item.idEfector=lab_item.idEfectorDerivacion and lab_area.idTipoServicio=
                     if (oUltimoResultado.Count>0)
                     {
 
-                        s_resultadoAnterior ="Protocolo Nro. " + oDetalle.GetNumero() + " - "  + oDetalle.Fecha.ToShortDateString();
+                        s_resultadoAnterior ="Protocolo Nro. " + oDetalle.Numero.ToString() + " - "  + oDetalle.Fecha.ToShortDateString();
                             break;
                     
                     }

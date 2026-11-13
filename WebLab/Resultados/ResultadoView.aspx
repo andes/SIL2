@@ -27,6 +27,29 @@
        .auto-style1 {
           width: 22px;
       }
+    
+
+       
+.icono-timespan {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    padding: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+    background-color: #eaf3fb;
+    border: 1px solid #b7d1e6;
+    border-radius: 5px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s;
+}
+
+.icono-timespan:hover {
+    background-color: #d3e7f7;
+    border-color: #6da6d0;
+}
+
        </style>
 
                    <script type="text/javascript">                     
@@ -238,7 +261,11 @@
 					<tr>
                         <td colspan="6">
                         <asp:Label ID="lblEfector" runat="server" Text="Label"  Font-Bold="True"  
-                                Font-Size="13pt"></asp:Label></td>
+                                Font-Size="13pt"></asp:Label>                
+                       
+                        </td>
+                        <td>
+                            &nbsp;</td>
 					</tr>
 					
 					<tr>
@@ -262,6 +289,16 @@
                         <td     align="left"  width="130px" >   
                                      <asp:Label Font-Bold="True" 
                                 Font-Size="10pt" ID="lblFecha" runat="server" Text="Label"></asp:Label>    </td>
+                        <td     align="left"  width="130px" rowspan="4" >   
+						   <asp:ImageButton
+                        ID="btnVerTiempos"
+                        runat="server"
+                        ImageUrl="~/App_Themes/default/images/timespan.png"
+                        ToolTip="Ver tiempos del protocolo"
+                        AlternateText="Timespan"
+                        CssClass="icono-timespan"
+                        OnClientClick="VerTiemposProtocolo(); return false;" />
+                            </td>
 					</tr>
 						
 					
@@ -338,10 +375,14 @@
                         </td>
                         <td rowspan="2"> 
                           
-                           <h5> <asp:Label  ID="lblCovid" runat="server" Font-Bold="True" Visible="false" ></asp:Label>&nbsp;</h5>  
+                           <h5> <asp:Label  ID="lblCovid" runat="server" Font-Bold="True" Visible="false" ></asp:Label>&nbsp;
+                       
+                            </h5>  
                               <asp:Label ID="lblNroSISA" runat="server" class="label label-success" Font-Size="12px" Text="Label" Visible="true"></asp:Label>  
-						   
                              </td>
+                        <td rowspan="2"> 
+                          
+                            &nbsp;</td>
 					</tr>
 						
 					
@@ -683,6 +724,63 @@
                 background: "black"
             }
         }).width(760);
+    }
+    function VerTiemposProtocolo() {
+
+        var dom = document.domain;
+        var domArray = dom.split('.');
+
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1)
+                        ? domArray[j]
+                        : domArray[j] + '.' + dom;
+                }
+
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+        var url = 'ProtocoloTiempos.aspx?idProtocolo=' + idProtocolo;
+
+        $('<iframe />', {
+            src: url,
+            frameborder: 0,
+            scrolling: 'auto'
+        }).dialog({
+            title: 'Tiempos del Protocolo',
+            autoOpen: true,
+            width: 750,
+            height: 550,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+
+            open: function (event, ui) {
+                jQuery('.ui-dialog-titlebar-close').hide();
+            },
+
+            buttons: {
+                'Cerrar': function () {
+                    $(this).dialog('close');
+                }
+            },
+
+            close: function () {
+                $(this).dialog('destroy').remove();
+            },
+
+            overlay: {
+                opacity: 0.5,
+                background: 'black'
+            }
+
+        }).width(765);
     }
 
     </script>

@@ -147,11 +147,19 @@ namespace WebLab.Resultados
         private void CargarObservaciones()
         {
             Utility oUtil = new Utility();
+            string idServicio = Request["idServicio"].ToString();
+            
+            string idServiciofiltro = idServicio;
+            if (idServiciofiltro == "5")
+                idServiciofiltro = "1,3";
+            string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
             string m_ssql = @" SELECT  idObservacionResultado , codigo  AS descripcion 
-                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio=" + Request["idServicio"].ToString() + " and  baja=0 order by codigo ";
+                                FROM   LAB_ObservacionResultado with (nolock) where idTipoServicio=" + idServiciofiltro + " and  baja=0 order by codigo ";
+            string cacheKey = $"CAT_Observ_{idServicio}";
+            Business.Helpers.ComboCache.CargarCombo(ddlObservacionesCodificadas, cacheKey, m_ssql, "idObservacionResultado", "descripcion", connReady);
 
 
-            oUtil.CargarCombo(ddlObservacionesCodificadas, m_ssql, "idObservacionResultado", "descripcion");
+         //   oUtil.CargarCombo(ddlObservacionesCodificadas, m_ssql, "idObservacionResultado", "descripcion");
             ddlObservacionesCodificadas.Items.Insert(0, new ListItem("", "0"));
 
 
@@ -1959,7 +1967,7 @@ namespace WebLab.Resultados
             {
                 if (!oDetalle.IdSubItem.VerificaValoresMinimosMaximos(valorItem))
                 {
-                    cvValidaControles.ErrorMessage = "Error de valor fuera de límite en protocolo " + oDetalle.IdProtocolo.GetNumero();
+                    cvValidaControles.ErrorMessage = "Error de valor fuera de límite en protocolo " + oDetalle.IdProtocolo.Numero.ToString();
                     lblIdValorFueraLimite.Text = oDetalle.IdDetalleProtocolo.ToString();
                     btnAceptarValorFueraLimite.Visible = true;
                     control = false; return control;
@@ -2394,7 +2402,7 @@ namespace WebLab.Resultados
                 }
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = oDetalle.IdProtocolo;
-
+                oProtocolo.FechaFinalizacion = DateTime.Parse("01/01/1900");
                 if (Request["Operacion"].ToString() != "Valida")
                 {
                     if (oProtocolo.Estado == 0)
@@ -2404,6 +2412,7 @@ namespace WebLab.Resultados
                 {
                     if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(Session["idUsuarioValida"].ToString())))
                     {
+                        if  (   oProtocolo.Estado <2) oProtocolo.FechaFinalizacion = DateTime.Now;
                         oProtocolo.Estado = 2;  //validado total (cerrado);   
 
                         if (!oProtocolo.Notificarresultado)
