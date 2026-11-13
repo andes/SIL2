@@ -613,7 +613,7 @@ namespace WebLab.Derivaciones
                 }
                 else
                     Response.Redirect("../FinSesion.aspx", false);
-            }
+            
             
         }
 
@@ -732,16 +732,14 @@ namespace WebLab.Derivaciones
                     
                    if(desasociaLote != -1)
                    {
+                        
                         string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
                         foreach (string idDetalleProtocolo in idDetalles)
                         {
-                            string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
-                            foreach (string idDetalleProtocolo in idDetalles)
-                            {
-                                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
-                               // ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
-                            }
+                            DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                            // ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
                         }
+                        
                    }
                 }
             }
