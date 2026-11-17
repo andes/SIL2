@@ -91,11 +91,13 @@ namespace WebLab.Resultados
         {
             if (!Page.IsPostBack)
             {
-                if (Session["idUsuario"] != null)                
-                    Inicializar();                
+                if (Session["idUsuario"] != null)
+                    Inicializar();
                 else
                     Response.Redirect("../FinSesion.aspx", false);
             }
+            else
+                ActualizarEstado(CurrentPageIndex.ToString());
 
         }
 
@@ -724,6 +726,102 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             set { ViewState["UltimaPageIndex"] = value; }
         }
 
+        private void ActualizarEstado(string p)
+        {
+            string operacion = Request["Operacion"]?.ToString();
+            bool esCarga = operacion == "Carga";
+
+            Protocolo oRegistro = new Protocolo();
+            oRegistro = (Protocolo)oRegistro.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(p));
+
+            switch (oRegistro.Estado)
+            {
+                case 0:
+                    {
+                        if (esCarga)
+                            btnActualizarPracticasCarga.Visible = true;// en la carga de edita si el protocolo no tiene validaciones
+
+                        imgEstado.ImageUrl = "~/App_Themes/default/images/rojo.gif";
+                        lblEstado1.CssClass = "label label-danger";
+                        lblEstado1.Text = "NO PROCESADO";
+                        imgPdf.Visible = false; btnRestringirAcceso.Visible = false;
+                        btnCerrarSinResultados.Visible = true;
+                    }
+                    break;
+                case 1:
+                    {
+                        imgEstado.ImageUrl = "~/App_Themes/default/images/amarillo.gif";
+                        lblEstado1.CssClass = "label label-warning";
+                        lblEstado1.Text = "EN PROCESO";
+                        btnRestringirAcceso.Visible = false;
+                        btnCerrarSinResultados.Visible = true;
+                    }
+
+                    break;
+                case 2:
+                    {
+                        imgEstado.ImageUrl = "~/App_Themes/default/images/verde.gif";
+                        lblEstado1.CssClass = "label label-success";
+                        lblEstado1.Text = "TERMINADO"; btnRestringirAcceso.Visible = true;
+                        btnCerrarSinResultados.Visible = false;
+                        if (esCarga)
+                        {
+                            btnGuardar.Visible = false;
+                            chkFormula.Enabled = false;
+                            btnAplicarFormula.Enabled = false;
+                            btnAplicarFormula2.Enabled = false;
+                            ////OCULTAR OPCIONES PARA CREAR O ELIMINAR ANTIBIOGRAMAS
+
+                            btnGuardarAislamientos.Visible = false;
+                            btnAgregarGermen.Visible = false;
+
+                            btnAgregarAntibiograma.Visible = false;
+                            btnEliminarAntibiograma.Visible = false;
+                            ddlAntibiograma.Visible = false;
+
+                        }
+
+                    }
+                    break;
+
+                case 3: // restringido
+                    {
+                        imgEstado.ImageUrl = "~/App_Themes/default/images/lock.png";
+                        lblEstado1.CssClass = "label label-success";
+                        lblEstado1.Text = "ACCESO RESTRINGIDO";
+                        if (esCarga)
+                        {
+                            btnGuardar.Visible = false;
+                            chkFormula.Enabled = false;
+                            btnAplicarFormula.Enabled = false;
+                            btnAplicarFormula2.Enabled = false;
+                            ////OCULTAR OPCIONES PARA CREAR O ELIMINAR ANTIBIOGRAMAS
+                            btnGuardarAislamientos.Visible = false;
+                            btnAgregarGermen.Visible = false;
+
+                            btnAgregarAntibiograma.Visible = false;
+                            btnEliminarAntibiograma.Visible = false;
+                            ddlAntibiograma.Visible = false;
+
+                        }
+                        if (oRegistro.IdTipoServicio.IdTipoServicio != 6)
+                        {
+                            btnRestringirAcceso.Visible = true;
+                            btnRestringirAcceso.Text = "Ver Restricción";
+                            btnDeshacerRestringirAcceso.Visible = true;
+                        }
+                        else
+                        {
+                            btnRestringirAcceso.Visible = false;
+                            btnDeshacerRestringirAcceso.Visible = false;
+                        }
+
+
+                    }
+                    break;
+
+            }
+        }
         private void MuestraDatos(string p)
         {
 			/*Se emprolija codigo*/
