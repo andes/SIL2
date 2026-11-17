@@ -36,7 +36,7 @@ namespace WebLab.Protocolos
 
             if (oP != null)
             {
-                lblProtocolo.Text = oP.GetNumero();
+                    lblProtocolo.Text = oP.Numero.ToString();//.GetNumero();
                 if (oP.IdTipoServicio.IdTipoServicio != 5)
                     lblProtocolo.Text = lblProtocolo.Text + " " + oP.IdPaciente.Apellido + " " + oP.IdPaciente.Nombre;
 
@@ -61,7 +61,7 @@ namespace WebLab.Protocolos
                 Boolean fileOK = false;
                 if (trepador.HasFile)
                 {
-                    string directorio = Server.MapPath("") + "\\" + oOs.GetNumero(); // @"C:\Archivos de Usuario\";
+                    string directorio = Server.MapPath("") + "\\" + oOs.Numero.ToString();//.GetNumero(); // @"C:\Archivos de Usuario\";
 
 
                     if (!Directory.Exists(directorio)) Directory.CreateDirectory(directorio);

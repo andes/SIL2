@@ -99,7 +99,7 @@ namespace WebLab.Turnos
                 //oC = (Configuracion)oC.Get(typeof(Configuracion), 1);
                 //if (oC.TipoNumeracionProtocolo == 2)
                 //    lblUltimoProtocolo.Text += oRegistro.PrefijoSector;
-                lblUltimoProtocolo.Text +=  oRegistro.GetNumero().ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
+                lblUltimoProtocolo.Text +=  oRegistro.Numero.ToString() + " " + oRegistro.IdPaciente.Apellido + " " + oRegistro.IdPaciente.Nombre;
             }
 
         }

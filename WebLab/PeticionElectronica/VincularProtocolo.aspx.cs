@@ -33,7 +33,7 @@ namespace WebLab.PeticionElectronica
                 {
                     Protocolo oP = new Protocolo();
                     oP = (Protocolo)oP.Get(typeof(Protocolo), oRegistro.IdProtocolo);
-                    lblProtocolo.Text = oP.GetNumero();
+                    lblProtocolo.Text = oP.Numero.ToString();
                 }
                 
                      

@@ -37,7 +37,7 @@ namespace WebLab.Protocolos
                     altaMuestra.Visible = true;
                     Business.Data.Laboratorio.Protocolo oP = new Business.Data.Laboratorio.Protocolo();
                     oP = (Business.Data.Laboratorio.Protocolo)oP.Get(typeof(Business.Data.Laboratorio.Protocolo), int.Parse(Request["id"].ToString()));
-                    lblTitulo.Text = oP.GetNumero();
+                    lblTitulo.Text = oP.Numero.ToString();
                     Business.Data.Laboratorio.Muestra oM = new Business.Data.Laboratorio.Muestra();
                     oM = (Business.Data.Laboratorio.Muestra)oM.Get(typeof(Business.Data.Laboratorio.Muestra), oP.IdMuestra);
                     lblDescripcion.Text = oM.Nombre.ToUpper() + " " + oP.DescripcionProducto;

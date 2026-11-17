@@ -234,7 +234,7 @@ inner join lab_consentimiento as C on C.idpaciente = P.idpaciente where C.idCons
             // oRegistro.IdProtocolo.GrabarAuditoriaProtocolo("Elimina Archivo: " + oRegistro.Url, int.Parse(Session["idUsuario"].ToString()));
             //oRegistro1.Delete(); //CargarGrilla();
 
-            string directorio = oRegistro1.IdProtocolo.GetNumero() + "\\" + oRegistro1.Url;
+            string directorio = oRegistro1.IdProtocolo.Numero.ToString() + "\\" + oRegistro1.Url;
             string extension = System.IO.Path.GetExtension(directorio).ToLower();
 
 

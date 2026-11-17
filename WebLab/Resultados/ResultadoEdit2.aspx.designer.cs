@@ -94,6 +94,15 @@ namespace WebLab.Resultados {
         protected global::System.Web.UI.WebControls.LinkButton lnkPosterior;
         
         /// <summary>
+        /// lblAreasValidacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAreasValidacion;
+        
+        /// <summary>
         /// pnlPaciente control.
         /// </summary>
         /// <remarks>
@@ -272,6 +281,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblHoraRegistro;
+        
+        /// <summary>
+        /// btnVerTiempos control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnVerTiempos;
         
         /// <summary>
         /// imgDiagnostico control.
@@ -857,7 +875,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RadioButtonList rdbImprimir;
-
+        
         /// <summary>
         /// btnAplicarFormula2 control.
         /// </summary>
@@ -866,7 +884,7 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnAplicarFormula2;
-
+        
         /// <summary>
         /// btnValidarImprimir control.
         /// </summary>
@@ -893,6 +911,15 @@ namespace WebLab.Resultados {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCerrarSinResultados;
+        
+        /// <summary>
+        /// btnCerrarArea control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCerrarArea;
         
         /// <summary>
         /// btnRestringirAcceso control.

@@ -71,6 +71,7 @@
     <many-to-one name="IdUsuarioRegistro" column="idUsuarioRegistro" class="Business.Data.Usuario,Business" />
 		<!--<property column="idUsuarioRegistro" type="Int32" name="IdUsuarioRegistro" not-null="true" />-->
 		<property column="fechaRegistro" type="DateTime" name="FechaRegistro" not-null="true" />
+    <property column="fechaFinalizacion" type="DateTime" name="FechaFinalizacion" not-null="true" />
 		<property column="idMuestra" type="Int32" name="IdMuestra" not-null="true" />
     <property column="fechaTomaMuestra" type="DateTime" name="FechaTomaMuestra" not-null="true" />
   	<property column="idConservacion" type="Int32" name="IdConservacion"  not-null="true" />

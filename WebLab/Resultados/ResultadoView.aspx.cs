@@ -192,48 +192,46 @@ namespace WebLab.Resultados
         }
 
 
-
-       
         private void CargarGrilla()
         {
             ////Metodo que carga la grilla de Protocolos
 
             string m_strSQL = " Select P.idProtocolo, " +
                               " P.numero as numero," +
-                              " convert(varchar(10),P.fecha,103) as fecha,P.estado , P.fecha as fecha1," +
-                              " prefijosector, numerosector , numerodiario" +
+                              " convert(varchar(10),P.fecha,103) as fecha,P.estado , P.fecha as fecha1" +
+                              //", prefijosector, numerosector , numerodiario" +
                               " from Lab_Protocolo P with (nolock) " + // +str_condicion;                          
                               " WHERE P.idProtocolo in (" + Session["Parametros"].ToString() + ")";
-            
+
             if (Request["Operacion"].ToString() == "HC")
                 m_strSQL += " order by idProtocolo desc "; // desde el mas reciente al mas antiguo.
-            else                      
-                m_strSQL += " order by  idProtocolo ";              
-    
+            else
+                m_strSQL += " order by  idProtocolo ";
 
-            DataSet Ds = new DataSet();            
+
+            DataSet Ds = new DataSet();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura, no escribe nada el SP
             SqlDataAdapter adapter = new SqlDataAdapter();
             adapter.SelectCommand = new SqlCommand(m_strSQL, conn);
             adapter.Fill(Ds);
             gvLista.DataSource = Ds.Tables[0];
             gvLista.DataBind();
-            dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);           
+            dtProtocolo = (System.Data.DataTable)(Session["Tabla1"]);
             if (Ds.Tables[0].Rows.Count > 0)
             {
                 dtProtocolo = Ds.Tables[0];
                 int ultimafila = Ds.Tables[0].Rows.Count - 1;
                 CurrentPageIndex = int.Parse(Session["idProtocolo"].ToString());
-                CurrentIndexGrilla = int.Parse(Request["Index"].ToString());                
+                CurrentIndexGrilla = int.Parse(Request["Index"].ToString());
                 UltimaPageIndex = ultimafila; // int.Parse(Ds.Tables[0].Rows[ultimafila].ItemArray[0].ToString());
             }
 
             lblCantidadRegistros.Text = Ds.Tables[0].Rows.Count.ToString() + " protocolos encontrados";
-            Session.Add("Tabla1", dtProtocolo);                       
+            Session.Add("Tabla1", dtProtocolo);
         }
 
 
-    
+
 
         private int CurrentPageIndex /* Guardamos el indice de página actual */
         {

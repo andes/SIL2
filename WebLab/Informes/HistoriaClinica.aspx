@@ -157,6 +157,7 @@
                             <ItemStyle HorizontalAlign="Center" />
                         </asp:BoundField>
                         <asp:BoundField DataField="firmante" HeaderText="Validado por" />
+                        <asp:BoundField DataField="efector" HeaderText="Laboratorio" />
                     </Columns>
                     <FooterStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
                     <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />

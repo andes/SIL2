@@ -154,6 +154,7 @@ namespace Business.Data.Laboratorio
         private bool m_verificaIngresoAnterior;
         private bool m_habilitaEnfermedadBase;
         private string m_tipoOrdenProtocolo;
+        private bool m_cargaAutomaticaActoBioquimico;
 
         #endregion
 
@@ -306,6 +307,7 @@ namespace Business.Data.Laboratorio
             m_habilitaNoPublicacion = false;
             m_tipoOrdenProtocolo = String.Empty;
             m_habilitaEnfermedadBase = false;
+            m_cargaAutomaticaActoBioquimico = true;
 
         }
 
@@ -456,7 +458,8 @@ int valordefectofechatomamuestra,
         string  urlResultadosQR ,
         bool verificaIngresoAnterior,
         string  tipoOrdenProtocolo,
-            bool habilitaEnfermedadBase
+            bool habilitaEnfermedadBase,
+            bool cargaAutomaticaActoBioquimico
             )
             : this()
 		{
@@ -595,6 +598,7 @@ int valordefectofechatomamuestra,
             m_verificaIngresoAnterior = verificaIngresoAnterior;
             m_tipoOrdenProtocolo = tipoOrdenProtocolo;
             m_habilitaEnfermedadBase = habilitaEnfermedadBase;
+            m_cargaAutomaticaActoBioquimico = cargaAutomaticaActoBioquimico;
         }
 		#endregion // End Required Fields Only Constructor
 
@@ -796,6 +800,17 @@ int valordefectofechatomamuestra,
             {
                 m_isChanged |= (m_habilitaNoPublicacion != value);
                 m_habilitaNoPublicacion = value;
+            }
+
+        }
+
+        public bool CargaAutomaticaActoBioquimico
+        {
+            get { return m_cargaAutomaticaActoBioquimico; }
+            set
+            {
+                m_isChanged |= (m_cargaAutomaticaActoBioquimico != value);
+                m_cargaAutomaticaActoBioquimico = value;
             }
 
         }

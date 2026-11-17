@@ -319,18 +319,27 @@ namespace WebLab.Protocolos
             pnlIncidencia.Visible = true;
             tituloCalidad.Visible = true;
             this.IncidenciaEdit1.Visible = true;
-            this.IncidenciaEdit1.MostrarDatosdelProtocolo(oRegistro.IdProtocolo);
-          
-            if (oRegistro.getIncidencias() > 0)
-                inci.Visible = true;
-            else
-                inci.Visible = false;
-                        
-            
+            /*    this.IncidenciaEdit1.MostrarDatosdelProtocolo(oRegistro.IdProtocolo);
+
+                if (oRegistro.getIncidencias() > 0)
+                    inci.Visible = true;
+                else
+                    inci.Visible = false;
+              */
+
+            /*Carga de incidencias optimizado para traerlas de una unica vez*/
+            HashSet<int> incidencias =
+IncidenciaEdit1.MostrarDatosdelProtocolo(
+    oRegistro.IdProtocolo);
+            int cantidadIncidencias = incidencias.Count;
+            inci.Visible = cantidadIncidencias > 0;
+
+            /*Fin de incidencias*/
+
             lblEstado.Visible = true;            
             lblEstado.Text = VerEstado(oRegistro);            
 
-
+            /*
             if (oC.TipoNumeracionProtocolo==2)
             {
              //   lblTitulo.Text = oRegistro.PrefijoSector;
@@ -339,8 +348,10 @@ namespace WebLab.Protocolos
                 ///////////////////////////
             }
 
+            */
+
             lblUsuario.Text = oRegistro.IdUsuarioRegistro.Apellido + " " + oRegistro.FechaRegistro.ToString();
-            lblTitulo.Text +=  oRegistro.GetNumero().ToString();
+            lblTitulo.Text +=  oRegistro.Numero.ToString();
             
             //ddlServicio.SelectedValue = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
             
@@ -1150,6 +1161,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     oRegistro.IdUsuarioRegistro = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
                     oRegistro.FechaRegistro = DateTime.Now;
                     oRegistro.ObservacionResultado = ""; //20.10.2026 En alta: instanciar valor //En Modificacion: mantener el valor cargado
+                    oRegistro.FechaFinalizacion = DateTime.Parse("01/01/1900"); ///En alta: instanciar valor //En Modificacion: mantener el valor cargado
                     AlmacenarSesion(oC);
                 }
 

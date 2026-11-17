@@ -97,9 +97,15 @@ namespace WebLab.Placas {
             string connReady = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString; ///Performance: conexion de solo lectura
 
 
-            string m_ssql = @"SELECT   distinct idusuario, apellido  as nombre 
-                FROM sys_usuario (nolock) WHERE firmavalidacion like '%Bio%' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
-            
+            //string m_ssql = @"SELECT   distinct idusuario, apellido  as nombre 
+            //    FROM sys_usuario (nolock) WHERE firmavalidacion like '%Bio%' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
+
+            string m_ssql = @" SELECT distinct idusuario, apellido as nombre
+                FROM sys_usuario U with (nolock)
+                WHERE  firmavalidacion <>''
+                and exists (select 1 from Sys_UsuarioEfector ue with (nolock) where ue.idUsuario = U.idUsuario and idEfector = " + oC.IdEfector.IdEfector.ToString() + @" and ue.activo = 1)
+                order by nombre";
+
             oUtil.CargarCombo(ddlOperador, m_ssql, "idusuario", "nombre", connReady);
             ddlOperador.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 

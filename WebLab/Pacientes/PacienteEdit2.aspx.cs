@@ -406,7 +406,8 @@ INSERT INTO LAB_LogAccesoServicio
                 req.ClientCertificates = new X509CertificateCollection() { certificate };
                 req.ContentType = "application/json";
                 req.AllowAutoRedirect = true;
-                req.Timeout = 10 * 1000;
+                req.Timeout = 30 * 1000;
+                req.ReadWriteTimeout = 30000;
                 req.Method = "GET";
                 req.Headers.Add("X-Road-Client", clie);
 

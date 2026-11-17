@@ -32,12 +32,12 @@ namespace WebLab.Resultados
 
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), int.Parse(s_idProtocolo));
-                lblProtocolo.Text = oProtocolo.GetNumero();
-
-           
+                lblProtocolo.Text = oProtocolo.Numero.ToString();
 
 
-               
+
+
+
 
                 CargarPerfil();
                 CargarPermisos(oProtocolo);
