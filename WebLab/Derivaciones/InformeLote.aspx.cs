@@ -481,15 +481,15 @@ namespace WebLab.Derivaciones
                         //int idLote = Convert.ToInt32(row.Cells[2].Text);
                         int idUsuario = oUser.IdUsuario;
                         int estadoLote = Convert.ToInt32(ddlEstados.SelectedValue);
-                        string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + Request["Destino"] : "No Derivado. ";
-                        string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
-                        string resultadoAuditoria = resultadoDerivacion + " " + observacion;
+                        string resultadoDerivacion = estadoLote == 2 ? "Derivado: " + Request["Destino"] : "No Derivado. " + txtObservacion.Text ;
+                        //string observacion = txtObservacion.Text + " " + (estadoLote == 1 ? ddlTransporte.SelectedValue : "");
+                        string resultadoAuditoria = estadoLote == 2 ? "Derivado: " + Request["Destino"] : "No Derivado. ";
                         LoteDerivacion lote = (LoteDerivacion)new LoteDerivacion().Get(typeof(LoteDerivacion), int.Parse(Request["idLote"]));
                         //lote = (LoteDerivacion)lote.Get(typeof(LoteDerivacion), idLote);
 
                         //Se cambia el estado del lote LAB_LoteDerivacion
                         lote.Estado = estadoLote;
-                        lote.Observacion = observacion;
+                        lote.Observacion = txtObservacion.Text;
                         lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
                         //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
                         string fecha_hora = txtFecha.Text + " " + txtHora.Text;
