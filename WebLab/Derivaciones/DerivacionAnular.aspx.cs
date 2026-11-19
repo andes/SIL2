@@ -63,8 +63,12 @@ namespace WebLab.Derivaciones
                         if (lista.Count > 0)
                         {
                             string resultadoDerivacion = "";
-                            if (oDetalle.ResultadoCar == "Pendiente de derivar") resultadoDerivacion = "No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text;
-                            else resultadoDerivacion = oDetalle.ResultadoCar.Replace(" - Pendiente de derivar", " - No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text);
+                            string resultadoCar = LimpiarEstadoDerivacion(oDetalle.ResultadoCar);
+
+                            if (resultadoCar != "")
+                                resultadoDerivacion = resultadoCar + " - No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text;
+                            else
+                                resultadoDerivacion =  "No Derivado: " + ddlMotivoCancelacion.SelectedItem.Text;
 
                             foreach (Derivacion oDeriva in lista)
                             {
@@ -118,6 +122,37 @@ namespace WebLab.Derivaciones
                 lblMensaje.Text = "Se guardaron los cambios";
             }
             
+
+        }
+
+        private string LimpiarEstadoDerivacion(string resultadoCar)
+        {
+            if (string.IsNullOrWhiteSpace(resultadoCar))
+                return "";
+
+            string resultado = resultadoCar.Trim();
+
+            string[] leyendas = {
+                "No Derivado:",
+                "Pendiente de derivar",
+                "Pendiente para enviar ",
+                "Enviado",
+                "No Enviado",
+                "Recibido"
+            };
+
+            foreach (string leyenda in leyendas)
+            {
+                if (resultado.StartsWith(leyenda, StringComparison.OrdinalIgnoreCase))
+                    return "";
+            }
+
+            int posicion = resultado.IndexOf(" - ", StringComparison.Ordinal);
+
+            if (posicion >= 0)
+                resultado = resultado.Substring(0, posicion).TrimEnd();
+
+            return resultado;
         }
     }
 }

@@ -114,6 +114,9 @@ namespace WebLab.Derivaciones
 
                     gvLista.Visible = true;
                     gvListaEdit.Visible = false;
+
+                    if (Request["Estado"].ToString() == "2")
+                        btnNoEnviado.Visible = false;
                     break;
 
                 case "Modifica":
@@ -922,39 +925,39 @@ namespace WebLab.Derivaciones
         private string LimpiarEstadoDerivacion(string resultadoCar)
         {
             if (string.IsNullOrEmpty(resultadoCar))
-                return "";
+                 return "";
 
-            string resultado = resultadoCar.Trim();
+             string resultado = resultadoCar.Trim();
 
-            string[] leyendas = {
-                    " - No Derivado:",
-                    " - Pendiente de derivar",
-                    " - Pendiente para enviar",
-                    " - Enviado",
-                    " - No Enviado",
-                    " - Recibido",
-                    "No Derivado:",
-                    "Pendiente de derivar",
-                    "Pendiente para enviar",
-                    "Enviado",
-                    "No Enviado",
-                    "Recibido"
-                };
+             string[] leyendas = {
+                     " - No Derivado:",
+                     " - Pendiente de derivar",
+                     " - Pendiente para enviar",
+                     " - Enviado",
+                     " - No Enviado",
+                     " - Recibido",
+                     "No Derivado:",
+                     "Pendiente de derivar",
+                     "Pendiente para enviar",
+                     "Enviado",
+                     "No Enviado",
+                     "Recibido"
+                 };
 
-            int posicion = resultado.Length;
+             int posicion = resultado.Length;
 
-            foreach (string leyenda in leyendas)
-            {
-                int indice = resultado.IndexOf(leyenda,StringComparison.OrdinalIgnoreCase);
+             foreach (string leyenda in leyendas)
+             {
+                 int indice = resultado.IndexOf(leyenda,StringComparison.OrdinalIgnoreCase);
 
-                if (indice >= 0 && indice < posicion)
-                    posicion = indice;
-            }
+                 if (indice >= 0 && indice < posicion)
+                     posicion = indice;
+             }
 
-            if (posicion < resultado.Length)
-                resultado = resultado.Substring(0, posicion).TrimEnd();
+             if (posicion < resultado.Length)
+                 resultado = resultado.Substring(0, posicion).TrimEnd();
 
-            return resultado;
+             return resultado;
         }
 
         protected void btnNoEnviado_Click(object sender, EventArgs e)
