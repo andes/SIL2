@@ -326,6 +326,8 @@ namespace WebLab.Resultados
             //Cambiar el estado del protocolo 
             if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
             {
+                if (oRegistro.Estado < 2) oRegistro.FechaFinalizacion = DateTime.Now;//solo actualiza la fecha de finalizacion si no estaba terminado antes
+
                 oRegistro.Estado = 2;  //validado total (cerrado);
                                        //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
                 if (!oRegistro.Notificarresultado) // no se notifica a sips
@@ -333,13 +335,17 @@ namespace WebLab.Resultados
             }
             else
             {
+
                 if (oRegistro.EnProceso())
                 {
+                    // oRegistro.FechaFinalizacion = DateTime.Parse("01/01/1900");
                     oRegistro.Estado = 1;//en proceso
                                          // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
                 }
                 else
+                {
                     oRegistro.Estado = 0;
+                }
 
             }
             oRegistro.Save();
