@@ -683,22 +683,30 @@ namespace WebLab.Derivaciones
                                     oDeriva.Save();
                                 }
 
-                                /*Actualiza estado de protocolo*/
-                                if (oDetalle.IdProtocolo.Estado < 2)
+                                /*Actualiza estado de protocolo*/  //20.11.2026 Actualiza validadototal
+                                if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
                                 {
-                                    if (oDetalle.IdProtocolo.ValidadoTotal("Derivacion", oUser.IdUsuario))
-                                        oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                                    if (oDetalle.IdProtocolo.Estado < 2) oDetalle.IdProtocolo.FechaFinalizacion = DateTime.Now;//solo actualiza la fecha de finalizacion si no estaba terminado antes
+
+                                    oDetalle.IdProtocolo.Estado = 2;  //validado total (cerrado);
+                                                                      //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                    if (!oDetalle.IdProtocolo.Notificarresultado) // no se notifica a sips
+                                        oDetalle.IdProtocolo.Estado = 3; ///Accceso Restringido;
+                                }
+                                else
+                                {
+
+                                    if (oDetalle.IdProtocolo.EnProceso())
+                                    {
+                                        // oRegistro.FechaFinalizacion = DateTime.Parse("01/01/1900");
+                                        oDetalle.IdProtocolo.Estado = 1;//en proceso
+                                                                        // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                                    }
                                     else
                                     {
-                                        if (oDetalle.IdProtocolo.EnProceso())
-                                        {
-                                            oDetalle.IdProtocolo.Estado = 1;//en proceso
-                                                                            // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                                        }
-                                        else
-                                            oDetalle.IdProtocolo.Estado = 0;
+                                        oDetalle.IdProtocolo.Estado = 0;
                                     }
-                                    oDetalle.IdProtocolo.Save();
+
                                 }
 
                                 //Auditoria de Alta
