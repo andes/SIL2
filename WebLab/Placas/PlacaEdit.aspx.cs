@@ -91,11 +91,14 @@ namespace WebLab.Placas {
         private void CargarListas()
         {
             Utility oUtil = new Utility();
-            Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
+            //   Configuracion oC = new Configuracion(); oC = (Configuracion)oC.Get(typeof(Configuracion), "IdConfiguracion", 1);
 
 
-
-            string m_ssql = "SELECT   distinct idusuario, apellido    as nombre FROM sys_usuario WHERE firmavalidacion like '%Bio%' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
+            string m_ssql = @" SELECT distinct idusuario, apellido as nombre
+                FROM sys_usuario U with (nolock)
+                WHERE  firmavalidacion <>''  
+                and exists (select 1 from Sys_UsuarioEfector ue with (nolock) where ue.idUsuario = U.idUsuario and idEfector = " + oC.IdEfector.IdEfector.ToString() + @" and ue.activo = 1)
+                order by nombre";
 
             oUtil.CargarCombo(ddlOperador, m_ssql, "idusuario", "nombre");
             ddlOperador.Items.Insert(0, new ListItem("--Seleccione--", "0"));

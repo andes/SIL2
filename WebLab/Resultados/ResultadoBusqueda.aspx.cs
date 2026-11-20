@@ -870,34 +870,10 @@ namespace WebLab.Resultados
                 m_parametro += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.fecha<='"+ fecha2.ToString("yyyyMMdd") + "'" ;
 
                 m_parametro += " and P.idEfector =" + oUser.IdEfector.IdEfector.ToString();
-                //if (ddlArea.SelectedValue != "0") m_parametro += " AND i.idArea=" + ddlArea.SelectedValue;
-
-              
-
-          //      Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
-                //switch (oCon.TipoNumeracionProtocolo)// busqueda con autonumerico
-                //{
-                //    case 0:
-                //        {
+                
                             if (txtProtocoloDesde.Value != "") m_parametro += " And P.numero>=" + int.Parse(txtProtocoloDesde.Value);
                             if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numero<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //    case 1:
-                //        {
-                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroDiario>=" + int.Parse(txtProtocoloDesde.Value);
-                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroDiario<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //    case 2:
-                //        {
-                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroSector>=" + int.Parse(txtProtocoloDesde.Value);
-                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroSector<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //    case 3:
-                //        {
-                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroTipoServicio>=" + int.Parse(txtProtocoloDesde.Value);
-                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroTipoServicio<=" + int.Parse(txtProtocoloHasta.Value);
-                //        } break;
-                //}
+                
 
 
                 if (ddlEfector.SelectedValue != "0") m_parametro += " AND P.idEfectorSolicitante=" + ddlEfector.SelectedValue;
@@ -915,16 +891,12 @@ namespace WebLab.Resultados
                     m_parametro += " AND P.idSector in (" + sectores + ")";
                 string s_areas = "0";
 
-                if (ddlArea.SelectedValue != "0")
-                {
-                   // m_parametro += " AND i.idArea in (" + ddlArea.SelectedValue +")";
+                if (ddlArea.SelectedValue != "0")                                   
                     s_areas = ddlArea.SelectedValue;
-
-                }
+                
 
                 if ((ddlArea.SelectedValue != "0") && (ddlArea2.SelectedValue!="0") && (ddlArea2.Visible))
-                {
-                    //m_parametro += " AND i.idArea in (" + ddlArea.SelectedValue + "," + ddlArea2.SelectedValue + ")";
+                {                    
                     s_areas = s_areas+ "," + ddlArea2.SelectedValue;
                 }
 
@@ -944,37 +916,10 @@ namespace WebLab.Resultados
                         //case 4: modoCarga = "ANDA"; break;
                     }
                 }
+                 
 
-                //if (modoCarga == "LP")
-                //{ 
-                //    if (s_areas != "0") m_parametro += " AND i.idArea in (" + s_areas + ")"; 
-                //}
-
-                //if (operacion == "Valida")
-                //{
-                //    switch (int.Parse(rdbCargaResultados.SelectedValue))
-                //    {/// por hoja de trabajo
-                //        case 0:
-                //            modoCarga = "LP"; break;
-                //        case 1:
-                //            modoCarga = "HT"; break;
-                //        case 2:
-                //            modoCarga = "AN"; break;
-                //    }
-                //}
-
-                string m_orden = "";
+                string m_orden = " order by  P.numero ";
                 
-                //if (oCon.TipoNumeracionProtocolo == 0)
-                    //m_strSQL += " order by  numero ";
-                    m_orden = " order by  P.numero ";
-                //if (oCon.TipoNumeracionProtocolo == 1)
-                //    m_orden = " order by  P.numerodiario ";
-                //if (oCon.TipoNumeracionProtocolo == 2)
-                //    m_orden = " order by P.prefijosector, P.numerosector ";
-                //if (oCon.TipoNumeracionProtocolo == 3)
-                //    m_orden = " order by P.numeroTipoServicio ";
-
                 switch (rdbEstado.SelectedValue)
                     {
                         case "0": // pendientes de validar
@@ -984,9 +929,12 @@ namespace WebLab.Resultados
                             if (ddlArea.SelectedValue != "0")
                                 m_parametro += " AND DP.idUsuarioValida = 0 " + //Las determinaciones no tienen que estar validadas
                                     " AND DP.idUsuarioValidaObservacion = 0"; //12/6/2026 Vane: Las determinaciones no tienen que estar autovalidas (las determinaciones sin insumo se validan idUsuarioValidaObservacion)
-                                if (modoCarga != "HT")
-                                    if (s_areas != "0")
-                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+                            if (modoCarga != "HT")
+                                if (s_areas != "0")
+                                {
+                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item with (nolock) where idarea in (" + s_areas + "))";
+                                    m_parametro += @" and NOT EXISTS (SELECT 1 FROM  LAB_ProtocoloAreaEstado PAE  WHERE Pae.idProtocolo = DP.idProtocolo  AND PAE.estado= 'T' and Pae.idarea in (" + s_areas + @"))";
+                                }
                             //20.08.2026 Las derivaciones no tienen idUsuariovalida o idUsuarioValidaObservacion
                               m_parametro += " AND NOT EXISTS (  SELECT 1  FROM LAB_Derivacion d  WHERE d.idDetalleProtocolo = dp.idDetalleProtocolo ) ";
                             }
@@ -1000,14 +948,14 @@ namespace WebLab.Resultados
 
                             if (modoCarga != "HT")
                                     if (s_areas != "0")
-                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item with (nolock) where idarea in (" + s_areas + "))";
                             }
                             break;
                         case "2":
                             //m_parametro += " AND P.estado>=0 ";
                             if (modoCarga != "HT")
                                 if (s_areas != "0")
-                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item with (nolock) where idarea in (" + s_areas + "))";
                             break;
 
 
@@ -1564,8 +1512,261 @@ namespace WebLab.Resultados
             }
             
         }
-       
 
-        }
-   
+//        protected void btnBuscar2_Click(object sender, EventArgs e)
+//        {
+//            if (Page.IsValid)
+//            {
+
+//                DateTime fecha1 = DateTime.Parse(txtFechaDesde.Value);
+//                DateTime fecha2 = DateTime.Parse(txtFechaHasta.Value);
+
+//                string m_parametro = " P.idTipoServicio=" + ddlServicio.SelectedValue;
+//                m_parametro += " AND P.Fecha>='" + fecha1.ToString("yyyyMMdd") + "' AND P.fecha<='" + fecha2.ToString("yyyyMMdd") + "'";
+
+//                m_parametro += " and P.idEfector =" + oUser.IdEfector.IdEfector.ToString();
+//                //if (ddlArea.SelectedValue != "0") m_parametro += " AND i.idArea=" + ddlArea.SelectedValue;
+
+
+
+//                //      Configuracion oCon = new Configuracion(); oCon = (Configuracion)oCon.Get(typeof(Configuracion), 1);
+//                //switch (oCon.TipoNumeracionProtocolo)// busqueda con autonumerico
+//                //{
+//                //    case 0:
+//                //        {
+//                if (txtProtocoloDesde.Value != "") m_parametro += " And P.numero>=" + int.Parse(txtProtocoloDesde.Value);
+//                if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numero<=" + int.Parse(txtProtocoloHasta.Value);
+//                //        } break;
+//                //    case 1:
+//                //        {
+//                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroDiario>=" + int.Parse(txtProtocoloDesde.Value);
+//                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroDiario<=" + int.Parse(txtProtocoloHasta.Value);
+//                //        } break;
+//                //    case 2:
+//                //        {
+//                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroSector>=" + int.Parse(txtProtocoloDesde.Value);
+//                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroSector<=" + int.Parse(txtProtocoloHasta.Value);
+//                //        } break;
+//                //    case 3:
+//                //        {
+//                //            if (txtProtocoloDesde.Value != "") m_parametro += " And P.numeroTipoServicio>=" + int.Parse(txtProtocoloDesde.Value);
+//                //            if (txtProtocoloHasta.Value != "") m_parametro += " AND  P.numeroTipoServicio<=" + int.Parse(txtProtocoloHasta.Value);
+//                //        } break;
+//                //}
+
+
+//                if (ddlEfector.SelectedValue != "0") m_parametro += " AND P.idEfectorSolicitante=" + ddlEfector.SelectedValue;
+//                if (ddlOrigen.SelectedValue != "0") m_parametro += " AND P.idOrigen=" + ddlOrigen.SelectedValue;
+//                if (ddlPrioridad.SelectedValue != "0") m_parametro += " AND P.idPrioridad=" + ddlPrioridad.SelectedValue;
+//                if (chkFactura.Checked) m_parametro += " AND P.nombreObraSocial not in (" + ConfigurationManager.AppSettings["NoFacturable"].ToString() + ")"; // solo las que tienen obra social
+
+//                if (txtNroOrigen.Text != "") m_parametro += " And P.numeroOrigen='" + txtNroOrigen.Text + "'";
+//                string modoCarga = ""; string operacion = Request["Operacion"].ToString();
+
+//                //  if (ddlSectorServicio.SelectedValue != "0") m_parametro += " AND P.idSector = " + ddlSectorServicio.SelectedValue;
+
+//                string sectores = getListaSectores(true);
+//                if (sectores != "")
+//                    m_parametro += " AND P.idSector in (" + sectores + ")";
+//                string s_areas = "0";
+
+//                if (ddlArea.SelectedValue != "0")
+//                {
+//                    // m_parametro += " AND i.idArea in (" + ddlArea.SelectedValue +")";
+//                    s_areas = ddlArea.SelectedValue;
+
+//                }
+
+//                if ((ddlArea.SelectedValue != "0") && (ddlArea2.SelectedValue != "0") && (ddlArea2.Visible))
+//                {
+//                    //m_parametro += " AND i.idArea in (" + ddlArea.SelectedValue + "," + ddlArea2.SelectedValue + ")";
+//                    s_areas = s_areas + "," + ddlArea2.SelectedValue;
+//                }
+
+//                string caracteres = getListaCaracter(true);
+//                if (caracteres != "")
+//                    m_parametro += " AND P.idCaracter in (" + caracteres + ")";
+
+
+//                if ((operacion == "Carga") || (operacion == "Valida"))
+//                {
+//                    switch (int.Parse(rdbCargaResultados.SelectedValue))
+//                    {/// por hoja de trabajo
+//                        case 0: modoCarga = "LP"; break;
+//                        case 1: modoCarga = "HT"; if (HFFormatoAncho.Value == "4") modoCarga = "AN"; break;//Para las hojas de trabajo tipo "Lista Continua" se tiene que ver como las de analisis
+//                        case 2: modoCarga = "AN"; break;
+//                        case 3: modoCarga = "ANDE"; break;
+//                            //case 4: modoCarga = "ANDA"; break;
+//                    }
+//                }
+
+//                //if (modoCarga == "LP")
+//                //{ 
+//                //    if (s_areas != "0") m_parametro += " AND i.idArea in (" + s_areas + ")"; 
+//                //}
+
+//                //if (operacion == "Valida")
+//                //{
+//                //    switch (int.Parse(rdbCargaResultados.SelectedValue))
+//                //    {/// por hoja de trabajo
+//                //        case 0:
+//                //            modoCarga = "LP"; break;
+//                //        case 1:
+//                //            modoCarga = "HT"; break;
+//                //        case 2:
+//                //            modoCarga = "AN"; break;
+//                //    }
+//                //}
+
+//                string m_orden = "";
+
+//                //if (oCon.TipoNumeracionProtocolo == 0)
+//                //m_strSQL += " order by  numero ";
+//                m_orden = " order by  P.numero ";
+//                //if (oCon.TipoNumeracionProtocolo == 1)
+//                //    m_orden = " order by  P.numerodiario ";
+//                //if (oCon.TipoNumeracionProtocolo == 2)
+//                //    m_orden = " order by P.prefijosector, P.numerosector ";
+//                //if (oCon.TipoNumeracionProtocolo == 3)
+//                //    m_orden = " order by P.numeroTipoServicio ";
+
+//                switch (rdbEstado.SelectedValue)
+//                {
+//                    case "0": // pendientes de validar
+//                        {
+//                            m_parametro += " AND P.estado<=1 ";
+
+//                            if (ddlArea.SelectedValue != "0")
+//                                m_parametro += " AND DP.idUsuarioValida = 0 " + //Las determinaciones no tienen que estar validadas
+//                                    " AND DP.idUsuarioValidaObservacion = 0"; //12/6/2026 Vane: Las determinaciones no tienen que estar autovalidas (las determinaciones sin insumo se validan idUsuarioValidaObservacion)
+//                            if (modoCarga != "HT")
+//                                if (s_areas != "0")
+//                                {
+//                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+//                                     m_parametro += @" and   NOT EXISTS (    SELECT 1
+//                                                                        FROM dbo.LAB_ProtocoloAreaEstado PAE
+//                                                                    ON PAE.idProtocolo = DP.idProtocolo       
+//                                                                WHERE DP.idProtocolo = @idProtocolo
+//                                                                  AND ISNULL(PAE.estado, 'P') <> 'T'
+//                                                            and Pae.idarea in (" + s_areas + @")
+//                                                            )";
+//                                }
+//                            //20.08.2026 Las derivaciones no tienen idUsuariovalida o idUsuarioValidaObservacion
+//                            m_parametro += " AND NOT EXISTS (  SELECT 1  FROM LAB_Derivacion d  WHERE d.idDetalleProtocolo = dp.idDetalleProtocolo ) ";
+//                        }
+//                        break;
+//                    case "1": // validados
+//                        {
+//                            m_parametro += " AND P.estado>=2 ";
+//                            if (ddlArea.SelectedValue != "0")
+//                                m_parametro += " AND (DP.idUsuarioValida > 0 " +
+//                                    " OR DP.idUsuarioValidaObservacion > 0) "; //12/6/2026 Vane: Las determinaciones tienen que estar validadas o autovalidadas
+
+//                            if (modoCarga != "HT")
+//                                if (s_areas != "0")
+//                                    m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+//                        }
+//                        break;
+//                    case "2":
+//                        //m_parametro += " AND P.estado>=0 ";
+//                        if (modoCarga != "HT")
+//                            if (s_areas != "0")
+//                                m_parametro += " and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+//                        break;
+
+
+//                    case "9":  // solo desde el equipo
+//                        m_orden = " order by  substring (DP.NamespaceID,2,2)  , substring (DP.NamespaceID,1,1)   ";
+//                        m_parametro += " AND P.estado<=1 and DP.enviado=2 and DP.conresultado=1 and DP.idusuarioValida=0 and DP.idusuariopreValida=0 ";
+
+//                        if (ddlArea.SelectedValue != "0")
+//                            m_parametro += " and DP.enviado=2 and DP.conresultado=1 and DP.idusuarioValida=0 and DP.idusuariopreValida=0 ";
+//                        if (modoCarga != "HT")
+//                            if (s_areas != "0")
+//                                m_parametro += "  and DP.idsubitem in (select iditem from lab_item where idarea in (" + s_areas + "))";
+//                        //  m_parametro += " and DP.enviado=2 and DP.conresultado=1 and DP.idusuarioValida=0 and DP.idusuariopreValida=0 and AND P.estado<2  ";
+//                        break;
+
+
+//                }
+
+//                //bool b_esHemoterapia = esHemoterapia();
+//                //    if (b_esHemoterapia) m_parametro += " and DP.idsubitem in (select iditem from lab_item where codigo like '433%')";
+
+
+
+//                if (operacion == "Control") { modoCarga = "LP"; }
+//                if ((operacion == "Carga") || (operacion == "HC")) { if (chkRecordarFiltro.Checked) AlmacenarSesion(); }
+//                if (operacion == "Valida") { if (chkRecordarFiltro.Checked) AlmacenarSesionValidacion(); }
+//                if (operacion == "Control") { if (chkRecordarFiltro.Checked) AlmacenarSesionControl(); }
+
+
+//                /// Response.Redirect("Procesa.aspx?idServicio=" + Request["idServicio"].ToString() + "&ModoCarga=" + modoCarga + "&Operacion=" + operacion + "&Parametros=" + m_parametro + "&idArea=" + s_areas + "&idHojaTrabajo=" + ddlHojaTrabajo.SelectedValue + "&idItem=" + ddlAnalisis.SelectedValue + "&validado=0&modo=" + Request["modo"] + "&dni=" + txtDNI.Value + "&orden=" + m_orden, false);
+//                EnviarProcesaPost(
+//                operacion,
+//    modoCarga,
+//    m_parametro,
+//    m_orden,
+//    s_areas
+//);
+//            }
+//        }
+
+
+//        private void EnviarProcesaPost(
+//            string operacion,
+//            string modoCarga,
+//            string parametros,
+//            string orden,
+//            string areas)
+//        {
+//            var datos = new System.Collections.Generic.Dictionary<string, string>();
+
+//            datos.Add("idServicio", Request["idServicio"] ?? "");
+//            datos.Add("ModoCarga", modoCarga);
+//            datos.Add("Operacion", operacion);
+//            datos.Add("Parametros", parametros);
+//            datos.Add("idArea", areas);
+//            datos.Add("idHojaTrabajo", ddlHojaTrabajo.SelectedValue);
+//            datos.Add("idItem", ddlAnalisis.SelectedValue);
+//            datos.Add("validado", "0");
+//            datos.Add("modo", Request["modo"] ?? "");
+//            datos.Add("dni", txtDNI.Value);
+//            datos.Add("orden", orden);
+
+//            var html = new System.Text.StringBuilder();
+
+//            html.Append("<!DOCTYPE html><html><head>");
+//            html.Append("<meta charset='utf-8' />");
+//            html.Append("</head><body>");
+
+//            html.Append("<form id='frmProcesa' method='post' action='Procesa.aspx'>");
+
+//            foreach (var dato in datos)
+//            {
+//                html.Append("<input type='hidden' name='");
+//                html.Append(HttpUtility.HtmlAttributeEncode(dato.Key));
+//                html.Append("' value='");
+//                html.Append(HttpUtility.HtmlAttributeEncode(dato.Value ?? ""));
+//                html.Append("' />");
+//            }
+
+//            html.Append("<noscript>");
+//            html.Append("<button type='submit'>Continuar</button>");
+//            html.Append("</noscript>");
+
+//            html.Append("</form>");
+//            html.Append("<script>document.getElementById('frmProcesa').submit();</script>");
+//            html.Append("</body></html>");
+
+//            Response.Clear();
+//            Response.ContentType = "text/html";
+//            Response.ContentEncoding = System.Text.Encoding.UTF8;
+//            Response.Write(html.ToString());
+
+//            Context.ApplicationInstance.CompleteRequest();
+//        }
+
+    }
+
 }

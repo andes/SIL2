@@ -255,7 +255,7 @@ namespace WebLab.Derivaciones
 
         private DataTable getDataSet()
         {
-            string s_condicion = Request["Parametros"].ToString()+ "  and estado=1 ";
+            string s_condicion = Request["Parametros"].ToString();/// + "  and estado=1 ";
 
             if (Request["idItem"] != null)
             {
@@ -272,7 +272,7 @@ namespace WebLab.Derivaciones
                 if (Request["estado"].ToString() != "-1")
                     s_condicion += " and estado= " + Request["estado"].ToString();
             }
-            if (Request["conResultado"] == null) s_condicion += " and idUsuarioResultado =0";
+            if (Request["conResultado"] == null) s_condicion += "";// and idUsuarioResultado =0";
             else
             {
                 if (Request["conResultado"].ToString() != "-1")

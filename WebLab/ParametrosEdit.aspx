@@ -341,7 +341,19 @@ $("#tabContainer").tabs({ selected: currTab });
                                             </asp:DropDownList>
                                         </td>
                                     </tr>
-                        
+                        <tr>
+                                        <td class="myLabelIzquierda">
+                                            Carga Automatica de Acto Bioquimico:</td>
+                                        <td class="myLabelIzquierda">
+                                            
+                                            <asp:DropDownList ID="ddlCargaAutomaticaActoBioquimico" runat="server"   class="form-control input-sm"
+                                               Width="100px"
+                                               >
+                                                <asp:ListItem Selected="True" Value="0">No</asp:ListItem>
+                                                <asp:ListItem Value="1">Si</asp:ListItem>
+                                            </asp:DropDownList>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td class="myLabelIzquierda">
                                             Fecha de Orden:</td>

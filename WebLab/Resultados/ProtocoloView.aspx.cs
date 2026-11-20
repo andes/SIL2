@@ -80,7 +80,7 @@ namespace WebLab.Resultados
             int len = oRegistro.FechaRegistro.ToString().Length - 11;
             lblHoraRegistro.Text = oRegistro.FechaRegistro.ToString().Substring(11, oRegistro.FechaRegistro.ToString().Length - 11);
             lblFecha.Text = oRegistro.Fecha.ToShortDateString();
-            lblProtocolo.Text = oRegistro.GetNumero().ToString();
+            lblProtocolo.Text = oRegistro.Numero.ToString();//.GetNumero().ToString();
 
             
 

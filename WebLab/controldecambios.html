@@ -121,6 +121,90 @@
   
   <script>
       const cambios = [
+              {
+                  "fecha": "2026.11.03",
+                  "modulo": "Derivaciones",
+                  "detalle": "Se corrigió el procesamiento de múltiples clics en los botones de confirmación, evitando la generación de registros duplicados en la visualización de resultados, auditorías y otros registros del sistema de derivaciones.",
+                  "tipo": "Correccion"
+              },
+            {
+                "fecha": "2026.11.03",
+                "modulo": "Visualización de tiempos del protocolo (TimeSpan)",
+                "detalle": "En Validación por Lista de Protocolos y en las consultas del Historial, se incorporó la posibilidad de consultar los tiempos del protocolo mediante el ícono del reloj ubicado en su encabezado.",
+                "tipo": "Nueva Funcionalidad"
+            },
+           {
+               "fecha": "2026.11.03",
+               "modulo": "Validar y Terminar Área",
+               "detalle": "En Validación por Lista de Protocolos, se incorporó el botón Validar y Terminar Área, disponible cuando se filtra por área y el protocolo aún no está terminado. Permite validar los resultados seleccionados y finalizar el área de manera independiente, aunque existan resultados pendientes en otras áreas.",
+               "tipo": "Nueva Funcionalidad"
+           },
+           {
+               "fecha": "2026.11.03",
+               "modulo": "Validar y Terminar Protocolo",
+               "detalle": "En Validación por Lista de Protocolos, se modificó el funcionamiento del botón Validar y Terminar, disponible cuando el protocolo aún no está terminado. Permite validar los resultados seleccionados y finalizar el protocolo completo, aun cuando existan resultados pendientes.",
+               "tipo": "Cambio de Funcionalidad"
+           },
+          {
+              "fecha": "2026.10.28",
+              "modulo": "Parametro Carga Automatica de Acto Bioquimico",
+              "detalle": "En Parámetros del SI, solapa Protocolos, se incorporó una opción que permite configurar, para cada laboratorio, si se desea habilitar o deshabilitar la carga automática del Acto Bioquímico.",
+              "tipo": "Nueva Funcionalidad"
+          },
+               {
+                   "fecha": "2026.10.28",
+                   "modulo": "Carga Automatica de Acto Bioquimico",
+                   "detalle": "Al ingresar un nuevo protocolo, se incorpora automáticamente la determinación Acto Bioquímico (código 001 en Laboratorio General y 002 en Microbiología), siempre que el origen sea Ambulatorio o Guardia, el protocolo no provenga de una derivación y la opción esté habilitada en los parámetros del laboratorio.",
+                   "tipo": "Nueva Funcionalidad"
+               },
+                 {
+                     "fecha": "2026.10.28",
+                     "modulo": "Historico Analisis",
+                     "detalle": "Se agrega columna con la identificacion del laboratorio que procesó la muestra.",
+                     "tipo": "Mejora Funcionalidad"
+                 },
+				 {
+                     "fecha": "2026.10.28",
+                     "modulo": "Historico Analisis",
+                     "detalle": "Se mejoró la visualización de los resultados para incluir las observaciones validadas, incluso cuando la determinación no tenga un resultado numérico o de texto registrado.",
+                     "tipo": "Mejora Funcionalidad"
+                 },
+            {
+                "fecha": "2026.10.26",
+                "modulo": "Placas",
+                "detalle": "Se muestran en la lista de Operadores los usuarios activos en el Efector (LNC)",
+                "tipo": "Mejora Funcionalidad"
+            },
+           {
+               "fecha": "2026.10.26",
+               "modulo": "Pacientes desde MPI",
+               "detalle": "Se corrige para que cuando se recupere el apellido de ANDES se muestren todos en caso de ser mas de un apellido.",
+               "tipo": "Correccion"
+           },
+             {
+                 "fecha": "2026.10.21",
+                 "modulo": "Protocolos-Etiquetas",
+                 "detalle": "Se corrige para que en la reimpresion de etiquetas se muestren solo las areas habilitadas para imprimir CB (el area Administrativa no está habilitada)",
+                 "tipo": "Correccion"
+             },
+           {
+               "fecha": "2026.10.21",
+               "modulo": "Protocolos",
+               "detalle": "Se corrige que no se borren las observaciones validadas cuando se modifca un protocolo terminado.",
+               "tipo": "Correccion"
+           },
+           {
+               "fecha": "2026.10.21",
+               "modulo": "Incidencias",
+               "detalle": "Se cambia para que se muestre por orden alfabetico y con mejoras de performance.",
+               "tipo": "Mejora Funcionalidad"
+           },
+            {
+                "fecha": "2026.10.21",
+                "modulo": "API de Resultados",
+                "detalle": "Se agrega la visualizacion de los resultados de derivaciones.",
+                "tipo": "Mejora Funcionalidad"
+            },
            {
                "fecha": "2026.10.19",
                "modulo": "Control de Protocolos",

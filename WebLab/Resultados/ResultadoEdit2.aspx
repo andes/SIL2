@@ -83,12 +83,111 @@
                 background: #1976d2;/*#1565c0;*/
                 opacity:80%;
             }
+
+
+            /* Encabezado compacto del protocolo */
+.panel-datos-protocolo {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+.encabezado-protocolo {
+    width: 100%;
+    padding: 5px 8px !important;
+    box-sizing: border-box;
+}
+
+.tabla-protocolo {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.tabla-protocolo td {
+    padding: 2px 4px !important;
+    line-height: 17px;
+    vertical-align: middle;
+    border: none;
+}
+.tabla-protocolo .etiqueta {
+    font-size: 11px;
+    font-weight: bold;
+    color: #444444;
+    white-space: nowrap;
+}
+
+.tabla-protocolo .valor,
+.tabla-protocolo .valor-normal {
+    font-size: 12px;
+    line-height: 17px;
+    color: #333333;
+}
+
+.tabla-protocolo .valor {
+    font-weight: 600;
+}
+ 
+.numero-protocolo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    line-height: 18px;
+}
+
+.numero-protocolo span {
+    font-size: 15px;
+    font-weight: bold;
+    color: #235a83;
+}
+
+.registro-protocolo {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 4px;
+    white-space: nowrap;
+}
+.icono-timespan {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    padding: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+    background-color: #eaf3fb;
+    border: 1px solid #b7d1e6;
+    border-radius: 5px;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.2s;
+}
+
+.icono-timespan:hover {
+    background-color: #d3e7f7;
+    border-color: #6da6d0;
+}
+
+.areas-validacion {
+    margin-left: 12px;
+    font-size: 12px;
+    font-weight: normal;
+    color: #333333;
+}
+/* Evitar espacios adicionales de controles internos */
+.tabla-protocolo div,
+.tabla-protocolo span,
+.tabla-protocolo p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 </style>
     </asp:Content>
 
 <asp:Content ID="content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">               
      
-<div align="left" style="width: 1400px">
+<div align="left" style="width: 1300px">
      
                  <table  width="98%"    align="center" cellpadding="0" cellspacing="0" style="vertical-align: top">
                      <tr>
@@ -180,164 +279,174 @@
                                           </li>
                                                                <li> <asp:LinkButton 
                                 ID="lnkPosterior" runat="server" 
-                                onclick="lnkPosterior_Click">Posterior&gt;</asp:LinkButton></li>
+                                onclick="lnkPosterior_Click">Posterior&gt;</asp:LinkButton>
+                                                                   
+                                      
+                                     </li> <asp:Label
+        ID="lblAreasValidacion"
+        runat="server"
+        CssClass="areas-validacion"
+        Visible="false" />
                                                                </ul>
 						 
                             <asp:Panel ID="pnlPaciente" runat="server">
-                                       <div class="panel panel-default" >
-  <div class="panel-heading"> Datos del protocolo </div>
-  <div class="panel-body">
-						<table align="left"  >
-      						
-					
-					
-					<tr>
-							<td class="myLabelIzquierda" width="150px">
-                                DU:</td>
-						<td  width="200px">
-                            <asp:Label ID="lblDni" runat="server" Text="Label" Font-Bold="True" 
-                                Font-Size="9pt"></asp:Label>
-                        </td>
-						<td class="myLabelIzquierda" width="100px">
-                            Protocolo:</td>
-						<td 
-                            align="left"   width="150px"  >
-                            <asp:Image ID="imgEstado" runat="server" 
-                                ImageUrl="~/App_Themes/default/images/amarillo.gif" Width="12px" Height="12px" />
-                              
-                            <asp:Label ID="lblProtocolo" runat="server" Text="Label" Font-Bold="True" 
-                                Font-Size="12pt" ></asp:Label>
-                            </td>
-                      	<td class="myLabelIzquierda">
-                           Fecha:</td>
-                        <td     align="left"  width="130px" >   
-                                     <asp:Label Font-Bold="True" 
-                                Font-Size="9pt" ID="lblFecha" runat="server" Text="Label"></asp:Label>    </td>
-					</tr>
-						
-					
-					
-					<tr>
-							<td class="myLabelIzquierda">
-                                Paciente:</td>
-						<td >
-                            <asp:Label ID="lblPaciente" runat="server" Text="Label" Font-Bold="True" 
-                                Font-Size="9pt"></asp:Label>
-                            <asp:Label ID="lblCodigoPaciente" runat="server" Text="Label" Font-Bold="True" 
-                                Font-Size="9pt" Visible="False"></asp:Label>
-                        </td>
-						<td class="myLabelIzquierda">
-                            Nro. Origen:</td>
-						<td 
-                            align="left"   >
-                            <asp:Label ID="lblNumeroOrigen" runat="server" Text="Label"  CssClass="myLabel"></asp:Label>
-                            </td>
-                      	<td class="myLabelIzquierda">
-                            Toma Muestra:</td>
-                        <td   align="left">   
-                                     <asp:Label Font-Bold="True" 
-                                Font-Size="9pt" ID="lblFechaTomaMuestra" runat="server" Text="Label"></asp:Label>    </td>
-					</tr>
-						
-					
-					
-					<tr>
-							<td class="myLabelIzquierda">
-                            Sexo:</td>
-						<td class="auto-style1"  >
-                            <asp:Label ID="lblSexo" runat="server" Text="Label" CssClass="myLabel" ></asp:Label>
-                        </td>
-						<td class="myLabelIzquierda">
-                            Origen:
-                            </td>
-						<td 
-                            align="left" colspan="3"   >
-                            <asp:Label ID="lblOrigen" runat="server" Text="Label"  CssClass="myLabel"></asp:Label>
-                            <asp:Label ID="lblSector" runat="server" CssClass="myLabel" Text=""></asp:Label>
-                        </td>
-					</tr>
-						
-					
-					
-					<tr>
-							<td class="myLabelIzquierda">
-                                Fecha Nac. - Edad:</td>
-						<td class="auto-style1"  >
-                            <asp:Label ID="lblFechaNacimiento" runat="server" Text="Label"  CssClass="myLabel"></asp:Label>
-                        &nbsp;<asp:Label ID="lblEdad" runat="server" Text="Label"  CssClass="myLabel"></asp:Label>   
-                        </td>
-						<td class="myLabelIzquierda" >
-                            Prioridad:
-                            </td>
-						<td   
-                            align="left" >
-                            <asp:Label ID="lblPrioridad" runat="server" Text="Label"  CssClass="myLabel"></asp:Label>
-                        </td>
-                    	<td class="myLabelIzquierda"> Usuario:</td>
-                        <td    align="left"> <asp:Label  ID="lblUsuario" runat="server" Text="Label"></asp:Label>                     
-                       
-                        </td>
-					</tr>
-						
-					
-					
-					<tr>
-							<td class="myLabelIzquierda">
-                                Solicitante:</td>
-						<td colspan="3">
-                           
-                            <asp:Label ID="lblSolicitante" runat="server" CssClass="myLabel" Text="Label"></asp:Label>
-                            &nbsp;<asp:Label ID="lblMedico" runat="server" CssClass="myLabel" Text="Label"></asp:Label>
-                        </td>
-                       	<td class="myLabelIzquierda">     
-                               Registro:</td>
-                       <td   align="left">     
-                                <asp:Label  ID="lblFechaRegistro" runat="server" Text="Label" CssClass="myLabel"></asp:Label>                
-                                 <asp:Label  ID="lblHoraRegistro" runat="server" Text="Label" CssClass="myLabel"></asp:Label>    
-                        </td>
-					</tr>
-						
-							
-						
-					
-					
-					<tr>
-					    <td class="myLabelIzquierda">Diagnósticos:<asp:ImageButton ID="imgDiagnostico" runat="server" ImageUrl="~/App_Themes/default/images/add.png" onclick="btnActualizarPracticas_Click" OnClientClick="editDiagnostico(); return false;" ToolTip="Agregar o quitar Diagnósticos" Visible="false" />
-                        </td>                        
-						<td colspan="3">
-                            <asp:Label ID="lblDiagnostico" runat="server" Text="" Font-Bold="False" 
-                                Font-Size="9pt" ></asp:Label>                                                                                                               
-                                
-                        </td>
-                        
-					    <td class="myLabelIzquierda" colspan="2">
-                            <asp:Label ID="lblCovid" runat="server" Visible="false" CssClass="myLabelRojo"></asp:Label>
-                        </td>
-                        
-					</tr>
-						
-						
-						<tr>
-						<td class="myLabelIzquierda">Observaciones Internas:</td>
-						<td colspan="5"  >
-                            <asp:Panel ID="pnlObservaciones" runat="server">
-                            <asp:Label ID="lblObservacion" runat="server" Text="Label"  CssClass="mytituloRojo"></asp:Label> 
-                            </asp:Panel>
-						   
-                            </td>
-					</tr>
-                            
-					        <tr>
-                                <td class="myLabelIzquierda">Placa Nro:</td>
-                                <td colspan="5">
-                                    <asp:Label ID="lblPlaca" runat="server" CssClass="myLabel" Text=""></asp:Label>
-                                </td>
-                            </tr>
+                                  <div class="panel panel-default panel-datos-protocolo">
+    <div class="panel-heading">Datos del protocolo</div>
+    <div class="panel-body encabezado-protocolo">
 
-                             
-                            
-					</table>
-      </div>
+    <table class="tabla-protocolo">
+     <colgroup>
+    <col style="width: 14%;" />
+    <col style="width: 22%;" />
+    <col style="width: 12%;" />
+    <col style="width: 18%;" />
+    <col style="width: 12%;" />
+    <col style="width: 22%;" />
+</colgroup>
+
+        <tr>
+            <td class="etiqueta">DU:</td>
+            <td>
+                <asp:Label ID="lblDni" runat="server" CssClass="valor" />
+            </td>
+
+            <td class="etiqueta">Protocolo:</td>
+            <td>
+                <div class="numero-protocolo">
+                    <asp:Image ID="imgEstado" runat="server"
+                        ImageUrl="~/App_Themes/default/images/amarillo.gif"
+                        Width="12px" Height="12px" />
+                    <asp:Label ID="lblProtocolo" runat="server" />
+                </div>
+            </td>
+
+            <td class="etiqueta">Fecha:</td>
+            <td>
+                <asp:Label ID="lblFecha" runat="server" CssClass="valor" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">Paciente:</td>
+            <td>
+                <asp:Label ID="lblPaciente" runat="server" CssClass="valor" />
+                <asp:Label ID="lblCodigoPaciente" runat="server"
+                    Visible="false" />
+            </td>
+
+            <td class="etiqueta">Nro. Origen:</td>
+            <td>
+                <asp:Label ID="lblNumeroOrigen" runat="server" CssClass="valor" />
+            </td>
+
+            <td class="etiqueta">Toma Muestra:</td>
+            <td>
+                <asp:Label ID="lblFechaTomaMuestra" runat="server"
+                    CssClass="valor" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">Sexo:</td>
+            <td>
+                <asp:Label ID="lblSexo" runat="server" CssClass="valor" />
+            </td>
+
+            <td class="etiqueta">Origen:</td>
+            <td colspan="3">
+                <asp:Label ID="lblOrigen" runat="server" CssClass="valor" />
+                <asp:Label ID="lblSector" runat="server" CssClass="valor" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">Fecha Nac. - Edad:</td>
+            <td>
+                <asp:Label ID="lblFechaNacimiento" runat="server"
+                    CssClass="valor" />
+                <asp:Label ID="lblEdad" runat="server"
+                    CssClass="valor" />
+            </td>
+
+            <td class="etiqueta">Prioridad:</td>
+            <td>
+                <asp:Label ID="lblPrioridad" runat="server" CssClass="valor" />
+            </td>
+
+            <td class="etiqueta">Usuario:</td>
+            <td>
+                <asp:Label ID="lblUsuario" runat="server" CssClass="valor" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">Solicitante:</td>
+            <td colspan="3">
+                <asp:Label ID="lblSolicitante" runat="server" CssClass="valor" />
+                <asp:Label ID="lblMedico" runat="server" CssClass="valor" />
+            </td>
+
+            <td class="etiqueta">Registro:</td>
+            <td>
+                <div class="registro-protocolo">
+                    <asp:Label ID="lblFechaRegistro" runat="server"
+                        CssClass="valor" />
+                    <asp:Label ID="lblHoraRegistro" runat="server"
+                        CssClass="valor" />
+
+                    <asp:ImageButton
+                        ID="btnVerTiempos"
+                        runat="server"
+                        ImageUrl="~/App_Themes/default/images/timespan.png"
+                        ToolTip="Ver tiempos del protocolo"
+                        AlternateText="Timespan"
+                        CssClass="icono-timespan"
+                        OnClientClick="VerTiemposProtocolo(); return false;" />
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">
+                Diagnósticos:
+                <asp:ImageButton ID="imgDiagnostico"
+                    runat="server"
+                    ImageUrl="~/App_Themes/default/images/add.png"
+                    OnClick="btnActualizarPracticas_Click"
+                    OnClientClick="editDiagnostico(); return false;"
+                    ToolTip="Agregar o quitar Diagnósticos"
+                    Visible="false" />
+            </td>
+            <td colspan="3">
+                <asp:Label ID="lblDiagnostico" runat="server"
+                    CssClass="valor-normal" />
+            </td>
+            <td colspan="2">
+                <asp:Label ID="lblCovid" runat="server"
+                    Visible="false" CssClass="myLabelRojo" />
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">Observaciones Internas:</td>
+            <td colspan="5">
+                <asp:Panel ID="pnlObservaciones" runat="server">
+                    <asp:Label ID="lblObservacion" runat="server"
+                        CssClass="mytituloRojo" />
+                </asp:Panel>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="etiqueta">Placa Nro:</td>
+            <td colspan="5">
+                <asp:Label ID="lblPlaca" runat="server" CssClass="valor" />
+            </td>
+        </tr>
+    </table>
+
+</div>
+
                                            </div>
                                 </asp:Panel>
                             
@@ -503,8 +612,9 @@
 						 
 
         <div onkeydown="enterToTab(event)"  id="tab1" >   
-        <button type="button" id="btnSubir" title="Volver arriba ">↑<%--<image alt="subir" src="../script/moverfilas/arriba.gif"></image>--%></button>
-        <table width="90%">
+        <button type="button" id="btnSubir" title="Volver arriba ">↑<%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />--%></button>
+        <table width="100%">
         	<tr>						
 						<td>   <asp:Button ID="btnMostrarResultados" runat="server" Visible="false"
                                 Text="Mostrar Resultados Anteriores"  AccessKey="M"
@@ -639,6 +749,14 @@
                           <asp:Button ID="btnGuardar" AccessKey="s" Width="100px" runat="server" CssClass="btn btn-primary" Text="Guardar" 
                                 onclick="btnGuardar_Click" ValidationGroup="0" TabIndex="600" ToolTip="Alt+Shift+S: Guarda resultados" />  
                           
+    <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-info" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Validar y Terminar"
+                                  Visible="False" 
+                                Width="230px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+
+    <asp:Button ID="btnCerrarArea"   runat="server" CssClass="btn btn-info" ToolTip="Da por terminado el area del protocolo"  Text="Validar y Terminar Area"
+                                  Visible="False" 
+                                Width="200px" OnClick="btnCerrarArea_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el area?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
+
                             </td>
 						
 					</tr>
@@ -654,13 +772,10 @@
                              
                                  
      <div class="footer" align="right">	
-    <asp:Button ID="btnCerrarSinResultados"   runat="server" CssClass="btn btn-info" ToolTip="Da por terminado el protocolo con analisis sin resultados"  Text="Terminar protocolo"
-                                  Visible="False" 
-                                Width="160px" OnClick="btnCerrarSinResultados_Click"  OnClientClick="return confirm('¿Está seguro de que desea terminar el protocolo?. Se cerrará aunque tenga determinaciones sin resultados validados.');" />
 
                            <asp:Button ID="btnRestringirAcceso" AccessKey="N" runat="server" CssClass="btn btn-danger" Text="No Publicar"  Visible="false" OnClientClick="ProtocoloPermisos();return false;" 
                                 Width="130px" OnClick="btnRestringirAcceso_Click"/>
-                           <%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+         <%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
                             <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />--%>
              <asp:Button ID="btnDeshacerRestringirAcceso" AccessKey="U" runat="server" CssClass="btn btn-warning" Text="Publicar" 
                                  ValidationGroup="0" Visible="false" OnClientClick="return PreguntoConfirmarPublicar();"
@@ -685,10 +800,14 @@
            <asp:LinkButton ID="imgAdjunto" runat="server" CssClass="btn btn-info" Text="Adjuntar Archivos" ForeColor="White" Width="165px" 
                OnClientClick="AdjuntoProtocoloEdit(); return false;"  Visible="False"></asp:LinkButton>
 
-          <%--   <br />
+          <%--</td>
+                </tr>
 
-                                        <asp:CheckBox ID="chkInfo" runat="server" Text="Info Adicional"  />--%><%--    <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
-                            <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />--%>
+                 
+                <tr>
+                <td style="vertical-align: top">--%><%--   <br />
+
+                                        <asp:CheckBox ID="chkInfo" runat="server" Text="Info Adicional"  />--%>
 
 
                            
@@ -1178,17 +1297,10 @@
                                                
                                                </div>
                                                
-                <%--         <div id="tab6" class="tab_content" style="height: 500px; overflow:scroll;overflow-x:hidden; ">
-                                     <table width="850px">
-                             <tr>
-                                                           <td>    
-                                    <uc1:IncidenciaEdit ID="IncidenciaEdit1" runat="server" />
-                             <asp:Button ID="btnGuardarIncidencia" runat="server" Text="Guardar" onclick="btnGuardarIncidencia_Click" CssClass="btn-primary" Width="100px" />
-                             <asp:Button ID="btnEliminarIncidencia" runat="server" Text="Borrar" onclick="btnEliminarIncidencia_Click" CssClass="btn-primary" Width="100px"/>
-                                    </td>
-                                 </tr>
-                                         </table>
-                                </div>          --%>             
+                <%--  <FooterStyle  BackColor="White" Font-Bold="True" ForeColor="White" />
+                        <RowStyle BackColor="White" ForeColor="#333333" Font-Bold="False" Font-Names="Verdana" Font-Size="8pt" />
+                        <PagerStyle BackColor="#284775" ForeColor="White" HorizontalAlign="Center" />
+                        <SelectedRowStyle BackColor="#E2DED6" Font-Bold="True" ForeColor="#333333" />--%>             
                                                
 </div>
 </td>
@@ -1204,21 +1316,7 @@
 					<tr>
 						
 						<td   colspan="3" align="right">
-                         <%--   <asp:Panel ID="pnlImpresora" Visible="false" runat="server" style="border:1px solid #C0C0C0; width:100%; background-color: #EFEFEF;">                                                      
- <table width="720px" align="center">
- 	<tr>
-						<td class="myLabelIzquierda" align="left" style="width: 140px; background-color: #EFEFEF;">
-                                        Impresora del sistema: </td>
-						<td  align="left">
-                                        <asp:DropDownList ID="ddlImpresora" runat="server" class="form-control input-sm">
-                                        </asp:DropDownList>
-                                        <asp:ImageButton ID="imgImprimir" runat="server" ImageUrl="~/App_Themes/default/images/imprimir.jpg" onclick="imgImprimir_Click" />
-                            </td>
-						
-                                        </tr>
-                                        </table>
-														
- </asp:Panel>--%>
+                            <%-- <EditRowStyle BackColor="#999999" />--%>
                          </td>
 						
 					</tr>
@@ -1375,8 +1473,8 @@
         $('<iframe src="IncidenciaProtocolo.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
             title: 'Incidencias de Calidad del Protocolo',
             autoOpen: true,
-            width: 750,
-            height: 490,
+            width: 700,
+            height: 450,
             modal: true,
             resizable: false,
             autoResize: true,
@@ -1741,6 +1839,65 @@
                 background: "black"
             }
         }).width(765);
+ }
+
+
+    function VerTiemposProtocolo() {
+
+        var dom = document.domain;
+        var domArray = dom.split('.');
+
+        for (var i = domArray.length - 1; i >= 0; i--) {
+            try {
+                var dom = '';
+
+                for (var j = domArray.length - 1; j >= i; j--) {
+                    dom = (j == domArray.length - 1)
+                        ? domArray[j]
+                        : domArray[j] + '.' + dom;
+                }
+
+                document.domain = dom;
+                break;
+            } catch (E) {
+            }
+        }
+
+        var url = 'ProtocoloTiempos.aspx?idProtocolo=' + idProtocolo;
+
+        $('<iframe />', {
+            src: url,
+            frameborder: 0,
+            scrolling: 'auto'
+        }).dialog({
+            title: 'Tiempos del Protocolo',
+            autoOpen: true,
+            width: 750,
+            height: 550,
+            modal: true,
+            resizable: false,
+            autoResize: true,
+
+            open: function (event, ui) {
+                jQuery('.ui-dialog-titlebar-close').hide();
+            },
+
+            buttons: {
+                'Cerrar': function () {
+                    $(this).dialog('close');
+                }
+            },
+
+            close: function () {
+                $(this).dialog('destroy').remove();
+            },
+
+            overlay: {
+                opacity: 0.5,
+                background: 'black'
+            }
+
+        }).width(765);
     }
  
    
@@ -1769,9 +1926,7 @@
             return false;
     }
     
-
-
-    
+     
       function PreguntoConfirmar()
     {
     if (confirm('¿Está seguro de desvalidar lo seleccionado?'))

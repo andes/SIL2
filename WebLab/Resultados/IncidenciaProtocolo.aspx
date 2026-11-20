@@ -26,9 +26,11 @@
                                      <table>
                              <tr>
                                                            <td>    
+                                                                 <div  style="width:600px;height:200pt;overflow:scroll;overflow-x:hidden;border:1px solid #CCCCCC;"" > 
                                     <uc1:IncidenciaEdit ID="IncidenciaEdit1" runat="server" />
+                                                                     </div>
                              <asp:Button ID="btnGuardarIncidencia" runat="server" Text="Guardar" onclick="btnGuardarIncidencia_Click" CssClass="btn-primary" Width="100px" />
-                             <asp:Button ID="btnEliminarIncidencia" runat="server" Text="Borrar" onclick="btnEliminarIncidencia_Click" CssClass="btn-primary" Width="100px"/>
+                             <asp:Button ID="btnEliminarIncidencia" Visible="false" runat="server" Text="Borrar" onclick="btnEliminarIncidencia_Click" CssClass="btn-primary" Width="100px"/>
                                     </td>
                                  </tr>
                                          </table>

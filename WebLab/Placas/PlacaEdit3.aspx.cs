@@ -90,9 +90,15 @@ namespace WebLab.Placas {
 
 
 
-            string m_ssql = "SELECT   distinct idusuario, apellido    as nombre FROM sys_usuario WHERE firmavalidacion like '%Bio%' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
+            ///  string m_ssql = "SELECT   distinct idusuario, apellido    as nombre FROM sys_usuario WHERE firmavalidacion like '%Bio%' and idEfector=" + oC.IdEfector.IdEfector.ToString()+ " and activo=1 order by nombre ";
+               string m_ssql = @" SELECT distinct idusuario, apellido as nombre
+            FROM sys_usuario U wirh (nolock)
+            WHERE firmavalidacion like '%Bio%'  and activo = 1
+                and exists(select 1 from Sys_UsuarioEfector ue wirh(nolock) where ue.idUsuario = U.idUsuario and idEfector = " + oC.IdEfector.IdEfector.ToString() + @" and ue.activo = 1)
+                order by nombre";
 
-            oUtil.CargarCombo(ddlOperador, m_ssql, "idusuario", "nombre");
+
+        oUtil.CargarCombo(ddlOperador, m_ssql, "idusuario", "nombre");
             ddlOperador.Items.Insert(0, new ListItem("--Seleccione--", "0"));
 
             oUtil.CargarCombo(ddlOperador0, m_ssql, "idusuario", "nombre");

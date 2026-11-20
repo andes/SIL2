@@ -890,17 +890,27 @@ namespace WebLab.Protocolos
                 else
                     Session["idUrgencia"] = 0;
 
-                pnlIncidencia.Visible = true;
-                tituloCalidad.Visible = true;
-                this.IncidenciaEdit1.Visible = true;
-                this.IncidenciaEdit1.MostrarDatosdelProtocolo(oRegistro.IdProtocolo);
 
+                tituloCalidad.Visible = true;
+
+                pnlIncidencia.Visible = true;            
+                this.IncidenciaEdit1.Visible = true;
+            /*    this.IncidenciaEdit1.MostrarDatosdelProtocolo(oRegistro.IdProtocolo);                
 
                 int cantidadIncidencias = oRegistro.getIncidencias();
                 if (cantidadIncidencias > 0)
                     inci.Visible = true;
                 else
                     inci.Visible = false;
+                    */
+                /*Carga de incidencias optimizado para traerlas de una unica vez*/
+                HashSet<int> incidencias =
+    IncidenciaEdit1.MostrarDatosdelProtocolo(
+        oRegistro.IdProtocolo);
+                int cantidadIncidencias = incidencias.Count;
+                inci.Visible = cantidadIncidencias > 0;
+
+                /*Fin de incidencias*/
 
 
                 ///Cambiar de Paciente: LLeva a elección de un otro paciente para asignarlo al protocolo.
@@ -958,7 +968,7 @@ namespace WebLab.Protocolos
             
                 chkNotificar.Checked = oRegistro.Notificarresultado;
                 // muestra FIS
-                chkSinFIS.Checked = false;
+             /*   chkSinFIS.Checked = false;
                 chkSinFUC.Checked = false;
                 if (cantidadIncidencias > 0)
                 { 
@@ -976,6 +986,25 @@ namespace WebLab.Protocolos
                             txtFechaFUC.Value = oRegistro.FechaUltimoContacto.ToShortDateString();
                     }
                 }
+                */
+                ////Verificacion nueva de incidencias
+                chkSinFIS.Checked = incidencias.Contains(46);
+                chkSinFUC.Checked = incidencias.Contains(47);
+
+                if (!chkSinFIS.Checked &&
+                    oRegistro.FechaInicioSintomas.Year != 1900)
+                {
+                    txtFechaFIS.Value =
+                        oRegistro.FechaInicioSintomas.ToShortDateString();
+                }
+
+                if (!chkSinFUC.Checked &&
+                    oRegistro.FechaUltimoContacto.Year != 1900)
+                {
+                    txtFechaFUC.Value =
+                        oRegistro.FechaUltimoContacto.ToShortDateString();
+                }
+                ///fin de Verificacion nueva de incidencias
 
                 if (oRegistro.IdCasoSISA > 0)
                 { lblNroSISA.Text = "Nro. SISA: " + oRegistro.IdCasoSISA.ToString(); lblNroSISA.Visible = true; }
@@ -2503,7 +2532,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                 oRegistro.FechaOrden = DateTime.Parse(txtFechaOrden.Value);
                 oRegistro.FechaTomaMuestra= DateTime.Parse(txtFechaTomaMuestra.Value);
                 oRegistro.FechaRetiro = DateTime.Parse("01/01/1900"); //DateTime.Parse(txtFechaEntrega.Value);
-
+                
                 oRegistro.IdEfectorSolicitante = (Efector)oEfector.Get(typeof(Efector), int.Parse(ddlEfector.SelectedValue));
                 oRegistro.IdEspecialistaSolicitante = 0;
 
@@ -2571,6 +2600,7 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
                     oRegistro.IpCarga = "";
                     oRegistro.Impres = ddlImpresoraEtiqueta.SelectedItem.Text;
                     oRegistro.ObservacionResultado = ""; //20.10.2026 En alta: instanciar valor //En Modificacion: mantener el valor cargado
+                    oRegistro.FechaFinalizacion = DateTime.Parse("01/01/1900"); ///En alta: instanciar valor //En Modificacion: mantener el valor cargado
                 }
 
                 ///separar medico
@@ -2666,20 +2696,26 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
 
                  if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
                   {
-                      oRegistro.Estado = 2;  //validado total (cerrado);
+                    if (  oRegistro.Estado<2)                    oRegistro.FechaFinalizacion = DateTime.Now;//solo actualiza la fecha de finalizacion si no estaba terminado antes
+
+                    oRegistro.Estado = 2;  //validado total (cerrado);
                                               //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
                       if (!oRegistro.Notificarresultado) // no se notifica a sips
                           oRegistro.Estado = 3; ///Accceso Restringido;
                   }
                   else
                   {
-                      if (oRegistro.EnProceso())
-                      {
-                          oRegistro.Estado = 1;//en proceso
-                                                // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-                      }
-                      else
-                          oRegistro.Estado = 0;
+                 
+                    if (oRegistro.EnProceso())
+                    {
+                       // oRegistro.FechaFinalizacion = DateTime.Parse("01/01/1900");
+                        oRegistro.Estado = 1;//en proceso
+                                             // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                    }
+                    else
+                    {
+                        oRegistro.Estado = 0;
+                    }
 
                   }
 
@@ -3023,9 +3059,68 @@ idItem, impresora, fechaRegistro, tipoMuestra ) VALUES ( " + oProt.IdProtocolo.T
             }
         }
 
+        private void AgregarActoBioquimico(Business.Data.Laboratorio.Protocolo oRegistro)
+        {
+            string codigo = "001";
+            if (oRegistro.IdTipoServicio.IdTipoServicio == 3) codigo = "002";
+            
+            string datos = TxtDatos.Value ?? "";
+            string[] determinaciones = datos.Split('@');
+
+            bool existe = false;
+
+            foreach (string determinacion in determinaciones)
+            {
+                string[] fila = determinacion.Split('#');
+
+                if (fila.Length > 1 && fila[1].Trim() == codigo)
+                {
+                    existe = true;
+                    break;
+                }
+            }
+
+            ///agrega al final
+            //if (!existe)
+            //{
+            //    if (!string.IsNullOrEmpty(datos) && !datos.EndsWith("@"))
+            //        datos += "@";
+
+            //    datos += "0#"+ codigo + "#Si#false@";
+
+            //    TxtDatos.Value = datos;
+            //}
+
+            ///agregar al principio
+            if (!existe)
+            {
+                // Agregar el Acto Bioquímico al principio
+                datos = "0#" + codigo + "#Si#false@" + datos;
+
+                TxtDatos.Value = datos;
+            }
+        }
+
         private void GuardarDetalle(Business.Data.Laboratorio.Protocolo oRegistro)
         {         
             int dias_espera = 0;
+
+            // Incorporar Acto Bioquímico si no está incluido solo en el alta (solo alta que no sea derivacion)
+            /*
+               if (Request["Operacion"].ToString() == "AltaTurno")                    
+                    if (Request["Operacion"].ToString() == "AltaDerivacion")
+                        if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfector")                            
+                            if (Request["Operacion"].ToString() == "AltaPeticion")
+                                if (Request["Operacion"].ToString() == "AltaDerivacionMultiEfectorLote") //Se piso en un merge..
+                                    if (Request["Operacion"].ToString() == "AltaFFEE") //Se piso en un merge..
+            */
+            if ((oRegistro.DebeAgregarActoBioquimico()) && (oC.CargaAutomaticaActoBioquimico) &&
+                    (Request["Operacion"].ToString() == "Alta" || 
+                    Request["Operacion"].ToString() == "AltaTurno" || 
+                    Request["Operacion"].ToString() == "AltaFFEE"))            
+            AgregarActoBioquimico(oRegistro);
+            ///fin de Incorporar Acto Bioquímico
+            /// 
             string[] tabla = TxtDatos.Value.Split('@');
             ISession m_session = NHibernateHttpModule.CurrentSession;
 
@@ -4976,47 +5071,100 @@ where D.idEfector = " + oUser.IdEfector.IdEfector.ToString() + " order by c.Nomb
 
             ddlDiagEfector.Items.Insert(0, new ListItem("Seleccione", "0"));
         }
+        //        private void CargarDiagnosticosFrecuentes()
+        //        {
+        //            Utility oUtil = new Utility();            
+        //            lstDiagnosticos.Items.Clear();
+
+        //            string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
+        //FROM Sys_CIE10 c (nolock)
+        //inner join LAB_ProtocoloDiagnostico p (nolock) on c.id = p.idDiagnostico
+        //where  c.tipo='DIAG' and 
+        //p.idEfector=" + oUser.IdEfector.IdEfector.ToString() + @"
+        //group by id, codigo, nombre
+        //ORDER BY cantidad desc";
+
+
+
+        //            DataSet Ds = new DataSet();
+        //            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
+        //            SqlDataAdapter adapter = new SqlDataAdapter();
+        //            adapter.SelectCommand = new SqlCommand(m_ssql, conn);
+        //            adapter.Fill(Ds);
+        //            lstDiagnosticos.Items.Clear();
+        //            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+        //            {
+        //                ListItem oDia = new ListItem();
+        //                oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
+        //                oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
+        //                lstDiagnosticos.Items.Add(oDia);
+        //            }            
+        //            lstDiagnosticos.UpdateAfterCallBack = true;
+        //        }
+
+
         private void CargarDiagnosticosFrecuentes()
         {
-            Utility oUtil = new Utility();
+            ///nueva funcion con caché
+            int idEfector = oUser.IdEfector.IdEfector;
 
+            string cacheKey = "DiagnosticosFrecuentes_" + idEfector;
 
-            //  btnGuardarImprimir.Visible = oC.GeneraComprobanteProtocolo;
-            lstDiagnosticos.Items.Clear();
+            // Buscar primero en caché
+            DataTable dt = HttpRuntime.Cache[cacheKey] as DataTable;
 
-            string m_ssql = @"SELECT top 20 ID, Codigo + ' - ' + Nombre as nombre, count (*)  cantidad
-FROM Sys_CIE10 c (nolock)
-inner join LAB_ProtocoloDiagnostico p (nolock) on c.id = p.idDiagnostico
-where  c.tipo='DIAG' and 
-p.idEfector=" + oUser.IdEfector.IdEfector.ToString() + @"
-group by id, codigo, nombre
-ORDER BY cantidad desc";
-
-
-           
-            DataSet Ds = new DataSet();
-            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString); ///Performance: conexion de solo lectura
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            adapter.SelectCommand = new SqlCommand(m_ssql, conn);
-            adapter.Fill(Ds);
-            lstDiagnosticos.Items.Clear();
-            for (int i = 0; i < Ds.Tables[0].Rows.Count; i++)
+            if (dt == null)
             {
+                string sql = @"
+            SELECT TOP 20
+                c.ID,
+                c.Codigo + ' - ' + c.Nombre AS nombre,
+                COUNT(*) AS cantidad
+            FROM Sys_CIE10 c WITH (NOLOCK)
+            INNER JOIN LAB_ProtocoloDiagnostico p WITH (NOLOCK)
+                ON c.ID = p.idDiagnostico
+            WHERE c.tipo = 'DIAG'
+              AND p.idEfector = @idEfector
+            GROUP BY c.ID, c.Codigo, c.Nombre
+            ORDER BY cantidad DESC";
 
-                ListItem oDia = new ListItem();
-                oDia.Text = Ds.Tables[0].Rows[i][1].ToString();
-                oDia.Value = Ds.Tables[0].Rows[i][0].ToString();
-                lstDiagnosticos.Items.Add(oDia);
+                dt = new DataTable();
 
+                using (SqlConnection conn = new SqlConnection(
+                    ConfigurationManager.ConnectionStrings["SIL_ReadOnly"]
+                        .ConnectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.Add("@idEfector", SqlDbType.Int)
+                            .Value = idEfector;
 
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                        {
+                            adapter.Fill(dt);
+                        }
+                    }
+                }
+
+                // Guardar en caché durante 120 minutos
+                HttpRuntime.Cache.Insert(
+                    cacheKey,
+                    dt,
+                    null,
+                    DateTime.Now.AddMinutes(120),
+                    System.Web.Caching.Cache.NoSlidingExpiration
+                );
             }
 
-            //if (oC.NomencladorDiagnostico==1) //prppio
-            //    m_ssql = "SELECT idDiagnostico as ID, Codigo + ' - ' + Nombre as nombre FROM lab_Diagnostico WHERE (idDiagnostico IN (SELECT DISTINCT idDiagnostico FROM LAB_ProtocoloDiagnostico)) ORDER BY Nombre";
-            //oUtil.CargarListBox(lstDiagnosticos, m_ssql, "id", "nombre");
+            // Cargar el ListBox desde la caché o desde SQL
+            lstDiagnosticos.Items.Clear();
+
+            lstDiagnosticos.DataSource = dt;
+            lstDiagnosticos.DataTextField = "nombre";
+            lstDiagnosticos.DataValueField = "ID";
+            lstDiagnosticos.DataBind();
+
             lstDiagnosticos.UpdateAfterCallBack = true;
-
-
         }
 
         protected void btnBusquedaFrecuente_Click(object sender, EventArgs e)

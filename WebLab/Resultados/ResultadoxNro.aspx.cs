@@ -1068,7 +1068,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                      
                     Protocolo oProtocolo = new Protocolo();
                     oProtocolo = oDetalle.IdProtocolo;
-
+                    oProtocolo.FechaFinalizacion = DateTime.Parse("01/01/1900");
                     if (s_operacion != "Valida")
                     {
                         if (oProtocolo.Estado == 0)
@@ -1078,6 +1078,7 @@ left join sys_usuario U2 with (nolock) on U2.idusuario= D.idusuarioresultado
                     {
                         if (oProtocolo.ValidadoTotal(s_operacion, int.Parse(Session["idUsuarioValida"].ToString())))
                         {
+                            oProtocolo.FechaFinalizacion = DateTime.Now;
                             oProtocolo.Estado = 2;  //validado total (cerrado); 
 
                             if (!oProtocolo.Notificarresultado)

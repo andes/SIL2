@@ -51,7 +51,6 @@ namespace WebLab.Derivaciones
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-          
             if (!Page.IsPostBack)
             {
                 if (Session["idUsuario"] != null)
@@ -480,7 +479,7 @@ namespace WebLab.Derivaciones
                     //   ScriptManager.RegisterStartupScript(this, GetType(), "noHuboCambios", "alert('No hay cambios para guardar');", true);
                     //}
                     //else
-                    {
+                    
                         int idUsuario = int.Parse(Session["idUsuario"].ToString());
                         Usuario oUser = new Usuario();
                         oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
@@ -513,7 +512,7 @@ namespace WebLab.Derivaciones
                             Guardar(lote);
                             Response.Redirect("NuevoLote.aspx?Lote=" + lote.IdLoteDerivacion + "&Tipo=" + (Request["Tipo"]).ToString(), false);
                         }
-                    }
+                    
 
                 }
                 else
@@ -543,32 +542,32 @@ namespace WebLab.Derivaciones
         {
             if (Session["idUsuario"] != null)
             {
-                    foreach (GridViewRow row in gvLista.Rows)
-                    {
-                        int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
-                        bool chequeado = ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked;
-                        //int idLote = lote.IdLoteDerivacion;
-                        int desasociaLote = -1;
+                foreach (GridViewRow row in gvLista.Rows)
+                {
+                    int estado = Convert.ToInt32(((Label)(row.Cells[0].FindControl("lbl_estado"))).Text);
+                    bool chequeado = ((CheckBox)(row.Cells[0].FindControl("CheckBox1"))).Checked;
+                    //int idLote = lote.IdLoteDerivacion;
+                    int desasociaLote = -1;
+                    
 
+                    //CASOS: Se evalua el estado anterior de las determinaciones
+                    // 1 - Esta chequeado -> Se asocia al lote
+                    if ((estado == 0 || estado == 2 || estado == 4) && chequeado) desasociaLote = 0;
+                    // 2 - No esta chequeado y tiene estado "Pendiente para enviar" (4) 
+                    if (estado == 4 && !chequeado)  desasociaLote = 1;
 
-                        //CASOS: Se evalua el estado anterior de las determinaciones
-                        // 1 - Esta chequeado -> Se asocia al lote
-                        if ((estado == 0 || estado == 2 || estado == 4) && chequeado) desasociaLote = 0;
-                        // 2 - No esta chequeado y tiene estado "Pendiente para enviar" (4) 
-                        if (estado == 4 && !chequeado)  desasociaLote = 1;
-
-
-                        if(desasociaLote != -1)
+                    
+                   if(desasociaLote != -1)
+                   {
+                        string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
+                        foreach (string idDetalleProtocolo in idDetalles)
                         {
-                            string[] idDetalles = gvLista.DataKeys[row.RowIndex].Value.ToString().Split('|');//20.08.2026 Para los casos donde un analisis compuesto tiene mas de una determinacion simple con derivacion automatica, "desarmo" el pipe
-                            foreach (string idDetalleProtocolo in idDetalles)
-                            {
-                                DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
-                                ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
-                            }
+                            DetalleProtocolo oDetalle = (DetalleProtocolo)new DetalleProtocolo().Get(typeof(DetalleProtocolo), int.Parse(idDetalleProtocolo));
+                            ActualizarDetalleProtocolo(oDetalle, lote.IdLoteDerivacion, estado, desasociaLote);
                         }
-                    }
+                   }
                 }
+            }
             else 
                 Response.Redirect("../FinSesion.aspx", false);
         }
@@ -855,7 +854,6 @@ namespace WebLab.Derivaciones
             SetToken(); //actualizo los tokens cuando se vuelve del modal
             CargarGrilla();
         }
-
         /// 27.10.2026 pasamos las funciones js a aspx.cs
 
         protected void cvGeneral_ServerValidate(object source, ServerValidateEventArgs args)
@@ -921,7 +919,5 @@ namespace WebLab.Derivaciones
             }
            
         }
-
-        
     }
 }

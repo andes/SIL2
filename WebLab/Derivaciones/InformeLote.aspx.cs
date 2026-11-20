@@ -50,12 +50,13 @@ namespace WebLab.Derivaciones
             if (Session["idUsuario"] != null)
             {
                 oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-               
+
                 if (!Page.IsPostBack)
                 {
                     PreventingDoubleSubmit(btnGuardar);
                     SetToken();
                     int estado = Convert.ToInt32(Request["Estado"]);
+
                     if (estado == 1 || estado == 3)
                     {
                         activarControles(true);
@@ -376,7 +377,6 @@ namespace WebLab.Derivaciones
                         ScriptManager.RegisterStartupScript(this, GetType(), "mensajeError", "alert('No se puede derivar lote N° " + idLote + " no tiene determinaciones.\\nAgregue determinaciones o descarte el lote.');", true);
                     }
                 }
-               
 
             }
             else
@@ -410,7 +410,7 @@ namespace WebLab.Derivaciones
         private bool Guardar()
         {
             bool seGuardoEnBd = false;
-            if (verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
+            if(verificarDeterminaciones() == 0) //No trajo ningun id Lote con error
             {
                 foreach (GridViewRow row in gvLista.Rows)
                 {
@@ -430,13 +430,13 @@ namespace WebLab.Derivaciones
                         //Se cambia el estado del lote LAB_LoteDerivacion
                         lote.Estado = estadoLote;
                         lote.Observacion = observacion;
-                        lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0;
+                        lote.IdUsuarioEnvio = (estadoLote == 2) ? idUsuario : 0; 
                         //para Estado "Derivado" poner la fecha actual y para estado "Cancelado" no poner Fecha
                         string fecha_hora = txtFecha.Text + " " + txtHora.Text;
                         DateTime fechaResultado = (estadoLote == 2) ? Convert.ToDateTime(fecha_hora) : DateTime.Parse("01/01/1900");
                         lote.FechaEnvio = fechaResultado;
                         lote.Save();
-
+                   
                         ISession m_session = NHibernateHttpModule.CurrentSession;
                         ICriteria crit = m_session.CreateCriteria(typeof(Business.Data.Laboratorio.Derivacion));
                         //crit.Add(Expression.Eq("Idlote", lote.IdLoteDerivacion));
@@ -444,47 +444,47 @@ namespace WebLab.Derivaciones
                         string ssql_Protocolo = " IdLote=" + lote.IdLoteDerivacion + " and {alias}.IdDetalleProtocolo in (Select IdDetalleProtocolo From LAB_DetalleProtocolo  where IdEfector=" + oUser.IdEfector.IdEfector + ")";
                         crit.Add(Expression.Sql(ssql_Protocolo));
                         IList lista = crit.List();
-
+                        
                         foreach (Business.Data.Laboratorio.Derivacion oDeriva in lista)
                         {
                             #region Derivacion 
-                            //Cambia el estado de las derivaciones LAB_Derivacion 
+                                //Cambia el estado de las derivaciones LAB_Derivacion 
 
-                            /*
-                                Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
-                                1 : Creado
-                                2 : Derivado
-                                3 : Cancelado
+                                /*
+                                 Estado del lote LAB_LoteDerivacionEstado (representa el estado del lote, no de la derivacion)
+                                 1 : Creado
+                                 2 : Derivado
+                                 3 : Cancelado
 
-                                Estado de la derivacion LAB_DerivacionEstado
-                                0 : Pendiente de derivar
-                                1 : Enviado
-                                2 : No Enviado
-                                3 : Recibido
-                                4 : Pendiente para enviar
-                            */
+                                 Estado de la derivacion LAB_DerivacionEstado
+                                 0 : Pendiente de derivar
+                                 1 : Enviado
+                                 2 : No Enviado
+                                 3 : Recibido
+                                 4 : Pendiente para enviar
+                               */
                             int estadoAnterior = oDeriva.Estado;
-                            oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
-                            oDeriva.Save();
-                            #endregion
+                                oDeriva.Estado = (estadoLote == 2) ? 1 : 2;
+                                oDeriva.Save();
+                                #endregion
 
 
                             #region cambio_codificacion_a_derivacion
                             //Cambia el resultado de LAB_DetalleProtocolo
                             DetalleProtocolo oDet = oDeriva.IdDetalleProtocolo;
 
-                            string aux_resultadoCar = "";
+                            string aux_resultadoCar="";
                             //Si el resultado anterior era 'pendiente de derivar'
-                            if (estadoAnterior == 4 && oDet.ResultadoCar != "Pendiente para enviar ") aux_resultadoCar = oDet.ResultadoCar.Replace("- Pendiente para enviar", "");
+                            if (estadoAnterior == 4 && oDet.ResultadoCar != "Pendiente para enviar ")   aux_resultadoCar = oDet.ResultadoCar.Replace("- Pendiente para enviar", "");
 
                             //Si el resultado anterior era 'No derivado.'
-                            if (estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
+                            if(estadoAnterior == 2 && oDet.ResultadoCar != "No Derivado. ") aux_resultadoCar = oDet.ResultadoCar.Replace("- No Derivado.", "");
 
                             //if (aux_resultadoCar != "")  //Agrego los nuevos valores al resultadoCar
                             //    if (estadoLote == 2) resultadoDerivacion = aux_resultadoCar + " - " + "Derivado: " + row.Cells[3].Text;
                             //    else resultadoDerivacion = aux_resultadoCar + " - " + "No Derivado. ";
 
-                            oDet.ResultadoCar = (aux_resultadoCar != "") ? aux_resultadoCar + " - " + resultadoDerivacion : resultadoDerivacion;
+                            oDet.ResultadoCar = (aux_resultadoCar != "") ? aux_resultadoCar + " - " + resultadoDerivacion  : resultadoDerivacion;
                             //oDet.ResultadoCar = resultadoDerivacion;
                             oDet.ConResultado = true;
                             oDet.IdUsuarioResultado = idUsuario;
@@ -494,13 +494,13 @@ namespace WebLab.Derivaciones
                             oDet.GrabarAuditoriaDetalleProtocolo("Graba", idUsuario);
                             #endregion
                         }
+                   
 
-
-
-
-                        //Inserta auditoria del lote
-                        lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
-                        lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Observacion", txtObservacion.Text);
+                   
+                    
+                    //Inserta auditoria del lote
+                    lote.GrabarAuditoriaLoteDerivacion(lote.descripcionEstadoLote(), idUsuario); // LAB-54 Sacar la palabra "Estado: xxxxx"
+                    lote.GrabarAuditoriaLoteDerivacion(resultadoAuditoria, idUsuario, "Observacion", txtObservacion.Text);
 
                         if (estadoLote == 2) //Si deriva indica con que transportista fue, y que fecha y hora se retiro
                         {      //   lote.GrabarAuditoriaLoteDerivacion(resultadoDerivacion, idUsuario, "Transportista", rb_transportista.SelectedValue); //Vanesa: Cambio el radio button por un dropdownlist (asociado a tarea LAB-52)
@@ -532,7 +532,6 @@ namespace WebLab.Derivaciones
         {
             Response.Redirect("InformeList3.aspx?idLote=" + e.CommandArgument + "&Destino=" + e.CommandName + "&Tipo=Modifica" , false);
         }
-
 
         #endregion
 

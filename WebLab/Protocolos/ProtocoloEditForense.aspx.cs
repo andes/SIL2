@@ -476,7 +476,7 @@ namespace WebLab.Protocolos
 
             lblUsuario.Text = oRegistro.IdUsuarioRegistro.Apellido + " " + oRegistro.FechaRegistro.ToString();
 
-            lblTitulo.Text += oRegistro.GetNumero().ToString();
+            lblTitulo.Text += oRegistro.Numero.ToString();//.GetNumero().ToString();
 
             //ddlServicio.SelectedValue = oRegistro.IdTipoServicio.IdTipoServicio.ToString();
 
@@ -1228,7 +1228,7 @@ namespace WebLab.Protocolos
 
                     Business.Data.Laboratorio.CasoFiliacion oCaso = new Business.Data.Laboratorio.CasoFiliacion();
                     oCaso = (Business.Data.Laboratorio.CasoFiliacion)oCaso.Get(typeof(Business.Data.Laboratorio.CasoFiliacion), int.Parse(Session["idCaso"].ToString()));
-                    oCaso.GrabarAuditoria(Request["Operacion"].ToString() + " Protocolo ", oUser.IdUsuario, "Nro. " + oRegistro.GetNumero());
+                    oCaso.GrabarAuditoria(Request["Operacion"].ToString() + " Protocolo ", oUser.IdUsuario, "Nro. " + oRegistro.Numero.ToString());
 
                     ///veririfcia si fue validada la seccion muestras, se desvalida
                     AuditoriaCasoFiliacion oMarca = new AuditoriaCasoFiliacion();
@@ -1241,7 +1241,7 @@ namespace WebLab.Protocolos
                     IList itemsm = crit2.List();
                     if (itemsm.Count > 0)
                     {
-                        oCaso.GrabarAuditoria("DesValida Muestras", oUser.IdUsuario, "Motivo Modificacion Protocolo " + oRegistro.GetNumero());
+                        oCaso.GrabarAuditoria("DesValida Muestras", oUser.IdUsuario, "Motivo Modificacion Protocolo " + oRegistro.Numero.ToString());
                     }
 
                     /// si el caso ya fue validado se desvalida para volver a generar el informe
@@ -1250,7 +1250,7 @@ namespace WebLab.Protocolos
                         oCaso.FechaValida = DateTime.Parse("1900-01-01");
                         oCaso.IdUsuarioValida = 0;
                         oCaso.Save();
-                        oCaso.GrabarAuditoria("Desvalida Caso ", oUser.IdUsuario, "Motivo Modificacion Protocolo " + oRegistro.GetNumero());
+                        oCaso.GrabarAuditoria("Desvalida Caso ", oUser.IdUsuario, "Motivo Modificacion Protocolo " + oRegistro.Numero.ToString());
                     }
                 }
 

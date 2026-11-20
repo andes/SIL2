@@ -91,22 +91,80 @@ namespace WebLab.Resultados
         {
             if (!Page.IsPostBack)
             {
-                if (Session["idUsuario"] != null)                
-                    Inicializar();                
+                if (Session["idUsuario"] != null)
+                {
+                    Inicializar();
+                    btnVerTiempos.OnClientClick =    "VerTiemposProtocolo(" + CurrentPageIndex + "); return false;";
+                }
                 else
                     Response.Redirect("../FinSesion.aspx", false);
             }
 
         }
 
+        private void MostrarAreasValidacion()
+        {
+            lblAreasValidacion.Visible = false;
 
-  
+            if (Request["Operacion"] != "Valida")
+                return;
+
+            string listaAreas = Request["idArea"];
+
+            if (string.IsNullOrEmpty(listaAreas) || listaAreas == "0")
+                return;
+
+            string nombresAreas = ObtenerNombresAreas(listaAreas);
+
+            if (!string.IsNullOrEmpty(nombresAreas))
+            {
+                lblAreasValidacion.Text =
+                    "Áreas a validar: " + nombresAreas;
+
+                lblAreasValidacion.Visible = true;
+            }
+        }
+        private string ObtenerNombresAreas(string listaAreas)
+        {
+            List<string> nombres = new List<string>();
+
+            string sql = @"
+        SELECT nombre
+        FROM LAB_Area
+        WHERE idArea = @idArea";
+
+            SqlConnection conn =
+                (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+            if (conn.State != ConnectionState.Open)
+                conn.Open();
+
+            foreach (string valor in listaAreas.Split(','))
+            {
+                int idArea;
+
+                if (!int.TryParse(valor.Trim(), out idArea))
+                    continue;
+
+                using (SqlCommand cmd = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.Add("@idArea", SqlDbType.Int).Value = idArea;
+
+                    object resultado = cmd.ExecuteScalar();
+
+                    if (resultado != null && resultado != DBNull.Value)
+                        nombres.Add(resultado.ToString());
+                }
+            }
+
+            return string.Join(", ", nombres.ToArray());
+        }
         private void Inicializar()
         {
 
             CargarGrilla();
-       
 
+            MostrarAreasValidacion();
             MuestraDatos(CurrentPageIndex.ToString());
     
             switch (Request["Operacion"].ToString())
@@ -141,6 +199,7 @@ namespace WebLab.Resultados
 
                         rdbImprimir.Visible = false; 
                         btnRestringirAcceso.Visible = false;
+                    //    btnVerTiempos.Visible = false;
                         VerificaPermisos("Carga");
                     }
                     break;
@@ -156,6 +215,7 @@ namespace WebLab.Resultados
                         chkFormula.Checked = oCon.AplicarFormulaDefecto;
                         pnlHC.Visible = false;
                         pnlResultados.Visible = true;
+                   //     btnVerTiempos.Visible = false;
                         hypRegresar.NavigateUrl = "ResultadoBusqueda.aspx?idServicio=" + Request["idServicio"].ToString() + "&Operacion=" + Request["Operacion"].ToString() + "&modo=" + Request["modo"].ToString();
                         lblTitulo.Text = "CONTROL DE RESULTADOS"; lblTitulo.ForeColor = Color.Green;
                         pnlReferencia.Visible = false;
@@ -888,9 +948,17 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
 
                         imgEstado.ImageUrl = "~/App_Themes/default/images/rojo.gif";
                         lblEstado1.CssClass = "label label-danger";
-                        lblEstado1.Text = "NO PROCESADO";                    
+                        lblEstado1.Text = "NO PROCESADO";
+                    //    btnVerTiempos.Visible = false;
                         imgPdf.Visible = false; btnRestringirAcceso.Visible = false;
-                        btnCerrarSinResultados.Visible = true;
+                        ///si se muestra la opcion de cerrar area no se cierra el protocolo.
+                        if (esValida)
+                        {
+                            if (btnCerrarArea.Visible)
+                                btnCerrarSinResultados.Visible = false;
+                            else
+                                btnCerrarSinResultados.Visible = true;
+                        }
                     }
                     break;
                 case 1:
@@ -898,7 +966,14 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                         lblEstado1.CssClass = "label label-warning";
                         lblEstado1.Text = "EN PROCESO";
                         btnRestringirAcceso.Visible = false;
-                        btnCerrarSinResultados.Visible = true;
+                        ///si se muestra la opcion de cerrar area no se cierra el protocolo.
+                        if (esValida)
+                        {
+                            if (btnCerrarArea.Visible)
+                                btnCerrarSinResultados.Visible = false;
+                            else
+                                btnCerrarSinResultados.Visible = true;
+                        }
                     }
                     
                     break;
@@ -931,7 +1006,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                     {
                         imgEstado.ImageUrl = "~/App_Themes/default/images/lock.png";
                         lblEstado1.CssClass = "label label-success";
-                        lblEstado1.Text = "ACCESO RESTRINGIDO";                        
+                        lblEstado1.Text = "ACCESO RESTRINGIDO";
+                        btnCerrarSinResultados.Visible = false;
                         if (esCarga)
                         {
                             btnGuardar.Visible = false;
@@ -978,6 +1054,9 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 else
                     pnlAntibiograma.Enabled = true;
 
+                btnCerrarArea.Visible = false;
+                btnCerrarSinResultados.Visible = false;
+
             }
 
             lblUsuario.Text =  oRegistro.IdUsuarioRegistro.Apellido;
@@ -999,7 +1078,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             else lblFechaTomaMuestra.Text = oRegistro.FechaTomaMuestra.ToShortDateString();
             lblFechaTomaMuestra1.Text = lblFechaTomaMuestra.Text;
 
-            lblProtocolo.Text =   oRegistro.GetNumero().ToString();
+            lblProtocolo.Text = oRegistro.Numero.ToString();
             lblProtocolo1.Text = lblProtocolo.Text;
 
             //hplProtocolo.NavigateUrl = "../Protocolos/ProtocoloEdit2.aspx?idServicio=" + oRegistro.IdTipoServicio.IdTipoServicio.ToString()+ "&Operacion=Modifica&idProtocolo=" +oRegistro.IdProtocolo.ToString();
@@ -1162,8 +1241,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 Caro 22.07.2026    
                 Se excluye busqueda de antecedentes para no pacientes.
 
-                Vane 14.10.2026
-                Se muestra el icono de adjunto para derivaciones
+
             */
             string conexion = ConfigurationManager.ConnectionStrings["SIL_ReadOnly"].ConnectionString;
             string s_operacion = Request["Operacion"] ?? "";
@@ -1175,9 +1253,13 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             bool mostrarResultadosAnteriores =
     (s_operacion == "Valida" || s_operacion == "Control")
     && s_idServicio != "5";   // No mostrar para No Pacientes
-
-            string m_strSQL = " 1=1 ";                                                       
-            if (Request["idArea"].ToString() != "0")   m_strSQL += " and idArea in (" + Request["idArea"].ToString()+")";            
+            btnCerrarArea.Visible = false;
+            string m_strSQL = " 1=1 ";
+            if (Request["idArea"].ToString() != "0")
+            {
+                m_strSQL += " and idArea in (" + Request["idArea"].ToString() + ")";
+                btnCerrarArea.Visible = true;
+            }
             if (s_operacion == "HC")
             {
                 if (Request["validado"].ToString() == "1") { m_strSQL += " and estado=2 "; }
@@ -2727,7 +2809,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             {
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-                Guardar(oProtocolo, true, false);
+                Guardar(oProtocolo, true, false,true);
                 //Imprimir(oProtocolo, "I");
                 Imprimir(oProtocolo, "PDF");
                 string sredirect="";
@@ -2758,7 +2840,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             {
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-                Guardar(oProtocolo, false, false);
+                Guardar(oProtocolo, false, false, true);
 
                 string sredirect="";
 
@@ -2788,7 +2870,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             {
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-                Guardar(oProtocolo, false,true);
+                Guardar(oProtocolo, false,true, true);
 
                 string sredirect="";
 
@@ -3113,6 +3195,8 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                
             if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
             {
+                if (oProtocolo.Estado < 2)                oProtocolo.FechaFinalizacion = DateTime.Now;
+
                 oProtocolo.Estado = 2;  //validado total (cerrado);
                                         //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
                 if (!oProtocolo.Notificarresultado) // no se notifica a sips
@@ -3120,6 +3204,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             }
             else
             {
+                oProtocolo.FechaFinalizacion = DateTime.Parse("01/01/1900");
                 if (oProtocolo.EnProceso())
                 {
                     oProtocolo.Estado = 1;//en proceso
@@ -3178,7 +3263,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 
             }
         }
-        private void Guardar(Protocolo oProtocolo, bool imprimir, bool todo)
+        private void Guardar(Protocolo oProtocolo, bool imprimir, bool todo, bool validacierre)
         {
             if (Request["Operacion"].ToString() == "Carga")
             { if (Session["idUsuario"] == null) Response.Redirect("../FinSesion.aspx", false); }
@@ -3303,6 +3388,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 }
                 //oProtocolo.ObservacionResultado = txtObservacion.Text;
                 oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                oProtocolo.FechaFinalizacion = DateTime.Parse("01/01/1900");
                 if (Request["Operacion"].ToString() == "Carga")
                 {
                     if (oProtocolo.EnProceso())
@@ -3313,28 +3399,33 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
                 }
                 else
                 {
-                    if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString())))
+                    //   if (validacierre)///agrego si verifica el cierre o no
+                    if ((validacierre) && (Request["Operacion"].ToString() == "Valida") && (!chkCerrarSinResultados.Checked))
                     {
-                        oProtocolo.Estado = 2;  //validado total (cerrado);
-                                                //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
-
-                        if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio!=5))//no aplica para no pacientes.
-                            oProtocolo.Estado = 3; //Acceso Restringido
-                    }
-                    else
-                    {
-                        if (oProtocolo.EnProceso())
+                        if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString())))
                         {
-                            oProtocolo.Estado = 1;//en proceso
-                                                  // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                            oProtocolo.FechaFinalizacion = DateTime.Now;
+                            oProtocolo.Estado = 2;  //validado total (cerrado);
+                                                    //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+
+                            if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
+                                oProtocolo.Estado = 3; //Acceso Restringido
+                        }
+                        else
+                        {
+                            if (oProtocolo.EnProceso())
+                            {
+                                oProtocolo.Estado = 1;//en proceso
+                                                      // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                            }
                         }
                     }
                 }
 
-                if ((Request["Operacion"].ToString() == "Valida") && (chkCerrarSinResultados.Checked))
-                
-                    {
+                if ((Request["Operacion"].ToString() == "Valida") && (chkCerrarSinResultados.Checked))                
+                 {
                     oProtocolo.Estado = 2;
+                    oProtocolo.FechaFinalizacion = DateTime.Now;
                     //if (oProtocolo.IdTipoServicio.IdTipoServicio==3) oProtocolo.exportarDatos();
                     oProtocolo.GrabarAuditoriaProtocolo("Terminado", int.Parse(Session["idUsuario"].ToString())); // agrego auditoria de cierre de protocolo
                     if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
@@ -4720,7 +4811,7 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
 
                     Protocolo oProtocolo = new Protocolo();
                     oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
-                    Guardar(oProtocolo,true, true);
+                    Guardar(oProtocolo,true, true, true);
                     Imprimir(oProtocolo, "I");
                     string sredirect = "";
 
@@ -6430,24 +6521,104 @@ WHERE     (PG.atb = 1) AND (G.baja = 0) AND (PG.idProtocolo = " + Request["idPro
             if (Request["Operacion"].ToString() == "Valida")
 
             {
+                
                 Protocolo oProtocolo = new Protocolo();
                 oProtocolo = (Protocolo)oProtocolo.Get(typeof(Protocolo), CurrentPageIndex);//int.Parse(Request["idProtocolo"].ToString()));r();
                 if (oProtocolo != null)
                 {
                     int id_user = 0;
-
+                    Guardar(oProtocolo, false, true, false);
                     if (Session["idUsuarioValida"] != null) id_user= int.Parse(Session["idUsuarioValida"].ToString());
                     else
                         id_user=int.Parse(Session["idUsuario"].ToString());
 
 
-                    oProtocolo.Estado = 2;                    
-                    oProtocolo.GrabarAuditoriaProtocolo("Terminado", id_user); // agrego auditoria de cierre de protocolo
+                    oProtocolo.Estado = 2;
+                    oProtocolo.FechaFinalizacion = DateTime.Now;
+                    
+
                     if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
                         oProtocolo.Estado = 3; //Acceso Restringido
+                    oProtocolo.Save();
+                    oProtocolo.GrabarAuditoriaProtocolo("Terminado", id_user); // agrego auditoria de cierre de protocolo
                 }
             }
-            Avanzar(0);//refresca pantalla
+            Avanzar(1);//refresca pantalla
+        }
+
+        protected void btnCerrarArea_Click(object sender, EventArgs e)
+        {
+            if (Request["Operacion"] == "Valida" &&
+                !string.IsNullOrEmpty(Request["idArea"]) &&
+                Request["idArea"] != "0")
+            {
+                string listaareas = Request["idArea"].ToString();
+
+                Protocolo oProtocolo = new Protocolo();
+                oProtocolo = (Protocolo)oProtocolo.Get(
+                    typeof(Protocolo), CurrentPageIndex);
+
+                if (oProtocolo != null)
+                {
+                    Guardar(oProtocolo, false, true, false);
+                    int id_user = 0;
+
+                    if (Session["idUsuarioValida"] != null)
+                        id_user = int.Parse(Session["idUsuarioValida"].ToString());
+                    else
+                        id_user = int.Parse(Session["idUsuario"].ToString());
+
+                    SqlConnection conn =
+                        (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
+
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("dbo.LAB_TerminarArea", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@idProtocolo", SqlDbType.Int)
+                            .Value = oProtocolo.IdProtocolo;
+
+                        cmd.Parameters.Add("@listaAreas", SqlDbType.VarChar, -1)
+                            .Value = listaareas;
+
+                        cmd.Parameters.Add("@idUsuario", SqlDbType.Int)
+                            .Value = id_user;
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    ///desues que cierra el area: recalcula el estado
+                    if (oProtocolo.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString())))
+                    {
+                        oProtocolo.FechaFinalizacion = DateTime.Now;
+                        oProtocolo.Estado = 2;  //validado total (cerrado);
+                                                //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+
+                        if ((!oProtocolo.Notificarresultado) && (oProtocolo.IdTipoServicio.IdTipoServicio != 5))//no aplica para no pacientes.
+                            oProtocolo.Estado = 3; //Acceso Restringido
+                    }
+                    else
+                    {
+                        if (oProtocolo.EnProceso())
+                        {
+                            oProtocolo.Estado = 1;//en proceso
+                                                  // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                        }
+                    }
+                    oProtocolo.Save();
+
+
+                    string s_areas = lblAreasValidacion.Text.Replace ( "Áreas a validar: ","");
+                    oProtocolo.GrabarAuditoriaProtocolo("Termina Area " + s_areas, id_user); // agrego auditoria de cierre de protocolo
+
+                }
+            }
+
+            //Avanzar(0); // Refresca pantalla
+            Avanzar(1); // avanza pantalla
         }
     }
 }
