@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Derivaciones {
-    
-    
-    public partial class ResultadoList {
-        
+namespace WebLab.Derivaciones
+{
+
+
+    public partial class ResultadoList
+    {
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// txtDni control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtDni;
-        
+
         /// <summary>
         /// txtApellido control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtApellido;
-        
+
         /// <summary>
         /// txtNombre control.
         /// </summary>
@@ -47,7 +49,34 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNombre;
-        
+
+        /// <summary>
+        /// txtFechaDesde control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaDesde;
+
+        /// <summary>
+        /// txtFechaHasta control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaHasta;
+
+        /// <summary>
+        /// ddlEfectorDestino control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEfectorDestino;
+
         /// <summary>
         /// btnBuscar control.
         /// </summary>
@@ -56,7 +85,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBuscar;
-        
+
         /// <summary>
         /// CantidadRegistros control.
         /// </summary>
@@ -65,7 +94,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label CantidadRegistros;
-        
+
         /// <summary>
         /// gvLista control.
         /// </summary>

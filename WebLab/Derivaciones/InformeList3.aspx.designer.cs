@@ -15,6 +15,60 @@ namespace WebLab.Derivaciones
     {
 
         /// <summary>
+        /// lblTitulo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitulo;
+
+        /// <summary>
+        /// pnlDescripcionLote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDescripcionLote;
+
+        /// <summary>
+        /// lblEstado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEstado;
+
+        /// <summary>
+        /// lblEstadoLote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEstadoLote;
+
+        /// <summary>
+        /// lblEfectorDestino control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEfectorDestino;
+
+        /// <summary>
+        /// lblSubTitulo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSubTitulo;
+
+        /// <summary>
         /// pnlNroLote control.
         /// </summary>
         /// <remarks>
@@ -33,58 +87,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Label lblNroLote;
 
         /// <summary>
-        /// Panel1 control.
+        /// Panel2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panel1;
-
-        /// <summary>
-        /// ddlEstado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlEstado;
-
-        /// <summary>
-        /// rvEstado control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RangeValidator rvEstado;
-
-        /// <summary>
-        /// ddlMotivoCancelacion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlMotivoCancelacion;
-
-        /// <summary>
-        /// rvMotivoCancelacion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Anthem.RangeValidator rvMotivoCancelacion;
-
-        /// <summary>
-        /// txtObservacion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtObservacion;
+        protected global::System.Web.UI.WebControls.Panel Panel2;
 
         /// <summary>
         /// btnGuardar control.
@@ -96,13 +105,49 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.Button btnGuardar;
 
         /// <summary>
-        /// lnkPDF control.
+        /// btnImprimir control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkPDF;
+        protected global::System.Web.UI.WebControls.Button btnImprimir;
+
+        /// <summary>
+        /// btnNoEnviado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnNoEnviado;
+
+        /// <summary>
+        /// btnExcluir control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnExcluir;
+
+        /// <summary>
+        /// btnAgregarDeterminaciones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAgregarDeterminaciones;
+
+        /// <summary>
+        /// btnActualizar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnActualizar;
 
         /// <summary>
         /// HFIdLote control.
@@ -123,13 +168,13 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.HiddenField HFIdEfectorDerivacion;
 
         /// <summary>
-        /// btnAgregarDeterminaciones control.
+        /// HFListaDetalles control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAgregarDeterminaciones;
+        protected global::System.Web.UI.WebControls.HiddenField HFListaDetalles;
 
         /// <summary>
         /// hidToken control.
@@ -148,6 +193,33 @@ namespace WebLab.Derivaciones
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvGeneral;
+
+        /// <summary>
+        /// cvNoEnviado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvNoEnviado;
+
+        /// <summary>
+        /// cvExcluir control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvExcluir;
+
+        /// <summary>
+        /// linkSeleccionar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl linkSeleccionar;
 
         /// <summary>
         /// lnkMarcar control.
@@ -186,6 +258,15 @@ namespace WebLab.Derivaciones
         protected global::System.Web.UI.WebControls.GridView gvLista;
 
         /// <summary>
+        /// gvListaEdit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvListaEdit;
+
+        /// <summary>
         /// HyperLink1 control.
         /// </summary>
         /// <remarks>
@@ -193,14 +274,5 @@ namespace WebLab.Derivaciones
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink HyperLink1;
-
-        /// <summary>
-        /// hdnDatosModificados control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdnDatosModificados;
     }
 }
