@@ -269,6 +269,22 @@ namespace WebLab.Derivaciones
                                 objCellResultado.Controls.Add(txt1);
                             }
                         }
+                        else //IdTipoResultado != 3
+                        {
+                            TextBox txt1 = new TextBox();
+                            txt1.ID = s_idDetalleProtocolo;
+
+                            txt1.Text = s_resultado;
+                            txt1.TextMode = TextBoxMode.MultiLine;
+                            txt1.Width = Unit.Percentage(80);
+                            txt1.Rows = 2;
+                            txt1.MaxLength = 200;
+                            txt1.CssClass = "myTexto";
+                            Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
+
+                            objCellResultado.Controls.Add(txt1);
+
+                        }
                     }
                     else
                     {
