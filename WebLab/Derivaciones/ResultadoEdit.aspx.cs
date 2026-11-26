@@ -215,61 +215,58 @@ namespace WebLab.Derivaciones
                     objCellPaciente.Controls.Add(olblPaciente);
 
                     Label olblAnalisis = new Label();
-                    olblAnalisis.Text = s_analisis;
-                    objCellAnalisis.Controls.Add(olblAnalisis);
+                    //olblAnalisis.Text = s_analisis;
+                    //objCellAnalisis.Controls.Add(olblAnalisis);
 
-                    //Ver el tipo de resultado
+                    
                     DetalleProtocolo oDetalle;
                     detallesDict.TryGetValue(int.Parse(s_idDetalleProtocolo), out oDetalle);
 
-                    if (oDetalle != null)
+                    if (oDetalle != null) //siempre tiene que tener
                     {
-                        if (oDetalle.IdItem.IdTipoResultado == 3)
+                        int idItem = 0, idTipoResultado=0;
+                        
+                        if (oDetalle.IdItem == oDetalle.IdSubItem)
                         {
-
-                            List<ResultadoItem> resultados;
-                            if (!resultadosPorItem.TryGetValue(oDetalle.IdItem.IdItem, out resultados))
-                                resultados = new List<ResultadoItem>();
-
-                            if (resultados.Count > 0)
-                            {
-                                DropDownList ddl1 = new DropDownList();
-                                ddl1.Width = Unit.Pixel(200);
-                                ddl1.ID = oDetalle.IdDetalleProtocolo.ToString();
-                                ddl1.TabIndex = short.Parse(i + 1.ToString());
-
-                               
-                                foreach (ResultadoItem oResultado in resultados)
-                                {
-                                    ListItem Item = new ListItem();
-                                    Item.Value = oResultado.IdResultadoItem.ToString();
-                                    Item.Text = oResultado.Resultado;
-                                    ddl1.Items.Add(Item);
-                                }
-                                ddl1.CssClass = "myList";
-                                ddl1.EnableViewState = false;
-                                objCellResultado.Controls.Add(ddl1);
-                                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(ddl1); //??
-
-                                objCellResultado.Controls.Add(ddl1);
-                            }
-                            else //Si el analisis no esta bien configurado, le dejamos la posibilidad de cargar texto  
-                            {
-                                TextBox txt1 = new TextBox();
-                                txt1.ID = s_idDetalleProtocolo;
-
-                                txt1.Text = s_resultado;
-                                txt1.TextMode = TextBoxMode.MultiLine;
-                                txt1.Width = Unit.Percentage(80);
-                                txt1.Rows = 2;
-                                txt1.MaxLength = 200;
-                                txt1.CssClass = "myTexto";
-                                Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
-
-                                objCellResultado.Controls.Add(txt1);
-                            }
+                            olblAnalisis.Text = s_analisis;
+                            idItem = oDetalle.IdItem.IdItem;
+                            idTipoResultado = oDetalle.IdItem.IdTipoResultado;
                         }
-                        else //IdTipoResultado != 3
+                        else
+                        {
+                            olblAnalisis.Text = oDetalle.IdItem.Descripcion + " - " + s_analisis;
+                            idItem = oDetalle.IdSubItem.IdItem;
+                            idTipoResultado = oDetalle.IdSubItem.IdTipoResultado;
+                        }
+
+                        objCellAnalisis.Controls.Add(olblAnalisis);
+                        //Ver el tipo de resultado
+                        List<ResultadoItem> resultados = null;
+                        if (idTipoResultado == 3 &&
+                            resultadosPorItem.TryGetValue(idItem, out resultados) &&
+                            resultados.Count > 0)  {
+                           
+                            DropDownList ddl1 = new DropDownList();
+                            ddl1.Width = Unit.Pixel(200);
+                            ddl1.ID = oDetalle.IdDetalleProtocolo.ToString();
+                            ddl1.TabIndex = short.Parse(i + 1.ToString());
+
+                            foreach (ResultadoItem oResultado in resultados)
+                            {
+                                ListItem Item = new ListItem();
+                                Item.Value = oResultado.IdResultadoItem.ToString();
+                                Item.Text = oResultado.Resultado;
+                                ddl1.Items.Add(Item);
+                            }
+                            ddl1.CssClass = "myList";
+                            ddl1.EnableViewState = false;
+                            objCellResultado.Controls.Add(ddl1);
+                            Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(ddl1); //??
+
+                            objCellResultado.Controls.Add(ddl1);
+                            
+                        }
+                        else //es de otro IdTipoResultado o no le cargaron resultados predefinidos
                         {
                             TextBox txt1 = new TextBox();
                             txt1.ID = s_idDetalleProtocolo;
@@ -283,31 +280,12 @@ namespace WebLab.Derivaciones
                             Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
 
                             objCellResultado.Controls.Add(txt1);
-
                         }
-                    }
-                    else
-                    {
-                        TextBox txt1 = new TextBox();
-                        txt1.ID = s_idDetalleProtocolo;
 
-                        txt1.Text = s_resultado;
-                        txt1.TextMode = TextBoxMode.MultiLine;
-                        txt1.Width = Unit.Percentage(80);
-                        txt1.Rows = 2;
-                        txt1.MaxLength = 200;
-                        txt1.CssClass = "myTexto";
-                        Master.FindControl("ContentPlaceHolder1").FindControl("Panel1").Controls.Add(txt1);
-
-                        objCellResultado.Controls.Add(txt1);
 
                     }
 
-
-
-
-
-                        Label lblPersona = new Label();
+                   Label lblPersona = new Label();
                     
 
                     if (s_idUsuario!="0")
@@ -388,10 +366,11 @@ namespace WebLab.Derivaciones
                 }
             }
 
-            string m_strSQL = " SELECT numero, convert(varchar(10),fecha,103) as fecha,convert(varchar,dni) + ' - ' + apellido + ' ' + nombre  AS PACIENTE, " +
-                              " determinacion, efectorDerivacion, IDDETALLEprotocolo, RESULTADO, IDusuarioResultado, fechaResultado, idItem FROM [vta_LAB_DerivacionesEnviadas]" +                              
-                              " WHERE  " +s_condicion+ 
-                              " ORDER BY NUMERO ";     
+             string m_strSQL = " SELECT numero, convert(varchar(10),fecha,103) as fecha,convert(varchar,dni) + ' - ' + apellido + ' ' + nombre  AS PACIENTE, " +
+                               " determinacion, efectorDerivacion, IDDETALLEprotocolo, RESULTADO, IDusuarioResultado, fechaResultado, idItem FROM [vta_LAB_DerivacionesSubItems]" +                              
+                               " WHERE  " +s_condicion+ 
+                               " ORDER BY NUMERO ";     
+           
 
             DataSet Ds = new DataSet();
             //SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection;
@@ -545,7 +524,7 @@ namespace WebLab.Derivaciones
 
         protected void Button1_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ResultadoEdit.aspx?Parametros=" + Request["Parametros"].ToString() + "&idItem=" + ddlItem.SelectedValue + "&idEfector=" + ddlEfector.SelectedValue + "&conResultado=" + ddlEstado.SelectedValue);
+            Response.Redirect("ResultadoEdit.aspx?Parametros=" + Request["Parametros"].ToString() + "&idItem=" + ddlItem.SelectedValue + "&idEfector=" + ddlEfector.SelectedValue + "&conResultado=" + ddlEstado.SelectedValue + "&estado=" + Request["estado"]);
         }
 
        
