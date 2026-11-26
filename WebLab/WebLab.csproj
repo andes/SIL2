@@ -4926,6 +4926,24 @@
     <Compile Include="Informes\PacientesList.aspx.designer.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\ResultadoMicrobiologia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultadoMicrobiologia.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\ResultadoMicrobiologiaA5.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultadoMicrobiologiaA5.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\ResultadoMicrobiologiaNoPacientes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultadoMicrobiologiaNoPacientes.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\ResultadosporServicio.aspx.cs">
       <DependentUpon>ResultadosporServicio.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -2124,6 +2124,8 @@ namespace WebLab.App_Data {
             
             private global::System.Data.DataColumn columnformatoDecimal;
             
+            private global::System.Data.DataColumn columnTrajoMuestra;
+            
             private global::System.Data.DataColumn columnformato0;
             
             private global::System.Data.DataColumn columnformato1;
@@ -2459,6 +2461,14 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public global::System.Data.DataColumn TrajoMuestraColumn {
+                get {
+                    return this.columnTrajoMuestra;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public global::System.Data.DataColumn formato0Column {
                 get {
                     return this.columnformato0;
@@ -2703,6 +2713,7 @@ namespace WebLab.App_Data {
                         string hc, 
                         string domicilio, 
                         int formatoDecimal, 
+                        string TrajoMuestra, 
                         string formato0, 
                         string formato1, 
                         string formato2, 
@@ -2759,6 +2770,7 @@ namespace WebLab.App_Data {
                         hc,
                         domicilio,
                         formatoDecimal,
+                        TrajoMuestra,
                         formato0,
                         formato1,
                         formato2,
@@ -2835,6 +2847,7 @@ namespace WebLab.App_Data {
                 this.columnhc = base.Columns["hc"];
                 this.columndomicilio = base.Columns["domicilio"];
                 this.columnformatoDecimal = base.Columns["formatoDecimal"];
+                this.columnTrajoMuestra = base.Columns["TrajoMuestra"];
                 this.columnformato0 = base.Columns["formato0"];
                 this.columnformato1 = base.Columns["formato1"];
                 this.columnformato2 = base.Columns["formato2"];
@@ -2926,6 +2939,8 @@ namespace WebLab.App_Data {
                 base.Columns.Add(this.columndomicilio);
                 this.columnformatoDecimal = new global::System.Data.DataColumn("formatoDecimal", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnformatoDecimal);
+                this.columnTrajoMuestra = new global::System.Data.DataColumn("TrajoMuestra", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnTrajoMuestra);
                 this.columnformato0 = new global::System.Data.DataColumn("formato0", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnformato0);
                 this.columnformato1 = new global::System.Data.DataColumn("formato1", typeof(string), null, global::System.Data.MappingType.Element);
@@ -10597,6 +10612,22 @@ namespace WebLab.App_Data {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public string TrajoMuestra {
+                get {
+                    try {
+                        return ((string)(this[this.tableresultado.TrajoMuestraColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'TrajoMuestra\' in table \'resultado\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableresultado.TrajoMuestraColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public string formato0 {
                 get {
                     try {
@@ -11329,6 +11360,18 @@ namespace WebLab.App_Data {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
             public void SetformatoDecimalNull() {
                 this[this.tableresultado.formatoDecimalColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public bool IsTrajoMuestraNull() {
+                return this.IsNull(this.tableresultado.TrajoMuestraColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
+            public void SetTrajoMuestraNull() {
+                this[this.tableresultado.TrajoMuestraColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
