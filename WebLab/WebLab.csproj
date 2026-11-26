@@ -2557,7 +2557,6 @@
     <Content Include="Protocolos\ProtocoloAdjuntar.aspx" />
     <Content Include="Protocolos\ProtocoloEditPesquisa.aspx" />
     <Content Include="Protocolos\ProtocoloEditForense.aspx" />
-    <Content Include="Protocolos\ProtocoloEditPesquisa_old.aspx" />
     <Content Include="Protocolos\ProtocoloEliminar.aspx" />
     <Content Include="Protocolos\ProtocoloList.ascx" />
     <Content Include="Protocolos\ProtocoloList.aspx" />
@@ -2668,6 +2667,7 @@
     <Content Include="Resultados\PesquisaNeonatalView.aspx" />
     <Content Include="Resultados\ProcesaExterno.aspx" />
     <Content Include="Resultados\ProtocoloPermiso.aspx" />
+    <Content Include="Resultados\ProtocoloTiempos.aspx" />
     <Content Include="Resultados\ProtocoloView.aspx" />
     <Content Include="Resultados\DiagnosticoEdit.aspx" />
     <Content Include="Resultados\PredefinidoSelect.aspx" />
@@ -4970,6 +4970,24 @@
     <Compile Include="Informes\PacientesList.aspx.designer.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\ResultadoMicrobiologia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultadoMicrobiologia.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\ResultadoMicrobiologiaA5.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultadoMicrobiologiaA5.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\ResultadoMicrobiologiaNoPacientes.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ResultadoMicrobiologiaNoPacientes.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\Resultado.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -5652,13 +5670,6 @@
     <Compile Include="Protocolos\ProtocoloEditForense.aspx.designer.cs">
       <DependentUpon>ProtocoloEditForense.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.cs">
-      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.designer.cs">
-      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Protocolos\ProtocoloEliminar.aspx.cs">
       <DependentUpon>ProtocoloEliminar.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5821,6 +5832,13 @@
     </Compile>
     <Compile Include="Resultados\ProtocoloPermiso.aspx.designer.cs">
       <DependentUpon>ProtocoloPermiso.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Resultados\ProtocoloTiempos.aspx.cs">
+      <DependentUpon>ProtocoloTiempos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Resultados\ProtocoloTiempos.aspx.designer.cs">
+      <DependentUpon>ProtocoloTiempos.aspx</DependentUpon>
     </Compile>
     <Compile Include="Resultados\ProtocoloView.aspx.cs">
       <DependentUpon>ProtocoloView.aspx</DependentUpon>

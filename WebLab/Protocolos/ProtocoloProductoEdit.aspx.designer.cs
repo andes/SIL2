@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Protocolos {
-    
-    
-    public partial class ProtocoloProductoEdit {
-        
+namespace WebLab.Protocolos
+{
+
+
+    public partial class ProtocoloProductoEdit
+    {
+
         /// <summary>
         /// pnlLista control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlLista;
-        
+
         /// <summary>
         /// gvLista control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvLista;
-        
+
         /// <summary>
         /// pnlActualiza control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlActualiza;
-        
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// lblEstado control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEstado;
-        
+
         /// <summary>
         /// lblServicio1 control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblServicio1;
-        
+
         /// <summary>
         /// spanadjunto control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanadjunto;
-        
+
         /// <summary>
         /// lblAdjunto control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblAdjunto;
-        
+
         /// <summary>
         /// btnArchivos control.
         /// </summary>
@@ -92,7 +94,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnArchivos;
-        
+
         /// <summary>
         /// lblServicio control.
         /// </summary>
@@ -101,7 +103,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblServicio;
-        
+
         /// <summary>
         /// txtCodigoMuestra control.
         /// </summary>
@@ -110,7 +112,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigoMuestra;
-        
+
         /// <summary>
         /// ddlMuestra control.
         /// </summary>
@@ -119,7 +121,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlMuestra;
-        
+
         /// <summary>
         /// rvTipoMuestra control.
         /// </summary>
@@ -128,7 +130,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvTipoMuestra;
-        
+
         /// <summary>
         /// rfvDescripcion control.
         /// </summary>
@@ -137,7 +139,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDescripcion;
-        
+
         /// <summary>
         /// txtDescripcionProducto control.
         /// </summary>
@@ -146,7 +148,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDescripcionProducto;
-        
+
         /// <summary>
         /// ddlConservacion control.
         /// </summary>
@@ -155,7 +157,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlConservacion;
-        
+
         /// <summary>
         /// rvConservacion control.
         /// </summary>
@@ -164,7 +166,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvConservacion;
-        
+
         /// <summary>
         /// txtFecha control.
         /// </summary>
@@ -173,7 +175,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFecha;
-        
+
         /// <summary>
         /// txtFechaOrden control.
         /// </summary>
@@ -182,7 +184,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputText txtFechaOrden;
-        
+
         /// <summary>
         /// txtNumeroOrigen control.
         /// </summary>
@@ -191,7 +193,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumeroOrigen;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -200,7 +202,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// ddlSectorServicio control.
         /// </summary>
@@ -209,7 +211,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlSectorServicio;
-        
+
         /// <summary>
         /// rvSectorServicio control.
         /// </summary>
@@ -218,7 +220,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RangeValidator rvSectorServicio;
-        
+
         /// <summary>
         /// txtObservacion control.
         /// </summary>
@@ -227,7 +229,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtObservacion;
-        
+
         /// <summary>
         /// lblUsuario control.
         /// </summary>
@@ -236,7 +238,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUsuario;
-        
+
         /// <summary>
         /// tab3Titulo control.
         /// </summary>
@@ -245,7 +247,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tab3Titulo;
-        
+
         /// <summary>
         /// tituloCalidad control.
         /// </summary>
@@ -254,7 +256,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tituloCalidad;
-        
+
         /// <summary>
         /// inci control.
         /// </summary>
@@ -263,7 +265,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlImage inci;
-        
+
         /// <summary>
         /// TxtCantidadFilas control.
         /// </summary>
@@ -272,7 +274,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtCantidadFilas;
-        
+
         /// <summary>
         /// cvValidacionInput control.
         /// </summary>
@@ -281,7 +283,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvValidacionInput;
-        
+
         /// <summary>
         /// ddlRutina control.
         /// </summary>
@@ -290,7 +292,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlRutina;
-        
+
         /// <summary>
         /// lnkAgregarRutina control.
         /// </summary>
@@ -299,7 +301,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.LinkButton lnkAgregarRutina;
-        
+
         /// <summary>
         /// ddlItem control.
         /// </summary>
@@ -308,7 +310,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlItem;
-        
+
         /// <summary>
         /// lnkAgregarItem control.
         /// </summary>
@@ -317,7 +319,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.LinkButton lnkAgregarItem;
-        
+
         /// <summary>
         /// pnlImpresoraAlta control.
         /// </summary>
@@ -326,7 +328,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl pnlImpresoraAlta;
-        
+
         /// <summary>
         /// ddlImpresoraEtiqueta control.
         /// </summary>
@@ -335,7 +337,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlImpresoraEtiqueta;
-        
+
         /// <summary>
         /// TxtDatosCargados control.
         /// </summary>
@@ -344,7 +346,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosCargados;
-        
+
         /// <summary>
         /// TxtDatos control.
         /// </summary>
@@ -353,7 +355,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatos;
-        
+
         /// <summary>
         /// txtTareas control.
         /// </summary>
@@ -362,7 +364,34 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden txtTareas;
-        
+
+        /// <summary>
+        /// TxtDatosDerivacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosDerivacion;
+
+        /// <summary>
+        /// TxtDatosTablaOriginal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputHidden TxtDatosTablaOriginal;
+
+        /// <summary>
+        /// HFValidacionFallida control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField HFValidacionFallida;
+
         /// <summary>
         /// pnlEtiquetas control.
         /// </summary>
@@ -371,7 +400,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlEtiquetas;
-        
+
         /// <summary>
         /// rdbSeleccionarAreasEtiquetas control.
         /// </summary>
@@ -380,7 +409,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.RadioButtonList rdbSeleccionarAreasEtiquetas;
-        
+
         /// <summary>
         /// chkAreaCodigoBarra control.
         /// </summary>
@@ -389,7 +418,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CheckBoxList chkAreaCodigoBarra;
-        
+
         /// <summary>
         /// ddlImpresora2 control.
         /// </summary>
@@ -398,7 +427,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.DropDownList ddlImpresora2;
-        
+
         /// <summary>
         /// btnReimprimirCodigoBarras control.
         /// </summary>
@@ -407,7 +436,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Button btnReimprimirCodigoBarras;
-        
+
         /// <summary>
         /// lblMensajeImpresion control.
         /// </summary>
@@ -416,7 +445,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.Label lblMensajeImpresion;
-        
+
         /// <summary>
         /// chkRecordarConfiguracion control.
         /// </summary>
@@ -425,7 +454,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CheckBox chkRecordarConfiguracion;
-        
+
         /// <summary>
         /// chkCodificaPaciente control.
         /// </summary>
@@ -434,7 +463,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.CheckBox chkCodificaPaciente;
-        
+
         /// <summary>
         /// pnlIncidencia control.
         /// </summary>
@@ -443,7 +472,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlIncidencia;
-        
+
         /// <summary>
         /// IncidenciaEdit1 control.
         /// </summary>
@@ -452,7 +481,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::WebLab.Calidad.IncidenciaEdit IncidenciaEdit1;
-        
+
         /// <summary>
         /// txtCodigo control.
         /// </summary>
@@ -461,7 +490,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigo;
-        
+
         /// <summary>
         /// txtCodigosRutina control.
         /// </summary>
@@ -470,7 +499,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Anthem.TextBox txtCodigosRutina;
-        
+
         /// <summary>
         /// hidToken control.
         /// </summary>
@@ -479,7 +508,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputHidden hidToken;
-        
+
         /// <summary>
         /// btnCancelar control.
         /// </summary>
@@ -488,7 +517,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelar;
-        
+
         /// <summary>
         /// chkRecordarPractica control.
         /// </summary>
@@ -497,7 +526,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkRecordarPractica;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>
@@ -506,7 +535,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-        
+
         /// <summary>
         /// pnlNavegacion control.
         /// </summary>
@@ -515,7 +544,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlNavegacion;
-        
+
         /// <summary>
         /// lnkAnterior control.
         /// </summary>
@@ -524,7 +553,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkAnterior;
-        
+
         /// <summary>
         /// lnkSiguiente control.
         /// </summary>
@@ -533,7 +562,7 @@ namespace WebLab.Protocolos {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkSiguiente;
-        
+
         /// <summary>
         /// ValidationSummary1 control.
         /// </summary>
