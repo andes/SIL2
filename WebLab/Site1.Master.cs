@@ -18,7 +18,7 @@ namespace WebLab
         
         protected void Page_Load(object sender, EventArgs e) 
         {
-          //  Page.RegisterRedirectOnSessionEndScript();
+            //  Page.RegisterRedirectOnSessionEndScript();
             if (!Page.IsPostBack)
             {
                 //if (ConfigurationManager.AppSettings["tipoAutenticacion"].ToString() == "SSO")
@@ -40,12 +40,13 @@ namespace WebLab
                     
                     Usuario oUser = new Usuario();
                     oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));//Session["idUsuario"].ToString());
-                    lblUsuario.Text = oUser.Username + " - " + oUser.Nombre + " " + oUser.Apellido + " " + oUser.IdEfector.Nombre;                    
-
+                    lblUsuario.Text = oUser.Username + " - " + oUser.Nombre + " " + oUser.Apellido + " " + oUser.IdEfector.Nombre;
+                    
+                    lblUsuarioConectado.Text = oUser.Nombre + " " + oUser.Apellido;
                     lblEfector.Text ="             "+ oUser.IdEfector.Nombre;
                     CrearMenu(oUser);
 
-                    if (Session["SIL"] != null)
+                    if (Session["SIL"] != null )
                         lnkCambiarPass.Visible = true;
                     else
                         lnkCambiarPass.Visible = false;

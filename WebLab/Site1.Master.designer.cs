@@ -8,10 +8,10 @@
 //------------------------------------------------------------------------------
 
 namespace WebLab {
-    
-    
+
+
     public partial class Site1 {
-        
+
         /// <summary>
         /// head control.
         /// </summary>
@@ -20,7 +20,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
-        
+
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -29,7 +29,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// lblEfector control.
         /// </summary>
@@ -38,25 +38,16 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblEfector;
-        
+
         /// <summary>
-        /// lnkCerrar control.
+        /// imgAyudaLinea control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkCerrar;
-        
-        /// <summary>
-        /// lnkCambiarPass control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkCambiarPass;
-        
+        protected global::System.Web.UI.HtmlControls.HtmlImage imgAyudaLinea;
+
         /// <summary>
         /// lblFechaHora control.
         /// </summary>
@@ -65,7 +56,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFechaHora;
-        
+
         /// <summary>
         /// lblUsuario control.
         /// </summary>
@@ -74,7 +65,52 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblUsuario;
-        
+
+        /// <summary>
+        /// lblUsuarioConectado control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblUsuarioConectado;
+
+        /// <summary>
+        /// lnkMiUltimaAceptacion control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkMiUltimaAceptacion;
+
+        /// <summary>
+        /// lnkMisAceptaciones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkMisAceptaciones;
+
+        /// <summary>
+        /// lnkCambiarPass control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkCambiarPass;
+
+        /// <summary>
+        /// lnkCerrar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkCerrar;
+
         /// <summary>
         /// mnuPrincipal control.
         /// </summary>
@@ -83,7 +119,7 @@ namespace WebLab {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Menu mnuPrincipal;
-        
+
         /// <summary>
         /// ContentPlaceHolder1 control.
         /// </summary>

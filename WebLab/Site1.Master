@@ -134,10 +134,88 @@ document.onkeydown=checkKeyCode;
   font-family: Arial;
   text-transform: uppercase;
 }
+
   </style>
 
   </asp:ContentPlaceHolder>
 
+    <style type="text/css">
+        
+ .usuario-dropdown {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    font-family: Arial;
+    text-transform: none;
+    font-size: 14px;
+    color: #333;
+}
+
+.usuario-dropdown summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    min-width: 300px;
+}
+
+.usuario-dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+.usuario-dropdown summary:hover {
+    background-color: #f8f8f8;
+}
+
+.usuario-dropdown .usuario-titulo {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.usuario-dropdown .usuario-flecha {
+    float: right;
+}
+
+.usuario-dropdown .usuario-opciones {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 320px;
+    margin: 0;
+    padding: 5px 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,.10);
+    z-index: 1000;
+}
+
+.usuario-dropdown .usuario-opciones li a {
+    display: block;
+    padding: 10px 14px;
+    color: #333;
+    text-decoration: none;
+    font-weight: normal;
+}
+
+.usuario-dropdown .usuario-opciones li a:hover {
+    background-color: #f5f5f5;
+}
+
+.usuario-dropdown .usuario-opciones li a .glyphicon {
+    color: #666;
+    margin-right: 8px;
+    width: 15px;
+}
+
+.usuario-dropdown .usuario-separador {
+    border-top: 1px solid #eee;
+    margin: 5px 0;
+}
+    </style>
 </head>
   
 
@@ -163,7 +241,7 @@ document.onkeydown=checkKeyCode;
 		  
          </td>
          
-         <td  align="right" style="vertical-align: top"> 
+        <td  align="right" style="vertical-align: top"> 
          <div  align="center" style=" color:#2f2736; font:bold;
   font-weight: normal;
   font-size: 12px;
@@ -171,17 +249,21 @@ document.onkeydown=checkKeyCode;
   text-transform: uppercase;">
          <br />
 
-        <%-- <a href="<%= Page.ResolveUrl("~/Help/help_LIS.html") %>" target="_blank"><img alt="Ayuda" title= "Ayuda en linea del Sistema" 
-          src="~/App_Themes/default/images/icono_help.jpg" border="0" visible="false"  runat="server" id="imgAyudaLinea" /></a>--%>
+       <a href="<%= Page.ResolveUrl("~/Help/help_LIS.html") %>" target="_blank"><img alt="Ayuda" title= "Ayuda en linea del Sistema" 
+          src="~/App_Themes/default/images/icono_help.jpg" border="0" visible="false"  runat="server" id="imgAyudaLinea" /></a>
           
          
    <%--  &nbsp;<a title="Volver a pantalla principal"  href="<%= Page.ResolveUrl("/Sips/default.aspx") %>">
     <span class=" glyphicon glyphicon-home" runat="server" id="imgPrincipal" visible="false"></span></a>&nbsp;&nbsp;--%>
-     <asp:HyperLink ID="lnkCerrar" runat="server" 
+     
+             
+       <%--      <asp:HyperLink ID="lnkCerrar" runat="server" 
          NavigateUrl="FinSesion.aspx" ToolTip="Cierra sesión del usuario y cierra el sistema">  <span class="glyphicon glyphicon-log-out"></span></asp:HyperLink>
          <asp:LinkButton ID="lnkCambiarPass" PostBackUrl="~/Usuarios/PasswordEdit2.aspx" ToolTip="Cambiar Password" runat="server" Text="" Width="20px"  >
-                                             <span class="glyphicon glyphicon-user"></span></asp:LinkButton>
-          <div class="myLabelIzquierda" > 
+                                             <span class="glyphicon glyphicon-user"></span></asp:LinkButton>--%>
+
+          
+             <div class="myLabelIzquierda" > 
       
        <h5>   <asp:Label ID="lblFechaHora" runat="server" Text="Label" 
        ></asp:Label>
@@ -190,6 +272,65 @@ document.onkeydown=checkKeyCode;
        </h5>
            
  </div>
+
+    <div class="usuario-dropdown">
+        <details>
+            <summary>
+                <span class="usuario-titulo">
+                     <i class="fa fa-user"></i>
+                    &nbsp;   <asp:Label ID="lblUsuarioConectado" runat="server" ></asp:Label>
+                </span>
+                <span class="glyphicon glyphicon-chevron-down usuario-flecha"></span>
+            </summary>
+
+            <ul class="usuario-opciones">
+                <li>
+                    <asp:HyperLink
+                        ID="lnkMiUltimaAceptacion"
+                        runat="server"
+                        NavigateUrl="~/CondicionUso.aspx?modo=ultima">
+                        <span class="glyphicon glyphicon-file"></span>
+                        Mi última aceptación
+                    </asp:HyperLink>
+                </li>
+                <li>
+                    <asp:HyperLink
+                        ID="lnkMisAceptaciones"
+                        runat="server"
+                        NavigateUrl="~/CondicionUso.aspx?modo=historial">
+                        <span class="glyphicon glyphicon-time"></span>
+                        Mis aceptaciones
+                    </asp:HyperLink>
+                </li>
+
+                <li>
+                    <asp:LinkButton
+                        ID="lnkCambiarPass"
+                        runat="server"
+                        PostBackUrl="~/Usuarios/PasswordEdit2.aspx">
+                        <span class="glyphicon glyphicon-edit"></span>
+                        Cambiar contraseña
+                    </asp:LinkButton>
+                </li>
+
+                <li class="usuario-separador"></li>
+                <li>
+                    <asp:HyperLink
+                        ID="lnkCerrar"
+                        runat="server"
+                        NavigateUrl="~/FinSesion.aspx">
+                        <span class="glyphicon glyphicon-log-out"></span>
+                        Cerrar sesión
+                    </asp:HyperLink>
+                </li>
+            </ul>
+        </details>
+    </div>
+
+
+
+
+              
                 </div>
          </td>
          </tr>
