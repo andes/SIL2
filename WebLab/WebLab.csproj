@@ -2032,6 +2032,7 @@
     <Content Include="CasoFiliacion\proceso caso filiacion.gif" />
     <Content Include="CasoFiliacion\WebForm1.aspx" />
     <Content Include="comparaString.aspx" />
+    <Content Include="CondicionUso.aspx" />
     <Content Include="Conservaciones\ConservacionEdit.aspx" />
     <Content Include="Conservaciones\ConservacionList.aspx" />
     <Content Include="Consulta\HistoriaClinicaFiltro.aspx" />
@@ -2514,7 +2515,6 @@
     <Content Include="Protocolos\ProtocoloAdjuntar.aspx" />
     <Content Include="Protocolos\ProtocoloEditPesquisa.aspx" />
     <Content Include="Protocolos\ProtocoloEditForense.aspx" />
-    <Content Include="Protocolos\ProtocoloEditPesquisa_old.aspx" />
     <Content Include="Protocolos\ProtocoloEliminar.aspx" />
     <Content Include="Protocolos\ProtocoloList.ascx" />
     <Content Include="Protocolos\ProtocoloList.aspx" />
@@ -4528,6 +4528,13 @@
     <Compile Include="comparaString.aspx.designer.cs">
       <DependentUpon>comparaString.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CondicionUso.aspx.cs">
+      <DependentUpon>CondicionUso.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CondicionUso.aspx.designer.cs">
+      <DependentUpon>CondicionUso.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Conservaciones\ConservacionEdit.aspx.cs">
       <DependentUpon>ConservacionEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5559,13 +5566,6 @@
     </Compile>
     <Compile Include="Protocolos\ProtocoloEditForense.aspx.designer.cs">
       <DependentUpon>ProtocoloEditForense.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.cs">
-      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Protocolos\ProtocoloEditPesquisa_old.aspx.designer.cs">
-      <DependentUpon>ProtocoloEditPesquisa_old.aspx</DependentUpon>
     </Compile>
     <Compile Include="Protocolos\ProtocoloEliminar.aspx.cs">
       <DependentUpon>ProtocoloEliminar.aspx</DependentUpon>

@@ -31,6 +31,19 @@ namespace WebLab
 
             if (!Page.IsPostBack)
             {
+
+               if (Session["usuarioContinuar"] != null) //26.11.2026 Viene de Termninos y Condiciones de Uso
+               {
+
+                    int idUsuario = Convert.ToInt32(Session["usuarioContinuar"]);
+                    Session.Remove("usuarioContinuar");
+                    Usuario oUser = new Usuario();
+                    oUser = (Usuario)oUser.Get(typeof(Usuario), idUsuario);
+                    //Ingreso al sistema
+                    AuthenticateEventArgs evento = new AuthenticateEventArgs(true);
+                    IngresoSistema(oUser, evento);
+                }
+
                 this.Login1.Focus();
                 if (Request["Operacion"] == null)
                 {
@@ -62,7 +75,9 @@ namespace WebLab
                         if (MostrarTerminosCondiciones(oUser))
                         {
                             Session["usuarioPendienteAceptacion"] = oUser.IdUsuario;// i_idusuario;
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "$('#modalTerminosCondiciones').modal('show');", true);
+                            // ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "$('#modalTerminosCondiciones').modal('show');", true); 
+                            //26.11.2026 Mejoras y nuevas funcionalidades: Condiciones de Uso
+                            Response.Redirect("CondicionUso.aspx", false);
                             return;
                         }
                     }
@@ -430,45 +445,76 @@ END";
             return sb.ToString();
         }
        
-        protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)
-        {
-            if(Session["usuarioPendienteAceptacion"] == null)
-            {
-                Response.Redirect("Logout.aspx", true);
-                return;
-            }
+        //protected void btn_aceptarTerminosCondiciones_Click(object sender, EventArgs e)
+        //{
+        //    if(Session["usuarioPendienteAceptacion"] == null)
+        //    {
+        //        Response.Redirect("Logout.aspx", true);
+        //        return;
+        //    }
 
-            int i_idusuario = int.Parse(Session["usuarioPendienteAceptacion"].ToString());
-            Usuario oUser = new Usuario();
-            oUser = (Usuario)oUser.Get(typeof(Usuario), i_idusuario);
+        //    int i_idusuario = int.Parse(Session["usuarioPendienteAceptacion"].ToString());
+        //    Usuario oUser = new Usuario();
+        //    oUser = (Usuario)oUser.Get(typeof(Usuario), i_idusuario);
 
-            if (oUser != null)
-            {
-                Session["usuarioPendienteAceptacion"] = null;
-                //Actualizar la fecha en la bd
-                oUser.FechaAceptaTerminosCondiciones = DateTime.Now;
-                oUser.Save();
-                //Actualizo acceso en log
-                CrearLogAcceso(oUser);
-                //Ingreso al sistema
-                AuthenticateEventArgs evento = new AuthenticateEventArgs(true);
-                IngresoSistema(oUser, evento);
-            }
-            else
-            {
-                Response.Redirect("Logout.aspx", true);
-            }
-        }
-        private void CrearLogAcceso(Usuario oUser)
-        {
-            LogAccesoTerminosCondiciones RegistroAcceso = new LogAccesoTerminosCondiciones();
-            RegistroAcceso.IdUsuario = oUser.IdUsuario;
-            RegistroAcceso.Fecha = DateTime.Now;
-            RegistroAcceso.Save();
-        }
+        //    if (oUser != null)
+        //    {
+        //        Session["usuarioPendienteAceptacion"] = null;
+        //        //Actualizar la fecha en la bd
+        //        oUser.FechaAceptaTerminosCondiciones = DateTime.Now;
+        //        oUser.Save();
+        //        //Actualizo acceso en log
+        //        CrearLogAcceso(oUser);
+        //        //Ingreso al sistema
+        //        AuthenticateEventArgs evento = new AuthenticateEventArgs(true);
+        //        IngresoSistema(oUser, evento);
+        //    }
+        //    else
+        //    {
+        //        Response.Redirect("Logout.aspx", true);
+        //    }
+        //}
+        //private void CrearLogAcceso(Usuario oUser)
+        //{
+        //    LogAccesoTerminosCondiciones RegistroAcceso = new LogAccesoTerminosCondiciones();
+        //    RegistroAcceso.IdUsuario = oUser.IdUsuario;
+        //    RegistroAcceso.Fecha = DateTime.Now;
+        //    RegistroAcceso.Save();
+        //}
 
         private bool MostrarTerminosCondiciones(Usuario oUser)
         {
+            // Obtener la última condición de uso
+            int idCondicionUso = 0;
+            SqlConnection conn = (SqlConnection)NHibernateHttpModule.CurrentSession.Connection; 
+            string m_strSQL = @"  SELECT TOP 1 idCondicionUso 
+                            FROM LAB_CondicionUso 
+                            order by idCondicionUso desc ";
+
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
+            {
+                idCondicionUso = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+
+           
+            // Obtener si el usuario aceptó esa condición
+            m_strSQL = @"SELECT COUNT(*)
+                        FROM LAB_LogAccesoTerminosCondiciones l
+                        WHERE l.idUsuario = @idUsuario
+                          AND l.idCondicionUso = @idCondicionUso";
+
+            bool aceptoUltimaVersion;
+            using (SqlCommand cmd = new SqlCommand(m_strSQL, conn))
+            {
+                cmd.Parameters.AddWithValue("@idUsuario", oUser.IdUsuario);
+                cmd.Parameters.AddWithValue("@idCondicionUso", idCondicionUso);
+
+                aceptoUltimaVersion =  Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+            }
+
+            if (!aceptoUltimaVersion)
+                    return true;
+
             /*
              PARAMETRIZACION:
              Cantidad X de dias
