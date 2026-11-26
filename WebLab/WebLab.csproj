@@ -4919,6 +4919,48 @@
     <Compile Include="Informes\HistorialPorUsuario.aspx.designer.cs">
       <DependentUpon>HistorialPorUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1HorizontalSA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1HorizontalSA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1SA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo1SA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2SA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo2SA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3HorizontalSA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3HorizontalSA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3SA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo3SA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4HorizontalSA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo4HorizontalSA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4SA.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HTrabajoProtocolo4SA.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Informes\PacientesList.aspx.cs">
       <DependentUpon>PacientesList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6814,6 +6856,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo1Horizontal1.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1HorizontalSA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo1HorizontalSA.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1Microbiologia.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo1Microbiologia.cs</LastGenOutput>
@@ -6837,6 +6883,10 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1PesquisaHorizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo1PesquisaHorizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo1SA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo1SA.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -6870,6 +6920,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo2PesquisaHorizontal.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo2SA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo2SA.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo3.cs</LastGenOutput>
@@ -6877,6 +6931,10 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Horizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo3Horizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3HorizontalSA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo3HorizontalSA.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3Microbiologia.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -6902,6 +6960,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo3PesquisaHorizontal.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo3SA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo3SA.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4.cs</LastGenOutput>
@@ -6909,6 +6971,10 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Horizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4Horizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4HorizontalSA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo4HorizontalSA.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4Microbiologia.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -6933,6 +6999,10 @@
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4PesquisaHorizontal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>HTrabajoProtocolo4PesquisaHorizontal.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocolo4SA.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>HTrabajoProtocolo4SA.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Informes\HojasdeTrabajo\HTrabajoProtocoloLetra1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
