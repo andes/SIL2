@@ -1687,7 +1687,10 @@ namespace Business.Data.Laboratorio
 
             string resul = "";
             ItemEfector oItem = new ItemEfector();
-            oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), "IdItem", this.IdSubItem, "IdEfector", this.IdEfector);
+            //20.11.2026 Primero verificamos si el idItem no tiene insumo
+            oItem = (ItemEfector)oItem.Get(typeof(ItemEfector), "IdItem", this.IdItem, "IdEfector", this.IdEfector);
+            bool itemSinInsumo = false;
+
             if (oItem != null) //Siempre tiene que haber 
                 if (oItem.IdEfectorDerivacion == this.IdEfector)
                 {
@@ -1695,23 +1698,57 @@ namespace Business.Data.Laboratorio
                     {
                         resul = "Sin Insumo";
 
-            if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
-            {
-                this.Observaciones = resul;
+                        if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
+                        {
+                            this.Observaciones = resul;
                             this.IdUsuarioValidaObservacion = oItem.IdUsuarioRegistro.IdUsuario;
-                this.FechaValidaObservacion = DateTime.Now;
-                this.FechaValida = DateTime.Now;
-            }
-            if (this.IdSubItem.IdTipoResultado == 2)///texto
-            {
-                this.ResultadoCar = resul;
-                this.IdUsuarioValida = oItem.IdUsuarioRegistro.IdUsuario;
+                            this.FechaValidaObservacion = DateTime.Now;
                             this.FechaValida = DateTime.Now;
-            }
-            this.Save();
+                        }
+                        if (this.IdSubItem.IdTipoResultado == 2)///texto
+                        {
+                            this.ResultadoCar = resul;
+                            this.IdUsuarioValida = oItem.IdUsuarioRegistro.IdUsuario;
+                            this.FechaValida = DateTime.Now;
+                        }
+                        this.Save();
+                        itemSinInsumo = true;
                     }
                 }
 
+            //20.11.2026 Si el iditem tiene insumo, verificamos si es practica y si el subItem no tiene insumo
+
+            if (!itemSinInsumo   //el iditem tiene insumo
+               && (this.IdItem != this.IdSubItem)  &&  (this.IdItem.Tipo == "P")) //Es una determinacion compuesta
+            {
+                ItemEfector oSubItem = new ItemEfector();
+                oSubItem = (ItemEfector)oSubItem.Get(typeof(ItemEfector), "IdItem", this.IdSubItem, "IdEfector", this.IdEfector);
+
+                if (oSubItem != null) //Siempre tiene que haber 
+                    if (oSubItem.IdEfectorDerivacion == this.IdEfector)
+                    {
+                        if (oSubItem.SinInsumo)
+                        {
+                            resul = "Sin Insumo";
+
+                            if (this.IdSubItem.IdTipoResultado != 2)///numerico o predefinido
+                            {
+                                this.Observaciones = resul;
+                                this.IdUsuarioValidaObservacion = oSubItem.IdUsuarioRegistro.IdUsuario;
+                                this.FechaValidaObservacion = DateTime.Now;
+                                this.FechaValida = DateTime.Now;
+                            }
+                            if (this.IdSubItem.IdTipoResultado == 2)///texto
+                            {
+                                this.ResultadoCar = resul;
+                                this.IdUsuarioValida = oSubItem.IdUsuarioRegistro.IdUsuario;
+                                this.FechaValida = DateTime.Now;
+                            }
+                            this.Save();
+                        }
+                    }
+            }
+            
 
         }
 

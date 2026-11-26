@@ -372,11 +372,11 @@ namespace WebLab.Resultados
                     Guardar(oRegistro);
                 }
                 //19.08.2026 Si viene de Operacion=Carga cuando recarga la pagina volver a ponerle el request
-                if(Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")
-                    
+               /* if (Request["Operacion"] != null && Request["Operacion"].ToString() == "Carga")
+
                     Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Operacion=Carga", false);
-                else
-                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString(), false);
+                else*/
+                    Response.Redirect("AnalisisEdit.aspx?idProtocolo=" + oRegistro.IdProtocolo.ToString() + "&Operacion=" + Request["Operacion"], false);
             }
                
 
@@ -399,7 +399,35 @@ namespace WebLab.Resultados
 
                 GuardarDetalle(oRegistro);
             //}
-           // oRegistro.GrabarAuditoriaProtocolo(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+            // oRegistro.GrabarAuditoriaProtocolo(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+
+            //16.11.2026
+            //Cambiar el estado del protocolo 
+            if (oRegistro.ValidadoTotal(Request["Operacion"].ToString(), int.Parse(oUser.IdUsuario.ToString())))
+            {
+                if (oRegistro.Estado < 2) oRegistro.FechaFinalizacion = DateTime.Now;//solo actualiza la fecha de finalizacion si no estaba terminado antes
+
+                oRegistro.Estado = 2;  //validado total (cerrado);
+                                       //oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                if (!oRegistro.Notificarresultado) // no se notifica a sips
+                    oRegistro.Estado = 3; ///Accceso Restringido;
+            }
+            else
+            {
+
+                if (oRegistro.EnProceso())
+                {
+                    // oRegistro.FechaFinalizacion = DateTime.Parse("01/01/1900");
+                    oRegistro.Estado = 1;//en proceso
+                                         // oProtocolo.ActualizarResultados(Request["Operacion"].ToString(), int.Parse(Session["idUsuario"].ToString()));
+                }
+                else
+                {
+                    oRegistro.Estado = 0;
+                }
+
+            }
+            oRegistro.Save();
         }
 
         

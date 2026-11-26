@@ -1713,7 +1713,7 @@
 
 
         var $this = $(this);
-        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '" />').dialog({
+        $('<iframe src="AnalisisEdit.aspx?idProtocolo=' + idProtocolo + '&operacion=Valida"/>').dialog({
             title: 'Practicas Pedidas',
             autoOpen: true,
             width: 800,
@@ -2046,7 +2046,7 @@
         }).width(670);
     }
 
-    </script>
+</script>
 
      <script type="text/javascript">
         
