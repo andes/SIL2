@@ -575,7 +575,9 @@
                                 </table> 
                               
                                 <input type="hidden" runat="server" name="TxtDatosCargados" id="TxtDatosCargados" value="" />                                
-                                   <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />                                
+                                   <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />   
+                                <input type="hidden" runat="server" name="TxtDatosDerivacion" id="TxtDatosDerivacion" value="" />
+                                <input type="hidden" runat="server" name="TxtDatosTablaOriginal" id="TxtDatosTablaOriginal" value="" />
                 <input id="txtTareas" name="txtTareas" runat="server" type="hidden"  />
 
                                   
@@ -897,7 +899,6 @@
             // TxtDatos        → estado actual / editable / a guardar
             const txtDatosCargados = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value;
             const txtDatos = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
-
             if (redirect) {
                 if (!postBack) AgregarCargados(); //Recarga todo desde cero
                 else AgregarCargadoSinVerificar(); //Si da error de postback se debe cargar nuevamente sin verificar
@@ -1528,7 +1529,7 @@
         function AgregarCargadoSinVerificar() {
             CrearFilaInicial(0);
            var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
-               
+
             if (elvalor != '') {
                 var sTabla = elvalor.split('@');
                 var largoTabla = (sTabla.length) ;
@@ -1552,7 +1553,8 @@
                             document.getElementById('Codigo_' + i).className = 'codigoConResultado';
                         if (sItem[4] == '2')///resultado validado
                             document.getElementById('Codigo_' + i).className = 'codigoConResultadoValidado';
-                        CrearFilaInicial(i + 1);
+                        if (document.getElementById('Codigo_' + (i + 1)) == null) //La condición evita duplicar filas sin alterar el comportamiento del postback normal.
+                            CrearFilaInicial(i + 1);
                     }
                     
                 }
