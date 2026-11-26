@@ -217,7 +217,12 @@
                                         <asp:Button ID="btnGuardar" runat="server" Text="Guardar" ValidationGroup="0"  Width="100px" CssClass ="btn btn-primary"
                                                 onclick="btnGuardar_Click"    TabIndex="24" />
                                       <input type="hidden" runat="server" name="TxtDatosCargados" id="TxtDatosCargados" value="" />                                
-                                   <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />                                
+                                   <input type="hidden" runat="server" name="TxtDatos" id="TxtDatos" value="" />     
+                               
+                                <input type="hidden" runat="server" name="TxtDatosDerivacion" id="TxtDatosDerivacion" value="" />
+                               
+                                <input type="hidden" runat="server" name="TxtDatosTablaOriginal" id="TxtDatosTablaOriginal" value="" />
+                                   <asp:HiddenField ID="HFValidacionFallida" runat="server" Value="0" />
                 <input id="txtTareas" name="txtTareas" runat="server" type="hidden"  />
                                                
                                    </div>
@@ -244,19 +249,103 @@
             arguments.IsValid = true;    //Si llego hasta aqui entonces la validación fue exitosa        
     }
 
-
-
+   
     function InicioPagina() {
+        const recargar = Recargar();
+
         if (document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatosCargados").ClientID %>').value == "") {///protocolo nuevo
             CrearFila(true);
         }
         else {        ///modificacion de protocolo
-            AgregarCargados();
+            if (!recargar)
+                AgregarCargados(); //Recarga todo desde cero
+            else
+                AgregarCargadoSinVerificar(); //Si da error de postback se debe cargar nuevamente (sin verificar si el codigo esta repetido)
+
         }
+
+    }
+    function Recargar() {
+        return document.getElementById('<%= HFValidacionFallida.ClientID %>').value == "1";
 
     }
 
 
+    
+   //<![CDATA[ ignora el análisis sintáctico de etiquetas dentro de ese bloque, que no se porque da el error (Error al analizar el recurso requerido para dar servicio a esta solicitud.)
+    function AgregarCargadoSinVerificar() {
+        CrearFilaInicial(0);
+        var elvalor = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value;
+
+        if (elvalor != '') {
+            var sTabla = elvalor.split('@');
+            var largoTabla = (sTabla.length);
+
+            for (var i = 0; i < largoTabla; i++) {
+                
+                var sItem = sTabla[i].split('#');
+                var valorCodigo = sItem[1];
+                var sinMuestra = true;
+
+                if (sItem[3] == 'false') sinMuestra = false;
+                if (valorCodigo != '' && document.getElementById('Codigo_' + i) != null && valorCodigo) {
+                    document.getElementById('Codigo_' + i).value = valorCodigo;
+                    CargarTareaSinVerificar(document.getElementById('Codigo_' + i));
+
+                    document.getElementById('Desde_' + i).checked = sinMuestra;
+
+                    if (sItem[4] == '1') ///resultado cargado
+                        document.getElementById('Codigo_' + i).className = 'codigoConResultado';
+                    if (sItem[4] == '2')///resultado validado
+                        document.getElementById('Codigo_' + i).className = 'codigoConResultadoValidado';
+                    if (document.getElementById('Codigo_' + (i + 1)) == null) //La condición evita duplicar filas sin alterar el comportamiento del postback normal.
+                        CrearFilaInicial(i + 1);
+                }
+
+            }
+        }
+    }
+    //CrearFilaInicial: Aumenta el contador de filas, y pasa el foco a la fila siguiente.
+    function CrearFilaInicial(indice) {
+        var valFila = indice;
+        NuevaFila(valFila);
+        document.getElementById('NroFila_' + valFila).value = valFila + 1;
+        document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtCantidadFilas").ClientID %>').value = valFila + 1;
+        document.getElementById('Codigo_' + valFila).focus();
+    }
+
+    function CargarTareaSinVerificar(codigo) {
+        var nroFila = codigo.name.replace('Codigo_', '');
+        var tarea = document.getElementById('Tarea_' + nroFila);
+        var sinMu = document.getElementById('Desde_' + nroFila);
+
+
+        var lista = document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("txtTareas").ClientID %>').value;
+
+          if (codigo.value == '') {
+              tarea.value = '';
+          }
+          else {
+
+              var i = lista.indexOf('#' + codigo.value + '#', 0);
+              if (i < 0) {
+                  codigo.value = '';
+                  tarea.value = '';
+                  alert('El codigo de analisis no existe o no es válido.');
+                  document.getElementById('Codigo_' + nroFila).focus();
+
+              }
+              else {
+                  var j = lista.indexOf('@', i);
+                  i = lista.indexOf('#', i + 1) + 1;
+                  tarea.value = lista.substring(i, j).replace('#True', '').replace('#False', '');
+                  CargarDatos();
+                  CrearFila(true);
+              }
+
+          }
+      }
+    //]]>
     function NuevaFila() {
         Grilla = document.getElementById('Datos');
 
@@ -384,8 +473,16 @@
             var cod = document.getElementById('Codigo_' + i);
             var tarea = document.getElementById('Tarea_' + i);
             var desde = document.getElementById('Desde_' + i);
-            if (cod.value != '')
-                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+            if (cod.value != '') {
+                switch (cod.className) {
+                    case 'codigo': estado = 0; break;
+                    case 'codigoConResultado': estado = 1; break;
+                    case 'codigoConResultadoValidado': estado = 2; break;
+                    default: estado = 0; break;
+                }
+
+                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '#' + estado + '@';
+            }
         }
         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
 
@@ -563,9 +660,16 @@
                 var desde = document.getElementById('Desde_' + i);
                 desde.name = 'Desde_' + pos;
                 desde.id = 'Desde_' + pos;
+               
+                switch (cod.className) {
+                    case 'codigo': estado = 0; break;
+                    case 'codigoConResultado': estado = 1; break;
+                    case 'codigoConResultadoValidado': estado = 2; break;
+                    default: estado = 0; break;
+                }
 
                 pos = pos + 1;
-                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '@';
+                str = str + nroFila.value + '#' + cod.value + '#' + tarea.value + '#' + desde.checked + '#' + estado + '@';
             }
         }
         document.getElementById('<%= Page.Master.FindControl("ContentPlaceHolder1").FindControl("TxtDatos").ClientID %>').value = str;
@@ -620,7 +724,6 @@
                 var sinMuestra = true;
                 if (sItem[1] == 'No') sinMuestra = true;
                 else sinMuestra = false;
-
                 var con = contadorfilas - 1;
                 document.getElementById('Codigo_' + con).value = valorCodigo;
 
@@ -629,7 +732,7 @@
                 var boton = document.getElementById('boton_' + con);
 
 
-                if (sItem[2] == '1')
+                if (sItem[2] == '1')///resultado cargado
                     document.getElementById('Codigo_' + con).className = 'codigoConResultado';
 
                 if (sItem[2] == '2')///resultado validado
@@ -645,5 +748,5 @@
 
 
 
-    </script>
+</script>
    </asp:Content>
