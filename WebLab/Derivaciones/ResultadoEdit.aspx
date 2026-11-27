@@ -24,8 +24,8 @@
                         </td>
 						
 					<td class="myLabelIzquierda" style="vertical-align: top">
-                                            Efector a derivar:
-                                            <asp:DropDownList ID="ddlEfector" runat="server" CssClass="form-control input-sm">
+                                            <%--Efector a derivar:--%>
+                                            <asp:DropDownList ID="ddlEfector" runat="server" CssClass="form-control input-sm" Visible="false">
                                             </asp:DropDownList>
                         </td>
 						

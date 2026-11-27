@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebLab.Derivaciones {
-    
-    
-    public partial class ResultadoEdit {
-        
+namespace WebLab.Derivaciones
+{
+
+
+    public partial class ResultadoEdit
+    {
+
         /// <summary>
         /// lblTitulo control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTitulo;
-        
+
         /// <summary>
         /// ddlItem control.
         /// </summary>
@@ -29,7 +31,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlItem;
-        
+
         /// <summary>
         /// ddlEfector control.
         /// </summary>
@@ -38,7 +40,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEfector;
-        
+
         /// <summary>
         /// ddlEstado control.
         /// </summary>
@@ -47,7 +49,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlEstado;
-        
+
         /// <summary>
         /// Button1 control.
         /// </summary>
@@ -56,7 +58,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Button1;
-        
+
         /// <summary>
         /// Panel1 control.
         /// </summary>
@@ -65,7 +67,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel Panel1;
-        
+
         /// <summary>
         /// tContenido control.
         /// </summary>
@@ -74,7 +76,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Table tContenido;
-        
+
         /// <summary>
         /// hypRegresar control.
         /// </summary>
@@ -83,7 +85,7 @@ namespace WebLab.Derivaciones {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hypRegresar;
-        
+
         /// <summary>
         /// btnGuardar control.
         /// </summary>

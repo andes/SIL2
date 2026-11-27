@@ -46,7 +46,7 @@ namespace WebLab.Derivaciones
         {
             Utility oUtil = new Utility();
             ///Carga de combos de areas
-            string m_ssql = " SELECT DISTINCT idItem, determinacion FROM vta_LAB_DerivacionesEnviadas " +
+            string m_ssql = " SELECT DISTINCT idItem, determinacion FROM vta_LAB_DerivacionesSubItems " +
                             " WHERE  " + Request["Parametros"].ToString() + " ORDER BY determinacion";
 
             oUtil.CargarCombo(ddlItem, m_ssql, "idItem", "determinacion");
@@ -63,8 +63,8 @@ namespace WebLab.Derivaciones
             if (Request["idItem"] != null)
                 ddlItem.SelectedValue = Request["idItem"].ToString();
 
-            if (Request["idEfector"] != null)
-                ddlEfector.SelectedValue = Request["idEfector"].ToString();
+            //if (Request["idEfector"] != null)
+            //    ddlEfector.SelectedValue = Request["idEfector"].ToString();
 
             if (Request["conResultado"] != null)
                 ddlEstado.SelectedValue = Request["conResultado"].ToString();
