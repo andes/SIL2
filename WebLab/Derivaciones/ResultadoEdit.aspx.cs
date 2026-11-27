@@ -251,6 +251,12 @@ namespace WebLab.Derivaciones
                             ddl1.ID = oDetalle.IdDetalleProtocolo.ToString();
                             ddl1.TabIndex = short.Parse(i + 1.ToString());
 
+                            // combo sin seleccion o con dato del conResultado
+                            ListItem ItemSeleccion = new ListItem();
+                            ItemSeleccion.Value = s_resultado;
+                            ItemSeleccion.Text = s_resultado;
+                            ddl1.Items.Add(ItemSeleccion);
+
                             foreach (ResultadoItem oResultado in resultados)
                             {
                                 ListItem Item = new ListItem();
