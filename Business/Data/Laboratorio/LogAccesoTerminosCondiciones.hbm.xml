@@ -7,6 +7,6 @@
 		</id>
 		<property column="idUsuario" type="Int32" name="IdUsuario" not-null="true" />
 		<property column="fecha" type="DateTime" name="Fecha" not-null="true" />
-		
+    <property column="idCondicionUso" type="Int32" name="IdCondicionUso" not-null="false" />
 	</class>
 </hibernate-mapping>

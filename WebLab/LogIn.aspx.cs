@@ -21,27 +21,35 @@ namespace WebLab
     {
         protected void Page_PreInit(object sender, EventArgs e)
         {
-            if (Session["idUsuario"] != null)
+            if (Session["idUsuario"] == null && Session["usuarioContinuar"] == null)
             {
-                Usuario oUser = new Usuario();
-                oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
-            }
-            else
                 Response.Redirect("FinSesion.aspx", false);
-                //Configuracion oC = new Configuracion();
-                //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
-                //if (oUser.IdEfector != oC.IdEfector) // es externo
-                //{
-                //    this.MasterPageFile = "~/PeticionElectronica/SitePE.master";
-
-                //}
-
+                return;
             }
+
+            //if (Session["idUsuario"] != null)
+            //{
+            //    Usuario oUser = new Usuario();
+            //    oUser = (Usuario)oUser.Get(typeof(Usuario), int.Parse(Session["idUsuario"].ToString()));
+            //}
+            //else
+            //    Response.Redirect("FinSesion.aspx", false);
+            //Configuracion oC = new Configuracion();
+            //oC = (Configuracion)oC.Get(typeof(Configuracion), "IdEfector", oUser.IdEfector);
+            //if (oUser.IdEfector != oC.IdEfector) // es externo
+            //{
+            //    this.MasterPageFile = "~/PeticionElectronica/SitePE.master";
+
+            //}
+
+        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
+                if (Session["usuarioContinuar"] != null) //26.11.2026 Viene de Termninos y Condiciones de Uso
+                    return;
 
                 if (Session["idUsuario"] != null)
                 {

@@ -42,6 +42,7 @@ namespace WebLab
                     //Ingreso al sistema
                     AuthenticateEventArgs evento = new AuthenticateEventArgs(true);
                     IngresoSistema(oUser, evento);
+                    return;
                 }
 
                 this.Login1.Focus();
@@ -77,7 +78,7 @@ namespace WebLab
                             Session["usuarioPendienteAceptacion"] = oUser.IdUsuario;// i_idusuario;
                             // ScriptManager.RegisterStartupScript(this, this.GetType(), "mostrarModal", "$('#modalTerminosCondiciones').modal('show');", true); 
                             //26.11.2026 Mejoras y nuevas funcionalidades: Condiciones de Uso
-                            Response.Redirect("CondicionUso.aspx", false);
+                            Response.Redirect("CondicionUso.aspx?Tipo=alta", false);
                             return;
                         }
                     }

@@ -288,7 +288,7 @@ document.onkeydown=checkKeyCode;
                     <asp:HyperLink
                         ID="lnkMiUltimaAceptacion"
                         runat="server"
-                        NavigateUrl="~/CondicionUso.aspx?modo=ultima">
+                        NavigateUrl="~/CondicionUso.aspx?Tipo=consulta">
                         <span class="glyphicon glyphicon-file"></span>
                         Mi última aceptación
                     </asp:HyperLink>
@@ -297,7 +297,7 @@ document.onkeydown=checkKeyCode;
                     <asp:HyperLink
                         ID="lnkMisAceptaciones"
                         runat="server"
-                        NavigateUrl="~/CondicionUso.aspx?modo=historial">
+                        NavigateUrl="~/CondicionUso.aspx?Tipo=historial">
                         <span class="glyphicon glyphicon-time"></span>
                         Mis aceptaciones
                     </asp:HyperLink>

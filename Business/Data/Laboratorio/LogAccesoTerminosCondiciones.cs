@@ -18,7 +18,8 @@ namespace Business.Data.Laboratorio
 
 		private int m_idlogacceso; 
 		private int m_idusuario; 
-		private DateTime m_fecha; 		
+		private DateTime m_fecha;
+		private int m_idCondicionUso;
 		#endregion
 
 		#region Default ( Empty ) Class Constuctor
@@ -29,7 +30,8 @@ namespace Business.Data.Laboratorio
 		{
 			m_idlogacceso = 0; 
 			m_idusuario = 0; 
-			m_fecha = DateTime.MinValue; 
+			m_fecha = DateTime.MinValue;
+			m_idCondicionUso = 0;
 		}
 		#endregion // End of Default ( Empty ) Class Constuctor
 
@@ -39,11 +41,13 @@ namespace Business.Data.Laboratorio
 		/// </summary>
 		public LogAccesoTerminosCondiciones(
 			int idusuario, 
-			DateTime fecha)
+			DateTime fecha,
+			int idCondicionUso)
 			: this()
 		{
 			m_idusuario = idusuario;
 			m_fecha = fecha;
+			m_idCondicionUso = idCondicionUso;
 		}
 		#endregion // End Required Fields Only Constructor
 
@@ -90,7 +94,20 @@ namespace Business.Data.Laboratorio
 			}
 
 		}
-			
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int IdCondicionUso
+		{
+			get { return m_idCondicionUso; }
+			set
+			{
+				m_isChanged |= (m_idCondicionUso != value);
+				m_idCondicionUso = value;
+			}
+
+		}
 		/// <summary>
 		/// Returns whether or not the object has changed it's values.
 		/// </summary>
